@@ -24,7 +24,7 @@ export class GlobalSettings {
     private static _homepageUrl:string = '.homerunloyal.com';
     private static _partnerHomepageUrl:string = '.myhomerunzone.com';
 
-    private static _baseTitle: string = "Home Run Loyal";
+    private static _baseTitle: string = "Touchdown Loyal";
 
     private static _copyrightInfo: string = "USA Today Sports Images";
 
@@ -162,6 +162,9 @@ export class GlobalSettings {
         return this._baseTitle +
             (profileName && profileName.length > 0 ? " - " + profileName : "") +
             (subtitle && subtitle.length > 0 ? " - " + subtitle : "");
+    }
+    static getBaseTitle() {
+      return this._baseTitle;
     }
 
     static getCopyrightInfo() {

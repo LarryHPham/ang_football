@@ -3,6 +3,7 @@
  */
 import {Component, OnInit} from '@angular/core';
 import {ModuleHeader, ModuleHeaderData} from '../../components/module-header/module-header.component';
+import {GlobalSettings} from '../../global/global-settings';
 
 @Component({
     selector: 'like-us-module',
@@ -11,8 +12,9 @@ import {ModuleHeader, ModuleHeaderData} from '../../components/module-header/mod
     directives: [ModuleHeader],
 })
 export class LikeUs implements OnInit{
+  public siteName: any = GlobalSettings.getBaseTitle();
       moduleTitle: ModuleHeaderData = {
-        moduleTitle: "Like Home Run Loyal on Facebook",
+        moduleTitle: "Like " + this.siteName + " on Facebook",
         hasIcon: false,
         iconClass: ""
       };
