@@ -5,16 +5,12 @@ import {Title} from '@angular/platform-browser';
 import {LoadingComponent} from '../../components/loading/loading.component';
 import {ErrorComponent} from '../../components/error/error.component';
 
-import {AboutUsModule} from '../../modules/about-us/about-us.module';
-import {LikeUs} from "../../modules/likeus/likeus.module";
-
 import {TwitterModule, twitterModuleData} from "../../modules/twitter/twitter.module";
 import {TwitterService} from '../../services/twitter.service';
 
 import {ComparisonModule, ComparisonModuleData} from '../../modules/comparison/comparison.module';
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
-import {ShareModule, ShareModuleInput} from '../../modules/share/share.module';
 import {CommentModule} from '../../modules/comment/comment.module';
 
 import {DYKModule, dykModuleData} from "../../modules/dyk/dyk.module";
@@ -81,13 +77,10 @@ declare var moment;
         DYKModule,
         DraftHistoryModule,
         FAQModule,
-        LikeUs,
         TwitterModule,
         ComparisonModule,
-        ShareModule,
         TransactionsModule,
         NewsModule,
-        AboutUsModule,
         ListOfListsModule,
         ImagesMedia,
         ResponsiveWidget
@@ -112,7 +105,6 @@ declare var moment;
 
 export class MLBPage implements OnInit {
     public widgetPlace: string = "widgetForModule";
-    public shareModuleInput:ShareModuleInput;
 
     pageParams:MLBPageParameters = {};
     partnerID:string = null;
@@ -212,7 +204,6 @@ export class MLBPage implements OnInit {
                 this.setupComparisonData();
 
                 /*** Keep Up With Everything MLB ***/
-                this.setupShareModule();
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
@@ -360,19 +351,6 @@ export class MLBPage implements OnInit {
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
-    }
-
-    private setupShareModule() {
-        let profileHeaderData = this.profileHeaderData;
-        let imageUrl = !profileHeaderData.profileImageUrl ? GlobalSettings.getImageUrl("/mlb/players/no-image.png") : profileHeaderData.profileImageUrl;
-        let shareText = !profileHeaderData.profileName ?
-            'Share This Profile Below' :
-            'Share ' + GlobalFunctions.convertToPossessive(profileHeaderData.profileName) + ' Profile Below:';
-
-        this.shareModuleInput = {
-            imageUrl: imageUrl,
-            shareText: shareText
-        };
     }
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
