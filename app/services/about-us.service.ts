@@ -26,6 +26,7 @@ export class AboutUsService {
 
   public siteName: any = GlobalSettings.getBaseTitle();
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
 
   getData(partnerID: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
@@ -81,7 +82,7 @@ export class AboutUsService {
               }
             },
           },
-          titleText: data.worldChampYear + ' Superbowl Champions',
+          titleText: data.worldChampYear + ' ' + this.sportLeagueChampionship + ' Champions',
           dataText: data.worldChampLastName,
         }
       ],
