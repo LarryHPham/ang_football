@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Http} from '@angular/http';
 import {Router} from '@angular/router-deprecated';
 import {Observable} from 'rxjs/Rx';
@@ -17,7 +17,7 @@ declare var moment;
     directives: [SidekickWrapper, ContactUsModule, WidgetModule, ResponsiveWidget],
     providers: [Title],
 })
-export class ContactUsPage implements OnInit{
+export class ContactUsPage{
     public widgetPlace: string = "widgetForPage";
     //Object that builds contact us module
     public mailManUrl: string;
@@ -28,7 +28,7 @@ export class ContactUsPage implements OnInit{
         GlobalSettings.getPartnerID(_router, partnerID => {
           var domainTitle;
           if(partnerID != null){
-            domainTitle = "My Home Run Zone";//TODO
+            domainTitle = "My Touch Down Zone";
           }else{
             domainTitle = "Touch Down Loyal";
           }
@@ -94,9 +94,5 @@ export class ContactUsPage implements OnInit{
         this.mailManUrl += '/'+stringOptions
         //send to backend the full mail url of all options
         this.http.get(this.mailManUrl,{})
-    }
-
-    ngOnInit(){
-
     }
 }

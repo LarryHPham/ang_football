@@ -48,8 +48,12 @@ ToC
 @homeRunLoyalIcon:'/app/public/icons/baseball-vertical-icon.png';
 
 // Brand Color Image Hovers
+
 @imageHoverOpacity: 0.75;
 @imageHoverOpacityHalf: 0.5;
+
+@touchDownLoyalSqrtHover: rgba(45, 62, 80, @imageHoverOpacityHalf);
+@touchDownLoyalImageHover: rgba(45, 62, 80, @imageHoverOpacity);
 @sntMediaBlueImageHover: rgba(0, 157, 251, @imageHoverOpacity);
 @investKitBlueImageHover: rgba(48, 152, 255, @imageHoverOpacity);
 @lifestylePurpleImageHover: rgba(101, 57, 142, @imageHoverOpacity);
@@ -61,10 +65,8 @@ ToC
 @weatherYellowImageHover: rgba(255, 223, 48, @imageHoverOpacity);
 @joyfulHomeGreenHover: rgba(68, 178, 36, @imageHoverOpacity);
 @homeRunLoyalImageHover: rgba(188, 32, 39, @imageHoverOpacity);
-@touchDownLoyalImageHover: rgba(45, 62, 80, @imageHoverOpacity);
 @featureBtn: rgba(54, 54, 54, 0.85);
 @homeRunLoyalSqrtHover: rgba(188,22,36,@imageHoverOpacityHalf);
-@touchDownLoyalSqrtHover: rgba(45, 62, 80, @imageHoverOpacityHalf);
 // Grey Color Palette; light to dark
 // We should only use these 6 types of grey
 // if there is ever a variation of one of those,please round to the closest color
@@ -84,7 +86,7 @@ ToC
 // Master Vertical Brand Colors
 @masterBrandColor: @touchDownLoyalBlue;
 @lightMasterBrandColor: @homeRunLoyalLightRed;
-@masterImageHover: @homeRunLoyalImageHover;
+@masterImageHover: @touchDownLoyalImageHover;
 @lightMasterBrandColor: @homeRunLoyalLightRed;
 @masterBackgroundColor: @backgroundGrey;
 @masterHighlightColor: @highlightGrey;
@@ -111,15 +113,16 @@ ToC
 @docPrimaryAccentColor: @wintergreen;
 @docCompAccentColor: @wintergreenCompPurp;
 @docTetraLeftAccentColor:@moderateYellow;
-
+@darkBrown: #150c0c;
 // Code Colors
 @activeBlue: #3098ff;
-@solarBgColor: #002B36;
+@highlightBlue: #2795ff;
 @solarBlue: #268bd2;
+@solarBgColor: #002B36;
 @solarCyan: #2aa198;
 @solarOrange: #cb4b16;
+@activeRed: @homeRunLoyalRed;//TODO need to verify
 @solarRed: #dc322f;
-@highlightBlue: #2795ff;
 @darkText:#2d3e50;
 
 @gradientBlue: #3299ff;
