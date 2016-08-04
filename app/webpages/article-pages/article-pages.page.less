@@ -1,28 +1,25 @@
-@import (reference) "./app/global/stylesheets/components.less";
-@import (reference) "./app/global/stylesheets/base.less";
-
 .large {
   display: block;
-  @media @mobile-s {
+  @media @mobile{
     display: none;
   }
 }
 
 .small {
   display: none;
-  @media @mobile-s {
+  @media @mobile{
     display: block;
   }
 }
 
 .article-image-responsive {
   .roundImageMain(121px);
-  @media @mobile-s {
+  @media @mobile{
     .roundImageMain(71px);
   }
 }
 
-@media @mobile-s {
+@media @mobile{
   .expand, .images, .sm-images {
     display: none;
   }
@@ -53,7 +50,7 @@
 .carousel-container {
   width: 583px;
   height: 400px;
-  @media @mobile-s {
+  @media @mobile{
     height: 60vw;
     width: ~"calc(100% + 20px)";
     margin-left: -10px;
@@ -74,7 +71,7 @@
     @media (max-width: 1023px) {
       width: 640px;
     }
-    @media @mobile-s {
+    @media @mobile{
       width: 100%;
       padding: 0 10px;
     }
@@ -87,7 +84,7 @@
     .globalDefaultFont(40px, 800);
     text-align: left;
     margin-bottom: 17px;
-    @media @mobile-s {
+    @media @mobile{
       .globalDefaultFont(20px, 800);
       margin-bottom: 10px;
       width: 100%;
@@ -140,7 +137,7 @@
       line-height: 10px;
       float: left;
       margin-top: 20px;
-      @media @mobile-s {
+      @media @mobile{
         margin-top: 16px;
       }
     }
