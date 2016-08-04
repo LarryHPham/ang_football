@@ -22,9 +22,14 @@ export class GlobalSettings {
     private static _trendingUrl:string = '-homerunloyal-ai.synapsys.us/sidekick';
     private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
     private static _homepageUrl:string = '.homerunloyal.com';
+    private static _homepageLinkName:string = 'touchdownloyal';
     private static _partnerHomepageUrl:string = '.myhomerunzone.com';
 
     private static _baseTitle: string = "Touchdown Loyal";
+    private static _basePartnerTitle: string = "My Touchdown Zone" //todo;
+
+    private static _sportLeagueAbbrv: string ="NFL";
+    private static _sportLeagueChampionship: string = "Superbowl";
 
     private static _copyrightInfo: string = "USA Today Sports Images";
 
@@ -88,6 +93,10 @@ export class GlobalSettings {
     static getNewsUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;
+    }
+
+    static getHomePageLinkName() {
+      return this._homepageLinkName;
     }
 
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
@@ -157,14 +166,27 @@ export class GlobalSettings {
 
     static getPageTitle(subtitle?: string, profileName?: string) {
       if(this.getHomeInfo().isPartner){
-        this._baseTitle = "My HomeRun Zone";
+        this._baseTitle = "My Touchdown Zone";
       }
         return this._baseTitle +
             (profileName && profileName.length > 0 ? " - " + profileName : "") +
             (subtitle && subtitle.length > 0 ? " - " + subtitle : "");
     }
+
     static getBaseTitle() {
       return this._baseTitle;
+    }
+
+    static getBasePartnerTitle() {
+      return this._basePartnerTitle;
+    }
+
+    static getSportLeagueAbbrv() {
+      return this._sportLeagueAbbrv;
+    }
+
+    static getSportLeagueChampionship() {
+      return this._sportLeagueChampionship;
     }
 
     static getCopyrightInfo() {

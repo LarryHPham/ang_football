@@ -24,6 +24,10 @@ export interface AboutUsInterface {
 export class AboutUsService {
   constructor(public http: Http){}
 
+  public siteName: any = GlobalSettings.getBaseTitle();
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
+
   getData(partnerID: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     return this.http.get(url)
@@ -33,8 +37,8 @@ export class AboutUsService {
 
   private formatData(data: AboutUsInterface, partnerID: string): AboutUsModel {
     let pageName = (partnerID == null)
-            ? "Home Run Loyal"
-            : "My Home Run Zone";
+            ? GlobalSettings.getBaseTitle()
+            : GlobalSettings.getBasePartnerTitle();
     let teamProfiles = GlobalFunctions.commaSeparateNumber(data.teamProfilesCount);
     let playerProfiles = GlobalFunctions.commaSeparateNumber(data.playerProfilesCount);
     let fullName = data.worldChampFirstName + " " + data.worldChampLastName;
@@ -52,17 +56,17 @@ export class AboutUsService {
       blocks: [
         {
           iconUrl: '/app/public/team_profile_image.png',
-          titleText: 'MLB Team Profiles',
+          titleText: this.sportLeagueAbbrv+' Team Profiles',
           dataText: teamProfiles
         },
         {
           iconUrl: '/app/public/player_profile_image.png',
-          titleText: 'MLB Player Profiles',
+          titleText: this.sportLeagueAbbrv+' Player Profiles',
           dataText: playerProfiles
         },
         {
           iconUrl: '/app/public/division_image.png',
-          titleText: 'MLB Divisions',
+          titleText: this.sportLeagueAbbrv+' Divisions',
           dataText: GlobalFunctions.commaSeparateNumber(data.divisionsCount)
         },
         {
@@ -78,7 +82,7 @@ export class AboutUsService {
               }
             },
           },
-          titleText: data.worldChampYear + ' World Series Champions',
+          titleText: data.worldChampYear + ' ' + this.sportLeagueChampionship + ' Champions',
           dataText: data.worldChampLastName,
         }
       ],
