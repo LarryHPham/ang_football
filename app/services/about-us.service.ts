@@ -25,6 +25,7 @@ export class AboutUsService {
   constructor(public http: Http){}
 
   public siteName: any = GlobalSettings.getBaseTitle();
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
 
   getData(partnerID: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
@@ -54,17 +55,17 @@ export class AboutUsService {
       blocks: [
         {
           iconUrl: '/app/public/team_profile_image.png',
-          titleText: 'NFL Team Profiles',
+          titleText: this.sportLeagueAbbrv+' Team Profiles',
           dataText: teamProfiles
         },
         {
           iconUrl: '/app/public/player_profile_image.png',
-          titleText: 'NFL Player Profiles',
+          titleText: this.sportLeagueAbbrv+' Player Profiles',
           dataText: playerProfiles
         },
         {
           iconUrl: '/app/public/division_image.png',
-          titleText: 'NFL Divisions',
+          titleText: this.sportLeagueAbbrv+' Divisions',
           dataText: GlobalFunctions.commaSeparateNumber(data.divisionsCount)
         },
         {

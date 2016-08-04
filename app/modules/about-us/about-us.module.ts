@@ -14,7 +14,7 @@ import {ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 export class AboutUsModule implements OnChanges {
     @Input() partnerID: string;
 
-    public homePageLinkName: string = "touchdownloyal";
+    public homePageLinkName: string = GlobalSettings.getHomePageLinkName();
     public pageName: string;
     public moduleHeader: ModuleHeaderData;
     public headerText: string = "Disclaimer";
