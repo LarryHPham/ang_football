@@ -28,9 +28,9 @@ export class ContactUsPage implements OnInit{
         GlobalSettings.getPartnerID(_router, partnerID => {
           var domainTitle;
           if(partnerID != null){
-            domainTitle = "My Home Run Zone";
+            domainTitle = "My Home Run Zone";//TODO
           }else{
-            domainTitle = "Home Run Loyal";
+            domainTitle = "Touch Down Loyal";
           }
 
           this.contactusInput = {
@@ -54,8 +54,7 @@ export class ContactUsPage implements OnInit{
               ],
               titleData: {
                   imageURL: GlobalSettings.getSiteLogoUrl(),
-                  // text1: 'Last Updated: '+moment(new Date()).format('dddd MMMM Do, YYYY'),
-                  text1: 'Last Updated: Friday, June 24th, 2016',
+                  text1: 'Last Updated: Thursday, August 4th, 2016',
                   text2: ' United States',
                   text3: 'Have a question about '+domainTitle+'? Write us a message.',
                   text4: '',
