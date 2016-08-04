@@ -14,7 +14,7 @@ import {ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 export class AboutUsModule implements OnChanges {
     @Input() partnerID: string;
 
-    public homePageLinkName: string = "homerunloyal";
+    public homePageLinkName: string = "touchdownloyal";
     public pageName: string;
     public moduleHeader: ModuleHeaderData;
     public headerText: string = "Disclaimer";
@@ -30,13 +30,13 @@ export class AboutUsModule implements OnChanges {
 
     loadData(partnerID: string) {
       if(partnerID != null) {
-        this.homePageLinkName = "www.myhomerunzone.com/" + partnerID;
-        this.pageName = "My Home Run Zone";
-        this.logoUrl = '/app/public/Logo_My-Home-Run-Zone.svg';
+        this.homePageLinkName = "www.mytouchdownzone.com/" + partnerID;
+        this.pageName = "My Touchdown Zone";
+        this.logoUrl = '/app/public/Logo_My-Touchdown-Zone.svg';
      } else {
-       this.homePageLinkName = "www.homerunloyal.com"
-       this.pageName = "Home Run Loyal";
-       this.logoUrl = '/app/public/Logo_Home-Run-Loyal.png';
+       this.homePageLinkName = "www.touchdownloyal.com"
+       this.pageName = "Touchdown Loyal";
+       this.logoUrl = '/app/public/Logo_Touchdown-Loyal.png';
       }
 
       this.headerText = GlobalFunctions.convertToPossessive(this.pageName) + ' Disclaimer';

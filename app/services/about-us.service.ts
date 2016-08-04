@@ -33,8 +33,8 @@ export class AboutUsService {
 
   private formatData(data: AboutUsInterface, partnerID: string): AboutUsModel {
     let pageName = (partnerID == null)
-            ? "Home Run Loyal"
-            : "My Home Run Zone";
+            ? "Touchdown Loyal"
+            : "My Touchdown Zone";
     let teamProfiles = GlobalFunctions.commaSeparateNumber(data.teamProfilesCount);
     let playerProfiles = GlobalFunctions.commaSeparateNumber(data.playerProfilesCount);
     let fullName = data.worldChampFirstName + " " + data.worldChampLastName;
@@ -52,17 +52,17 @@ export class AboutUsService {
       blocks: [
         {
           iconUrl: '/app/public/team_profile_image.png',
-          titleText: 'MLB Team Profiles',
+          titleText: 'NFL Team Profiles',
           dataText: teamProfiles
         },
         {
           iconUrl: '/app/public/player_profile_image.png',
-          titleText: 'MLB Player Profiles',
+          titleText: 'NFL Player Profiles',
           dataText: playerProfiles
         },
         {
           iconUrl: '/app/public/division_image.png',
-          titleText: 'MLB Divisions',
+          titleText: 'NFL Divisions',
           dataText: GlobalFunctions.commaSeparateNumber(data.divisionsCount)
         },
         {
@@ -78,7 +78,7 @@ export class AboutUsService {
               }
             },
           },
-          titleText: data.worldChampYear + ' World Series Champions',
+          titleText: data.worldChampYear + ' Superbowl Champions',
           dataText: data.worldChampLastName,
         }
       ],
