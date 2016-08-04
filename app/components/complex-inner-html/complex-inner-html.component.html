@@ -1,5 +1,0 @@
-<template ngFor let-item [ngForOf]="textItems">
-  <a *ngIf="item.route" [routerLink]="item.route" class="{{item.class}}" [innerHtml]="item.text"></a>
-  <span *ngIf="!item.route && item.text" class="{{item.class}}" [innerHtml]="item.text"></span>
-  <span *ngIf="!item.route && !item.text" [innerHtml]="item"></span>
-</template>
