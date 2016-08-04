@@ -24,6 +24,8 @@ export interface AboutUsInterface {
 export class AboutUsService {
   constructor(public http: Http){}
 
+  public siteName: any = GlobalSettings.getBaseTitle();
+
   getData(partnerID: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     return this.http.get(url)
@@ -33,8 +35,8 @@ export class AboutUsService {
 
   private formatData(data: AboutUsInterface, partnerID: string): AboutUsModel {
     let pageName = (partnerID == null)
-            ? "Touchdown Loyal"
-            : "My Touchdown Zone";
+            ? GlobalSettings.getBaseTitle()
+            : GlobalSettings.getBasePartnerTitle();
     let teamProfiles = GlobalFunctions.commaSeparateNumber(data.teamProfilesCount);
     let playerProfiles = GlobalFunctions.commaSeparateNumber(data.playerProfilesCount);
     let fullName = data.worldChampFirstName + " " + data.worldChampLastName;

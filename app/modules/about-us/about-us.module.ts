@@ -30,13 +30,13 @@ export class AboutUsModule implements OnChanges {
 
     loadData(partnerID: string) {
       if(partnerID != null) {
-        this.homePageLinkName = "www.mytouchdownzone.com/" + partnerID;
-        this.pageName = "My Touchdown Zone";
-        this.logoUrl = '/app/public/Logo_My-Touchdown-Zone.svg';
+        this.homePageLinkName = GlobalSettings.getHomePage(partnerID);
+        this.pageName = GlobalSettings.getBasePartnerTitle();
+        this.logoUrl = GlobalSettings.getSiteLogoUrl();
      } else {
-       this.homePageLinkName = "www.touchdownloyal.com"
-       this.pageName = "Touchdown Loyal";
-       this.logoUrl = '/app/public/Logo_Touchdown-Loyal.png';
+       this.homePageLinkName = GlobalSettings.getHomePage(partnerID);
+       this.pageName = GlobalSettings.getBaseTitle();
+       this.logoUrl = GlobalSettings.getSiteLogoUrl();
       }
 
       this.headerText = GlobalFunctions.convertToPossessive(this.pageName) + ' Disclaimer';
