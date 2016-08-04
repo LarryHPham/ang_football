@@ -36,15 +36,11 @@
     <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
     <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
     <!--Like Us On FB Module, only display if not on partner page-->
-    <share-module *ngIf="shareModuleInput" [shareModuleInput]="shareModuleInput"></share-module>
-    <responsive-widget *ngIf="shareModuleInput" [embedPlace]="widgetPlace"></responsive-widget>
     <section *ngIf="!partnerID">
-      <like-us-module></like-us-module>
       <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-      <responsive-widget *ngIf="shareModuleInput" [embedPlace]="widgetPlace"></responsive-widget>
+      <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     </section>
     <!-- TODO<section *ngIf="!partnerCheck"> also required for comment module-->
-    <about-us [partnerID]="partnerID"></about-us>
   </div>
 </section>
 </sidekick-wrapper>

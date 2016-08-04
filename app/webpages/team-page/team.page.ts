@@ -9,16 +9,12 @@ import {LoadingComponent} from '../../components/loading/loading.component';
 import {ErrorComponent} from '../../components/error/error.component';
 
 import {CommentModule} from '../../modules/comment/comment.module';
-import {LikeUs} from "../../modules/likeus/likeus.module";
 import {HeadlineComponent} from '../../components/headline/headline.component';
 
-import {AboutUsModule} from '../../modules/about-us/about-us.module';
 import {ArticlesModule} from "../../modules/articles/articles.module";
 
 import {TwitterModule, twitterModuleData} from "../../modules/twitter/twitter.module";
 import {TwitterService} from '../../services/twitter.service';
-
-import {ShareModule, ShareModuleInput} from '../../modules/share/share.module';
 
 import {DYKModule, dykModuleData} from "../../modules/dyk/dyk.module";
 import {DykService} from '../../services/dyk.service';
@@ -90,13 +86,10 @@ declare var moment;
         CommentModule,
         DYKModule,
         FAQModule,
-        LikeUs,
         TwitterModule,
         ComparisonModule,
-        ShareModule,
         TeamRosterModule,
         NewsModule,
-        AboutUsModule,
         ArticlesModule,
         ImagesMedia,
         ListOfListsModule,
@@ -126,7 +119,6 @@ declare var moment;
 
 export class TeamPage implements OnInit {
     public widgetPlace: string = "widgetForModule";
-    public shareModuleInput:ShareModuleInput;
     headerData:any;
     pageParams:MLBPageParameters;
     partnerID:string = null;
@@ -242,7 +234,6 @@ export class TeamPage implements OnInit {
 
                 /*** Interact With [League Name]’s Fans ***/
                 this.getTwitterService();
-                this.setupShareModule();
             },
             err => {
                 this.hasError = true;
@@ -366,19 +357,6 @@ export class TeamPage implements OnInit {
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
-    }
-
-    private setupShareModule() {
-        let profileHeaderData = this.profileHeaderData;
-        let imageUrl = !profileHeaderData.profileImageUrl ? GlobalSettings.getImageUrl('/mlb/players/no-image.png') : profileHeaderData.profileImageUrl;
-        let shareText = !profileHeaderData.profileName ?
-            'Share This Profile Below' :
-            'Share ' + GlobalFunctions.convertToPossessive(profileHeaderData.profileName) + ' Profile Below:';
-
-        this.shareModuleInput = {
-            imageUrl: imageUrl,
-            shareText: shareText
-        };
     }
 
     private transactionsTab(tab) {

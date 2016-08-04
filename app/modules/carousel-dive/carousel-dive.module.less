@@ -1,4 +1,3 @@
-
 .carousel-dive {
   height: 420px;
   width: 100%;
@@ -9,7 +8,6 @@
     top: 50%;
     transform: translateY(-50%);
     margin: auto;
-  //  height: 420px;
     display: table;
     z-index: 2;
     color:@white;
@@ -21,14 +19,13 @@
       vertical-align: middle;
       cursor:pointer;
       &:hover {
-        color:@homeRunLoyalRed;
+        color:@masterBrandColor;
       }
     }
   }
   &-left {
     position: absolute;
     left: 0;
-//  height: 420px;
     top: 50%;
     transform: translateY(-50%);
     margin: auto;
@@ -43,7 +40,7 @@
       vertical-align: middle;
       cursor:pointer;
       &:hover {
-        color:@homeRunLoyalRed;
+        color:@masterBrandColor;
       }
     }
   }
@@ -52,7 +49,6 @@
   height: 420px;
   width: 100%;
   background-size: cover;
-//  background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
 }
@@ -63,7 +59,6 @@
   width: 80%;
   height: 420px;
   margin: auto;
-//  display: table;
   position: relative;
   &-container{
     display: table-cell;
@@ -73,14 +68,12 @@
     text-align: left;
   &-right {
     display: none;
-    // margin: auto;
     position: relative;
-  //  top:45px;
     &-key {
       width: 125px;
       height: 25px;
       border-radius: 3px;
-      background-color: @homeRunLoyalRed;
+      background-color: @masterBrandColor;
       text-align: center;
       color:@white;
       line-height: 25px;
@@ -90,14 +83,13 @@
     &-title {
       .globalDefaultModFont(25px, 400, @white);
       line-height: 1.2;
-      font-weight: 800;
       width: 100%;
       >#cardivetitle {
         font-weight: 800;
       }
       >span{
         display: block;
-        .globalDefaultModFont(18px, 400, @white);
+        .globalDefaultFont(18px, 400);
       }
       &-border {
         border-bottom: 2px solid @white;
@@ -112,7 +104,7 @@
       .globalDefaultModFont(16px, 400, @white);
       margin-top: 20px;
      >span {
-       .globalDefaultModFont(14px, 400, @white);
+       .globalDefaultFont(14px, 400);
        position: relative;
        display: block;
      }
@@ -124,7 +116,7 @@
       width: 200px;
       height: 40px;
       border-radius: 3px;
-      background-color: @homeRunLoyalRed;
+      background-color: @masterBrandColor;
       color:@white;
       line-height: 40px;
       text-align: center;
@@ -215,9 +207,9 @@
       }
       &-right {
         &-title {
-          .globalDefaultModFont(16px, 800, @white);
+          .globalDefaultFont(16px, 800);
           >span {
-            .globalDefaultModFont(12px, 400, @white);
+            .globalDefaultFont(12px, 400);
             margin: 0 0 5px 0;
           }
           &-border {
@@ -232,12 +224,12 @@
           padding: 0px 14px;
           margin-bottom: 12px;
           line-height: 20px;
-          .globalDefaultModFont(10px, 400, @white);
+          .globalDefaultFont(10px, 400);
         }
         &-content {
           height: 28px;
           margin-top: 10px;
-          .globalDefaultModFont(12px, 400, @white);
+          .globalDefaultFont(12px, 400);
           overflow: hidden;
         }
         &-fullstory {
@@ -247,7 +239,7 @@
           line-height: 30px;
           padding: 0 16px;
           margin-top: 20px;
-          .globalDefaultModFont(14px, 800, @white);
+          .globalDefaultFont(14px, 800);
         }
       }
     }
@@ -296,17 +288,17 @@
           height: 25px;
           margin-bottom: 20px;
           line-height: 25px;
-          .globalDefaultModFont(12px, 400, @white);
+          .globalDefaultFont(12px, 400);
         }
         &-title {
-          .globalDefaultModFont(32px, 800, @white);
+          .globalDefaultFont(32px, 800);
           >span {
-            .globalDefaultModFont(28px, 400, @white);
+            .globalDefaultFont(28px, 400);
           }
         }
         &-content {
           margin-top: 10px;
-          .globalDefaultModFont(16px, 400, @white);
+          .globalDefaultFont(16px, 400);
           overflow: auto;
           text-overflow: initial;
           white-space: normal;
@@ -318,7 +310,7 @@
           padding: 0px;
           margin-top: 30px;
           line-height: 40px;
-          .globalDefaultModFont(16px, 800, @white);
+          .globalDefaultFont(16px, 800);
         }
         &-title {
           > span {
@@ -366,12 +358,12 @@
         position: relative;
         top: 50px;
         &-title {
-          .globalDefaultModFont(32px, 800, @white);
+          .globalDefaultFont(32px, 800);
           &-border {
             margin: 5px 0 0 0;
           }
           >span {
-            .globalDefaultModFont(28px, 400, @white);
+            .globalDefaultFont(28px, 400);
           }
         }
         &-content {
@@ -416,7 +408,7 @@
           &-title {
             > span {
               margin: 0 0 10px 0;
-              .globalDefaultModFont(20px, 400, @white);
+              .globalDefaultFont(20px, 400);
             }
             &-border {
               margin: 10px 0 0 0;
@@ -425,11 +417,11 @@
           &-content {
             span.cardescription {
               margin: 0;
-              .globalDefaultModFont(16px, 400, @white);
+              .globalDefaultFont(16px, 400);
             }
             span {
               margin-top: 20px;
-              .globalDefaultModFont(12px, 400, @white);
+              .globalDefaultFont(12px, 400);
             }
           }
         }
@@ -437,12 +429,3 @@
     }
   }
 }
-
-// @media @desktop-xl {
-//   .carousel-item {
-//     &-container {
-//       &-right {
-//       }
-//     }
-//   }
-// }
