@@ -1,0 +1,36 @@
+.comparison-legend{
+    padding: 10px 0 20px;
+    .flexDisplay;
+    .flexJustify(space-between);
+
+    li{
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    &-title{
+      font-size: 18px;
+
+      &-sub {
+        .globalDefaultModFont(10px, 400, @bulletGrey);
+        font-style: italic;
+        display: block;
+      }
+    }
+
+    &-key {
+      .flexDisplay;
+      .flexAlignItems(center);
+    }
+
+    &-circle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: @highlightGrey;
+      display: inline-block;
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+    }
+}

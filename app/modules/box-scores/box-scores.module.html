@@ -1,0 +1,74 @@
+<div class="module-container box-scores" *ngIf="calendarParams" (window:resize)="onWindowLoadOrResize($event)">
+  <div id="box-header" *ngIf="boxScores">
+    <module-header [modHeadData]="boxScores.moduleTitle"></module-header>
+    <!--for calendar-->
+    <calendar-carousel [chosenParam]="calendarParams" (dateEmit)="dateTransfer($event)"></calendar-carousel>
+    <!--for calendar-->
+
+    <!--for team profile-->
+    <article-schedule-component *ngIf=" calendarParams.profile != 'league' && boxScores" [homeData]="boxScores.schedule.home" [awayData]="boxScores.schedule.away"></article-schedule-component>
+  </div>
+
+  <div *ngIf="boxScores && boxScores.gameInfo[0].length > 1 && calendarParams.profile != 'league'" class="box-scores-moregames">
+    <div *ngFor="let gameInfo of boxScores.gameInfo" class="box-scores-mult">
+      <div class="box-scores-mult-title">
+        <span class="text-heavy">{{gameInfo[gameNum].game.homeData.homeTeamName}}</span>
+        <span>vs</span>
+        <span class="text-heavy">{{gameInfo[gameNum].game.awayData.awayTeamName}}</span>
+        <span class="text-heavy">: Game {{gameNum+1}}</span>
+      </div>
+      <div class="box-scores-mult-game">
+        <div class="box-scores-mult-button" [class.selected]="i == gameNum" *ngFor="let game of gameInfo; let i = index" (click)="changeGame(i)">Game {{i+1}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!--box-scores info-->
+  <div *ngIf="boxScores" class="box-scores-info">
+    <template [ngIf]="!scroll" *ngIf="windowWidth > 640">
+      <div *ngFor="let gameBox of boxScores.gameInfo; let i = odd" class="box-scores-info-container" [class.odd]="i" [class.even]="!i">
+        <!--game info that affects only how league box scores are displayed-->
+        <div *ngIf=" calendarParams.profile == 'league' " >
+          <game-info *ngFor="let game of gameBox; let g = index" [ngClass]="{'float-left':g % 2 == 0,'float-right':g % 2 == 1}"[gameInfo]="game.game"></game-info>
+        </div>
+        <!--game info that affects only how team box scores are displayed-->
+        <div *ngIf=" calendarParams.profile != 'league' " >
+          <game-info *ngIf=" calendarParams.profile != 'league' " class="float-left" [gameInfo]="gameBox[gameNum].game"></game-info>
+          <game-article  *ngIf=" calendarParams.profile != 'league' " class="float-right" [gameArticle]="gameBox[gameNum].aiContent"></game-article>
+        </div>
+      </div>
+    </template>
+    <!-- box-score scroll -->
+    <template [ngIf]="scroll" *ngIf="windowWidth > 640">
+      <div class="box-scores-overlay"></div>
+      <scrollable-content *ngIf="heightStyle" class="box-scores-scroll"
+      (reloadScroller)="_reloadScroller" [style.height]="heightStyle">
+        <div *ngFor="let gameBox of boxScores.gameInfo; let i = odd" class="box-scores-info-container" [class.odd]="i" [class.even]="!i">
+          <!--game info that affects only how league box scores are displayed-->
+          <template [ngIf]=" calendarParams.profile == 'league' " >
+            <game-info  *ngFor="let game of gameBox; let g = index" [ngClass]="{'float-left':g % 2 == 0,'float-right':g % 2 == 1}"[gameInfo]="game.game"></game-info>
+          </template>
+          <!--game info that affects only how team box scores are displayed-->
+          <template [ngIf]=" calendarParams.profile != 'league' " >
+            <game-info *ngIf=" calendarParams.profile != 'league' " class="float-left" [gameInfo]="gameBox[gameNum].game"></game-info>
+            <game-article  *ngIf=" calendarParams.profile != 'league' " class="float-right" [gameArticle]="gameBox[gameNum].aiContent"></game-article>
+          </template>
+        </div>
+      </scrollable-content>
+    </template>
+
+
+    <template [ngIf]="windowWidth <= 640">
+      <div class="box-scores-overlay"></div>
+      <game-info   [ngClass]="{'float-left':1 % 2 == 0,'float-right':1 % 2 == 1}"[gameInfo]="boxScores.gameInfoSmall[currentPage - 1].game"></game-info>
+      <!--game info that affects only how team box scores are displayed-->
+      <span class="pageIndicator">Showing: <b>{{currentPage}}</b> of <b>{{boxScores.gameInfoSmall.length}}</b></span>
+      <span class="pagButton leftPag {{leftDisabled}}" (click)="retreatPage()"><i class="fa fa-angle-left"></i> Previous Game</span>
+      <span class="pagButton rightPag {{rightDisabled}}" (click)="advancePage()">Next Game <i class="fa fa-angle-right"></i></span>
+    </template>
+
+  </div>
+  <score-board *ngIf=" calendarParams.profile != 'league' && boxScores" [scoreBoard]="boxScores.scoreBoard"></score-board>
+  <!--box-scores info END-->
+  <!--end team profile-->
+</div>

@@ -1,0 +1,22 @@
+.sidekick-container {
+  display: none;
+  @media (max-width: 1023px) {
+    display: block;
+    .flexDisplay;
+    .flexDirection(column);
+    .flexAlignItems(center);
+  }
+  width: 640px;
+  height: 280px;
+  @media @mobile-s {
+    width: 100%;
+    margin: -10px 0 0 0;
+    background-color: @white;
+  }
+  background-color: @white;
+  margin: 0 0 20px -20px;
+}
+
+.sidekick-ai {
+  height: 250px !important;
+}

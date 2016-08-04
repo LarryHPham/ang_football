@@ -1,0 +1,16 @@
+<div class="hamburger-component">
+  <div class="hamburger">
+    <ul class="hamburger-topics-list">
+      <span  *ngFor="let menuData of menuData">
+        <a *ngIf="menuData.menuTitle == 'Home' && isHome" class="disabled"><li class="hamburger-topics-list-item">{{menuData.menuTitle}}</li></a>
+        <a *ngIf="menuData.menuTitle != 'Home' || !isHome" [routerLink]="menuData.url"><li class="hamburger-topics-list-item">{{menuData.menuTitle}}</li></a>
+      </span>
+    </ul>
+  </div>
+  <div class="hamburger-company">
+    <h2 class="hamburger-company-title">{{menuInfoHeader}}</h2>
+    <ul class="hamburger-nested-list">
+      <a *ngFor="let menuData of menuInfo" [routerLink]="menuData.url"><li class="hamburger-nested-list-item">{{menuData.menuTitle}}</li></a>
+    </ul>
+  </div>
+</div>
