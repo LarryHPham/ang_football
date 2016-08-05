@@ -43,7 +43,7 @@ export class CommentModule implements OnInit, OnChanges {
                     });
                 }else{
                     js = d.createElement(s); js.id = id;
-                    js.src = "//homerunloyal.disqus.com/embed.js";
+                    js.src = "//touchdownloyal.disqus.com/embed.js";
                     fjs.parentNode.insertBefore(js, fjs);
                 }
               }(document, 'script', 'disqusJS'));

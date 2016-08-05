@@ -11,7 +11,7 @@
               <span *ngFor="let link of data.breadcrumbList; let isList = last">
                 <a *ngIf="link.route" [routerLink]="[link.page, link.pageParams]">{{link.text}}</a>
                 <span *ngIf="!link.route">{{link.text}}</span>
-                <i *ngIf="isLast" class="fa fa-angle-right"></i>                
+                <i *ngIf="isLast" class="fa fa-angle-right"></i>
               </span>
           </div>
           <div class="dir-hdr-title">
@@ -40,8 +40,8 @@
           </div>
       </div>
 
-      <directory-pagination *ngIf="data.pagingDescription" [data]="pagingDescription" [nextLink]="nextLink" [prevLink]="prevLink"></directory-pagination>
-      
+      <directory-pagination *ngIf="data.pagingDescription" [data]="pagingDescription" [nextLink]="nextLink" [prevLink]="prevLink" [dirRangeTotal]=true></directory-pagination>
+
       <!-- Directory List Data -->
       <ul *ngIf="data.hasListings && data.listingItems" class="dir-list">
           <li *ngFor="let item of data.listingItems.items" class="dir-list-item">
@@ -69,6 +69,6 @@
           <no-data-box [data]="data.noResultsMessage" [icon]="'fa fa-remove'"></no-data-box>
       </div>
 
-      <directory-pagination *ngIf="data.pagingDescription" [data]="pagingDescription" [nextLink]="nextLink" [prevLink]="prevLink"></directory-pagination>
-      
+      <directory-pagination *ngIf="data.pagingDescription" [data]="pagingDescription" [nextLink]="nextLink" [prevLink]="prevLink" [dirPagination]=true></directory-pagination>
+
   </div>
