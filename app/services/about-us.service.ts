@@ -34,6 +34,7 @@ export class AboutUsService {
         .map(res => res.json())
         .map(data => this.formatData(data.data, partnerID));
   }
+  
 
   private formatData(data: AboutUsInterface, partnerID: string): AboutUsModel {
     let pageName = (partnerID == null)

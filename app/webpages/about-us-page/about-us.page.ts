@@ -1,5 +1,5 @@
 import {Component, Injector} from '@angular/core';
-import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {RouteParams, Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from '../../components/backtab/backtab.component';
@@ -40,6 +40,7 @@ export interface AboutUsModel {
 })
 
 export class AboutUsPage {
+    public partnerID: string;
     public widgetPlace: string = "widgetForPage";
     public auHeaderTitle: string = "What is the site about?";
 
@@ -58,7 +59,7 @@ export class AboutUsPage {
         icon: 'fa fa-map-marker'
     }
 
-    constructor(private _router:Router, private _service: AboutUsService, private _title: Title) {
+    constructor(private _router:Router, private _service: AboutUsService, private _title: Title, private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("About Us"));
         GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
     }

@@ -23,7 +23,7 @@ import {MyAppComponent} from "../app-webpage/app.mywebpage";
         path: '/:partner_id/...',
         name: 'Partner-home',
         component: MyAppComponent,
-    },
+    }
 ])
 
 export class AppDomain {
