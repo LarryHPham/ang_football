@@ -18,7 +18,7 @@
       <div class="home-main {{gridLMain}}">
         <!--Extra span is needed to restrict width of top/bottom header border-->
         <!-- ngFor here for league -->
-        <div class="home-league" *ngFor="let league of mlbTeams">
+        <div class="home-league" *ngFor="let league of teams">
           <h3 [innerHtml]="league.displayName"></h3>
           <section class="row">
             <!-- ngFor here for Division -->
@@ -42,7 +42,7 @@
   <div *ngIf="displayData" class="home-slider col-xs-12">
     <slider-button (scrollRight)="right()" (scrollLeft)="left()"></slider-button>
     <div class="home-slider-news col-xs-offset-2 col-xs-3">
-      <div>{{mlb}}</div>
+      <div>{{_sportLeagueAbbrv}}</div>
       <h3><b>{{displayData.newsTitle}}</b></h3>
       <hr />
       <h5>{{displayData.newsSubTitle}}</h5>
