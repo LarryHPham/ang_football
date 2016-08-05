@@ -18,10 +18,15 @@ export class FooterComponent implements OnInit {
     public pageName: string;
     public homePageLinkName: string;
     public linkName: string;
-    public currentUrl: string = window.location.href
-    teamDirectoryListings: Array<Link> = []
+    public currentUrl: string = window.location.href;
+    public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public _copyrightInfo: string = GlobalSettings.getCopyrightInfo();
+    public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl();
+    public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl();
 
-    playerDirectoryListings: Array<Link> = []
+    teamDirectoryListings: Array<Link> = [];
+
+    playerDirectoryListings: Array<Link> = [];
 
     mlbTeamListings: Array<Link> = [];
 

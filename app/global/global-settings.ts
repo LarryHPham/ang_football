@@ -26,6 +26,9 @@ export class GlobalSettings {
     private static _partnerHomepageUrl:string = '.mytouchdownzone.com';
     private static _partnerHomepageLinkName:string = 'mytouchdownzone';
 
+    private static _siteTwitterUrl:string = 'https://twitter.com/touchdownloyal';
+    private static _siteFacebookUrl:string = 'https://www.facebook.com/touchdownloyal';
+
     private static _baseTitle: string = "Touchdown Loyal";
     private static _basePartnerTitle: string = "My Touchdown Zone" //todo;
 
@@ -196,6 +199,12 @@ export class GlobalSettings {
 
     static getCopyrightInfo() {
         return this._copyrightInfo;
+    }
+    static getSiteTwitterUrl() {
+      return this._siteTwitterUrl;
+    }
+    static getSiteFacebookUrl() {
+      return this._siteFacebookUrl;
     }
 
 }
