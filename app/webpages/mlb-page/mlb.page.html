@@ -34,15 +34,9 @@
     <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
     <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <!--Like Us On FB Module, only display if not on partner page-->
-    <share-module *ngIf="profileHeaderData && shareModuleInput" [shareModuleInput]="shareModuleInput"></share-module>
-    <responsive-widget *ngIf="profileHeaderData && shareModuleInput" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <section *ngIf="!partnerID">
-      <like-us-module></like-us-module>
       <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-      <responsive-widget *ngIf="profileHeaderData && shareModuleInput" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     </section>
-    <!-- TODO<section *ngIf="!partnerID"> also required for comment module-->
-    <about-us [partnerID]="partnerID"></about-us>
   </div>
 </section>
 </sidekick-wrapper>

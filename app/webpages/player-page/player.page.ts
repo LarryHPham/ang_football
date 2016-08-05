@@ -6,9 +6,6 @@ import {MLBPageParameters} from '../../global/global-interface';
 import {LoadingComponent} from '../../components/loading/loading.component';
 import {ErrorComponent} from '../../components/error/error.component';
 
-import {AboutUsModule} from '../../modules/about-us/about-us.module';
-import {LikeUs} from "../../modules/likeus/likeus.module";
-
 import {DYKModule, dykModuleData} from "../../modules/dyk/dyk.module";
 import {DykService} from '../../services/dyk.service';
 
@@ -35,8 +32,6 @@ import {StandingsService} from '../../services/standings.service';
 
 import {ProfileHeaderData, ProfileHeaderModule} from '../../modules/profile-header/profile-header.module';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-
-import {ShareModule, ShareModuleInput} from '../../modules/share/share.module';
 
 import {HeadlineComponent} from '../../components/headline/headline.component';
 
@@ -77,13 +72,10 @@ declare var moment;
       CommentModule,
       DYKModule,
       FAQModule,
-      LikeUs,
       TwitterModule,
       SeasonStatsModule,
       ComparisonModule,
       NewsModule,
-      ShareModule,
-      AboutUsModule,
       ListOfListsModule,
       DailyUpdateModule,
       ImagesMedia,
@@ -109,7 +101,6 @@ declare var moment;
 
 export class PlayerPage implements OnInit {
   public widgetPlace: string = "widgetForModule";
-  public shareModuleInput:ShareModuleInput;
   pageParams:MLBPageParameters;
   partnerID:string = null;
   hasError: boolean = false;
@@ -203,7 +194,6 @@ export class PlayerPage implements OnInit {
               this.getNewsService();
 
               /*** Interact With [League Name]’s Fans ***/
-              this.setupShareModule();
               this.getTwitterService();
           },
           err => {
@@ -349,19 +339,6 @@ private dailyUpdateModule(playerId: number) {
             err => {
                 console.log("Error getting comparison data for "+ this.pageParams.playerId, err);
             });
-    }
-
-    private setupShareModule() {
-        let profileHeaderData = this.profileHeaderData;
-        let imageUrl = typeof profileHeaderData.profileImageUrl === 'undefined' || profileHeaderData.profileImageUrl === null ? GlobalSettings.getImageUrl('/mlb/players/no-image.png') : profileHeaderData.profileImageUrl;
-        let shareText = typeof profileHeaderData.profileName === 'undefined' || profileHeaderData.profileName === null ?
-            'Share This Profile Below' :
-            'Share ' + GlobalFunctions.convertToPossessive(profileHeaderData.profileName) + ' Profile Below:';
-
-        this.shareModuleInput = {
-            imageUrl: imageUrl,
-            shareText: shareText
-        };
     }
 
     setupListOfListsModule() {

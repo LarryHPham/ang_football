@@ -15,13 +15,10 @@ import {GlobalSettings} from '../../global/global-settings';
 import {ProfileHeaderData, ProfileHeaderModule} from '../../modules/profile-header/profile-header.module';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 
-import {AboutUsModule} from '../../modules/about-us/about-us.module';
 import {ArticlesModule} from "../../modules/articles/articles.module";
 import {ListOfListsModule} from "../../modules/list-of-lists/list-of-lists.module";
 import {TeamRosterModule} from '../../modules/team-roster/team-roster.module';
 import {RosterService} from '../../services/roster.service';
-import {ShareModule, ShareModuleInput} from '../../modules/share/share.module';
-import {LikeUs} from "../../modules/likeus/likeus.module";
 import {CommentModule} from '../../modules/comment/comment.module';
 import {ListOfListsData} from "../../modules/list-of-lists/list-of-lists.module";
 import {ListOfListsService} from "../../services/list-of-lists.service";
@@ -29,7 +26,7 @@ import {ListOfListsService} from "../../services/list-of-lists.service";
 @Component({
     selector: 'Design-page',
     templateUrl: './app/webpages/design-page/design.page.html',
-    directives: [DraftHistoryModule, TeamRosterModule, AboutUsModule, StandingsModule, ProfileHeaderModule, ArticlesModule, ListOfListsModule, ShareModule, LikeUs, CommentModule],
+    directives: [DraftHistoryModule, TeamRosterModule, StandingsModule, ProfileHeaderModule, ArticlesModule, ListOfListsModule, CommentModule],
     providers: [StandingsService, ProfileHeaderService, RosterService, ListOfListsService]
 })
 
@@ -44,10 +41,6 @@ export class DesignPage implements OnInit {
   lolDetailedDataArray : any;
   lolDataArray : boolean;
   lolCarouselDataArray : any;
-
-  public shareModuleInput: ShareModuleInput = {
-      imageUrl: GlobalSettings.getSiteLogoUrl()
-  };
 
   constructor(
     private _params: RouteParams,
@@ -83,7 +76,7 @@ export class DesignPage implements OnInit {
     this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
       data => {
         this.pageParams = data.pageParams;
-        this.teamProfileHeaderData = this._profileService.convertToTeamProfileHeader(data);        
+        this.teamProfileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
       },
       err => {
@@ -99,7 +92,7 @@ export class DesignPage implements OnInit {
       }
     );
   }
-  
+
   private standingsTabSelected(tabData: Array<any>) {
     //only show 5 rows in the module
     this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5)

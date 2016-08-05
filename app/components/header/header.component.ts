@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit,OnChanges {
     }
   }
   loadData(partnerID: string) {
-    this.logoUrl = 'app/public/Home-Run-Loyal_Logo.svg';
+    this.logoUrl = 'app/public/Touchdown-Loyal_Logo_Outlined-W.svg';
     this.hamburgerMenuData = [{
         menuTitle: "Home",
         url: ['Home-page']
