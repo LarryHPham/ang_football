@@ -16,7 +16,7 @@ import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrappe
 import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
 
 export interface AuBlockData {
-  iconUrl?:string;
+  iconClass?: string;
   link?: {
     imageConfig: CircleImageData;
     route: Array<any>;
