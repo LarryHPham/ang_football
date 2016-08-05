@@ -1,0 +1,65 @@
+
+<section class="contactus">
+  <backtab-component></backtab-component>
+  <title-component [titleData]="contactusInput.titleData"></title-component>
+  <div class="contactus-container">
+      <div class="contactus-required"><span class="text-master">*</span> All fields are required</div>
+      <!-- Contact Us Form -->
+      <form *ngIf="active" #f="ngForm" (ngSubmit)="formSubmit(f.value)">
+
+          <!-- Full Name Text Input -->
+          <div class="row contactus-margin contactus-row-align">
+              <div class="contactus-labels">
+                  <label for="contactusName" class="contactus-label">
+                      Full Name
+                  </label>
+              </div>
+              <div class="contactus-fields">
+                  <input ngControl="name" name="name" id="contactusName" class="contactus-textinput" placeholder="John Smith" />
+              </div>
+          </div>
+
+          <!-- Email Text Input -->
+          <div class="row contactus-margin contactus-row-align">
+              <div class="contactus-labels">
+                  <label for="contactusEmail" class="contactus-label">
+                      Email Address
+                  </label>
+              </div>
+              <div class="contactus-fields">
+                  <input ngControl="email" type="email" id="contactusEmail" class="contactus-textinput" placeholder="name@domain-name.com" />
+              </div>
+          </div>
+
+          <!-- Subject Checkboxes -->
+          <div class="row contactus-margin-small">
+              <div class="contactus-question">
+                  <label class="contactus-label">
+                      My question is regarding:
+                  </label>
+              </div>
+              <div class="contactus-fields">
+                  <div class="contactus-margin-small" *ngFor="let item of contactusInput.subjects">
+                      <label>
+                          <input ngControl="{{item.id}}" class="contactus-checkbox" type="checkbox" value="{{item.value}}" name="Type" ngControl="{{item.value}}">
+                          <span class="contactus-checkbox-value">{{item.value}}</span>
+                      </label>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Message Text area -->
+          <div class="row contactus-margin-large">
+              <textarea ngControl="description" class="contactus-textarea" placeholder="Detailed description of your question here..."></textarea>
+          </div>
+
+          <div class="contactus-buttons">
+              <input class="contactus-buttons-reset" (click)="reset()" value="RESET" />
+              <button class="contactus-buttons-submit" [disabled]="!f.form.valid">
+                  Submit <i class="fa fa-angle-right"></i>
+              </button>
+          </div>
+
+      </form>
+  </div>
+<section class="contactus">

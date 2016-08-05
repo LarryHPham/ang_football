@@ -150,7 +150,7 @@ export class GlobalSettings {
     }
 
     static getSiteLogoUrl():string {
-        return "/app/public/mainLogo.png";
+        return "/app/public/mainLogo.jpg";
     }
 
     /**
