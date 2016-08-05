@@ -33,6 +33,8 @@ export class GlobalSettings {
     private static _basePartnerTitle: string = "My Touchdown Zone" //todo;
 
     private static _sportLeagueAbbrv: string ="NFL";
+    private static _sportLeagueFull: string ="National Football League";
+
     private static _sportLeagueChampionship: string = "Superbowl";
 
     private static _copyrightInfo: string = "USA Today Sports Images";
@@ -191,6 +193,9 @@ export class GlobalSettings {
 
     static getSportLeagueAbbrv() {
       return this._sportLeagueAbbrv;
+    }
+    static getSportLeagueFull() {
+      return this._sportLeagueFull;
     }
 
     static getSportLeagueChampionship() {

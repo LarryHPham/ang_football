@@ -23,6 +23,7 @@ export class FooterComponent implements OnInit {
     public _copyrightInfo: string = GlobalSettings.getCopyrightInfo();
     public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl();
     public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl();
+    public _sportLeagueFull: string = GlobalSettings.getSportLeagueFull();
 
     teamDirectoryListings: Array<Link> = [];
 
