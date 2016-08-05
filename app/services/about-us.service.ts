@@ -55,17 +55,17 @@ export class AboutUsService {
       },
       blocks: [
         {
-          iconUrl: '/app/public/team_profile_image.png',
+          iconClass: 'fa fa-tdl-profiles',
           titleText: this.sportLeagueAbbrv+' Team Profiles',
           dataText: teamProfiles
         },
         {
-          iconUrl: '/app/public/player_profile_image.png',
+          iconClass: 'fa fa-tdl-helmet',
           titleText: this.sportLeagueAbbrv+' Player Profiles',
           dataText: playerProfiles
         },
         {
-          iconUrl: '/app/public/division_image.png',
+          iconClass: 'fa fa-tdl-football',
           titleText: this.sportLeagueAbbrv+' Divisions',
           dataText: GlobalFunctions.commaSeparateNumber(data.divisionsCount)
         },

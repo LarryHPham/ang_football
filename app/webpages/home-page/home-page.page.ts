@@ -33,24 +33,24 @@ export class PickTeamPage{
     public teamData: Array<homePageData>;
     public listData: Array<newsCarouselData>;
     public displayData: Object;
+    public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public imgHero1: string = "/app/public/homePage_hero1.png";
     public imgIcon1: string = "/app/public/homePage_icon1.png";
     public imageTile1: string = "/app/public/iphone.png";
     public imageTile2: string = "/app/public/ipad.png";
     public imageTile3: string = "/app/public/MLB_Schedule_Image.jpg";
-    public homeHeading1: string = "Stay Loyal to Your Favorite MLB Team";
+    public homeHeading1: string = "Stay Loyal to Your Favorite " + this._sportLeagueAbbrv + " Team";
     public homeSubHeading1: string = "Find the sports information you need to show your loyalty";
-    public homeHeading2: string = "PICK YOUR FAVORITE <span class='text-heavy'>MLB TEAM</span>";
-    public homeFeaturesTile1: string = "MLB Standings";
-    public homeFeaturesTile3: string = "MLB Scores";
-    public homeFeaturesTile4: string = "MLB Schedules";
-    public homeFeaturesButton1: string = "View MLB Standings";
-    public homeFeaturesButton3: string = "View MLB Scores";
-    public homeFeaturesButton4: string = "View MLB Schedules";
+    public homeHeading2: string = "PICK YOUR FAVORITE <span class='text-heavy'>" + this._sportLeagueAbbrv + " TEAM</span>";
+    public homeFeaturesTile1: string = this._sportLeagueAbbrv + " Standings";
+    public homeFeaturesTile3: string = this._sportLeagueAbbrv + " Scores";
+    public homeFeaturesTile4: string = this._sportLeagueAbbrv + " Schedules";
+    public homeFeaturesButton1: string = "View " + this._sportLeagueAbbrv + " Standings";
+    public homeFeaturesButton3: string = "View " + this._sportLeagueAbbrv + " Scores";
+    public homeFeaturesButton4: string = "View " + this._sportLeagueAbbrv + " Schedules";
     public routerInfo1 = ['Standings-page'];
     public buttonFullList: string = "See The Full List";
-    public mlb: string = "MLB";
-    public mlbTeams: any;
+    public teams: any;
     public counter: number = 0;
     public max:number = 3;
     public searchInput: SearchInput = {
@@ -74,7 +74,7 @@ export class PickTeamPage{
         this.isHomeRunZone = partnerHome;
       });
     }
-  
+
     getListData(){
       this.listData = [
         {
@@ -135,7 +135,7 @@ export class PickTeamPage{
     getData(){
       this._landingPageService.getLandingPageService()
         .subscribe(data => {
-          this.mlbTeams = data.league;
+          this.teams = data.league;
         })
       var sampleImage = "./app/public/placeholder-location.jpg";
     }
