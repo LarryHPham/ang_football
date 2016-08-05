@@ -5,7 +5,7 @@ import {Observable} from 'rxjs/Rx';
 import {Title} from '@angular/platform-browser';
 
 import {WidgetModule} from "../../modules/widget/widget.module";
-import {ContactUsModule} from '../../modules/contactus/contactus.module';
+import {ContactUsModule} from '../../components/contactus/contactus.component';
 import {GlobalSettings} from '../../global/global-settings';
 import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
@@ -28,9 +28,9 @@ export class ContactUsPage{
         GlobalSettings.getPartnerID(_router, partnerID => {
           var domainTitle;
           if(partnerID != null){
-            domainTitle = "My Touch Down Zone";
+            domainTitle = GlobalSettings.getBasePartnerTitle();
           }else{
-            domainTitle = "Touch Down Loyal";
+            domainTitle = GlobalSettings.getBaseTitle();
           }
 
           this.contactusInput = {
@@ -54,7 +54,7 @@ export class ContactUsPage{
               ],
               titleData: {
                   imageURL: GlobalSettings.getSiteLogoUrl(),
-                  text1: 'Last Updated: Thursday, August 4th, 2016',
+                  text1: 'Last Updated: Thursday, August 4, 2016',
                   text2: ' United States',
                   text3: 'Have a question about '+domainTitle+'? Write us a message.',
                   text4: '',
