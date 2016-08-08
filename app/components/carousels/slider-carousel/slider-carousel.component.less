@@ -13,6 +13,12 @@ slider-carousel{
     width: 100%;
     opacity: .5;
     filter:alpha(opacity=50);
+    @media @mobile {
+      left: 0;
+      bottom: 0;
+      margin: 0 auto auto auto;
+      min-height: 100%;
+    }
   }
     &-placeholder{
       width: 100%;
@@ -37,18 +43,32 @@ slider-carousel{
     &-details{
       .flexDisplay;
       .flexDirection(row);
+      .flexAlignItems(center);
       width: 80%;
       height: auto;
       margin:auto;
-      padding-top: 7.5%;
+      padding-top: 20px;
       min-height: 250px;
       position: relative;
-
+      @media @mobile {
+        width: ~"calc( 100% - 40px)";
+        display: block;
+        padding-bottom:20px;
+      }
       &-mainImg{
         width: 38%;
         .flexDisplay;
         .flexDirection(column);
         .flexAlignItems(center);
+        @media @mobile {
+          width:100%;
+          margin-top: 60px;
+          margin-bottom: 25px;
+          .image-150 {
+            width:125px;
+            height:125px;
+          }
+        }
       }//.scc-details-mainImg ends
 
       &-type1 { //for most modules
@@ -56,7 +76,13 @@ slider-carousel{
           .globalDefaultModFont(10px, 400, @white);
           text-transform: uppercase;
           line-height: 1.2em;
+          @media @mobile {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            text-align: center;
 
+          }
           .fa {
             color: @masterBrandColor;
             padding-right: 6px;
@@ -68,12 +94,23 @@ slider-carousel{
         &-hdr {
           .globalDefaultModFont(20px, 800, @white);
           margin-top: 10px;
+          @media @mobile {
+            margin-top: 0;
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            text-align: center;
+          }
         }
 
         &-desc {
           .globalDefaultModFont(14px, 400, @white);
           line-height: 1.2em;
           margin-top: 10px;
+          @media @mobile {
+            width:100%;
+            height: auto;
+          }
         }
 
         &-date {
@@ -113,14 +150,16 @@ slider-carousel{
         }
       }
 
-
       &-desc{
         width:60%;
         max-height:182px;
         .flexAlignItems(flex-start);
         .globalDefaultModFont(16px, 400, @white);
-        overflow-y: auto;
-
+        overflow-y: visible;
+        @media @mobile {
+          width:100% !important;
+          height: auto !important;
+        }
         a:hover {
           color: @masterBrandColor;
         }
@@ -169,7 +208,7 @@ slider-carousel{
             font-weight: 400;
           }
           &.fw-700{
-            font-weight: 700;
+            font-weight: 800;
           }
           &.fw-800{
             font-weight: 800;
@@ -184,14 +223,4 @@ slider-carousel{
         }
       }//.scc-details-desc ends
     }//.scc-details ends
-
-    &-copyright {
-      .globalDefaultModFont(10px, 400, @white);
-      padding: 4px 20px;
-      text-align: right;
-      background-color: rgba(0, 0, 0, .65);
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-    }
 }//.scc ends

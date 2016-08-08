@@ -7,7 +7,7 @@ export interface ComparisonLegendInput {
     }>;
     legendValues: Array<{
        title: string,
-       color: string 
+       color: string
     }>;
 }
 
@@ -18,12 +18,4 @@ export interface ComparisonLegendInput {
 
 export class ComparisonLegend{
     @Input() comparisonLegendInput: ComparisonLegendInput;
-    
-    ngOnInit() {
-        // if ( this.comparisonLegendInput ) {
-        //     this.comparisonLegendInput.legendTitle.forEach(item => {
-        //         if ( item.class == )
-        //     })
-        // }
-    }
 }

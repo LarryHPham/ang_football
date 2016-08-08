@@ -13,7 +13,7 @@
 
     a {
       color: @activeBlue;
-      font-weight: 700;
+      font-weight: 800;
       text-decoration: inherit;
     }
 
@@ -21,6 +21,9 @@
       margin-top: 10px;
       margin-bottom: 14px;
       padding: 0 10px;
+      @media @mobile{
+        padding: 0;
+      }
     }
 
     &-headline {
