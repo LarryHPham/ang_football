@@ -22,20 +22,26 @@ export interface AboutUsInterface {
 
 @Injectable()
 export class AboutUsService {
-  constructor(public http: Http){}
 
   public siteName: any = GlobalSettings.getBaseTitle();
+
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
 
-  getData(partnerID: string): Observable<AboutUsModel> {
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionChampionship: string = GlobalSettings.getCollegeDivisionChampionship();
+
+  constructor(public http: Http){}
+
+  getData(partnerID: string, division: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     return this.http.get(url)
         .map(res => res.json())
-        .map(data => this.formatData(data.data, partnerID));
+        .map(data => this.formatData(data.data, partnerID, division));
   }
 
-  private formatData(data: AboutUsInterface, partnerID: string): AboutUsModel {
+  private formatData(data: AboutUsInterface, partnerID: string, division?: string): AboutUsModel {
+
     let pageName = (partnerID == null)
             ? GlobalSettings.getBaseTitle()
             : GlobalSettings.getBasePartnerTitle();
@@ -43,6 +49,16 @@ export class AboutUsService {
     let playerProfiles = GlobalFunctions.commaSeparateNumber(data.playerProfilesCount);
     let fullName = data.worldChampFirstName + " " + data.worldChampLastName;
     let championLink = MLBGlobalFunctions.formatTeamRoute(fullName, data.worldChampTeamId);
+
+    // Set auBlocks vars based on division league routeParam
+    let activeDivision = (division == this.collegeDivisionAbbrv || division == this.collegeDivisionAbbrv.toLowerCase())
+            ? this.collegeDivisionAbbrv+" FBS"
+            : this.sportLeagueAbbrv;
+
+    let activeDivisionChampionship = (division == this.collegeDivisionAbbrv || division == this.collegeDivisionAbbrv.toLowerCase())
+            ? "National"
+            : this.sportLeagueChampionship;
+
     let model: AboutUsModel = {
       headerTitle: "What is " + pageName + "?",
       titleData: {
@@ -56,17 +72,17 @@ export class AboutUsService {
       blocks: [
         {
           iconClass: 'fa fa-tdl-profiles',
-          titleText: this.sportLeagueAbbrv+' Team Profiles',
+          titleText: activeDivision+' Team Profiles',
           dataText: teamProfiles
         },
         {
           iconClass: 'fa fa-tdl-helmet',
-          titleText: this.sportLeagueAbbrv+' Player Profiles',
+          titleText: activeDivision+' Player Profiles',
           dataText: playerProfiles
         },
         {
           iconClass: 'fa fa-tdl-football',
-          titleText: this.sportLeagueAbbrv+' Divisions',
+          titleText: activeDivision+' Divisions',
           dataText: GlobalFunctions.commaSeparateNumber(data.divisionsCount)
         },
         {
@@ -82,7 +98,7 @@ export class AboutUsService {
               }
             },
           },
-          titleText: data.worldChampYear + ' ' + this.sportLeagueChampionship + ' Champions',
+          titleText: data.worldChampYear + ' ' + activeDivisionChampionship + ' Champions',
           dataText: data.worldChampLastName,
         }
       ],

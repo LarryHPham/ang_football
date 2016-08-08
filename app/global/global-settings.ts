@@ -34,8 +34,12 @@ export class GlobalSettings {
 
     private static _sportLeagueAbbrv: string ="NFL";
     private static _sportLeagueFull: string ="National Football League";
-
     private static _sportLeagueChampionship: string = "Superbowl";
+
+    private static _collegeDivisionAbbrv: string="NCAA";
+    private static _collegeDivisionChampionship: string = "National Championships";
+
+
 
     private static _copyrightInfo: string = "USA Today Sports Images";
 
@@ -56,6 +60,7 @@ export class GlobalSettings {
     static getApiUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
+
     }
 
     static getPartnerApiUrl(partnerID):string {
@@ -197,9 +202,15 @@ export class GlobalSettings {
     static getSportLeagueFull() {
       return this._sportLeagueFull;
     }
-
     static getSportLeagueChampionship() {
       return this._sportLeagueChampionship;
+    }
+
+    static getCollegeDivisionAbbrv() {
+      return this._collegeDivisionAbbrv;
+    }
+    static getCollegeDivisionChampionship() {
+      return this._collegeDivisionChampionship;
     }
 
     static getCopyrightInfo() {
