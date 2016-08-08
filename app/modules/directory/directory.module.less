@@ -2,7 +2,7 @@
   &-hdr {
     border-bottom: 1px solid @strokeGrey;
     padding-bottom: 15px;
-
+    margin-top: 35px;
     &-loc {
       font-size: 12px;
       margin-bottom: 8px;
@@ -28,11 +28,9 @@
   }
 
   &-pag {
-    padding: 10px 0px;
-
+    padding: 16px 0px 20px;
     &-text {
-      padding-top: 11px;
-      margin-bottom: 4px;
+
 
       &-lbl {
         padding-right: 4px;
@@ -171,5 +169,10 @@
     li:nth-child(even) {
       background-color: @white;
     }
+  }
+}
+@media @mobile{
+  .directory-container{
+    padding: 0 10px 0 10px;
   }
 }

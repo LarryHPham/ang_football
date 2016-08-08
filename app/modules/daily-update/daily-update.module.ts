@@ -90,7 +90,7 @@ export class DailyUpdateModule {
             data: item.values,
             dataLabels: {
               style: {
-                color: '#272727'
+                color: '#999999'
               }
             }
           };
@@ -159,8 +159,8 @@ export class DailyUpdateModule {
         }
       },
       colors: [
-        '#272727',
-        '#bc2027'
+        '#999999',
+        '#2d3e50'
       ],
       series: series,
       credits: {
