@@ -1,11 +1,11 @@
 <div class="recommendations" *ngIf="!isDeepDive">
     <div class="recommendations-header">
-        <i class="fa fa-heartbeat recommendations-header-icon"></i><span class="recommendations-header-text">Other Articles You Will Love</span>
+        <i class="fa fa-heart-o recommendations-header-icon"></i><span class="recommendations-header-text">Other Stories You Will Love</span>
     </div>
     <div class="recommendations-articles" (window:resize)="onResize($event)">
         <span *ngFor="let data of randomHeadlines; let i=index;">
             <span *ngIf="!isSmall">
-                <a *ngIf="i < 6" class="recommendations-articles-six article"
+                <a *ngIf="i < 3" class="recommendations-articles-six article-recommend"
                    [routerLink]="['Article-pages', {eventType: data.eventType, eventID: data.eventID}]"
                    title="{{data.title}}">
                     <span class="articleBoxMedium">
@@ -15,7 +15,13 @@
                             <p>View Article</p>
                         </div>
                     </span>
-                    <div class="recommendations-articles-six-text">{{data.title}}</div>
+                    <div class="recommendations-articles-six-content">
+                        <div class="recommendations-articles-six-content-dateline">
+                            <span class="recommendations-articles-six-content-dateline-keyword">{{data.keyword}}</span>
+                            <span class="deep_recs-ai-articles-item-content-dateline-date">{{data.date}}</span>
+                        </div>
+                        <div class="recommendations-articles-six-content-headline">{{data.title}}</div>
+                    </div>
                 </a>
             </span>
             <span *ngIf="isSmall">
