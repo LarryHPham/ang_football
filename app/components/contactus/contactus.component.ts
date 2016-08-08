@@ -5,7 +5,7 @@ import {FORM_DIRECTIVES, FormBuilder, ControlGroup, Validators, Control} from '@
 
 @Component({
     selector: 'contactus-module',
-    templateUrl: './app/modules/contactus/contactus.module.html',
+    templateUrl: './app/components/contactus/contactus.component.html',
     directives:[FORM_DIRECTIVES, BackTabComponent, TitleComponent],
     providers: []
 })

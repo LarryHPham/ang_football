@@ -24,6 +24,7 @@ export interface FooterStyle {
 export class ModuleFooter implements OnInit{
   @Input() footerData: ModuleFooterData;
   @Input() footerStyle: FooterStyle;
+  public windowWidth: number;
 
     ngOnInit(){
       if(typeof this.footerStyle == 'undefined'){
@@ -41,6 +42,12 @@ export class ModuleFooter implements OnInit{
           url:['Disclaimer-page'],
         }
       }
+      var windowWidth = window.innerWidth;
+      this.windowWidth = windowWidth;
     }
 
+    private onWindowLoadOrResize(event) {
+      var windowWidth = event.target.innerWidth;
+      this.windowWidth = windowWidth;
+    }
 }

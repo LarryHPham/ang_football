@@ -21,6 +21,14 @@
     a{
       font-size: 14px;
       width:200px;
+      @media @mobile {
+        width: auto;
+        padding-left: 10px;
+        i {
+          margin-left: 0px!important;
+          margin-right: 5px;
+        }
+      }
       height:35px;
       background-color:@white;
       color:@bulletGrey;

@@ -42,6 +42,7 @@ standings-page div .standings-tab-section:last-of-type .widgetForPage {
   z-index:5;
   height: 270px;
   .widgetWrapper {
+    width: 100%;
     padding: 0 0 20px;
     height: 270px;
     position: absolute;
@@ -50,7 +51,7 @@ standings-page div .standings-tab-section:last-of-type .widgetForPage {
 }
 @media @tablet and (max-width: 1024px) {
   .widgetForPage .widgetWrapper {
-      background-color: @white;
+      background-color: transparent;
       padding: 10px 0;
       height: 270px;
   }
@@ -68,13 +69,17 @@ standings-page div .standings-tab-section:last-of-type .widgetForPage {
   table .widgetForPage {
     padding: 5px 0;
     height:290px;
+    .widgetWrapper {
+      width: 100vw;
+      margin-left: -19px;
+    }
   }
 }
 
 .widgetWrapper {
   width: 640px;
   height: 250px;
-  background-color: @white;
+  background-color: transparent;
   padding: 0;
   position:relative;
   .adSquareSmall {

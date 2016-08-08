@@ -15,18 +15,19 @@ export class DirectoryPagination implements OnChanges {
   @Input() data: PagingData;
   @Input() nextLink: Link;
   @Input() prevLink: Link;
-  
+  @Input() dirRangeTotal: boolean;
+  @Input () dirPagination: boolean;
   public enablePrev: boolean;
   public enableNext: boolean;
-  
+
   constructor() {
     this.pagesUpdated();
   }
-  
+
   ngOnChanges() {
-    this.pagesUpdated(); 
+    this.pagesUpdated();
   }
-  
+
   pagesUpdated() {
     if ( this.data !== undefined && this.data !== null ) {
       this.enableNext = this.data.currentPage + 1 <= this.data.totalPages;

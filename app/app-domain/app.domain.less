@@ -21,7 +21,7 @@
       width:100px;
       // height:40px;
       padding: 5px;
-      color:white;
+      color: @white;
       background-color:black;
       cursor:pointer;
     }
@@ -49,6 +49,9 @@
 .deep-dive-container {
   width: 100%;
 }
+.directory-rails{
+    background-color:@white;
+}
 @media @desktop-l{
   .web-container{
     width: 980px;
@@ -64,10 +67,13 @@
   }
 }
 @media @desktop-xl{
-.pick-a-team-container {
-  min-width: 1440px;
-}
-.deep-dive-container {
+  .web-container{
+    width: 1260px;
+  }
+  .pick-a-team-container {
+    min-width: 1440px;
+  }
+  .deep-dive-container {
     width: 1440px;
   }
 }
