@@ -117,7 +117,7 @@
       margin: 0 25px;
     }
     &-blocks {
-      padding: 30px 15px 10px 15px;
+      padding: 30px 15px 5px 15px;
       overflow: auto;
       &-block {
         float: left;
@@ -142,7 +142,17 @@
 @media @desktop-l {
   .au {
     &-blocks {
-      padding: 30px 15px 20px 15px;
+      padding: 25px 15px 40px 15px;
+    }
+  }
+}
+
+@media @desktop-xl {
+  .au {
+    &-blocks {
+      &-block {
+        width: 430px;
+      }
     }
   }
 }
