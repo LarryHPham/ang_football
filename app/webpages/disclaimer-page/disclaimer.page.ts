@@ -35,7 +35,7 @@ export class DisclaimerPage {
     loadData(partnerID:string) {
       this.pageLinkName = GlobalSettings.getHomePage(partnerID).replace(/https?:\/\//, "");
 
-      this.pageName = partnerID ? "My Touch Down Zone" : "Touch Down Loyal";
+      this.pageName = partnerID ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
           text1: 'Last Updated: Thursday, August 4, 2016.',

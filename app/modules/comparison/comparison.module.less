@@ -9,8 +9,8 @@
     height: 350px !important;
 
     &-vs{
-      width: 48px;
-      height: 48px;
+      width: 30px;
+      height: 30px;
       line-height: 44px;
       background-color: @black;
       border: 1px solid @white;
@@ -22,9 +22,7 @@
       bottom: 0px;
       margin: auto;
       text-align: center;
-      color: @white;
-      font-size: 18px;
-      font-weight: 800;
+      .globalDefaultModFont(18px, 800, @white);
     }
   }
 
@@ -41,7 +39,17 @@
   height: 60px;
   line-height: 60px;
   text-transform: uppercase;
-  background-color: #000;
+  background-color: @black;
   color: @white;
   text-align: center;
+}
+@media @tablet{
+  .comparison-module{
+    &-tiles{
+      &-vs{
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
 }
