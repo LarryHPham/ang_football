@@ -231,6 +231,9 @@
 
 .border-10 {
   .imageShadow(10px, @masterLargeImageShadow);
+  @media @mobile{
+    .imageShadow(5px, @masterLargeImageShadow);
+  }
 }
 
 .border-logo{

@@ -35,10 +35,11 @@ export class GlobalSettings {
     private static _sportLeagueAbbrv: string ="NFL";
     private static _sportLeagueFull: string ="National Football League";
     private static _sportLeagueChampionship: string = "Superbowl";
+    private static _sportLeagueSegments: string = "Divisions";
 
     private static _collegeDivisionAbbrv: string="NCAA";
     private static _collegeDivisionChampionship: string = "National Championships";
-
+    private static _collegeDivisionSegments: string = "Conferences";
 
 
     private static _copyrightInfo: string = "USA Today Sports Images";
@@ -205,12 +206,18 @@ export class GlobalSettings {
     static getSportLeagueChampionship() {
       return this._sportLeagueChampionship;
     }
+    static getSportLeagueSegments() {
+      return this._sportLeagueSegments;
+    }
 
     static getCollegeDivisionAbbrv() {
       return this._collegeDivisionAbbrv;
     }
     static getCollegeDivisionChampionship() {
       return this._collegeDivisionChampionship;
+    }
+    static getCollegeDivisionSegments() {
+      return this._collegeDivisionSegments;
     }
 
     static getCopyrightInfo() {

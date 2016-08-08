@@ -361,7 +361,7 @@ export class ComparisonStatsService {
           {
             value: playerTwoStats != null ? this.getNumericValue(key, playerTwoStats[key]) : null,
             // color: data.playerTwo.mainTeamColor,
-            color: '#444444'
+            color: '#999'
           }],
           minValue: worstStats != null ? this.getNumericValue(key, worstStats[key]) : null,
           maxValue: bestStats != null ? this.getNumericValue(key, bestStats[key]) : null,
