@@ -172,7 +172,7 @@ goalsHeader
   .flexDirection(column);
   .flexJustify(center);
   text-align: center;
-  background-color: @touchdownLoyalSqrtHover;
+  background-color: @masterSqrtHoverAI;
   width: @hoverEleWidth;
   height: @hoverEleHeight;
   position: absolute;
@@ -226,7 +226,7 @@ goalsHeader
   .flexDirection(column);
   .flexJustify(center);
   text-align: center;
-  background-color: @touchdownLoyalSqrtHover;
+  background-color: @masterSqrtHoverAI;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -245,7 +245,7 @@ goalsHeader
       width: 75%;
       border: 1px solid @white;
       border-radius: 2px;
-      background-color: @touchdownLoyalSqrtHover;
+      background-color: @masterSqrtHoverAI;
       font-size: 80%;
       font-weight: 800;
       font-family: @globalFont;
@@ -258,7 +258,7 @@ goalsHeader
   .flexDirection(column);
   .flexJustify(center);
   text-align: center;
-  background-color: @touchdownLoyalSqrtHover;
+  background-color: @masterSqrtHoverAI;
   width: @hoverEleWidth;
   height: @hoverEleHeight;
   position: absolute;
@@ -282,10 +282,10 @@ goalsHeader
 
 .articleImageHoverWithTextMedium(@hoverEleWidth, @hoverEleHeight) {
   .flexDisplay;
-  .flexDirection(column);
   .flexJustify(center);
+  .flexAlignItems(center);
   text-align: center;
-  background-color: @touchdownLoyalSqrtHover;
+  background-color: @masterSqrtHoverAI;
   width: @hoverEleWidth;
   height: @hoverEleHeight;
   position: absolute;
@@ -293,13 +293,15 @@ goalsHeader
   top: 0;
   p {
     &:first-child {
+      .flexDisplay;
+      .flexJustify(center);
+      .flexAlignItems(center);
       @defaultFirstParaFontSize: @hoverEleWidth * 0.1;
       .globalDefaultModFont(@defaultFirstParaFontSize, 700, @white);
       line-height: @defaultFirstParaFontSize;
       margin: 0 auto;
       height: 28px;
       width: 120px;
-      padding-top: 3px;
       border: 1px solid @white;
       border-radius: 2px;
       background-color: rgba(0, 0, 0, 0.25);
