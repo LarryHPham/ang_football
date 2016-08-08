@@ -1,11 +1,12 @@
 <div *ngIf="data" class="dir-pag row">
-  <div class="col-sm-6 dir-pag-text">
-    <span class="dir-pag-text-lbl">Showing:</span> 
-    <span class="text-heavy">{{data.rangeText}}</span> of 
-    <span class="text-heavy">{{data.totalItems}}</span> 
+  <div *ngIf="dirRangeTotal" class="col-sm-6 dir-pag-text">
+    <span class="dir-pag-text-lbl">Showing:</span>
+    <span class="text-heavy">{{data.rangeText}}</span> of
+    <span class="text-heavy">{{data.totalItems}}</span>
     {{data.description}}
   </div>
-  <div class="col-sm-6 dir-pag-buttons">
+  <!-- TODO -->
+  <div *ngIf="dirPagination && enableNext" class="col-sm-6 dir-pag-buttons">
     <a [routerLink]="prevLink.route" class="dir-pag-button dir-pag-button-l"
      [class.dir-pag-button-active]="enablePrev"
      [class.dir-pag-button-disabled]="!enablePrev">
