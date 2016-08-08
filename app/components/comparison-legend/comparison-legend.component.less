@@ -2,15 +2,25 @@
     padding: 10px 0 20px;
     .flexDisplay;
     .flexJustify(space-between);
-
+    @media @mobile {
+      display: block;
+      padding: 10px 0 15px;
+    }
     li{
       display: inline-block;
       margin-left: 20px;
+      @media @mobile {
+        margin-bottom: 5px;
+        margin-left: 0;
+        margin-right: 10px;
+      }
     }
 
     &-title{
       font-size: 18px;
-
+      @media @mobile {
+        margin-bottom: 10px;
+      }
       &-sub {
         .globalDefaultModFont(10px, 400, @bulletGrey);
         font-style: italic;
@@ -21,6 +31,9 @@
     &-key {
       .flexDisplay;
       .flexAlignItems(center);
+      @media @mobile {
+        display: block;
+      }
     }
 
     &-circle {
