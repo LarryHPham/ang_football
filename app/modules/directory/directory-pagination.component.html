@@ -6,7 +6,7 @@
     {{data.description}}
   </div>
   <!-- TODO -->
-  <div *ngIf="dirPagination" class="col-sm-6 dir-pag-buttons">
+  <div *ngIf="dirPagination && enableNext" class="col-sm-6 dir-pag-buttons">
     <a [routerLink]="prevLink.route" class="dir-pag-button dir-pag-button-l"
      [class.dir-pag-button-active]="enablePrev"
      [class.dir-pag-button-disabled]="!enablePrev">

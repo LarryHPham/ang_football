@@ -4,6 +4,7 @@
 import {Component, OnInit, Input, OnChanges} from '@angular/core';
 import {ModuleHeader, ModuleHeaderData} from '../../components/module-header/module-header.component';
 import {MLBPageParameters} from '../../global/global-interface';
+import {GlobalSettings} from "../../global/global-settings";
 
 declare var DISQUS: any;
 
@@ -43,7 +44,7 @@ export class CommentModule implements OnInit, OnChanges {
                     });
                 }else{
                     js = d.createElement(s); js.id = id;
-                    js.src = "//touchdownloyal.disqus.com/embed.js";
+                    js.src = "//"+GlobalSettings.getHomePageLinkName()+".disqus.com/embed.js";
                     fjs.parentNode.insertBefore(js, fjs);
                 }
               }(document, 'script', 'disqusJS'));
