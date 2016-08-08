@@ -1,5 +1,5 @@
 import {Component, Injector} from '@angular/core';
-import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from '../../components/backtab/backtab.component';
@@ -58,13 +58,28 @@ export class AboutUsPage {
         icon: 'fa fa-map-marker'
     }
 
-    constructor(private _router:Router, private _service: AboutUsService, private _title: Title) {
-        _title.setTitle(GlobalSettings.getPageTitle("About Us"));
-        GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+    public divisionID: string;
+    public activeDivision: string;
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
+    constructor(
+      private _router:Router,
+      private _service: AboutUsService,
+      private _title: Title,
+      private _params: RouteParams
+    ) {
+      _title.setTitle(GlobalSettings.getPageTitle("About Us"));
+      GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+
+      this.divisionID = _params.get('divisionID');
+
+      if ( this.divisionID == this.collegeDivisionAbbrv || this.divisionID == this.collegeDivisionAbbrv.toLowerCase()) {}
+      else {}
     }
 
     loadData(partnerID:string) {
-        this._service.getData(partnerID).subscribe(
+        this._service.getData(partnerID, this.divisionID).subscribe(
           data => this.setupAboutUsData(data),
           err => {
             console.log("Error getting About Us data: " + err);

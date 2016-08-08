@@ -103,6 +103,11 @@ declare var jQuery: any;
         component: AboutUsPage,
     },
     {
+        path: '/:divisionID/about',
+        name: 'About-us-page',
+        component: AboutUsPage,
+    },
+    {
         path: '/contactus',
         name: 'Contact-us-page',
         component: ContactUsPage,
