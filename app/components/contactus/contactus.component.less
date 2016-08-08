@@ -11,6 +11,9 @@
   }
   &-fields{
     width: 100%;
+    :-ms-input-placeholder { /* IE10–11 */
+        color: @bulletGrey !important;
+    }
   }
   &-required{
     margin-bottom: 10px;
@@ -19,7 +22,6 @@
 
   &-question{
     padding-bottom: 10px;
-    .col-xs-4;
   }
 
   &-margin{
@@ -55,7 +57,7 @@
     padding: 0px 10px;
     border: 1px solid @strokeGrey;
     &:focus{
-      outline: 2px solid @homeRunLoyalImageHover;
+      outline: 2px solid @masterImageHover;
     }
   }
   .inputPlaceholder(normal, @bulletGrey);
@@ -79,7 +81,7 @@
     resize: vertical;
     border: 1px solid @strokeGrey;
     &:focus{
-      outline: 2px solid @homeRunLoyalImageHover;
+      outline: 2px solid @masterImageHover;
     }
   }
 .textAreaPlaceholder(italic, @bulletGrey);
@@ -154,7 +156,7 @@
       &-large{
         margin-bottom: 50px;
         .col-xs-9;
-        .col-xs-offset-3;
+        .col-xs-offset-3!important;
       }
     }
 
