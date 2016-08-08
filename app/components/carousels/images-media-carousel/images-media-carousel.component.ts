@@ -45,7 +45,7 @@ export class ImagesMedia implements OnInit {
     backgroundImage:SafeStyle;
     totalImageCount:number = 0;
     imageCounter:number = 0;
-    imagesTitle:string = "Images";
+    imagesTitle:string = "Image";
     image_url = './app/public/no_photo_images/onError.png';
     images:any;
     displayCounter:number;
