@@ -15,7 +15,13 @@
                             <p>View Article</p>
                         </div>
                     </span>
-                    <div class="recommendations-articles-six-text">{{data.title}}</div>
+                    <div class="recommendations-articles-six-content">
+                        <div class="recommendations-articles-six-content-dateline">
+                            <span class="recommendations-articles-six-content-dateline-keyword">{{data.keyword}}</span>
+                            <span class="deep_recs-ai-articles-item-content-dateline-date">{{data.date}}</span>
+                        </div>
+                        <div class="recommendations-articles-six-content-headline">{{data.title}}</div>
+                    </div>
                 </a>
             </span>
             <span *ngIf="isSmall">

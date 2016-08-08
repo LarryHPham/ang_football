@@ -33,52 +33,8 @@
     .flexJustify(space-between);
     margin: 24px 0 0 -9px;
     @media @mobile {
+      display: block;
       margin-top: 15px;
-    }
-    &-three {
-      color: @black;
-      &:hover {
-        color: @masterBrandColor;
-      }
-      &:hover .articleBoxXl {
-        .articleImageLinkWithHoverResponsive(100%, ~"calc(17% + 20px)");
-        div {
-          left: 0;
-        }
-      }
-      &-image {
-        width: 100%;
-        height: ~"calc(17% + 20px)";
-        background-position: top center;
-        background-size: cover;
-        background-repeat: no-repeat;
-      }
-      &-description {
-        width: 100%;
-        height: 72px;
-        position: relative;
-        top: 172px;
-        &-text {
-          .globalDefaultFont(14px, 400);
-          //necessary for multiline ellipses
-          display: block;
-          display: -webkit-box;
-          line-height: 14px;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        &-dateline {
-          .globalDefaultModFont(10px, 800, @bulletGrey);
-          text-align: left;
-          margin-top: 9px;
-          line-height: 14px;
-          &-keyword {
-            .globalDefaultModFont(10px, 800, @black);
-          }
-        }
-      }
     }
     &-six {
       color: @black;
@@ -99,7 +55,7 @@
         background-size: cover;
         background-repeat: no-repeat;
       }
-      &-text {
+      &-content {
         .globalDefaultFont(16px, 800);
         //necessary for multiline ellipses
         display: block;
@@ -111,11 +67,22 @@
         text-overflow: ellipsis;
         position: relative;
         top: 130px;
-      }
-      &-time {
-        .globalDefaultModFont(10px, 400, @bulletGrey);
-        text-align: left;
-        margin-top: 5px;
+        &-dateline {
+          .globalDefaultFont(10px, 800);
+          &-keyword {
+            margin-right: 3px;
+          }
+          &-date {
+            text-transform: uppercase;
+            color: @bulletGrey;
+          }
+        }
+        &-headline {
+          .globalDefaultFont(14px, 400);
+          margin-top: 5px;
+          height: auto;
+          line-height: 1.2em;
+        }
       }
     }
   }
@@ -169,7 +136,7 @@
           box-shadow: inset 0 0 0 -10000px @masterHighlightColor;
           display: none;
           text-align: center;
-          background-color: rgba(188, 32, 39, 0.75);
+          background-color: @touchdownLoyalSqrtHover;
           p {
             &:first-child {
               .globalDefaultFont(2rem, 800);

@@ -6,13 +6,13 @@
   font-family: @globalFont;
   &-hr-title {
     background-color: @strokeGrey;
-    width: 582px;
+    width: 610px;
     height: 1px;
     margin: 0 auto;
   }
   &-hr {
     background-color: @strokeGrey;
-    width: 582px;
+    width: 610px;
     height: 1px;
     margin: 0 auto;
     @media (max-width: 1023px) {
@@ -21,7 +21,7 @@
   }
   &-hr-responsive {
     background-color: @strokeGrey;
-    width: 582px;
+    width: 610px;
     height: 1px;
     margin: 0 auto;
     display: none;
@@ -38,30 +38,69 @@
     margin: 25px auto;
     padding-bottom: 3px;
   }
-  &-article-title {
-    .globalDefaultFont(32px, 800);
-    text-align: left;
-    margin-top: 20px;
-  }
-  &-article-content {
-    .globalDefaultFont(16px, 400);
-    text-align: left;
-    line-height: 20px;
-    margin-top: 10px;
-    &:first-letter {
-      .globalDefaultFont(120px, 800);
-      float: left;
-      line-height: 80px;
-      padding-top: 10px;
-      padding-right: 15px;
-      font-style: italic;
+  &-article {
+    width: 100%;
+    position: relative;
+    .flexDisplay;
+    .flexDirection(column);
+    .flexJustify(space-between);
+    a {
+      color: @black;
     }
-  }
-  &-read-more {
-    .globalDefaultModFont(16px, 800, @masterBrandColor);
-    line-height: 35px;
-    text-align: left;
-    margin: 10px 0 25px;
+    &:hover {
+      a {
+        color: @masterBrandColor;
+      }
+      .trending-article-content {
+        color: @black;
+      }
+      .trending-article-read-more {
+        color: @black;
+      }
+    }
+    &:hover .articleBoxTrendingMedium{
+      .articleImageLinkWithHoverMedium(140px, 100px);
+      div {
+        left: 0;
+        margin-top: 15px;
+      }
+    }
+    &-title {
+      .globalDefaultFont(32px, 800);
+      text-align: left;
+      margin-top: 20px;
+    }
+    &-image {
+      width: 140px;
+      height: 100px;
+      background-clip: padding-box;
+      left: 0;
+      background-size: cover !important;
+      background-repeat: no-repeat;
+      display: inline-block;
+      float: left;
+      margin-top: 15px;
+    }
+    &-content {
+      .globalDefaultFont(16px, 400);
+      margin-top: 10px;
+      position: relative;
+      line-height: 1.2;
+      text-align: left;
+      margin-bottom: 20px;
+      width: 75%;
+      //height override for .line-clamp height calculation
+      height: 100px !important;
+      .line-clamp;
+      .line-clamp-5;
+      left: 155px;
+    }
+    &-read-more {
+      .globalDefaultModFont(16px, 800, @masterBrandColor);
+      margin-bottom: 15px;
+      text-align: left;
+      display: inline-block;
+    }
   }
 }
 
@@ -122,7 +161,7 @@
         color: @black;
       }
     }
-    &:hover .articleBoxTrending {
+    &:hover .articleBoxTrendingSmall {
       .articleImageLinkWithHoverSmall(100px, 56px);
       div {
         left: 0;
