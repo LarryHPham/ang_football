@@ -9,15 +9,15 @@ import {MLBGlobalFunctions} from "../global/mlb-global-functions";
 import {AuBlockData, AboutUsModel} from "../webpages/about-us-page/about-us.page";
 
 export interface AboutUsInterface {
-    teamProfilesCount: number;
-    divisionsCount: number;
-    playerProfilesCount: number;
-    worldChampFirstName: string;
-    worldChampLastName: string;
-    worldChampTeamId: string;
-    worldChampYear: string;
-    worldChampImageUrl: string;
-    lastUpdated: string;
+    numTeams: number;
+    divisionScope: string;
+    numPlayers: number;
+    numDivisions: number;
+    championshipYear: number;
+    championshipTeamId: string;
+    championshipTeamName: string;
+    imageUrl: string;
+    championshipTeamLink: string;
 }
 
 @Injectable()
@@ -35,79 +35,42 @@ export class AboutUsService {
 
   constructor(public http: Http){}
 
-  // Will be removed once call is set up
-  tempData(division: string) {
-    let nflData = {
-      "success": true,
-        "message": "",
-        "data": {
-            "scope": "nfl",
-            "numTeams": 32,
-            "numPlayers": 1696,
-            "numDivisions": 2,
-            "championshipYear": 2015,
-            "championshipTeam": "Denver Broncos"
-        }
-    }
-    let ncaaData = {
-      "success": true,
-        "message": "",
-        "data": {
-            "scope": "ncaa",
-            "numTeams": 128,
-            "numPlayers": 16000,
-            "numDivisions": 11,
-            "championshipYear": 2015,
-            "championshipTeam": "Alabama Crimson Tide"
-        }
-    }
-
-    if ( division == this.collegeDivisionAbbrv || division == this.collegeDivisionAbbrv.toLowerCase() ) {
-      return ncaaData;
-    }
-    else {
-      return nflData;
-    }
-  }
-
   getData(partnerID: string, division: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
+    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+division.toLowerCase(); //todo
 
-    return this.http.get(url)
-        .map(
-          res => res.json()
-        )
-        .map(
-          data => this.formatData(data.data, partnerID, division)
-        )
-  }
+    return this.http.get(newUrl)
+      .map( res => res.json() )
+      .map( data => this.formatData(data.data, partnerID, division) )
+    }
 
   private formatData(data: AboutUsInterface, partnerID: string, division?: string): AboutUsModel {
-
-    //will be removed once call is set up
-    let tempData = this.tempData(division).data;
 
     let pageName = (partnerID == null)
             ? GlobalSettings.getBaseTitle()
             : GlobalSettings.getBasePartnerTitle();
-    let teamProfiles = GlobalFunctions.commaSeparateNumber(tempData.numTeams);
-    let playerProfiles = GlobalFunctions.commaSeparateNumber(tempData.numPlayers);
-    let fullName = tempData.championshipTeam;
-    let championshipYear = tempData.championshipYear;
-    let championLink = MLBGlobalFunctions.formatTeamRoute(fullName, data.worldChampTeamId);
+    let numTeams = GlobalFunctions.commaSeparateNumber(data[0].numTeams);
+    let divisionScope = data[0].scope.toUpperCase();
+    let numPlayers = GlobalFunctions.commaSeparateNumber(data[0].numPlayers);
+    let numDivisions = data[0].numDivisions;
+    let championshipYear = data[0].championshipYear;
+    let championshipTeamId = data[0].championshipTeamId;
+    let championshipTeamName = data[0].championshipTeamName;
+    let imageUrl = data[0].imageUrl;
+    let championshipTeamLink = data[0].imageUrl;
 
+    // Set auBlocks vars based on divisionScope
     let activeDivision;
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    // Set auBlocks vars based on division routeParam
-    if (division == this.collegeDivisionAbbrv || division == this.collegeDivisionAbbrv.toLowerCase()) {
-      activeDivision = this.collegeDivisionAbbrv+" FBS";
-      activeDivisionSegments = this.sportLeagueSegments;
+    if (divisionScope == this.collegeDivisionAbbrv.toUpperCase()) {
+      activeDivision = divisionScope+" FBS";
+      activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
     }
     else {
-      activeDivision = this.sportLeagueAbbrv;
+      activeDivision = divisionScope;
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = this.sportLeagueChampionship;
     }
@@ -116,7 +79,7 @@ export class AboutUsService {
       headerTitle: "What is " + pageName + "?",
       titleData: {
           imageURL : GlobalSettings.getSiteLogoUrl(),
-          text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
+          text1: 'Last Updated: ', //+ GlobalFunctions.formatUpdatedDate(data.lastUpdated), todo
           text2: 'United States',
           text3: "Want to learn more about " + pageName + "?",
           text4: '',
@@ -126,33 +89,33 @@ export class AboutUsService {
         {
           iconClass: 'fa fa-tdl-profiles',
           titleText: activeDivision+' Team Profiles',
-          dataText: teamProfiles
+          dataText: numTeams
         },
         {
           iconClass: 'fa fa-tdl-helmet',
           titleText: activeDivision+' Player Profiles',
-          dataText: playerProfiles
+          dataText: numPlayers
         },
         {
           iconClass: 'fa fa-tdl-football',
           titleText: activeDivision+" "+activeDivisionSegments,
-          dataText: GlobalFunctions.commaSeparateNumber(tempData.numDivisions)
+          dataText: GlobalFunctions.commaSeparateNumber(numDivisions)
         },
         {
           link: {
-            route: championLink,
+            route: championshipTeamLink,
             imageConfig: {
               imageClass: "image-50",
               mainImage: {
-                imageUrl: GlobalSettings.getImageUrl(data.worldChampImageUrl),
+                imageUrl: GlobalSettings.getImageUrl(imageUrl),
                 imageClass: "border-1",
-                urlRouteArray: championLink,
+                urlRouteArray: championshipTeamLink,
                 hoverText: "<i class=\"fa fa-mail-forward\"></i>"
               }
             },
           },
           titleText: championshipYear + ' ' + activeDivisionChampionship + ' Champions',
-          dataText: fullName
+          dataText: championshipTeamName
         }
       ],
       //TODO-CJP: Update [July, 2016] to reflect actual creation date!
@@ -162,7 +125,7 @@ export class AboutUsService {
         "Here at " + pageName + ", we have an appetite for digesting down big data in the world of baseball." +
         " We create unique content so you can learn everything about your favorite team or player." +
         " From rookie players and underachieving teams to veteran stars and perennial favorites, " +
-        pageName + " produces content and statistical information for " + teamProfiles + " MLB teams and over " + playerProfiles + " player profiles."
+        pageName + " produces content and statistical information for " + numTeams + " MLB teams and over " + numPlayers + " player profiles."
       ]
     };
 
