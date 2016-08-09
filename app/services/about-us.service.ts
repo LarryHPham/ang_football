@@ -29,7 +29,7 @@ export class AboutUsService {
   public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
   public sportLeagueSegments: string = GlobalSettings.getSportLeagueSegments();
 
-  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
   public collegeDivisionChampionship: string = GlobalSettings.getCollegeDivisionChampionship();
   public collegeDivisionSegments: string = GlobalSettings.getCollegeDivisionSegments();
 
@@ -64,8 +64,8 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    if (divisionScope == this.collegeDivisionAbbrv.toUpperCase()) {
-      activeDivision = this.collegeDivisionAbbrv;
+    if (divisionScope == this.collegeDivisionFullAbbrv.toUpperCase()) {
+      activeDivision = this.collegeDivisionFullAbbrv;
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
     }
