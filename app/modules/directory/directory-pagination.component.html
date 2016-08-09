@@ -7,15 +7,29 @@
   </div>
   <!-- TODO -->
   <div *ngIf="dirPagination && enableNext" class="col-sm-6 dir-pag-buttons">
-    <a [routerLink]="prevLink.route" class="dir-pag-button dir-pag-button-l"
-     [class.dir-pag-button-active]="enablePrev"
-     [class.dir-pag-button-disabled]="!enablePrev">
-        <i class="fa fa-angle-left"></i> {{prevLink.text}}
-    </a>
-    <a [routerLink]="nextLink.route" class="dir-pag-button dir-pag-button-r"
-     [class.dir-pag-button-active]="enableNext"
-     [class.dir-pag-button-disabled]="!enableNext">
-        {{nextLink.text}} <i class="fa fa-angle-right"></i>
-    </a>
+    <div>
+      <a [routerLink]="reverseLink.route" class="dir-pag-skip"
+       [class.dir-pag-skip-active]="enableRevr"
+       [class.dir-pag-skip-disabled]="!enableRevr">
+          <i class="fa fa-angle-left"></i>
+      </a>
+      <a [routerLink]="prevLink.route" class="dir-pag-button"
+       [class.dir-pag-button-active]="enablePrev"
+       [class.dir-pag-button-disabled]="!enablePrev">
+          <i class="fa fa-angle-left"></i>
+      </a>
+    </div>
+    <div>
+      <a [routerLink]="nextLink.route" class="dir-pag-button"
+       [class.dir-pag-button-active]="enableNext"
+       [class.dir-pag-button-disabled]="!enableNext">
+          <i class="fa fa-angle-right"></i>
+      </a>
+      <a [routerLink]="fastFowardLink.route" class="dir-pag-skip"
+      [class.dir-pag-skip-active]="enableFwd"
+      [class.dir-pag-skip-disabled]="!enableFwd">
+          <i class="fa fa-angle-right"></i>
+      </a>
+    </div>
   </div>
 </div>

@@ -15,10 +15,14 @@ export class DirectoryPagination implements OnChanges {
   @Input() data: PagingData;
   @Input() nextLink: Link;
   @Input() prevLink: Link;
+  @Input() fastFowardLink: Link;
+  @Input() reverseLink: Link;
   @Input() dirRangeTotal: boolean;
-  @Input () dirPagination: boolean;
+  @Input() dirPagination: boolean;
   public enablePrev: boolean;
   public enableNext: boolean;
+  public enableFwd: boolean;
+  public enableRevr: boolean;
 
   constructor() {
     this.pagesUpdated();
@@ -32,10 +36,14 @@ export class DirectoryPagination implements OnChanges {
     if ( this.data !== undefined && this.data !== null ) {
       this.enableNext = this.data.currentPage + 1 <= this.data.totalPages;
       this.enablePrev = this.data.currentPage -1 > 0;
+      this.enableFwd = this.data.currentPage + 10 <= this.data.totalPages;
+      this.enableRevr = this.data.currentPage - 10 > 0;
     }
     else {
       this.enableNext = false;
       this.enablePrev = false;
+      this.enableFwd = false;
+      this.enableRevr = false;
     }
   }
 }
