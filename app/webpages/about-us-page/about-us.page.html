@@ -11,7 +11,7 @@
         <!--Blocks Start-->
         <div class="au-blocks">
             <div *ngFor="let auBlock of auBlocks" class="au-blocks-block">
-                <a *ngIf="auBlock.link" [routerLink]="auBlock.link.route">
+                <a *ngIf="auBlock.link && auBlock.link.route" [routerLink]="auBlock.link.route">
                     <div class="au-blocks-block-content">
                         <div class="au-blocks-block-image">
                             <circle-image [data]="auBlock.link.imageConfig"></circle-image>
