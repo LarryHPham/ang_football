@@ -168,12 +168,12 @@ export class ComparisonModule implements OnInit, OnChanges {
                 {
                     title: data.playerOne.playerName,
                     // color: data.playerOne.mainTeamColor
-                    color: '#BC1624'
+                    color: '#2D3E50'
                 },
                 {
                     title: data.playerTwo.playerName,
                     // color: data.playerTwo.mainTeamColor
-                    color: '#444444'
+                    color: '#999'
                 },
                 {
                     title: "Stat High",
