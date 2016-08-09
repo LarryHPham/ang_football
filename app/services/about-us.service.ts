@@ -65,7 +65,7 @@ export class AboutUsService {
     let activeDivisionChampionship;
 
     if (divisionScope == this.collegeDivisionAbbrv.toUpperCase()) {
-      activeDivision = divisionScope+" FBS";
+      activeDivision = this.collegeDivisionAbbrv;
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
     }

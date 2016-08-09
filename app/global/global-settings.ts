@@ -37,7 +37,7 @@ export class GlobalSettings {
     private static _sportLeagueChampionship: string = "Superbowl";
     private static _sportLeagueSegments: string = "Divisions";
 
-    private static _collegeDivisionAbbrv: string="NCAA";
+    private static _collegeDivisionAbbrv: string="NCAAF";
     private static _collegeDivisionChampionship: string = "National Championships";
     private static _collegeDivisionSegments: string = "Conferences";
 
