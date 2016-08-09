@@ -35,6 +35,13 @@ export class DirectoryModule implements OnChanges {
     text: "Back"
   }
 
+  public reverseLink: Link = {
+    text: "Reverse"
+  }
+  public fastFowardLink: Link = {
+    text: "Fast Forward"
+  }
+
   constructor(private router: Router) {}
 
   ngOnChanges() {
@@ -42,7 +49,7 @@ export class DirectoryModule implements OnChanges {
   }
 
   setupData() {
-    if ( this.data === undefined || this.data === null  ){
+    if ( this.data === undefined || this.data === null ){
       this.pagingDescription = null;
       this.isLoading = true; //it may still be loading
       return;
@@ -68,9 +75,17 @@ export class DirectoryModule implements OnChanges {
     this.prevLink.route = [pageName, { page: currPage - 1 }]
     this.setPageParams(this.prevLink);
 
+    //Fast Forward Page
+    this.fastFowardLink.route = [pageName, { page: currPage + 10 }]
+    this.setPageParams(this.fastFowardLink);
+
+    //Reverse Page
+    this.reverseLink.route = [pageName, { page: currPage - 10 }]
+    this.setPageParams(this.reverseLink);
+
     //Determine range display for directory page (ex. 1-20, 22-40, etc)
     var rangeStart = 0;
-    var rangeEnd = 0;    
+    var rangeEnd = 0;
     var totalItems = 0;
     if ( this.data.hasListings ) {
       rangeStart = (currPage - 1) * this.data.listingsLimit + 1;
