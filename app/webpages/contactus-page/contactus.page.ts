@@ -4,11 +4,11 @@ import {Router} from '@angular/router-deprecated';
 import {Observable} from 'rxjs/Rx';
 import {Title} from '@angular/platform-browser';
 
-import {WidgetModule} from "../../modules/widget/widget.module";
-import {ContactUsModule} from '../../components/contactus/contactus.component';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {ContactUsModule} from '../../fe-core/components/contactus/contactus.component';
 import {GlobalSettings} from '../../global/global-settings';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment;
 @Component({

@@ -5,7 +5,7 @@ import {Conference, Division, MLBPageParameters} from '../global/global-interfac
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {TeamStandingsData, MLBStandingsTabData, MLBStandingsTableModel, MLBStandingsTableData} from './standings.data';
-import {StandingsTableTabData} from '../components/standings/standings.component';
+import {StandingsTableTabData} from '../fe-core/components/standings/standings.component';
 import {GlobalSettings} from '../global/global-settings';
 
 @Injectable()

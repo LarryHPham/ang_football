@@ -2,12 +2,12 @@
  * Created by Victoria on 4/19/2016.
  */
 import {Component} from '@angular/core';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {TitleComponent} from '../../components/title/title.component';
-import {WidgetModule} from "../../modules/widget/widget.module";
-import {CircleImage} from '../../components/images/circle-image';
-import {ImageData,CircleImageData} from '../../components/images/image-data';
-import {TitleInputData} from "../../components/title/title.component";
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {TitleComponent} from '../../fe-core/components/title/title.component';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {CircleImage} from '../../fe-core/components/images/circle-image';
+import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
+import {TitleInputData} from "../../fe-core/components/title/title.component";
 import {Gradient} from "../../global/global-gradient";
 import {GlobalSettings} from '../../global/global-settings';
 

@@ -3,23 +3,23 @@ import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated
 import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from "../../global/global-settings";
-import {DetailedListItem, DetailListInput} from '../../components/detailed-list-item/detailed-list-item.component';
-import {ModuleFooter, ModuleFooterData, FooterStyle} from '../../components/module-footer/module-footer.component';
-import {SliderCarousel, SliderCarouselInput} from '../../components/carousels/slider-carousel/slider-carousel.component';
-import {TitleComponent, TitleInputData} from '../../components/title/title.component';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
+import {DetailedListItem, DetailListInput} from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {ModuleFooter, ModuleFooterData, FooterStyle} from '../../fe-core/components/module-footer/module-footer.component';
+import {SliderCarousel, SliderCarouselInput} from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {DraftHistoryService} from '../../services/draft-history.service';
 import {ListPageService} from '../../services/list-page.service';
-import {NoDataBox} from '../../components/error/data-box/data-box.component';
+import {NoDataBox} from '../../fe-core/components/error/data-box/data-box.component';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {PaginationFooter} from '../../components/pagination-footer/pagination-footer.component';
-import {LoadingComponent} from "../../components/loading/loading.component";
-import {ErrorComponent} from "../../components/error/error.component";
+import {PaginationFooter} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {ErrorComponent} from "../../fe-core/components/error/error.component";
 
 import {SchedulesService} from '../../services/schedules.service';
-import {SchedulesComponent} from '../../components/schedules/schedules.component';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SchedulesComponent} from '../../fe-core/components/schedules/schedules.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment;
 

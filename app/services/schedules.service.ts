@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {CircleImageData} from '../components/images/image-data';
+import {CircleImageData} from '../fe-core/components/images/image-data';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division, MLBPageParameters} from '../global/global-interface';
-import {SchedulesCarouselInput} from '../components/carousels/schedules-carousel/schedules-carousel.component';
+import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
 import {SchedulesData, MLBSchedulesTableModel, MLBSchedulesTableData, MLBScheduleTabData} from './schedules.data';
 import {Gradient} from '../global/global-gradient';
-import {scheduleBoxInput} from '../components/schedule-box/schedule-box.component';
+import {scheduleBoxInput} from '../fe-core/components/schedule-box/schedule-box.component';
 
 declare var moment: any;
 

@@ -4,11 +4,11 @@ import {Http, Headers} from '@angular/http';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {CircleImageData} from '../components/images/image-data';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {TransactionModuleData} from '../modules/transactions/transactions.module';
-import {TransactionTabData} from '../components/transactions/transactions.component';
-import {TransactionsListInput} from '../components/transactions-list-item/transactions-list-item.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {TransactionModuleData} from '../fe-core/modules/transactions/transactions.module';
+import {TransactionTabData} from '../fe-core/components/transactions/transactions.component';
+import {TransactionsListInput} from '../fe-core/components/transactions-list-item/transactions-list-item.component';
 
 declare var moment: any;
 

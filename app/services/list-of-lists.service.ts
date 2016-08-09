@@ -4,7 +4,7 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions}  from '../global/mlb-global-functions';
 import {GlobalSettings}  from '../global/global-settings';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
 declare var moment: any;
 @Injectable()

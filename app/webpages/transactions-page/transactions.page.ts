@@ -2,17 +2,17 @@ import {Component, OnInit} from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {TitleComponent, TitleInputData} from '../../components/title/title.component';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
+import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {TransactionsService} from '../../services/transactions.service';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {LoadingComponent} from "../../components/loading/loading.component";
-import {ErrorComponent} from "../../components/error/error.component";
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {TransactionsComponent, TransactionTabData} from '../../components/transactions/transactions.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {TransactionsComponent, TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
 import {MLBPageParameters} from '../../global/global-interface';
 
 declare var moment:any;

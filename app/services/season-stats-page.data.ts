@@ -1,7 +1,7 @@
-import {TableModel, TableColumn, CellData} from '../components/custom-table/table-data.component';
-import {CircleImageData} from '../components/images/image-data';
-import {TableTabData, TableComponentData} from '../components/season-stats/season-stats.component';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
+import {TableModel, TableColumn, CellData} from '../fe-core/components/custom-table/table-data.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {TableTabData, TableComponentData} from '../fe-core/components/season-stats/season-stats.component';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Season} from '../global/global-interface';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';

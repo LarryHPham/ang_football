@@ -2,18 +2,18 @@ import {Component, Injector} from '@angular/core';
 import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {TitleComponent} from '../../components/title/title.component';
-import {WidgetModule} from "../../modules/widget/widget.module";
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {TitleComponent} from '../../fe-core/components/title/title.component';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 import {AboutUsService} from '../../services/about-us.service';
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {TitleInputData} from "../../components/title/title.component";
-import {CircleImage} from "../../components/images/circle-image";
-import {CircleImageData} from "../../components/images/image-data";
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {TitleInputData} from "../../fe-core/components/title/title.component";
+import {CircleImage} from "../../fe-core/components/images/circle-image";
+import {CircleImageData} from "../../fe-core/components/images/image-data";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 export interface AuBlockData {
   iconClass?: string;

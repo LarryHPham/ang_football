@@ -5,8 +5,8 @@ import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
-import {CircleImageData} from '../components/images/image-data';
-import {GameInfoInput} from '../components/game-info/game-info.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {GameInfoInput} from '../fe-core/components/game-info/game-info.component';
 
 declare var moment;
 @Injectable()
