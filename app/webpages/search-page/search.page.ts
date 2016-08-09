@@ -3,10 +3,10 @@ import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from "../../global/global-settings";
-import {SearchPageModule} from '../../modules/search-page/search-page.module';
+import {SearchPageModule} from '../../fe-core/modules/search-page/search-page.module';
 import {SearchService} from '../../services/search.service';
-import {SearchPageInput} from '../../modules/search-page/search-page.module';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SearchPageInput} from '../../fe-core/modules/search-page/search-page.module';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 interface SearchPageParams {
     query: string;

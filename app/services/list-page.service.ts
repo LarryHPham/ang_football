@@ -4,12 +4,12 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {DetailListInput} from '../components/detailed-list-item/detailed-list-item.component';
-import {MVPTabData} from '../components/mvp-list/mvp-list.component';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {CircleImageData, ImageData} from '../components/images/image-data';
+import {DetailListInput} from '../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {MVPTabData} from '../fe-core/components/mvp-list/mvp-list.component';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {CircleImageData, ImageData} from '../fe-core/components/images/image-data';
 import {Link} from '../global/global-interface';
-import {TitleInputData} from '../components/title/title.component';
+import {TitleInputData} from '../fe-core/components/title/title.component';
 
 declare var moment;
 

@@ -4,12 +4,12 @@ import {Http, Headers} from '@angular/http';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {CircleImageData} from '../components/images/image-data';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
 import {ListPageService} from './list-page.service';
 import {IProfileData} from './profile-header.service';
-import {DetailListInput} from '../components/detailed-list-item/detailed-list-item.component';
-import {PaginationParameters} from '../components/pagination-footer/pagination-footer.component';
+import {DetailListInput} from '../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {PaginationParameters} from '../fe-core/components/pagination-footer/pagination-footer.component';
 
 export interface DraftHistoryTab {
   tabTitle: string;

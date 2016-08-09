@@ -2,12 +2,12 @@ import {Component, OnInit, Input} from '@angular/core';
 import {RouteParams} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from "../../components/backtab/backtab.component";
-import {TitleComponent, TitleInputData} from "../../components/title/title.component";
-import {CircleImageData, ImageData} from "../../components/images/image-data";
-import {StandingsComponent} from "../../components/standings/standings.component";
-import {LoadingComponent} from '../../components/loading/loading.component';
-import {ErrorComponent} from '../../components/error/error.component';
+import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
+import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
+import {CircleImageData, ImageData} from "../../fe-core/components/images/image-data";
+import {StandingsComponent} from "../../fe-core/components/standings/standings.component";
+import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
+import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {StandingsService} from '../../services/standings.service';
@@ -17,7 +17,7 @@ import {Division, Conference, MLBPageParameters} from '../../global/global-inter
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
     selector: 'Standings-page',

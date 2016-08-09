@@ -6,8 +6,8 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {NavigationData, Link} from '../../global/global-interface';
 import {DirectoryService, DirectoryType, DirectorySearchParams} from '../../services/directory.service';
-import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../modules/directory/directory.data';
-import {DirectoryModule} from '../../modules/directory/directory.module';
+import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../fe-core/modules/directory/directory.data';
+import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
 
 @Component({
     selector: 'Directory-page',

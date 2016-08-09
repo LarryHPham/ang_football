@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
 
-import {TitleInputData} from "../components/title/title.component";
+import {TitleInputData} from "../fe-core/components/title/title.component";
 import {GlobalFunctions} from "../global/global-functions";
 import {GlobalSettings} from "../global/global-settings";
 import {MLBGlobalFunctions} from "../global/mlb-global-functions";

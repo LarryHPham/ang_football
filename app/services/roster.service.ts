@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {RosterModuleData} from '../modules/team-roster/team-roster.module';
+import {RosterModuleData} from '../fe-core/modules/team-roster/team-roster.module';
 import {RosterTableModel, MLBRosterTabData, TeamRosterData} from '../services/roster.data';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';

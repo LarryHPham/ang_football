@@ -3,14 +3,14 @@ import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Injector} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {TitleComponent} from '../../components/title/title.component';
-import {WidgetModule} from "../../modules/widget/widget.module";
-import {TitleInputData} from "../../components/title/title.component";
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {TitleComponent} from '../../fe-core/components/title/title.component';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {TitleInputData} from "../../fe-core/components/title/title.component";
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'Disclaimer-page',

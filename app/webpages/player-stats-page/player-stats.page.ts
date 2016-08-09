@@ -2,13 +2,13 @@ import {Component, OnInit, Input} from '@angular/core';
 import {RouteParams} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from "../../components/backtab/backtab.component";
-import {TitleComponent, TitleInputData} from "../../components/title/title.component";
-import {CircleImageData} from "../../components/images/image-data";
-import {PlayerStatsComponent} from "../../components/player-stats/player-stats.component";
-import {LoadingComponent} from '../../components/loading/loading.component';
-import {ErrorComponent} from '../../components/error/error.component';
-import {DropdownComponent} from '../../components/dropdown/dropdown.component';
+import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
+import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
+import {CircleImageData} from "../../fe-core/components/images/image-data";
+import {PlayerStatsComponent} from "../../fe-core/components/player-stats/player-stats.component";
+import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
+import {ErrorComponent} from '../../fe-core/components/error/error.component';
+import {DropdownComponent} from '../../fe-core/components/dropdown/dropdown.component';
 
 import {PlayerStatsService} from '../../services/player-stats.service';
 import {ProfileHeaderService} from '../../services/profile-header.service';
@@ -18,7 +18,7 @@ import {Division, Conference, MLBPageParameters} from '../../global/global-inter
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
     selector: 'Player-stats-page',

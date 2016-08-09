@@ -5,7 +5,7 @@ import {Http} from '@angular/http';
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
-import {DirectoryProfileItem, DirectoryItems} from '../modules/directory/directory.data';
+import {DirectoryProfileItem, DirectoryItems} from '../fe-core/modules/directory/directory.data';
 
 export enum DirectoryType {
   none,

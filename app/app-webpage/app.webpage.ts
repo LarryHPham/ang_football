@@ -2,8 +2,8 @@ import {Component, AfterViewChecked, OnInit} from '@angular/core';
 import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES, Router} from '@angular/router-deprecated';
 
 import {GlobalFunctions} from "../global/global-functions";
-import {FooterComponent} from "../components/footer/footer.component";
-import {HeaderComponent} from "../components/header/header.component";
+import {FooterComponent} from "../fe-core/components/footer/footer.component";
+import {HeaderComponent} from "../fe-core/components/header/header.component";
 
 import {PickTeamPage} from "../webpages/home-page/home-page.page";
 import {AboutUsPage} from "../webpages/about-us-page/about-us.page";
@@ -36,8 +36,8 @@ import {ModulePage} from "../webpages/module-page/module.page";
 import {ImagesTestPage} from "../webpages/images-test-page/images-test.page";
 import {DesignPage} from "../webpages/design-page/design.page";
 
-import {SanitizeHtml} from "../pipes/safe.pipe";
-import {SanitizeStyle} from "../pipes/safe.pipe";
+import {SanitizeHtml} from "../fe-core/pipes/safe.pipe";
+import {SanitizeStyle} from "../fe-core/pipes/safe.pipe";
 import {GlobalSettings} from "../global/global-settings";
 
 //FOR DEEP DIVE
@@ -254,7 +254,7 @@ declare var jQuery: any;
     },
     // Test Pages - TODO: remove after testing
     {
-        path: '/modules/:teamID',
+        path: '/fe-core/modules/:teamID',
         name: 'Module-page',
         component: ModulePage
     },

@@ -3,7 +3,7 @@ import {Router,ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from '../../global/global-settings';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
     selector: 'Error-page',

@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
-import {ImagesMedia} from "../../components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../components/articles/shareLinks/shareLinks.component";
-import {ArticleContentComponent} from "../../components/articles/article-content/article-content.component";
-import {RecommendationsComponent} from "../../components/articles/recommendations/recommendations.component";
-import {TrendingComponent} from "../../components/articles/trending/trending.component";
-import {DisqusComponent} from "../../components/articles/disqus/disqus.component";
-import {LoadingComponent} from "../../components/loading/loading.component";
+import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {ArticleContentComponent} from "../../fe-core/components/articles/article-content/article-content.component";
+import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
+import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
+import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
 import {ArticleData} from "../../global/global-interface";
 import {ArticleDataService} from "../../global/global-article-page-service";
 import {GlobalFunctions} from "../../global/global-functions";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
-import {SidekickWrapperAI} from "../../components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
+import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import {GlobalSettings} from "../../global/global-settings";
-import {SidekickContainerComponent} from "../../components/articles/sidekick-container/sidekick-container.component";
+import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 
 @Component({
     selector: 'article-pages',

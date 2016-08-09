@@ -5,22 +5,22 @@ import {Division, Conference, MLBPageParameters} from '../../global/global-inter
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
 
-import {DraftHistoryModule} from '../../modules/draft-history/draft-history.module';
+import {DraftHistoryModule} from '../../fe-core/modules/draft-history/draft-history.module';
 
-import {StandingsModuleData, StandingsModule} from '../../modules/standings/standings.module';
+import {StandingsModuleData, StandingsModule} from '../../fe-core/modules/standings/standings.module';
 import {MLBStandingsTabData} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 import {GlobalSettings} from '../../global/global-settings';
 
-import {ProfileHeaderData, ProfileHeaderModule} from '../../modules/profile-header/profile-header.module';
+import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 
-import {ArticlesModule} from "../../modules/articles/articles.module";
-import {ListOfListsModule} from "../../modules/list-of-lists/list-of-lists.module";
-import {TeamRosterModule} from '../../modules/team-roster/team-roster.module';
+import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
+import {ListOfListsModule} from "../../fe-core/modules/list-of-lists/list-of-lists.module";
+import {TeamRosterModule} from '../../fe-core/modules/team-roster/team-roster.module';
 import {RosterService} from '../../services/roster.service';
-import {CommentModule} from '../../modules/comment/comment.module';
-import {ListOfListsData} from "../../modules/list-of-lists/list-of-lists.module";
+import {CommentModule} from '../../fe-core/modules/comment/comment.module';
+import {ListOfListsData} from "../../fe-core/modules/list-of-lists/list-of-lists.module";
 import {ListOfListsService} from "../../services/list-of-lists.service";
 
 @Component({

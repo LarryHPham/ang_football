@@ -3,57 +3,57 @@ import {Router, RouteParams, RouteConfig} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {MLBPageParameters} from '../../global/global-interface';
-import {LoadingComponent} from '../../components/loading/loading.component';
-import {ErrorComponent} from '../../components/error/error.component';
+import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
+import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
-import {DYKModule, dykModuleData} from "../../modules/dyk/dyk.module";
+import {DYKModule, dykModuleData} from "../../fe-core/modules/dyk/dyk.module";
 import {DykService} from '../../services/dyk.service';
 
-import {FAQModule, faqModuleData} from "../../modules/faq/faq.module";
+import {FAQModule, faqModuleData} from "../../fe-core/modules/faq/faq.module";
 import {FaqService} from '../../services/faq.service';
 
-import {BoxScoresModule} from '../../modules/box-scores/box-scores.module';
+import {BoxScoresModule} from '../../fe-core/modules/box-scores/box-scores.module';
 import {BoxScoresService} from '../../services/box-scores.service';
 
-import {TwitterModule, twitterModuleData} from "../../modules/twitter/twitter.module";
+import {TwitterModule, twitterModuleData} from "../../fe-core/modules/twitter/twitter.module";
 import {TwitterService} from '../../services/twitter.service';
 
 import {SeasonStatsService} from '../../services/season-stats.service';
-import {SeasonStatsModule} from '../../modules/season-stats/season-stats.module';
+import {SeasonStatsModule} from '../../fe-core/modules/season-stats/season-stats.module';
 
-import {ComparisonModule, ComparisonModuleData} from '../../modules/comparison/comparison.module';
+import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comparison/comparison.module';
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
-import {CommentModule} from '../../modules/comment/comment.module';
+import {CommentModule} from '../../fe-core/modules/comment/comment.module';
 
-import {StandingsModule, StandingsModuleData} from '../../modules/standings/standings.module';
+import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
 import {MLBStandingsTabData} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
-import {ProfileHeaderData, ProfileHeaderModule} from '../../modules/profile-header/profile-header.module';
+import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 
-import {HeadlineComponent} from '../../components/headline/headline.component';
+import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
 
-import {NewsModule} from '../../modules/news/news.module';
+import {NewsModule} from '../../fe-core/modules/news/news.module';
 import {NewsService} from '../../services/news.service';
 
-import {SchedulesModule} from '../../modules/schedules/schedules.module';
+import {SchedulesModule} from '../../fe-core/modules/schedules/schedules.module';
 import {SchedulesService} from '../../services/schedules.service';
 
 import {GlobalSettings} from "../../global/global-settings";
 import {ImagesService} from "../../services/carousel.service";
-import {ImagesMedia} from "../../components/carousels/images-media-carousel/images-media-carousel.component";
+import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import {GlobalFunctions} from "../../global/global-functions";
 import {ListOfListsService} from "../../services/list-of-lists.service";
-import {ListOfListsModule} from "../../modules/list-of-lists/list-of-lists.module";
+import {ListOfListsModule} from "../../fe-core/modules/list-of-lists/list-of-lists.module";
 
-import {DailyUpdateModule} from "../../modules/daily-update/daily-update.module";
+import {DailyUpdateModule} from "../../fe-core/modules/daily-update/daily-update.module";
 import {DailyUpdateService, DailyUpdateData} from "../../services/daily-update.service";
 
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment;
 

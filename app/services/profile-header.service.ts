@@ -5,8 +5,8 @@ import {Http} from '@angular/http';
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
-import {DataItem, ProfileHeaderData} from '../modules/profile-header/profile-header.module';
-import {TitleInputData} from '../components/title/title.component';
+import {DataItem, ProfileHeaderData} from '../fe-core/modules/profile-header/profile-header.module';
+import {TitleInputData} from '../fe-core/components/title/title.component';
 import {Division, Conference, MLBPageParameters} from '../global/global-interface';
 
 declare var moment: any;

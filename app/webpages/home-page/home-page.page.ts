@@ -1,10 +1,10 @@
 import {Component, Input} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {GlobalSettings} from "../../global/global-settings";
-import {SliderButton} from "../../components/buttons/slider/slider.button";
-import {CircleImage} from '../../components/images/circle-image';
-import {ImageData,CircleImageData} from '../../components/images/image-data';
-import {Search, SearchInput} from '../../components/search/search.component';
+import {SliderButton} from "../../fe-core/components/buttons/slider/slider.button";
+import {CircleImage} from '../../fe-core/components/images/circle-image';
+import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
+import {Search, SearchInput} from '../../fe-core/components/search/search.component';
 import {RouteParams, Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {LandingPageService} from '../../services/landing-page';
 import {PartnerHomePage} from '../partner-home-page/partner-home-page';

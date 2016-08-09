@@ -8,8 +8,8 @@ import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
 import {SeasonStatsService} from './season-stats.service';
 
-import {ComparisonModuleData} from '../modules/comparison/comparison.module';
-import {ComparisonBarInput} from '../components/comparison-bar/comparison-bar.component';
+import {ComparisonModuleData} from '../fe-core/modules/comparison/comparison.module';
+import {ComparisonBarInput} from '../fe-core/components/comparison-bar/comparison-bar.component';
 import {ComparisonBarList} from './common-interfaces';
 
 //TODO: unify player/team data interface
