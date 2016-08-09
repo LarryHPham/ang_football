@@ -73,7 +73,6 @@ export class AboutUsPage {
       GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
 
       this.divisionID = _params.get('divisionID');
-
       if ( this.divisionID == this.collegeDivisionAbbrv || this.divisionID == this.collegeDivisionAbbrv.toLowerCase()) {}
       else {}
     }
