@@ -38,6 +38,7 @@ export class GlobalSettings {
     private static _sportLeagueSegments: string = "Divisions";
 
     private static _collegeDivisionAbbrv: string="NCAA";
+    private static _collegeDivisionFullAbbrv: string="NCAAF";
     private static _collegeDivisionChampionship: string = "National Championships";
     private static _collegeDivisionSegments: string = "Conferences";
 
@@ -212,6 +213,9 @@ export class GlobalSettings {
 
     static getCollegeDivisionAbbrv() {
       return this._collegeDivisionAbbrv;
+    }
+    static getCollegeDivisionFullAbbrv() {
+      return this._collegeDivisionFullAbbrv;
     }
     static getCollegeDivisionChampionship() {
       return this._collegeDivisionChampionship;
