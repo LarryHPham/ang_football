@@ -31,7 +31,8 @@ export class GlobalSettings {
     private static _siteGoogleUrl:string = 'https://plus.google.com/share?url=';
 
     private static _baseTitle: string = "Touchdown Loyal";
-    private static _basePartnerTitle: string = "My Touchdown Zone" //todo;
+    private static _basePartnerTitle: string = "My Touchdown Zone";
+    private static _sportName: string ="football";
 
     private static _sportLeagueAbbrv: string ="NFL";
     private static _sportLeagueFull: string ="National Football League";
@@ -236,6 +237,9 @@ export class GlobalSettings {
     }
     static getSiteGoogleUrl(partnerId: string) {
       return this._siteGoogleUrl + this.getHomePage(partnerId);
+	}
+    static getSportName() {
+      return this._sportName;
     }
 
 }
