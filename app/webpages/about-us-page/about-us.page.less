@@ -43,6 +43,7 @@
     .flexDisplay;
     .flexWrap(wrap);
     &-block{
+      position: relative;
       border: solid 1px @strokeGrey;
       border-left: solid 5px @highlightGrey;
       box-sizing: border-box;
@@ -67,8 +68,11 @@
       }
       &-image {
         position: absolute;
-        top: 9px;
         left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
         // margin: 9px 28px 0 41px;
         // display: inline-block;
       }

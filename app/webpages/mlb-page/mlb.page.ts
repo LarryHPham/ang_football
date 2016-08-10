@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router-deprecated';
+import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
@@ -143,6 +143,9 @@ export class MLBPage implements OnInit {
     twitterData: Array<twitterModuleData>;
     schedulesData:any;
 
+    leagueID: string;
+    leagueAPIparam: number;
+
     constructor(private _router:Router,
                 private _title: Title,
                 private _standingsService:StandingsService,
@@ -157,7 +160,8 @@ export class MLBPage implements OnInit {
                 private _comparisonService: ComparisonStatsService,
                 private _transactionsService: TransactionsService,
                 private _lolService: ListOfListsService,
-                private listService:ListPageService) {
+                private listService:ListPageService,
+                private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("MLB"));
 
         // this.currentYear = new Date().getFullYear();
@@ -174,6 +178,15 @@ export class MLBPage implements OnInit {
         GlobalSettings.getPartnerID(_router, partnerID => {
             this.partnerID = partnerID;
         });
+
+        //set league ID based on route pageParams
+        this.leagueID = _params.get('leagueId').toLowerCase();
+        if ( this.leagueID === GlobalSettings.getCollegeDivisionAbbrv().toLowerCase() ) {
+          this.leagueAPIparam = 2;
+        }
+        else {
+          this.leagueAPIparam = 1;
+        }
     }
 
     ngOnInit() {
@@ -181,12 +194,13 @@ export class MLBPage implements OnInit {
     }
 
     private setupProfileData() {
-        this._profileService.getMLBProfile().subscribe(
+        this._profileService.getMLBProfile(this.leagueAPIparam).subscribe(
             data => {
-                /*** About MLB ***/
+
+            //     /*** About MLB ***/
                 this.profileData = data;
-                this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData)
-                this.profileName = "MLB";
+                this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
+                this.profileName = "MLB"; //leagueShortName
 
                 /*** Keep Up With Everything MLB ***/
                 this.getBoxScores(this.dateParam);
@@ -210,7 +224,7 @@ export class MLBPage implements OnInit {
                 this.setupListOfListsModule();
                 this.getDykService(this.profileType);
                 this.getTwitterService(this.profileType);
-            },
+             },
             err => {
                 this.hasError = true;
                 console.log("Error getting team profile data for mlb", err);
