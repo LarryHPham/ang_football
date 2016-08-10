@@ -12,9 +12,9 @@ import {Division, Conference, MLBPageParameters} from '../global/global-interfac
 declare var moment: any;
 
 export interface IProfileData {
-  profileName: string; 
+  profileName: string;
   profileId: string;
-  profileType: string; // for MLB, this is 'team', 'player', or 'league'  
+  profileType: string; // for MLB, this is 'team', 'player', or 'league'
 }
 
 interface PlayerProfileData extends IProfileData {
@@ -27,7 +27,6 @@ interface PlayerProfileData extends IProfileData {
 interface PlayerProfileHeaderData {
   description: string;
   info: {
-
     teamId: number;
     teamName: string;
     playerId: number;

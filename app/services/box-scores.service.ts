@@ -136,7 +136,7 @@ export class BoxScoresService {
     var convertedDate = month + ' ' + day + ordinal + ', ' + year;
 
     moduleTitle = "Box Scores - " + team + ': ' +convertedDate;
-    return {
+    return {      
       moduleTitle: moduleTitle,
       hasIcon: false,
       iconClass: '',
