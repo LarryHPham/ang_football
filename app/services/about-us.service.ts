@@ -41,7 +41,6 @@ export class AboutUsService {
   getData(partnerID: string, division: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+division.toLowerCase(); //todo
-    console.log(url);
     return this.http.get(newUrl)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, division) )
