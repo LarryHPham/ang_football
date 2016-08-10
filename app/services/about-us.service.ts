@@ -15,11 +15,14 @@ export interface AboutUsInterface {
     numDivisions: number;
     championshipYear: number;
     championshipTeamId: string;
+    championshipTeamMarket: string;
     championshipTeamName: string;
     imageUrl: string;
     championshipTeamLink: string;
+    lastUpdated: string;
 }
 
+declare var moment;
 @Injectable()
 export class AboutUsService {
 
@@ -38,11 +41,16 @@ export class AboutUsService {
   getData(partnerID: string, division: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+division.toLowerCase(); //todo
-
+    console.log(url);
     return this.http.get(newUrl)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, division) )
-    }
+  }
+
+  formatDate(date) {
+    var newDate = moment(Number(date)*1000).tz('America/New_York').format("MMMM D YYYY");
+    return newDate;
+  }
 
   private formatData(data: AboutUsInterface, partnerID: string, division?: string): AboutUsModel {
 
@@ -55,9 +63,11 @@ export class AboutUsService {
     let numDivisions = data[0].numDivisions;
     let championshipYear = data[0].championshipYear;
     let championshipTeamId = data[0].championshipTeamId;
+    let championshipTeamMarket = data[0].championshipTeamMarket;
     let championshipTeamName = data[0].championshipTeamName;
     let imageUrl = data[0].imageUrl;
     let championshipTeamLink = data[0].imageUrl;
+    let lastUpdated = this.formatDate(data[0].unixTimestamp);
 
     // Set auBlocks vars based on divisionScope
     let activeDivision;
@@ -79,7 +89,7 @@ export class AboutUsService {
       headerTitle: "What is " + pageName + "?",
       titleData: {
           imageURL : GlobalSettings.getSiteLogoUrl(),
-          text1: 'Last Updated: ', //+ GlobalFunctions.formatUpdatedDate(data.lastUpdated), todo
+          text1: 'Last Updated: '+ lastUpdated, //+ GlobalFunctions.formatUpdatedDate(data.lastUpdated), todo
           text2: 'United States',
           text3: "Want to learn more about " + pageName + "?",
           text4: '',
