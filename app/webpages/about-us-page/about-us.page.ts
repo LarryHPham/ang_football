@@ -91,5 +91,7 @@ export class AboutUsPage {
         this.titleData = data.titleData;
         this.auContent = data.content;
       }
+
+      console.log(data.blocks);
     }
 }

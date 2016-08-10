@@ -32,7 +32,7 @@ export class AboutUsService {
   public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
   public sportLeagueSegments: string = GlobalSettings.getSportLeagueSegments();
 
-  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   public collegeDivisionChampionship: string = GlobalSettings.getCollegeDivisionChampionship();
   public collegeDivisionSegments: string = GlobalSettings.getCollegeDivisionSegments();
 
@@ -65,7 +65,7 @@ export class AboutUsService {
     let championshipTeamMarket = data[0].championshipTeamMarket;
     let championshipTeamName = data[0].championshipTeamName;
     let imageUrl = data[0].imageUrl;
-    let championshipTeamLink = data[0].imageUrl;
+    let championshipTeamLink = MLBGlobalFunctions.formatTeamRoute(championshipTeamName, championshipTeamId);
     let lastUpdated = this.formatDate(data[0].unixTimestamp);
 
     // Set auBlocks vars based on divisionScope
@@ -73,15 +73,17 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    if (divisionScope == this.collegeDivisionFullAbbrv.toUpperCase()) {
-      activeDivision = this.collegeDivisionFullAbbrv;
+    if (divisionScope == this.collegeDivisionAbbrv.toUpperCase()) {
+      activeDivision = this.collegeDivisionAbbrv;
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
+      console.log(data[0].scope.toUpperCase(), this.collegeDivisionAbbrv.toUpperCase(), activeDivisionChampionship);
     }
     else {
       activeDivision = divisionScope;
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = this.sportLeagueChampionship;
+      console.log(data[0].scope.toUpperCase(), this.collegeDivisionAbbrv.toUpperCase(), activeDivisionChampionship);
     }
 
     let model: AboutUsModel = {

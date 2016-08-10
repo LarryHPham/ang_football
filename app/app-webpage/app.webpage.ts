@@ -81,6 +81,11 @@ declare var jQuery: any;
         component: MLBPage,
     },
     {
+        path: '/league/:leagueId',
+        name: 'MLB-page',
+        component: MLBPage,
+    },
+    {
         path: '/team/:teamName/:teamId',
         name: 'Team-page',
         component: TeamPage,
