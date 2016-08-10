@@ -17,15 +17,17 @@ import {SeasonStatsComponent} from "../../fe-core/components/season-stats/season
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {SeasonStatsPageService} from '../../services/season-stats.service';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'Season-stats-page',
     templateUrl: './app/webpages/season-stats-page/season-stats.page.html',
-    directives: [SidekickWrapper, BackTabComponent, TitleComponent, SeasonStatsComponent, LoadingComponent, ErrorComponent],
+    directives: [SidekickWrapper, BackTabComponent, TitleComponent, SeasonStatsComponent, LoadingComponent, ErrorComponent, ResponsiveWidget],
     providers: [SeasonStatsPageService, ProfileHeaderService, Title],
 })
 
 export class SeasonStatsPage implements OnInit {
+  public widgetPlace: string = "widgetForPage";
   public tabs: Array<MLBSeasonStatsTabData>;
 
   public pageParams: MLBPageParameters = {}
