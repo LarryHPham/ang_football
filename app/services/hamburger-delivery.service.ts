@@ -22,7 +22,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " League",
-        url: ['MLB-page']//todo
+        url: ['MLB-page', {leagueId: division}]//todo
       },
       {
         menuTitle: division + " Schedule",
