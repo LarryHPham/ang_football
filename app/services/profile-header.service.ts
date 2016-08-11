@@ -168,7 +168,7 @@ interface LeagueProfileHeaderData {
   totalDivisions: number;
   totalConferences: number;
   backgroundUrl: string;
-  leagueLogo: string;
+  logo: string;
   aiDescriptionId: string;
   seasonId: string;
   lastUpdated: string;
@@ -307,7 +307,7 @@ export class ProfileHeaderService {
 
   convertMLBHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
-      imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
+      imageURL: GlobalSettings.getImageUrl(data.logo), //TODO
       imageRoute: ["MLB-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
@@ -564,7 +564,7 @@ export class ProfileHeaderService {
 
     var header: ProfileHeaderData = {
       profileName: data.leagueFullName, //todo short name
-      profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
+      profileImageUrl: GlobalSettings.getImageUrl(data.logo),
       backgroundImageUrl: data.backgroundUrl,
       profileTitleFirstPart: "",
       profileTitleLastPart: data.leagueFullName,
