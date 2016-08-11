@@ -19,7 +19,6 @@ export class TwitterService {
 
     if(id !== undefined){
       fullUrl += "/" + id;
-      console.log('twitter '+fullUrl);
     }
     return this.http.get( fullUrl, {
         headers: headers

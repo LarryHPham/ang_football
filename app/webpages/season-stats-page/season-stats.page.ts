@@ -70,8 +70,8 @@ export class SeasonStatsPage implements OnInit {
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.info.playerName));
-          this.setupTitleData(data.fullProfileImageUrl, data.headerData.info.teamName, data.pageParams.playerId.toString(), data.headerData.info.playerName);
+          this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
+          this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
           this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams);
         },
         err => {
