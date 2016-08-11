@@ -16,8 +16,10 @@ export class TwitterService {
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     fullUrl += "/"+profile+"/twitterInfo";
+
     if(id !== undefined){
       fullUrl += "/" + id;
+      console.log('twitter '+fullUrl);
     }
     return this.http.get( fullUrl, {
         headers: headers
