@@ -27,6 +27,7 @@ interface PlayerProfileData extends IProfileData {
 interface PlayerProfileHeaderData {
   description: string;
   info: {
+
     teamId: number;
     teamName: string;
     playerId: number;
@@ -155,19 +156,22 @@ interface LeagueProfileData extends IProfileData {
 }
 
 interface LeagueProfileHeaderData {
-  lastUpdated: string;
-  city: string;
-  state: string;
-  foundingDate: string;
-  foundedIn: string;  //NEED // year in [YYYY]
-  backgroundImage: string; //PLACEHOLDER
-  logo: string;
-  profileNameShort:string;
-  profileNameLong:string;
+  id: string;
+  profileNameShort: string;
+  profileNameLong: string;
+  leagueFullName: string;
+  leagueCity: string;
+  leagueState: string;
+  leagueFounded: string;
   totalTeams: number;
   totalPlayers: number;
   totalDivisions: number;
-  totalLeagues: number;
+  totalConferences: number;
+  backgroundUrl: string;
+  logo: string;
+  aiDescriptionId: string;
+  seasonId: string;
+  lastUpdated: string;
 }
 
 @Injectable()
@@ -254,18 +258,20 @@ export class ProfileHeaderService {
         });
   }
 
-  getMLBProfile(): Observable<LeagueProfileData> {
+  getMLBProfile(leagueParam?): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl() + '/league/profileHeader';
+    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/league/"+leagueParam;
     // console.log("mlb profile url: " + url);
-    return this.http.get(url)
+    return this.http.get(newUrl)
         .map(res => res.json())
         .map(data => {
-          var leagueData: LeagueProfileHeaderData = data.data;
-          leagueData.profileNameShort = "MLB";
-          leagueData.profileNameLong = "Major League Baseball";
+          var leagueData: LeagueProfileHeaderData = data.data[0];
+
+          leagueData.profileNameShort = leagueData.leagueFullName; //todo
+          leagueData.profileNameLong = leagueData.leagueFullName;
           //Forcing values to be numbers
           leagueData.totalDivisions = Number(leagueData.totalDivisions);
-          leagueData.totalLeagues = Number(leagueData.totalLeagues);
+          leagueData.totalConferences = Number(leagueData.totalConferences);
           leagueData.totalPlayers = Number(leagueData.totalPlayers);
           leagueData.totalTeams = Number(leagueData.totalTeams);
 
@@ -541,37 +547,37 @@ export class ProfileHeaderService {
 
   convertToLeagueProfileHeader(data: LeagueProfileHeaderData): ProfileHeaderData {
     //The MLB consists of [30] teams and [####] players. These teams and players are divided across [two] leagues and [six] divisions.
-    var city = data.city != null ? data.city : "N/A";
-    var state = data.state != null ? data.state : "N/A";
+    var city = data.leagueCity != null ? data.leagueCity : "N/A";
+    var state = data.leagueState != null ? data.leagueState : "N/A";
 
-    data.backgroundImage = GlobalSettings.getBackgroundImageUrl(data.backgroundImage);
+    data.backgroundUrl = GlobalSettings.getBackgroundImageUrl(data.backgroundUrl);
 
-    var description = "The MLB consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
+    var description = "The "+data.leagueFullName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
                       " teams and " + GlobalFunctions.formatNumber(data.totalPlayers) + " players. " +
-                      "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalLeagues) +
-                      " leagues and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
+                      "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
+                      " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
     var location = "N/A";
-    if ( data.city && data.state ) {
+    if ( data.leagueCity && data.leagueState ) {
       location = city + ", " + state;
     }
 
     var header: ProfileHeaderData = {
-      profileName: "MLB",
+      profileName: data.leagueFullName, //todo short name
       profileImageUrl: GlobalSettings.getImageUrl(data.logo),
-      backgroundImageUrl: data.backgroundImage,
+      backgroundImageUrl: data.backgroundUrl,
       profileTitleFirstPart: "",
-      profileTitleLastPart: "Major League Baseball",
+      profileTitleLastPart: data.leagueFullName,
       lastUpdatedDate: data.lastUpdated,
       description: description,
       topDataPoints: [
         {
           label: "League Headquarters",
-          value: location
+          value: data.leagueCity
         },
         {
           label: "Founded In",
-          value: data.foundingDate
+          value: data.leagueFounded
         }
       ],
       bottomDataPoints: [
@@ -588,8 +594,8 @@ export class ProfileHeaderService {
           value: data.totalDivisions != null ? data.totalDivisions.toString() : null
         },
         {
-          label: "Total Leagues:",
-          value: data.totalLeagues != null ? data.totalLeagues.toString() : null
+          label: "Total Conferences:",
+          value: data.totalConferences != null ? data.totalConferences.toString() : null
         }
       ]
     }
