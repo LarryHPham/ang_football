@@ -69,14 +69,16 @@ export class AboutUsPage {
       private _title: Title,
       private _params: RouteParams
     ) {
-      _title.setTitle(GlobalSettings.getPageTitle("About Us"));
-      GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+        _title.setTitle(GlobalSettings.getPageTitle("About Us"));
 
-      this.divisionID = _params.get('divisionID');
+        GlobalSettings.getParentParams(_router, parentParams =>
+          this.loadData(parentParams.partnerID, parentParams.scope)
+        );
     }
 
-    loadData(partnerID:string) {
-        this._service.getData(partnerID, this.divisionID).subscribe(
+    loadData(partnerID?:string, scope?:string) {
+      
+        this._service.getData(partnerID, scope).subscribe(
           data => this.setupAboutUsData(data),
           err => {
             console.log("Error getting About Us data: " + err);
@@ -91,7 +93,5 @@ export class AboutUsPage {
         this.titleData = data.titleData;
         this.auContent = data.content;
       }
-
-      console.log(data.blocks);
     }
 }

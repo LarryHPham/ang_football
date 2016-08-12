@@ -1,5 +1,5 @@
 import {Component, ApplicationRef} from '@angular/core';
-import {Router, RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {Router, RouteConfig, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Rx';
 import {AppComponent} from "../app-webpage/app.webpage";
