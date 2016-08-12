@@ -17,7 +17,6 @@ export class TwitterService {
     var fullUrl = this._apiUrl;
     fullUrl += "/"+profile+"/twitterInfo";
 
-    console.log(fullUrl);
 
     if(id !== undefined){
       fullUrl += "/" + id;
