@@ -185,7 +185,6 @@ export class ComparisonStatsService {
       data.bestStatistics = this.formatPlayerData("statHigh", data.data);
       data.worstStatistics = this.formatPlayerData("statLow", data.data);
       data.bars = this.createComparisonBars(data);
-
       var team1Data = {
         teamId: data.playerOne.teamId,
         playerList: [{key: data.playerOne.playerId, value: data.playerOne.playerName}]
@@ -199,7 +198,7 @@ export class ComparisonStatsService {
       var moduleData = new MLBComparisonModuleData(this);
       moduleData.data = data;
       moduleData.teamList = [
-          {key: data.playerOne.teamId, value: data.playerOne.teamName},
+          {key: data.playerOne.teamId, value: data.playerOne.teamName},//TODO only need team last name
           {key: data.playerTwo.teamId, value: data.playerTwo.teamName}
       ];
       moduleData.playerLists = [
@@ -277,7 +276,7 @@ export class ComparisonStatsService {
   */
   private formatTeamList(teamList) {
     return teamList.map(team => {
-      var teamName = team.teamFirstName + " " + team.teamLastName;
+      var teamName = team.teamLastName;
       return {key: team.teamId, value: teamName};
     });
   }

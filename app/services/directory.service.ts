@@ -122,17 +122,16 @@ export class DirectoryService {
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
     // console.log("team directory: " + url);
     return this.http.get(url)
-        .map(res => res.json())
-        .map(data => {
-          var items = data.data;
-          var firstItem = items.length > 0 ? items[0] : null;
-          return {
-            totalItems: firstItem ? firstItem.resultCount : 0,
-            items: data.data.map(value => this.convertTeamDataToDirectory(value))
-          }
-        });
+      .map(res => res.json())
+      .map(data => {
+        var items = data.data;
+        var firstItem = items.length > 0 ? items[0] : null;
+        return {
+          totalItems: firstItem ? firstItem.resultCount : 0,
+          items: data.data.map(value => this.convertTeamDataToDirectory(value))
+        }
+      });
   }
-
   //"<a href=''>[Team Name]</a>  |  League:  [American or National]  |  Division: [Division]",
   //"[City], [State]  <i class=\"fa fa-angle-right\"></i>  Stadium: [Stadium Name]"
   convertTeamDataToDirectory(data: MLBTeamDirectoryData): DirectoryProfileItem {
@@ -140,7 +139,7 @@ export class DirectoryService {
     if ( data.teamCity && data.teamState ) {
       location = data.teamCity + ", " + data.teamState;
     }
-    
+
     var venue = "N/A";
     if ( data.teamVenue ) {
       venue = data.teamVenue;
@@ -174,12 +173,12 @@ export class DirectoryService {
     if ( data.city && data.area ) {
       location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
     }
-    
+
     var positions = "N/A";
     if ( data.position && data.position.length > 0 ) {
       positions = data.position.join(", ");
     }
-    
+
     return {
       lastUpdated: data.lastUpdate,
       mainDescription: [
