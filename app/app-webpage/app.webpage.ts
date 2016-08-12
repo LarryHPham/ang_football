@@ -3,6 +3,7 @@ import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES, Router} from 
 
 import {GlobalFunctions} from "../global/global-functions";
 import {FooterComponent} from "../fe-core/components/footer/footer.component";
+
 import {HeaderComponent} from "../fe-core/components/header/header.component";
 
 import {PickTeamPage} from "../webpages/home-page/home-page.page";
