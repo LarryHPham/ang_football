@@ -28,7 +28,7 @@ declare var moment:any;
 export class TransactionsPage implements OnInit{
   profileHeaderData: TitleInputData;
   pageParams:MLBPageParameters;
-  
+
   tabs: Array<TransactionTabData>;
 
   isError: boolean = false;
@@ -39,9 +39,9 @@ export class TransactionsPage implements OnInit{
   selectedTabKey: string;
   listSort: string = "recent";
 
-  constructor(private _transactionsService:TransactionsService, 
-              private _profileService:ProfileHeaderService, 
-              private _params: RouteParams, 
+  constructor(private _transactionsService:TransactionsService,
+              private _profileService:ProfileHeaderService,
+              private _params: RouteParams,
               private _title: Title) {
     _title.setTitle(GlobalSettings.getPageTitle("Transactions"));
     this.pageParams = {
@@ -79,8 +79,8 @@ export class TransactionsPage implements OnInit{
       this._profileService.getMLBProfile()
         .subscribe(
           data => {
-            this.profileName = data.headerData.profileNameShort;
-            var profileHeaderData = this._profileService.convertMLBHeader(data.headerData, "");                        
+            this.profileName = data.headerData.leagueAbbreviatedName;
+            var profileHeaderData = this._profileService.convertMLBHeader(data.headerData, "");
             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
