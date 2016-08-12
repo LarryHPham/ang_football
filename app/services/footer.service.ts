@@ -42,18 +42,19 @@ export class FooterService {
   footerData(data, scope: string, profile: string): Array<Link>{
     var navigationArray: Array<Link> = [];
     //Build alphabet array for navigation links
+    var footerLink = {['Directory-page-starts-with',{
+              type: profile,
+              page: 1,
+              startsWith: text
+          }]}
     for ( var i in data ) {
       var text = i.toUpperCase();
         navigationArray.push({
             text: text,
-            route: ['Directory-page-starts-with',
-              {
-                  type: profile,
-                  page: 1,
-                  startsWith: text
-              }]
+            route: data[i] != false ? footerLink : null
         });
       }
+      console.log(navigationArray)
       return navigationArray;
     }
 }
