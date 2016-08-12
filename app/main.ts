@@ -2,7 +2,7 @@
 
 import {bootstrap} from '@angular/platform-browser-dynamic';
 import {ROUTER_PROVIDERS, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
-import {AppDomain} from './fe-core/app-domain/app.domain';
+import {AppDomain} from './app-domain/app.domain';
 import {GlobalFunctions} from './global/global-functions';
 import {MLBGlobalFunctions} from './global/mlb-global-functions';
 import {SearchService} from './services/search.service';

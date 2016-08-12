@@ -59,6 +59,7 @@ export class ArticlePages implements OnInit {
     aiSidekick:boolean = true;
     partnerId:string;
     isSmall:boolean = false;
+    rawUrl:string;
 
     constructor(private _params:RouteParams,
                 private _router:Router,
@@ -84,6 +85,7 @@ export class ArticlePages implements OnInit {
             .subscribe(
                 ArticleData => {
                     this.isSmall = window.innerWidth <= 640;
+                    this.rawUrl = window.location.href;
                     var pageIndex = Object.keys(ArticleData)[0];
                     this.getCarouselImages(ArticleData[pageIndex]['images']);
                     //this.parseLinks(ArticleData[pageIndex]);
@@ -110,7 +112,7 @@ export class ArticlePages implements OnInit {
             .subscribe(
                 HeadlineData => {
                     this.pageIndex = this.eventType;
-                    this.eventID = HeadlineData.event;
+                    this.eventID = HeadlineData.event.toString();
                     this.recommendedImageData = HeadlineData['home'].images.concat(HeadlineData['away'].images);
                     this.getRandomArticles(HeadlineData, this.pageIndex, this.eventID, this.recommendedImageData);
                 }
@@ -153,7 +155,8 @@ export class ArticlePages implements OnInit {
                     content: data[val].article[0],
                     eventId: data['meta-data']['current'].eventId,
                     eventType: val,
-                    url: MLBGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId)
+                    url: MLBGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId),
+                    rawUrl: window.location.protocol + "//" + window.location.host + "/articles/" + val + "/" + data['meta-data']['current'].eventId
                 };
             }
         });
@@ -582,14 +585,14 @@ export class ArticlePages implements OnInit {
     }
 
     ngOnInit() {
-      //This has to be resize to trigger the takeover update
-      try {
-          window.dispatchEvent(new Event('resize'));
-      }catch(e){
-          //to run resize event on IE
-          var resizeEvent = document.createEvent('UIEvents');
-          resizeEvent.initUIEvent('resize', true, false, window, 0);
-          window.dispatchEvent(resizeEvent);
-      }
+        //This has to be resize to trigger the takeover update
+        try {
+            window.dispatchEvent(new Event('resize'));
+        }catch(e){
+            //to run resize event on IE
+            var resizeEvent = document.createEvent('UIEvents');
+            resizeEvent.initUIEvent('resize', true, false, window, 0);
+            window.dispatchEvent(resizeEvent);
+        }
     }
 }
