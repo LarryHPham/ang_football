@@ -29,7 +29,7 @@ export class DisclaimerPage {
 
     constructor(private _router:Router, private _title: Title) {
       _title.setTitle(GlobalSettings.getPageTitle("Disclaimer"));
-      GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+      GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
     }
 
     loadData(partnerID:string) {

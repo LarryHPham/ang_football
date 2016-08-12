@@ -143,8 +143,10 @@ export class MLBPage implements OnInit {
     twitterData: Array<twitterModuleData>;
     schedulesData:any;
 
-    leagueID: string;
-    leagueAPIparam: number;
+    public scope: string;
+    public leagueAPIparam: number;
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(private _router:Router,
                 private _title: Title,
@@ -175,29 +177,34 @@ export class MLBPage implements OnInit {
           date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
         }
 
-        GlobalSettings.getPartnerID(_router, partnerID => {
-            this.partnerID = partnerID;
+        GlobalSettings.getParentParams(_router, parentParams => {
+            this.partnerID = parentParams.partnerID;
+            this.scope = parentParams.scope;
+
+            if ( this.scope == this.collegeDivisionAbbrv.toLowerCase() ) {
+              this.leagueAPIparam = 2;
+            }
+            else {
+              this.leagueAPIparam = 1;
+            }
+
+            this.setupProfileData(this.leagueAPIparam);
         });
 
-        //set league ID based on route pageParams
-        this.leagueID = _params.get('leagueId').toLowerCase();
-        if ( this.leagueID === GlobalSettings.getCollegeDivisionAbbrv().toLowerCase() ) {
-          this.leagueAPIparam = 2;
-        }
-        else {
-          this.leagueAPIparam = 1;
-        }
+
+
     }
 
     ngOnInit() {
-        this.setupProfileData();
+        // this.setupProfileData();
     }
 
-    private setupProfileData() {
-        this._profileService.getMLBProfile(this.leagueAPIparam).subscribe(
+    private setupProfileData(scope) {
+
+        this._profileService.getMLBProfile(scope).subscribe(
             data => {
 
-            //     /*** About MLB ***/
+            ///*** About MLB ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = "MLB"; //leagueShortName

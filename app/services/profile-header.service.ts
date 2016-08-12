@@ -44,8 +44,8 @@ interface PlayerProfileHeaderData {
     experience: number;
     entryDate?: string; //null
     draftYear?: string; //null
-    city: string; // todo - missing
-    area: string; //todo - missing
+    playerBirthCity: string;
+    playerBirthState: string; //todo - missing
     age: number;
     dob: string;
     height: string;
@@ -132,8 +132,8 @@ interface LeagueProfileData extends IProfileData {
 
 interface LeagueProfileHeaderData {
   id: string;
-  leagueShortName: string;
   leagueFullName: string;
+  leagueAbbreviatedName?: string;
   leagueCity: string;
   leagueState: string;
   leagueFounded: string;
@@ -156,8 +156,6 @@ export class ProfileHeaderService {
     let url = GlobalSettings.getApiUrl() + '/player/profileHeader/' + playerId;
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/player/130"; //todo
 
-    console.log(url);
-    
     return this.http.get(newUrl)
         .map(res => res.json())
         .map(data => {
@@ -236,20 +234,21 @@ export class ProfileHeaderService {
     let url = GlobalSettings.getApiUrl() + '/league/profileHeader';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/league/"+leagueParam;
     // console.log("mlb profile url: " + url);
+
     return this.http.get(newUrl)
         .map(res => res.json())
         .map(data => {
-          var leagueData: LeagueProfileHeaderData = data.data[0];
+          var headerData: LeagueProfileHeaderData = data.data[0];
 
           //Forcing values to be numbers
-          leagueData.totalDivisions = Number(leagueData.totalDivisions);
-          leagueData.totalConferences = Number(leagueData.totalConferences);
-          leagueData.totalPlayers = Number(leagueData.totalPlayers);
-          leagueData.totalTeams = Number(leagueData.totalTeams);
+          headerData.totalDivisions = Number(headerData.totalDivisions);
+          headerData.totalConferences = Number(headerData.totalConferences);
+          headerData.totalPlayers = Number(headerData.totalPlayers);
+          headerData.totalTeams = Number(headerData.totalTeams);
 
           return {
-            headerData: leagueData,
-            profileName: leagueData.leagueFullName, //todo - should be short name
+            headerData: headerData,
+            profileName: headerData.leagueFullName, //todo - should be short name
             profileId: null,
             profileType: "league"
           };
@@ -323,8 +322,8 @@ export class ProfileHeaderService {
     }
 
     var location = "N/A"; //[Wichita], [Kan.]
-    if ( headerData.city && headerData.area ) {
-      location = headerData.city + ", " + headerData.area;
+    if ( headerData.playerBirthCity && headerData.playerBirthState ) {
+      location = headerData.playerBirthCity + ", " + headerData.playerBirthState;
     }
 
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
@@ -337,7 +336,7 @@ export class ProfileHeaderService {
     var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
     var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
 
-    var description = firstSentence + "<span class='text-heavy'>" + headerData.playerFullName +
+    var description = firstSentence + "<span class='text-heavy'>" + headerData.playerFirstName +
                   "</span> was born in <span class='text-heavy'>" + location +
                   "</span> on <span class='text-heavy'>" + formattedBirthDate +
                   "</span> and is <span class='text-heavy'>" + formattedAge +

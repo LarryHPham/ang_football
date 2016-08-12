@@ -150,8 +150,8 @@ export class PlayerPage implements OnInit {
           playerId: Number(_params.get("playerId"))
       };
 
-    GlobalSettings.getPartnerID(_router, partnerID => {
-        this.partnerID = partnerID;
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.partnerID = parentParams.partnerID;
     });
   }
 

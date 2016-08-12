@@ -69,7 +69,7 @@ export class PickTeamPage{
       this.getData();
       this.getListData();
 
-      GlobalSettings.getPartnerID(_router, partnerID => {
+      GlobalSettings.getParentParams(_router, parentParams => {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
         this.isHomeRunZone = partnerHome;
       });
