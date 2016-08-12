@@ -17,9 +17,9 @@ export class ErrorPage {
 
   constructor(private _router:Router, private _title: Title) {
       _title.setTitle(GlobalSettings.getPageTitle("Page Not Found"));
-      GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+      GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
   }
-  
+
   loadData(partnerID:string) {
     this.pageLink = GlobalSettings.getHomePage(partnerID);
     this.errorMessage = "Oops! That page doesn't exist! Try Refreshing or go to <a class='text-master' href='/'"+ this.pageLink +"'> our home page</a>!";

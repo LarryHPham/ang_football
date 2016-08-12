@@ -68,7 +68,7 @@ export class SyndicatedArticlePage{
         this.getDeepDiveVideo(this.eventID);
       }
 
-      GlobalSettings.getPartnerID(_router, partnerID => {
+      GlobalSettings.getParentParams(_router, partnerID => {
           this.partnerID = partnerID;
           this.getPartnerHeader();
       });

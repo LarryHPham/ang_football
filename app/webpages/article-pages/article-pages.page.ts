@@ -71,9 +71,9 @@ export class ArticlePages implements OnInit {
         if (this.eventType == "upcoming-game") {
             this.eventType = "upcoming";
         }
-        GlobalSettings.getPartnerID(_router, partnerID => {
-            if (partnerID != null) {
-                this.partnerId = partnerID.replace("-", ".");
+        GlobalSettings.getParentParams(_router, parentParams => {
+            if (parentParams.partnerID != null) {
+                this.partnerId = parentParams.partnerID.replace("-", ".");
             }
             this.getArticles();
         });

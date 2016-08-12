@@ -32,18 +32,19 @@ export class AboutUsService {
   public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
   public sportLeagueSegments: string = GlobalSettings.getSportLeagueSegments();
 
-  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
   public collegeDivisionChampionship: string = GlobalSettings.getCollegeDivisionChampionship();
   public collegeDivisionSegments: string = GlobalSettings.getCollegeDivisionSegments();
 
   constructor(public http: Http){}
 
-  getData(partnerID: string, division: string): Observable<AboutUsModel> {
+  getData(partnerID: string, scope: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+division.toLowerCase(); //todo
+    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
+    console.log(newUrl);
     return this.http.get(newUrl)
       .map( res => res.json() )
-      .map( data => this.formatData(data.data, partnerID, division) )
+      .map( data => this.formatData(data.data, partnerID, scope) )
   }
 
   formatDate(date) {
@@ -51,13 +52,13 @@ export class AboutUsService {
     return newDate;
   }
 
-  private formatData(data: AboutUsInterface, partnerID: string, division?: string): AboutUsModel {
+  private formatData(data: AboutUsInterface, partnerID: string, scope?: string): AboutUsModel {
 
     let pageName = (partnerID == null)
             ? GlobalSettings.getBaseTitle()
             : GlobalSettings.getBasePartnerTitle();
     let numTeams = GlobalFunctions.commaSeparateNumber(data[0].numTeams);
-    let divisionScope = data[0].scope.toUpperCase();
+    let divisionScope = data[0].scope.toLowerCase();
     let numPlayers = GlobalFunctions.commaSeparateNumber(data[0].numPlayers);
     let numDivisions = data[0].numDivisions;
     let championshipYear = data[0].championshipYear;
@@ -73,17 +74,17 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    if (divisionScope == this.collegeDivisionAbbrv.toUpperCase()) {
-      activeDivision = this.collegeDivisionAbbrv;
+    if (divisionScope == this.collegeDivisionFullAbbrv) {
+      activeDivision = this.collegeDivisionFullAbbrv.toUpperCase();
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
-      console.log(data[0].scope.toUpperCase(), this.collegeDivisionAbbrv.toUpperCase(), activeDivisionChampionship);
+      console.log(data[0].scope.toUpperCase(), this.collegeDivisionFullAbbrv.toUpperCase(), activeDivisionChampionship);
     }
     else {
-      activeDivision = divisionScope;
-      activeDivisionSegments = this.collegeDivisionSegments;
+      activeDivision = this.sportLeagueAbbrv.toUpperCase();
+      activeDivisionSegments = this.sportLeagueSegments;
       activeDivisionChampionship = this.sportLeagueChampionship;
-      console.log(data[0].scope.toUpperCase(), this.collegeDivisionAbbrv.toUpperCase(), activeDivisionChampionship);
+      console.log(data[0].scope.toUpperCase(), this.sportLeagueAbbrv.toUpperCase().toUpperCase(), activeDivisionChampionship);
     }
 
     let model: AboutUsModel = {

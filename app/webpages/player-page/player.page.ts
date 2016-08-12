@@ -150,8 +150,8 @@ export class PlayerPage implements OnInit {
           playerId: Number(_params.get("playerId"))
       };
 
-    GlobalSettings.getPartnerID(_router, partnerID => {
-        this.partnerID = partnerID;
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.partnerID = parentParams.partnerID;
     });
   }
 
@@ -164,14 +164,17 @@ export class PlayerPage implements OnInit {
           data => {
               /*** About [Player Name] ***/
               this.pageParams = data.pageParams;
-              this.profileName = data.headerData.info.playerName;
-              this.teamName = data.headerData.info.teamName;
-              this.teamId = data.headerData.info.teamId;
+              this.profileName = data.headerData.playerFullName;
+              this.teamName = data.headerData.teamFullName;
+              this.teamId = data.headerData.teamId;
 
               this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
               this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
+
               this.setupTeamProfileData();
               this.dailyUpdateModule(this.pageParams.playerId);
+
+
 
               //get current date for box-scores
               var currentUnixDate = new Date().getTime();
