@@ -44,16 +44,19 @@ export class FooterService {
     //Build alphabet array for navigation links
     for ( var i in data ) {
       var text = i.toUpperCase();
+      if(data[i] == true){
         navigationArray.push({
-            text: text,
-            route: {['Directory-page-starts-with',{
-                      type: profile,
-                      page: 1,
-                      startsWith: text
-                  }]}
+          text: text,
+          active: true,
+          route: ['Directory-page-starts-with',
+          {
+            type: profile,
+            page: 1,
+            startsWith: text
+          }]
         });
       }
-      console.log(navigationArray);
-      return navigationArray;
+    }
+    return navigationArray;
     }
 }
