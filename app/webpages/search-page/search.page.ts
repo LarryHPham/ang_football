@@ -32,8 +32,8 @@ export class SearchPage implements OnInit {
         this.pageParams = {
             query: query
         }
-        GlobalSettings.getPartnerID(_router, partnerID => {
-            this.partnerId = partnerID;
+        GlobalSettings.getParentParams(_router, parentParams => {
+            this.partnerId = parentParams.partnerID;
         });
     }
 
