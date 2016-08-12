@@ -17,7 +17,7 @@ export class FaqService {
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     fullUrl = 'http://dev-touchdownloyal-api.synapsys.us';
-    fullUrl += "/"+profile+"/faq";
+    fullUrl += "/faq/" + profile;
     /*
      http://dev-touchdownloyal-api.synapsys.us/faq/player/1
      http://dev-touchdownloyal-api.synapsys.us/faq/league/1
