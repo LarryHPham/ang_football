@@ -16,7 +16,13 @@ export class FaqService {
   getFaqService(profile, id?){
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
-    fullUrl += "/"+profile+"/faq";
+    fullUrl = 'http://dev-touchdownloyal-api.synapsys.us';
+    fullUrl += "/faq/" + profile;
+    /*
+     http://dev-touchdownloyal-api.synapsys.us/faq/player/1
+     http://dev-touchdownloyal-api.synapsys.us/faq/league/1
+     http://dev-touchdownloyal-api.synapsys.us/faq/team/1
+    */
     if(id !== undefined){
       fullUrl += "/" + id;
     }
