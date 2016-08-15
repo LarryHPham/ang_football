@@ -150,7 +150,7 @@ export class ListOfListsPage implements OnInit{
         if ( this.pageType == "league" ) {
             this._profileService.getMLBProfile()
             .subscribe(data => {
-                this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.logo));
+                this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
             }, err => {
                 console.log("Error loading MLB profile");
             });

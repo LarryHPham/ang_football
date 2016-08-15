@@ -126,10 +126,10 @@ export class SchedulesPage implements OnInit{
             if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
               display = "Current Season"
             }
-            var pageTitle = display + " Schedules - " + data.headerData.profileNameShort;
+            var pageTitle = display + " Schedules - " + data.headerData.leagueAbbreviatedName;
             this.profileHeaderData = this.profHeadService.convertMLBHeader(data.headerData, pageTitle);
             this.errorData = {
-              data: data.headerData.profileNameShort + " has no record of any more games for the current season.",
+              data: data.headerData.leagueAbbreviatedName + " has no record of any more games for the current season.",
               icon: "fa fa-remove"
             }
           },
