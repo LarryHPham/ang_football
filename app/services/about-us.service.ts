@@ -137,12 +137,12 @@ export class AboutUsService {
       ],
       //TODO-CJP: Update [July, 2016] to reflect actual creation date!
       content: [
-        "We created " + pageName + " -based in Wichita, Kan. in July, 2016 to connect baseball fans with insightful, well-informed and up-to-date content.",
+        "We created " + pageName + " -based in Wichita, Kan. in July, 2016 to connect football fans with insightful, well-informed and up-to-date content.",
 
-        "Here at " + pageName + ", we have an appetite for digesting down big data in the world of baseball." +
+        "Here at " + pageName + ", we have an appetite for digesting down big data in the world of football." +
         " We create unique content so you can learn everything about your favorite team or player." +
         " From rookie players and underachieving teams to veteran stars and perennial favorites, " +
-        pageName + " produces content and statistical information for " + numTeams + " MLB teams and over " + numPlayers + " player profiles."
+        pageName + " produces content and statistical information for " + numTeams + " NFL teams and over " + numPlayers + " player profiles."
       ]
     };
 

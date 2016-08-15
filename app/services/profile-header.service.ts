@@ -384,7 +384,7 @@ export class ProfileHeaderService {
                        "</span>.";
 
     var header: ProfileHeaderData = {
-      profileName: headerData.teamName,
+      profileName: "the "+fullTeamName,
       profileImageUrl: headerData.backgroundUrl,
       backgroundImageUrl: headerData.backgroundUrl,
       profileTitleFirstPart: headerData.teamMarket,
@@ -460,12 +460,12 @@ export class ProfileHeaderService {
 
     var header: ProfileHeaderData = {
       //profileName: data.leagueAbbreviatedName, //todo when correct API is set
-      profileName: leagueAbbreviatedName,
+      profileName: "the "+leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
       backgroundImageUrl: data.backgroundUrl,
       profileTitleFirstPart: "",
       //profileTitleLastPart: data.leagueAbbreviatedName, //todo when correct API is set
-      profileTitleLastPart: leagueAbbreviatedName,
+      profileTitleLastPart: data.leagueFullName,
       lastUpdatedDate: data.lastUpdated,
       description: description,
       topDataPoints: [
