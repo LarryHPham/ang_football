@@ -233,7 +233,15 @@ export class ProfileHeaderService {
   getMLBProfile(leagueParam?): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl() + '/league/profileHeader';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/league/"+leagueParam;
-    // console.log("mlb profile url: " + url);
+
+    //remove when correct API is set up
+    let leagueAbbreviatedName;
+    if ( leagueParam == 1 ) {
+        leagueAbbreviatedName = 'NFL';
+    }
+    else if ( leagueParam == 2 ) {
+      leagueAbbreviatedName == 'NCAAF'
+    }
 
     return this.http.get(newUrl)
         .map(res => res.json())
@@ -481,13 +489,23 @@ export class ProfileHeaderService {
   }
 
   convertToLeagueProfileHeader(data: LeagueProfileHeaderData): ProfileHeaderData {
+
+    //remove when correct API is set up
+    let leagueAbbreviatedName;
+    if ( data.leagueFullName == 'National Football League' ) {
+        leagueAbbreviatedName = 'NFL';
+    }
+    else if ( data.leagueFullName == 'NCAA Football Bowl Subdivision' ) {
+      leagueAbbreviatedName = 'NCAAF';
+    }
+
     //The MLB consists of [30] teams and [####] players. These teams and players are divided across [two] leagues and [six] divisions.
     var city = data.leagueCity != null ? data.leagueCity : "N/A";
     var state = data.leagueState != null ? data.leagueState : "N/A";
 
     data.backgroundUrl = GlobalSettings.getBackgroundImageUrl(data.backgroundUrl);
 
-    var description = "The "+data.leagueFullName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
+    var description = "The "+/*-data.leagueFullName-*/leagueAbbreviatedName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
                       " teams and " + GlobalFunctions.formatNumber(data.totalPlayers) + " players. " +
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
@@ -498,11 +516,13 @@ export class ProfileHeaderService {
     }
 
     var header: ProfileHeaderData = {
-      profileName: data.leagueFullName, //todo short name
+      //profileName: data.leagueAbbreviatedName, //todo when correct API is set
+      profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
       backgroundImageUrl: data.backgroundUrl,
       profileTitleFirstPart: "",
-      profileTitleLastPart: data.leagueFullName,
+      //profileTitleLastPart: data.leagueAbbreviatedName, //todo when correct API is set
+      profileTitleLastPart: leagueAbbreviatedName,
       lastUpdatedDate: data.lastUpdated,
       description: description,
       topDataPoints: [

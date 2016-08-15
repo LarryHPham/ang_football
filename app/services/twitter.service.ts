@@ -12,11 +12,14 @@ export class TwitterService {
     return headers;
   }
   // getTwitterService(profile, id){
-  getTwitterService(profile, id?){
+  getTwitterService(profile, id?, scope?){
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     fullUrl += "/"+profile+"/twitterInfo";
+    var newUrl = "http://dev-touchdownloyal-api.synapsys.us/twitter/"+profile+"/"+scope;
 
+    console.log('newUrl '+newUrl);
+    console.log('oldUrl '+fullUrl);
 
     if(id !== undefined){
       fullUrl += "/" + id;

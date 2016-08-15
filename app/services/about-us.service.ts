@@ -39,9 +39,15 @@ export class AboutUsService {
   constructor(public http: Http){}
 
   getData(partnerID: string, scope: string): Observable<AboutUsModel> {
+
+    //remove when correct API is set
+    if (scope == 'fbs' ) {
+      scope = 'ncaa';
+    }
+
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
-    console.log(newUrl);
+
     return this.http.get(newUrl)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, scope) )
@@ -74,17 +80,16 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    if (divisionScope == this.collegeDivisionFullAbbrv) {
+    //remove or condition below when correct API is set
+    if (divisionScope == this.collegeDivisionFullAbbrv || divisionScope == 'ncaa') {
       activeDivision = this.collegeDivisionFullAbbrv.toUpperCase();
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
-      console.log(data[0].scope.toUpperCase(), this.collegeDivisionFullAbbrv.toUpperCase(), activeDivisionChampionship);
     }
     else {
       activeDivision = this.sportLeagueAbbrv.toUpperCase();
       activeDivisionSegments = this.sportLeagueSegments;
       activeDivisionChampionship = this.sportLeagueChampionship;
-      console.log(data[0].scope.toUpperCase(), this.sportLeagueAbbrv.toUpperCase().toUpperCase(), activeDivisionChampionship);
     }
 
     let model: AboutUsModel = {
