@@ -18,9 +18,6 @@ export class TwitterService {
     fullUrl += "/"+profile+"/twitterInfo";
     var newUrl = "http://dev-touchdownloyal-api.synapsys.us/twitter/"+profile+"/"+scope;
 
-    console.log('newUrl '+newUrl);
-    console.log('oldUrl '+fullUrl);
-
     if(id !== undefined){
       fullUrl += "/" + id;
     }

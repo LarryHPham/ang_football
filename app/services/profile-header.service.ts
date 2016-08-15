@@ -83,47 +83,31 @@ interface TeamProfileData extends IProfileData {
 }
 
 interface TeamProfileHeaderData {
-    description: string;
-    profileImage: string;
-    backgroundImage: string;
-    lastUpdated: string;
-    teamFirstName: string;
-    teamLastName: string;
-    teamVenue: string;
+    id: number;
+    teamId: number;
+    teamMarket: string;
+    teamName: string;
     teamCity: string;
     teamState: string;
-    stats: {
-      teamId: number;
-      teamName: string;
-      seasonId: string;
-      totalWins: number;
-      totalLosses: number;
-      batting: {
-        average: number;
-        runsScored: number;
-        homeRuns: number;
-      };
-      pitching: {
-        era: number;
-      };
-      conference: {
-        rank: string;
-        name: string;
-      };
-      division: {
-        rank: string;
-        wins: string;
-        losses: string;
-        winningPercentage: string;
-        eventsPlayed: number;
-        gamesBack: number;
-        name: string;
-      };
-      streak: {
-        type: string; //win or loss
-        count: number;
-      };
-    };
+    divisionName: Division;
+    conferenceName: Conference;
+    venueName: string;
+    rank: number;
+    divWins: number;
+    divLosses: number;
+    totalWins: number;
+    totalLosses: number;
+    pointsPerGame: number;
+    pointsPerGameRank: number;
+    passingYardsPerGame: number;
+    passingYardsPerGameRank: number;
+    rushingYardsPerGame: number;
+    rushingYardsPerGameRank: number;
+    backgroundUrl: string;
+    teamLogo: string;
+    lastUpdated: string;
+    profileImage: string; //todo - missing
+    seasonId: string; //todo - missing
 }
 
 interface LeagueProfileData extends IProfileData {
@@ -185,46 +169,28 @@ export class ProfileHeaderService {
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
     let url = GlobalSettings.getApiUrl() + '/team/profileHeader/' + teamId;
+    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/team/2";
     // console.log("team profile url: " + url);
-    return this.http.get(url)
+
+    return this.http.get(newUrl)
         .map(res => res.json())
         .map(data => {
-          var headerData: TeamProfileHeaderData = data.data;
+          var headerData: TeamProfileHeaderData = data.data[0];
+          var teamName = headerData.teamName;
 
-          //Setting up conference and division values
-          var confKey = "", divKey = "";
-          if ( headerData.stats ) {
-            if ( headerData.stats.conference && headerData.stats.conference.name ) {
-              confKey = headerData.stats.conference.name.toLowerCase();
-            }
-            if ( headerData.stats.division && headerData.stats.division.name ) {
-              divKey = headerData.stats.division.name.toLowerCase();
-            }
-          }
-
-          //Forcing values to be numbers
-          if ( headerData.stats.batting ) {
-            headerData.stats.batting.average = Number(headerData.stats.batting.average);
-            headerData.stats.batting.runsScored = Number(headerData.stats.batting.runsScored);
-            headerData.stats.batting.homeRuns = Number(headerData.stats.batting.homeRuns);
-          }
-          if ( headerData.stats.pitching ) {
-            headerData.stats.pitching.era = Number(headerData.stats.pitching.era);
-          }
-          var teamName = headerData.teamFirstName + " " + headerData.teamLastName;
           return {
             pageParams: {
-              teamId: headerData.stats.teamId,
-              teamName: headerData.stats.teamName,
-              division: Division[divKey],
-              conference: Conference[confKey],
+              teamId: headerData.teamId,
+              teamName: headerData.teamName,
+              division: headerData.divisionName,
+              conference: headerData.conferenceName,
             },
-            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundImage),
+            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.profileImage),
             headerData: headerData,
-            teamName: teamName,
-            profileName: headerData.stats.teamName,
-            profileId: headerData.stats.teamId.toString(),
+            teamName: headerData.teamName,
+            profileName: headerData.teamName,
+            profileId: headerData.teamId.toString(),
             profileType: "team"
           };
         });
@@ -264,19 +230,14 @@ export class ProfileHeaderService {
   }
 
   convertTeamPageHeader(data: TeamProfileData, pageName:string): TitleInputData {
-    var description = data.headerData.description;
-    var stats = data.headerData.stats;
-
-    if (!stats) {
-      return null;
-    }
     if(typeof pageName == 'undefined'){
       pageName = '';
     }
-    var teamId = data.pageParams.teamId ? data.pageParams.teamId.toString() : null;
+
+    var teamId = data.pageParams.teamId ? data.pageParams.teamId : null;
     return {
       imageURL: data.fullProfileImageUrl, //TODO
-      imageRoute: MLBGlobalFunctions.formatTeamRoute(data.teamName, teamId),
+      imageRoute: MLBGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
@@ -405,11 +366,6 @@ export class ProfileHeaderService {
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
-    var stats = data.headerData.stats;
-
-    if (!stats) {
-      return null;
-    }
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
@@ -417,71 +373,56 @@ export class ProfileHeaderService {
       location = headerData.teamCity + ", " + headerData.teamState;
     }
 
-    var group = "N/A";
-    if ( stats.division && stats.conference ) {
-      group = MLBGlobalFunctions.formatShortNameDivison(stats.conference.name, stats.division.name);
-    }
-
-    var venue = headerData.teamVenue ? headerData.teamVenue : "N/A";
-    var description = "The <span class='text-heavy'>" + stats.teamName +
-                      "</span> play in <span class='text-heavy'>" + venue +
-                      "</span> located in <span class='text-heavy'>" + location +
-                      "</span>. The <span class='text-heavy'>" + stats.teamName +
-                      "</span> are part of the <span class='text-heavy'>" + group +
+    var venue = headerData.venueName ? headerData.venueName : "N/A";
+    var description = "The <span class='text-heavy'>" + headerData.teamName +
+                      "</span> play in <span class='text-heavy'>" + headerData.venueName +
+                      "</span> located in <span class='text-heavy'>" + headerData.teamMarket +
+                      "</span>. The <span class='text-heavy'>" + headerData.teamName +
+                      "</span> are part of the <span class='text-heavy'>" + headerData.divisionName +
                        "</span>.";
 
-    var formattedEra = null;
-    if ( stats.pitching ) {
-      if ( stats.pitching.era > 1 ) {
-        formattedEra = stats.pitching.era.toPrecision(3);
-      }
-      else {
-        formattedEra = stats.pitching.era.toPrecision(2);
-      }
-    }
-
     var header: ProfileHeaderData = {
-      profileName: stats.teamName,
-      profileImageUrl: data.fullProfileImageUrl,
-      backgroundImageUrl: data.fullBackgroundImageUrl,
-      profileTitleFirstPart: data.headerData.teamFirstName,
-      profileTitleLastPart: data.headerData.teamLastName,
-      lastUpdatedDate: data.headerData.lastUpdated,
+      profileName: headerData.teamName,
+      profileImageUrl: headerData.backgroundUrl,
+      backgroundImageUrl: headerData.backgroundUrl,
+      profileTitleFirstPart: headerData.teamMarket,
+      profileTitleLastPart: headerData.teamName,
+      lastUpdatedDate: headerData.lastUpdated,
       description: description,
       topDataPoints: [
         {
           label: "Division",
-          value: stats.division ? stats.division.name : null
+          value: headerData.divisionName ? headerData.divisionName.toString() : null
         },
         {
           label: "Rank",
-          value: stats.division ? stats.division.rank : null
+          value: headerData.rank ? headerData.rank.toString() : null
         },
         {
           label: "Record",
-          value: stats.totalWins + " - " + stats.totalLosses
+          value: headerData.totalWins.toString() + " - " + headerData.totalLosses.toString()
         }
       ],
       bottomDataPoints: [
         {
-          label: "Batting Average",
+          label: "Wins/losses",
           labelCont: "for the current season",
-          value: stats.batting ? stats.batting.average.toPrecision(3) : null
+          value: headerData.totalWins.toString() + " - " + headerData.totalLosses.toString()
         },
         {
-          label: "Runs",
-          labelCont: "for the current season",
-          value: stats.batting ? stats.batting.runsScored.toString() : null
+          label: "Average Points Per Game",
+          labelCont: headerData.pointsPerGameRank.toString()+" overall",
+          value: headerData.pointsPerGame ? headerData.pointsPerGame.toString() : null
         },
         {
-          label: "Home Runs",
-          labelCont: "for the current season",
-          value: stats.batting ? stats.batting.homeRuns.toString() : null
+          label: "Passing Yards Per Game",
+          labelCont: headerData.passingYardsPerGameRank.toString()+" overall",
+          value: headerData.passingYardsPerGame.toString()
         },
         {
-          label: "Earned Run Average",
-          labelCont: "for the current season",
-          value: formattedEra
+          label: "Rushing Yards per Game",
+          labelCont: headerData.rushingYardsPerGameRank.toString()+" overall",
+          value: headerData.rushingYardsPerGame.toString()
         }
       ]
     }

@@ -57,9 +57,9 @@ export class TransactionsPage implements OnInit{
       this._profileService.getTeamProfile(this.pageParams.teamId)
       .subscribe(
           data => {
-            var stats = data.headerData.stats;
+            //var stats = data.headerData.stats;
             var profileHeaderData = this._profileService.convertTeamPageHeader(data, "");
-            this.profileName = stats.teamName;
+            this.profileName = data.headerData.teamName;
             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
