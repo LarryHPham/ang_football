@@ -25,9 +25,9 @@ export class ContactUsPage{
 
     constructor(private http:Http, private _title: Title, private _router:Router) {
         _title.setTitle(GlobalSettings.getPageTitle("Contact Us"));
-        GlobalSettings.getPartnerID(_router, partnerID => {
+        GlobalSettings.getParentParams(_router, parentParams => {
           var domainTitle;
-          if(partnerID != null){
+          if(parentParams.partnerID != null){
             domainTitle = GlobalSettings.getBasePartnerTitle();
           }else{
             domainTitle = GlobalSettings.getBaseTitle();

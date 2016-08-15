@@ -16,6 +16,7 @@ export interface Link {
   route?: Array<any>;
   text: string;
   class?: string;
+  active?: boolean;
 }
 
 export interface ParagraphItem {

@@ -45,7 +45,7 @@ export class DraftHistoryPage implements OnInit{
       .subscribe(
           data => {
             this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
-            var pageNameForTitle = data.profileName + " " + data.headerData.stats.seasonId + " - " + this.whatProfile;
+            var pageNameForTitle = data.profileName + " " + data.headerData.seasonId + " - " + this.whatProfile;
             this.profileHeaderData = this._profileService.convertTeamPageHeader(data, pageNameForTitle);
             this.profileData = data;
           },
@@ -59,7 +59,7 @@ export class DraftHistoryPage implements OnInit{
       this._profileService.getMLBProfile()
       .subscribe(
           data => {
-            this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.profileNameShort));
+            this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
             this.profileHeaderData = this._profileService.convertMLBHeader(data.headerData, "MLB's " + this.whatProfile);
             this.profileData = data;
           },

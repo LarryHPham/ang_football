@@ -285,7 +285,7 @@
 .fa-sort-desc:before {
   content: "\78";
 }
-.fa-share:before {
+.fa-mail-forward:before {
   content: "\79";
 }
 .fa-arrows-alt:before {
@@ -323,9 +323,6 @@
 }
 .fa-twitter:before {
   content: "\4b";
-}
-.fa-google-plus:before {
-  content: "\4c";
 }
 .fa-pinterest:before {
   content: "\4d";
@@ -398,4 +395,19 @@
 }
 .fa-share-alt:before {
   content: "\39";
+}
+.fa-angle-double-left:before {
+  content: "\21";
+}
+.fa-angle-double-right:before {
+  content: "\22";
+}
+.fa-info-circle:before {
+  content: "\23";
+}
+.fa-copyright:before {
+  content: "\24";
+}
+.fa-fontawesome-webfont:before {
+  content: "\25";
 }

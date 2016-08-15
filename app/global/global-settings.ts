@@ -39,12 +39,12 @@ export class GlobalSettings {
     private static _sportLeagueChampionship: string = "Superbowl";
     private static _sportLeagueSegments: string = "Divisions";
 
-    private static _collegeDivisionAbbrv: string="NCAA";
+    private static _collegeDivisionAbbrv: string="FBS";
     private static _collegeDivisionFullAbbrv: string="NCAAF";
     private static _collegeDivisionChampionship: string = "National Championships";
     private static _collegeDivisionSegments: string = "Conferences";
 
-
+    private static _estYear: string = "© 2016";
     private static _copyrightInfo: string = "USA Today Sports Images";
 
     static getEnv(env:string):string {
@@ -164,28 +164,48 @@ export class GlobalSettings {
 
     /**
      * This should be called by classes in their constructor function, so that the
-     * 'subscribe' function actually gets called and the partnerID can be located from the route
+     * 'subscribe' function actually gets called and the partnerID and scope can be located from the route
      *
      * @param{Router} router
      * @param {Function} subscribeListener - takes a single parameter that represents the partnerID: (partnerID) => {}
      */
-    static getPartnerID(router: Router, subscribeListener: Function) {
+
+    //static getPartnerID(router: Router, subscribeListener: Function)
+    static getParentParams(router: Router, subscribeListener: Function) {
         if ( !subscribeListener ) return;
 
         router.root.subscribe (
             route => {
                 let partnerID = null;
+                let scope = this.getSportLeagueAbbrv();
                 if ( route && route.instruction && route.instruction.params ) {
                     partnerID = route.instruction.params["partner_id"];
+                    scope = route.instruction.params["scope"];
                 }
-                subscribeListener(partnerID == '' ? null : partnerID);
+                subscribeListener({
+                  partnerID: partnerID == '' ? null : partnerID,
+                  scope: this.getScope(scope)
+                });
             }
         )
     }
 
+    //converts URL route scope from NCAAF to FBS
+    //NCAAF is for display purpose and returning FBS is for API requirements
+    //lowercase is for common practice
+    static getScope(scope) {
+      switch(scope) {
+        case ( this.getCollegeDivisionFullAbbrv().toLowerCase() ) :
+        return this.getCollegeDivisionAbbrv().toLowerCase();
+
+        default:
+        return this.getSportLeagueAbbrv().toLowerCase();
+      }
+    }
+
     static getPageTitle(subtitle?: string, profileName?: string) {
       if(this.getHomeInfo().isPartner){
-        this._baseTitle = "My Touchdown Zone";
+        this._baseTitle = this._basePartnerTitle;
       }
         return this._baseTitle +
             (profileName && profileName.length > 0 ? " - " + profileName : "") +
@@ -237,9 +257,12 @@ export class GlobalSettings {
     }
     static getSiteGoogleUrl(partnerId: string) {
       return this._siteGoogleUrl + this.getHomePage(partnerId);
-	}
+	  }
     static getSportName() {
       return this._sportName;
+    }
+    static getEstYear() {
+      return this._estYear;
     }
 
 }

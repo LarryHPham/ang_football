@@ -143,8 +143,11 @@ export class MLBPage implements OnInit {
     twitterData: Array<twitterModuleData>;
     schedulesData:any;
 
-    leagueID: string;
-    leagueAPIparam: number;
+    public scope: string;
+    public leagueAPIparam: number;
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
 
     constructor(private _router:Router,
                 private _title: Title,
@@ -174,30 +177,32 @@ export class MLBPage implements OnInit {
           teamId:null,
           date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
         }
+        GlobalSettings.getParentParams(this._router, parentParams => {
+            this.partnerID = parentParams.partnerID;
+            this.scope = parentParams.scope;
 
-        GlobalSettings.getPartnerID(_router, partnerID => {
-            this.partnerID = partnerID;
+            //temporary until we get correct api params set
+            if ( this.scope == this.collegeDivisionAbbrv.toLowerCase() ) {
+              this.leagueAPIparam = 2;
+            }
+            else {
+              this.leagueAPIparam = 1;
+            }
+
+            this.setupProfileData(this.partnerID, this.leagueAPIparam);
         });
-
-        //set league ID based on route pageParams
-        this.leagueID = _params.get('leagueId').toLowerCase();
-        if ( this.leagueID === GlobalSettings.getCollegeDivisionAbbrv().toLowerCase() ) {
-          this.leagueAPIparam = 2;
-        }
-        else {
-          this.leagueAPIparam = 1;
-        }
     }
 
     ngOnInit() {
-        this.setupProfileData();
+        // this.setupProfileData();
     }
 
-    private setupProfileData() {
-        this._profileService.getMLBProfile(this.leagueAPIparam).subscribe(
+    private setupProfileData(partnerID, scope) {
+
+        this._profileService.getMLBProfile(scope).subscribe(
             data => {
 
-            //     /*** About MLB ***/
+            ///*** About MLB ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = "MLB"; //leagueShortName
@@ -223,7 +228,7 @@ export class MLBPage implements OnInit {
                 this.getFaqService(this.profileType);
                 this.setupListOfListsModule();
                 this.getDykService(this.profileType);
-                this.getTwitterService(this.profileType);
+                this.getTwitterService(this.profileType, partnerID, scope);
              },
             err => {
                 this.hasError = true;
@@ -272,18 +277,22 @@ export class MLBPage implements OnInit {
         );
     }
 
-    private getTwitterService(profileType) {
-          this.isProfilePage = true;
-          this.profileType = 'league';
-          this.profileName = "MLB";
-          this._twitterService.getTwitterService(this.profileType)
-              .subscribe(data => {
-                  this.twitterData = data;
-              },
-              err => {
-                  console.log("Error getting twitter data");
-              });
+  private getTwitterService(profileType, partnerID, scope) {
+      this.scope = scope;
+      this.partnerID = partnerID;
+      this.isProfilePage = true;
+      this.profileType = 'league';
+      this.profileName = "NFL";
+
+      this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
+          .subscribe(data => {
+              this.twitterData = data;
+          },
+          err => {
+              console.log("Error getting twitter data");
+          });
     }
+
     private getDykService(profileType) {
       this._dykService.getDykService(this.profileType)
           .subscribe(data => {
