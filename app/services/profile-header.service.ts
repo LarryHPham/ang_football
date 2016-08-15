@@ -366,6 +366,8 @@ export class ProfileHeaderService {
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
+    var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
+    var fullLocation = headerData.teamMarket+', '+headerData.teamState;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
@@ -374,10 +376,10 @@ export class ProfileHeaderService {
     }
 
     var venue = headerData.venueName ? headerData.venueName : "N/A";
-    var description = "The <span class='text-heavy'>" + headerData.teamName +
+    var description = "The <span class='text-heavy'>" + fullTeamName +
                       "</span> play in <span class='text-heavy'>" + headerData.venueName +
-                      "</span> located in <span class='text-heavy'>" + headerData.teamMarket +
-                      "</span>. The <span class='text-heavy'>" + headerData.teamName +
+                      "</span> located in <span class='text-heavy'>" + fullLocation +
+                      "</span>. The <span class='text-heavy'>" + fullTeamName +
                       "</span> are part of the <span class='text-heavy'>" + headerData.divisionName +
                        "</span>.";
 
