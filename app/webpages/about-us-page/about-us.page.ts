@@ -1,5 +1,5 @@
 import {Component, Injector} from '@angular/core';
-import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
+import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
@@ -66,8 +66,7 @@ export class AboutUsPage {
     constructor(
       private _router:Router,
       private _service: AboutUsService,
-      private _title: Title,
-      private _params: RouteParams
+      private _title: Title
     ) {
         _title.setTitle(GlobalSettings.getPageTitle("About Us"));
 
@@ -77,7 +76,6 @@ export class AboutUsPage {
     }
 
     loadData(partnerID?:string, scope?:string) {
-      
         this._service.getData(partnerID, scope).subscribe(
           data => this.setupAboutUsData(data),
           err => {
