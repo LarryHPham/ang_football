@@ -17,7 +17,9 @@
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
         <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId"></comparison-module>
         <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
-        <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
+        <div class="profile-carousel-container">
+            <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
+        </div>
         <responsive-widget *ngIf="profileHeaderData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
         <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>

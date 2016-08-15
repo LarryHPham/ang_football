@@ -39,9 +39,15 @@ export class AboutUsService {
   constructor(public http: Http){}
 
   getData(partnerID: string, scope: string): Observable<AboutUsModel> {
+
+    //remove when correct API is set
+    if (scope == 'fbs' ) {
+      scope = 'ncaa';
+    }
+
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
-    console.log(newUrl);
+
     return this.http.get(newUrl)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, scope) )
@@ -74,17 +80,16 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    if (divisionScope == this.collegeDivisionFullAbbrv) {
+    //remove or condition below when correct API is set
+    if (divisionScope == this.collegeDivisionFullAbbrv || divisionScope == 'ncaa') {
       activeDivision = this.collegeDivisionFullAbbrv.toUpperCase();
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
-      console.log(data[0].scope.toUpperCase(), this.collegeDivisionFullAbbrv.toUpperCase(), activeDivisionChampionship);
     }
     else {
       activeDivision = this.sportLeagueAbbrv.toUpperCase();
       activeDivisionSegments = this.sportLeagueSegments;
       activeDivisionChampionship = this.sportLeagueChampionship;
-      console.log(data[0].scope.toUpperCase(), this.sportLeagueAbbrv.toUpperCase().toUpperCase(), activeDivisionChampionship);
     }
 
     let model: AboutUsModel = {
@@ -132,12 +137,12 @@ export class AboutUsService {
       ],
       //TODO-CJP: Update [July, 2016] to reflect actual creation date!
       content: [
-        "We created " + pageName + " -based in Wichita, Kan. in July, 2016 to connect baseball fans with insightful, well-informed and up-to-date content.",
+        "We created " + pageName + " -based in Wichita, Kan. in August, 2016 to connect football fans with insightful, well-informed and up-to-date content.",
 
-        "Here at " + pageName + ", we have an appetite for digesting down big data in the world of baseball." +
+        "Here at " + pageName + ", we have an appetite for digesting down big data in the world of football." +
         " We create unique content so you can learn everything about your favorite team or player." +
         " From rookie players and underachieving teams to veteran stars and perennial favorites, " +
-        pageName + " produces content and statistical information for " + numTeams + " MLB teams and over " + numPlayers + " player profiles."
+        pageName + " produces content and statistical information for " + numTeams + " NFL teams and over " + numPlayers + " player profiles."
       ]
     };
 
