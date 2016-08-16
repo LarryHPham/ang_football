@@ -294,7 +294,7 @@ export class MLBPage implements OnInit {
     }
 
     private getDykService(profileType) {
-      this._dykService.getDykService(this.profileType)
+      this._dykService.getDykService(this.profileType, this.leagueAPIparam)
           .subscribe(data => {
                 this.dykData = data;
             },
@@ -304,7 +304,7 @@ export class MLBPage implements OnInit {
   }
 
     private getFaqService(profileType) {
-      this._faqService.getFaqService(this.profileType)
+      this._faqService.getFaqService(this.profileType, this.leagueAPIparam)
         .subscribe(data => {
             this.faqData = data;
         },
