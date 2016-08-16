@@ -209,7 +209,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.playerBackground),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
-          description: ['Hometown: ', location, '   |   College: ', val.playerCollege],
+          description: ['<i class="fa fa-map-marker"></i>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', val.playerCollege],
           dataValue: val.playerOverallPick + " Overall",
           dataLabel: "Draft Round " + val.playerRound,
           circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
@@ -254,7 +254,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           ],
           val.playerOverallPick+' Overall',
           [//sub left text
-            {text: location + '   |   College: ' + val.playerCollege}
+            {text: location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
           ],
           'Draft Round '+val.playerRound,
           'fa fa-map-marker'),
@@ -268,7 +268,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       return listData;
     });
     // console.log('TRANSFORMED List Data', listDataArray);
-    if (sortBy == "ascending") {
+    if (sortBy == "Ascending") {
       return listDataArray.length > 0 ? listDataArray.reverse() : null;
     }
     else {
