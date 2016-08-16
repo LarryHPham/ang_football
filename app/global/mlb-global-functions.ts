@@ -145,14 +145,16 @@ export class MLBGlobalFunctions {
    * @param {string} heightStr - a height value from the API, which lists feet and inches separated by a dash (#-#)
    * @returns #-foot-#
    */
-  static formatHeightWithFoot(heightStr: string) {
-    if ( heightStr ) {
-      return heightStr.split("-").join("-foot-");
-    }
-    else {
-      return "N/A";
-    }
-  }
+   static formatHeightWithFoot(heightStr: string) {
+     if ( heightStr ) {
+       var insert ="-foot-";
+       var formattedHeight = [heightStr.slice(0, 1), insert, heightStr.slice(1)].join('');
+       return heightStr ? formattedHeight : "N/A";
+     }
+     else {
+       return "N/A";
+     }
+   }
 
 
   /**

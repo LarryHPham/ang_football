@@ -22,7 +22,9 @@
     <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName"></comparison-module>
     <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
-    <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
+    <div class="profile-carousel-container">
+      <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
+    </div>
     <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
     <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
