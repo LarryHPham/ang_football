@@ -411,3 +411,12 @@
 .fa-fontawesome-webfont:before {
   content: "\25";
 }
+.fa-share:before {
+  content: "\79";
+}
+.fa-cog:before {
+  content: "\4c";
+}
+.fa-search-icon-01:before {
+  content: "\26";
+}
