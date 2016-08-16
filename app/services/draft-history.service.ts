@@ -122,12 +122,12 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
     var callURL;
     if ( profileData.profileType == "team" ) {
-      //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
-      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
+      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
+      //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
     else {
-      //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
-      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
+      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
+      //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
 
     return this.http.get(callURL)
