@@ -460,7 +460,7 @@ export class ProfileHeaderService {
 
     var header: ProfileHeaderData = {
       //profileName: data.leagueAbbreviatedName, //todo when correct API is set
-      profileName: "the "+leagueAbbreviatedName,
+      profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
       backgroundImageUrl: data.backgroundUrl,
       profileTitleFirstPart: "",
