@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {RosterModuleData} from '../fe-core/modules/team-roster/team-roster.module';
-import {RosterTableModel, MLBRosterTabData, TeamRosterData} from '../services/roster.data';
+import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/roster.data';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
@@ -22,18 +22,19 @@ export class RosterService {
     return headers;
   }
 
-  initializeAllTabs(teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<MLBRosterTabData> {
-    return this._tabTypes.map(type => new MLBRosterTabData(this, teamId, type, conference, maxRows, isTeamProfilePage));
+  initializeAllTabs(teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
+    return this._tabTypes.map(type => new NFLRosterTabData(this, teamId, type, conference, maxRows, isTeamProfilePage));
   }
 
-  getRosterTabData(rosterTab: MLBRosterTabData): Observable<Array<TeamRosterData>> {
+  getRosterTabData(rosterTab: NFLRosterTabData): Observable<Array<TeamRosterData>> {
     var teamId = rosterTab.teamId;
     var type = rosterTab.type;
-    
+
     rosterTab.isLoaded = false;
     rosterTab.hasError = false;
-    
-    var fullUrl = this._apiUrl + "/team/roster/" + teamId;
+
+    // var fullUrl = this._apiUrl + "/team/roster/" + teamId;
+    var fullUrl = "http://dev-touchdownloyal-api.synapsys.us" + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
     return this.http.get(fullUrl, {headers: this.setToken()})
       .map(res => res.json())
