@@ -32,6 +32,7 @@ export class AboutUsService {
   public sportLeagueChampionship: string = GlobalSettings.getSportLeagueChampionship();
   public sportLeagueSegments: string = GlobalSettings.getSportLeagueSegments();
 
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
   public collegeDivisionChampionship: string = GlobalSettings.getCollegeDivisionChampionship();
   public collegeDivisionSegments: string = GlobalSettings.getCollegeDivisionSegments();
@@ -39,12 +40,6 @@ export class AboutUsService {
   constructor(public http: Http){}
 
   getData(partnerID: string, scope: string): Observable<AboutUsModel> {
-
-    //remove when correct API is set
-    if (scope == 'fbs' ) {
-      scope = 'ncaa';
-    }
-
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
 
@@ -64,7 +59,7 @@ export class AboutUsService {
             ? GlobalSettings.getBaseTitle()
             : GlobalSettings.getBasePartnerTitle();
     let numTeams = GlobalFunctions.commaSeparateNumber(data[0].numTeams);
-    let divisionScope = data[0].scope.toLowerCase();
+    let divisionScope = data[0].scope.toUpperCase();
     let numPlayers = GlobalFunctions.commaSeparateNumber(data[0].numPlayers);
     let numDivisions = data[0].numDivisions;
     let championshipYear = data[0].championshipYear;
@@ -80,8 +75,7 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    //remove or condition below when correct API is set
-    if (divisionScope == this.collegeDivisionFullAbbrv || divisionScope == 'ncaa') {
+    if (divisionScope == this.collegeDivisionAbbrv) {
       activeDivision = this.collegeDivisionFullAbbrv.toUpperCase();
       activeDivisionSegments = this.collegeDivisionSegments;
       activeDivisionChampionship = "National";
