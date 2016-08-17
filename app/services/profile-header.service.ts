@@ -276,18 +276,16 @@ export class ProfileHeaderService {
       if ( yearsInLeague == 1 ) {
         yearPluralStr = "year";
       }
-      firstSentence = "<span class='text-heavy'>" + headerData.playerFullName +
-                  "</span> started his NFL career in <span class='text-heavy'>" + formattedStartDate +
-                  "</span> for the <span class='text-heavy'>" + headerData.draftTeam +
-                  "</span>, accumulating <span class='text-heavy'>" + formattedYearsInLeague +
-                  "</span> " + yearPluralStr + " in the MLB. "
+      firstSentence = headerData.playerFullName +
+                  " started his NFL career in " + formattedStartDate +
+                  " for the " + headerData.draftTeam +
+                  ", accumulating " + formattedYearsInLeague +
+                  " " + yearPluralStr + " in the MLB. "
     }
 
     //for pro
     else { // no draft year or team
-      firstSentence = "<span class='text-heavy'>" + headerData.playerFullName +
-                  "</span> currently plays for the <span class='text-heavy'>" + headerData.teamFullName +
-                  "</span>. ";
+      firstSentence = headerData.playerFullName + " currently plays for the " + headerData.teamFullName + ". ";
     }
 
     var location = "N/A"; //[Wichita], [Kan.]
@@ -305,21 +303,21 @@ export class ProfileHeaderService {
     var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
     var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
 
-    var description = firstSentence + "<span class='text-heavy'>" + headerData.playerFirstName +
-                  "</span> was born in <span class='text-heavy'>" + location +
-                  "</span> on <span class='text-heavy'>" + formattedBirthDate +
-                  "</span> and is <span class='text-heavy'>" + formattedAge +
-                  "</span> years old. He stands at <span class='text-heavy'>" + formattedHeight +
-                  "</span>, <span class='text-heavy'>" + formattedWeight +
-                  "</span> pounds.";
+    var description = firstSentence + headerData.playerFirstName +
+                  " was born in " + location +
+                  " on " + formattedBirthDate +
+                  " and is " + formattedAge +
+                  " years old. He stands at " + formattedHeight +
+                  ", " + formattedWeight +
+                  " pounds.";
 
 
     var header: ProfileHeaderData = {
       profileName: headerData.playerFullName,
       profileImageUrl: headerData.playerHeadShot,
       backgroundImageUrl: headerData.backgroundUrl,
-      profileTitleFirstPart: headerData.playerFirstName,
-      profileTitleLastPart: headerData.playerLastName,
+      profileTitleFirstPart: '',
+      profileTitleLastPart: headerData.playerFullName, // not seperated by first and last so entire name is bold
       lastUpdatedDate: headerData.lastUpdated,
       description: description,
       topDataPoints: [
@@ -340,22 +338,22 @@ export class ProfileHeaderService {
       bottomDataPoints: [
         {
           label: headerData.stat1Type,
-          labelCont: headerData.stat1Desc,
+          labelCont: 'for the current season',
           value: headerData.stat1
         },
         {
           label: headerData.stat2Type,
-          labelCont: headerData.stat2Desc,
+          labelCont: 'for the current season',
           value: headerData.stat2
         },
         {
           label: headerData.stat3Type,
-          labelCont: headerData.stat3Desc,
+          labelCont: 'for the current season',
           value: headerData.stat3
         },
         {
           label: headerData.stat4Type,
-          labelCont: headerData.stat4Desc,
+          labelCont: 'for the current season',
           value: headerData.stat4
         }
       ]
@@ -376,15 +374,15 @@ export class ProfileHeaderService {
     }
 
     var venue = headerData.venueName ? headerData.venueName : "N/A";
-    var description = "The <span class='text-heavy'>" + fullTeamName +
-                      "</span> play in <span class='text-heavy'>" + headerData.venueName +
-                      "</span> located in <span class='text-heavy'>" + fullLocation +
-                      "</span>. The <span class='text-heavy'>" + fullTeamName +
-                      "</span> are part of the <span class='text-heavy'>" + headerData.divisionName +
-                       "</span>.";
+    var description = "The " + fullTeamName +
+                      " play in " + headerData.venueName +
+                      " located in " + fullLocation +
+                      ". The " + fullTeamName +
+                      " are part of the " + headerData.divisionName +
+                       ".";
 
     var header: ProfileHeaderData = {
-      profileName: "the "+fullTeamName,
+      profileName: headerData.teamName,
       profileImageUrl: headerData.backgroundUrl,
       backgroundImageUrl: headerData.backgroundUrl,
       profileTitleFirstPart: headerData.teamMarket,
@@ -413,17 +411,17 @@ export class ProfileHeaderService {
         },
         {
           label: "Average Points Per Game",
-          labelCont: headerData.pointsPerGameRank.toString()+" overall",
+          labelCont: "Ranked "+headerData.pointsPerGameRank+GlobalFunctions.Suffix(headerData.pointsPerGameRank),
           value: headerData.pointsPerGame ? headerData.pointsPerGame.toString() : null
         },
         {
           label: "Passing Yards Per Game",
-          labelCont: headerData.passingYardsPerGameRank.toString()+" overall",
+          labelCont: "Ranked "+headerData.passingYardsPerGameRank+GlobalFunctions.Suffix(headerData.passingYardsPerGameRank),
           value: headerData.passingYardsPerGame.toString()
         },
         {
           label: "Rushing Yards per Game",
-          labelCont: headerData.rushingYardsPerGameRank.toString()+" overall",
+          labelCont: "Ranked "+headerData.rushingYardsPerGameRank+GlobalFunctions.Suffix(headerData.rushingYardsPerGameRank),
           value: headerData.rushingYardsPerGame.toString()
         }
       ]
