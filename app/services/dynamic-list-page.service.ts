@@ -225,10 +225,10 @@ export class DynamicWidgetCall {
   //TODO replace data points for list page
   imageData(imageClass, imageBorder, mainImg, mainImgRoute, rank, rankClass, subImgClass, subImg?, subRoute?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     if(typeof subImg =='undefined' || subImg == ''){
-      subImg = "/app/public/no-image.png";
+      subImg = "/app/public/no-image.svg";
     }
     if(typeof rank == 'undefined' || rank == 0){
       rank = 0;

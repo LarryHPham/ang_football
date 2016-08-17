@@ -193,7 +193,7 @@ export class TransactionsService {
       profileNameLink: null,
       description: [tab.isLoaded ? tab.errorMessage : ""],
       lastUpdatedDate: null,
-      circleImageUrl: "/app/public/no-image.png",
+      circleImageUrl: "/app/public/no-image.svg",
       circleImageRoute: null
     })];
   }
@@ -281,7 +281,7 @@ export class TransactionsService {
 
   static getListImageData(mainImg: string, mainImgRoute: Array<any>){
     if(mainImg == null || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     return { //interface is found in image-data.ts
         imageClass        : "image-48",
