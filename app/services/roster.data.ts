@@ -21,7 +21,7 @@ export interface TeamRosterData {
   playerJerseyNumber: string,
   backgroundImage: string;
   teamLogo: string,
-  playerPosition:Array<string>,
+  playerPosition:string,
   depth: string,
   playerWeight: string,
   playerHeight: string,
@@ -68,8 +68,8 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
 
     switch ( type ) {
       case "full":      this.title = "Full Roster"; break;
-      case "offence":  this.title = "Offence";    break;
-      case "defence":  this.title = "Defence";    break;
+      case "offense":  this.title = "Offense";    break;
+      case "defense":  this.title = "Defense";    break;
       case "special":  this.title = "Special Teams";    break;
     }
   }
@@ -102,25 +102,20 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
 
   filterRows(data: any): Array<TeamRosterData> {
     var rows: Array<TeamRosterData>;
-    // if ( this.type != "full" ) {
-    //   rows = data[this.type];
-    // }
-    // else {
-    //   rows = [];
-    //   for ( var type in data ) {
-    //     data[type].forEach(player => {
-    //       if ( rows.filter(row => row.playerId == player.playerId).length == 0 ) {
-    //         rows.push(player);
-    //       }
-    //     });
-    //   }
-    // }
-    rows = [];
-    data.forEach(player => {
-      if ( rows.filter(row => row.playerId == player.playerId).length == 0 ) {
-        rows.push(player);
+    if ( this.type != "full" ) {
+      rows = data[this.type];
+    }
+    else {
+      rows = [];
+      for ( var type in data ) {
+        data[type].forEach(player => {
+          if ( rows.filter(row => row.playerId == player.playerId).length == 0 ) {
+            rows.push(player);
+          }
+        });
       }
-    });
+    }
+
 
     rows = rows.sort((a, b) => {
       return Number(b.playerSalary) - Number(a.playerSalary);

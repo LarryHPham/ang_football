@@ -11,7 +11,7 @@ import {Conference, Division} from '../global/global-interface';
 @Injectable()
 export class RosterService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _tabTypes = ['full', 'pitchers', 'catchers', 'fielders', 'hitters'];
+  private _tabTypes = ['full', 'offense', 'defense', 'special'];
 
   public fullRoster: { [type:string]:Array<TeamRosterData> };
 
