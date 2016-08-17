@@ -1,6 +1,6 @@
 # TouchDownLoyal - Frontend (modular version)
 
-To start clone this repo, run: `git clone --recursive https://github.com/passit/TouchdownLoyal-frontend-modular.git`
+To start clone this repo, run: `git clone --recursive https://github.com/passit/TouchdownLoyal-frontend.git`
 
 ## TouchDownLoyal - Frontend Modular Workflow Guide
 

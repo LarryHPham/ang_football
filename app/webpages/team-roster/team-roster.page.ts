@@ -5,7 +5,7 @@ import {Title} from '@angular/platform-browser';
 import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
 import {RosterComponent, RosterTabData} from "../../fe-core/components/roster/roster.component";
-import {MLBRosterTabData} from '../../services/roster.data';
+import {NFLRosterTabData} from '../../services/roster.data';
 import {MLBPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
@@ -31,7 +31,7 @@ export class TeamRosterPage implements OnInit {
       text: 'View Profile',
       url: ['Team-roster-page']
   };
-  public tabs: Array<MLBRosterTabData>;
+  public tabs: Array<NFLRosterTabData>;
   private selectedTabTitle: string;
 
   constructor(private _params: RouteParams,
@@ -68,7 +68,7 @@ export class TeamRosterPage implements OnInit {
     else {
       //TODO - Load error page since a team is required to show a roster?
     }
-  }  
+  }
 
   private setupRosterData() {
     this.tabs = this._rosterService.initializeAllTabs(this.pageParams.teamId.toString(), this.pageParams.conference);
