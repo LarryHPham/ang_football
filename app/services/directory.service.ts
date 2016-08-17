@@ -82,7 +82,7 @@ export class DirectoryService {
   }
 
   getPlayerData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() + '/directory/nfl/player';//TODO
+    let url = GlobalSettings.getApiUrlTdl() + '/directory/' + GlobalSettings.getScope() + '/player';//TODO
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -93,14 +93,15 @@ export class DirectoryService {
           var items = data.data;
           var firstItem = items.length > 0 ? items[0] : null;//TODO
           return {
-            totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting for data
+            // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting for data
+            totalItems: 20,//TODO waiting for data
             items: items.map(value => this.convertPlayerDataToDirectory(value))
           }
         });
   }
 
   getTeamData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() +  '/directory/nfl/team';//TODO
+    let url = GlobalSettings.getApiUrlTdl() +  '/directory/'+ GlobalSettings.getScope() +'/team';//TODO
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -111,7 +112,8 @@ export class DirectoryService {
         var items = data.data;
         var firstItem = items.length > 0 ? items[0] : null;
         return {
-          totalItems: firstItem ? firstItem.resultCount : 0,
+          // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting on data
+          totalItems: 20,
           items: data.data.map(value => this.convertTeamDataToDirectory(value))
         }
       });
