@@ -38,7 +38,7 @@ export class NewsService {
   newsData(data){
     var self = this;
     var newsArray = [];
-    var dummyImg = "/app/public/no-image.png";
+    var dummyImg = "/app/public/no-image.svg";
     var _getHostName = GlobalFunctions.getHostName;
     data.forEach(function(val, index){
       var News = {

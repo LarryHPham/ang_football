@@ -366,7 +366,7 @@ export class ListPageService {
       subImageClass = "image-40-sub";
     }
     if(!mainImgUrl || mainImgUrl == ''){
-      mainImgUrl = "/app/public/no-image.png";
+      mainImgUrl = "/app/public/no-image.svg";
     }
     if(!rank){
       rank = 0;
@@ -379,7 +379,7 @@ export class ListPageService {
     if ( subImgRoute ) {
       //Add sub image if route exists.
       if(!subImgUrl || subImgUrl == ''){
-        subImgUrl = "/app/public/no-image.png";
+        subImgUrl = "/app/public/no-image.svg";
       }
       subImages.push({
           imageUrl: subImgUrl,
