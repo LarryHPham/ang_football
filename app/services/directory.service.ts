@@ -28,21 +28,18 @@ interface DirectoryListData<T> {
 }
 
 interface MLBTeamDirectoryData {
-  teamName: string;
-  teamId: string;
+  id: string;
+  pageHeaderParentProfileName: string;
+  listItemsProfileName: string;
+  listItemsAssociatedProfile: string;
+  dataPointOne: string;
+  dataValueOne: string;
+  dataPointTwo: string;
+  dataValueTwo: string;
   teamFirstName: string;
   teamLastName: string;
   teamCity: string;
   teamState: string;
-  teamCountry: string;
-  teamVenue: string;
-  teamLogo: string;
-  teamColorsHex: string;
-  teamCurrentActivePlayers: string;
-  pub2Id: string;
-  twitterHandle: string;
-  divisionName: string;
-  conferenceName: string;
   lastUpdated: string;
   resultCount: number;
   pageCount: number;
@@ -50,32 +47,21 @@ interface MLBTeamDirectoryData {
 
 interface MLBPlayerDirectoryData {
   teamId: string;
-  teamName: string;
+  teamFirstName: string;
+  teamLastName: string;
+  listItemsAssociatedProfile: string;
   playerId: string;
-  playerName: string;
-  playerFirstName: string;
-  playerLastName: string;
-  roleStatus: string;
-  active: string;
-  uniformNumber: string;
+  listItemsProfileName: string;
+  firstName: string;
+  lastName: string;
   position: Array<string>;
-  depth: string;
-  height: string;
-  weight: string;
-  birthDate: string;
   city: string;
   area: string;
-  country: string;
-  heightInInches: string;
-  age: string;
-  salary: string;
-  personKey: string;
-  pub1PlayerId: string;
-  pub1TeamId: string;
-  pub2Id: string;
-  pub2TeamId: string;
-  startDate: string;
-  lastUpdate: string;
+  dataPointOne: string;
+  dataValueOne: string;
+  dataPointTwo: string;
+  dataValueTwo: string;
+  lastUpdated: string;
   resultCount: number;
   pageCount: number;
 }
@@ -105,9 +91,9 @@ export class DirectoryService {
         .map(res => res.json())
         .map(data => {
           var items = data.data;
-          var firstItem = items.length > 0 ? items[0] : null;
+          var firstItem = items.length > 0 ? items[0] : null;//TODO
           return {
-            totalItems: firstItem ? firstItem.resultCount : 0,
+            totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting for data
             items: items.map(value => this.convertPlayerDataToDirectory(value))
           }
         });
