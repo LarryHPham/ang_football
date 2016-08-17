@@ -179,7 +179,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
   private carDraftHistory(data: Array<PlayerDraftData>, errorMessage: string, type){
     let self = this;
     var carouselArray = [];
-    var dummyImg = "/app/public/no-image.png";
+    var dummyImg = "/app/public/no-image.svg";
     if(data.length == 0){//if no data is being returned then show proper Error Message in carousel
       carouselArray.push(SliderCarousel.convertToEmptyCarousel(errorMessage));
     }else{
