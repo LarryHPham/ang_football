@@ -14,7 +14,7 @@ import {DisclaimerPage} from "../webpages/disclaimer-page/disclaimer.page";
 import {ErrorPage} from "../webpages/error-page/error-page.page";
 import {SearchPage} from '../webpages/search-page/search.page';
 
-import {MLBPage} from "../webpages/mlb-page/mlb.page";
+import {LeaguePage} from "../webpages/league-page/league.page";
 import {TeamPage} from "../webpages/team-page/team.page";
 import {PlayerPage} from "../webpages/player-page/player.page";
 
@@ -77,14 +77,9 @@ declare var jQuery: any;
     },
     //Profile Pages
     {
-        path: '/mlb',
-        name: 'MLB-page',
-        component: MLBPage,
-    },
-    {
-        path: '/league/',
-        name: 'MLB-page',
-        component: MLBPage,
+        path: '/league',
+        name: 'League-page',
+        component: LeaguePage,
     },
     {
         path: '/team/:teamName/:teamId',
