@@ -200,7 +200,7 @@ export class GlobalSettings {
     //converts URL route scope from NCAAF to FBS
     //NCAAF is for display purpose and returning FBS is for API requirements
     //lowercase is for common practice
-    static getScope(scope) {
+    static getScope(scope?) {
       switch(scope) {
         case ( this.getCollegeDivisionFullAbbrv().toLowerCase() ) :
         return this.getCollegeDivisionAbbrv().toLowerCase();
