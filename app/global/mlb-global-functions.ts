@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {GlobalFunctions} from './global-functions';
 import {Division, Conference} from './global-interface';
 import {GlobalSettings} from "./global-settings";
+
 @Injectable()
 
 export class MLBGlobalFunctions {
@@ -358,4 +359,23 @@ export class MLBGlobalFunctions {
     }
     return aiArticleRoute ? aiArticleRoute : ['Error-page'];
   }
+
+  //Some positions don't provided stats that have a league ranking
+  static nonRankedDataPoints(position: Array<string>, statDesc: string) {
+      //set array of positions that don't provide 4 player stats that also have a league ranking
+      var positionsArray:Array<string> = ['C' ,'G', 'LS', 'OL', 'OT'];
+
+      //compare set array^ to array of position provided from data
+      var result = positionsArray.some(function (v) {
+        return position.indexOf(v) >= 0;
+      });
+
+      //if result matches return the desired description
+      if (result == true) {
+        return null;
+      }
+      else {
+        return statDesc;
+      }
+  } //static playerProfileStatDesc
 }

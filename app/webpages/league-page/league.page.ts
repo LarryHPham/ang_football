@@ -61,8 +61,8 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
 declare var moment;
 
 @Component({
-    selector: 'MLB-page',
-    templateUrl: './app/webpages/mlb-page/mlb.page.html',
+    selector: 'League-page',
+    templateUrl: './app/webpages/league-page/league.page.html',
     directives: [
         SidekickWrapper,
         LoadingComponent,
@@ -103,7 +103,7 @@ declare var moment;
       ]
 })
 
-export class MLBPage implements OnInit {
+export class LeaguePage implements OnInit {
     public widgetPlace: string = "widgetForModule";
 
     pageParams:MLBPageParameters = {};
@@ -144,7 +144,6 @@ export class MLBPage implements OnInit {
     schedulesData:any;
 
     public scope: string;
-    public leagueAPIparam: number;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
@@ -181,15 +180,8 @@ export class MLBPage implements OnInit {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
 
-            //temporary until we get correct api params set
-            if ( this.scope == this.collegeDivisionAbbrv.toLowerCase() ) {
-              this.leagueAPIparam = 2;
-            }
-            else {
-              this.leagueAPIparam = 1;
-            }
 
-            this.setupProfileData(this.partnerID, this.leagueAPIparam);
+            this.setupProfileData(this.partnerID, this.scope);
         });
     }
 
@@ -294,7 +286,7 @@ export class MLBPage implements OnInit {
     }
 
     private getDykService(profileType) {
-      this._dykService.getDykService(this.profileType, this.leagueAPIparam)
+      this._dykService.getDykService(this.profileType, this.scope)
           .subscribe(data => {
                 this.dykData = data;
             },
@@ -304,7 +296,7 @@ export class MLBPage implements OnInit {
   }
 
     private getFaqService(profileType) {
-      this._faqService.getFaqService(this.profileType, this.leagueAPIparam)
+      this._faqService.getFaqService(this.profileType, this.scope)
         .subscribe(data => {
             this.faqData = data;
         },

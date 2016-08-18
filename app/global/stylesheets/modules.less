@@ -39,16 +39,6 @@
   margin-right: auto;
   position: relative;
   font-family: @globalFont;
-  // @media @tablet {
-  //   width: 640px;
-  // }
-  // @media @desktop-xl{
-  //   width: 900px;
-  // }
-}
-
-.basic-container {
-  width: 100%;
 }
 .widget-page-wrapper {
   width:100%;
@@ -72,57 +62,29 @@
   width: 100%;
 }
 @media @tablet{
-  .basic-container{
-    display:block;
-    width: 100%;
-  }
   .directory-container {
-    width: 640px;
     padding: 0 15px 0 15px;
   }
 }
-
-@media @desktop-l{
-  .directory-container {
-    width: 1012px;
-    margin: 0px auto;
-  }
-
-  .basic-container{
-    width: 1000px;
-  }
+@media @desktop-m{
   .widget-page-wrapper {
     > .col-xs-8 {
-      width: 640px;
+      width: ~"calc(100% - 345px)";
+      margin-left: 15px;
     }
     > .col-xs-4 {
       display: block;
       width: 300px;
       margin-top: 20px;
-      margin-left: 20px;
+      margin-left: 15px;
       margin-bottom: 20px;
     }
   }
-}//min-width 1024 ENDS
+}
 @media @desktop-xl{
-  .directory-container {
-    width: 900px;
-    margin: 0 20px;
-  }
-
-  .basic-container{
-    width: 1260px;
-  }
   .widget-page-wrapper {
-    width: 1220px;
     > .col-xs-8 {
-      width: 900px;
-    }
-    > .col-xs-4 {
-      display: block;
-      width: 300px;
-      margin-top: 20px;
-      margin-left: 20px;
+      max-width: 900px;
     }
   }
 }
