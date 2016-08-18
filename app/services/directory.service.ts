@@ -28,21 +28,18 @@ interface DirectoryListData<T> {
 }
 
 interface MLBTeamDirectoryData {
-  teamName: string;
-  teamId: string;
+  id: string;
+  pageHeaderParentProfileName: string;
+  listItemsProfileName: string;
+  listItemsAssociatedProfile: string;
+  dataPointOne: string;
+  dataValueOne: string;
+  dataPointTwo: string;
+  dataValueTwo: string;
   teamFirstName: string;
   teamLastName: string;
   teamCity: string;
   teamState: string;
-  teamCountry: string;
-  teamVenue: string;
-  teamLogo: string;
-  teamColorsHex: string;
-  teamCurrentActivePlayers: string;
-  pub2Id: string;
-  twitterHandle: string;
-  divisionName: string;
-  conferenceName: string;
   lastUpdated: string;
   resultCount: number;
   pageCount: number;
@@ -50,39 +47,28 @@ interface MLBTeamDirectoryData {
 
 interface MLBPlayerDirectoryData {
   teamId: string;
-  teamName: string;
+  teamFirstName: string;
+  teamLastName: string;
+  listItemsAssociatedProfile: string;
   playerId: string;
-  playerName: string;
-  playerFirstName: string;
-  playerLastName: string;
-  roleStatus: string;
-  active: string;
-  uniformNumber: string;
+  listItemsProfileName: string;
+  firstName: string;
+  lastName: string;
   position: Array<string>;
-  depth: string;
-  height: string;
-  weight: string;
-  birthDate: string;
   city: string;
   area: string;
-  country: string;
-  heightInInches: string;
-  age: string;
-  salary: string;
-  personKey: string;
-  pub1PlayerId: string;
-  pub1TeamId: string;
-  pub2Id: string;
-  pub2TeamId: string;
-  startDate: string;
-  lastUpdate: string;
+  dataPointOne: string;
+  dataValueOne: string;
+  dataPointTwo: string;
+  dataValueTwo: string;
+  lastUpdated: string;
   resultCount: number;
   pageCount: number;
 }
 
 @Injectable()
 export class DirectoryService {
-  constructor(public http: Http){}
+  constructor(public http: Http, private _globalFunc: GlobalFunctions){}
 
   getData(pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
     switch ( pageType ) {
@@ -96,107 +82,89 @@ export class DirectoryService {
   }
 
   getPlayerData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrl() + '/directory/players';
+    let url = GlobalSettings.getApiUrlTdl() + '/directory/' + GlobalSettings.getScope() + '/player';//TODO
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
-    // console.log("player directory: " + url);
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var items = data.data;
-          var firstItem = items.length > 0 ? items[0] : null;
+          var firstItem = items.length > 0 ? items[0] : null;//TODO
           return {
-            totalItems: firstItem ? firstItem.resultCount : 0,
+            // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting for data
+            totalItems: 20,//TODO waiting for data
             items: items.map(value => this.convertPlayerDataToDirectory(value))
           }
         });
   }
 
   getTeamData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrl() + '/directory/teams';
+    let url = GlobalSettings.getApiUrlTdl() +  '/directory/'+ GlobalSettings.getScope() +'/team';//TODO
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
-    // console.log("team directory: " + url);
     return this.http.get(url)
       .map(res => res.json())
       .map(data => {
         var items = data.data;
         var firstItem = items.length > 0 ? items[0] : null;
         return {
-          totalItems: firstItem ? firstItem.resultCount : 0,
+          // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting on data
+          totalItems: 20,
           items: data.data.map(value => this.convertTeamDataToDirectory(value))
         }
       });
   }
-  //"<a href=''>[Team Name]</a>  |  League:  [American or National]  |  Division: [Division]",
-  //"[City], [State]  <i class=\"fa fa-angle-right\"></i>  Stadium: [Stadium Name]"
-  convertTeamDataToDirectory(data: MLBTeamDirectoryData): DirectoryProfileItem {
-    var location = "N/A";
-    if ( data.teamCity && data.teamState ) {
-      location = data.teamCity + ", " + data.teamState;
-    }
 
-    var venue = "N/A";
-    if ( data.teamVenue ) {
-      venue = data.teamVenue;
-    }
+  convertTeamDataToDirectory(data: MLBTeamDirectoryData): DirectoryProfileItem {
     return {
-      lastUpdated: data.lastUpdated,
+      lastUpdated: data.lastUpdated * 1000,
       mainDescription: [
         {
-          route: MLBGlobalFunctions.formatTeamRoute(data.teamName, data.teamId),
-          text: data.teamName
+          route: MLBGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.id),
+          text: data.listItemsProfileName
         },
         {
-          text: "League: " + (data.conferenceName ? data.conferenceName : "N/A")
+          text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " "  + (data.dataValueOne ? data.dataValueOne : "N/A")
         },
         {
-          text: "Division: "  + (data.divisionName ? data.divisionName : "N/A")
+          text: data.listItemsAssociatedProfile ? this._globalFunc.capitalizeFirstLetter(data.listItemsAssociatedProfile) : "N/A"
         }
       ],
       subDescription: [
-        location,
-        "Stadium: " + venue
+        data.teamCity && data.teamState ? data.teamCity + ", " + data.teamState : "N/A",
+        this._globalFunc.capitalizeFirstLetter(data.dataPointTwo) + " " + (data.dataValueTwo ? data.dataValueTwo : "N/A")
       ]
     };
   }
 
-  //"Last updated: [Day of the week], [Month] [Day], [YYYY]  |   [Timestamp]" +
-  //"[Player Name]  |  [Associated Team]  |  Position:  [Position]" +
-  //"[City], [State]    Rookie Year: {Rookie Year]"
   convertPlayerDataToDirectory(data: MLBPlayerDirectoryData): DirectoryProfileItem {
     var location = "N/A";
-    if ( data.city && data.area ) {
+    if ( data.city && data.area ) {//TODO waiting on data
       location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
     }
-
-    var positions = "N/A";
-    if ( data.position && data.position.length > 0 ) {
-      positions = data.position.join(", ");
-    }
-
+    var teamName = data.teamFirstName + " " + data.teamLastName;//TODO waiting on data to be updated, teamName should be using listItemsAssociatedProfile
     return {
-      lastUpdated: data.lastUpdate,
+      lastUpdated: data.lastUpdated * 1000,
       mainDescription: [
         {
-          route: MLBGlobalFunctions.formatPlayerRoute(data.teamName, data.playerName, data.playerId),
-          text: data.playerName
+          route: MLBGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
+          text: data.listItemsProfileName
         },
         {
-          route: MLBGlobalFunctions.formatTeamRoute(data.teamName, data.teamId),
-          text: data.teamName
+          route: MLBGlobalFunctions.formatTeamRoute(teamName, data.teamId),
+          text: teamName
         },
         {
-          text: "Position: " + positions
+          text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " " + (data.dataValueOne ? data.dataValueOne : "N/A")
         }
       ],
       subDescription: [
         location,
-        "Rookie Year: " + (data.startDate != null ? data.startDate : "N/A")
+        this._globalFunc.capitalizeFirstLetter(data.dataPointTwo) + " " + (data.dataValueTwo ? data.dataValueTwo : "N/A")
       ]
     };
   }

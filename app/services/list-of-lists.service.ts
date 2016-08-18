@@ -245,10 +245,10 @@ export class ListOfListsService {
 
   imageData(imageClass, imageBorder, mainImg, mainImgRoute, subImgClass?, subImg?, subRoute?, rank?, hasHover?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.png");
+      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.svg");
     }
     if(typeof subImg =='undefined' || subImg == ''){
-      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.png");
+      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.svg");
     }
     if(typeof rank == 'undefined' || rank == 0){
       rank = 0;

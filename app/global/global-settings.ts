@@ -10,6 +10,8 @@ export class GlobalSettings {
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
     private static _apiUrl:string = '-homerunloyal-api.synapsys.us';
+    private static _apiUrlTdl:string = '-touchdownloyal-api.synapsys.us';
+
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
 
@@ -66,6 +68,11 @@ export class GlobalSettings {
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
 
     }
+    static getApiUrlTdl():string {//TODO
+        //[https:]//[prod]-homerunloyal-api.synapsys.us
+        return this._proto + "//" + this.getEnv(this._env) + this._apiUrlTdl;
+
+    }
 
     static getPartnerApiUrl(partnerID):string {
         return this._proto + "//"+ this._partnerApiUrl + partnerID;
@@ -77,7 +84,7 @@ export class GlobalSettings {
     }
 
     static getImageUrl(relativePath):string {
-        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/no-image.png';
+        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/no-image.svg';
         return relPath;
     }
 

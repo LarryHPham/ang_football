@@ -138,9 +138,9 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
     }
 
     var playerNum = val.playerJerseyNumber != null ? "<span class='text-heavy'>No. " + val.playerJerseyNumber + "</span>," : "";
-    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + val.playerHeight + "</span>, " : "";
-    var playerWeight = val.playerWeight != null ? "<span class='text-heavy'>" + val.playerWeight + "</span> " : "";
-    var playerSalary = " makes <span class='text-heavy'>" + formattedSalary + "</span> per year.";
+    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + MLBGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
+    var playerWeight = val.playerWeight != null ? "<span class='text-heavy'>" + val.playerWeight + "</span> " : "N/A";
+    var playerSalary = "<span class='text-heavy'>" + formattedSalary + "</span> per year.";
 
     var playerLinkText = {
       route: playerRoute,
@@ -159,9 +159,9 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       profileNameLink: playerLinkText,
       description: [
           playerLinkText,
-          " plays ", "<span class='text-heavy'>" + val.playerPosition, "</span>",'for the ',
+          ", ", "<span class='text-heavy'>" + val.playerPosition, "</span>",'for the ',
           teamLinkText,
-          'wears <span class="text-heavy">'+ playerNum + '</span> is ' + playerHeight + playerWeight +" and "+ playerSalary
+          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" and making a salary of "+ playerSalary
       ],
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),
@@ -181,7 +181,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
     },{
       headerValue: "Pos.",
       columnClass: "data-column",
-      isNumericType: true,
+      isNumericType: false,
       key: "pos"
     },{
       headerValue: "Height",
@@ -259,9 +259,9 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
         break;
 
       case "ht":
-        display = item.playerHeight != null ? MLBGlobalFunctions.formatHeight(item.playerHeight) : null;
+        display = item.playerHeight != null ? MLBGlobalFunctions.formatHeight(MLBGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
         displayAsRawText = true;
-        sort = item.heightInInches != null ? Number(item.heightInInches) : null;
+        sort = item.playerHeight != null ? Number(item.playerHeight) : null;
         break;
 
       case "wt":
