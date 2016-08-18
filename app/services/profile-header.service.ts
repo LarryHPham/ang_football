@@ -168,11 +168,14 @@ export class ProfileHeaderService {
   }
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/team/profileHeader/' + teamId;
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/team/2";
+    let url = GlobalSettings.getApiUrl();
+    url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url += '/profileHeader/team/' + teamId;
+
+    // let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/team/2";
     // console.log("team profile url: " + url);
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: TeamProfileHeaderData = data.data[0];
