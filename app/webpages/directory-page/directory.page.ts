@@ -110,7 +110,7 @@ export class DirectoryPage {
         break;
     }
 
-    let directoryListTitle = "Latest MLB " + titleCaseType + " Profiles in the Nation.";
+    let directoryListTitle = "Latest " + GlobalSettings.getScope().toUpperCase() + " " + titleCaseType + " Profiles in the Nation.";//TODO NFL/NCAAF
     let noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s";
     let pagingDescription = titleCaseType + " profiles";
     let navTitle = "Browse all " + lowerCaseType + " profiles from A to Z";
