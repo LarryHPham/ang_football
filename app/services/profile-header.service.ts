@@ -137,10 +137,10 @@ export class ProfileHeaderService {
   constructor(public http: Http){}
 
   getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/player/profileHeader/' + playerId;
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/player/130"; //todo
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/player/' + playerId;
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: PlayerProfileHeaderData = data.data[0];
@@ -168,11 +168,10 @@ export class ProfileHeaderService {
   }
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/team/profileHeader/' + teamId;
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/team/2";
-    // console.log("team profile url: " + url);
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/team/' + teamId;
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: TeamProfileHeaderData = data.data[0];
@@ -197,8 +196,8 @@ export class ProfileHeaderService {
   }
 
   getMLBProfile(leagueParam?): Observable<LeagueProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/league/profileHeader';
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/league/"+leagueParam;
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/league/' + leagueParam;
 
     //remove when correct API is set up
     let leagueAbbreviatedName;
@@ -209,7 +208,7 @@ export class ProfileHeaderService {
       leagueAbbreviatedName == 'NCAAF'
     }
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: LeagueProfileHeaderData = data.data[0];
@@ -268,6 +267,7 @@ export class ProfileHeaderService {
     var firstSentence = "";
     var yearPluralStr = "years";
 
+
     //for ncaa
     if ( headerData.draftYear && headerData.draftTeam ) {
       var currentYear = (new Date()).getFullYear();
@@ -311,13 +311,15 @@ export class ProfileHeaderService {
                   ", " + formattedWeight +
                   " pounds.";
 
+    var statDesc;
+
 
     var header: ProfileHeaderData = {
       profileName: headerData.playerFullName,
       profileImageUrl: headerData.playerHeadShot,
       backgroundImageUrl: headerData.backgroundUrl,
-      profileTitleFirstPart: '',
-      profileTitleLastPart: headerData.playerFullName, // not seperated by first and last so entire name is bold
+      profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
+      profileTitleLastPart: '',
       lastUpdatedDate: headerData.lastUpdated,
       description: description,
       topDataPoints: [
@@ -338,22 +340,24 @@ export class ProfileHeaderService {
       bottomDataPoints: [
         {
           label: headerData.stat1Type,
-          labelCont: 'for the current season',
+          labelCont: headerData.stat1Desc,
           value: headerData.stat1
         },
         {
           label: headerData.stat2Type,
-          labelCont: 'for the current season',
+          labelCont: headerData.stat1Desc,
           value: headerData.stat2
         },
         {
           label: headerData.stat3Type,
-          labelCont: 'for the current season',
+          //will remove the weird brackets when API is corrected with positions as an array
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints([""+headerData.position+""], headerData.stat1Desc),
           value: headerData.stat3
         },
         {
           label: headerData.stat4Type,
-          labelCont: 'for the current season',
+          //will remove the weird brackets when API is corrected with positions as an array
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints([""+headerData.position+""], headerData.stat1Desc),
           value: headerData.stat4
         }
       ]
