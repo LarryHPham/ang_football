@@ -372,8 +372,8 @@ export class DeepDiveService {
     data = data.data;
     var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the MLB'];
     let pickATeam = ['Pick-team-page'];
-    let mlbPage = ['MLB-page'];
-    var tileLink = [pickATeam, pickATeam, mlbPage];
+    let leaguePage = ['League-page'];
+    var tileLink = [pickATeam, pickATeam, leaguePage];
     var dataStack = [];
     // create array of imagePaths
     var imagePaths = [];

@@ -6,6 +6,7 @@ import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {DirectoryProfileItem, DirectoryItems} from '../fe-core/modules/directory/directory.data';
+declare var moment: any;
 
 export enum DirectoryType {
   none,
@@ -43,6 +44,7 @@ interface MLBTeamDirectoryData {
   lastUpdated: string;
   resultCount: number;
   pageCount: number;
+  dayOfWeek: string;
 }
 
 interface MLBPlayerDirectoryData {
@@ -64,6 +66,7 @@ interface MLBPlayerDirectoryData {
   lastUpdated: string;
   resultCount: number;
   pageCount: number;
+  dayOfWeek: string;
 }
 
 @Injectable()
@@ -82,7 +85,7 @@ export class DirectoryService {
   }
 
   getPlayerData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() + '/directory/' + GlobalSettings.getScope() + '/player';//TODO
+    let url = GlobalSettings.getApiUrlTdl() + '/directory/nfl/player';//TODO
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -101,7 +104,7 @@ export class DirectoryService {
   }
 
   getTeamData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() +  '/directory/'+ GlobalSettings.getScope() +'/team';//TODO
+    let url = GlobalSettings.getApiUrlTdl() +  '/directory/nfl/team';//TODO
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -120,8 +123,12 @@ export class DirectoryService {
   }
 
   convertTeamDataToDirectory(data: MLBTeamDirectoryData): DirectoryProfileItem {
+    var date = moment(data.lastUpdated * 1000);
+    var dayOfWeek = date.format('dddd, ');
+    var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
     return {
-      lastUpdated: data.lastUpdated * 1000,
+      dayOfWeek: dayOfWeek,
+      lastUpdated: lastUpdate,
       mainDescription: [
         {
           route: MLBGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.id),
@@ -147,8 +154,12 @@ export class DirectoryService {
       location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
     }
     var teamName = data.teamFirstName + " " + data.teamLastName;//TODO waiting on data to be updated, teamName should be using listItemsAssociatedProfile
+    var date = moment(data.lastUpdated * 1000);
+    var dayOfWeek = date.format('dddd, ');
+    var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
     return {
-      lastUpdated: data.lastUpdated * 1000,
+      dayOfWeek: dayOfWeek,
+      lastUpdated: lastUpdate,
       mainDescription: [
         {
           route: MLBGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),

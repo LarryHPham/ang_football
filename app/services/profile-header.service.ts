@@ -195,19 +195,10 @@ export class ProfileHeaderService {
         });
   }
 
-  getMLBProfile(leagueParam?): Observable<LeagueProfileData> {
+  getMLBProfile(scope?): Observable<LeagueProfileData> {
     let url = 'http://dev-touchdownloyal-api.synapsys.us';
-    url = url + '/profileHeader/league/' + leagueParam;
-
-    //remove when correct API is set up
-    let leagueAbbreviatedName;
-    if ( leagueParam == 1 ) {
-        leagueAbbreviatedName = 'NFL';
-    }
-    else if ( leagueParam == 2 ) {
-      leagueAbbreviatedName == 'NCAAF'
-    }
-
+    url = url + '/profileHeader/league/' + scope;
+    console.log(url);
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
@@ -247,7 +238,7 @@ export class ProfileHeaderService {
   convertMLBHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
       imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
-      imageRoute: ["MLB-page"],
+      imageRoute: ["League-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
       text3: pageName,
