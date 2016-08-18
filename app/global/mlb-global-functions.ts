@@ -132,6 +132,11 @@ export class MLBGlobalFunctions {
   static formatHeight(heightStr: string) {
     return heightStr ? heightStr.replace(/(\d+)-(\d+)/, "$1'$2\"") : "N/A";
   }
+  static formatHeightInches(heightStr: string) {
+    var heightInFeet = Math.round((Number(heightStr) / 12));
+    var inches = Number(heightStr) % 12;
+    return heightInFeet + "-" + inches;
+  }
 
   /**
    * - Formats the height string by replacing the dash with '-foot-'
