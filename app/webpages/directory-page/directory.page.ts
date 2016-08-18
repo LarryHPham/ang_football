@@ -8,11 +8,12 @@ import {NavigationData, Link} from '../../global/global-interface';
 import {DirectoryService, DirectoryType, DirectorySearchParams} from '../../services/directory.service';
 import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../fe-core/modules/directory/directory.data';
 import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
     selector: 'Directory-page',
     templateUrl: './app/webpages/directory-page/directory.page.html',
-    directives: [DirectoryModule],
+    directives: [SidekickWrapper, DirectoryModule],
     providers: [DirectoryService, Title]
 })
 
@@ -110,7 +111,7 @@ export class DirectoryPage {
         break;
     }
 
-    let directoryListTitle = "Latest " + GlobalSettings.getScope().toUpperCase() + " " + titleCaseType + " Profiles in the Nation.";//TODO NFL/NCAAF
+    let directoryListTitle = "Latest NFL " + titleCaseType + " Profiles in the Nation.";//TODO NFL/NCAAF
     let noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s";
     let pagingDescription = titleCaseType + " profiles";
     let navTitle = "Browse all " + lowerCaseType + " profiles from A to Z";
