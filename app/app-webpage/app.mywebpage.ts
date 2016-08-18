@@ -13,7 +13,7 @@ import {ErrorPage} from "../webpages/error-page/error-page.page";
 import {SearchPage} from '../webpages/search-page/search.page';
 
 import {TeamPage} from "../webpages/team-page/team.page";
-import {MLBPage} from "../webpages/mlb-page/mlb.page";
+import {LeaguePage} from "../webpages/league-page/league.page";
 import {PlayerPage} from "../webpages/player-page/player.page";
 
 import {PlayerStatsPage} from "../webpages/player-stats-page/player-stats.page";
@@ -77,9 +77,9 @@ declare var jQuery: any;
     },
     //Profile Pages
     {
-        path: '/mlb',
-        name: 'MLB-page',
-        component: MLBPage,
+        path: '/league',
+        name: 'League-page',
+        component: LeaguePage,
     },
     {
         path: '/t/:teamName/:teamId',

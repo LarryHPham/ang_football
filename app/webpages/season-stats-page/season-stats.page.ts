@@ -49,7 +49,7 @@ export class SeasonStatsPage implements OnInit {
   }
 
   private setupTitleData(imageUrl: string, teamName: string, playerId: string, playerName: string) {
-    var profileLink = ["MLB-page"];
+    var profileLink = ["League-page"];
     if ( playerId ) {
       profileLink = MLBGlobalFunctions.formatPlayerRoute(teamName, playerName, playerId);
     }
