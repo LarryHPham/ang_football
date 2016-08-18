@@ -54,7 +54,7 @@ export class DynamicWidgetCall {
           }
           var profHeader= {
             imageURL : GlobalSettings.getSiteLogoUrl(),
-            imageRoute: ["MLB-page"],
+            imageRoute: ["League-page"],
             text1 : 'Last Updated: ' + moment(data.date).format('dddd, MMMM Do, YYYY'),
             text2 : ' United States',
             text3 : data.title,
@@ -136,7 +136,7 @@ export class DynamicWidgetCall {
           circleImageUrl: self.protocol + val.img,
           circleImageRoute: primaryRoute,
           // subImageUrl: self.protocol + val['sub_img'].img,
-          // subImageRoute: subRoute,              
+          // subImageRoute: subRoute,
           rank: val.rank
         });
         carouselItem.footerInfo = footerInfo;
