@@ -277,20 +277,20 @@ export class MLBPage implements OnInit {
         );
     }
 
-  private getTwitterService(profileType, partnerID, scope) {
-      this.scope = scope;
-      this.partnerID = partnerID;
-      this.isProfilePage = true;
-      this.profileType = 'league';
-      this.profileName = "NFL";
+    private getTwitterService(profileType, partnerID, scope) {
+        this.scope = scope;
+        this.partnerID = partnerID;
+        this.isProfilePage = true;
+        this.profileType = 'league';
+        this.profileName = "NFL";
 
-      this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
-          .subscribe(data => {
-              this.twitterData = data;
-          },
-          err => {
-              console.log("Error getting twitter data");
-          });
+        this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
+            .subscribe(data => {
+                this.twitterData = data;
+            },
+            err => {
+                console.log("Error getting twitter data");
+            });
     }
 
     private getDykService(profileType) {
