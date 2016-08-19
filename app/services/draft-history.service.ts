@@ -179,7 +179,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
   private carDraftHistory(data: Array<PlayerDraftData>, errorMessage: string, type){
     let self = this;
     var carouselArray = [];
-    var dummyImg = "/app/public/no-image.png";
+    var dummyImg = "/app/public/no-image.svg";
     if(data.length == 0){//if no data is being returned then show proper Error Message in carousel
       carouselArray.push(SliderCarousel.convertToEmptyCarousel(errorMessage));
     }else{
@@ -209,7 +209,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.playerBackground),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
-          description: ['<i class="fa fa-map-marker"></i>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', val.playerCollege],
+          description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', val.playerCollege],
           dataValue: val.playerOverallPick + " Overall",
           dataLabel: "Draft Round " + val.playerRound,
           circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
@@ -254,7 +254,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           ],
           val.playerOverallPick+' Overall',
           [//sub left text
-            {text: location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
+            {text:'<span class="hometown">Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
           ],
           'Draft Round '+val.playerRound,
           'fa fa-map-marker'),

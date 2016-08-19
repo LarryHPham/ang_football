@@ -94,6 +94,7 @@ export class SchedulesService {
     var callURL = this._apiUrl+'/'+profile+'/schedule';
 
     if(typeof id != 'undefined'){
+      id=2791;//REMOVE TODO
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
@@ -101,7 +102,7 @@ export class SchedulesService {
     if(profile == 'league'){
       callURL += '/schedule-live';
     }
-
+    // console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -331,7 +332,7 @@ export class SchedulesService {
 
   imageData(imageClass, imageBorder, mainImg, mainImgRoute?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     var image: CircleImageData = {//interface is found in image-data.ts
         imageClass: imageClass,

@@ -324,7 +324,12 @@ export class GlobalFunctions {
         let displayState = stateAP[upperState];
         return displayState !== undefined ? displayState : state;
     };
-
+    /**
+     * - Capital the first letter of a string
+    **/
+    capitalizeFirstLetter(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
     /**
      * - Transforms camel case to regular case (Words split up and capitalized)
      * - If the str is undefined or null, then it is returned without performing the conversion

@@ -661,12 +661,23 @@ goalsHeader
   .flexJustify(space-around);
   .globalDefaultModFont(@modBtnFontSize, @modBtnFontWeight, @white);
   & > span:first-child {
-    background-image: url(@masterIcon);
-    background-position: center center;
-    background-repeat: no-repeat;
-    border-radius: 50%;
+    display: inline-block;
+    font-size: inherit;
+    text-rendering: auto;
+    font-family: "tdl" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
     height: @masterIconSize;
-    width: @masterIconSize;
+    width: @masterIconSize/2;
+    margin-left:10px;
+    font-size: 15px;
+  }
+  & > span:first-child:before {
+    content: "\61";
   }
   & > i {
     color: @white;

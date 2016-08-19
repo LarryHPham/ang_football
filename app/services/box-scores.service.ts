@@ -502,7 +502,7 @@ export class BoxScoresService {
   **/
   imageData(imageClass, imageBorder, mainImg, mainImgRoute?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     var image: CircleImageData = {//interface is found in image-data.ts
         imageClass: imageClass,
