@@ -38,7 +38,7 @@
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transform: translate(0, 0)
+  /*transform: translate(0, 0);*/
 }
 
 .fa-lg {
@@ -283,6 +283,12 @@
   content: "\77";
 }
 .fa-sort-desc:before {
+  content: "\78";
+}
+.fa-sort-up:before {
+  content: "\77";
+}
+.fa-sort-down:before {
   content: "\78";
 }
 .fa-mail-forward:before {

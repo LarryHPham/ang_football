@@ -69,8 +69,8 @@ export class ListOfListsPage implements OnInit{
                 this.setPaginationParams(list.pagination);
                 this.carouselDataArray = list.carData;
 
-                var profileName = "MLB";
-                var profileRoute = ["MLB-page"];
+                var profileName = "League";
+                var profileRoute = ["League-page"];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
                 switch ( urlParams.type ) {
                     case "player":
@@ -148,7 +148,7 @@ export class ListOfListsPage implements OnInit{
 
     ngOnInit(){
         if ( this.pageType == "league" ) {
-            this._profileService.getMLBProfile()
+            this._profileService.getLeagueProfile()
             .subscribe(data => {
                 this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
             }, err => {

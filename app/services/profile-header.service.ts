@@ -26,35 +26,38 @@ interface PlayerProfileData extends IProfileData {
 
 interface PlayerProfileHeaderData {
   // Basic Info
-    description: string;
     id: string;
     playerId: number;
     playerFirstName: string;
     playerLastName: string;
     playerFullName: string;
+    playerBirthCity: string;
+    playerBirthState: string;
+    playerBirthCountry: string;
     teamId: number;
     teamMarket: string;
     teamName: string;
     teamFullName: string;
-    draftTeam?: string;
     jerseyNumber: number;
     position: Array<string>;
     gamesPlayed: number;
     gamesStarted: number;
     experience: number;
-    entryDate?: string; //null
-    draftYear?: string; //null
-    playerBirthCity: string;
-    playerBirthState: string; //todo - missing
+    entryDate?: string;
     age: number;
     dob: string;
     height: string;
     weight: number;
-    class?: string;
+    playerHeadShot?: string; //todo - missing
     backgroundUrl: string; //todo - missing
     seasonId: string;
     lastUpdated: string;
-    playerHeadShot?: string; //todo - missing
+    description: string;
+
+    //NCAA specific
+    class?: string;
+    draftYear?: string;
+    draftTeam?: string;
 
   //Stats
     stat1: string;
@@ -105,9 +108,9 @@ interface TeamProfileHeaderData {
     rushingYardsPerGameRank: number;
     backgroundUrl: string;
     teamLogo: string;
-    lastUpdated: string;
     profileImage: string; //todo - missing
-    seasonId: string; //todo - missing
+    seasonId: string;
+    lastUpdated: string;
 }
 
 interface LeagueProfileData extends IProfileData {
@@ -117,7 +120,7 @@ interface LeagueProfileData extends IProfileData {
 interface LeagueProfileHeaderData {
   id: string;
   leagueFullName: string;
-  leagueAbbreviatedName?: string;
+  leagueAbbreviatedName?: string; //todo - null
   leagueCity: string;
   leagueState: string;
   leagueFounded: string;
@@ -134,13 +137,17 @@ interface LeagueProfileHeaderData {
 
 @Injectable()
 export class ProfileHeaderService {
+
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
   constructor(public http: Http){}
 
   getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/player/profileHeader/' + playerId;
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/player/130"; //todo
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/player/' + playerId;
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: PlayerProfileHeaderData = data.data[0];
@@ -163,20 +170,17 @@ export class ProfileHeaderService {
             profileId: headerData.playerId.toString(),
             profileType: "player"
           };
-
         });
   }
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/team/profileHeader/' + teamId;
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/team/2";
-    // console.log("team profile url: " + url);
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/team/' + teamId;
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: TeamProfileHeaderData = data.data[0];
-          var teamName = headerData.teamName;
 
           return {
             pageParams: {
@@ -196,29 +200,14 @@ export class ProfileHeaderService {
         });
   }
 
-  getMLBProfile(leagueParam?): Observable<LeagueProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/league/profileHeader';
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/profileHeader/league/"+leagueParam;
+  getLeagueProfile(scope?): Observable<LeagueProfileData> {
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/league/' + scope;
 
-    //remove when correct API is set up
-    let leagueAbbreviatedName;
-    if ( leagueParam == 1 ) {
-        leagueAbbreviatedName = 'NFL';
-    }
-    else if ( leagueParam == 2 ) {
-      leagueAbbreviatedName == 'NCAAF'
-    }
-
-    return this.http.get(newUrl)
+    return this.http.get(url)
         .map(res => res.json())
         .map(data => {
           var headerData: LeagueProfileHeaderData = data.data[0];
-
-          //Forcing values to be numbers
-          headerData.totalDivisions = Number(headerData.totalDivisions);
-          headerData.totalConferences = Number(headerData.totalConferences);
-          headerData.totalPlayers = Number(headerData.totalPlayers);
-          headerData.totalTeams = Number(headerData.totalTeams);
 
           return {
             headerData: headerData,
@@ -245,10 +234,10 @@ export class ProfileHeaderService {
     };
   }
 
-  convertMLBHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
+  convertLeagueHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
       imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
-      imageRoute: ["MLB-page"],
+      imageRoute: ["League-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
       text3: pageName,
@@ -263,61 +252,66 @@ export class ProfileHeaderService {
     }
     var headerData = data.headerData;
 
-    var formattedStartDate = headerData.entryDate ? headerData.entryDate.toString() : "N/A"; //[September 18, 2015]
+    var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
+
     var formattedYearsInLeague = headerData.experience ? headerData.experience.toString() : "N/A";
     var firstSentence = "";
     var yearPluralStr = "years";
 
-    //for ncaa
-    if ( headerData.draftYear && headerData.draftTeam ) {
-      var currentYear = (new Date()).getFullYear();
-      var yearsInLeague = (currentYear - Number(headerData.draftYear));
-      formattedYearsInLeague = GlobalFunctions.formatNumber(yearsInLeague);
-      if ( yearsInLeague == 1 ) {
-        yearPluralStr = "year";
-      }
-      firstSentence = headerData.playerFullName +
-                  " started his NFL career in " + formattedStartDate +
-                  " for the " + headerData.draftTeam +
-                  ", accumulating " + formattedYearsInLeague +
-                  " " + yearPluralStr + " in the MLB. "
-    }
-
-    //for pro
-    else { // no draft year or team
-      firstSentence = headerData.playerFullName + " currently plays for the " + headerData.teamFullName + ". ";
-    }
-
-    var location = "N/A"; //[Wichita], [Kan.]
-    if ( headerData.playerBirthCity && headerData.playerBirthState ) {
-      location = headerData.playerBirthCity + ", " + headerData.playerBirthState;
-    }
-
+    var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
+    var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
+    var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
       var date = moment(headerData.dob);
       formattedBirthDate = GlobalFunctions.formatAPMonth(date.month()) + date.format(" D, YYYY");
     }
+    var formattedBirthlocation = "N/A"; //[Wichita], [Kan.]
+    if ( headerData.playerBirthCity && headerData.playerBirthState ) {
+      formattedBirthlocation = headerData.playerBirthCity + ", " + headerData.playerBirthState;
+    }
 
-    var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
-    var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
-    var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
+    var formattedExperience = "N/A";
+    if ( headerData.experience == 1 ) {
+      formattedExperience = headerData.experience + " year"
+    }
+    else {
+      formattedExperience = headerData.experience + " years"
+    }
 
-    var description = firstSentence + headerData.playerFirstName +
-                  " was born in " + location +
-                  " on " + formattedBirthDate +
-                  " and is " + formattedAge +
-                  " years old. He stands at " + formattedHeight +
-                  ", " + formattedWeight +
-                  " pounds.";
-
+    var description;
+    //NCAA
+    if ( headerData.class != null ) {
+      description = headerData.playerFullName + " a " +
+                    headerData.class + " " +
+                    headerData.position + " for the " +
+                    fullTeamName + " is No. " +
+                    headerData.jerseyNumber + " and stands at " +
+                    formattedHeight + " tall and weighs in at " +
+                    formattedWeight + " lbs."
+    }
+    //PRO
+    else {
+      description = headerData.playerFullName + " started his " +
+                    this.sportLeagueAbbrv + " careers on " +
+                    headerData.entryDate + " for the " +
+                    fullTeamName + " accumulating " +
+                    formattedExperience + " in the " +
+                    this.sportLeagueAbbrv + ". " +
+                    headerData.playerFirstName + " was born in " +
+                    formattedBirthlocation + " on " +
+                    formattedBirthDate + " and is " +
+                    formattedAge + " years old, with a height of " +
+                    formattedHeight + " and weighing in at " +
+                    formattedWeight + "lbs.";
+    }
 
     var header: ProfileHeaderData = {
       profileName: headerData.playerFullName,
       profileImageUrl: headerData.playerHeadShot,
       backgroundImageUrl: headerData.backgroundUrl,
-      profileTitleFirstPart: '',
-      profileTitleLastPart: headerData.playerFullName, // not seperated by first and last so entire name is bold
+      profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
+      profileTitleLastPart: '',
       lastUpdatedDate: headerData.lastUpdated,
       description: description,
       topDataPoints: [
@@ -338,22 +332,22 @@ export class ProfileHeaderService {
       bottomDataPoints: [
         {
           label: headerData.stat1Type,
-          labelCont: 'for the current season',
+          labelCont: headerData.stat1Desc,
           value: headerData.stat1
         },
         {
           label: headerData.stat2Type,
-          labelCont: 'for the current season',
+          labelCont: headerData.stat1Desc,
           value: headerData.stat2
         },
         {
           label: headerData.stat3Type,
-          labelCont: 'for the current season',
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat1Desc),
           value: headerData.stat3
         },
         {
           label: headerData.stat4Type,
-          labelCont: 'for the current season',
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat1Desc),
           value: headerData.stat4
         }
       ]
@@ -364,19 +358,19 @@ export class ProfileHeaderService {
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
+
     var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
-    var fullLocation = headerData.teamMarket+', '+headerData.teamState;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
     if ( headerData.teamCity && headerData.teamState ) {
       location = headerData.teamCity + ", " + headerData.teamState;
     }
-
     var venue = headerData.venueName ? headerData.venueName : "N/A";
+
     var description = "The " + fullTeamName +
                       " play in " + headerData.venueName +
-                      " located in " + fullLocation +
+                      " located in " + location +
                       ". The " + fullTeamName +
                       " are part of the " + headerData.divisionName +
                        ".";
@@ -431,7 +425,7 @@ export class ProfileHeaderService {
 
   convertToLeagueProfileHeader(data: LeagueProfileHeaderData): ProfileHeaderData {
 
-    //remove when correct API is set up
+    //remove when abbreviated league name is in the data
     let leagueAbbreviatedName;
     if ( data.leagueFullName == 'National Football League' ) {
         leagueAbbreviatedName = 'NFL';
@@ -441,23 +435,19 @@ export class ProfileHeaderService {
     }
 
     //The MLB consists of [30] teams and [####] players. These teams and players are divided across [two] leagues and [six] divisions.
-    var city = data.leagueCity != null ? data.leagueCity : "N/A";
-    var state = data.leagueState != null ? data.leagueState : "N/A";
+    var location = "N/A";
+    if ( data.leagueCity && data.leagueState ) {
+      location = data.leagueCity + ", " + data.leagueState;
+    }
 
-    data.backgroundUrl = GlobalSettings.getBackgroundImageUrl(data.backgroundUrl);
-
-    var description = "The "+/*-data.leagueFullName-*/leagueAbbreviatedName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
+    var description = "The "+leagueAbbreviatedName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
                       " teams and " + GlobalFunctions.formatNumber(data.totalPlayers) + " players. " +
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
-    var location = "N/A";
-    if ( data.leagueCity && data.leagueState ) {
-      location = city + ", " + state;
-    }
+    data.backgroundUrl = GlobalSettings.getBackgroundImageUrl(data.backgroundUrl);
 
     var header: ProfileHeaderData = {
-      //profileName: data.leagueAbbreviatedName, //todo when correct API is set
       profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
       backgroundImageUrl: data.backgroundUrl,
@@ -469,7 +459,7 @@ export class ProfileHeaderService {
       topDataPoints: [
         {
           label: "League Headquarters",
-          value: data.leagueCity
+          value: location
         },
         {
           label: "Founded In",
