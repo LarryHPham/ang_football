@@ -47,6 +47,31 @@ export class StandingsService {
     return pageTitle;
   }
 
+  getGlossaryData(){
+    var glossaries = {
+      title: "Glossary",
+      glossary: [
+        {
+          key: "Key 1",
+          value: "Value 1"
+        },
+        {
+          key: "Key 2",
+          value: "Value 2"
+        },
+        {
+          key: "Key 1",
+          value: "Value 1"
+        },
+        {
+          key: "Key 2",
+          value: "Value 2"
+        }
+      ]
+    }
+    return glossaries;
+  }
+
   loadAllTabsForModule(pageParams: MLBPageParameters, currentTeamId?: number, currentTeamName?: string) {
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
@@ -171,7 +196,7 @@ export class StandingsService {
       value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
       value.fullImageUrl = GlobalSettings.getImageUrl(value.imageUrl);
       value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
-      
+
       //Make sure numbers are numbers.
       value.totalWins = Number(value.totalWins);
       value.totalLosses = Number(value.totalLosses);
