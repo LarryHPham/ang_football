@@ -191,7 +191,7 @@ export class LeaguePage implements OnInit {
 
     private setupProfileData(partnerID, scope) {
 
-        this._profileService.getMLBProfile(scope).subscribe(
+        this._profileService.getLeagueProfile(scope).subscribe(
             data => {
 
             ///*** About MLB ***/
