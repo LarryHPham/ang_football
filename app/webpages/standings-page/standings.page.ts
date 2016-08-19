@@ -3,7 +3,7 @@ import {RouteParams} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
-import {GlossaryComponent, GlossaryInput, GlossaryData} from "../../fe-core/components/glossary/glossary.component";
+import {GlossaryComponent, GlossaryData} from "../../fe-core/components/glossary/glossary.component";
 
 import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
 import {CircleImageData, ImageData} from "../../fe-core/components/images/image-data";
@@ -34,7 +34,7 @@ export class StandingsPage implements OnInit {
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;
-  public glossary: GlossaryInput;
+  public glossary: Array<GlossaryData>;
   constructor(private _params: RouteParams,
               private _title: Title,
               private _profileService: ProfileHeaderService,
@@ -52,7 +52,7 @@ export class StandingsPage implements OnInit {
       this.pageParams.teamId = Number(teamId);
     }
   }
-  getGlossaryValue() : GlossaryInput{
+  getGlossaryValue():Array<GlossaryData>{
     this.glossary = [
         {
           terms: "<span class='text-heavy'>W:</span> Value 1",
