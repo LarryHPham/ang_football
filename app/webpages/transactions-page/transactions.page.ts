@@ -76,11 +76,11 @@ export class TransactionsPage implements OnInit{
       );
     }
     else {
-      this._profileService.getMLBProfile()
+      this._profileService.getLeagueProfile()
         .subscribe(
           data => {
             this.profileName = data.headerData.leagueAbbreviatedName;
-            var profileHeaderData = this._profileService.convertMLBHeader(data.headerData, "");
+            var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);

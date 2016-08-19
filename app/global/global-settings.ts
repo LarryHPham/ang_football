@@ -141,8 +141,8 @@ export class GlobalSettings {
       var isHome = false;
       var hide = false;
       var hostname = window.location.hostname;
-      var partnerPage = /myhomerunzone/.test(hostname);
-      //var partnerPage = /localhost/.test(hostname);
+      var partnerPage = /mytouchdownzone/.test(hostname);
+      // var partnerPage = /localhost/.test(hostname);
       var name = window.location.pathname.split('/')[1];
       //console.log("GlobalSettings:", 'partnerPage =>', partnerPage, 'name =>', name);
 
