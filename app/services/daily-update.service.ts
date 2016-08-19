@@ -77,7 +77,9 @@ export class DailyUpdateService {
 
   getTeamDailyUpdate(teamId: number): Observable<DailyUpdateData> {
     //http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800
-    let url = GlobalSettings.getApiUrl() + '/team/dailyUpdate/' + teamId;
+    // let url = GlobalSettings.getApiUrl() + '/team/dailyUpdate/' + teamId;
+    let url = "http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800"; //place holder data for QA review
+  
     return this.http.get(url)
         .map(res => res.json())
         .map(data => this.formatTeamData(data.data, teamId));

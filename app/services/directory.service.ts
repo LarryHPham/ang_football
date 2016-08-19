@@ -123,7 +123,7 @@ export class DirectoryService {
   }
 
   convertTeamDataToDirectory(data: MLBTeamDirectoryData): DirectoryProfileItem {
-    var date = moment(data.lastUpdated * 1000);
+    var date = moment(Number(data.lastUpdated) * 1000);
     var dayOfWeek = date.format('dddd, ');
     var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
     return {
@@ -154,7 +154,7 @@ export class DirectoryService {
       location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
     }
     var teamName = data.teamFirstName + " " + data.teamLastName;//TODO waiting on data to be updated, teamName should be using listItemsAssociatedProfile
-    var date = moment(data.lastUpdated * 1000);
+    var date = moment(Number(data.lastUpdated) * 1000);
     var dayOfWeek = date.format('dddd, ');
     var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
     return {
