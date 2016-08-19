@@ -216,7 +216,6 @@ export class ListOfListsService {
           MLBGlobalFunctions.formatTeamRoute('st-louis-cardinals', '2805');
           // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
           let firstItemHover = "<p>View</p><p>Profile</p>";
-          console.log(itemUrlRouteArray);
         listData.dataPoints.push(
           {
             imageClass : index > 0 ? "image-43" : "image-121",
