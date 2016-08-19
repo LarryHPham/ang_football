@@ -406,17 +406,17 @@ export class ProfileHeaderService {
         {
           label: "Average Points Per Game",
           labelCont: "Ranked "+headerData.pointsPerGameRank+GlobalFunctions.Suffix(headerData.pointsPerGameRank),
-          value: headerData.pointsPerGame ? headerData.pointsPerGame.toString() : null
+          value: headerData.pointsPerGame ? GlobalFunctions.commaSeparateNumber(headerData.pointsPerGame).toString() : null
         },
         {
           label: "Passing Yards Per Game",
           labelCont: "Ranked "+headerData.passingYardsPerGameRank+GlobalFunctions.Suffix(headerData.passingYardsPerGameRank),
-          value: headerData.passingYardsPerGame.toString()
+          value: headerData.passingYardsPerGame ? GlobalFunctions.commaSeparateNumber(headerData.passingYardsPerGame).toString() : null
         },
         {
           label: "Rushing Yards per Game",
           labelCont: "Ranked "+headerData.rushingYardsPerGameRank+GlobalFunctions.Suffix(headerData.rushingYardsPerGameRank),
-          value: headerData.rushingYardsPerGame.toString()
+          value: headerData.rushingYardsPerGame ? GlobalFunctions.commaSeparateNumber(headerData.rushingYardsPerGame).toString() : null
         }
       ]
     }
@@ -473,7 +473,7 @@ export class ProfileHeaderService {
         },
         {
           label: "Total Players:",
-          value: data.totalPlayers != null ? data.totalPlayers.toString() : null
+          value: data.totalPlayers != null ? GlobalFunctions.commaSeparateNumber(data.totalPlayers).toString() : null
         },
         {
           label: "Total Divisions:",
