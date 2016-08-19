@@ -55,7 +55,7 @@ export class DesignPage implements OnInit {
         conference: Conference.american,
         playerId: 95041,
         teamId: Number(_params.get("teamId"))
-      };
+      }
     }
   }
 
