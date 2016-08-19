@@ -5,6 +5,6 @@
     <loading-component *ngIf="!profileLoaded && !hasError && !tabs"></loading-component>
     <error-component *ngIf="hasError"></error-component>
     <standings-component *ngIf="tabs" [tabs]="tabs" (tabSelected)="standingsTabSelected($event)"></standings-component>
-    <glossary-component [glossaryData]="glossary"></glossary-component>
+    <glossary-component *ngIf="glossary" [glossaryData]="glossary"></glossary-component>
 </section>
 </sidekick-wrapper>
