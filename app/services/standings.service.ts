@@ -47,31 +47,6 @@ export class StandingsService {
     return pageTitle;
   }
 
-  getGlossaryData(){
-    var glossaries = {
-      title: "Glossary",
-      glossary: [
-        {
-          key: "Key 1",
-          value: "Value 1"
-        },
-        {
-          key: "Key 2",
-          value: "Value 2"
-        },
-        {
-          key: "Key 1",
-          value: "Value 1"
-        },
-        {
-          key: "Key 2",
-          value: "Value 2"
-        }
-      ]
-    }
-    return glossaries;
-  }
-
   loadAllTabsForModule(pageParams: MLBPageParameters, currentTeamId?: number, currentTeamName?: string) {
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
