@@ -148,7 +148,7 @@ export class ListOfListsPage implements OnInit{
 
     ngOnInit(){
         if ( this.pageType == "league" ) {
-            this._profileService.getMLBProfile()
+            this._profileService.getLeagueProfile()
             .subscribe(data => {
                 this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
             }, err => {

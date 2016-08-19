@@ -56,11 +56,11 @@ export class DraftHistoryPage implements OnInit{
       );
     }
     else {
-      this._profileService.getMLBProfile()
+      this._profileService.getLeagueProfile()
       .subscribe(
           data => {
             this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
-            this.profileHeaderData = this._profileService.convertMLBHeader(data.headerData, "MLB's " + this.whatProfile);
+            this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "MLB's " + this.whatProfile);
             this.profileData = data;
           },
           err => {
