@@ -60,9 +60,11 @@ export class SearchService{
      */
 
     //Function used by search input to get suggestions dropdown
-    getSearchDropdownData(term: string){
+    getSearchDropdownData(scope: string, term: string){
         //TODO: Wrap in async
         let data = this.searchJSON;
+
+        console.log('data', data);
 
         //Search for players and teams
         let playerResults = this.searchPlayers(term, data.players);
@@ -315,6 +317,7 @@ export class SearchService{
      }
     //Function to search through players. Outputs array of players that match criteria
     searchPlayers(term, data){
+      console.log('searchPlayers',data);
         let fuse = new Fuse(data, {
             //Fields the search is based on
             keys: [{
@@ -340,6 +343,7 @@ export class SearchService{
 
     //Function to search through teams. Outputs array of teams that match criteria
     searchTeams(term, data){
+      console.log('searchTeams',data);
         let fuse = new Fuse(data, {
             //Fields the search is based on
             keys: ['teamName'],
