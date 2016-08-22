@@ -203,6 +203,7 @@ export class GlobalSettings {
     static getScope(scope?) {
       switch(scope) {
         case ( this.getCollegeDivisionFullAbbrv().toLowerCase() ) :
+        case ( this.getCollegeDivisionFullAbbrv() ) :
         return this.getCollegeDivisionAbbrv().toLowerCase();
 
         default:

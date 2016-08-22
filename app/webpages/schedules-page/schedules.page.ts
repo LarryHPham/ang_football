@@ -118,7 +118,7 @@ export class SchedulesPage implements OnInit{
       )
     }else{
       this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "MLB"));
-      this.profHeadService.getMLBProfile()
+      this.profHeadService.getLeagueProfile()
       .subscribe(
           data => {
             var currentDate = new Date();// no stat for date so will grab current year client is on
@@ -127,7 +127,7 @@ export class SchedulesPage implements OnInit{
               display = "Current Season"
             }
             var pageTitle = display + " Schedules - " + data.headerData.leagueAbbreviatedName;
-            this.profileHeaderData = this.profHeadService.convertMLBHeader(data.headerData, pageTitle);
+            this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
             this.errorData = {
               data: data.headerData.leagueAbbreviatedName + " has no record of any more games for the current season.",
               icon: "fa fa-remove"

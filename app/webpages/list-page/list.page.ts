@@ -173,7 +173,7 @@ export class ListPage implements OnInit {
 
 
   ngOnInit(){
-    this._profileService.getMLBProfile()
+    this._profileService.getLeagueProfile()
     .subscribe(data => {
         this.getListPage(this.params.params);
     }, err => {

@@ -3,6 +3,8 @@ import {RouteParams} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
+import {GlossaryComponent, GlossaryData} from "../../fe-core/components/glossary/glossary.component";
+
 import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
 import {CircleImageData, ImageData} from "../../fe-core/components/images/image-data";
 import {StandingsComponent} from "../../fe-core/components/standings/standings.component";
@@ -22,21 +24,17 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 @Component({
     selector: 'Standings-page',
     templateUrl: './app/webpages/standings-page/standings.page.html',
-
-    directives: [SidekickWrapper, BackTabComponent, TitleComponent, StandingsComponent, LoadingComponent, ErrorComponent],
+    directives: [GlossaryComponent, SidekickWrapper, BackTabComponent, TitleComponent, StandingsComponent, LoadingComponent, ErrorComponent],
     providers: [StandingsService, ProfileHeaderService, Title],
 })
 
 export class StandingsPage implements OnInit {
   public tabs: Array<MLBStandingsTabData>;
-
   public pageParams: MLBPageParameters = {}
-
   public titleData: TitleInputData;
-
   public profileLoaded: boolean = false;
   public hasError: boolean = false;
-
+  public glossary: Array<GlossaryData>;
   constructor(private _params: RouteParams,
               private _title: Title,
               private _profileService: ProfileHeaderService,
@@ -49,14 +47,36 @@ export class StandingsPage implements OnInit {
       type = type.toLowerCase();
       this.pageParams.conference = Conference[type];
     }
-
     var teamId = _params.get("teamId");
     if ( type == "team" && teamId !== null && teamId !== undefined ) {
       this.pageParams.teamId = Number(teamId);
     }
   }
-
+  getGlossaryValue():Array<GlossaryData>{
+    this.glossary = [
+        {
+          terms: "<span class='text-heavy'>W:</span> Value 1",
+        },
+        {
+          terms: "<span class='text-heavy'>L:</span> Value 2",
+        },
+        {
+          terms: "<span class='text-heavy'>PCT:</span> Value 3",
+        },
+        {
+          terms: "<span class='text-heavy'>DIV:</span> Value 4",
+        },
+        {
+          terms: "<span class='text-heavy'>CONF:</span> Value 5",
+        },
+        {
+          terms: "<span class='text-heavy'>PA:</span> Value 6",
+        }
+      ]
+    return this.glossary;
+  }
   ngOnInit() {
+    this.getGlossaryValue();
     if ( this.pageParams.teamId ) {
       this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
         data => {
