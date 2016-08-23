@@ -13,7 +13,8 @@ declare let Fuse: any;
 export class SearchService{
     public pageMax: number = 10;
     public searchJSON: any;
-    public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
+    // public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
+    public searchAPI: string = 'http://dev-touchdownloyal-api.synapsys.us/landingPage/search';
     constructor(private http: Http){
         //Get initial search JSON data
         this.getSearchJSON();
@@ -21,7 +22,6 @@ export class SearchService{
 
     //Function get search JSON object
     getSearchJSON(){
-      // console.log(this.searchAPI);
         return this.http.get(this.searchAPI, {
 
             })
@@ -39,7 +39,6 @@ export class SearchService{
     }
     //Function get search JSON object
     getSearch(){
-      // console.log(this.searchAPI);
         return this.http.get(this.searchAPI, {
 
             })
@@ -63,12 +62,37 @@ export class SearchService{
     getSearchDropdownData(scope: string, term: string){
         //TODO: Wrap in async
         let data = this.searchJSON;
-
-        console.log('data', data);
+        let dataSearch = {
+          players: [],
+          teams: []
+        };
+        if(scope !== null){
+          data[scope]['players'].forEach(function(item){
+            item['scope'] = scope;
+            dataSearch.players.push(item);
+          });
+          data[scope]['teams'].forEach(function(item){
+            item['scope'] = scope;
+            dataSearch.teams.push(item);
+          })
+        }else{
+          for(var s in data){
+            data[s]['players'].forEach(function(item){
+              item['scope'] = s;
+              dataSearch.players.push(item);
+            })
+            data[s]['teams'].forEach(function(item){
+              item['scope'] = s;
+              dataSearch.teams.push(item);
+            })
+          }
+        }
+        //converts to usable scope for api calls null is default value for all
+        scope = scope != null ? GlobalSettings.getScope(scope):null;
 
         //Search for players and teams
-        let playerResults = this.searchPlayers(term, data.players);
-        let teamResults = this.searchTeams(term, data.teams);
+        let playerResults = this.searchPlayers(term, scope, data);
+        let teamResults = this.searchTeams(term, scope, data);
         //Transform data to useable format
         let searchResults = this.resultsToDropdown(playerResults, teamResults);
         //Build output to send to search component
@@ -149,21 +173,66 @@ export class SearchService{
      * Functions for search page
      */
 
-    getSearchPageData(router: Router, partnerId: string, query: string, data){
-        // let data = this.searchJSON;
+    getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
+      let dataSearch = {
+        players: [],
+        teams: []
+      };
+      if(scope !== null){
+        data[scope]['players'].forEach(function(item){
+          item['scope'] = scope;
+          dataSearch.players.push(item);
+        });
+        data[scope]['teams'].forEach(function(item){
+          item['scope'] = scope;
+          dataSearch.teams.push(item);
+        })
+      }else{
+        for(var s in data){
+          data[s]['players'].forEach(function(item){
+            item['scope'] = s;
+            dataSearch.players.push(item);
+          })
+          data[s]['teams'].forEach(function(item){
+            item['scope'] = s;
+            dataSearch.teams.push(item);
+          })
+        }
+      }
+
+        //converts to usable scope for api calls null is default value for all
+        scope = scope != null ? GlobalSettings.getScope(scope):null;
         //Search for players and teams
-        let playerResults = this.searchPlayers(query, data.players);
-        let teamResults = this.searchTeams(query, data.teams);
+        let playerResults = this.searchPlayers(query, scope, dataSearch.players);
+        let teamResults = this.searchTeams(query, scope, dataSearch.teams);
 
         let searchResults = this.resultsToTabs(router, partnerId, query, playerResults, teamResults);
 
-        return searchResults;
+        return {
+          results: searchResults,
+          filters: this.filterDropdown()
+        };
+    }
+
+    filterDropdown(){
+      var dropdownFilter = [{
+        key: null,
+        value: 'ALL',
+      },{
+        key: 'nfl',
+        value: 'NFL',
+      },{
+        key: 'ncaaf',
+        value: 'NCAAF',
+      }];
+      return dropdownFilter;
     }
 
     //Convert players and teams to tabs format
     resultsToTabs(router: Router, partnerId: string, query, playerResults, teamResults){
-      // console.log('results to Tabs', playerResults, teamResults);
       let self = this;
+      let partnerScope = GlobalSettings.getHomeInfo();
+
         let searchPageInput: SearchPageInput = {
             searchComponent : {
                 placeholderText: 'Search for a player or team...',
@@ -214,6 +283,7 @@ export class SearchService{
         var objCounter = 0;
         var objData1 = [];
 
+        console.log(playerResults);
         playerResults.forEach(function(item){
             let playerName = item.playerName;
             let title = GlobalFunctions.convertToPossessive(playerName) + " Player Profile";
@@ -221,10 +291,18 @@ export class SearchService{
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
             let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
+            console.log('Before',route);
+            if(partnerScope.isPartner && item.scope != null){
+              route.unshift('../../Partner-home',{scope:item.scope});
+            }else{
+              route.unshift('../../Default-home',{scope:item.scope});
+            }
+            console.log('After',route);
             let relativePath = router.generate(route).toUrlPath();
             if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
-                relativePath = relativePath.substr(1);
+                relativePath = item.scope+ '/' + relativePath.substr(1);
             }
+            console.log(relativePath);
             let urlText = GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span>';
             let regExp = new RegExp(playerName, 'g');
             let description = item.playerDescription.replace(regExp, ('<span class="text-heavy">' + playerName + '</span>'));
@@ -316,44 +394,40 @@ export class SearchService{
        }
      }
     //Function to search through players. Outputs array of players that match criteria
-    searchPlayers(term, data){
-      console.log('searchPlayers',data);
-        let fuse = new Fuse(data, {
-            //Fields the search is based on
-            keys: [{
-              name: 'playerFirstName',
-              weight: 0.5
-            }, {
-              name: 'playerLastName',
-              weight: 0.3
-            }, {
-                name: 'playerName',
-                weight: 0.2
-            }],
-            //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location),
-            // a threshold of 1.0 would match anything.
-            threshold: 0.1,
-            distance: 10,
-            tokenize: false,
-            sortFn: SearchService._orderByComparatorPlayer
-        });
-
-        return fuse.search(term);
+    searchPlayers(term, scope, data){
+      let fuse = new Fuse(data, {
+          //Fields the search is based on
+          keys: [{
+            name: 'playerFirstName',
+            weight: 0.5
+          }, {
+            name: 'playerLastName',
+            weight: 0.3
+          }, {
+              name: 'playerName',
+              weight: 0.2
+          }],
+          //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location),
+          // a threshold of 1.0 would match anything.
+          threshold: 0.1,
+          distance: 10,
+          tokenize: false,
+          sortFn: SearchService._orderByComparatorPlayer
+      });
+      return fuse.search(term);
     }
 
     //Function to search through teams. Outputs array of teams that match criteria
-    searchTeams(term, data){
-      console.log('searchTeams',data);
-        let fuse = new Fuse(data, {
-            //Fields the search is based on
-            keys: ['teamName'],
-            //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location), a threshold of 1.0 would match anything.
-            threshold: 0.2,
-            shouldSort: true,
-            sortFn: SearchService._orderByComparatorTeam
-        });
-
-        return fuse.search(term);
+    searchTeams(term, scope, data){
+      let fuse = new Fuse(data, {
+          //Fields the search is based on
+          keys: ['teamName'],
+          //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location), a threshold of 1.0 would match anything.
+          threshold: 0.2,
+          shouldSort: true,
+          sortFn: SearchService._orderByComparatorTeam
+      });
+      return fuse.search(term);
     }
 
 }
