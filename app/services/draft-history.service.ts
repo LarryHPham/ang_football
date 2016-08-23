@@ -268,7 +268,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       return listData;
     });
     // console.log('TRANSFORMED List Data', listDataArray);
-    if (sortBy == "Ascending") {
+    if (sortBy != "1") {
       return listDataArray.length > 0 ? listDataArray.reverse() : null;
     }
     else {
