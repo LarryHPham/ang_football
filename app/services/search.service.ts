@@ -59,42 +59,29 @@ export class SearchService{
      */
 
     //Function used by search input to get suggestions dropdown
-    getSearchDropdownData(scope: string, term: string){
+    getSearchDropdownData(router:Router, term: string){
         //TODO: Wrap in async
         let data = this.searchJSON;
         let dataSearch = {
           players: [],
           teams: []
         };
-        if(scope !== null){
-          data[scope]['players'].forEach(function(item){
-            item['scope'] = scope;
+        for(var s in data){
+          data[s]['players'].forEach(function(item){
+            item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
             dataSearch.players.push(item);
-          });
-          data[scope]['teams'].forEach(function(item){
-            item['scope'] = scope;
+          })
+          data[s]['teams'].forEach(function(item){
+            item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
             dataSearch.teams.push(item);
           })
-        }else{
-          for(var s in data){
-            data[s]['players'].forEach(function(item){
-              item['scope'] = s;
-              dataSearch.players.push(item);
-            })
-            data[s]['teams'].forEach(function(item){
-              item['scope'] = s;
-              dataSearch.teams.push(item);
-            })
-          }
         }
-        //converts to usable scope for api calls null is default value for all
-        scope = scope != null ? GlobalSettings.getScope(scope):null;
 
         //Search for players and teams
-        let playerResults = this.searchPlayers(term, scope, data);
-        let teamResults = this.searchTeams(term, scope, data);
+        let playerResults = this.searchPlayers(term, null, dataSearch.players);
+        let teamResults = this.searchTeams(term, null, dataSearch.teams);
         //Transform data to useable format
-        let searchResults = this.resultsToDropdown(playerResults, teamResults);
+        let searchResults = this.resultsToDropdown(router, playerResults, teamResults);
         //Build output to send to search component
         let searchOutput: SearchComponentData = {
             term: term,
@@ -104,8 +91,9 @@ export class SearchService{
     }
 
     //Convert players and teams to needed dropdown array format
-    resultsToDropdown(playerResults, teamResults){
+    resultsToDropdown(router, playerResults, teamResults){
         let searchArray: Array<SearchComponentResult> = [];
+        let partnerScope = GlobalSettings.getHomeInfo();
         let count = 0, max = 4;
         for(let i = 0, length = teamResults.length; i < length; i++){
             //Exit loop if max dropdown count
@@ -114,6 +102,15 @@ export class SearchService{
             }
             let item = teamResults[i];
             let teamName = item.teamName;
+
+            //generate route for team
+            let route = MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            if(partnerScope.isPartner && item.scope != null){
+              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope});
+            }else{
+              route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
+            }
+
             count++;
             searchArray.push({
                 title: teamName,
@@ -124,11 +121,11 @@ export class SearchService{
                       imageUrl: GlobalSettings.getImageUrl(item.teamLogo),
                       hoverText: "<i class='fa fa-mail-forward search-text'></i>",
                       imageClass: "border-1",
-                      urlRouteArray: MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId),
+                      urlRouteArray: route,
                     }
                 },
-                routerLink: MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId)
-            })
+                routerLink: route
+              })
         }
 
         for(let i = 0, length = playerResults.length; i < length; i++){
@@ -139,6 +136,12 @@ export class SearchService{
             count++;
             let item = playerResults[i];
             let playerName = item.playerName;
+            let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
+            if(partnerScope.isPartner && item.scope != null){
+              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope});
+            }else{
+              route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
+            }
             searchArray.push({
                 title: '<span class="text-heavy">' + playerName + '</span> - ' + item.teamName,
                 value: playerName,
@@ -146,12 +149,12 @@ export class SearchService{
                     imageClass: "image-43",
                     mainImage: {
                       imageUrl: GlobalSettings.getImageUrl(item.imageUrl),
-                      urlRouteArray: MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId),
+                      urlRouteArray: route,
                       hoverText: "<i class='fa fa-mail-forward search-text'></i>",
                       imageClass: "border-1"
                     }
                 },
-                routerLink: MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId)
+                routerLink: route
             })
         }
         return searchArray;
@@ -174,31 +177,31 @@ export class SearchService{
      */
 
     getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
-      let dataSearch = {
-        players: [],
-        teams: []
-      };
-      if(scope !== null){
-        data[scope]['players'].forEach(function(item){
-          item['scope'] = scope;
-          dataSearch.players.push(item);
-        });
-        data[scope]['teams'].forEach(function(item){
-          item['scope'] = scope;
-          dataSearch.teams.push(item);
-        })
-      }else{
-        for(var s in data){
-          data[s]['players'].forEach(function(item){
-            item['scope'] = s;
+        let dataSearch = {
+          players: [],
+          teams: []
+        };
+        if(scope !== null){
+          data[scope]['players'].forEach(function(item){
+            item['scope'] = scope;
             dataSearch.players.push(item);
-          })
-          data[s]['teams'].forEach(function(item){
-            item['scope'] = s;
+          });
+          data[scope]['teams'].forEach(function(item){
+            item['scope'] = scope;
             dataSearch.teams.push(item);
           })
+        }else{
+          for(var s in data){
+            data[s]['players'].forEach(function(item){
+              item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
+              dataSearch.players.push(item);
+            })
+            data[s]['teams'].forEach(function(item){
+              item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
+              dataSearch.teams.push(item);
+            })
+          }
         }
-      }
 
         //converts to usable scope for api calls null is default value for all
         scope = scope != null ? GlobalSettings.getScope(scope):null;
@@ -283,7 +286,6 @@ export class SearchService{
         var objCounter = 0;
         var objData1 = [];
 
-        console.log(playerResults);
         playerResults.forEach(function(item){
             let playerName = item.playerName;
             let title = GlobalFunctions.convertToPossessive(playerName) + " Player Profile";
@@ -291,18 +293,15 @@ export class SearchService{
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
             let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
-            console.log('Before',route);
             if(partnerScope.isPartner && item.scope != null){
-              route.unshift('../../Partner-home',{scope:item.scope});
+              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope});
             }else{
-              route.unshift('../../Default-home',{scope:item.scope});
+              route.unshift(self.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
-            console.log('After',route);
             let relativePath = router.generate(route).toUrlPath();
             if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
                 relativePath = item.scope+ '/' + relativePath.substr(1);
             }
-            console.log(relativePath);
             let urlText = GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span>';
             let regExp = new RegExp(playerName, 'g');
             let description = item.playerDescription.replace(regExp, ('<span class="text-heavy">' + playerName + '</span>'));
@@ -340,9 +339,14 @@ export class SearchService{
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
             let route = MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            if(partnerScope.isPartner && item.scope != null){
+              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope});
+            }else{
+              route.unshift(self.getRelativePath(router)+'Default-home',{scope:item.scope});
+            }
             let relativePath = router.generate(route).toUrlPath();
             if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
-                relativePath = relativePath.substr(1);
+                relativePath = item.scope + '/' + relativePath.substr(1);
             }
             let urlText = GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span>';
             let regExp = new RegExp(teamName, 'g');
@@ -428,6 +432,25 @@ export class SearchService{
           sortFn: SearchService._orderByComparatorTeam
       });
       return fuse.search(term);
+    }
+
+    getRelativePath(router:Router){
+      let counter = 0;
+      let hasParent = true;
+      let route = router;
+      for (var i = 0; hasParent == true; i++){
+        if(route.parent != null){
+          counter++;
+          route = route.parent;
+        }else{
+          hasParent = false;
+          let relPath = '';
+          for(var c = 1 ; c <= counter; c++){
+            relPath += '../';
+          }
+          return relPath;
+        }
+      }
     }
 
 }
