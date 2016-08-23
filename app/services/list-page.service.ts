@@ -124,73 +124,79 @@ export class ListPageService {
   getMVPTabs(moduleType: string, profileType: string): Array<positionMVPTabData>{
     var tabArray: Array<positionMVPTabData> = [];
 
-    //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
-    if(moduleType == 'pitcher'){
-      tabArray.push(new positionMVPTabData('W/L', 'pitcher-win-record', profileType));
-      tabArray.push(new positionMVPTabData('Innings Pitched', 'pitcher-innings-pitched', profileType));
-      tabArray.push(new positionMVPTabData('Strikeouts', 'pitcher-strikeouts', profileType));
-      tabArray.push(new positionMVPTabData('ERA', 'pitcher-earned-run-average', profileType));
-      tabArray.push(new positionMVPTabData('Hits', 'pitcher-hits-allowed', profileType));
-    } else if (moduleType == 'batter') {//defaults to 'batter' if nothing is sent to moduleType
-      tabArray.push(new positionMVPTabData('Home Runs', 'batter-home-runs', profileType));
-      tabArray.push(new positionMVPTabData('Batting Avg.', 'batter-batting-average', profileType));
-      tabArray.push(new positionMVPTabData('RBIs', 'batter-runs-batted-in', profileType));
-      tabArray.push(new positionMVPTabData('Hits', 'batter-hits', profileType));
-      tabArray.push(new positionMVPTabData('Walks', 'batter-bases-on-balls', profileType));
-      tabArray.push(new positionMVPTabData('OBP', 'batter-on-base-percentage', profileType));
-    } //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
+    switch(moduleType) {
 
-    else if(moduleType == 'Cornerback' || 'Defensive end' || 'Defensive back' || 'Defensive lineman' || 'Defensive tackle' || 'Safety' || 'Linebacker'){
+      //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
+      case 'pitcher' :
+      tabArray.push(new positionMVPTabData('W/L', 'pitcher-win-record', profileType))
+      tabArray.push(new positionMVPTabData('Innings Pitched', 'pitcher-innings-pitched', profileType))
+      tabArray.push(new positionMVPTabData('Strikeouts', 'pitcher-strikeouts', profileType))
+      tabArray.push(new positionMVPTabData('ERA', 'pitcher-earned-run-average', profileType))
+      tabArray.push(new positionMVPTabData('Hits', 'pitcher-hits-allowed', profileType));
+
+      case 'batter' :
+      tabArray.push(new positionMVPTabData('Home Runs', 'batter-home-runs', profileType))
+      tabArray.push(new positionMVPTabData('Batting Avg.', 'batter-batting-average', profileType))
+      tabArray.push(new positionMVPTabData('RBIs', 'batter-runs-batted-in', profileType))
+      tabArray.push(new positionMVPTabData('Hits', 'batter-hits', profileType))
+      tabArray.push(new positionMVPTabData('Walks', 'batter-bases-on-balls', profileType))
+      tabArray.push(new positionMVPTabData('OBP', 'batter-on-base-percentage', profileType));
+
+      case 'Cornerback':
+      case 'Defensive end':
+      case 'Defensive lineman':
+      case 'Defensive tackle':
+      case 'Safety':
+      case 'Linebacker':
       tabArray.push(new positionMVPTabData('Total Tackles', '', profileType));
       tabArray.push(new positionMVPTabData('Total Sacks', '', profileType));
       tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
       tabArray.push(new positionMVPTabData('Forced Fumbles', '', profileType));
       tabArray.push(new positionMVPTabData('Passes Defended', '', profileType));
-    }
-    else if (moduleType == 'Kicker') {
+
+      case 'Kicker':
       tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
       tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
       tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
       tabArray.push(new positionMVPTabData('Total Points', '', profileType));
       tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
-    }
-    else if (moduleType == 'Punter') {
+
+      case 'Punter':
       tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
       tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
       tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
       tabArray.push(new positionMVPTabData('Total Points', '', profileType));
       tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
-    }
-    else if (moduleType == 'Quarterback') {
+
+      case 'Quarterback':
       tabArray.push(new positionMVPTabData('Passer Rating', '', profileType));
       tabArray.push(new positionMVPTabData('Passing Yards', '', profileType));
       tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
       tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
       tabArray.push(new positionMVPTabData('Completions', '', profileType));
-    }
-    else if (moduleType == 'Running back') {
+
+      case 'Running back':
       tabArray.push(new positionMVPTabData('Rushing Yards', '', profileType));
       tabArray.push(new positionMVPTabData('Rushing Attempts', '', profileType));
       tabArray.push(new positionMVPTabData('Yards Per Carry', '', profileType));
       tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
       tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
-    }
-    else if (moduleType == 'Return specialist') {
+
+      case 'Return specialist':
       tabArray.push(new positionMVPTabData('Return Yards', '', profileType));
       tabArray.push(new positionMVPTabData('Return Attempts', '', profileType));
       tabArray.push(new positionMVPTabData('Return Average', '', profileType));
       tabArray.push(new positionMVPTabData('Longest Return', '', profileType));
       tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
-    }
-    else if (moduleType == 'Wide receiver' || 'Tight end') {
+
+      case 'Wide receiver':
+      case 'Tight end':
       tabArray.push(new positionMVPTabData('Receiving Yards', '', profileType));
       tabArray.push(new positionMVPTabData('Receptions', '', profileType));
       tabArray.push(new positionMVPTabData('Average Yards Per Receptio', '', profileType));
       tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
       tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
     }
-
-
 
     return tabArray;
   }

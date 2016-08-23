@@ -209,16 +209,19 @@ export class LeaguePage implements OnInit {
                 this.batterData = this.listService.getMVPTabs('batter', 'module');
                 if ( this.batterData && this.batterData.length > 0 ) {
                     this.batterTab(this.batterData[0]);
+
+                    console.log('Batter Data');
+                    console.log(this.batterData);
                 }
                 this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
                 if ( this.pitcherData && this.pitcherData.length > 0 ) {
                     this.pitcherTab(this.pitcherData[0]);
                 }
-
                 this.positionData = this.listService.getMVPTabs('position', 'module');
                 if ( this.positionData && this.positionData.length > 0 ) {
                   this.positionTab(this.positionData[0]);
                 }
+
                 this.setupComparisonData();
 
                 /*** Keep Up With Everything MLB ***/
@@ -407,6 +410,8 @@ export class LeaguePage implements OnInit {
                 tab.isLoaded = true;
                 console.log('Error: Loading MVP Batters: ', err);
               })
+
+
     }
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
