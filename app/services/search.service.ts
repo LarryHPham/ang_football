@@ -106,7 +106,7 @@ export class SearchService{
             //generate route for team
             let route = MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null){
-              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope});
+              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
               route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
@@ -138,7 +138,7 @@ export class SearchService{
             let playerName = item.playerName;
             let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
-              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope});
+              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
               route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
@@ -294,7 +294,7 @@ export class SearchService{
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
             let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
-              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope});
+              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
               route.unshift(self.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
@@ -340,7 +340,7 @@ export class SearchService{
             // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
             let route = MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null){
-              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope});
+              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
               route.unshift(self.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
