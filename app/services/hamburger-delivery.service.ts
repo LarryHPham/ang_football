@@ -32,7 +32,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " League",
-        url: [partnerUrl +'-home',params ,'League-page', {leagueId: division}]//todo
+        url: [partnerUrl +'-home',params ,'League-page']//todo
       },
       {
         menuTitle: division + " Schedule",

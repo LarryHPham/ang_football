@@ -22,7 +22,7 @@
 .carousel-container {
   width: 610px;
   height: 345px;
-  @media @mobile{
+  @media @fluid {
     height: 60vw;
     width: ~"calc(100% + 20px)";
     margin-left: -10px;
@@ -65,10 +65,7 @@
     position: relative;
     background-color: @white;
     width: 960px;
-    @media (max-width: 1023px) {
-      width: 640px;
-    }
-    @media @mobile{
+    @media @fluid {
       width: 100%;
       padding: 0 10px;
     }

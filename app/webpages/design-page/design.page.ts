@@ -55,7 +55,7 @@ export class DesignPage implements OnInit {
         conference: Conference.american,
         playerId: 95041,
         teamId: Number(_params.get("teamId"))
-      };
+      }
     }
   }
 
@@ -83,7 +83,7 @@ export class DesignPage implements OnInit {
         console.log("Error getting team profile data for " + this.pageParams.teamId + ": " + err);
       }
     );
-    this._profileService.getMLBProfile().subscribe(
+    this._profileService.getLeagueProfile().subscribe(
       data => {
         this.leagueProfileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
       },

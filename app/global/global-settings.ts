@@ -59,6 +59,14 @@ export class GlobalSettings {
       return env;
     }
 
+    static isProd():boolean {
+      if( this.getEnv(this._env) == "prod" ){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
     static getDynamicWidet():string {
         return this._proto + "//" + this._dynamicApiUrl;
     }
@@ -141,8 +149,8 @@ export class GlobalSettings {
       var isHome = false;
       var hide = false;
       var hostname = window.location.hostname;
-      var partnerPage = /myhomerunzone/.test(hostname);
-      //var partnerPage = /localhost/.test(hostname);
+      var partnerPage = /mytouchdownzone/.test(hostname);
+      // var partnerPage = /localhost/.test(hostname);
       var name = window.location.pathname.split('/')[1];
       //console.log("GlobalSettings:", 'partnerPage =>', partnerPage, 'name =>', name);
 
@@ -203,6 +211,7 @@ export class GlobalSettings {
     static getScope(scope?) {
       switch(scope) {
         case ( this.getCollegeDivisionFullAbbrv().toLowerCase() ) :
+        case ( this.getCollegeDivisionFullAbbrv() ) :
         return this.getCollegeDivisionAbbrv().toLowerCase();
 
         default:

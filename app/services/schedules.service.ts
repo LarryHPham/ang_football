@@ -94,6 +94,7 @@ export class SchedulesService {
     var callURL = this._apiUrl+'/'+profile+'/schedule';
 
     if(typeof id != 'undefined'){
+      id=2791;//REMOVE TODO
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
@@ -101,7 +102,7 @@ export class SchedulesService {
     if(profile == 'league'){
       callURL += '/schedule-live';
     }
-
+    // console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {

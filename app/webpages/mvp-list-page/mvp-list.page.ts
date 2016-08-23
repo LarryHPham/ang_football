@@ -5,7 +5,7 @@ import {Title} from '@angular/platform-browser';
 import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
 import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {DraftHistoryService} from '../../services/draft-history.service';
-import {ListPageService, BaseballMVPTabData} from '../../services/list-page.service';
+import {ListPageService, positionMVPTabData} from '../../services/list-page.service';
 import {FooterStyle} from '../../fe-core/components/module-footer/module-footer.component';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
@@ -27,7 +27,7 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
 })
 
 export class MVPListPage implements OnInit {
-  tabs: Array<BaseballMVPTabData>;
+  tabs: Array<positionMVPTabData>;
   profileHeaderData: TitleInputData;
 
   paginationParameters:PaginationParameters;
@@ -80,7 +80,7 @@ export class MVPListPage implements OnInit {
       icon: 'fa fa-map-marker'
     };
 
-    this._profileService.getMLBProfile()
+    this._profileService.getLeagueProfile()
       .subscribe(data => {
         this.profileHeaderData = {
           imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),
@@ -134,7 +134,7 @@ export class MVPListPage implements OnInit {
     };
   }
 
-  getStandardList(tab: BaseballMVPTabData){
+  getStandardList(tab: positionMVPTabData){
     this.queryParams.listname = tab.tabDataKey;
     this._service.getListModuleService(tab, this.queryParams)
       .subscribe(
@@ -151,7 +151,7 @@ export class MVPListPage implements OnInit {
       );
   }
 
-  tabSelected(tab: BaseballMVPTabData) {
+  tabSelected(tab: positionMVPTabData) {
     var tabRoute;
     var tabNameFrom = this.selectedTabName; //get the tab we are changing from into a var before we change it
     var tabNameTo = tab.tabDisplayTitle;
