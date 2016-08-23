@@ -9,11 +9,12 @@ import {DirectoryService, DirectoryType, DirectorySearchParams} from '../../serv
 import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../fe-core/modules/directory/directory.data';
 import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {PaginationFooter} from '../../fe-core/components/pagination-footer/pagination-footer.component';
 
 @Component({
     selector: 'Directory-page',
     templateUrl: './app/webpages/directory-page/directory.page.html',
-    directives: [SidekickWrapper, DirectoryModule],
+    directives: [SidekickWrapper, DirectoryModule, PaginationFooter],
     providers: [DirectoryService, Title]
 })
 
