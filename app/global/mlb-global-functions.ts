@@ -377,5 +377,5 @@ export class MLBGlobalFunctions {
       else {
         return statDesc;
       }
-  } //static playerProfileStatDesc
+  } //static nonRankedDataPoints
 }

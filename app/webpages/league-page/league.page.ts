@@ -30,7 +30,7 @@ import {SchedulesModule} from '../../fe-core/modules/schedules/schedules.module'
 import {SchedulesService} from '../../services/schedules.service';
 
 import {MVPModule} from '../../fe-core/modules/mvp/mvp.module';
-import {ListPageService, BaseballMVPTabData} from '../../services/list-page.service';
+import {ListPageService, positionMVPTabData} from '../../services/list-page.service';
 
 import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {IProfileData, ProfileHeaderService} from '../../services/profile-header.service';
@@ -125,9 +125,12 @@ export class LeaguePage implements OnInit {
     dateParam:any;
 
     batterParams:any;
-    batterData:Array<BaseballMVPTabData>;
+    batterData:Array<positionMVPTabData>;
     pitcherParams:any;
-    pitcherData:Array<BaseballMVPTabData>;
+    pitcherData:Array<positionMVPTabData>;
+
+    positionParams: any;
+    positionData: Array<positionMVPTabData>;
 
     imageData:any;
     copyright:any;
@@ -185,9 +188,7 @@ export class LeaguePage implements OnInit {
         });
     }
 
-    ngOnInit() {
-        // this.setupProfileData();
-    }
+    ngOnInit() {}
 
     private setupProfileData(partnerID, scope) {
 
@@ -204,6 +205,7 @@ export class LeaguePage implements OnInit {
                 this.getSchedulesData('pre-event');//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
+
                 this.batterData = this.listService.getMVPTabs('batter', 'module');
                 if ( this.batterData && this.batterData.length > 0 ) {
                     this.batterTab(this.batterData[0]);
@@ -211,6 +213,11 @@ export class LeaguePage implements OnInit {
                 this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
                 if ( this.pitcherData && this.pitcherData.length > 0 ) {
                     this.pitcherTab(this.pitcherData[0]);
+                }
+
+                this.positionData = this.listService.getMVPTabs('position', 'module');
+                if ( this.positionData && this.positionData.length > 0 ) {
+                  this.positionTab(this.positionData[0]);
                 }
                 this.setupComparisonData();
 
@@ -226,6 +233,7 @@ export class LeaguePage implements OnInit {
                 this.hasError = true;
                 console.log("Error getting team profile data for mlb", err);
             }
+
         );
     }
 
@@ -368,8 +376,21 @@ export class LeaguePage implements OnInit {
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
+    private positionTab(tab: positionMVPTabData) {
+      this.positionParams = {
+        profile: 'player',
+        position: 'position',
+        listname: tab.tabDataKey,
+        sort: '',
+        conference: '',
+        division: '',
+        limit: '',
+        pageNum: 1
+      }
+    }
+
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    private batterTab(tab: BaseballMVPTabData) {
+    private batterTab(tab: positionMVPTabData) {
         this.batterParams = { //Initial load for mvp Data
             profile: 'player',
             listname: tab.tabDataKey,
@@ -385,11 +406,14 @@ export class LeaguePage implements OnInit {
             }, err => {
                 tab.isLoaded = true;
                 console.log('Error: Loading MVP Batters: ', err);
-            })
+              })
+
+        console.log('batterParams');
+        console.log(this.batterParams.position);
     }
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    private pitcherTab(tab: BaseballMVPTabData) {
+    private pitcherTab(tab: positionMVPTabData) {
         this.pitcherParams = { //Initial load for mvp Data
             profile: 'player',
             listname: tab.tabDataKey,
@@ -406,5 +430,8 @@ export class LeaguePage implements OnInit {
                 tab.isLoaded = true;
                 console.log('Error: Loading MVP Pitchers: ', err);
             })
+
+            console.log('pitcherParams');
+            console.log(this.pitcherParams.position);
     }
 }
