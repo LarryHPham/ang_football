@@ -60,16 +60,16 @@ interface PlayerProfileHeaderData {
     draftTeam?: string;
 
   //Stats
-    stat1: string;
+    stat1: number;
     stat1Type: string;
     stat1Desc: string;
-    stat2: string;
+    stat2: number;
     stat2Type: string;
     stat2Desc: string;
-    stat3: string;
+    stat3: number;
     stat3Type: string;
     stat3Desc: string;
-    stat4: string;
+    stat4: number;
     stat4Type: string;
     stat4Desc: string;
 }
@@ -96,10 +96,12 @@ interface TeamProfileHeaderData {
     conferenceName: Conference;
     venueName: string;
     rank: number;
-    divWins: number;
-    divLosses: number;
-    totalWins: number;
-    totalLosses: number;
+    divWins?: number;
+    divLosses?: number;
+    divRecord: string;
+    totalWins?: number;
+    totalLosses?: number;
+    leagueRecord: string;
     pointsPerGame: number;
     pointsPerGameRank: number;
     passingYardsPerGame: number;
@@ -171,7 +173,7 @@ export class ProfileHeaderService {
             profileType: "player"
           };
         });
-  }
+  } //getPlayerProfile
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
     let url = 'http://dev-touchdownloyal-api.synapsys.us';
@@ -198,7 +200,7 @@ export class ProfileHeaderService {
             profileType: "team"
           };
         });
-  }
+  } //getTeamProfile
 
   getLeagueProfile(scope?): Observable<LeagueProfileData> {
     let url = 'http://dev-touchdownloyal-api.synapsys.us';
@@ -216,7 +218,7 @@ export class ProfileHeaderService {
             profileType: "league"
           };
         });
-  }
+  } //getLeagueProfile
 
   convertTeamPageHeader(data: TeamProfileData, pageName:string): TitleInputData {
     if(typeof pageName == 'undefined'){
@@ -232,7 +234,7 @@ export class ProfileHeaderService {
       text3: pageName,
       icon: 'fa fa-map-marker'
     };
-  }
+  } //convertTeamPageHeader
 
   convertLeagueHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
@@ -243,10 +245,9 @@ export class ProfileHeaderService {
       text3: pageName,
       icon: 'fa fa-map-marker'
     };
-  }
+  } //convertLeagueHeader
 
   convertToPlayerProfileHeader(data: PlayerProfileData): ProfileHeaderData {
-
     if (!data.headerData) {
       return null;
     }
@@ -333,28 +334,28 @@ export class ProfileHeaderService {
         {
           label: headerData.stat1Type,
           labelCont: headerData.stat1Desc,
-          value: headerData.stat1
+          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1).toString() : null
         },
         {
           label: headerData.stat2Type,
           labelCont: headerData.stat1Desc,
-          value: headerData.stat2
+          value: headerData.stat2 ? GlobalFunctions.commaSeparateNumber(headerData.stat2).toString() : null
         },
         {
           label: headerData.stat3Type,
-          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat1Desc),
-          value: headerData.stat3
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
+          value: headerData.stat3.toString()
         },
         {
           label: headerData.stat4Type,
-          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat1Desc),
-          value: headerData.stat4
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
+          value: headerData.stat4.toString()
         }
       ]
     }
 
     return header;
-  }
+  } //convertToPlayerProfileHeader
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
@@ -366,11 +367,11 @@ export class ProfileHeaderService {
     if ( headerData.teamCity && headerData.teamState ) {
       location = headerData.teamCity + ", " + headerData.teamState;
     }
-    var venue = headerData.venueName ? headerData.venueName : "N/A";
+    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
 
-    var description = "The " + fullTeamName +
-                      " play in " + headerData.venueName +
-                      " located in " + location +
+    var description = "The" + fullTeamName +
+                      venueForDescription +
+                      "located in " + location +
                       ". The " + fullTeamName +
                       " are part of the " + headerData.divisionName +
                        ".";
@@ -394,14 +395,14 @@ export class ProfileHeaderService {
         },
         {
           label: "Record",
-          value: headerData.totalWins.toString() + " - " + headerData.totalLosses.toString()
+          value: headerData.leagueRecord
         }
       ],
       bottomDataPoints: [
         {
           label: "Wins/losses",
           labelCont: "for the current season",
-          value: headerData.totalWins.toString() + " - " + headerData.totalLosses.toString()
+          value: headerData.leagueRecord
         },
         {
           label: "Average Points Per Game",
@@ -421,10 +422,9 @@ export class ProfileHeaderService {
       ]
     }
     return header;
-  }
+  } //convertToTeamProfileHeader
 
   convertToLeagueProfileHeader(data: LeagueProfileHeaderData): ProfileHeaderData {
-
     //remove when abbreviated league name is in the data
     let leagueAbbreviatedName;
     if ( data.leagueFullName == 'National Football League' ) {
@@ -486,5 +486,5 @@ export class ProfileHeaderService {
       ]
     }
     return header;
-  }
+  } //convertToLeagueProfileHeader
 }
