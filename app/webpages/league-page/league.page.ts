@@ -407,9 +407,6 @@ export class LeaguePage implements OnInit {
                 tab.isLoaded = true;
                 console.log('Error: Loading MVP Batters: ', err);
               })
-
-        console.log('batterParams');
-        console.log(this.batterParams.position);
     }
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
@@ -430,8 +427,5 @@ export class LeaguePage implements OnInit {
                 tab.isLoaded = true;
                 console.log('Error: Loading MVP Pitchers: ', err);
             })
-
-            console.log('pitcherParams');
-            console.log(this.pitcherParams.position);
     }
 }
