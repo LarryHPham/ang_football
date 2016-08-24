@@ -15,17 +15,18 @@ export interface TeamStandingsData {
   conferenceName: string,
   divisionName: string,
   lastUpdated: string,
-  rank: number,
-  totalWins: number,
-  totalLosses: number,
-  winPercentage: number,
-  streakType: string,
-  streakCount: number,
-  batRunsScored: number,
-  pitchRunsAllowed: number,
-  gamesBack: number,
-  seasonId: string,
-
+  divisionRank: string,
+  conferenceRank: string,
+  leagueRank: string,
+  streak: string,
+  teamConferenceRecord: string,
+  teamWinPercent: string,
+  teamDivisionRecord: string,
+  teamPointsAllowed: string,
+  teamOverallRecord: string,
+  seasonBase: string,
+  totalLosses: string;
+  totalWins: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -123,6 +124,7 @@ export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsD
 
   convertToCarouselItem(item: TeamStandingsData, index:number): SliderCarouselInput {
     var teamRoute = null;
+    var yearEnd = Number(item.seasonBase)+1;
     if ( this.currentTeamId != item.teamId ) {
       teamRoute = MLBGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
     }
@@ -133,14 +135,11 @@ export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsD
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: item.fullBackgroundImageUrl,
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonId + " Season " + item.groupName + " Standings"],
+      subheader: [item.seasonBase + "-" + yearEnd + " Season " + item.divisionName + " Standings"],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
-          " are currently <span class='text-heavy'>ranked " + item.rank + GlobalFunctions.Suffix(item.rank) +
-          "</span>" + " in the <span class='text-heavy'>" + item.groupName +
-          "</span>, with a record of " + "<span class='text-heavy'>" + item.totalWins + " - " + item.totalLosses +
-          "</span>."
+          " is currently <span class='text-heavy'>ranked " + Number(item.divisionRank) + "</span>" + " in the <span class='text-heavy'>" + item.divisionName + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
       circleImageUrl: item.fullImageUrl,
@@ -157,41 +156,38 @@ export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
       columnClass: "image-column",
       key: "name"
     },{
-      headerValue: "W",
+      headerValue: "W/L/T",
       columnClass: "data-column",
-      isNumericType: true,
-      key: "w"
+      key: "wlt"
     },{
-      headerValue: "L",
+      headerValue: "CONF",
       columnClass: "data-column",
-      isNumericType: true,
-      key: "l"
-    },{
-      headerValue: "PCT",
-      columnClass: "data-column",
-      isNumericType: true,
       sortDirection: -1, //descending
-      key: "pct"
-    },{
-      headerValue: "GB",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "gb"
-    },{
-      headerValue: "RS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "rs"
-    },{
-      headerValue: "RA",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "ra"
+      key: "conf"
     },{
       headerValue: "STRK",
       columnClass: "data-column",
-      isNumericType: true,
       key: "strk"
+    },{
+      headerValue: "HM",
+      columnClass: "data-column",
+      key: "hm"
+    },{
+      headerValue: "RD",
+      columnClass: "data-column",
+      key: "rd"
+    },{
+      headerValue: "PF",
+      columnClass: "data-column",
+      key: "pf"
+    },{
+      headerValue: "PA",
+      columnClass: "data-column",
+      key: "pa"
+    },{
+      headerValue: "Rank:",
+      columnClass: "data-column",
+      key: "rank"
     }];
 
   rows: Array<TeamStandingsData>;
@@ -212,7 +208,7 @@ export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
   }
 
   setSelectedKey(key: string) {
-    this.selectedKey = key ? key.toString() : key;
+    this.selectedKey = key ? key : null;
   }
 
   getSelectedKey(): string {
@@ -242,47 +238,44 @@ export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
         display = item.teamName;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
-          link = MLBGlobalFunctions.formatTeamRoute(item.teamName,item.teamId.toString());
+          link = MLBGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
         }
         imageUrl = item.fullImageUrl;
         break;
 
-      case "w":
-        display = item.totalWins != null ? item.totalWins.toString() : null;
-        sort = item.totalWins;
+      case "wlt"://TODO
+        display = item.teamOverallRecord != null ? item.teamOverallRecord : null;
+        sort = item.teamOverallRecord;
         break;
 
-      case "l":
-        display = item.totalLosses != null ? item.totalLosses.toString() : null;
-        sort = item.totalLosses;
-        break;
-
-      case "pct":
-        display = item.winPercentage != null ? item.winPercentage.toPrecision(3) : null;
-        sort = item.winPercentage;
-        break;
-
-      case "gb":
-        display = item.gamesBack != null ? item.gamesBack.toString() : null;
-        sort = item.gamesBack;
-        break;
-
-      case "rs":
-        display = item.batRunsScored != null ? item.batRunsScored.toString() : null;
-        sort = item.batRunsScored;
-        break;
-
-      case "ra":
-        display = item.pitchRunsAllowed != null ? item.pitchRunsAllowed.toString() : null;
-        sort = item.pitchRunsAllowed;
+      case "conf":
+        display = item.teamConferenceRecord != null ? item.teamConferenceRecord : null;
+        sort = item.teamConferenceRecord;
         break;
 
       case "strk":
-        if ( item.streakCount != null && item.streakType ) {
-          var str = item.streakCount.toString();
-          display = (item.streakType == "loss" ? "L-" : "W-") + item.streakCount.toString();
-          sort = (item.streakType == "loss" ? -1 : 1) * item.streakCount;
-        }
+        display = item.streak != null ? item.streak : null;
+        sort = item.streak;
+        break;
+
+      case "hm"://TODO
+        display = item.teamWinPercent != null ? item.teamWinPercent : null;
+        sort = item.teamWinPercent;
+        break;
+
+      case "rd"://TODO
+        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
+        sort = item.teamDivisionRecord;
+        break;
+
+      case "pa":
+        display = item.teamPointsAllowed != null ? item.teamPointsAllowed : null;
+        sort = Number(item.teamPointsAllowed);
+        break;
+
+      case "rank"://TODO
+        display = item.leagueRank != null ? item.leagueRank : null;
+        sort = Number(item.leagueRank);
         break;
     }
     if ( display == null ) {

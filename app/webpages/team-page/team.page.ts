@@ -122,6 +122,7 @@ export class TeamPage implements OnInit {
     headerData:any;
     pageParams:MLBPageParameters;
     partnerID:string = null;
+    scope:string = null;
     hasError: boolean = false;
 
     profileHeaderData:ProfileHeaderData;
@@ -179,6 +180,7 @@ export class TeamPage implements OnInit {
 
         GlobalSettings.getParentParams(_router, parentParams => {
             this.partnerID = parentParams.partnerID;
+            this.scope = parentParams.scope;
         });
     }
 
@@ -217,9 +219,9 @@ export class TeamPage implements OnInit {
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
-                this.getSchedulesData('pre-event');//grab pre event data for upcoming games
+                this.getSchedulesData('pregame');//grab pregame data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
-                this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true);
+                this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
                 //this.loadMVP
@@ -304,21 +306,21 @@ export class TeamPage implements OnInit {
         })
     }
 
-    //grab tab to make api calls for post of pre event table
+    //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pre-event');
+            this.getSchedulesData('pregame');
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('post-event');
+            this.getSchedulesData('postgame');
         }else{
-            this.getSchedulesData('post-event');// fall back just in case no status event is present
+            this.getSchedulesData('postgame');// fall back just in case no status event is present
         }
     }
 
     //api for Schedules
     private getSchedulesData(status){
       var limit = 5;
-      this._schedulesService.getSchedulesService('team', status, limit, 1, true, this.pageParams.teamId) // isTeamProfilePage = true
+      this._schedulesService.getSchedulesService(this.scope, 'team', status, limit, 1, true, this.pageParams.teamId) // isTeamProfilePage = true
       .subscribe(
         data => {
           this.schedulesData = data;

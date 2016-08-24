@@ -50,7 +50,7 @@ export class FooterService {
           active: true,
           route: ['Directory-page-starts-with',
           {
-            type: profile,
+            type: profile+'s',
             page: 1,
             startsWith: text
           }]

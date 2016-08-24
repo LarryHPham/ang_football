@@ -55,22 +55,28 @@ export class StandingsPage implements OnInit {
   getGlossaryValue():Array<GlossaryData>{
     this.glossary = [
         {
-          terms: "<span class='text-heavy'>W:</span> Value 1",
+          terms: "<span class='text-heavy'>W/L/T:</span> Total Wins",
         },
         {
-          terms: "<span class='text-heavy'>L:</span> Value 2",
+          terms: "<span class='text-heavy'>CONF:</span> Conference Record",
         },
         {
-          terms: "<span class='text-heavy'>PCT:</span> Value 3",
+          terms: "<span class='text-heavy'>STRK:</span> Streak",
         },
         {
-          terms: "<span class='text-heavy'>DIV:</span> Value 4",
+          terms: "<span class='text-heavy'>HM:</span> Home",
         },
         {
-          terms: "<span class='text-heavy'>CONF:</span> Value 5",
+          terms: "<span class='text-heavy'>RD:</span> Road",
         },
         {
-          terms: "<span class='text-heavy'>PA:</span> Value 6",
+          terms: "<span class='text-heavy'>PF:</span> Value 6",
+        },
+        {
+          terms: "<span class='text-heavy'>PA:</span> Points Allowed",
+        },
+        {
+          terms: "<span class='text-heavy'>RANK</span> Team Rank",
         }
       ]
     return this.glossary;
@@ -95,7 +101,7 @@ export class StandingsPage implements OnInit {
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", "MLB"));
+      this._title.setTitle(GlobalSettings.getPageTitle("Standings", "NFL"));//TODO
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
