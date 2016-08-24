@@ -156,7 +156,7 @@ export class TeamPage implements OnInit {
     // currentYear: any;
 
     schedulesData:any;
-    public scope: string;
+
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
