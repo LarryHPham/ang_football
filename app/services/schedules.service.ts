@@ -68,7 +68,7 @@ export class SchedulesService {
       return headers;
   }
 
-  getSchedulesService(profile, eventStatus, limit, pageNum, isTeamProfilePage?: boolean, id?, year?){
+  getSchedulesService(scope, profile, eventStatus, limit, pageNum, isTeamProfilePage?: boolean, id?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
@@ -86,23 +86,27 @@ export class SchedulesService {
     }
 
     //eventType determines which tab is highlighted
-    if(eventStatus == 'pre-event'){
+    if(eventStatus == 'pregame'){
       eventTab = true;
     }else{
       eventTab = false;
     }
-    var callURL = this._apiUrl+'/'+profile+'/schedule';
 
-    if(typeof id != 'undefined'){
-      id=2791;//REMOVE TODO
+
+    //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
+    this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    if(profile == 'league'){//if league call then add scope
+      callURL += '/'+ scope;
+    }
+
+    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
 
-    if(profile == 'league'){
-      callURL += '/schedule-live';
-    }
-    // console.log(callURL);
+    console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -124,7 +128,7 @@ export class SchedulesService {
   }
 
   //possibly simpler version of getting schedules api call
-  getSchedule(profile, eventStatus, limit, pageNum, id?, year?){
+  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
@@ -147,16 +151,20 @@ export class SchedulesService {
     }else{
       eventTab = false;
     }
-    var callURL = this._apiUrl+'/'+profile+'/schedule';
+    var callURL = this._apiUrl+'/schedule/'+profile;
 
-    if(typeof id != 'undefined'){
+    //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
+    this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    if(profile == 'league'){//if league call then add scope
+      callURL += '/'+ scope;
+    }
+
+    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-
-    if(profile == 'league'){
-      callURL += '/schedule-live';
-    }
 
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
@@ -165,8 +173,8 @@ export class SchedulesService {
       });
   }
 
-  setupSlideScroll(data, profile, eventStatus, limit, pageNum, callback: Function){
-    this.getSchedule('league', eventStatus, limit, pageNum)
+  setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
+    this.getSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(data.data);
       callback(formattedData);
