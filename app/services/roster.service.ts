@@ -44,9 +44,10 @@ export class RosterService {
       });
   }//getRosterService ends
 
-  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean): RosterModuleData<TeamRosterData> {
+  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
     return {
-        moduleTitle: this.getModuleTitle(teamName),
+        moduleTitle: "Team Roster",
+        moduleIdentifier: " - " + fullTeam + " " + teamName,
         pageRouterLink: this.getLinkToPage(teamId, teamName),
         tabs: this.initializeAllTabs(teamId.toString(), conference, 5, isTeamProfilePage)
     };
