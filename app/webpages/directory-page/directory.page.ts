@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
@@ -9,13 +9,13 @@ import {DirectoryService, DirectoryType, DirectorySearchParams} from '../../serv
 import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../fe-core/modules/directory/directory.data';
 import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
-import {PaginationFooter} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {FooterService} from '../../services/footer.service';
 
 @Component({
     selector: 'Directory-page',
     templateUrl: './app/webpages/directory-page/directory.page.html',
-    directives: [SidekickWrapper, DirectoryModule, PaginationFooter],
-    providers: [DirectoryService, Title]
+    directives: [SidekickWrapper, DirectoryModule],
+    providers: [DirectoryService, Title, FooterService]
 })
 
 export class DirectoryPage {
@@ -33,7 +33,11 @@ export class DirectoryPage {
 
   public pageType: DirectoryType;
 
-  constructor(private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title) {
+  public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+
+  navLists: Array<Link>;
+
+  constructor(private _footerService: FooterService, private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title) {
     _title.setTitle(GlobalSettings.getPageTitle("Directory"));
     var page = _params.get("page");
     this.currentPage = Number(page);
@@ -42,10 +46,12 @@ export class DirectoryPage {
     switch ( type ) {
       case "players":
         this.pageType = DirectoryType.players;
+        this.getNav(this._sportLeagueAbbrv, "player");
         break;
 
       case "teams":
         this.pageType = DirectoryType.teams;
+        this.getNav(this._sportLeagueAbbrv, "team");
         break;
 
       default:
@@ -62,10 +68,6 @@ export class DirectoryPage {
     if ( this.currentPage === 0 ) {
       this.currentPage = 1; //page index starts at one
     }
-  }
-
-  ngOnInit() {
-      this.getDirectoryData();
   }
 
   getDirectoryData() {
@@ -111,8 +113,7 @@ export class DirectoryPage {
         titleCaseType = "[Type]";
         break;
     }
-
-    let directoryListTitle = "Latest NFL " + titleCaseType + " Profiles in the Nation.";//TODO NFL/NCAAF
+    let directoryListTitle = "Latest " + this._sportLeagueAbbrv + " " + titleCaseType + " Profiles in the Nation.";
     let noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s";
     let pagingDescription = titleCaseType + " profiles";
     let navTitle = "Browse all " + lowerCaseType + " profiles from A to Z";
@@ -133,7 +134,10 @@ export class DirectoryPage {
       noResultsMessage: noResultsMessage,
       listingItems: null,
       listingsLimit: this.listingsLimit,
-      navigationData: this.setupAlphabeticalNavigation(navTitle),
+      navigationData: {
+        title: navTitle,
+        links: this.navLists ? this.navLists : null
+      },
       pagingDescription: pagingDescription,
       pageParams: pageParams
     };
@@ -151,12 +155,14 @@ export class DirectoryPage {
     this.data = data;
   }
 
-  setupAlphabeticalNavigation(title: string): NavigationData {
-      var navigationArray = GlobalFunctions.setupAlphabeticalNavigation(DirectoryType[this.pageType]);
-
-      return {
-        title: title,
-        links: navigationArray
-      };
+  getNav(scope, profile) {
+    this._footerService.getFooterService(scope, profile)
+    .subscribe(data => {
+      this.navLists = data;
+      this.getDirectoryData();
+    },
+    err => {
+      console.log("Error getting navigation data");
+    });
   }
 }
