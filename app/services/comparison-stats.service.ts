@@ -150,7 +150,7 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
 
 @Injectable()
 export class ComparisonStatsService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
+  private _apiUrl: string = GlobalSettings.getApiUrlTdl();
 
   private pitchingFields = [//TODO
     "pitchWins",

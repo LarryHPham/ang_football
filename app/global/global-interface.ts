@@ -28,6 +28,7 @@ export interface ParagraphItem {
 export interface NavigationData {
   title: string;
   links: Array<Link>;
+  active?: boolean;
   moreLink?: Link;
 }
 
