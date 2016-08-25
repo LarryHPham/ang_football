@@ -133,15 +133,11 @@ export class LeaguePage implements OnInit {
     firstVideo:string;
     videoData:any;
 
-    defaultSetTab: any;
-    defaultSetPosition: any;
-
     batterParams:any;
     batterData:Array<positionMVPTabData>;
     pitcherParams:any;
     pitcherData:Array<positionMVPTabData>;
 
-    globalPosition: string;
     positionParams: any;
     positionData: Array<positionMVPTabData>;
 
@@ -220,8 +216,7 @@ export class LeaguePage implements OnInit {
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
-
-                // this.batterData = this.listService.getMVPTabs('batter', 'module');
+				// this.batterData = this.listService.getMVPTabs('batter', 'module');
                 // if ( this.batterData && this.batterData.length > 0 ) {
                 //     this.batterTab(this.batterData[0]);
                 // }
@@ -232,7 +227,6 @@ export class LeaguePage implements OnInit {
 
                 this.globalPosition = 'qb';
                 this.positionData = this.listService.getMVPTabs(this.globalPosition, 'module');
-                
                 if ( this.positionData && this.positionData.length > 0 ) {
 
                   //default params
@@ -241,7 +235,6 @@ export class LeaguePage implements OnInit {
                       position: this.globalPosition
                   });
                 }
-
                 this.setupComparisonData();
 
                 /*** Keep Up With Everything MLB ***/
@@ -465,46 +458,44 @@ export class LeaguePage implements OnInit {
       }
     } //private checkToResetTabs
 
+
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    // private batterTab(tab: positionMVPTabData) {
-    //     this.batterParams = { //Initial load for mvp Data
-    //         profile: 'player',
-    //         listname: tab.tabDataKey,
-    //         sort: 'asc',
-    //         conference: 'all',
-    //         division: 'all',
-    //         limit: this.listMax,
-    //         pageNum: 1
-    //     };
-    //     this.getMVPService(tab, this.batterParams);
-    // }
-    //
-    // //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    // private pitcherTab(tab: positionMVPTabData) {
-    //     this.pitcherParams = { //Initial load for mvp Data
-    //         profile: 'player',
-    //         listname: tab.tabDataKey,
-    //         sort: 'asc',
-    //         conference: 'all',
-    //         division: 'all',
-    //         limit: this.listMax,
-    //         pageNum: 1
-    //     };
-    //     this.getMVPService(tab, this.pitcherParams);
-    // }
-    getMVPService(tab, params){
-      console.log(6, 'get tab data');
-      this.listService.getListModuleService(tab, params)
-          .subscribe(updatedTab => {
-              //do nothing?
-              console.log('updatedTab', updatedTab);
-              console.log(this.positionData);
-              var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
-              matches[0] = updatedTab;
-              console.log(this.positionData);
-          }, err => {
-              tab.isLoaded = true;
-              console.log('Error: Loading MVP Pitchers: ', err);
-          })
+    private batterTab(tab: positionMVPTabData) {
+        this.batterParams = { //Initial load for mvp Data
+            profile: 'player',
+            listname: tab.tabDataKey,
+            sort: 'asc',
+            conference: 'all',
+            division: 'all',
+            limit: this.listMax,
+            pageNum: 1
+        };
+        this.listService.getListModuleService(tab, this.batterParams)
+            .subscribe(updatedTab => {
+                //do nothing?
+            }, err => {
+                tab.isLoaded = true;
+                console.log('Error: Loading MVP Batters: ', err);
+              })
+    }
+
+    //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
+    private pitcherTab(tab: positionMVPTabData) {
+        this.pitcherParams = { //Initial load for mvp Data
+            profile: 'player',
+            listname: tab.tabDataKey,
+            sort: 'asc',
+            conference: 'all',
+            division: 'all',
+            limit: this.listMax,
+            pageNum: 1
+        };
+        this.listService.getListModuleService(tab, this.pitcherParams)
+            .subscribe(updatedTab => {
+                //do nothing?
+            }, err => {
+                tab.isLoaded = true;
+                console.log('Error: Loading MVP Pitchers: ', err);
+            })
     }
 }
