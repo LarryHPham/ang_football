@@ -5,7 +5,7 @@ import {GlobalFunctions} from '../global/global-functions';
 import {CircleImageData} from '../fe-core/components/images/image-data';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {Conference, Division, MLBPageParameters} from '../global/global-interface';
+import {Conference, Division, SportPageParameters} from '../global/global-interface';
 import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
 import {SchedulesData, MLBSchedulesTableModel, MLBSchedulesTableData, MLBScheduleTabData} from './schedules.data';
 import {Gradient} from '../global/global-gradient';
@@ -23,7 +23,7 @@ export class SchedulesService {
 
   }
 
-  getLinkToPage(pageParams: MLBPageParameters, teamName?: string): Array<any> {
+  getLinkToPage(pageParams: SportPageParameters, teamName?: string): Array<any> {
     var pageName = "Schedules-page";
     var pageValues = {};
 
@@ -68,7 +68,7 @@ export class SchedulesService {
       return headers;
   }
 
-  getSchedulesService(profile, eventStatus, limit, pageNum, isTeamProfilePage?: boolean, id?, year?){
+  getSchedulesService(scope, profile, eventStatus, limit, pageNum, isTeamProfilePage?: boolean, id?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
@@ -86,30 +86,34 @@ export class SchedulesService {
     }
 
     //eventType determines which tab is highlighted
-    if(eventStatus == 'pre-event'){
+    if(eventStatus == 'pregame'){
       eventTab = true;
     }else{
       eventTab = false;
     }
-    var callURL = this._apiUrl+'/'+profile+'/schedule';
 
-    if(typeof id != 'undefined'){
-      id=2791;//REMOVE TODO
+
+    //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
+    this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    if(profile == 'league'){//if league call then add scope
+      callURL += '/'+ scope;
+    }
+
+    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
 
-    if(profile == 'league'){
-      callURL += '/schedule-live';
-    }
-    // console.log(callURL);
+    console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
         var tableData = this.setupTableData(eventStatus, year, data.data, id, limit, isTeamProfilePage);
         var tabData = [
-          {display: 'Upcoming Games', data:'pre-event', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new MLBScheduleTabData(this.formatGroupName(year,'pre-event'), eventTab)},
-          {display: 'Previous Games', data:'post-event', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new MLBScheduleTabData(this.formatGroupName(year,'post-event'), !eventTab)}
+          {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new MLBScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
+          {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new MLBScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
         ];
         return {
           data:tableData,
@@ -123,10 +127,7 @@ export class SchedulesService {
       });
   }
 
-  //possibly simpler version of getting schedules api call
-  getSchedule(profile, eventStatus, limit, pageNum, id?, year?){
-    //Configure HTTP Headers
-    var headers = this.setToken();
+  getScheduleTable(data, scope, profile, eventStatus, limit, pageNum, callback: Function, id?, year?){
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
     var displayYear;
     var eventTab:boolean = false;
@@ -142,21 +143,51 @@ export class SchedulesService {
     }
 
     //eventType determines which tab is highlighted
-    if(eventStatus == 'pre-event'){
+    if(eventStatus == 'pregame'){
       eventTab = true;
     }else{
       eventTab = false;
     }
-    var callURL = this._apiUrl+'/'+profile+'/schedule';
 
-    if(typeof id != 'undefined'){
+    this.getSchedule(scope, profile, eventStatus, limit, pageNum)
+    .subscribe( data => {
+      let isTeamProfilePage = profile == 'league' ? false :true;
+      var tableData = this.setupTableData(eventStatus, year, data.data, id, limit, isTeamProfilePage);
+      var tabData = [
+        {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new MLBScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
+        {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new MLBScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
+      ];
+      return {
+        data:tableData,
+        tabs:tabData,
+        carData: this.setupCarouselData(data.data, tableData[0], limit),
+        pageInfo:{
+          totalPages: data.data[0].totalPages,
+          totalResults: data.data[0].totalResults,
+        }
+      };
+    })
+  }
+
+  //possibly simpler version of getting schedules api call
+  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
+    //Configure HTTP Headers
+    var headers = this.setToken();
+
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
+    this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    if(profile == 'league'){//if league call then add scope
+      callURL += '/'+ scope;
+    }
+
+    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-
-    if(profile == 'league'){
-      callURL += '/schedule-live';
-    }
 
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
@@ -165,8 +196,8 @@ export class SchedulesService {
       });
   }
 
-  setupSlideScroll(data, profile, eventStatus, limit, pageNum, callback: Function){
-    this.getSchedule('league', eventStatus, limit, pageNum)
+  setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
+    this.getSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(data.data);
       callback(formattedData);
@@ -186,9 +217,9 @@ export class SchedulesService {
       if(val.live == true){
           reportText = 'LIVE GAME REPORT';
       }else{
-        if(val.eventStatus = 'pre-event'){
+        if(val.eventStatus = 'pregame'){
           reportText = 'PRE GAME REPORT'
-        }else if (val.eventStatus == 'post-event'){
+        }else if (val.eventStatus == 'postgame'){
           reportText = 'POST GAME REPORT';
         }else{
           reportText = 'POST GAME REPORT';
@@ -219,7 +250,7 @@ export class SchedulesService {
     });
     return modifiedArray;
   }
-  getInning(url){// should only run if game is live and pre-event
+  getInning(url){// should only run if game is live and pregame
     var inning = {
       'pregame-report':0,
       'first-inning-report':1,
@@ -245,7 +276,7 @@ export class SchedulesService {
     var currentTeamProfile = isTeamProfilePage ? teamId : null;
 
     //TWO tables are to be made depending on what type of tabs the use is click on in the table
-    if(eventStatus == 'pre-event'){
+    if(eventStatus == 'pregame'){
       // let tableName = this.formatGroupName(year,eventStatus);
       var table = new MLBSchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);
       var tableArray = new MLBSchedulesTableData('' , table, currentTeamProfile);
@@ -289,7 +320,7 @@ export class SchedulesService {
     }
     var carData = origData.map(function(val, index){
       var displayNext = '';
-      if(val.eventStatus == 'pre-event'){
+      if(val.eventStatus == 'pregame'){
         var displayNext = 'Next Game:';
       }else{
         var displayNext = 'Previous Game:';
@@ -319,7 +350,7 @@ export class SchedulesService {
   private formatGroupName(year, eventStatus): string {
     var currentDate = new Date().getFullYear();
     let games = "";
-    if ( eventStatus == 'pre-event' ) {
+    if ( eventStatus == 'pregame' ) {
       games = "<span class='text-heavy>Current Season</span> Upcoming Games";
     }
     else if(year == currentDate){

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {MLBPageParameters} from '../global/global-interface';
+import {SportPageParameters} from '../global/global-interface';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
@@ -36,7 +36,7 @@ export class PlayerStatsService {
     };
   }
 
-  getStatsTabData(tabData: Array<any>, pageParams: MLBPageParameters, tabDataLoaded: Function, maxRows?: number) {
+  getStatsTabData(tabData: Array<any>, pageParams: SportPageParameters, tabDataLoaded: Function, maxRows?: number) {
     if ( !tabData || tabData.length <= 1 ) {
       console.log("Error getting stats data - invalid tabData object");
       return;
@@ -90,7 +90,7 @@ export class PlayerStatsService {
     return tabs;
   }
 
-  private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: MLBPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
+  private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
     let table = new MLBPlayerStatsTableModel(data, standingsTab.isPitcherTable);
     //Limit to maxRows, if necessary
     if ( maxRows !== undefined ) {

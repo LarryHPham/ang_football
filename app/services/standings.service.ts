@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {Conference, Division, MLBPageParameters} from '../global/global-interface';
+import {Conference, Division, SportPageParameters} from '../global/global-interface';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
-import {TeamStandingsData, MLBStandingsTabData, MLBStandingsTableModel, MLBStandingsTableData} from './standings.data';
+import {TeamStandingsData, TDLStandingsTabdata, MLBStandingsTableModel, MLBStandingsTableData} from './standings.data';
 import {StandingsTableTabData} from '../fe-core/components/standings/standings.component';
 import {GlobalSettings} from '../global/global-settings';
 
@@ -12,7 +12,7 @@ import {GlobalSettings} from '../global/global-settings';
 export class StandingsService {
   constructor(public http: Http, private _mlbFunctions: MLBGlobalFunctions){}
 
-  private getLinkToPage(pageParams: MLBPageParameters, teamName: string): Array<any> {
+  private getLinkToPage(pageParams: SportPageParameters, teamName: string): Array<any> {
     var pageName = "Standings-page";
     var pageValues = {};
 
@@ -29,7 +29,7 @@ export class StandingsService {
     return [pageName, pageValues];
   }
 
-  private getModuleTitle(pageParams: MLBPageParameters, teamName: string): string {
+  private getModuleTitle(pageParams: SportPageParameters, teamName: string): string {
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
     let moduletitle = groupName + " Standings";
     if ( teamName ) {
@@ -38,37 +38,39 @@ export class StandingsService {
     return moduletitle;
   }
 
-  getPageTitle(pageParams: MLBPageParameters, teamName: string): string {
+  getPageTitle(pageParams: SportPageParameters, teamName: string): string {
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = "MLB Standings Breakdown";
+    let pageTitle = "NFL Standings Breakdown";
     if ( teamName ) {
-      pageTitle = "MLB Standings - " + teamName;
+      pageTitle = "NFL Standings - " + teamName;
     }
+    console.log("PAGE TITLE", pageTitle);
     return pageTitle;
   }
 
-  loadAllTabsForModule(pageParams: MLBPageParameters, currentTeamId?: number, currentTeamName?: string) {
+  loadAllTabsForModule(pageParams: SportPageParameters, currentTeamId?: string, currentTeamName?: string) {
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
         pageRouterLink: this.getLinkToPage(pageParams, currentTeamName),
-        tabs: this.initializeAllTabs(pageParams, currentTeamId ? currentTeamId.toString() : null)
+        tabs: this.initializeAllTabs(pageParams, currentTeamId ? currentTeamId : null)
     };
   }
 
-  initializeAllTabs(pageParams: MLBPageParameters, currentTeamId?: string): Array<MLBStandingsTabData> {
-    let tabs: Array<MLBStandingsTabData> = [];
+  initializeAllTabs(pageParams: SportPageParameters, currentTeamId?: string): Array<TDLStandingsTabdata> {
+    let tabs: Array<TDLStandingsTabdata> = [];
 
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an MLB page: show MLB, then American, then National
+      //TDL: show division, then conference, then league standings
+      tabs.push(this.createTab(false, currentTeamId, Conference.afc));//TODO
+      tabs.push(this.createTab(false, currentTeamId, Conference.nfc));//TODO
       tabs.push(this.createTab(true, currentTeamId));
-      tabs.push(this.createTab(false, currentTeamId, Conference.american));
-      tabs.push(this.createTab(false, currentTeamId, Conference.national));
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
       //Is a League page: show All Divisions, then American, then National
       tabs.push(this.createTab(false, currentTeamId));
-      tabs.push(this.createTab(pageParams.conference === Conference.american, currentTeamId, Conference.american));
-      tabs.push(this.createTab(pageParams.conference === Conference.national, currentTeamId, Conference.national));
+      tabs.push(this.createTab(pageParams.conference === Conference.afc, currentTeamId, Conference.afc));
+      tabs.push(this.createTab(pageParams.conference === Conference.nfc, currentTeamId, Conference.nfc));
     }
     else {
       //Is a Team page: show team's division, then team's league, then MLB
@@ -80,25 +82,27 @@ export class StandingsService {
     return tabs;
   }
 
-  getStandingsTabData(tabData: Array<any>, pageParams: MLBPageParameters, onTabsLoaded: Function, maxRows?: number) {
+  getStandingsTabData(tabData: Array<any>, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number) {
     if ( !tabData || tabData.length < 2 ) {
       throw new Error("Invalid tabData for standings")
     }
-    var standingsTab: MLBStandingsTabData = tabData[0];
+    var standingsTab: TDLStandingsTabdata = tabData[0];
     var selectedKey = tabData[1];
     if ( selectedKey == null ) {
       selectedKey = pageParams.teamId;
     }
+    //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
-      let url = GlobalSettings.getApiUrl() + "/standings";
-
+      let url = GlobalSettings.getApiUrlTdl() + "/standings";
+      //TODO
       if ( standingsTab.conference !== undefined ) {
-        url += "/" + Conference[standingsTab.conference];
+      //  url += "/conference/" + Conference[standingsTab.conference];
+       url += "/conference/nfl";
+      } else {
+       url += "/league/nfl";
       }
-
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
-
       this.http.get(url)
           .map(res => res.json())
           .map(data => this.setupTabData(standingsTab, data.data, maxRows))
@@ -121,10 +125,10 @@ export class StandingsService {
 
   private createTab(selectTab: boolean, teamId: string, conference?: Conference, division?: Division) {
     let title = this.formatGroupName(conference, division) + " Standings";
-    return new MLBStandingsTabData(title, conference, division, selectTab, teamId);
+    return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
 
-  private setupTabData(standingsTab: MLBStandingsTabData, apiData: any, maxRows: number): Array<MLBStandingsTableData> {
+  private setupTabData(standingsTab: TDLStandingsTabdata, apiData: any, maxRows: number): Array<MLBStandingsTableData> {
     var sections: Array<MLBStandingsTableData> = [];
     var totalRows = 0;
 
@@ -173,13 +177,12 @@ export class StandingsService {
       value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
 
       //Make sure numbers are numbers.
-      value.totalWins = Number(value.totalWins);
-      value.totalLosses = Number(value.totalLosses);
-      value.winPercentage = Number(value.winPercentage);
-      value.gamesBack = Number(value.gamesBack);
-      value.streakCount = Number(value.streakCount);
-      value.batRunsScored = Number(value.batRunsScored);
-      value.pitchRunsAllowed = Number(value.pitchRunsAllowed);
+      value.totalWins = value.totalWins;
+      value.totalLosses = value.totalLosses;
+      value.teamWinPercent = value.teamWinPercent;
+      value.teamDivisionRecord = value.teamDivisionRecord;
+      value.conferenceRank = value.conferenceRank;
+      value.teamPointsAllowed = value.teamPointsAllowed;
     });
 
     let tableName = this.formatGroupName(conference, division, true);
@@ -192,7 +195,7 @@ export class StandingsService {
    *
    * @example
    * // "American League"
-   * formatGroupName(Conference.american)
+   * formatGroupName(Conference.afc)
    *
    * @example
    * // "MLB"
@@ -200,7 +203,7 @@ export class StandingsService {
    *
    * @example
    * // "American League East"
-   * formatGroupName(Conference.american, Division.east)
+   * formatGroupName(Conference.afc, Division.east)
    *
    * @param {Conference} conference - (Optional)
    *                                - Expected if {division} is included.
@@ -220,7 +223,7 @@ export class StandingsService {
       }
     }
     else {
-      return "MLB";
+      return "NFL";//TODO
     }
   }
 }
