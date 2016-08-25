@@ -10,7 +10,7 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 import {MLBSeasonStatsTabData, MLBSeasonStatsTableData} from '../../services/season-stats-page.data';
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
-import {Season, MLBPageParameters} from '../../global/global-interface';
+import {Season, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 
 import {SeasonStatsComponent} from "../../fe-core/components/season-stats/season-stats.component";
@@ -30,7 +30,7 @@ export class SeasonStatsPage implements OnInit {
   public widgetPlace: string = "widgetForPage";
   public tabs: Array<MLBSeasonStatsTabData>;
 
-  public pageParams: MLBPageParameters = {}
+  public pageParams: SportPageParameters = {}
 
   public profileLoaded: boolean = false;
 

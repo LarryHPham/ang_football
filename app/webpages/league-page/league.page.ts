@@ -25,7 +25,7 @@ import {BoxScoresModule} from '../../fe-core/modules/box-scores/box-scores.modul
 import {BoxScoresService} from '../../services/box-scores.service';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {SchedulesModule} from '../../fe-core/modules/schedules/schedules.module';
@@ -37,7 +37,7 @@ import {ListPageService, positionMVPTabData} from '../../services/list-page.serv
 import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {IProfileData, ProfileHeaderService} from '../../services/profile-header.service';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 
 import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
@@ -112,7 +112,7 @@ declare var moment;
 export class LeaguePage implements OnInit {
     public widgetPlace: string = "widgetForModule";
 
-    pageParams:MLBPageParameters = {};
+    pageParams:SportPageParameters = {};
     partnerID:string = null;
     hasError: boolean = false;
 

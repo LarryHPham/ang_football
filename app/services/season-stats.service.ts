@@ -11,7 +11,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {ComparisonBarInput} from '../fe-core/components/comparison-bar/comparison-bar.component';
 import {SeasonStatsModuleData, SeasonStatsTabData} from '../fe-core/modules/season-stats/season-stats.module';
 
-import {Season, MLBPageParameters} from '../global/global-interface';
+import {Season, SportPageParameters} from '../global/global-interface';
 import {TeamSeasonStatsData, MLBSeasonStatsTabData, MLBSeasonStatsTableModel, MLBSeasonStatsTableData} from './season-stats-page.data';
 import {TableTabData} from '../fe-core/components/season-stats/season-stats.component';
 
@@ -334,7 +334,7 @@ export class SeasonStatsService {
 export class SeasonStatsPageService {
   constructor(public http: Http, private _mlbFunctions: MLBGlobalFunctions){}
 
-  getPageTitle( pageParams: MLBPageParameters, playerName: string): string {
+  getPageTitle( pageParams: SportPageParameters, playerName: string): string {
     let pageTitle = "Season Stats";
     if ( playerName ) {
       pageTitle = "Season Stats - " + playerName;
@@ -342,7 +342,7 @@ export class SeasonStatsPageService {
     return pageTitle;
   }
 
-  initializeAllTabs(pageParams: MLBPageParameters): Array<MLBSeasonStatsTabData> {
+  initializeAllTabs(pageParams: SportPageParameters): Array<MLBSeasonStatsTabData> {
     let tabs: Array<MLBSeasonStatsTabData> = [];
     var curYear = new Date().getFullYear();
     var year = curYear;
@@ -362,7 +362,7 @@ export class SeasonStatsPageService {
     return tabs;
   }
 
-  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: MLBPageParameters, onTabsLoaded: Function, maxRows?: number){
+  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number){
       var playerId = pageParams.playerId;
       //example url: http://dev-homerunloyal-api.synapsys.us/player/statsDetail/96652
       let url = GlobalSettings.getApiUrl() + "/player/statsDetail/" + playerId;
