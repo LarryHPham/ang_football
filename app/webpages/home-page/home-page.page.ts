@@ -9,11 +9,16 @@ import {RouteParams, Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated
 import {LandingPageService} from '../../services/landing-page';
 import {PartnerHomePage} from '../partner-home-page/partner-home-page';
 
+import {GeoLocation} from "../../global/global-service";
+import {PartnerHeader} from "../../global/global-service";
+
 export interface homePageData {
   imageData: CircleImageData;
   location: string;
   divisionName: string;
   teamName: string;
+
+  geoLocation:string;
 }
 
 export interface newsCarouselData {
@@ -26,28 +31,33 @@ export interface newsCarouselData {
     selector: 'home-page',
     templateUrl: './app/webpages/home-page/home-page.page.html',
     directives: [CircleImage, ROUTER_DIRECTIVES, Search, SliderButton, PartnerHomePage],
-    providers: [LandingPageService, Title],
+    providers: [LandingPageService, Title, GeoLocation,PartnerHeader],
 })
 
 export class PickTeamPage{
     public teamData: Array<homePageData>;
     public listData: Array<newsCarouselData>;
     public displayData: Object;
+
     public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public _collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+    public _collegeDivisonFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+    public activeDivision: string;
+
     public imgHero1: string = "/app/public/homePage_hero1.png";
     public imgIcon1: string = "/app/public/homePage_icon1.png";
     public imageTile1: string = "/app/public/iphone.png";
     public imageTile2: string = "/app/public/ipad.png";
     public imageTile3: string = "/app/public/MLB_Schedule_Image.jpg";
-    public homeHeading1: string = "Stay Loyal to Your Favorite " + this._sportLeagueAbbrv + " Team";
-    public homeSubHeading1: string = "Find the sports information you need to show your loyalty";
-    public homeHeading2: string = "PICK YOUR FAVORITE <span class='text-heavy'>" + this._sportLeagueAbbrv + " TEAM</span>";
-    public homeFeaturesTile1: string = this._sportLeagueAbbrv + " Standings";
-    public homeFeaturesTile3: string = this._sportLeagueAbbrv + " Scores";
-    public homeFeaturesTile4: string = this._sportLeagueAbbrv + " Schedules";
-    public homeFeaturesButton1: string = "View " + this._sportLeagueAbbrv + " Standings";
-    public homeFeaturesButton3: string = "View " + this._sportLeagueAbbrv + " Scores";
-    public homeFeaturesButton4: string = "View " + this._sportLeagueAbbrv + " Schedules";
+    public homeHeading1: string;
+    public homeSubHeading1: string;
+    public homeHeading2: string;
+    public homeFeaturesTile1: string;
+    public homeFeaturesTile3: string;
+    public homeFeaturesTile4: string;
+    public homeFeaturesButton1: string;
+    public homeFeaturesButton3: string;
+    public homeFeaturesButton4: string;
     public routerInfo1 = ['Standings-page'];
     public buttonFullList: string = "See The Full List";
     public teams: any;
@@ -62,17 +72,60 @@ export class PickTeamPage{
     public gridLMain: string;
     public gridFeaturesCol: string;
     public width: number;
-    constructor(private _router: Router,
-                private _landingPageService: LandingPageService,
-                private _title: Title) {
+
+    public partnerData: any;
+    public partnerID: string;
+    public geoLocation:string;
+
+    public scope: string;
+
+    constructor(
+      private _router: Router,
+      private _landingPageService: LandingPageService,
+      private _title: Title,
+      private _geoLocation:GeoLocation,
+      private _partnerData: PartnerHeader
+    ) {
       _title.setTitle(GlobalSettings.getPageTitle(""));
-      this.getData();
+
       this.getListData();
 
       GlobalSettings.getParentParams(_router, parentParams => {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
         this.isHomeRunZone = partnerHome;
-      });
+
+        this.partnerID = parentParams.partnerID;
+        this.scope = parentParams.scope;
+
+        if(this.partnerID != null) {
+           this.getPartnerHeader();
+        }
+        else {
+          this.getGeoLocation(this.scope);
+        }
+
+        //set the active league variables based on scope
+        if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
+          this.activeDivision = this._collegeDivisonFullAbbrv;
+        }
+        else {
+          this.activeDivision = this._sportLeagueAbbrv;
+        }
+
+        this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
+        this.homeSubHeading1 = "Find the sports information you need to show your loyalty";
+        this.homeHeading2 = "PICK YOUR FAVORITE <span class='text-heavy'>" + this.activeDivision + " TEAM</span>";
+        this.homeFeaturesTile1 = this.activeDivision + " Standings";
+        this.homeFeaturesTile3 = this.activeDivision + " Scores";
+        this.homeFeaturesTile4 = this.activeDivision + " Schedules";
+        this.homeFeaturesButton1 = "View " + this.activeDivision + " Standings";
+        this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
+        this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
+
+
+      }); //GlobalSettings.getParentParams
+
+
     }
 
     getListData(){
@@ -100,6 +153,7 @@ export class PickTeamPage{
       ];
       this.changeMain(this.counter);
     }
+
     left(){
       var counter = this.counter;
       counter--;
@@ -132,11 +186,49 @@ export class PickTeamPage{
       }
     }
 
-    getData(){
-      this._landingPageService.getLandingPageService()
+    getPartnerHeader() {//Since it we are receiving
+      if(this.partnerID != null){
+        this._partnerData.getPartnerData(this.partnerID)
+        .subscribe(
+          partnerScript => {
+            this.partnerData = partnerScript;
+            //super long way from partner script to get location using geo location api
+            var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
+
+            if ( state != null ) {
+              state = state.toLowerCase();
+              this.geoLocation = state;
+
+              this.getData(this.scope, state);
+            }
+            else {
+              this.getGeoLocation(this.scope);
+            }
+          }
+        );
+      }
+    } //getPartnerData
+
+    getGeoLocation(scope) {
+      var defaultState = 'ca';
+      this._geoLocation.getGeoLocation()
+        .subscribe(
+          geoLocationData => {
+            this.geoLocation = geoLocationData[0].state;
+            this.geoLocation = this.geoLocation.toLowerCase();
+            this.getData(scope, this.geoLocation);
+          },
+          err => {
+            this.geoLocation = defaultState;
+          }
+      );
+    } //getGeoLocation
+
+    getData(scope, geoLocation?){
+      this._landingPageService.getLandingPageService(scope, geoLocation)
         .subscribe(data => {
           this.teams = data.league;
         })
       var sampleImage = "./app/public/placeholder-location.jpg";
-    }
+    } //getData
 }
