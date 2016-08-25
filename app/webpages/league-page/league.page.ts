@@ -8,8 +8,6 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 import {TwitterModule, twitterModuleData} from "../../fe-core/modules/twitter/twitter.module";
 import {TwitterService} from '../../services/twitter.service';
 
-
-
 import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comparison/comparison.module';
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
@@ -25,7 +23,7 @@ import {BoxScoresModule} from '../../fe-core/modules/box-scores/box-scores.modul
 import {BoxScoresService} from '../../services/box-scores.service';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {TDLStandingsTabdata} from '../../services/standings.data';
+import {MLBStandingsTabData} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {SchedulesModule} from '../../fe-core/modules/schedules/schedules.module';
@@ -37,7 +35,7 @@ import {ListPageService, positionMVPTabData} from '../../services/list-page.serv
 import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {IProfileData, ProfileHeaderService} from '../../services/profile-header.service';
 
-import {Division, Conference, SportPageParameters} from '../../global/global-interface';
+import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 
 import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
@@ -59,8 +57,6 @@ import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carou
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
-import {VideoModule} from "../../fe-core/modules/video/video.module";
-import {VideoService} from "../../services/video.service";
 
 declare var moment;
 
@@ -68,7 +64,6 @@ declare var moment;
     selector: 'League-page',
     templateUrl: './app/webpages/league-page/league.page.html',
     directives: [
-        VideoModule,
         SidekickWrapper,
         LoadingComponent,
         ErrorComponent,
@@ -91,7 +86,6 @@ declare var moment;
         ResponsiveWidget
       ],
     providers: [
-        VideoService,
         BoxScoresService,
         SchedulesService,
         ListPageService,
@@ -112,7 +106,7 @@ declare var moment;
 export class LeaguePage implements OnInit {
     public widgetPlace: string = "widgetForModule";
 
-    pageParams:SportPageParameters = {};
+    pageParams:MLBPageParameters = {};
     partnerID:string = null;
     hasError: boolean = false;
 
@@ -129,9 +123,6 @@ export class LeaguePage implements OnInit {
     boxScoresData:any;
     currentBoxScores:any;
     dateParam:any;
-
-    firstVideo:string;
-    videoData:any;
 
     batterParams:any;
     batterData:Array<positionMVPTabData>;
@@ -175,7 +166,6 @@ export class LeaguePage implements OnInit {
                 private _transactionsService: TransactionsService,
                 private _lolService: ListOfListsService,
                 private listService:ListPageService,
-                private videoBatchService:VideoService,
                 private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("MLB"));
 
@@ -224,11 +214,11 @@ export class LeaguePage implements OnInit {
                 if ( this.pitcherData && this.pitcherData.length > 0 ) {
                     this.pitcherTab(this.pitcherData[0]);
                 }
-
                 this.positionData = this.listService.getMVPTabs('position', 'module');
                 if ( this.positionData && this.positionData.length > 0 ) {
                   this.positionTab(this.positionData[0]);
                 }
+
                 this.setupComparisonData();
 
                 /*** Keep Up With Everything MLB ***/
@@ -237,7 +227,6 @@ export class LeaguePage implements OnInit {
                 this.getFaqService(this.profileType);
                 this.setupListOfListsModule();
                 this.getDykService(this.profileType);
-                this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
              },
             err => {
@@ -257,24 +246,6 @@ export class LeaguePage implements OnInit {
         }else{
             this.getSchedulesData('post-event');// fall back just in case no status event is present
         }
-    }
-
-    private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
-
-        this.videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
-            .subscribe(data => {
-
-                    this.firstVideo = data.data[first].videoLink;
-                    this.videoData = data.data.slice(1);
-
-                },
-                err => {
-
-                    console.log("Error getting video data");
-                }
-
-            );
-
     }
 
     //api for Schedules
@@ -436,6 +407,8 @@ export class LeaguePage implements OnInit {
                 tab.isLoaded = true;
                 console.log('Error: Loading MVP Batters: ', err);
               })
+
+
     }
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
