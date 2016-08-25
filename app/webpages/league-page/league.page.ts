@@ -140,6 +140,7 @@ export class LeaguePage implements OnInit {
 
     positionParams: any;
     positionData: Array<positionMVPTabData>;
+    globalPosition:any;
 
     imageData:any;
     copyright:any;
@@ -445,6 +446,22 @@ export class LeaguePage implements OnInit {
           this.getMVPService(matches[0], this.positionParams);
         }
       //}
+    }
+
+    getMVPService(tab, params){
+      console.log(6, 'get tab data');
+      this.listService.getListModuleService(tab, params)
+          .subscribe(updatedTab => {
+              //do nothing?
+              console.log('updatedTab', updatedTab);
+              console.log(this.positionData);
+              var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+              matches[0] = updatedTab;
+              console.log(this.positionData);
+          }, err => {
+              tab.isLoaded = true;
+              console.log('Error: Loading MVP Pitchers: ', err);
+          })
     }
 
     //function to check if selected position in dropdown is currently active
