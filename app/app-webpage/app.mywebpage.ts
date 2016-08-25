@@ -296,11 +296,11 @@ export class MyAppComponent implements OnInit{
   }
 
   getPartnerHeader(){//Since it we are receiving
+
     if(this.partnerID != null){
       this._partnerData.getPartnerData(this.partnerID)
       .subscribe(
         partnerScript => {
-          //console.log(partnerScript);
           this.partnerData = partnerScript;
           this.partnerScript = this.partnerData['results'].header.script;
         }

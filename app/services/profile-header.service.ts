@@ -251,6 +251,7 @@ export class ProfileHeaderService {
     if (!data.headerData) {
       return null;
     }
+
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
@@ -344,12 +345,12 @@ export class ProfileHeaderService {
         {
           label: headerData.stat3Type,
           labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
-          value: headerData.stat3.toString()
+          value: headerData.stat3 ? GlobalFunctions.commaSeparateNumber(headerData.stat3).toString() : null
         },
         {
           label: headerData.stat4Type,
           labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-          value: headerData.stat4.toString()
+          value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
         }
       ]
     }

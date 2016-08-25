@@ -133,11 +133,15 @@ export class LeaguePage implements OnInit {
     firstVideo:string;
     videoData:any;
 
+    defaultSetTab: any;
+    defaultSetPosition: any;
+
     batterParams:any;
     batterData:Array<positionMVPTabData>;
     pitcherParams:any;
     pitcherData:Array<positionMVPTabData>;
 
+    globalPosition: string;
     positionParams: any;
     positionData: Array<positionMVPTabData>;
 
@@ -216,17 +220,26 @@ export class LeaguePage implements OnInit {
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
-                this.batterData = this.listService.getMVPTabs('batter', 'module');
-                if ( this.batterData && this.batterData.length > 0 ) {
-                    this.batterTab(this.batterData[0]);
-                }
-                this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
-                if ( this.pitcherData && this.pitcherData.length > 0 ) {
-                    this.pitcherTab(this.pitcherData[0]);
-                }
-                this.positionData = this.listService.getMVPTabs('position', 'module');
+
+                // this.batterData = this.listService.getMVPTabs('batter', 'module');
+                // if ( this.batterData && this.batterData.length > 0 ) {
+                //     this.batterTab(this.batterData[0]);
+                // }
+                // this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
+                // if ( this.pitcherData && this.pitcherData.length > 0 ) {
+                //     this.pitcherTab(this.pitcherData[0]);
+                // }
+
+                this.globalPosition = 'qb';
+                this.positionData = this.listService.getMVPTabs(this.globalPosition, 'module');
+                
                 if ( this.positionData && this.positionData.length > 0 ) {
-                  this.positionTab(this.positionData[0]);
+
+                  //default params
+                  this.positionDropdown({
+                      tab: this.positionData[0],
+                      position: this.globalPosition
+                  });
                 }
 
                 this.setupComparisonData();
@@ -405,58 +418,93 @@ export class LeaguePage implements OnInit {
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
-    private positionTab(tab: positionMVPTabData) {
-      this.positionParams = {
-        profile: 'player',
-        position: 'position',
-        listname: tab.tabDataKey,
-        sort: '',
-        conference: '',
-        division: '',
-        limit: '',
-        pageNum: 1
+    private positionDropdown(event) {
+      console.log(1,event);
+      this.positionData = this.checkToResetTabs(event);
+      console.log(2,this.positionData);
+      console.log('league.page - positionData');
+      //if(event.tab != null){
+        let listName = event.tab.tabDataKey;
+        var matches = this.positionData.filter(tab => tab.tabDataKey == listName);
+        console.log(3,matches);
+        if(matches.length > 0){
+          console.log(4,matches[0]);
+          this.positionParams = {
+
+            scope:  'scope=nfl', //TODO change to active scope
+            target: 'target=player',
+            statName: 'statName='+matches[0].tabDataKey,
+            ordering: 'ordering=desc',
+            perPageCount: 'perPageCount='+this.listMax,
+            pageNumber: 'pageNumber='+1
+
+            //OLD API
+            // profile: 'player',
+            // // position: this.globalPosition,
+            // listname: matches[0].tabDataKey,
+            // sort: 'asc',
+            // conference: 'all',
+            // division: 'all',
+            // limit: this.listMax,
+            // pageNum: 1
+          }
+          console.log(5,this.positionParams);
+          this.getMVPService(matches[0], this.positionParams);
+        }
+      //}
+    }
+
+    //function to check if selected position in dropdown is currently active
+    private checkToResetTabs(event) {
+      let localPosition = event.position;
+      if ( localPosition != this.globalPosition ) {
+        this.globalPosition = event.position;
+        return this.listService.getMVPTabs(event.position, 'module');
+      }else{
+        return this.positionData;
       }
-    }
+    } //private checkToResetTabs
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    private batterTab(tab: positionMVPTabData) {
-        this.batterParams = { //Initial load for mvp Data
-            profile: 'player',
-            listname: tab.tabDataKey,
-            sort: 'asc',
-            conference: 'all',
-            division: 'all',
-            limit: this.listMax,
-            pageNum: 1
-        };
-        this.listService.getListModuleService(tab, this.batterParams)
-            .subscribe(updatedTab => {
-                //do nothing?
-            }, err => {
-                tab.isLoaded = true;
-                console.log('Error: Loading MVP Batters: ', err);
-              })
-
-
-    }
-
-    //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    private pitcherTab(tab: positionMVPTabData) {
-        this.pitcherParams = { //Initial load for mvp Data
-            profile: 'player',
-            listname: tab.tabDataKey,
-            sort: 'asc',
-            conference: 'all',
-            division: 'all',
-            limit: this.listMax,
-            pageNum: 1
-        };
-        this.listService.getListModuleService(tab, this.pitcherParams)
-            .subscribe(updatedTab => {
-                //do nothing?
-            }, err => {
-                tab.isLoaded = true;
-                console.log('Error: Loading MVP Pitchers: ', err);
-            })
+    // private batterTab(tab: positionMVPTabData) {
+    //     this.batterParams = { //Initial load for mvp Data
+    //         profile: 'player',
+    //         listname: tab.tabDataKey,
+    //         sort: 'asc',
+    //         conference: 'all',
+    //         division: 'all',
+    //         limit: this.listMax,
+    //         pageNum: 1
+    //     };
+    //     this.getMVPService(tab, this.batterParams);
+    // }
+    //
+    // //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
+    // private pitcherTab(tab: positionMVPTabData) {
+    //     this.pitcherParams = { //Initial load for mvp Data
+    //         profile: 'player',
+    //         listname: tab.tabDataKey,
+    //         sort: 'asc',
+    //         conference: 'all',
+    //         division: 'all',
+    //         limit: this.listMax,
+    //         pageNum: 1
+    //     };
+    //     this.getMVPService(tab, this.pitcherParams);
+    // }
+    getMVPService(tab, params){
+      console.log(6, 'get tab data');
+      this.listService.getListModuleService(tab, params)
+          .subscribe(updatedTab => {
+              //do nothing?
+              console.log('updatedTab', updatedTab);
+              console.log(this.positionData);
+              var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+              matches[0] = updatedTab;
+              console.log(this.positionData);
+          }, err => {
+              tab.isLoaded = true;
+              console.log('Error: Loading MVP Pitchers: ', err);
+          })
     }
 }

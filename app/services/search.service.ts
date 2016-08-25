@@ -13,17 +13,23 @@ declare let Fuse: any;
 export class SearchService{
     public pageMax: number = 10;
     public searchJSON: any;
+
     // public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
     public searchAPI: string = 'http://dev-touchdownloyal-api.synapsys.us/landingPage/search';
     constructor(private http: Http){
+
         //Get initial search JSON data
-        this.getSearchJSON();
+        // GlobalSettings.getParentParams(_router, parentParams =>
+        //   this.getSearchJSON(parentParams.scope)
+        // );
     }
 
     //Function get search JSON object
     getSearchJSON(){
-        return this.http.get(this.searchAPI, {
 
+      //this.newSearchAPI = this.newSearchAPI+scope;
+
+        return this.http.get(this.searchAPI, {
             })
             .map(
                 res => res.json()
