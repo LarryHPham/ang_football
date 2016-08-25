@@ -209,9 +209,6 @@ export class LeaguePage implements OnInit {
                 this.batterData = this.listService.getMVPTabs('batter', 'module');
                 if ( this.batterData && this.batterData.length > 0 ) {
                     this.batterTab(this.batterData[0]);
-
-                    console.log('Batter Data');
-                    console.log(this.batterData);
                 }
                 this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
                 if ( this.pitcherData && this.pitcherData.length > 0 ) {
