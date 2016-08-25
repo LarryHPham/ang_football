@@ -12,10 +12,10 @@ declare var moment;
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleUrl();
+  private _apiUrlTdl: string = GlobalSettings.getApiUrlTdl();
   private _recUrl: string = GlobalSettings.getRecUrl();
   // private _apiToken: string = 'BApA7KEfj';
   // private _headerName: string = 'X-SNT-TOKEN';
-
 
   constructor(
     public http: Http,
@@ -32,30 +32,53 @@ export class DeepDiveService {
   //Configure HTTP Headers
   var headers = this.setToken();
 
-  var callURL = this._apiUrl + '/' + 'article/batch/';
+  var callURL = this._apiUrlTdl + '/' + 'articleBatch/';
+  if(typeof limit == 'undefined'){
+    callURL += "/5";
+  } else {
+    callURL += "/" + limit;
+  }
   if(typeof batchId == 'undefined'){
     callURL += "1";
   } else {
     callURL += batchId;
   }
-  if(typeof limit == 'undefined'){
-    callURL += "/25";
-  } else {
-    callURL += "/" + limit;
-  }
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
+      // console.log("deep dive data", callURL, data);
       return data;
     })
   }
+
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
   var headers = this.setToken();
-  var callURL = this._apiUrl+'/'+ 'article/' + articleID;
+  var callURL = this._apiUrlTdl+'/'+ 'article/' + articleID;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
+      // console.log( "article service", callURL, data);
+      return data;
+    })
+  }
+
+  getDeepDiveBatchService(limit, startNum, state?){
+  //Configure HTTP Headers
+  var headers = this.setToken();
+
+  if(startNum == null){
+    startNum = 1;
+  }
+  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
+    state = 'null';
+  }
+  // var callURL = this._apiUrl+'/articleBatch/division/'+state+'/'+startNum+'/'+limit;
+  var callURL = this._apiUrlTdl+'/articleBatch/9/1';//TODO waiting on api to finish
+  return this.http.get(callURL, {headers: headers})
+    .map(res => res.json())
+    .map(data => {
+      // console.log("deep dive batch", callURL, data);
       return data;
     })
   }
@@ -87,29 +110,10 @@ export class DeepDiveService {
       return data;
     })
   }
-  getDeepDiveBatchService(limit, startNum, state?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
 
-  if(startNum == null){
-    startNum = 1;
-  }
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
-  }
-  var callURL = this._apiUrl+'/article'+ '/batch/division/'+state+'/'+startNum+'/'+limit;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-
-      return data;
-    })
-  }
   getDeepDiveAiBatchService(state?){
   //Configure HTTP Headers
   var headers = this.setToken();
-
-
   if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     state = 'null';
   }
@@ -117,16 +121,14 @@ export class DeepDiveService {
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-
       return data;
     })
   }
+
   getDeepDiveAiHeavyBatchService(state?){
   //Configure HTTP Headers
     state = state.toUpperCase();
   var headers = this.setToken();
-
-
   if(state == null){
     state = 'CA';
   }
@@ -145,7 +147,6 @@ export class DeepDiveService {
   }else {
     }
   }
-
 
   getAiArticleData(state){
     var headers = this.setToken();

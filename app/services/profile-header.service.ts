@@ -7,7 +7,7 @@ import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {DataItem, ProfileHeaderData} from '../fe-core/modules/profile-header/profile-header.module';
 import {TitleInputData} from '../fe-core/components/title/title.component';
-import {Division, Conference, MLBPageParameters} from '../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../global/global-interface';
 
 declare var moment: any;
 
@@ -18,7 +18,7 @@ export interface IProfileData {
 }
 
 interface PlayerProfileData extends IProfileData {
-  pageParams: MLBPageParameters;
+  pageParams: SportPageParameters;
   fullProfileImageUrl: string;
   fullBackgroundImageUrl: string;
   headerData: PlayerProfileHeaderData
@@ -75,7 +75,7 @@ interface PlayerProfileHeaderData {
 }
 
 interface TeamProfileData extends IProfileData {
-  pageParams: MLBPageParameters;
+  pageParams: SportPageParameters;
   fullProfileImageUrl: string;
   fullBackgroundImageUrl: string;
   headerData: TeamProfileHeaderData;
