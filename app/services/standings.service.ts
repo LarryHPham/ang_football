@@ -62,15 +62,15 @@ export class StandingsService {
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an MLB page: show MLB, then American, then National
       //TDL: show division, then conference, then league standings
-      tabs.push(this.createTab(false, currentTeamId, Conference.american));//TODO
-      tabs.push(this.createTab(false, currentTeamId, Conference.national));//TODO
+      tabs.push(this.createTab(false, currentTeamId, Conference.afc));//TODO
+      tabs.push(this.createTab(false, currentTeamId, Conference.nfc));//TODO
       tabs.push(this.createTab(true, currentTeamId));
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
       //Is a League page: show All Divisions, then American, then National
       tabs.push(this.createTab(false, currentTeamId));
-      tabs.push(this.createTab(pageParams.conference === Conference.american, currentTeamId, Conference.american));
-      tabs.push(this.createTab(pageParams.conference === Conference.national, currentTeamId, Conference.national));
+      tabs.push(this.createTab(pageParams.conference === Conference.afc, currentTeamId, Conference.afc));
+      tabs.push(this.createTab(pageParams.conference === Conference.nfc, currentTeamId, Conference.nfc));
     }
     else {
       //Is a Team page: show team's division, then team's league, then MLB
@@ -195,7 +195,7 @@ export class StandingsService {
    *
    * @example
    * // "American League"
-   * formatGroupName(Conference.american)
+   * formatGroupName(Conference.afc)
    *
    * @example
    * // "MLB"
@@ -203,7 +203,7 @@ export class StandingsService {
    *
    * @example
    * // "American League East"
-   * formatGroupName(Conference.american, Division.east)
+   * formatGroupName(Conference.afc, Division.east)
    *
    * @param {Conference} conference - (Optional)
    *                                - Expected if {division} is included.
