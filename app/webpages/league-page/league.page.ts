@@ -283,15 +283,11 @@ export class LeaguePage implements OnInit {
       if(status == 'post-event'){
         limit = 3;
       }
-      this._schedulesService.getSchedulesService('league', status, limit, 1)
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
+      console.log('MAKING SERVICE CALL');
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        console.log('got DATA!=>', schedulesData);
+        this.schedulesData = schedulesData;
+      }) // isTeamProfilePage = true
     }
 
     private transactionsTab(tab) {

@@ -353,15 +353,11 @@ export class TeamPage implements OnInit {
     //api for Schedules
     private getSchedulesData(status){
       var limit = 5;
-      this._schedulesService.getSchedulesService(this.scope, 'team', status, limit, 1, true, this.pageParams.teamId) // isTeamProfilePage = true
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
+      console.log('MAKING SERVICE CALL');
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        console.log('got DATA!=>', schedulesData);
+        this.schedulesData = schedulesData;
+      }) // isTeamProfilePage = true
     }
 
     private getImages(imageData) {

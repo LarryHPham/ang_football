@@ -154,18 +154,19 @@ export class SchedulesService {
     .subscribe( data => {
       console.log('transforming Schedules');
       let isTeamProfilePage = profile == 'league' ? false :true;
-      var tableData = this.setupTableData(eventStatus, year, data.data, teamId, limit, isTeamProfilePage);
+      var tableData = this.setupTableData(eventStatus, year, data.data.games, teamId, limit, isTeamProfilePage);
       var tabData = [
         {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
         {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
       ];
+      console.log(data.data.game);
       return {
         data:tableData,
         tabs:tabData,
-        carData: this.setupCarouselData(data.data, tableData[0], limit),
+        carData: this.setupCarouselData(data.data.game, tableData[0], limit),
         pageInfo:{
-          totalPages: data.data[0].totalPages,
-          totalResults: data.data[0].totalResults,
+          totalPages: data.data.info.pages,
+          totalResults: data.data.info.total,
         }
       };
     })
@@ -272,13 +273,15 @@ export class SchedulesService {
 
   //rows is the data coming in
   private setupTableData(eventStatus, year, rows: Array<any>, teamId, maxRows: number, isTeamProfilePage: boolean): Array<SchedulesTableData> {
+
     //Limit to maxRows, if necessary
     console.log('rows',rows);
-    if ( maxRows !== undefined ) {
+    console.log('rows',maxRows);
+    if ( maxRows !== undefined && rows.length > maxRows) {
       rows = rows.slice(0, maxRows);
     }
     var currentTeamProfile = teamId != null ? teamId : null;
-
+    console.log(currentTeamProfile);
     //TWO tables are to be made depending on what type of tabs the use is click on in the table
     if(eventStatus == 'pregame'){
       // let tableName = this.formatGroupName(year,eventStatus);
@@ -312,6 +315,8 @@ export class SchedulesService {
       }else{//if there is a teamID
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
+        console.log('team Table Array',tableArray);
+
         return [tableArray];
       }
     }
@@ -319,6 +324,7 @@ export class SchedulesService {
 
   private setupCarouselData(origData: Array<SchedulesData>, tableData: SchedulesTableData, maxRows?: number){
     //Limit to maxRows, if necessary
+    console.log(origData);
     if ( maxRows !== undefined ) {
       origData = origData.slice(0, maxRows);
     }
@@ -329,22 +335,26 @@ export class SchedulesService {
       }else{
         var displayNext = 'Previous Game:';
       }
+      val.team1Wins = val.team1Record.split('-')[0];
+      val.team1Losses = val.team1Record.split('-')[1];
+      val.team2Wins = val.team2Record.split('-')[0];
+      val.team2Losses = val.team2Record.split('-')[1];
 
-      if(val.homeTeamWins === null){
-        val.homeTeamWins = '#';
+      if(val.team1Wins === null){
+        val.team1Wins = '#';
       }
-      if(val.homeTeamLosses === null){
-        val.homeTeamLosses = '#';
+      if(val.team1Losses === null){
+        val.team1Losses = '#';
       }
-      if(val.awayTeamWins === null){
-        val.awayTeamWins = '#';
+      if(val.team2Wins === null){
+        val.team2Wins = '#';
       }
-      if(val.awayTeamLosses === null){
-        val.awayTeamLosses = '#';
+      if(val.team2Losses === null){
+        val.team2Losses = '#';
       }
       // combine together the win and loss of a team to create their record
-      val.homeRecord = val.homeTeamWins + '-' + val.homeTeamLosses;//?? is this really the win and loss
-      val.awayRecord = val.awayTeamWins + '-' + val.awayTeamLosses;//?? is this really the win and loss
+      val.homeRecord = val.team1Wins + '-' + val.team1Losses;//?? is this really the win and loss
+      val.awayRecord = val.team2Wins + '-' + val.team2Losses;//?? is this really the win and loss
 
       return tableData.updateCarouselData(val, index); //Use existing conversion function
     });
