@@ -285,6 +285,15 @@
 .fa-sort-desc:before {
   content: "\78";
 }
+.fa-sort-up:before {   
+  content: "\77";    
+}    
+.fa-sort-down:before {   
+  content: "\78";    
+}    
+.fa-mail-forward:before {    
+  content: "\79";    
+}
 .fa-arrows-alt:before {
   content: "\7a";
 }
@@ -296,6 +305,9 @@
 }
 .fa-map-marker:before {
   content: "\43";
+}
+.fa-area-chart:before {    
+  content: "\44";    
 }
 .fa-phone:before {
   content: "\45";
@@ -383,6 +395,9 @@
 }
 .fa-heart-o:before {
   content: "\37";
+}
+.fa-remove:before {
+  content: "\38";
 }
 .fa-times:before {
   content: "\38";
