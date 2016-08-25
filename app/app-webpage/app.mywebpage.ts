@@ -33,7 +33,6 @@ import {HeadlineDataService} from "../global/global-ai-headline-module-service";
 
 import {ModulePage} from "../webpages/module-page/module.page";
 import {ImagesTestPage} from "../webpages/images-test-page/images-test.page";
-import {DesignPage} from "../webpages/design-page/design.page";
 
 import {PartnerHeader} from "../global/global-service";
 import {SanitizeHtml} from "../fe-core/pipes/safe.pipe";
@@ -253,11 +252,6 @@ declare var jQuery: any;
         path: '/fe-core/modules/:teamID',
         name: 'Module-page',
         component: ModulePage
-    },
-    {
-        path: '/design/:teamId',
-        name: 'Design-page',
-        component: DesignPage,
     },
     {
         path: '/images-test',

@@ -6,7 +6,7 @@ import {BackTabComponent} from '../../fe-core/components/backtab/backtab.compone
 import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
 import {RosterComponent, RosterTabData} from "../../fe-core/components/roster/roster.component";
 import {NFLRosterTabData} from '../../services/roster.data';
-import {MLBPageParameters} from '../../global/global-interface';
+import {SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {RosterService} from '../../services/roster.service';
@@ -22,7 +22,7 @@ import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
 })
 
 export class TeamRosterPage implements OnInit {
-  public pageParams: MLBPageParameters = {}
+  public pageParams: SportPageParameters = {}
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;

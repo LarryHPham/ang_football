@@ -5,7 +5,7 @@ import {GlobalFunctions} from '../global/global-functions';
 import {CircleImageData} from '../fe-core/components/images/image-data';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {Conference, Division, MLBPageParameters} from '../global/global-interface';
+import {Conference, Division, SportPageParameters} from '../global/global-interface';
 import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
 import {SchedulesData, SchedulesTableModel, SchedulesTableData, ScheduleTabData} from './schedules.data';
 import {Gradient} from '../global/global-gradient';
@@ -23,7 +23,7 @@ export class SchedulesService {
 
   }
 
-  getLinkToPage(pageParams: MLBPageParameters, teamName?: string): Array<any> {
+  getLinkToPage(pageParams: SportPageParameters, teamName?: string): Array<any> {
     var pageName = "Schedules-page";
     var pageValues = {};
 
