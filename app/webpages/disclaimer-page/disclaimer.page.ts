@@ -3,14 +3,14 @@ import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Injector} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {TitleComponent} from '../../components/title/title.component';
-import {WidgetModule} from "../../modules/widget/widget.module";
-import {TitleInputData} from "../../components/title/title.component";
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {TitleComponent} from '../../fe-core/components/title/title.component';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {TitleInputData} from "../../fe-core/components/title/title.component";
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'Disclaimer-page',
@@ -29,16 +29,16 @@ export class DisclaimerPage {
 
     constructor(private _router:Router, private _title: Title) {
       _title.setTitle(GlobalSettings.getPageTitle("Disclaimer"));
-      GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+      GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
     }
 
     loadData(partnerID:string) {
       this.pageLinkName = GlobalSettings.getHomePage(partnerID).replace(/https?:\/\//, "");
 
-      this.pageName = partnerID ? "My Home Run Zone" : "Home Run Loyal";
+      this.pageName = partnerID ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
-          text1: 'Last Updated: Monday, March 21, 2016.',
+          text1: 'Last Updated: Thursday, August 4, 2016.',
           text2 : ' United States',
           text3 : GlobalFunctions.convertToPossessive(this.pageName) + " Disclaimer",
           text4 : '',

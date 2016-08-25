@@ -8,8 +8,8 @@ import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
 import {SeasonStatsService} from './season-stats.service';
 
-import {ComparisonModuleData} from '../modules/comparison/comparison.module';
-import {ComparisonBarInput} from '../components/comparison-bar/comparison-bar.component';
+import {ComparisonModuleData} from '../fe-core/modules/comparison/comparison.module';
+import {ComparisonBarInput} from '../fe-core/components/comparison-bar/comparison-bar.component';
 import {ComparisonBarList} from './common-interfaces';
 
 //TODO: unify player/team data interface
@@ -150,9 +150,9 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
 
 @Injectable()
 export class ComparisonStatsService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
+  private _apiUrl: string = GlobalSettings.getApiUrlTdl();
 
-  private pitchingFields = [
+  private pitchingFields = [//TODO
     "pitchWins",
     "pitchInningsPitched",
     "pitchStrikeouts",
@@ -164,7 +164,7 @@ export class ComparisonStatsService {
     "pitchBasesOnBalls"
   ];
 
-  private battingFields = [
+  private battingFields = [//TODO
     "batHomeRuns", "batAverage", "batRbi",
     "batHits", "batBasesOnBalls", "batOnBasePercentage",
     "batDoubles", "batTriples"
@@ -185,7 +185,6 @@ export class ComparisonStatsService {
       data.bestStatistics = this.formatPlayerData("statHigh", data.data);
       data.worstStatistics = this.formatPlayerData("statLow", data.data);
       data.bars = this.createComparisonBars(data);
-
       var team1Data = {
         teamId: data.playerOne.teamId,
         playerList: [{key: data.playerOne.playerId, value: data.playerOne.playerName}]
@@ -199,7 +198,7 @@ export class ComparisonStatsService {
       var moduleData = new MLBComparisonModuleData(this);
       moduleData.data = data;
       moduleData.teamList = [
-          {key: data.playerOne.teamId, value: data.playerOne.teamName},
+          {key: data.playerOne.teamId, value: data.playerOne.teamName},//TODO only need team last name
           {key: data.playerTwo.teamId, value: data.playerTwo.teamName}
       ];
       moduleData.playerLists = [
@@ -277,12 +276,12 @@ export class ComparisonStatsService {
   */
   private formatTeamList(teamList) {
     return teamList.map(team => {
-      var teamName = team.teamFirstName + " " + team.teamLastName;
+      var teamName = team.teamLastName;
       return {key: team.teamId, value: teamName};
     });
   }
 
-  private formatPlayerList(playerList: TeamPlayers) {
+  private formatPlayerList(playerList: TeamPlayers) {//TODO
     var list = [];
     Array.prototype.push.apply(list, this.formatPlayerPositionList("Pitchers", playerList.pitchers));
     Array.prototype.push.apply(list, this.formatPlayerPositionList("Catchers", playerList.catchers));
@@ -334,7 +333,7 @@ export class ComparisonStatsService {
     return stats;
   }
 
-  private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
+  private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {//TODO
     var fields = data.playerOne.position[0].charAt(0) == "P" ? this.pitchingFields : this.battingFields;
     var colors = Gradient.getColorPair(data.playerOne.teamColors, data.playerTwo.teamColors);
     data.playerOne.mainTeamColor = colors[0];
@@ -356,12 +355,12 @@ export class ComparisonStatsService {
           data: [{
             value: playerOneStats != null ? this.getNumericValue(key, playerOneStats[key]) : null,
             // color: data.playerOne.mainTeamColor
-            color: '#BC1624'
+            color: '#2D3E50'
           },
           {
             value: playerTwoStats != null ? this.getNumericValue(key, playerTwoStats[key]) : null,
             // color: data.playerTwo.mainTeamColor,
-            color: '#444444'
+            color: '#999'
           }],
           minValue: worstStats != null ? this.getNumericValue(key, worstStats[key]) : null,
           maxValue: bestStats != null ? this.getNumericValue(key, bestStats[key]) : null,
@@ -375,7 +374,7 @@ export class ComparisonStatsService {
   }
 
   static getKeyDisplayTitle(key: string): string {
-    switch (key) {
+    switch (key) {//TODO
       case "batHomeRuns": return "Home Runs";
       case "batAverage": return "Batting Average";
       case "batRbi": return "RBIs";
@@ -405,7 +404,7 @@ export class ComparisonStatsService {
     if ( value == null ) return null;
 
     var num = Number(value);
-    switch (key) {
+    switch (key) {//TODO
       case "batAverage": return Number(num.toFixed(3));
       case "batOnBasePercentage": return Number(num.toFixed(3));
       case "pitchEra": return Number(num.toFixed(2));

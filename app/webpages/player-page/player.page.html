@@ -17,7 +17,9 @@
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
         <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId"></comparison-module>
         <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
-        <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
+        <div class="profile-carousel-container">
+            <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
+        </div>
         <responsive-widget *ngIf="profileHeaderData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
         <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
@@ -29,14 +31,10 @@
         <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
         <!--Like Us On FB Module, only display if not on partner page-->
-        <share-module *ngIf="shareModuleInput" [shareModuleInput]="shareModuleInput"></share-module>
-        <responsive-widget *ngIf="shareModuleInput" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         <section *ngIf="!partnerID">
-          <like-us-module></like-us-module>
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-          <responsive-widget *ngIf="profileHeaderData && shareModuleInput" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace"></responsive-widget>
         </section>
-        <about-us [partnerID]="partnerID"></about-us>
     </div>
 </section>
 </sidekick-wrapper>

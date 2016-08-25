@@ -10,13 +10,13 @@ ToC
 */
 
 //Media Queries for responsive
-@mobile-s:    ~"(max-width: 639px)";
 @mobile:      ~"(max-width: 640px)";
 @small-grid:  ~"(min-width: 576px) and (max-width: 640px)";
 @tablet:      ~"(min-width: 641px)";
-@desktop-m:   ~"(min-width: 768px)";
-@desktop-l:   ~"(min-width: 1024px)";
+@desktop-m:   ~"(min-width: 1000px)";
+@desktop-l:   ~"(min-width: 1317px)";
 @desktop-xl:  ~"(min-width: 1760px)";
+@fluid:       ~"(max-width: 1023px)";
 // @desktop-xl:  ~"only screen and (min-width: 1500px)";
 
 /***********/
@@ -29,8 +29,10 @@ ToC
 @bodyBg: @highlightGrey;
 
 // Brand Color Palette
+@touchDownLoyalBlue: #2d3e50;
 @homeRunLoyalRed: #bc2027;
 @homeRunLoyalLightRed: #fff7f7;
+@touchDownLoyalLightBlue: #F4F9FF;
 @sntMediaBlue: #009dfb;
 @tcxBlue: #00b9e3;
 @investKitBlue: #3098ff;
@@ -43,14 +45,23 @@ ToC
 @weatherYellow: #ffdf30;
 @joyfulHomeGreen: #44b224;
 @joyfulHomeGreen-hover: #339f33;
-@fbblue: #3a5b97;
 
 // Icon links
 @homeRunLoyalIcon:'/app/public/icons/baseball-vertical-icon.png';
+@touchDownLoyalIcon:'/app/public/icons/football-vertical-icon.png';
 
 // Brand Color Image Hovers
+
 @imageHoverOpacity: 0.75;
 @imageHoverOpacityHalf: 0.5;
+@imageHoverOpacityCarousel: 0.85;
+
+@modBoxShadow: 0 0 10px 0 rgba(0,0,0,0.2);
+@whiteGradient: rgba(255, 255, 255, 0);
+@backgroundTransparent: rgba(0, 0, 0, 0.75);
+
+@touchDownLoyalSqrtHover: rgba(45, 62, 80, @imageHoverOpacityHalf);
+@touchDownLoyalImageHover: rgba(45, 62, 80, @imageHoverOpacity);
 @sntMediaBlueImageHover: rgba(0, 157, 251, @imageHoverOpacity);
 @investKitBlueImageHover: rgba(48, 152, 255, @imageHoverOpacity);
 @lifestylePurpleImageHover: rgba(101, 57, 142, @imageHoverOpacity);
@@ -64,6 +75,7 @@ ToC
 @homeRunLoyalImageHover: rgba(188, 32, 39, @imageHoverOpacity);
 @featureBtn: rgba(54, 54, 54, 0.85);
 @homeRunLoyalSqrtHover: rgba(188,22,36,@imageHoverOpacityHalf);
+@touchdownLoyalSqrtHoverAI: rgba(45,62,50,@imageHoverOpacityCarousel);
 // Grey Color Palette; light to dark
 // We should only use these 6 types of grey
 // if there is ever a variation of one of those,please round to the closest color
@@ -81,20 +93,23 @@ ToC
 @masterLargeImageShadow: rgba(0,0,0,0.25);
 @masterSmallImageShadow: @strokeGrey;
 // Master Vertical Brand Colors
-@masterBrandColor: @homeRunLoyalRed;
-@lightMasterBrandColor: @homeRunLoyalLightRed;
-@masterImageHover: @homeRunLoyalImageHover;
-@lightMasterBrandColor: @homeRunLoyalLightRed;
+@masterBrandColor: @touchDownLoyalBlue;
+@masterBrandColorLink: #3098ff;
+@lightMasterBrandColor: @touchDownLoyalLightBlue;
+@masterImageHover: @touchDownLoyalImageHover;
 @masterBackgroundColor: @backgroundGrey;
 @masterHighlightColor: @highlightGrey;
 @masterStrokeColor: @strokeGrey;
 @masterFontIconColor: @fontIconGrey;
 @masterTextEmphasisColor: @textEmphasisGrey;
 @masterTabIconColor: @homeRunLoyalRed;
+@masterSqrtHoverAI: @touchdownLoyalSqrtHoverAI;
+@masterFooter1: @darkBlueTD;
+@masterFooter2: @darkBlueTD2;
 
 //master ICON logo
-@masterIcon: @homeRunLoyalIcon;
-@masterIconHover:@homeRunLoyalIcon;
+@masterIcon: @touchDownLoyalIcon;
+@masterIconHover:@touchDownLoyalIcon;
 //social media COLOR
 @facebook: #3b5998;
 @twitter: #00aced;
@@ -110,15 +125,19 @@ ToC
 @docPrimaryAccentColor: @wintergreen;
 @docCompAccentColor: @wintergreenCompPurp;
 @docTetraLeftAccentColor:@moderateYellow;
-
+@darkBrown: #150c0c;
+@darkTouchDownBlue: #202e3d;
+@darkBlueTD: #1a2531;
+@darkBlueTD2: #121922;
 // Code Colors
 @activeBlue: #3098ff;
-@solarBgColor: #002B36;
+@highlightBlue: #2795ff;
 @solarBlue: #268bd2;
+@solarBgColor: #002B36;
 @solarCyan: #2aa198;
 @solarOrange: #cb4b16;
+@activeRed: @homeRunLoyalRed;//TODO need to verify
 @solarRed: #dc322f;
-@highlightBlue: #2795ff;
 @darkText:#2d3e50;
 
 @gradientBlue: #3299ff;
@@ -236,7 +255,7 @@ img{
 }
 
 .text-bold{
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .text-heavy{
@@ -443,9 +462,10 @@ code.less-var-name-light {
   &-textarea:-ms-input-placeholder { font-style: @taPlaceholderStyle; color:@taPlaceholderColor;} /* ie */
 }
 .inputPlaceholder(@iPlaceholderStyle, @iPlaceholderColor) {
-  &-input::-webkit-input-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;}
-  &-input::-moz-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;} /* firefox 19+ */
-  &-input:-ms-input-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;} /* ie */
+  ::-webkit-input-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;}
+  ::-moz-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;} /* firefox 19+ */
+  :-moz-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;} /* firefox 18- */
+  :-ms-input-placeholder { font-style: @iPlaceholderStyle; color:@iPlaceholderColor;} /* ie */
 }
 /* Begin required CSS for line-clamp. */
 .line-clamp
@@ -510,9 +530,6 @@ code.less-var-name-light {
 /* @Module Box Shadow */
 /*********************/
 
-@modBoxShadow: 0 0 10px 0 rgba(0,0,0,0.2);
-@whiteGradient: rgba(255, 255, 255, 0);
-@backgroundTransparent: rgba(0, 0, 0, 0.75);
 
 // clear fix
 .clearfix {

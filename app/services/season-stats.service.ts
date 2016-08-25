@@ -6,14 +6,14 @@ import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 // import {ComparisonBarList} from './common-interfaces';
 
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {CircleImageData} from '../components/images/image-data';
-import {ComparisonBarInput} from '../components/comparison-bar/comparison-bar.component';
-import {SeasonStatsModuleData, SeasonStatsTabData} from '../modules/season-stats/season-stats.module';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {ComparisonBarInput} from '../fe-core/components/comparison-bar/comparison-bar.component';
+import {SeasonStatsModuleData, SeasonStatsTabData} from '../fe-core/modules/season-stats/season-stats.module';
 
 import {Season, MLBPageParameters} from '../global/global-interface';
 import {TeamSeasonStatsData, MLBSeasonStatsTabData, MLBSeasonStatsTableModel, MLBSeasonStatsTableData} from './season-stats-page.data';
-import {TableTabData} from '../components/season-stats/season-stats.component';
+import {TableTabData} from '../fe-core/components/season-stats/season-stats.component';
 
 export interface SeasonStatsPlayerData {
   teamId: string;

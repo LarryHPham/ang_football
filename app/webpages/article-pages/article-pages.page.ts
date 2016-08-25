@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
-import {ImagesMedia} from "../../components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../components/articles/shareLinks/shareLinks.component";
-import {ArticleContentComponent} from "../../components/articles/article-content/article-content.component";
-import {RecommendationsComponent} from "../../components/articles/recommendations/recommendations.component";
-import {TrendingComponent} from "../../components/articles/trending/trending.component";
-import {DisqusComponent} from "../../components/articles/disqus/disqus.component";
-import {LoadingComponent} from "../../components/loading/loading.component";
+import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {ArticleContentComponent} from "../../fe-core/components/articles/article-content/article-content.component";
+import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
+import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
+import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
 import {ArticleData} from "../../global/global-interface";
 import {ArticleDataService} from "../../global/global-article-page-service";
 import {GlobalFunctions} from "../../global/global-functions";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
-import {SidekickWrapperAI} from "../../components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
+import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import {GlobalSettings} from "../../global/global-settings";
-import {SidekickContainerComponent} from "../../components/articles/sidekick-container/sidekick-container.component";
+import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 
 @Component({
     selector: 'article-pages',
@@ -59,6 +59,7 @@ export class ArticlePages implements OnInit {
     aiSidekick:boolean = true;
     partnerId:string;
     isSmall:boolean = false;
+    rawUrl:string;
 
     constructor(private _params:RouteParams,
                 private _router:Router,
@@ -70,9 +71,9 @@ export class ArticlePages implements OnInit {
         if (this.eventType == "upcoming-game") {
             this.eventType = "upcoming";
         }
-        GlobalSettings.getPartnerID(_router, partnerID => {
-            if (partnerID != null) {
-                this.partnerId = partnerID.replace("-", ".");
+        GlobalSettings.getParentParams(_router, parentParams => {
+            if (parentParams.partnerID != null) {
+                this.partnerId = parentParams.partnerID.replace("-", ".");
             }
             this.getArticles();
         });
@@ -84,6 +85,7 @@ export class ArticlePages implements OnInit {
             .subscribe(
                 ArticleData => {
                     this.isSmall = window.innerWidth <= 640;
+                    this.rawUrl = window.location.href;
                     var pageIndex = Object.keys(ArticleData)[0];
                     this.getCarouselImages(ArticleData[pageIndex]['images']);
                     //this.parseLinks(ArticleData[pageIndex]);
@@ -110,7 +112,7 @@ export class ArticlePages implements OnInit {
             .subscribe(
                 HeadlineData => {
                     this.pageIndex = this.eventType;
-                    this.eventID = HeadlineData.event;
+                    this.eventID = HeadlineData.event.toString();
                     this.recommendedImageData = HeadlineData['home'].images.concat(HeadlineData['away'].images);
                     this.getRandomArticles(HeadlineData, this.pageIndex, this.eventID, this.recommendedImageData);
                 }
@@ -153,7 +155,8 @@ export class ArticlePages implements OnInit {
                     content: data[val].article[0],
                     eventId: data['meta-data']['current'].eventId,
                     eventType: val,
-                    url: MLBGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId)
+                    url: MLBGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId),
+                    rawUrl: window.location.protocol + "//" + window.location.host + "/articles/" + val + "/" + data['meta-data']['current'].eventId
                 };
             }
         });
@@ -582,14 +585,14 @@ export class ArticlePages implements OnInit {
     }
 
     ngOnInit() {
-      //This has to be resize to trigger the takeover update
-      try {
-          window.dispatchEvent(new Event('resize'));
-      }catch(e){
-          //to run resize event on IE
-          var resizeEvent = document.createEvent('UIEvents');
-          resizeEvent.initUIEvent('resize', true, false, window, 0);
-          window.dispatchEvent(resizeEvent);
-      }
+        //This has to be resize to trigger the takeover update
+        try {
+            window.dispatchEvent(new Event('resize'));
+        }catch(e){
+            //to run resize event on IE
+            var resizeEvent = document.createEvent('UIEvents');
+            resizeEvent.initUIEvent('resize', true, false, window, 0);
+            window.dispatchEvent(resizeEvent);
+        }
     }
 }

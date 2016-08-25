@@ -11,15 +11,23 @@ export class TwitterService {
     var headers = new Headers();
     return headers;
   }
+
   // getTwitterService(profile, id){
-  getTwitterService(profile, id?){
+  getTwitterService(profile, id?, scope?){
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     fullUrl += "/"+profile+"/twitterInfo";
+    var newUrl = "http://dev-touchdownloyal-api.synapsys.us/twitter/"+profile;
+
+    //if page is team/player or league
     if(id !== undefined){
-      fullUrl += "/" + id;
+      newUrl += "/" + id;
     }
-    return this.http.get( fullUrl, {
+    else {
+      newUrl += "/" + scope
+    }
+
+    return this.http.get( newUrl, {
         headers: headers
       })
       .map(
@@ -27,7 +35,7 @@ export class TwitterService {
       )
       .map(
         data => {
-          return data.data;
+          return data.data[0];
         },
         err => {
           console.log('INVALID DATA');

@@ -4,11 +4,11 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {TitleInputData} from "../components/title/title.component";
+import {TitleInputData} from "../fe-core/components/title/title.component";
 import {Link} from "../global/global-interface";
-import {DetailListInput} from "../components/detailed-list-item/detailed-list-item.component";
+import {DetailListInput} from "../fe-core/components/detailed-list-item/detailed-list-item.component";
 import {ListPageService} from './list-page.service'
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
 declare var moment;
 
@@ -54,7 +54,7 @@ export class DynamicWidgetCall {
           }
           var profHeader= {
             imageURL : GlobalSettings.getSiteLogoUrl(),
-            imageRoute: ["MLB-page"],
+            imageRoute: ["League-page"],
             text1 : 'Last Updated: ' + moment(data.date).format('dddd, MMMM Do, YYYY'),
             text2 : ' United States',
             text3 : data.title,
@@ -136,7 +136,7 @@ export class DynamicWidgetCall {
           circleImageUrl: self.protocol + val.img,
           circleImageRoute: primaryRoute,
           // subImageUrl: self.protocol + val['sub_img'].img,
-          // subImageRoute: subRoute,              
+          // subImageRoute: subRoute,
           rank: val.rank
         });
         carouselItem.footerInfo = footerInfo;
@@ -225,10 +225,10 @@ export class DynamicWidgetCall {
   //TODO replace data points for list page
   imageData(imageClass, imageBorder, mainImg, mainImgRoute, rank, rankClass, subImgClass, subImg?, subRoute?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     if(typeof subImg =='undefined' || subImg == ''){
-      subImg = "/app/public/no-image.png";
+      subImg = "/app/public/no-image.svg";
     }
     if(typeof rank == 'undefined' || rank == 0){
       rank = 0;

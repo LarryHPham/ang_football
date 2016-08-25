@@ -4,12 +4,12 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {DetailListInput} from '../components/detailed-list-item/detailed-list-item.component';
-import {MVPTabData} from '../components/mvp-list/mvp-list.component';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {CircleImageData, ImageData} from '../components/images/image-data';
+import {DetailListInput} from '../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {MVPTabData} from '../fe-core/components/mvp-list/mvp-list.component';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {CircleImageData, ImageData} from '../fe-core/components/images/image-data';
 import {Link} from '../global/global-interface';
-import {TitleInputData} from '../components/title/title.component';
+import {TitleInputData} from '../fe-core/components/title/title.component';
 
 declare var moment;
 
@@ -45,7 +45,7 @@ interface ListData {
   query: any;
 }
 
-export class BaseballMVPTabData implements MVPTabData {
+export class positionMVPTabData implements MVPTabData {
   tabDataKey: string;
   tabDisplayTitle: string;
   errorData: any = {
@@ -121,29 +121,82 @@ export class ListPageService {
   }
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
-  getMVPTabs(moduleType: string, profileType: string): Array<BaseballMVPTabData>{
-    var tabArray: Array<BaseballMVPTabData> = [];
+  getMVPTabs(moduleType: string, profileType: string): Array<positionMVPTabData>{
+    var tabArray: Array<positionMVPTabData> = [];
+
     //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
     if(moduleType == 'pitcher'){
-      tabArray.push(new BaseballMVPTabData('W/L', 'pitcher-win-record', profileType));
-      tabArray.push(new BaseballMVPTabData('Innings Pitched', 'pitcher-innings-pitched', profileType));
-      tabArray.push(new BaseballMVPTabData('Strikeouts', 'pitcher-strikeouts', profileType));
-      tabArray.push(new BaseballMVPTabData('ERA', 'pitcher-earned-run-average', profileType));
-      tabArray.push(new BaseballMVPTabData('Hits', 'pitcher-hits-allowed', profileType));
-    } else {//defaults to 'batter' if nothing is sent to moduleType
-      tabArray.push(new BaseballMVPTabData('Home Runs', 'batter-home-runs', profileType));
-      tabArray.push(new BaseballMVPTabData('Batting Avg.', 'batter-batting-average', profileType));
-      tabArray.push(new BaseballMVPTabData('RBIs', 'batter-runs-batted-in', profileType));
-      tabArray.push(new BaseballMVPTabData('Hits', 'batter-hits', profileType));
-      tabArray.push(new BaseballMVPTabData('Walks', 'batter-bases-on-balls', profileType));
-      tabArray.push(new BaseballMVPTabData('OBP', 'batter-on-base-percentage', profileType));
+      tabArray.push(new positionMVPTabData('W/L', 'pitcher-win-record', profileType));
+      tabArray.push(new positionMVPTabData('Innings Pitched', 'pitcher-innings-pitched', profileType));
+      tabArray.push(new positionMVPTabData('Strikeouts', 'pitcher-strikeouts', profileType));
+      tabArray.push(new positionMVPTabData('ERA', 'pitcher-earned-run-average', profileType));
+      tabArray.push(new positionMVPTabData('Hits', 'pitcher-hits-allowed', profileType));
+    } else if (moduleType == 'batter') {//defaults to 'batter' if nothing is sent to moduleType
+      tabArray.push(new positionMVPTabData('Home Runs', 'batter-home-runs', profileType));
+      tabArray.push(new positionMVPTabData('Batting Avg.', 'batter-batting-average', profileType));
+      tabArray.push(new positionMVPTabData('RBIs', 'batter-runs-batted-in', profileType));
+      tabArray.push(new positionMVPTabData('Hits', 'batter-hits', profileType));
+      tabArray.push(new positionMVPTabData('Walks', 'batter-bases-on-balls', profileType));
+      tabArray.push(new positionMVPTabData('OBP', 'batter-on-base-percentage', profileType));
+    } //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
+
+    else if(moduleType == 'Cornerback' || 'Defensive end' || 'Defensive back' || 'Defensive lineman' || 'Defensive tackle' || 'Safety' || 'Linebacker'){
+      tabArray.push(new positionMVPTabData('Total Tackles', '', profileType));
+      tabArray.push(new positionMVPTabData('Total Sacks', '', profileType));
+      tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
+      tabArray.push(new positionMVPTabData('Forced Fumbles', '', profileType));
+      tabArray.push(new positionMVPTabData('Passes Defended', '', profileType));
     }
+    else if (moduleType == 'Kicker') {
+      tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
+      tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
+      tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
+      tabArray.push(new positionMVPTabData('Total Points', '', profileType));
+      tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
+    }
+    else if (moduleType == 'Punter') {
+      tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
+      tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
+      tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
+      tabArray.push(new positionMVPTabData('Total Points', '', profileType));
+      tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
+    }
+    else if (moduleType == 'Quarterback') {
+      tabArray.push(new positionMVPTabData('Passer Rating', '', profileType));
+      tabArray.push(new positionMVPTabData('Passing Yards', '', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+      tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
+      tabArray.push(new positionMVPTabData('Completions', '', profileType));
+    }
+    else if (moduleType == 'Running back') {
+      tabArray.push(new positionMVPTabData('Rushing Yards', '', profileType));
+      tabArray.push(new positionMVPTabData('Rushing Attempts', '', profileType));
+      tabArray.push(new positionMVPTabData('Yards Per Carry', '', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+      tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
+    }
+    else if (moduleType == 'Return specialist') {
+      tabArray.push(new positionMVPTabData('Return Yards', '', profileType));
+      tabArray.push(new positionMVPTabData('Return Attempts', '', profileType));
+      tabArray.push(new positionMVPTabData('Return Average', '', profileType));
+      tabArray.push(new positionMVPTabData('Longest Return', '', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+    }
+    else if (moduleType == 'Wide receiver' || 'Tight end') {
+      tabArray.push(new positionMVPTabData('Receiving Yards', '', profileType));
+      tabArray.push(new positionMVPTabData('Receptions', '', profileType));
+      tabArray.push(new positionMVPTabData('Average Yards Per Receptio', '', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+      tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
+    }
+
+
 
     return tabArray;
   }
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
-  getListModuleService(tab: BaseballMVPTabData, query: Array<any>): Observable<BaseballMVPTabData> {
+  getListModuleService(tab: positionMVPTabData, query: Array<any>): Observable<positionMVPTabData> {
     //Configure HTTP Headers
     var headers = this.setToken();
 
@@ -366,7 +419,7 @@ export class ListPageService {
       subImageClass = "image-40-sub";
     }
     if(!mainImgUrl || mainImgUrl == ''){
-      mainImgUrl = "/app/public/no-image.png";
+      mainImgUrl = "/app/public/no-image.svg";
     }
     if(!rank){
       rank = 0;
@@ -379,7 +432,7 @@ export class ListPageService {
     if ( subImgRoute ) {
       //Add sub image if route exists.
       if(!subImgUrl || subImgUrl == ''){
-        subImgUrl = "/app/public/no-image.png";
+        subImgUrl = "/app/public/no-image.svg";
       }
       subImages.push({
           imageUrl: subImgUrl,

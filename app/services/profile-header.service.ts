@@ -5,16 +5,16 @@ import {Http} from '@angular/http';
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
-import {DataItem, ProfileHeaderData} from '../modules/profile-header/profile-header.module';
-import {TitleInputData} from '../components/title/title.component';
+import {DataItem, ProfileHeaderData} from '../fe-core/modules/profile-header/profile-header.module';
+import {TitleInputData} from '../fe-core/components/title/title.component';
 import {Division, Conference, MLBPageParameters} from '../global/global-interface';
 
 declare var moment: any;
 
 export interface IProfileData {
-  profileName: string; 
+  profileName: string;
   profileId: string;
-  profileType: string; // for MLB, this is 'team', 'player', or 'league'  
+  profileType: string; // for MLB, this is 'team', 'player', or 'league'
 }
 
 interface PlayerProfileData extends IProfileData {
@@ -25,75 +25,53 @@ interface PlayerProfileData extends IProfileData {
 }
 
 interface PlayerProfileHeaderData {
-  description: string;
-  info: {
-
-    teamId: number;
-    teamName: string;
+  // Basic Info
+    id: string;
     playerId: number;
-    playerName: string;
     playerFirstName: string;
     playerLastName: string;
-    roleStatus: string; //??
-    active: string;
-    uniformNumber: number;
+    playerFullName: string;
+    playerBirthCity: string;
+    playerBirthState: string;
+    playerBirthCountry: string;
+    teamId: number;
+    teamMarket: string;
+    teamName: string;
+    teamFullName: string;
+    jerseyNumber: number;
     position: Array<string>;
-    depth: string;
+    gamesPlayed: number;
+    gamesStarted: number;
+    experience: number;
+    entryDate?: string;
+    age: number;
+    dob: string;
     height: string;
     weight: number;
-    birthDate: string;
-    city: string;
-    area: string;
-    country: string;
-    heightInInches: number;
-    age: number;
-    salary: number;
-    personKey: number;
-    pub1PlayerId: number;
-    pub1TeamId: number;
-    pub2Id: number;
-    pub2TeamId: number;
-    lastUpdate: string;
-    playerHeadshot: string;
-    backgroundImage: string;
-    draftTeam: string;
-    draftYear: string;
-    qualified: boolean;
-  };
-  stats: {
-    //Pitcher stats
-      eventsStarted: number;
-      runsAllowed: number;
-      inningsPitched: number;
-      era: number;
-      wins: number;
-      losses: number;
-      saves: number;
-      shutouts: number;
-      gamesComplete: number;
-      homeRunsAllowed: number;
-      earnedRuns:  number;
-      wildPitch:  number;
-    //Batter stats
-      average: number;
-      runsScored: number;
-      rbi: number;
-      atBats: number;
-      totalBases: number;
-      sluggingPercentage: number;
-      doubles: number;
-      triples: number;
-      homeRuns: number;
-      onBasePercentage: number;
-      stolenBases: number;
-      stolenBasesCaught: number;
-      onBasePlusSlugging: number;
-      plateAppearances: number;
-    //Both stats
-      hits: number;
-      basesOnBalls: number;
-      strikeouts: number;
-  }
+    playerHeadShot?: string; //todo - missing
+    backgroundUrl: string; //todo - missing
+    seasonId: string;
+    lastUpdated: string;
+    description: string;
+
+    //NCAA specific
+    class?: string;
+    draftYear?: string;
+    draftTeam?: string;
+
+  //Stats
+    stat1: number;
+    stat1Type: string;
+    stat1Desc: string;
+    stat2: number;
+    stat2Type: string;
+    stat2Desc: string;
+    stat3: number;
+    stat3Type: string;
+    stat3Desc: string;
+    stat4: number;
+    stat4Type: string;
+    stat4Desc: string;
 }
 
 interface TeamProfileData extends IProfileData {
@@ -108,47 +86,33 @@ interface TeamProfileData extends IProfileData {
 }
 
 interface TeamProfileHeaderData {
-    description: string;
-    profileImage: string;
-    backgroundImage: string;
-    lastUpdated: string;
-    teamFirstName: string;
-    teamLastName: string;
-    teamVenue: string;
+    id: number;
+    teamId: number;
+    teamMarket: string;
+    teamName: string;
     teamCity: string;
     teamState: string;
-    stats: {
-      teamId: number;
-      teamName: string;
-      seasonId: string;
-      totalWins: number;
-      totalLosses: number;
-      batting: {
-        average: number;
-        runsScored: number;
-        homeRuns: number;
-      };
-      pitching: {
-        era: number;
-      };
-      conference: {
-        rank: string;
-        name: string;
-      };
-      division: {
-        rank: string;
-        wins: string;
-        losses: string;
-        winningPercentage: string;
-        eventsPlayed: number;
-        gamesBack: number;
-        name: string;
-      };
-      streak: {
-        type: string; //win or loss
-        count: number;
-      };
-    };
+    divisionName: Division;
+    conferenceName: Conference;
+    venueName: string;
+    rank: number;
+    divWins?: number;
+    divLosses?: number;
+    divRecord: string;
+    totalWins?: number;
+    totalLosses?: number;
+    leagueRecord: string;
+    pointsPerGame: number;
+    pointsPerGameRank: number;
+    passingYardsPerGame: number;
+    passingYardsPerGameRank: number;
+    rushingYardsPerGame: number;
+    rushingYardsPerGameRank: number;
+    backgroundUrl: string;
+    teamLogo: string;
+    profileImage: string; //todo - missing
+    seasonId: string;
+    lastUpdated: string;
 }
 
 interface LeagueProfileData extends IProfileData {
@@ -156,413 +120,340 @@ interface LeagueProfileData extends IProfileData {
 }
 
 interface LeagueProfileHeaderData {
-  lastUpdated: string;
-  city: string;
-  state: string;
-  foundingDate: string;
-  foundedIn: string;  //NEED // year in [YYYY]
-  backgroundImage: string; //PLACEHOLDER
-  logo: string;
-  profileNameShort:string;
-  profileNameLong:string;
+  id: string;
+  leagueFullName: string;
+  leagueAbbreviatedName?: string; //todo - null
+  leagueCity: string;
+  leagueState: string;
+  leagueFounded: string;
   totalTeams: number;
   totalPlayers: number;
   totalDivisions: number;
-  totalLeagues: number;
+  totalConferences: number;
+  backgroundUrl: string;
+  leagueLogo: string;
+  aiDescriptionId: string;
+  seasonId: string;
+  lastUpdated: string;
 }
 
 @Injectable()
 export class ProfileHeaderService {
+
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
   constructor(public http: Http){}
 
   getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/player/profileHeader/' + playerId;
-    // console.log("player profile url: " + url);
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/player/' + playerId;
+
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
-          var headerData: PlayerProfileHeaderData = data.data;
-          if (!headerData.info) {
+          var headerData: PlayerProfileHeaderData = data.data[0];
+
+          if (!headerData) {
             return null;
           }
-          //Forcing values to be numbers (all stats values should be numbers)
-          if ( headerData.stats ) {
-            for ( var key in headerData.stats ) {
-              headerData.stats[key] = Number(headerData.stats[key]);
-            }
-          }
+
           return {
             pageParams: {
-              teamId: headerData.info.teamId,
-              teamName: headerData.info.teamName,
-              playerId: headerData.info.playerId,
-              playerName: headerData.info.playerName
+              teamId: headerData.teamId,
+              teamName: headerData.teamFullName,
+              playerId: headerData.playerId,
+              playerName: headerData.playerFullName
             },
-            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.info.backgroundImage),
-            fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.info.playerHeadshot),
+            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
+            fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadShot),
             headerData: headerData,
-            profileName: headerData.info.playerName,
-            profileId: headerData.info.playerId.toString(),
+            profileName: headerData.playerFullName,
+            profileId: headerData.playerId.toString(),
             profileType: "player"
           };
         });
-  }
+  } //getPlayerProfile
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/team/profileHeader/' + teamId;
-    // console.log("team profile url: " + url);
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/team/' + teamId;
+
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
-          var headerData: TeamProfileHeaderData = data.data;
+          var headerData: TeamProfileHeaderData = data.data[0];
 
-          //Setting up conference and division values
-          var confKey = "", divKey = "";
-          if ( headerData.stats ) {
-            if ( headerData.stats.conference && headerData.stats.conference.name ) {
-              confKey = headerData.stats.conference.name.toLowerCase();
-            }
-            if ( headerData.stats.division && headerData.stats.division.name ) {
-              divKey = headerData.stats.division.name.toLowerCase();
-            }
-          }
-
-          //Forcing values to be numbers
-          if ( headerData.stats.batting ) {
-            headerData.stats.batting.average = Number(headerData.stats.batting.average);
-            headerData.stats.batting.runsScored = Number(headerData.stats.batting.runsScored);
-            headerData.stats.batting.homeRuns = Number(headerData.stats.batting.homeRuns);
-          }
-          if ( headerData.stats.pitching ) {
-            headerData.stats.pitching.era = Number(headerData.stats.pitching.era);
-          }
-          var teamName = headerData.teamFirstName + " " + headerData.teamLastName;
           return {
             pageParams: {
-              teamId: headerData.stats.teamId,
-              teamName: headerData.stats.teamName,
-              division: Division[divKey],
-              conference: Conference[confKey],
+              teamId: headerData.teamId,
+              teamName: headerData.teamName,
+              division: headerData.divisionName,
+              conference: headerData.conferenceName,
             },
-            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundImage),
+            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.profileImage),
             headerData: headerData,
-            teamName: teamName,
-            profileName: headerData.stats.teamName,
-            profileId: headerData.stats.teamId.toString(),
+            teamName: headerData.teamName,
+            profileName: headerData.teamName,
+            profileId: headerData.teamId.toString(),
             profileType: "team"
           };
         });
-  }
+  } //getTeamProfile
 
-  getMLBProfile(): Observable<LeagueProfileData> {
-    let url = GlobalSettings.getApiUrl() + '/league/profileHeader';
-    // console.log("mlb profile url: " + url);
+  getLeagueProfile(scope?): Observable<LeagueProfileData> {
+    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    url = url + '/profileHeader/league/' + scope;
+
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
-          var leagueData: LeagueProfileHeaderData = data.data;
-          leagueData.profileNameShort = "MLB";
-          leagueData.profileNameLong = "Major League Baseball";
-          //Forcing values to be numbers
-          leagueData.totalDivisions = Number(leagueData.totalDivisions);
-          leagueData.totalLeagues = Number(leagueData.totalLeagues);
-          leagueData.totalPlayers = Number(leagueData.totalPlayers);
-          leagueData.totalTeams = Number(leagueData.totalTeams);
+          var headerData: LeagueProfileHeaderData = data.data[0];
 
           return {
-            headerData: leagueData,
-            profileName: leagueData.profileNameShort,
+            headerData: headerData,
+            profileName: headerData.leagueFullName, //todo - should be short name
             profileId: null,
             profileType: "league"
           };
         });
-  }
+  } //getLeagueProfile
 
   convertTeamPageHeader(data: TeamProfileData, pageName:string): TitleInputData {
-    var description = data.headerData.description;
-    var stats = data.headerData.stats;
-
-    if (!stats) {
-      return null;
-    }
     if(typeof pageName == 'undefined'){
       pageName = '';
     }
-    var teamId = data.pageParams.teamId ? data.pageParams.teamId.toString() : null;
+
+    var teamId = data.pageParams.teamId ? data.pageParams.teamId : null;
     return {
       imageURL: data.fullProfileImageUrl, //TODO
-      imageRoute: MLBGlobalFunctions.formatTeamRoute(data.teamName, teamId),
+      imageRoute: MLBGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
       icon: 'fa fa-map-marker'
     };
-  }
+  } //convertTeamPageHeader
 
-  convertMLBHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
+  convertLeagueHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
-      imageURL: GlobalSettings.getImageUrl(data.logo), //TODO
-      imageRoute: ["MLB-page"],
+      imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
+      imageRoute: ["League-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
       text3: pageName,
       icon: 'fa fa-map-marker'
     };
-  }
+  } //convertLeagueHeader
 
   convertToPlayerProfileHeader(data: PlayerProfileData): ProfileHeaderData {
-    if (!data.headerData || !data.headerData.info) {
+    if (!data.headerData) {
       return null;
     }
-
     var headerData = data.headerData;
-    var stats = headerData.stats;
-    var info = headerData.info;
 
-    var formattedStartDate = info.draftYear ? info.draftYear : "N/A"; //[September 18, 2015]
-    var formattedYearsInMLB = "N/A"; //[one]
+    var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
+
+    var formattedYearsInLeague = headerData.experience ? headerData.experience.toString() : "N/A";
     var firstSentence = "";
     var yearPluralStr = "years";
-    if ( info.draftYear && info.draftTeam ) {
-      var currentYear = (new Date()).getFullYear();
-      var yearsInMLB = (currentYear - Number(info.draftYear));
-      formattedYearsInMLB = GlobalFunctions.formatNumber(yearsInMLB);
-      if ( yearsInMLB == 1 ) {
-        yearPluralStr = "year";
-      }
-      firstSentence = "<span class='text-heavy'>" + info.playerName +
-                  "</span> started his MLB career in <span class='text-heavy'>" + formattedStartDate +
-                  "</span> for the <span class='text-heavy'>" + info.draftTeam +
-                  "</span>, accumulating <span class='text-heavy'>" + formattedYearsInMLB +
-                  "</span> " + yearPluralStr + " in the MLB. "
-    }
-    else { // no draft year or team
-      firstSentence = "<span class='text-heavy'>" + info.playerName +
-                  "</span> currently plays for the <span class='text-heavy'>" + info.teamName +
-                  "</span>. ";
-    }
 
-    var location = "N/A"; //[Wichita], [Kan.]
-    if ( info.city && info.area ) {
-      location = info.city + ", " + info.area;
-    }
-
+    var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
+    var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
+    var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
-    if ( info.birthDate ) {
-      var date = moment(info.birthDate);
+    if ( headerData.dob ) {
+      var date = moment(headerData.dob);
       formattedBirthDate = GlobalFunctions.formatAPMonth(date.month()) + date.format(" D, YYYY");
     }
-    var formattedAge = info.age ? info.age.toString() : "N/A";
+    var formattedBirthlocation = "N/A"; //[Wichita], [Kan.]
+    if ( headerData.playerBirthCity && headerData.playerBirthState ) {
+      formattedBirthlocation = headerData.playerBirthCity + ", " + headerData.playerBirthState;
+    }
 
-    var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(info.height); //[6-foot-11]
-
-    var formattedWeight = info.weight ? info.weight.toString() : "N/A";
-
-    var description = firstSentence + "<span class='text-heavy'>" + info.playerName +
-                  "</span> was born in <span class='text-heavy'>" + location +
-                  "</span> on <span class='text-heavy'>" + formattedBirthDate +
-                  "</span> and is <span class='text-heavy'>" + formattedAge +
-                  "</span> years old. He stands at <span class='text-heavy'>" + formattedHeight +
-                  "</span>, <span class='text-heavy'>" + formattedWeight +
-                  "</span> pounds.";
-
-    var dataPoints: Array<DataItem>;
-    var isPitcher = headerData.info.position.filter(value => value === "P").length > 0;
-
-    if ( isPitcher ) {
-      var formattedEra = null;
-      if ( stats && stats.era != null ) {
-        if ( stats.era > 1 ) {
-          formattedEra = stats.era.toPrecision(3);
-        }
-        else {
-          formattedEra = stats.era.toPrecision(2);
-        }
-      }
-      dataPoints = [
-        {
-          label: "Wins/Losses",
-          labelCont: "for the current season",
-          value: (stats && stats.wins != null && stats.losses != null ) ? stats.wins + " - " + stats.losses : null
-        },
-        {
-          label: "Innings Pitched",
-          labelCont: "for the current season",
-          value: (stats && stats.inningsPitched != null) ? stats.inningsPitched.toString() : null
-        },
-        {
-          label: "Strikeouts",
-          labelCont: "for the current season",
-          value: (stats && stats.strikeouts != null) ? stats.strikeouts.toString() : null
-        },
-        {
-          label: "Earned Run Average",
-          labelCont: "for the current season",
-          value: formattedEra
-        }
-      ];
+    var formattedExperience = "N/A";
+    if ( headerData.experience == 1 ) {
+      formattedExperience = headerData.experience + " year"
     }
     else {
-      dataPoints = [
-        {
-          label: "Home Runs",
-          labelCont: "for the current season",
-          value: (stats && stats.homeRuns != null) ? stats.homeRuns.toString() : null
-        },
-        {
-          label: "Batting Average",
-          labelCont: "for the current season",
-          value: (stats && stats.average != null) ? stats.average.toPrecision(3) : null
-        },
-        {
-          label: "RBIs",
-          labelCont: "for the current season",
-          value: (stats && stats.rbi != null) ? stats.rbi.toString() : null
-        },
-        {
-          label: "Hits",
-          labelCont: "for the current season",
-          value: (stats && stats.hits != null) ? stats.hits.toString() : null
-        }
-      ];
+      formattedExperience = headerData.experience + " years"
     }
+
+    var description;
+    //NCAA
+    if ( headerData.class != null ) {
+      description = headerData.playerFullName + " a " +
+                    headerData.class + " " +
+                    headerData.position + " for the " +
+                    fullTeamName + " is No. " +
+                    headerData.jerseyNumber + " and stands at " +
+                    formattedHeight + " tall and weighs in at " +
+                    formattedWeight + " lbs."
+    }
+    //PRO
+    else {
+      description = headerData.playerFullName + " started his " +
+                    this.sportLeagueAbbrv + " careers on " +
+                    headerData.entryDate + " for the " +
+                    fullTeamName + " accumulating " +
+                    formattedExperience + " in the " +
+                    this.sportLeagueAbbrv + ". " +
+                    headerData.playerFirstName + " was born in " +
+                    formattedBirthlocation + " on " +
+                    formattedBirthDate + " and is " +
+                    formattedAge + " years old, with a height of " +
+                    formattedHeight + " and weighing in at " +
+                    formattedWeight + "lbs.";
+    }
+
     var header: ProfileHeaderData = {
-      profileName: info.playerName,
-      profileImageUrl: data.fullProfileImageUrl,
-      backgroundImageUrl: data.fullBackgroundImageUrl,
-      profileTitleFirstPart: info.playerFirstName,
-      profileTitleLastPart: info.playerLastName,
-      lastUpdatedDate: info.lastUpdate,
+      profileName: headerData.playerFullName,
+      profileImageUrl: headerData.playerHeadShot,
+      backgroundImageUrl: headerData.backgroundUrl,
+      profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
+      profileTitleLastPart: '',
+      lastUpdatedDate: headerData.lastUpdated,
       description: description,
       topDataPoints: [
         {
           label: "Team",
-          value: info.teamName,
-          routerLink: MLBGlobalFunctions.formatTeamRoute(info.teamName, info.teamId.toString())
+          value: headerData.teamFullName,
+          routerLink: MLBGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
         },
         {
           label: "Jersey Number",
-          value: info.uniformNumber ? info.uniformNumber.toString() : null
+          value: headerData.jerseyNumber ? '#'+headerData.jerseyNumber.toString() : null
         },
         {
           label: "Position",
-          value: info.position ? info.position.join(",") : null
+          value: headerData.position ? headerData.position.toString() : null //todo
         }
       ],
-      bottomDataPoints: dataPoints
+      bottomDataPoints: [
+        {
+          label: headerData.stat1Type,
+          labelCont: headerData.stat1Desc,
+          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1).toString() : null
+        },
+        {
+          label: headerData.stat2Type,
+          labelCont: headerData.stat1Desc,
+          value: headerData.stat2 ? GlobalFunctions.commaSeparateNumber(headerData.stat2).toString() : null
+        },
+        {
+          label: headerData.stat3Type,
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
+          value: headerData.stat3.toString()
+        },
+        {
+          label: headerData.stat4Type,
+          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
+          value: headerData.stat4.toString()
+        }
+      ]
     }
+
     return header;
-  }
+  } //convertToPlayerProfileHeader
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
-    var stats = data.headerData.stats;
 
-    if (!stats) {
-      return null;
-    }
+    var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
     if ( headerData.teamCity && headerData.teamState ) {
       location = headerData.teamCity + ", " + headerData.teamState;
     }
+    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
 
-    var group = "N/A";
-    if ( stats.division && stats.conference ) {
-      group = MLBGlobalFunctions.formatShortNameDivison(stats.conference.name, stats.division.name);
-    }
-
-    var venue = headerData.teamVenue ? headerData.teamVenue : "N/A";
-    var description = "The <span class='text-heavy'>" + stats.teamName +
-                      "</span> play in <span class='text-heavy'>" + venue +
-                      "</span> located in <span class='text-heavy'>" + location +
-                      "</span>. The <span class='text-heavy'>" + stats.teamName +
-                      "</span> are part of the <span class='text-heavy'>" + group +
-                       "</span>.";
-
-    var formattedEra = null;
-    if ( stats.pitching ) {
-      if ( stats.pitching.era > 1 ) {
-        formattedEra = stats.pitching.era.toPrecision(3);
-      }
-      else {
-        formattedEra = stats.pitching.era.toPrecision(2);
-      }
-    }
+    var description = "The" + fullTeamName +
+                      venueForDescription +
+                      "located in " + location +
+                      ". The " + fullTeamName +
+                      " are part of the " + headerData.divisionName +
+                       ".";
 
     var header: ProfileHeaderData = {
-      profileName: stats.teamName,
-      profileImageUrl: data.fullProfileImageUrl,
-      backgroundImageUrl: data.fullBackgroundImageUrl,
-      profileTitleFirstPart: data.headerData.teamFirstName,
-      profileTitleLastPart: data.headerData.teamLastName,
-      lastUpdatedDate: data.headerData.lastUpdated,
+      profileName: headerData.teamName,
+      profileImageUrl: headerData.backgroundUrl,
+      backgroundImageUrl: headerData.backgroundUrl,
+      profileTitleFirstPart: headerData.teamMarket,
+      profileTitleLastPart: headerData.teamName,
+      lastUpdatedDate: headerData.lastUpdated,
       description: description,
       topDataPoints: [
         {
           label: "Division",
-          value: stats.division ? stats.division.name : null
+          value: headerData.divisionName ? headerData.divisionName.toString() : null
         },
         {
           label: "Rank",
-          value: stats.division ? stats.division.rank : null
+          value: headerData.rank ? headerData.rank.toString() : null
         },
         {
           label: "Record",
-          value: stats.totalWins + " - " + stats.totalLosses
+          value: headerData.leagueRecord
         }
       ],
       bottomDataPoints: [
         {
-          label: "Batting Average",
+          label: "Wins/losses",
           labelCont: "for the current season",
-          value: stats.batting ? stats.batting.average.toPrecision(3) : null
+          value: headerData.leagueRecord
         },
         {
-          label: "Runs",
-          labelCont: "for the current season",
-          value: stats.batting ? stats.batting.runsScored.toString() : null
+          label: "Average Points Per Game",
+          labelCont: "Ranked "+headerData.pointsPerGameRank+GlobalFunctions.Suffix(headerData.pointsPerGameRank),
+          value: headerData.pointsPerGame ? GlobalFunctions.commaSeparateNumber(headerData.pointsPerGame).toString() : null
         },
         {
-          label: "Home Runs",
-          labelCont: "for the current season",
-          value: stats.batting ? stats.batting.homeRuns.toString() : null
+          label: "Passing Yards Per Game",
+          labelCont: "Ranked "+headerData.passingYardsPerGameRank+GlobalFunctions.Suffix(headerData.passingYardsPerGameRank),
+          value: headerData.passingYardsPerGame ? GlobalFunctions.commaSeparateNumber(headerData.passingYardsPerGame).toString() : null
         },
         {
-          label: "Earned Run Average",
-          labelCont: "for the current season",
-          value: formattedEra
+          label: "Rushing Yards per Game",
+          labelCont: "Ranked "+headerData.rushingYardsPerGameRank+GlobalFunctions.Suffix(headerData.rushingYardsPerGameRank),
+          value: headerData.rushingYardsPerGame ? GlobalFunctions.commaSeparateNumber(headerData.rushingYardsPerGame).toString() : null
         }
       ]
     }
     return header;
-  }
+  } //convertToTeamProfileHeader
 
   convertToLeagueProfileHeader(data: LeagueProfileHeaderData): ProfileHeaderData {
-    //The MLB consists of [30] teams and [####] players. These teams and players are divided across [two] leagues and [six] divisions.
-    var city = data.city != null ? data.city : "N/A";
-    var state = data.state != null ? data.state : "N/A";
-
-    data.backgroundImage = GlobalSettings.getBackgroundImageUrl(data.backgroundImage);
-
-    var description = "The MLB consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
-                      " teams and " + GlobalFunctions.formatNumber(data.totalPlayers) + " players. " +
-                      "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalLeagues) +
-                      " leagues and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
-
-    var location = "N/A";
-    if ( data.city && data.state ) {
-      location = city + ", " + state;
+    //remove when abbreviated league name is in the data
+    let leagueAbbreviatedName;
+    if ( data.leagueFullName == 'National Football League' ) {
+        leagueAbbreviatedName = 'NFL';
+    }
+    else if ( data.leagueFullName == 'NCAA Football Bowl Subdivision' ) {
+      leagueAbbreviatedName = 'NCAAF';
     }
 
+    //The MLB consists of [30] teams and [####] players. These teams and players are divided across [two] leagues and [six] divisions.
+    var location = "N/A";
+    if ( data.leagueCity && data.leagueState ) {
+      location = data.leagueCity + ", " + data.leagueState;
+    }
+
+    var description = "The "+leagueAbbreviatedName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
+                      " teams and " + GlobalFunctions.formatNumber(data.totalPlayers) + " players. " +
+                      "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
+                      " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
+
+    data.backgroundUrl = GlobalSettings.getBackgroundImageUrl(data.backgroundUrl);
+
     var header: ProfileHeaderData = {
-      profileName: "MLB",
-      profileImageUrl: GlobalSettings.getImageUrl(data.logo),
-      backgroundImageUrl: data.backgroundImage,
+      profileName: leagueAbbreviatedName,
+      profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
+      backgroundImageUrl: data.backgroundUrl,
       profileTitleFirstPart: "",
-      profileTitleLastPart: "Major League Baseball",
+      //profileTitleLastPart: data.leagueAbbreviatedName, //todo when correct API is set
+      profileTitleLastPart: data.leagueFullName,
       lastUpdatedDate: data.lastUpdated,
       description: description,
       topDataPoints: [
@@ -572,7 +463,7 @@ export class ProfileHeaderService {
         },
         {
           label: "Founded In",
-          value: data.foundingDate
+          value: data.leagueFounded
         }
       ],
       bottomDataPoints: [
@@ -582,18 +473,18 @@ export class ProfileHeaderService {
         },
         {
           label: "Total Players:",
-          value: data.totalPlayers != null ? data.totalPlayers.toString() : null
+          value: data.totalPlayers != null ? GlobalFunctions.commaSeparateNumber(data.totalPlayers).toString() : null
         },
         {
           label: "Total Divisions:",
           value: data.totalDivisions != null ? data.totalDivisions.toString() : null
         },
         {
-          label: "Total Leagues:",
-          value: data.totalLeagues != null ? data.totalLeagues.toString() : null
+          label: "Total Conferences:",
+          value: data.totalConferences != null ? data.totalConferences.toString() : null
         }
       ]
     }
     return header;
-  }
+  } //convertToLeagueProfileHeader
 }

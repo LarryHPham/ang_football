@@ -2,23 +2,23 @@ import {Component, OnInit} from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {DetailedListItem, DetailListInput} from '../../components/detailed-list-item/detailed-list-item.component';
-import {ModuleFooter} from '../../components/module-footer/module-footer.component';
-import {SliderCarousel, SliderCarouselInput} from '../../components/carousels/slider-carousel/slider-carousel.component';
-import {TitleComponent, TitleInputData} from '../../components/title/title.component';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {NoDataBox} from '../../components/error/data-box/data-box.component';
-import {ListOfListsItem, IListOfListsItem} from "../../components/list-of-lists-item/list-of-lists-item.component";
+import {DetailedListItem, DetailListInput} from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {ModuleFooter} from '../../fe-core/components/module-footer/module-footer.component';
+import {SliderCarousel, SliderCarouselInput} from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {NoDataBox} from '../../fe-core/components/error/data-box/data-box.component';
+import {ListOfListsItem, IListOfListsItem} from "../../fe-core/components/list-of-lists-item/list-of-lists-item.component";
 import {ListOfListsService} from "../../services/list-of-lists.service";
-import {LoadingComponent} from "../../components/loading/loading.component";
-import {ErrorComponent} from "../../components/error/error.component";
-import {PaginationFooter, PaginationParameters} from "../../components/pagination-footer/pagination-footer.component";
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {ErrorComponent} from "../../fe-core/components/error/error.component";
+import {PaginationFooter, PaginationParameters} from "../../fe-core/components/pagination-footer/pagination-footer.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment:any;
 
@@ -69,8 +69,8 @@ export class ListOfListsPage implements OnInit{
                 this.setPaginationParams(list.pagination);
                 this.carouselDataArray = list.carData;
 
-                var profileName = "MLB";
-                var profileRoute = ["MLB-page"];
+                var profileName = "League";
+                var profileRoute = ["League-page"];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
                 switch ( urlParams.type ) {
                     case "player":
@@ -148,9 +148,9 @@ export class ListOfListsPage implements OnInit{
 
     ngOnInit(){
         if ( this.pageType == "league" ) {
-            this._profileService.getMLBProfile()
+            this._profileService.getLeagueProfile()
             .subscribe(data => {
-                this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.logo));
+                this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
             }, err => {
                 console.log("Error loading MLB profile");
             });

@@ -2,23 +2,23 @@ import {Component, OnInit} from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {DetailedListItem, DetailListInput} from '../../components/detailed-list-item/detailed-list-item.component';
-import {ModuleFooter, ModuleFooterData, FooterStyle} from '../../components/module-footer/module-footer.component';
-import {SliderCarousel, SliderCarouselInput} from '../../components/carousels/slider-carousel/slider-carousel.component';
-import {TitleComponent, TitleInputData} from '../../components/title/title.component';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
+import {DetailedListItem, DetailListInput} from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {ModuleFooter, ModuleFooterData, FooterStyle} from '../../fe-core/components/module-footer/module-footer.component';
+import {SliderCarousel, SliderCarouselInput} from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {DraftHistoryService} from '../../services/draft-history.service';
 import {ListPageService} from '../../services/list-page.service';
-import {NoDataBox} from '../../components/error/data-box/data-box.component';
+import {NoDataBox} from '../../fe-core/components/error/data-box/data-box.component';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {PaginationFooter, PaginationParameters} from '../../components/pagination-footer/pagination-footer.component';
-import {LoadingComponent} from "../../components/loading/loading.component";
-import {ErrorComponent} from "../../components/error/error.component";
+import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {GlobalFunctions} from "../../global/global-functions";
 import {GlobalSettings} from "../../global/global-settings";
 import {DynamicWidgetCall} from "../../services/dynamic-list-page.service";
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'list-page',
@@ -173,7 +173,7 @@ export class ListPage implements OnInit {
 
 
   ngOnInit(){
-    this._profileService.getMLBProfile()
+    this._profileService.getLeagueProfile()
     .subscribe(data => {
         this.getListPage(this.params.params);
     }, err => {

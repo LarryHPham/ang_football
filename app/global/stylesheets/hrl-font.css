@@ -9,7 +9,6 @@
   url("/app/public/fonts/hrl.svg#hrl") format("svg");
   font-weight: normal;
   font-style: normal;
-
 }
 
 .fa {
@@ -25,7 +24,7 @@
 .fa-lg {
   font-size: 1.33333333em;
   line-height: .75em;
-  vertical-align: -15%
+  vertical-align: -15%;
 }
 
 .fa-2x {
@@ -407,3 +406,6 @@
 .fa-heart-o:before {
   content: "\e046";
 }
+
+
+.fa-

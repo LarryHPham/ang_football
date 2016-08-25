@@ -2,16 +2,16 @@ import {Component, OnInit, Input, DoCheck, OnChanges} from '@angular/core';
 import {RouteParams} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {TitleComponent, TitleInputData} from "../../components/title/title.component";
-import {RosterComponent, RosterTabData} from "../../components/roster/roster.component";
-import {MLBRosterTabData} from '../../services/roster.data';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
+import {RosterComponent, RosterTabData} from "../../fe-core/components/roster/roster.component";
+import {NFLRosterTabData} from '../../services/roster.data';
 import {MLBPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {RosterService} from '../../services/roster.service';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
 
 @Component({
@@ -31,7 +31,7 @@ export class TeamRosterPage implements OnInit {
       text: 'View Profile',
       url: ['Team-roster-page']
   };
-  public tabs: Array<MLBRosterTabData>;
+  public tabs: Array<NFLRosterTabData>;
   private selectedTabTitle: string;
 
   constructor(private _params: RouteParams,
@@ -68,7 +68,7 @@ export class TeamRosterPage implements OnInit {
     else {
       //TODO - Load error page since a team is required to show a roster?
     }
-  }  
+  }
 
   private setupRosterData() {
     this.tabs = this._rosterService.initializeAllTabs(this.pageParams.teamId.toString(), this.pageParams.conference);

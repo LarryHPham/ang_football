@@ -1,9 +1,12 @@
 import {Component, ApplicationRef} from '@angular/core';
-import {Router, RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {Router, RouteConfig, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 import {Observable} from 'rxjs/Rx';
 import {AppComponent} from "../app-webpage/app.webpage";
 import {MyAppComponent} from "../app-webpage/app.mywebpage";
+import {GlobalSettings} from "../global/global-settings";
+
+declare var ga:any;
 
 @Component({
     selector: 'app-domain',
@@ -14,20 +17,22 @@ import {MyAppComponent} from "../app-webpage/app.mywebpage";
 
 @RouteConfig([
     {
-        path: '/...',
+        path: '/:scope/...',
         name: 'Default-home',
         component: AppComponent,
         useAsDefault: true
     },
     {
-        path: '/:partner_id/...',
+        path: '/:partner_id/:scope/...',
         name: 'Partner-home',
         component: MyAppComponent,
-    },
+    }
 ])
 
 export class AppDomain {
-    constructor(private _router: Router, private _ref: ApplicationRef) {
+  currentRoute: string = '';
+
+  constructor(private _router: Router, private _ref: ApplicationRef) {
       if ( Object.prototype.toString.call(window['HTMLElement']).indexOf('Constructor') > 0 ) {
         //we appear to be using safari
         this._router.subscribe(route => {
@@ -47,6 +52,17 @@ export class AppDomain {
             var resizeEvent = document.createEvent('UIEvents');
             resizeEvent.initUIEvent('load', true, false, window, 0);
             window.dispatchEvent(resizeEvent);
+          }
+          if(GlobalSettings.isProd()) {
+            var newRoute = route || '/';
+            if (newRoute !== this.currentRoute) {
+              try {
+                ga('send', 'pageview', location.pathname);
+              }
+              catch (e) {
+              }
+              this.currentRoute = newRoute;
+            }
           }
         }
       );

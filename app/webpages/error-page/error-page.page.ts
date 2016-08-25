@@ -3,7 +3,7 @@ import {Router,ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from '../../global/global-settings';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
     selector: 'Error-page',
@@ -17,9 +17,9 @@ export class ErrorPage {
 
   constructor(private _router:Router, private _title: Title) {
       _title.setTitle(GlobalSettings.getPageTitle("Page Not Found"));
-      GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+      GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
   }
-  
+
   loadData(partnerID:string) {
     this.pageLink = GlobalSettings.getHomePage(partnerID);
     this.errorMessage = "Oops! That page doesn't exist! Try Refreshing or go to <a class='text-master' href='/'"+ this.pageLink +"'> our home page</a>!";

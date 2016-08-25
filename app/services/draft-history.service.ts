@@ -4,12 +4,12 @@ import {Http, Headers} from '@angular/http';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {CircleImageData} from '../components/images/image-data';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
 import {ListPageService} from './list-page.service';
 import {IProfileData} from './profile-header.service';
-import {DetailListInput} from '../components/detailed-list-item/detailed-list-item.component';
-import {PaginationParameters} from '../components/pagination-footer/pagination-footer.component';
+import {DetailListInput} from '../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {PaginationParameters} from '../fe-core/components/pagination-footer/pagination-footer.component';
 
 export interface DraftHistoryTab {
   tabTitle: string;
@@ -33,17 +33,18 @@ export interface PlayerDraftData {
   playerLastName: string;
   roleStatus: string;
   active: string;
-  teamId: string;
-  teamName: string;
+  id: string;
+  draftTeamName: string;
   entryReason: string;
-  selectionLevel: string;
-  selectionOverall: string;
+  playerRound: string;
+  playerOverallPick: string;
   startDate: string;
-  city: string;
-  area: string;
-  country: string;
-  backgroundImage: string;
-  imageUrl: string;
+  playerCity: string;
+  playerState: string;
+  playerCountry: string;
+  playerCollege: string;
+  playerBackground: string;
+  playerHeadshot: string;
 }
 
 @Injectable()
@@ -54,7 +55,7 @@ export class DraftHistoryService {
     return [];
   }
 
-  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string): Observable<DraftHistoryData> {
+  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string, sortBy: string): Observable<DraftHistoryData> {
     // console.log("interface - getDraftHistoryService")
     return null;
   }
@@ -63,8 +64,7 @@ export class DraftHistoryService {
 
 @Injectable()
 export class MLBDraftHistoryService extends DraftHistoryService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
-
+  private _apiUrl: string = "http://dev-touchdownloyal-api.synapsys.us";
   constructor(public http: Http){
     super();
   }
@@ -115,19 +115,19 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 /**
  * @param {string} type - 'page' or 'module'
  */
-  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string): Observable<DraftHistoryData> {
+  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string, sortBy: string): Observable<DraftHistoryData> {
     // console.log("concrete - getDraftHistoryService");
-
     let year = tab.tabKey;
     let itemsOnPage = 10;
 
     var callURL;
     if ( profileData.profileType == "team" ) {
-      callURL = this._apiUrl + '/team/draftHistory/'+profileData.profileId+'/'+year;
+      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
+      //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
     else {
-      //http://dev-homerunloyal-api.synapsys.us/league/draftHistory/2016
-      callURL = this._apiUrl + '/league/draftHistory/'+ year;
+      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
+      //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
 
     return this.http.get(callURL)
@@ -140,7 +140,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           }
         }
         var allCarouselItems = this.carDraftHistory(data.data, tab.errorMessage, type);
-        var allDetailItems = this.detailedData(data.data);
+        var allDetailItems = this.detailedData(data.data, sortBy);
         var totalPages = allDetailItems ? Math.ceil(allDetailItems.length / itemsOnPage) : 0;
         var draftData = {
           carouselDataArray: [],
@@ -179,7 +179,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
   private carDraftHistory(data: Array<PlayerDraftData>, errorMessage: string, type){
     let self = this;
     var carouselArray = [];
-    var dummyImg = "/app/public/no-image.png";
+    var dummyImg = "/app/public/no-image.svg";
     if(data.length == 0){//if no data is being returned then show proper Error Message in carousel
       carouselArray.push(SliderCarousel.convertToEmptyCarousel(errorMessage));
     }else{
@@ -189,7 +189,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
         var playerRoute = null;
         if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-          playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+          playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
         }
         var playerLinkText = {
           route: playerRoute,
@@ -198,21 +198,21 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
         var rank = (index+1).toString();
         var location;
-        if (val.city == null || val.area == null){
+        if (val.playerCity == null || val.playerState == null){
           location = "N/A";
         }
         else {
-        location = GlobalFunctions.toTitleCase(val.city) + ', ' + GlobalFunctions.stateToAP(val.area);
+        location = GlobalFunctions.toTitleCase(val.playerCity) + ', ' + GlobalFunctions.stateToAP(val.playerState);
         }
         var carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: false,
-          backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
+          backgroundImage: GlobalSettings.getBackgroundImageUrl(val.playerBackground),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
-          description: ['<i class="fa fa-map-marker text-master"></i>', 'Hometown: ', location],
-          dataValue: val.selectionOverall + " Overall",
-          dataLabel: "Draft Round " + val.selectionLevel,
-          circleImageUrl: GlobalSettings.getImageUrl(val.imageUrl),
+          description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', val.playerCollege],
+          dataValue: val.playerOverallPick + " Overall",
+          dataLabel: "Draft Round " + val.playerRound,
+          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
           circleImageRoute: playerRoute,
           rank: rank
         });
@@ -230,35 +230,35 @@ export class MLBDraftHistoryService extends DraftHistoryService {
     return carouselArray;
   }
 
-  private detailedData(data: Array<PlayerDraftData>){
+  private detailedData(data: Array<PlayerDraftData>, sortBy){
     var listDataArray = data.map(function(val, index){
       var playerFullName = val.playerFirstName + " " + val.playerLastName;
-      if (val.city == null || val.area == null){
+      if (val.playerCity == null || val.playerState == null){
         location = "N/A";
       }
       else {
-      var location = GlobalFunctions.toTitleCase(val.city) + ', ' + GlobalFunctions.stateToAP(val.area);
+      var location = GlobalFunctions.toTitleCase(val.playerCity) + ', ' + GlobalFunctions.stateToAP(val.playerState);
       }
       var rank = (index+1);
 
       var playerRoute = null;
       if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-        playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
-      }
-      var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-
+        playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
+        }
+      playerRoute = MLBGlobalFunctions.formatPlayerRoute("boston-red-sox", "david-price", "95151"); //todo
+      var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
       var listData = {
         dataPoints: ListPageService.detailsData(
           [//main left text
             { route: playerRoute, text: playerFullName, class: "dataBox-mainLink" }
           ],
-          val.selectionOverall+' Overall',
+          val.playerOverallPick+' Overall',
           [//sub left text
-            {text: "Hometown: " + location}
+            {text:'<span class="hometown">Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
           ],
-          'Draft Round '+val.selectionLevel,
+          'Draft Round '+val.playerRound,
           'fa fa-map-marker'),
-        imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.imageUrl), playerRoute, rank),
+        imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
         hasCTA:true,
         ctaDesc: playerRoute ? 'Want more info about this player?' : 'This player is currently not active.',
         ctaBtn:'',
@@ -268,6 +268,11 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       return listData;
     });
     // console.log('TRANSFORMED List Data', listDataArray);
-    return listDataArray.length > 0 ? listDataArray : null;
+    if (sortBy != "1") {
+      return listDataArray.length > 0 ? listDataArray.reverse() : null;
+    }
+    else {
+      return listDataArray.length > 0 ? listDataArray : null;
+    }
   }//end of function
 }

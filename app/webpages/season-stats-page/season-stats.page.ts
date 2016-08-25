@@ -2,30 +2,32 @@ import {Component, OnInit, Input} from '@angular/core';
 import {RouteParams} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from "../../components/backtab/backtab.component";
-import {TitleComponent, TitleInputData} from "../../components/title/title.component";
-import {CircleImageData, ImageData} from "../../components/images/image-data";
-import {LoadingComponent} from '../../components/loading/loading.component';
-import {ErrorComponent} from '../../components/error/error.component';
+import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
+import {TitleComponent, TitleInputData} from "../../fe-core/components/title/title.component";
+import {CircleImageData, ImageData} from "../../fe-core/components/images/image-data";
+import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
+import {ErrorComponent} from '../../fe-core/components/error/error.component';
 import {MLBSeasonStatsTabData, MLBSeasonStatsTableData} from '../../services/season-stats-page.data';
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
 import {Season, MLBPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 
-import {SeasonStatsComponent} from "../../components/season-stats/season-stats.component";
+import {SeasonStatsComponent} from "../../fe-core/components/season-stats/season-stats.component";
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {SeasonStatsPageService} from '../../services/season-stats.service';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'Season-stats-page',
     templateUrl: './app/webpages/season-stats-page/season-stats.page.html',
-    directives: [SidekickWrapper, BackTabComponent, TitleComponent, SeasonStatsComponent, LoadingComponent, ErrorComponent],
+    directives: [SidekickWrapper, BackTabComponent, TitleComponent, SeasonStatsComponent, LoadingComponent, ErrorComponent, ResponsiveWidget],
     providers: [SeasonStatsPageService, ProfileHeaderService, Title],
 })
 
 export class SeasonStatsPage implements OnInit {
+  public widgetPlace: string = "widgetForPage";
   public tabs: Array<MLBSeasonStatsTabData>;
 
   public pageParams: MLBPageParameters = {}
@@ -47,7 +49,7 @@ export class SeasonStatsPage implements OnInit {
   }
 
   private setupTitleData(imageUrl: string, teamName: string, playerId: string, playerName: string) {
-    var profileLink = ["MLB-page"];
+    var profileLink = ["League-page"];
     if ( playerId ) {
       profileLink = MLBGlobalFunctions.formatPlayerRoute(teamName, playerName, playerId);
     }
@@ -68,8 +70,8 @@ export class SeasonStatsPage implements OnInit {
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.info.playerName));
-          this.setupTitleData(data.fullProfileImageUrl, data.headerData.info.teamName, data.pageParams.playerId.toString(), data.headerData.info.playerName);
+          this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
+          this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
           this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams);
         },
         err => {

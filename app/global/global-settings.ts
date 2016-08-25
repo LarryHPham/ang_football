@@ -10,6 +10,8 @@ export class GlobalSettings {
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
     private static _apiUrl:string = '-homerunloyal-api.synapsys.us';
+    private static _apiUrlTdl:string = '-touchdownloyal-api.synapsys.us';
+
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
 
@@ -21,11 +23,30 @@ export class GlobalSettings {
     private static _headlineUrl:string = '-homerunloyal-ai.synapsys.us/headlines/team/';
     private static _trendingUrl:string = '-homerunloyal-ai.synapsys.us/sidekick';
     private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
-    private static _homepageUrl:string = '.homerunloyal.com';
-    private static _partnerHomepageUrl:string = '.myhomerunzone.com';
+    private static _homepageUrl:string = '.touchdownloyal.com';
+    private static _homepageLinkName:string = 'touchdownloyal';
+    private static _partnerHomepageUrl:string = '.mytouchdownzone.com';
+    private static _partnerHomepageLinkName:string = 'mytouchdownzone';
 
-    private static _baseTitle: string = "Home Run Loyal";
+    private static _siteTwitterUrl:string = 'https://twitter.com/touchdownloyal';
+    private static _siteFacebookUrl:string = 'https://www.facebook.com/touchdownloyal';
+    private static _siteGoogleUrl:string = 'https://plus.google.com/share?url=';
 
+    private static _baseTitle: string = "Touchdown Loyal";
+    private static _basePartnerTitle: string = "My Touchdown Zone";
+    private static _sportName: string ="football";
+
+    private static _sportLeagueAbbrv: string ="NFL";
+    private static _sportLeagueFull: string ="National Football League";
+    private static _sportLeagueChampionship: string = "Superbowl";
+    private static _sportLeagueSegments: string = "Divisions";
+
+    private static _collegeDivisionAbbrv: string="FBS";
+    private static _collegeDivisionFullAbbrv: string="NCAAF";
+    private static _collegeDivisionChampionship: string = "National Championships";
+    private static _collegeDivisionSegments: string = "Conferences";
+
+    private static _estYear: string = "© 2016";
     private static _copyrightInfo: string = "USA Today Sports Images";
 
     static getEnv(env:string):string {
@@ -38,6 +59,14 @@ export class GlobalSettings {
       return env;
     }
 
+    static isProd():boolean {
+      if( this.getEnv(this._env) == "prod" ){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
     static getDynamicWidet():string {
         return this._proto + "//" + this._dynamicApiUrl;
     }
@@ -45,6 +74,12 @@ export class GlobalSettings {
     static getApiUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
+
+    }
+    static getApiUrlTdl():string {//TODO
+        //[https:]//[prod]-homerunloyal-api.synapsys.us
+        return this._proto + "//" + this.getEnv(this._env) + this._apiUrlTdl;
+
     }
 
     static getPartnerApiUrl(partnerID):string {
@@ -57,7 +92,7 @@ export class GlobalSettings {
     }
 
     static getImageUrl(relativePath):string {
-        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/no-image.png';
+        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/no-image.svg';
         return relPath;
     }
 
@@ -90,6 +125,14 @@ export class GlobalSettings {
         return this._proto + "//" + this._newsUrl;
     }
 
+    static getHomePageLinkName() {
+      return this._homepageLinkName;
+    }
+
+    static getPartnerHomePageLinkName() {
+      return this._partnerHomepageLinkName;
+    }
+
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
       var linkEnv = this._env != 'localhost' && this._env != "homerunloyal" && this._env != "myhomerunzone" ? this._env:'www';
         if ( partnerId ) {
@@ -106,8 +149,8 @@ export class GlobalSettings {
       var isHome = false;
       var hide = false;
       var hostname = window.location.hostname;
-      var partnerPage = /myhomerunzone/.test(hostname);
-      //var partnerPage = /localhost/.test(hostname);
+      var partnerPage = /mytouchdownzone/.test(hostname);
+      // var partnerPage = /localhost/.test(hostname);
       var name = window.location.pathname.split('/')[1];
       //console.log("GlobalSettings:", 'partnerPage =>', partnerPage, 'name =>', name);
 
@@ -131,41 +174,111 @@ export class GlobalSettings {
     }
 
     static getSiteLogoUrl():string {
-        return "/app/public/mainLogo.png";
+        return "/app/public/mainLogo.jpg";
     }
 
     /**
      * This should be called by classes in their constructor function, so that the
-     * 'subscribe' function actually gets called and the partnerID can be located from the route
+     * 'subscribe' function actually gets called and the partnerID and scope can be located from the route
      *
      * @param{Router} router
      * @param {Function} subscribeListener - takes a single parameter that represents the partnerID: (partnerID) => {}
      */
-    static getPartnerID(router: Router, subscribeListener: Function) {
+
+    //static getPartnerID(router: Router, subscribeListener: Function)
+    static getParentParams(router: Router, subscribeListener: Function) {
         if ( !subscribeListener ) return;
 
         router.root.subscribe (
             route => {
                 let partnerID = null;
+                let scope = this.getSportLeagueAbbrv();
                 if ( route && route.instruction && route.instruction.params ) {
                     partnerID = route.instruction.params["partner_id"];
+                    scope = route.instruction.params["scope"];
                 }
-                subscribeListener(partnerID == '' ? null : partnerID);
+                subscribeListener({
+                  partnerID: partnerID == '' ? null : partnerID,
+                  scope: this.getScope(scope)
+                });
             }
         )
     }
 
+    //converts URL route scope from NCAAF to FBS
+    //NCAAF is for display purpose and returning FBS is for API requirements
+    //lowercase is for common practice
+    static getScope(scope?) {
+      switch(scope) {
+        case ( this.getCollegeDivisionFullAbbrv().toLowerCase() ) :
+        case ( this.getCollegeDivisionFullAbbrv() ) :
+        return this.getCollegeDivisionAbbrv().toLowerCase();
+
+        default:
+        return this.getSportLeagueAbbrv().toLowerCase();
+      }
+    }
+
     static getPageTitle(subtitle?: string, profileName?: string) {
       if(this.getHomeInfo().isPartner){
-        this._baseTitle = "My HomeRun Zone";
+        this._baseTitle = this._basePartnerTitle;
       }
         return this._baseTitle +
             (profileName && profileName.length > 0 ? " - " + profileName : "") +
             (subtitle && subtitle.length > 0 ? " - " + subtitle : "");
     }
 
+    static getBaseTitle() {
+      return this._baseTitle;
+    }
+
+    static getBasePartnerTitle() {
+      return this._basePartnerTitle;
+    }
+
+    static getSportLeagueAbbrv() {
+      return this._sportLeagueAbbrv;
+    }
+    static getSportLeagueFull() {
+      return this._sportLeagueFull;
+    }
+    static getSportLeagueChampionship() {
+      return this._sportLeagueChampionship;
+    }
+    static getSportLeagueSegments() {
+      return this._sportLeagueSegments;
+    }
+
+    static getCollegeDivisionAbbrv() {
+      return this._collegeDivisionAbbrv;
+    }
+    static getCollegeDivisionFullAbbrv() {
+      return this._collegeDivisionFullAbbrv;
+    }
+    static getCollegeDivisionChampionship() {
+      return this._collegeDivisionChampionship;
+    }
+    static getCollegeDivisionSegments() {
+      return this._collegeDivisionSegments;
+    }
+
     static getCopyrightInfo() {
         return this._copyrightInfo;
+    }
+    static getSiteTwitterUrl() {
+      return this._siteTwitterUrl;
+    }
+    static getSiteFacebookUrl() {
+      return this._siteFacebookUrl;
+    }
+    static getSiteGoogleUrl(partnerId: string) {
+      return this._siteGoogleUrl + this.getHomePage(partnerId);
+	  }
+    static getSportName() {
+      return this._sportName;
+    }
+    static getEstYear() {
+      return this._estYear;
     }
 
 }

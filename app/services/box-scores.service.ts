@@ -5,8 +5,8 @@ import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
-import {CircleImageData} from '../components/images/image-data';
-import {GameInfoInput} from '../components/game-info/game-info.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {GameInfoInput} from '../fe-core/components/game-info/game-info.component';
 
 declare var moment;
 @Injectable()
@@ -136,7 +136,7 @@ export class BoxScoresService {
     var convertedDate = month + ' ' + day + ordinal + ', ' + year;
 
     moduleTitle = "Box Scores - " + team + ': ' +convertedDate;
-    return {
+    return {      
       moduleTitle: moduleTitle,
       hasIcon: false,
       iconClass: '',
@@ -502,7 +502,7 @@ export class BoxScoresService {
   **/
   imageData(imageClass, imageBorder, mainImg, mainImgRoute?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     var image: CircleImageData = {//interface is found in image-data.ts
         imageClass: imageClass,

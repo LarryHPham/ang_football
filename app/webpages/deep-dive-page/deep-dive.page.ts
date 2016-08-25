@@ -1,24 +1,24 @@
 import {Component, OnInit, Input, NgZone} from '@angular/core';
-import {CarouselDiveModule} from '../../modules/carousel-dive/carousel-dive.module';
+import {CarouselDiveModule} from '../../fe-core/modules/carousel-dive/carousel-dive.module';
 import {DeepDiveService} from '../../services/deep-dive.service';
-import {SidekickWrapper} from '../../components/sidekick-wrapper/sidekick-wrapper.component';
+import {SidekickWrapper} from '../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component';
 import {SchedulesService} from '../../services/schedules.service';
 import {PartnerHeader} from "../../global/global-service";
-import {WidgetCarouselModule} from '../../modules/widget/widget-carousel.module';
-import {SideScrollSchedule} from '../../modules/side-scroll-schedules/side-scroll-schedules.module';
+import {WidgetCarouselModule} from '../../fe-core/modules/widget/widget-carousel.module';
+import {SideScrollSchedule} from '../../fe-core/modules/side-scroll-schedules/side-scroll-schedules.module';
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
 import {GeoLocation} from "../../global/global-service";
 import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {PartnerHomePage} from '../partner-home-page/partner-home-page';
 
-import {DeepDiveBlock1} from '../../modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module';
-import {DeepDiveBlock2} from '../../modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
-import {DeepDiveBlock3} from '../../modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
-import {DeepDiveBlock4} from '../../modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
+import {DeepDiveBlock1} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module';
+import {DeepDiveBlock2} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
+import {DeepDiveBlock3} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
+import {DeepDiveBlock4} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
 
-import {SideScroll} from '../../components/side-scroll/side-scroll.component'
+import {SideScroll} from '../../fe-core/components/side-scroll/side-scroll.component'
 //window declarions of global functions from library scripts
 declare var moment;
 declare var jQuery: any;
@@ -77,8 +77,9 @@ export class DeepDivePage implements OnInit{
         // needs to get Geolocation first
       this.profileName = "MLB";
 
-      GlobalSettings.getPartnerID(_router, partnerID => {
-          this.partnerID = partnerID;
+      GlobalSettings.getParentParams(_router, parentParams => {
+          this.partnerID = parentParams.partnerID;
+          
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           this.isHomeRunZone = partnerHome;
           if(this.partnerID != null){

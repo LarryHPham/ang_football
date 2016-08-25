@@ -5,7 +5,7 @@ import {Conference, Division, MLBPageParameters} from '../global/global-interfac
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {TeamStandingsData, MLBStandingsTabData, MLBStandingsTableModel, MLBStandingsTableData} from './standings.data';
-import {StandingsTableTabData} from '../components/standings/standings.component';
+import {StandingsTableTabData} from '../fe-core/components/standings/standings.component';
 import {GlobalSettings} from '../global/global-settings';
 
 @Injectable()
@@ -40,18 +40,18 @@ export class StandingsService {
 
   getPageTitle(pageParams: MLBPageParameters, teamName: string): string {
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = "MLB Standings Breakdown";
+    let pageTitle = "NFL Standings Breakdown";
     if ( teamName ) {
-      pageTitle = "MLB Standings - " + teamName;
+      pageTitle = "NFL Standings - " + teamName;
     }
     return pageTitle;
   }
 
-  loadAllTabsForModule(pageParams: MLBPageParameters, currentTeamId?: number, currentTeamName?: string) {
+  loadAllTabsForModule(pageParams: MLBPageParameters, currentTeamId?: string, currentTeamName?: string) {
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
         pageRouterLink: this.getLinkToPage(pageParams, currentTeamName),
-        tabs: this.initializeAllTabs(pageParams, currentTeamId ? currentTeamId.toString() : null)
+        tabs: this.initializeAllTabs(pageParams, currentTeamId ? currentTeamId : null)
     };
   }
 
@@ -61,8 +61,8 @@ export class StandingsService {
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an MLB page: show MLB, then American, then National
       tabs.push(this.createTab(true, currentTeamId));
-      tabs.push(this.createTab(false, currentTeamId, Conference.american));
-      tabs.push(this.createTab(false, currentTeamId, Conference.national));
+      tabs.push(this.createTab(false, currentTeamId, Conference.american));//TODO
+      tabs.push(this.createTab(false, currentTeamId, Conference.national));//TODO
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
       //Is a League page: show All Divisions, then American, then National
@@ -89,16 +89,17 @@ export class StandingsService {
     if ( selectedKey == null ) {
       selectedKey = pageParams.teamId;
     }
+    //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
-      let url = GlobalSettings.getApiUrl() + "/standings";
-
+      let url = GlobalSettings.getApiUrlTdl() + "/standings";
+      //TODO
       if ( standingsTab.conference !== undefined ) {
-        url += "/" + Conference[standingsTab.conference];
+       url += "/conference/" + Conference[standingsTab.conference];
+      } else {
+       url += "/league/nfl";
       }
-
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
-
       this.http.get(url)
           .map(res => res.json())
           .map(data => this.setupTabData(standingsTab, data.data, maxRows))
@@ -171,15 +172,14 @@ export class StandingsService {
       value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
       value.fullImageUrl = GlobalSettings.getImageUrl(value.imageUrl);
       value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
-      
+
       //Make sure numbers are numbers.
-      value.totalWins = Number(value.totalWins);
-      value.totalLosses = Number(value.totalLosses);
-      value.winPercentage = Number(value.winPercentage);
-      value.gamesBack = Number(value.gamesBack);
-      value.streakCount = Number(value.streakCount);
-      value.batRunsScored = Number(value.batRunsScored);
-      value.pitchRunsAllowed = Number(value.pitchRunsAllowed);
+      value.totalWins = value.totalWins;
+      value.totalLosses = value.totalLosses;
+      value.teamWinPercent = value.teamWinPercent;
+      value.teamDivisionRecord = value.teamDivisionRecord;
+      value.conferenceRank = value.conferenceRank;
+      value.teamPointsAllowed = value.teamPointsAllowed;
     });
 
     let tableName = this.formatGroupName(conference, division, true);
@@ -220,7 +220,7 @@ export class StandingsService {
       }
     }
     else {
-      return "MLB";
+      return "NFL";//TODO
     }
   }
 }

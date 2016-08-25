@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ArticlesModule} from "../../modules/articles/articles.module";
+import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
 
 @Component({
     selector: 'Module-page',

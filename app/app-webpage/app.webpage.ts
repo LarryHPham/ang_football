@@ -2,8 +2,9 @@ import {Component, AfterViewChecked, OnInit} from '@angular/core';
 import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES, Router} from '@angular/router-deprecated';
 
 import {GlobalFunctions} from "../global/global-functions";
-import {FooterComponent} from "../components/footer/footer.component";
-import {HeaderComponent} from "../components/header/header.component";
+import {FooterComponent} from "../fe-core/components/footer/footer.component";
+
+import {HeaderComponent} from "../fe-core/components/header/header.component";
 
 import {PickTeamPage} from "../webpages/home-page/home-page.page";
 import {AboutUsPage} from "../webpages/about-us-page/about-us.page";
@@ -13,7 +14,7 @@ import {DisclaimerPage} from "../webpages/disclaimer-page/disclaimer.page";
 import {ErrorPage} from "../webpages/error-page/error-page.page";
 import {SearchPage} from '../webpages/search-page/search.page';
 
-import {MLBPage} from "../webpages/mlb-page/mlb.page";
+import {LeaguePage} from "../webpages/league-page/league.page";
 import {TeamPage} from "../webpages/team-page/team.page";
 import {PlayerPage} from "../webpages/player-page/player.page";
 
@@ -36,8 +37,8 @@ import {ModulePage} from "../webpages/module-page/module.page";
 import {ImagesTestPage} from "../webpages/images-test-page/images-test.page";
 import {DesignPage} from "../webpages/design-page/design.page";
 
-import {SanitizeHtml} from "../pipes/safe.pipe";
-import {SanitizeStyle} from "../pipes/safe.pipe";
+import {SanitizeHtml} from "../fe-core/pipes/safe.pipe";
+import {SanitizeStyle} from "../fe-core/pipes/safe.pipe";
 import {GlobalSettings} from "../global/global-settings";
 
 //FOR DEEP DIVE
@@ -76,9 +77,9 @@ declare var jQuery: any;
     },
     //Profile Pages
     {
-        path: '/mlb',
-        name: 'MLB-page',
-        component: MLBPage,
+        path: '/league',
+        name: 'League-page',
+        component: LeaguePage,
     },
     {
         path: '/team/:teamName/:teamId',
@@ -249,7 +250,7 @@ declare var jQuery: any;
     },
     // Test Pages - TODO: remove after testing
     {
-        path: '/modules/:teamID',
+        path: '/fe-core/modules/:teamID',
         name: 'Module-page',
         component: ModulePage
     },
@@ -289,31 +290,31 @@ export class AppComponent implements OnInit{
   }
 
   setPageSize(){
-    jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container basic-container');
+    jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container');
     // Handle all the exceptions here
     jQuery("deep-dive-page").parent().addClass('deep-dive-container');
     jQuery("directory-page").parent().addClass('directory-rails');
     jQuery("home-page").parent().addClass('pick-a-team-container');
     // Handle the basic (consistent) pages here
-    if(jQuery("deep-dive-page").add("directory-page").add("home-page").length < 1) {
-        jQuery("sidekick-wrapper").parent().parent().addClass('basic-container');
-    }
+    // if(jQuery("deep-dive-page").add("directory-page").add("home-page").length < 1) {
+    //     jQuery("sidekick-wrapper").parent().parent().addClass('basic-container');
+    // }
     var isTakenOver = false;
     var intvl = setInterval(function(){
       //Looking at component/module tags
         var pageWrappers = jQuery("deep-dive-page").add("article-pages").add("syndicated-article-page").add("directory-page").add("home-page");
         // should only run once
         if (!isTakenOver && pageWrappers.add("sidekick-wrapper").length > 0 ){
-            jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container basic-container');
+            jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container');
             // Handle all the exceptions here
             jQuery("deep-dive-page").parent().addClass('deep-dive-container');
             jQuery("directory-page").parent().addClass('directory-rails');
             jQuery("home-page").parent().addClass('pick-a-team-container');
 
             // Handle the basic (consistent) pages here
-            if(pageWrappers.length < 1) {
-                jQuery("sidekick-wrapper").parent().parent().addClass('basic-container');
-            }
+            // if(pageWrappers.length < 1) {
+            //     jQuery("sidekick-wrapper").parent().parent().addClass('basic-container');
+            // }
             //This has to be resize to trigger the takeover update
             try {
                 window.dispatchEvent(new Event('resize'));

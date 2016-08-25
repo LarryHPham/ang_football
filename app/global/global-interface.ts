@@ -16,6 +16,7 @@ export interface Link {
   route?: Array<any>;
   text: string;
   class?: string;
+  active?: boolean;
 }
 
 export interface ParagraphItem {
@@ -27,6 +28,7 @@ export interface ParagraphItem {
 export interface NavigationData {
   title: string;
   links: Array<Link>;
+  active?: boolean;
   moreLink?: Link;
 }
 

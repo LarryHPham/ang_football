@@ -5,31 +5,28 @@ import {Division, Conference, MLBPageParameters} from '../../global/global-inter
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
 
-import {DraftHistoryModule} from '../../modules/draft-history/draft-history.module';
+import {DraftHistoryModule} from '../../fe-core/modules/draft-history/draft-history.module';
 
-import {StandingsModuleData, StandingsModule} from '../../modules/standings/standings.module';
+import {StandingsModuleData, StandingsModule} from '../../fe-core/modules/standings/standings.module';
 import {MLBStandingsTabData} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 import {GlobalSettings} from '../../global/global-settings';
 
-import {ProfileHeaderData, ProfileHeaderModule} from '../../modules/profile-header/profile-header.module';
+import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 
-import {AboutUsModule} from '../../modules/about-us/about-us.module';
-import {ArticlesModule} from "../../modules/articles/articles.module";
-import {ListOfListsModule} from "../../modules/list-of-lists/list-of-lists.module";
-import {TeamRosterModule} from '../../modules/team-roster/team-roster.module';
+import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
+import {ListOfListsModule} from "../../fe-core/modules/list-of-lists/list-of-lists.module";
+import {TeamRosterModule} from '../../fe-core/modules/team-roster/team-roster.module';
 import {RosterService} from '../../services/roster.service';
-import {ShareModule, ShareModuleInput} from '../../modules/share/share.module';
-import {LikeUs} from "../../modules/likeus/likeus.module";
-import {CommentModule} from '../../modules/comment/comment.module';
-import {ListOfListsData} from "../../modules/list-of-lists/list-of-lists.module";
+import {CommentModule} from '../../fe-core/modules/comment/comment.module';
+import {ListOfListsData} from "../../fe-core/modules/list-of-lists/list-of-lists.module";
 import {ListOfListsService} from "../../services/list-of-lists.service";
 
 @Component({
     selector: 'Design-page',
     templateUrl: './app/webpages/design-page/design.page.html',
-    directives: [DraftHistoryModule, TeamRosterModule, AboutUsModule, StandingsModule, ProfileHeaderModule, ArticlesModule, ListOfListsModule, ShareModule, LikeUs, CommentModule],
+    directives: [DraftHistoryModule, TeamRosterModule, StandingsModule, ProfileHeaderModule, ArticlesModule, ListOfListsModule, CommentModule],
     providers: [StandingsService, ProfileHeaderService, RosterService, ListOfListsService]
 })
 
@@ -45,10 +42,6 @@ export class DesignPage implements OnInit {
   lolDataArray : boolean;
   lolCarouselDataArray : any;
 
-  public shareModuleInput: ShareModuleInput = {
-      imageUrl: GlobalSettings.getSiteLogoUrl()
-  };
-
   constructor(
     private _params: RouteParams,
     private _standingsService: StandingsService,
@@ -62,7 +55,7 @@ export class DesignPage implements OnInit {
         conference: Conference.american,
         playerId: 95041,
         teamId: Number(_params.get("teamId"))
-      };
+      }
     }
   }
 
@@ -83,14 +76,14 @@ export class DesignPage implements OnInit {
     this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
       data => {
         this.pageParams = data.pageParams;
-        this.teamProfileHeaderData = this._profileService.convertToTeamProfileHeader(data);        
+        this.teamProfileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
       },
       err => {
         console.log("Error getting team profile data for " + this.pageParams.teamId + ": " + err);
       }
     );
-    this._profileService.getMLBProfile().subscribe(
+    this._profileService.getLeagueProfile().subscribe(
       data => {
         this.leagueProfileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
       },
@@ -99,7 +92,7 @@ export class DesignPage implements OnInit {
       }
     );
   }
-  
+
   private standingsTabSelected(tabData: Array<any>) {
     //only show 5 rows in the module
     this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5)

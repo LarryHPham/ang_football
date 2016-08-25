@@ -2,21 +2,21 @@ import {Component, OnInit} from '@angular/core';
 import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {TitleComponent, TitleInputData} from '../../components/title/title.component';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
+import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {DraftHistoryService} from '../../services/draft-history.service';
-import {ListPageService, BaseballMVPTabData} from '../../services/list-page.service';
-import {FooterStyle} from '../../components/module-footer/module-footer.component';
+import {ListPageService, positionMVPTabData} from '../../services/list-page.service';
+import {FooterStyle} from '../../fe-core/components/module-footer/module-footer.component';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {PaginationFooter, PaginationParameters} from '../../components/pagination-footer/pagination-footer.component';
-import {LoadingComponent} from "../../components/loading/loading.component";
-import {ErrorComponent} from "../../components/error/error.component";
+import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {GlobalFunctions} from "../../global/global-functions";
 import {GlobalSettings} from "../../global/global-settings";
 import {DynamicWidgetCall} from "../../services/dynamic-list-page.service";
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {MVPListComponent, MVPTabData} from '../../components/mvp-list/mvp-list.component';
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {MVPListComponent, MVPTabData} from '../../fe-core/components/mvp-list/mvp-list.component';
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'mvp-list-page',
@@ -27,7 +27,7 @@ import {ResponsiveWidget} from '../../components/responsive-widget/responsive-wi
 })
 
 export class MVPListPage implements OnInit {
-  tabs: Array<BaseballMVPTabData>;
+  tabs: Array<positionMVPTabData>;
   profileHeaderData: TitleInputData;
 
   paginationParameters:PaginationParameters;
@@ -73,18 +73,18 @@ export class MVPListPage implements OnInit {
   ngOnInit(){
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
-      imageRoute: ["MLB-page"],
+      imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
       text3: "MLB's Most Valuable Players",
       icon: 'fa fa-map-marker'
     };
 
-    this._profileService.getMLBProfile()
+    this._profileService.getLeagueProfile()
       .subscribe(data => {
         this.profileHeaderData = {
-          imageURL: GlobalSettings.getImageUrl(data.headerData.logo),
-          imageRoute: ["MLB-page"],
+          imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),
+          imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
           text3: "MLB's Most Valuable Players",
@@ -134,7 +134,7 @@ export class MVPListPage implements OnInit {
     };
   }
 
-  getStandardList(tab: BaseballMVPTabData){
+  getStandardList(tab: positionMVPTabData){
     this.queryParams.listname = tab.tabDataKey;
     this._service.getListModuleService(tab, this.queryParams)
       .subscribe(
@@ -151,7 +151,7 @@ export class MVPListPage implements OnInit {
       );
   }
 
-  tabSelected(tab: BaseballMVPTabData) {
+  tabSelected(tab: positionMVPTabData) {
     var tabRoute;
     var tabNameFrom = this.selectedTabName; //get the tab we are changing from into a var before we change it
     var tabNameTo = tab.tabDisplayTitle;

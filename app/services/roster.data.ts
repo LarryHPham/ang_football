@@ -1,7 +1,7 @@
-import {TableModel, TableColumn, CellData} from '../components/custom-table/table-data.component';
-import {CircleImageData} from '../components/images/image-data';
-import {RosterTabData} from '../components/roster/roster.component';
-import {SliderCarousel,SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
+import {TableModel, TableColumn, CellData} from '../fe-core/components/custom-table/table-data.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {RosterTabData} from '../fe-core/components/roster/roster.component';
+import {SliderCarousel,SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Conference, Division} from '../global/global-interface';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
@@ -9,7 +9,7 @@ import {GlobalSettings} from '../global/global-settings';
 import {RosterService} from './roster.service';
 
 export interface TeamRosterData {
-  imageUrl: string,
+  playerHeadshotUrl: string,
   teamId: string,
   teamName: string,
   playerName: string,
@@ -18,22 +18,21 @@ export interface TeamRosterData {
   playerId: string,
   roleStatus: string,
   active: string,
-  uniformNumber: string,
-  playerHeadshot: string,
+  playerJerseyNumber: string,
   backgroundImage: string;
   teamLogo: string,
-  position:Array<string>,
+  playerPosition:string,
   depth: string,
-  weight: string,
-  height: string,
+  playerWeight: string,
+  playerHeight: string,
   birthDate: string,
   city: string,
   area: string,
   country: string,
   heightInInches: string,
-  age: string,
-  salary: number,
-  lastUpdate: string,
+  playerAge: string,
+  playerSalary: number,
+  lastUpdated: string,
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -44,7 +43,7 @@ export interface TeamRosterData {
   displayDate?: string;
 }
 
-export class MLBRosterTabData implements RosterTabData<TeamRosterData> {
+export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   type: string;
   teamId: string;
   maxRows: number;
@@ -62,17 +61,16 @@ export class MLBRosterTabData implements RosterTabData<TeamRosterData> {
     this.errorMessage = "Sorry, there is no roster data available.";
     this.isTeamProfilePage = isTeamProfilePage;
 
-    if ( this.type == "hitters" && conference == Conference.national ) {
-      this.hasError = true;
-      this.errorMessage = "This team is a National League team and has no designated hitters.";
-    }
+    // if ( this.type == "hitters" && conference == Conference.national ) {
+    //   this.hasError = true;
+    //   this.errorMessage = "This team is a National League team and has no designated hitters.";
+    // }
 
     switch ( type ) {
       case "full":      this.title = "Full Roster"; break;
-      case "pitchers":  this.title = "Pitchers";    break;
-      case "catchers":  this.title = "Catchers";    break;
-      case "fielders":  this.title = "Fielders";    break;
-      case "hitters":   this.title = "Hitters";     break;
+      case "offense":  this.title = "Offense";    break;
+      case "defense":  this.title = "Defense";    break;
+      case "special":  this.title = "Special Teams";    break;
     }
   }
 
@@ -117,8 +115,10 @@ export class MLBRosterTabData implements RosterTabData<TeamRosterData> {
         });
       }
     }
+
+
     rows = rows.sort((a, b) => {
-      return Number(b.salary) - Number(a.salary);
+      return Number(b.playerSalary) - Number(a.playerSalary);
     });
     if ( this.maxRows !== undefined ) {
       rows = rows.slice(0, this.maxRows);
@@ -127,24 +127,24 @@ export class MLBRosterTabData implements RosterTabData<TeamRosterData> {
   }
 
   convertToCarouselItem(val:TeamRosterData, index:number):SliderCarouselInput {
-    var playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName,val.playerName,val.playerId);
+    var playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
     var teamRoute = this.isTeamProfilePage ? null : MLBGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
     var curYear = new Date().getFullYear();
 
     // var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(val.height);
     var formattedSalary = "N/A";
-    if ( val.salary != null ) {
-      formattedSalary = "$" + GlobalFunctions.nFormatter(Number(val.salary));
+    if ( val.playerSalary != null ) {
+      formattedSalary = "$" + GlobalFunctions.nFormatter(Number(val.playerSalary));
     }
 
-    var playerNum = val.uniformNumber != null ? "<span class='text-heavy'>No. " + val.uniformNumber + "</span>," : "";
-    var playerHeight = val.height != null ? "<span class='text-heavy'>" + val.height + "</span>, " : "";
-    var playerWeight = val.weight != null ? "<span class='text-heavy'>" + val.weight + "</span> " : "";
-    var playerSalary = " makes <span class='text-heavy'>" + formattedSalary + "</span> per year.";
+    var playerNum = val.playerJerseyNumber != null ? "<span class='text-heavy'>No. " + val.playerJerseyNumber + "</span>," : "";
+    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + MLBGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
+    var playerWeight = val.playerWeight != null ? "<span class='text-heavy'>" + val.playerWeight + "</span> " : "N/A";
+    var playerSalary = "<span class='text-heavy'>" + formattedSalary + "</span> per year.";
 
     var playerLinkText = {
       route: playerRoute,
-      text: val.playerName,
+      text: val.playerFirstName + " " + val.playerLastName,
       class: 'text-heavy'
     }
     var teamLinkText = {
@@ -159,12 +159,12 @@ export class MLBRosterTabData implements RosterTabData<TeamRosterData> {
       profileNameLink: playerLinkText,
       description: [
           playerLinkText,
-          " plays ", "<span class='text-heavy'>" + val.position.join(', '), "</span>",'for the ',
+          ", ", "<span class='text-heavy'>" + val.playerPosition, "</span>",'for the ',
           teamLinkText,
-          'wears <span class="text-heavy">'+ playerNum + '</span> is ' + playerHeight + playerWeight +" and "+ playerSalary
+          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" and making a salary of "+ playerSalary
       ],
-      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdate),
-      circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
+      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
+      circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),
       circleImageRoute: playerRoute,
       // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
       // subImageRoute: teamRoute,
@@ -177,11 +177,12 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
   columns: Array<TableColumn> = [{
       headerValue: "Player",
       columnClass: "image-column",
-      key: "name"
+      key: "name",
+      sortDirection: 1 //ascending
     },{
       headerValue: "Pos.",
       columnClass: "data-column",
-      isNumericType: true,
+      isNumericType: false,
       key: "pos"
     },{
       headerValue: "Height",
@@ -202,7 +203,6 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       headerValue: "Salary",
       columnClass: "data-column",
       isNumericType: true,
-      sortDirection: -1, //descending
       key: "sal"
     }
   ];
@@ -247,36 +247,36 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
     var displayAsRawText = false;
     switch (column.key) {
       case "name":
-        display = item.playerName;
+        display = item.playerFirstName + " " + item.playerLastName;
         sort = item.playerLastName + ', ' + item.playerFirstName;
-        link = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId);
-        imageUrl = GlobalSettings.getImageUrl(item.playerHeadshot);
+        link = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
+        imageUrl = GlobalSettings.getImageUrl(item.playerHeadshotUrl);
         break;
 
       case "pos":
-        display = typeof item.position[0] != null ? item.position.join(', ') : null;
-        sort = item.position != null ? item.position.toString() : null;
+        display = typeof item.playerPosition[0] != null ? item.playerPosition : null;
+        sort = item.playerPosition != null ? item.playerPosition.toString() : null;
         break;
 
       case "ht":
-        display = item.height != null ? MLBGlobalFunctions.formatHeight(item.height) : null;
+        display = item.playerHeight != null ? MLBGlobalFunctions.formatHeight(MLBGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
         displayAsRawText = true;
-        sort = item.heightInInches != null ? Number(item.heightInInches) : null;
+        sort = item.playerHeight != null ? Number(item.playerHeight) : null;
         break;
 
       case "wt":
-        display = item.weight != null ? item.weight + " lbs." : null;
-        sort = item.weight != null ? Number(item.weight) : null;
+        display = item.playerWeight != null ? item.playerWeight + " lbs." : null;
+        sort = item.playerWeight != null ? Number(item.playerWeight) : null;
         break;
 
       case "age":
-        display = item.age != null ? item.age.toString() : null;
-        sort = item.age != null ? Number(item.age) : null;
+        display = item.playerAge != null ? item.playerAge.toString() : null;
+        sort = item.playerAge != null ? Number(item.playerAge) : null;
         break;
 
       case "sal":
-        display = item.salary != null ? "$" + GlobalFunctions.nFormatter(Number(item.salary)) : null;
-        sort = item.salary != null ? Number(item.salary) : null;
+        display = item.playerSalary != null ? "$" + GlobalFunctions.nFormatter(Number(item.playerSalary)) : null;
+        sort = item.playerSalary != null ? Number(item.playerSalary) : null;
         break;
     }
     if ( display == null ) {

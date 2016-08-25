@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {GlobalFunctions} from './global-functions';
 import {Division, Conference} from './global-interface';
 import {GlobalSettings} from "./global-settings";
+
 @Injectable()
 
 export class MLBGlobalFunctions {
@@ -132,6 +133,11 @@ export class MLBGlobalFunctions {
   static formatHeight(heightStr: string) {
     return heightStr ? heightStr.replace(/(\d+)-(\d+)/, "$1'$2\"") : "N/A";
   }
+  static formatHeightInches(heightStr: string) {
+    var heightInFeet = (Number(heightStr) / 12)|0;
+    var inches = Number(heightStr) % 12;
+    return heightInFeet + "-" + inches;
+  }
 
   /**
    * - Formats the height string by replacing the dash with '-foot-'
@@ -145,14 +151,16 @@ export class MLBGlobalFunctions {
    * @param {string} heightStr - a height value from the API, which lists feet and inches separated by a dash (#-#)
    * @returns #-foot-#
    */
-  static formatHeightWithFoot(heightStr: string) {
-    if ( heightStr ) {
-      return heightStr.split("-").join("-foot-");
-    }
-    else {
-      return "N/A";
-    }
-  }
+   static formatHeightWithFoot(heightStr: string) {
+     if ( heightStr ) {
+       var insert ="-foot-";
+       var formattedHeight = [heightStr.slice(0, 1), insert, heightStr.slice(1)].join('');
+       return heightStr ? formattedHeight : "N/A";
+     }
+     else {
+       return "N/A";
+     }
+   }
 
 
   /**
@@ -351,4 +359,23 @@ export class MLBGlobalFunctions {
     }
     return aiArticleRoute ? aiArticleRoute : ['Error-page'];
   }
+
+  //Some positions don't provided stats that have a league ranking
+  static nonRankedDataPoints(position: Array<string>, statDesc: string) {
+      //set array of positions that don't provide 4 player stats that also have a league ranking
+      var positionsArray:Array<string> = ['C' ,'G', 'LS', 'OL', 'OT'];
+
+      //compare set array^ to array of position provided from data
+      var result = positionsArray.some(function (v) {
+        return position.indexOf(v) >= 0;
+      });
+
+      //if result matches return the desired description
+      if (result == true) {
+        return null;
+      }
+      else {
+        return statDesc;
+      }
+  } //static nonRankedDataPoints
 }

@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {RosterModuleData} from '../modules/team-roster/team-roster.module';
-import {RosterTableModel, MLBRosterTabData, TeamRosterData} from '../services/roster.data';
+import {RosterModuleData} from '../fe-core/modules/team-roster/team-roster.module';
+import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/roster.data';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
@@ -11,7 +11,7 @@ import {Conference, Division} from '../global/global-interface';
 @Injectable()
 export class RosterService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _tabTypes = ['full', 'pitchers', 'catchers', 'fielders', 'hitters'];
+  private _tabTypes = ['full', 'offense', 'defense', 'special'];
 
   public fullRoster: { [type:string]:Array<TeamRosterData> };
 
@@ -22,18 +22,19 @@ export class RosterService {
     return headers;
   }
 
-  initializeAllTabs(teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<MLBRosterTabData> {
-    return this._tabTypes.map(type => new MLBRosterTabData(this, teamId, type, conference, maxRows, isTeamProfilePage));
+  initializeAllTabs(teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
+    return this._tabTypes.map(type => new NFLRosterTabData(this, teamId, type, conference, maxRows, isTeamProfilePage));
   }
 
-  getRosterTabData(rosterTab: MLBRosterTabData): Observable<Array<TeamRosterData>> {
+  getRosterTabData(rosterTab: NFLRosterTabData): Observable<Array<TeamRosterData>> {
     var teamId = rosterTab.teamId;
     var type = rosterTab.type;
-    
+
     rosterTab.isLoaded = false;
     rosterTab.hasError = false;
-    
-    var fullUrl = this._apiUrl + "/team/roster/" + teamId;
+
+    // var fullUrl = this._apiUrl + "/team/roster/" + teamId;
+    var fullUrl = "http://dev-touchdownloyal-api.synapsys.us" + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
     return this.http.get(fullUrl, {headers: this.setToken()})
       .map(res => res.json())
@@ -43,9 +44,10 @@ export class RosterService {
       });
   }//getRosterService ends
 
-  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean): RosterModuleData<TeamRosterData> {
+  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
     return {
-        moduleTitle: this.getModuleTitle(teamName),
+        moduleTitle: "Team Roster",
+        moduleIdentifier: " - " + fullTeam + " " + teamName,
         pageRouterLink: this.getLinkToPage(teamId, teamName),
         tabs: this.initializeAllTabs(teamId.toString(), conference, 5, isTeamProfilePage)
     };

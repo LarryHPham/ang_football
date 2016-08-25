@@ -2,21 +2,21 @@ import {Component, Injector} from '@angular/core';
 import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {BackTabComponent} from '../../components/backtab/backtab.component';
-import {TitleComponent} from '../../components/title/title.component';
-import {WidgetModule} from "../../modules/widget/widget.module";
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
+import {TitleComponent} from '../../fe-core/components/title/title.component';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 import {AboutUsService} from '../../services/about-us.service';
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {TitleInputData} from "../../components/title/title.component";
-import {CircleImage} from "../../components/images/circle-image";
-import {CircleImageData} from "../../components/images/image-data";
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {TitleInputData} from "../../fe-core/components/title/title.component";
+import {CircleImage} from "../../fe-core/components/images/circle-image";
+import {CircleImageData} from "../../fe-core/components/images/image-data";
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 export interface AuBlockData {
-  iconUrl?:string;
+  iconClass?: string;
   link?: {
     imageConfig: CircleImageData;
     route: Array<any>;
@@ -58,13 +58,25 @@ export class AboutUsPage {
         icon: 'fa fa-map-marker'
     }
 
-    constructor(private _router:Router, private _service: AboutUsService, private _title: Title) {
+    public divisionID: string;
+    public activeDivision: string;
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
+    constructor(
+      private _router:Router,
+      private _service: AboutUsService,
+      private _title: Title
+    ) {
         _title.setTitle(GlobalSettings.getPageTitle("About Us"));
-        GlobalSettings.getPartnerID(_router, partnerID => this.loadData(partnerID));
+
+        GlobalSettings.getParentParams(_router, parentParams =>
+          this.loadData(parentParams.partnerID, parentParams.scope)
+        );
     }
 
-    loadData(partnerID:string) {
-        this._service.getData(partnerID).subscribe(
+    loadData(partnerID?:string, scope?:string) {
+        this._service.getData(partnerID, scope).subscribe(
           data => this.setupAboutUsData(data),
           err => {
             console.log("Error getting About Us data: " + err);

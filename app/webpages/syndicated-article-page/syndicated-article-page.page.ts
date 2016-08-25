@@ -1,19 +1,19 @@
 import {Component, AfterViewInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
-import {ImagesMedia} from "../../components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../components/articles/shareLinks/shareLinks.component";
-import {RecommendationsComponent} from "../../components/articles/recommendations/recommendations.component";
-import {SyndicatedTrendingComponent} from "../../components/articles/syndicated-trending/syndicated-trending.component";
-import {DisqusComponent} from "../../components/articles/disqus/disqus.component";
-import {LoadingComponent} from "../../components/loading/loading.component";
+import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
+import {SyndicatedTrendingComponent} from "../../fe-core/components/articles/syndicated-trending/syndicated-trending.component";
+import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
 import {DeepDiveService} from '../../services/deep-dive.service'
 import {GlobalFunctions} from "../../global/global-functions";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
-import {SidekickWrapperAI} from "../../components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
+import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import {GlobalSettings} from "../../global/global-settings";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
-import {SanitizeRUrl, SanitizeHtml} from "../../pipes/safe.pipe";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
 
@@ -68,7 +68,7 @@ export class SyndicatedArticlePage{
         this.getDeepDiveVideo(this.eventID);
       }
 
-      GlobalSettings.getPartnerID(_router, partnerID => {
+      GlobalSettings.getParentParams(_router, partnerID => {
           this.partnerID = partnerID;
           this.getPartnerHeader();
       });

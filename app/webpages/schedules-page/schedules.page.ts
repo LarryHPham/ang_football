@@ -3,23 +3,23 @@ import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated
 import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from "../../global/global-settings";
-import {DetailedListItem, DetailListInput} from '../../components/detailed-list-item/detailed-list-item.component';
-import {ModuleFooter, ModuleFooterData, FooterStyle} from '../../components/module-footer/module-footer.component';
-import {SliderCarousel, SliderCarouselInput} from '../../components/carousels/slider-carousel/slider-carousel.component';
-import {TitleComponent, TitleInputData} from '../../components/title/title.component';
-import {BackTabComponent} from '../../components/backtab/backtab.component';
+import {DetailedListItem, DetailListInput} from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
+import {ModuleFooter, ModuleFooterData, FooterStyle} from '../../fe-core/components/module-footer/module-footer.component';
+import {SliderCarousel, SliderCarouselInput} from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
+import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {DraftHistoryService} from '../../services/draft-history.service';
 import {ListPageService} from '../../services/list-page.service';
-import {NoDataBox} from '../../components/error/data-box/data-box.component';
+import {NoDataBox} from '../../fe-core/components/error/data-box/data-box.component';
 import {ProfileHeaderService} from '../../services/profile-header.service';
-import {PaginationFooter} from '../../components/pagination-footer/pagination-footer.component';
-import {LoadingComponent} from "../../components/loading/loading.component";
-import {ErrorComponent} from "../../components/error/error.component";
+import {PaginationFooter} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {ErrorComponent} from "../../fe-core/components/error/error.component";
 
 import {SchedulesService} from '../../services/schedules.service';
-import {SchedulesComponent} from '../../components/schedules/schedules.component';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SchedulesComponent} from '../../fe-core/components/schedules/schedules.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment;
 
@@ -118,7 +118,7 @@ export class SchedulesPage implements OnInit{
       )
     }else{
       this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "MLB"));
-      this.profHeadService.getMLBProfile()
+      this.profHeadService.getLeagueProfile()
       .subscribe(
           data => {
             var currentDate = new Date();// no stat for date so will grab current year client is on
@@ -126,10 +126,10 @@ export class SchedulesPage implements OnInit{
             if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
               display = "Current Season"
             }
-            var pageTitle = display + " Schedules - " + data.headerData.profileNameShort;
-            this.profileHeaderData = this.profHeadService.convertMLBHeader(data.headerData, pageTitle);
+            var pageTitle = display + " Schedules - " + data.headerData.leagueAbbreviatedName;
+            this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
             this.errorData = {
-              data: data.headerData.profileNameShort + " has no record of any more games for the current season.",
+              data: data.headerData.leagueAbbreviatedName + " has no record of any more games for the current season.",
               icon: "fa fa-remove"
             }
           },

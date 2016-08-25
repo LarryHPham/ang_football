@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
@@ -6,67 +6,71 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {NavigationData, Link} from '../../global/global-interface';
 import {DirectoryService, DirectoryType, DirectorySearchParams} from '../../services/directory.service';
-import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../modules/directory/directory.data';
-import {DirectoryModule} from '../../modules/directory/directory.module';
+import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../fe-core/modules/directory/directory.data';
+import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {FooterService} from '../../services/footer.service';
 
 @Component({
     selector: 'Directory-page',
     templateUrl: './app/webpages/directory-page/directory.page.html',
-    directives: [DirectoryModule],
-    providers: [DirectoryService, Title]
+    directives: [SidekickWrapper, DirectoryModule],
+    providers: [DirectoryService, Title, FooterService]
 })
 
 export class DirectoryPage {
   public data: DirectoryModuleData;
-  
+
   public currentPage: number = 1;
-  
+
   public startsWith: string;
-  
+
   public newlyAdded: boolean = false;
-  
-  public listingsLimit: number = 25;
-  
+
+  public listingsLimit: number = 20;
+
   public isError: boolean = false;
-  
+
   public pageType: DirectoryType;
 
-  constructor(private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title) {
+  public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+
+  navLists: Array<Link>;
+
+  constructor(private _footerService: FooterService, private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title) {
     _title.setTitle(GlobalSettings.getPageTitle("Directory"));
     var page = _params.get("page");
     this.currentPage = Number(page);
-    
+
     var type = _params.get("type");
     switch ( type ) {
-      case "players": 
+      case "players":
         this.pageType = DirectoryType.players;
+        this.getNav(this._sportLeagueAbbrv, "player");
         break;
-        
-      case "teams": 
+
+      case "teams":
         this.pageType = DirectoryType.teams;
+        this.getNav(this._sportLeagueAbbrv, "team");
         break;
-        
+
       default:
         this.pageType = DirectoryType.none;
         break;
     }
-    
+
     let startsWith = _params.get("startsWith");
     if ( startsWith !== undefined && startsWith !== null ) {
        this.newlyAdded = startsWith.toLowerCase() === "new";
        this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;
     }
-    
+
     if ( this.currentPage === 0 ) {
       this.currentPage = 1; //page index starts at one
     }
   }
 
-  ngOnInit() {
-      this.getDirectoryData();
-  }
-  
-  getDirectoryData() {    
+  getDirectoryData() {
     window.scrollTo(0, 0);
 
     let params: DirectorySearchParams = {
@@ -75,7 +79,7 @@ export class DirectoryPage {
       startsWith: this.startsWith,
       newlyAdded: this.newlyAdded
     }
-        
+
     this._directoryService.getData(this.pageType, params)
       .subscribe(
           data => this.setupData(data),
@@ -92,35 +96,34 @@ export class DirectoryPage {
     };
     let lowerCaseType = "";
     let titleCaseType = "";
-    
+
     switch ( this.pageType ) {
       case DirectoryType.players:
         lowerCaseType = "player";
-        titleCaseType = "Player"; 
+        titleCaseType = "Player";
         break;
-        
+
       case DirectoryType.teams:
         lowerCaseType = "team";
-        titleCaseType = "Team"; 
+        titleCaseType = "Team";
         break;
-        
-      default: 
+
+      default:
         lowerCaseType = "[type]";
-        titleCaseType = "[Type]"; 
-        break;        
-    }    
-    
-    let directoryListTitle = "Latest MLB " + titleCaseType + " Profiles in the Nation.";
+        titleCaseType = "[Type]";
+        break;
+    }
+    let directoryListTitle = "Latest " + this._sportLeagueAbbrv + " " + titleCaseType + " Profiles in the Nation.";
     let noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s";
     let pagingDescription = titleCaseType + " profiles";
     let navTitle = "Browse all " + lowerCaseType + " profiles from A to Z";
     let pageName = "Directory-page-starts-with";
-    
+
     if ( this.startsWith !== undefined && this.startsWith !== null && this.startsWith.length > 0 ) {
       pageParams["startsWith"] = this.startsWith;
       noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s starting with the letter '" + this.startsWith + "'";
     }
-    
+
     let data:DirectoryModuleData = {
       pageName: pageName,
       breadcrumbList: [{
@@ -131,7 +134,10 @@ export class DirectoryPage {
       noResultsMessage: noResultsMessage,
       listingItems: null,
       listingsLimit: this.listingsLimit,
-      navigationData: this.setupAlphabeticalNavigation(navTitle),
+      navigationData: {
+        title: navTitle,
+        links: this.navLists ? this.navLists : null
+      },
       pagingDescription: pagingDescription,
       pageParams: pageParams
     };
@@ -145,16 +151,18 @@ export class DirectoryPage {
       data.hasListings = false;
       data.listingItems = null;
     }
-    
+
     this.data = data;
   }
 
-  setupAlphabeticalNavigation(title: string): NavigationData {
-      var navigationArray = GlobalFunctions.setupAlphabeticalNavigation(DirectoryType[this.pageType]);
-
-      return {
-        title: title,
-        links: navigationArray
-      };  
+  getNav(scope, profile) {
+    this._footerService.getFooterService(scope, profile)
+    .subscribe(data => {
+      this.navLists = data;
+      this.getDirectoryData();
+    },
+    err => {
+      console.log("Error getting navigation data");
+    });
   }
 }

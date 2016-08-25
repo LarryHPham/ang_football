@@ -4,16 +4,17 @@ import {Http, Headers} from '@angular/http';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {CircleImageData} from '../components/images/image-data';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
-import {TransactionModuleData} from '../modules/transactions/transactions.module';
-import {TransactionTabData} from '../components/transactions/transactions.component';
-import {TransactionsListInput} from '../components/transactions-list-item/transactions-list-item.component';
+import {CircleImageData} from '../fe-core/components/images/image-data';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {TransactionModuleData} from '../fe-core/modules/transactions/transactions.module';
+import {TransactionTabData} from '../fe-core/components/transactions/transactions.component';
+import {TransactionsListInput} from '../fe-core/components/transactions-list-item/transactions-list-item.component';
 
 declare var moment: any;
 
 interface TransactionInfo {
     transactionDate: string;
+    type?: string;
     id: string;
     teamKey: string;
     personKey: string;
@@ -152,6 +153,7 @@ export class TransactionsService {
 
     //http://dev-homerunloyal-api.synapsys.us/league/transactions/injuries/desc/5/1
     var callURL = this._apiUrl + '/';
+
     if ( teamId ) {
        callURL += 'team/transactions/'+teamId + '/';
     }
@@ -159,7 +161,6 @@ export class TransactionsService {
        callURL += 'league/transactions/';
     }
     callURL += tab.tabDataKey+'/'+sort+'/'+limit+'/'+page;
-
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
     // and MLB profile pages
@@ -189,11 +190,11 @@ export class TransactionsService {
     return [SliderCarousel.convertToCarouselItemType1(2, {
       backgroundImage: null,
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [tab.tabDisplay + ' Report'],
+      subheader: [tab.tabDisplay],
       profileNameLink: null,
       description: [tab.isLoaded ? tab.errorMessage : ""],
       lastUpdatedDate: null,
-      circleImageUrl: "/app/public/no-image.png",
+      circleImageUrl: "/app/public/no-image.svg",
       circleImageRoute: null
     })];
   }
@@ -219,21 +220,30 @@ export class TransactionsService {
         }
         var teamLinkText = {
           route: teamId == val.teamId ? null : teamRoute,
-          text: val.teamName,
-          class: 'text-heavy'
+          text: val.teamName
         };
         var playerLinkText = {
           route: playerRoute,
           text: val.playerName,
           class: 'text-heavy'
         };
+
+        //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
+        var description;
+        if (val.type == "Suspension") {
+          description = val.playerName + " was " + val.contents
+        }
+        else {
+          description = val.playerName + ", for the " + val.teamName + ",was suspensed for " + val.contents;
+        }
+
         return SliderCarousel.convertToCarouselItemType1(index, {
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
-          subheader: [tab.tabDisplay + ' Report - ', teamLinkText],
+          subheader: [tab.tabDisplay + ' - ', teamLinkText],
           profileNameLink: playerLinkText,
           description: [
-              this.getTabSingularName(tab.tabDataKey) + ' date - ' + val.repDate + ': ' + val.contents
+              description
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdate),
@@ -281,7 +291,7 @@ export class TransactionsService {
 
   static getListImageData(mainImg: string, mainImgRoute: Array<any>){
     if(mainImg == null || mainImg == ''){
-      mainImg = "/app/public/no-image.png";
+      mainImg = "/app/public/no-image.svg";
     }
     return { //interface is found in image-data.ts
         imageClass        : "image-48",

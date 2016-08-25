@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Http} from '@angular/http';
 import {Router} from '@angular/router-deprecated';
 import {Observable} from 'rxjs/Rx';
 import {Title} from '@angular/platform-browser';
 
-import {WidgetModule} from "../../modules/widget/widget.module";
-import {ContactUsModule} from '../../modules/contactus/contactus.module';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {ContactUsModule} from '../../fe-core/components/contactus/contactus.component';
 import {GlobalSettings} from '../../global/global-settings';
-import {SidekickWrapper} from "../../components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../components/responsive-widget/responsive-widget.component';
+import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment;
 @Component({
@@ -17,7 +17,7 @@ declare var moment;
     directives: [SidekickWrapper, ContactUsModule, WidgetModule, ResponsiveWidget],
     providers: [Title],
 })
-export class ContactUsPage implements OnInit{
+export class ContactUsPage{
     public widgetPlace: string = "widgetForPage";
     //Object that builds contact us module
     public mailManUrl: string;
@@ -25,12 +25,12 @@ export class ContactUsPage implements OnInit{
 
     constructor(private http:Http, private _title: Title, private _router:Router) {
         _title.setTitle(GlobalSettings.getPageTitle("Contact Us"));
-        GlobalSettings.getPartnerID(_router, partnerID => {
+        GlobalSettings.getParentParams(_router, parentParams => {
           var domainTitle;
-          if(partnerID != null){
-            domainTitle = "My Home Run Zone";
+          if(parentParams.partnerID != null){
+            domainTitle = GlobalSettings.getBasePartnerTitle();
           }else{
-            domainTitle = "Home Run Loyal";
+            domainTitle = GlobalSettings.getBaseTitle();
           }
 
           this.contactusInput = {
@@ -54,8 +54,7 @@ export class ContactUsPage implements OnInit{
               ],
               titleData: {
                   imageURL: GlobalSettings.getSiteLogoUrl(),
-                  // text1: 'Last Updated: '+moment(new Date()).format('dddd MMMM Do, YYYY'),
-                  text1: 'Last Updated: Friday, June 24th, 2016',
+                  text1: 'Last Updated: Thursday, August 4, 2016',
                   text2: ' United States',
                   text3: 'Have a question about '+domainTitle+'? Write us a message.',
                   text4: '',
@@ -95,9 +94,5 @@ export class ContactUsPage implements OnInit{
         this.mailManUrl += '/'+stringOptions
         //send to backend the full mail url of all options
         this.http.get(this.mailManUrl,{})
-    }
-
-    ngOnInit(){
-
     }
 }

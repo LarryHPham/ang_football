@@ -4,7 +4,7 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {MLBGlobalFunctions}  from '../global/mlb-global-functions';
 import {GlobalSettings}  from '../global/global-settings';
-import {SliderCarousel, SliderCarouselInput} from '../components/carousels/slider-carousel/slider-carousel.component';
+import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
 declare var moment: any;
 @Injectable()
@@ -143,7 +143,7 @@ export class ListOfListsService {
           description: itemDescription,
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData.lastUpdated),
           circleImageUrl: itemImgUrl,
-          circleImageRoute: itemRoute,
+          circleImageRoute: MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId), //replacement for
           rank: itemTargetData.rank,
           rankClass: "image-48-rank"
         });
@@ -212,9 +212,10 @@ export class ListOfListsService {
 
       itemListData.forEach(function(val, index) {
         let itemUrlRouteArray = itemListInfo.target == "player"  ?
-          MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
-          MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId); let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
-
+          MLBGlobalFunctions.formatPlayerRoute('st-louis-cardinals', 'adam-wainwright', '96049') :
+          MLBGlobalFunctions.formatTeamRoute('st-louis-cardinals', '2805');
+          // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
+          let firstItemHover = "<p>View</p><p>Profile</p>";
         listData.dataPoints.push(
           {
             imageClass : index > 0 ? "image-43" : "image-121",
@@ -245,10 +246,10 @@ export class ListOfListsService {
 
   imageData(imageClass, imageBorder, mainImg, mainImgRoute, subImgClass?, subImg?, subRoute?, rank?, hasHover?){
     if(typeof mainImg =='undefined' || mainImg == ''){
-      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.png");
+      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.svg");
     }
     if(typeof subImg =='undefined' || subImg == ''){
-      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.png");
+      mainImg = GlobalSettings.getImageUrl("/mlb/players/no-image.svg");
     }
     if(typeof rank == 'undefined' || rank == 0){
       rank = 0;
