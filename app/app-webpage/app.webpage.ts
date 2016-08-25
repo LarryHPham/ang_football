@@ -128,12 +128,12 @@ declare var jQuery: any;
         component: MVPListPage
     },
     {
-        path: '/schedules/mlb/:pageNum',
+        path: '/schedules/league/:pageNum',
         name: 'Schedules-page-league',
         component: SchedulesPage
     },
     {
-        path: '/schedules/mlb/:tab/:pageNum',
+        path: '/schedules/league/:tab/:pageNum',
         name: 'Schedules-page-league-tab',
         component: SchedulesPage
     },

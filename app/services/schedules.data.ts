@@ -15,7 +15,7 @@ export interface SchedulesData {
   //TEAM2 => AWAY
   index:any;
   backgroundImage: string,
-  eventTimestamp: string,
+  eventTimestamp: number,
   id: string,//id from API
   eventStatus: string,
   team1Id: string,
@@ -128,15 +128,15 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : MLBGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
     var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : MLBGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
     //TEST colors
-    item.team1ColorHex = '#a1a1a1';
-    item.team2ColorHex = '#eeeeee';
+    item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
+    item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
     var colors = Gradient.getColorPair(item.team2ColorHex.split(','), item.team1ColorHex.split(','));
 
     return {//placeholder data
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(item.eventTimestamp).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A') + " ET", //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: moment(Number(Number(item.eventTimestamp)*1000)*1000).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A') + " ET", //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.team1Stadium,
       detail2Value:item.team1City + ', ' + item.team1State,
@@ -314,17 +314,17 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
     switch (hdrColumnKey) {
       case "date":
-        display = GlobalFunctions.formatDateWithAPMonth(item.eventTimestamp, "", "D");
-        sort = item.eventTimestamp;
+        display = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
+        sort = Number(item.eventTimestamp)*1000;
         break;
 
       case "t":
         if(item.eventStatus != 'cancelled'){
-          display = moment(item.eventTimestamp).tz('America/New_York').format('h:mm') + " <sup> "+moment(item.eventTimestamp).tz('America/New_York').format('A')+" </sup>";
+          display = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('h:mm') + " <sup> "+moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('A')+" </sup>";
         }else{
           display = "Cancelled";
         }
-        sort = item.eventTimestamp;
+        sort = Number(item.eventTimestamp)*1000;
         break;
 
       case "away":

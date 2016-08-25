@@ -54,9 +54,9 @@ export class SchedulesService {
 
 
   getPageTitle(teamName?: string): string {
-    let pageTitle = "MLB Schedules Breakdown";
+    let pageTitle = "Football Schedules Breakdown";
     if ( teamName ) {
-      pageTitle = "MLB Schedules - " + teamName;
+      pageTitle = "Football Schedules - " + teamName;
     }
     return pageTitle;
   }// Sets the title of the Page with data returne by shedules
@@ -128,7 +128,34 @@ export class SchedulesService {
   //     });
   // }
 
-  getScheduleTable(data, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, id?, year?){
+  //possibly simpler version of getting schedules api call
+  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
+    //Configure HTTP Headers
+    var headers = this.setToken();
+
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
+    this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
+    var callURL = this._apiUrl+'/schedule/'+profile;
+
+    if(profile == 'league'){//if league call then add scope
+      callURL += '/'+ scope;
+    }
+
+    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
+      callURL += '/'+id;
+    }
+    callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
+    console.log(callURL);
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      });
+  }
+
+  getScheduleTable(dataSchedule, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, year?){
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
     var displayYear;
     var eventTab:boolean = false;
@@ -152,53 +179,27 @@ export class SchedulesService {
 
     this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId)
     .subscribe( data => {
-      console.log('transforming Schedules');
       let isTeamProfilePage = profile == 'league' ? false :true;
       var tableData = this.setupTableData(eventStatus, year, data.data.games, teamId, limit, isTeamProfilePage);
       var tabData = [
         {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
         {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
       ];
-      console.log(data.data.game);
-      return {
+
+      var scheduleData = {
         data:tableData,
         tabs:tabData,
-        carData: this.setupCarouselData(data.data.game, tableData[0], limit),
+        carData: this.setupCarouselData(data.data.games, tableData[0], limit),
         pageInfo:{
           totalPages: data.data.info.pages,
           totalResults: data.data.info.total,
         }
-      };
+      }
+      callback(scheduleData);
     })
   }
 
-  //possibly simpler version of getting schedules api call
-  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
-    //Configure HTTP Headers
-    var headers = this.setToken();
 
-    var callURL = this._apiUrl+'/schedule/'+profile;
-
-    //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
-    this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
-    var callURL = this._apiUrl+'/schedule/'+profile;
-
-    if(profile == 'league'){//if league call then add scope
-      callURL += '/'+ scope;
-    }
-
-    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
-      callURL += '/'+id;
-    }
-    callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-
-    console.log(callURL);
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
-      .map(data => {
-        return data;
-      });
-  }
 
   setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
     this.getSchedule(scope, 'league', eventStatus, limit, pageNum)
@@ -275,13 +276,10 @@ export class SchedulesService {
   private setupTableData(eventStatus, year, rows: Array<any>, teamId, maxRows: number, isTeamProfilePage: boolean): Array<SchedulesTableData> {
 
     //Limit to maxRows, if necessary
-    console.log('rows',rows);
-    console.log('rows',maxRows);
     if ( maxRows !== undefined && rows.length > maxRows) {
       rows = rows.slice(0, maxRows);
     }
     var currentTeamProfile = teamId != null ? teamId : null;
-    console.log(currentTeamProfile);
     //TWO tables are to be made depending on what type of tabs the use is click on in the table
     if(eventStatus == 'pregame'){
       // let tableName = this.formatGroupName(year,eventStatus);
@@ -315,7 +313,6 @@ export class SchedulesService {
       }else{//if there is a teamID
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
-        console.log('team Table Array',tableArray);
 
         return [tableArray];
       }
@@ -324,7 +321,6 @@ export class SchedulesService {
 
   private setupCarouselData(origData: Array<SchedulesData>, tableData: SchedulesTableData, maxRows?: number){
     //Limit to maxRows, if necessary
-    console.log(origData);
     if ( maxRows !== undefined ) {
       origData = origData.slice(0, maxRows);
     }

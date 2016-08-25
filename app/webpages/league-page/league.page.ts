@@ -212,7 +212,7 @@ export class LeaguePage implements OnInit {
 
                 /*** Keep Up With Everything MLB ***/
                 this.getBoxScores(this.dateParam);
-                this.getSchedulesData('pre-event');//grab pre event data for upcoming games
+                this.getSchedulesData('postgame');//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
@@ -251,12 +251,23 @@ export class LeaguePage implements OnInit {
     //grab tab to make api calls for post of pre event table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pre-event');
+            this.getSchedulesData('pregame');
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('post-event');
+            this.getSchedulesData('postgame');
         }else{
-            this.getSchedulesData('post-event');// fall back just in case no status event is present
+            this.getSchedulesData('postgame');// fall back just in case no status event is present
         }
+    }
+
+    //api for Schedules
+    private getSchedulesData(status){
+      var limit = 5;
+      if(status == 'postgame'){
+        limit = 3;
+      }
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.schedulesData = schedulesData;
+      }) // isTeamProfilePage = true
     }
 
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
@@ -275,19 +286,6 @@ export class LeaguePage implements OnInit {
 
             );
 
-    }
-
-    //api for Schedules
-    private getSchedulesData(status){
-      var limit = 5;
-      if(status == 'post-event'){
-        limit = 3;
-      }
-      console.log('MAKING SERVICE CALL');
-      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-        console.log('got DATA!=>', schedulesData);
-        this.schedulesData = schedulesData;
-      }) // isTeamProfilePage = true
     }
 
     private transactionsTab(tab) {
