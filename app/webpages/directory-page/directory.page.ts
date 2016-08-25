@@ -104,7 +104,6 @@ export class DirectoryPage {
   }
 
   setPaginationParams(input) {
-    console.log(input);
       var info = input;
       var params = this._params.params;
       //path: '/directory/:type/:startsWith/page/:page',
@@ -124,8 +123,6 @@ export class DirectoryPage {
         navigationParams: navigationParams,
         indexKey: 'page'
       };
-      console.log(navigationPage);
-      console.log(this.paginationParameters);
   }
 
   newIndex(index){
@@ -168,7 +165,6 @@ export class DirectoryPage {
       pageParams["startsWith"] = this.startsWith;
       noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s starting with the letter '" + this.startsWith + "'";
     }
-    console.log(pageParams);
     let data:DirectoryModuleData = {
       pageName: pageName,
       breadcrumbList: [{
