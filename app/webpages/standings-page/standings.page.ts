@@ -13,9 +13,9 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {StandingsService} from '../../services/standings.service';
-import {MLBStandingsTabData,MLBStandingsTableData} from '../../services/standings.data';
+import {TDLStandingsTabdata,MLBStandingsTableData} from '../../services/standings.data';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
@@ -29,8 +29,8 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 })
 
 export class StandingsPage implements OnInit {
-  public tabs: Array<MLBStandingsTabData>;
-  public pageParams: MLBPageParameters = {}
+  public tabs: Array<TDLStandingsTabdata>;
+  public pageParams: SportPageParameters = {}
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;

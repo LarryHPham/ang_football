@@ -3,7 +3,7 @@ import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalFunctions} from "../../global/global-functions";
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from "../../global/global-settings";
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
 import {ErrorComponent} from '../../fe-core/components/error/error.component';
@@ -29,7 +29,7 @@ import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comp
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {SchedulesService} from '../../services/schedules.service';
@@ -120,7 +120,7 @@ declare var moment;
 export class TeamPage implements OnInit {
     public widgetPlace: string = "widgetForModule";
     headerData:any;
-    pageParams:MLBPageParameters;
+    pageParams:SportPageParameters;
     partnerID:string = null;
     scope:string = null;
     hasError: boolean = false;

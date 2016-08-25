@@ -13,7 +13,7 @@ import {GlobalFunctions} from "../../global/global-functions";
 import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {TransactionsComponent, TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
-import {MLBPageParameters} from '../../global/global-interface';
+import {SportPageParameters} from '../../global/global-interface';
 
 declare var moment:any;
 
@@ -27,7 +27,7 @@ declare var moment:any;
 
 export class TransactionsPage implements OnInit{
   profileHeaderData: TitleInputData;
-  pageParams:MLBPageParameters;
+  pageParams:SportPageParameters;
 
   tabs: Array<TransactionTabData>;
 

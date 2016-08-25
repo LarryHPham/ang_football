@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
 
 import {DraftHistoryModule} from '../../fe-core/modules/draft-history/draft-history.module';
 
 import {StandingsModuleData, StandingsModule} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 import {GlobalSettings} from '../../global/global-settings';
 
@@ -31,7 +31,7 @@ import {ListOfListsService} from "../../services/list-of-lists.service";
 })
 
 export class DesignPage implements OnInit {
-  pageParams: MLBPageParameters;
+  pageParams: SportPageParameters;
   standingsData: StandingsModuleData;
   playerProfileHeaderData: ProfileHeaderData;
   teamProfileHeaderData: ProfileHeaderData;
