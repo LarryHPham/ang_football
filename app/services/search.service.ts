@@ -181,13 +181,17 @@ export class SearchService{
           players: [],
           teams: []
         };
+
+        //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
+        scope = scope == 'ncaaf'?'fbs':'nfl';
+
         if(scope !== null){
           data[scope]['players'].forEach(function(item){
-            item['scope'] = scope;
+            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
             dataSearch.players.push(item);
           });
           data[scope]['teams'].forEach(function(item){
-            item['scope'] = scope;
+            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
             dataSearch.teams.push(item);
           })
         }else{
@@ -302,7 +306,7 @@ export class SearchService{
             if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
                 relativePath = item.scope+ '/' + relativePath.substr(1);
             }
-            let urlText = GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span>';
+            let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span></p>';
             let regExp = new RegExp(playerName, 'g');
             let description = item.playerDescription.replace(regExp, ('<span class="text-heavy">' + playerName + '</span>'));
 

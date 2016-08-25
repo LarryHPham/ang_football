@@ -11,47 +11,47 @@ import {Gradient} from '../global/global-gradient';
 declare var moment: any;
 
 export interface SchedulesData {
+  //TEAM1 => HOME
+  //TEAM2 => AWAY
   index:any;
-  backgroundImage: string,
-  startDateTimestamp: string,
-  eventId: string,
+  backgroundImage: string,//TODO missing
+  eventTimestamp: string,
+  id: string,//eventID from API
   eventStatus: string,
-  homeTeamId: string,
-  awayTeamId: string,
-  siteId: string,
-  homeScore: string,
-  awayScore: string,
-  homeOutcome: string,
-  awayOutcome: string,
+  team1Id: string,
+  team2Id: string,
+  siteId: string,//TODO missing
+  team1Score: string,
+  team2Score: string,
+  homeOutcome: string,//TODO missing
+  awayOutcome: string,//TODO missing
   seasonId: string,
-  homeTeamLogo: string,
-  homeTeamColors: string,
-  homeTeamCity: string,
-  homeTeamState: string,
-  homeTeamVenue: string,
-  homeTeamFirstName: string,
-  homeTeamLastName: string,
-  homeTeamName: string,
-  homeTeamNickname: string,
-  homeTeamAbbreviation: string,
-  homeTeamWins: string,
-  homeTeamLosses: string,
-  awayTeamLogo: string,
-  awayTeamColors: string,
-  awayTeamCity: string,
-  awayTeamState: string,
-  awayTeamVenue: string,
-  awayTeamFirstName: string,
-  awayTeamLastName: string,
-  awayTeamName: string,
-  awayTeamNickname: string,
-  awayTeamAbbreviation: string,
-  awayTeamWins: string,
-  awayTeamLosses: string,
-  reportUrlMod: string,
-  results:string,
-  targetTeamWinsCurrent: string;
-  targetTeamLossesCurrent: string;
+  team1Logo: string,
+  team1ColorHex: string,
+  team1City: string,
+  team1State: string,
+  team1Stadium: string,
+  team1Market: string, //first name
+  team1Name: string, //last name
+  homeTeamNickname: string, //TODO missing
+  homeTeamAbbreviation: string, //TODO missing
+  homeTeamWins: string, //TODO missing
+  homeTeamLosses: string, //TODO missing
+  team2Logo: string,
+  team2ColorHex: string,
+  team2City: string,
+  team2State: string,
+  team2Stadium: string,
+  team2Market: string, //first name
+  team2Name: string, //last name
+  awayTeamNickname: string,//TODO missing
+  awayTeamAbbreviation: string,//TODO missing
+  awayTeamWins: string,//TODO missing
+  awayTeamLosses: string,//TODO missing
+  reportUrlMod: string, //TODO missing
+  results:string, //TODO missing
+  targetTeamWinsCurrent: string; //TODO missing
+  targetTeamLossesCurrent: string; //TODO missing
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -83,7 +83,7 @@ export interface SchedulesData {
   awayRecord?: string;
 }
 
-export class MLBScheduleTabData implements TableTabData<SchedulesData> {
+export class ScheduleTabData implements TableTabData<SchedulesData> {
 
   title: string;
 
@@ -95,7 +95,7 @@ export class MLBScheduleTabData implements TableTabData<SchedulesData> {
 
   isActive: boolean;
 
-  sections: Array<MLBSchedulesTableData>;
+  sections: Array<SchedulesTableData>;
 
   constructor(title: string, isActive: boolean) {
     this.title = title;
@@ -104,7 +104,7 @@ export class MLBScheduleTabData implements TableTabData<SchedulesData> {
   }
 }
 
-export class MLBSchedulesTableData implements TableComponentData<SchedulesData> {
+export class SchedulesTableData implements TableComponentData<SchedulesData> {
   groupName: string;
 
   tableData: any;
@@ -166,7 +166,7 @@ export class MLBSchedulesTableData implements TableComponentData<SchedulesData> 
   }
 }
 
-export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
+export class SchedulesTableModel implements TableModel<SchedulesData> {
   columns: Array<TableColumn>;
 
   rows: Array<SchedulesData>;
