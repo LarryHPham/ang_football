@@ -243,7 +243,7 @@ export class SearchService{
                 initialText: query
             },
             heroImage: '/app/public/homePage_hero1.png',
-            headerText: 'Discover The Latest In Baseball',
+            headerText: 'Discover The Latest In Football',
             subHeaderText: 'Find the Players and Teams you love.',
             query: query,
             tabData: [
