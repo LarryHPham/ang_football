@@ -1,3 +1,4 @@
+///<reference path="../../../node_modules/rxjs/Observable.d.ts"/>
 import {Component, OnInit, Injectable} from '@angular/core';
 import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
@@ -10,6 +11,8 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {CommentModule} from '../../fe-core/modules/comment/comment.module';
 import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
+
+
 
 import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
 
@@ -66,6 +69,8 @@ import {DailyUpdateService, DailyUpdateData} from "../../services/daily-update.s
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {VideoModule} from "../../fe-core/modules/video/video.module";
+import {VideoService} from "../../services/video.service";
 
 declare var moment;
 
@@ -74,6 +79,7 @@ declare var moment;
     templateUrl: './app/webpages/team-page/team.page.html',
     directives: [
         SidekickWrapper,
+        VideoModule,
         LoadingComponent,
         ErrorComponent,
         DailyUpdateModule,
@@ -98,6 +104,7 @@ declare var moment;
         ResponsiveWidget
     ],
     providers: [
+      VideoService,
       BoxScoresService,
       SchedulesService,
       StandingsService,
@@ -132,7 +139,8 @@ export class TeamPage implements OnInit {
     playerStatsData: PlayerStatsModuleData;
     rosterData: RosterModuleData<TeamRosterData>;
     dailyUpdateData: DailyUpdateData;
-
+    firstVideo:string;
+    videoData:any;
     imageData:any;
     copyright:any;
     imageTitle: any;
@@ -148,6 +156,7 @@ export class TeamPage implements OnInit {
     // currentYear: any;
 
     schedulesData:any;
+
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -173,7 +182,8 @@ export class TeamPage implements OnInit {
                 private _dykService: DykService,
                 private _twitterService: TwitterService,
                 private _comparisonService: ComparisonStatsService,
-                private _dailyUpdateService: DailyUpdateService) {
+                private _dailyUpdateService: DailyUpdateService,
+                private _videoBatchService: VideoService) {
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
         };
@@ -181,6 +191,8 @@ export class TeamPage implements OnInit {
         GlobalSettings.getParentParams(_router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
+            this.setupProfileData(this.partnerID,this.scope);
+
         });
     }
 
@@ -195,7 +207,8 @@ export class TeamPage implements OnInit {
         date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
       }
 
-      this.setupProfileData();
+
+
     }
 
     /**
@@ -205,7 +218,8 @@ export class TeamPage implements OnInit {
      * calls from other modules.
      *
      **/
-    private setupProfileData() {
+    private setupProfileData(partnerID, scope) {
+
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
                 /*** About the [Team Name] ***/
@@ -233,6 +247,7 @@ export class TeamPage implements OnInit {
                 this.getFaqService();
                 this.setupListOfListsModule();
                 this.getNewsService();
+                this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
 
                 /*** Interact With [League Name]’s Fans ***/
                 this.getTwitterService();
@@ -253,6 +268,24 @@ export class TeamPage implements OnInit {
                 this.dailyUpdateData = this._dailyUpdateService.getErrorData();
                 console.log("Error getting daily update data", err);
             });
+    }
+
+    private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
+       // if(teamID)
+        this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+            .subscribe(data => {
+
+                this.firstVideo = data.data[first].videoLink;
+                this.videoData = data.data.slice(1);
+
+            },
+                err => {
+
+                    console.log("Error getting video data");
+                }
+
+        );
+
     }
 
     private getTwitterService() {

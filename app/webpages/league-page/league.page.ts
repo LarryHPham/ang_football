@@ -8,6 +8,8 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 import {TwitterModule, twitterModuleData} from "../../fe-core/modules/twitter/twitter.module";
 import {TwitterService} from '../../services/twitter.service';
 
+
+
 import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comparison/comparison.module';
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
@@ -57,6 +59,8 @@ import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carou
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {VideoModule} from "../../fe-core/modules/video/video.module";
+import {VideoService} from "../../services/video.service";
 
 declare var moment;
 
@@ -64,6 +68,7 @@ declare var moment;
     selector: 'League-page',
     templateUrl: './app/webpages/league-page/league.page.html',
     directives: [
+        VideoModule,
         SidekickWrapper,
         LoadingComponent,
         ErrorComponent,
@@ -86,6 +91,7 @@ declare var moment;
         ResponsiveWidget
       ],
     providers: [
+        VideoService,
         BoxScoresService,
         SchedulesService,
         ListPageService,
@@ -123,6 +129,9 @@ export class LeaguePage implements OnInit {
     boxScoresData:any;
     currentBoxScores:any;
     dateParam:any;
+
+    firstVideo:string;
+    videoData:any;
 
     batterParams:any;
     batterData:Array<positionMVPTabData>;
@@ -166,6 +175,7 @@ export class LeaguePage implements OnInit {
                 private _transactionsService: TransactionsService,
                 private _lolService: ListOfListsService,
                 private listService:ListPageService,
+                private videoBatchService:VideoService,
                 private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("MLB"));
 
@@ -227,6 +237,7 @@ export class LeaguePage implements OnInit {
                 this.getFaqService(this.profileType);
                 this.setupListOfListsModule();
                 this.getDykService(this.profileType);
+                this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
              },
             err => {
@@ -246,6 +257,24 @@ export class LeaguePage implements OnInit {
         }else{
             this.getSchedulesData('post-event');// fall back just in case no status event is present
         }
+    }
+
+    private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
+
+        this.videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
+            .subscribe(data => {
+
+                    this.firstVideo = data.data[first].videoLink;
+                    this.videoData = data.data.slice(1);
+
+                },
+                err => {
+
+                    console.log("Error getting video data");
+                }
+
+            );
+
     }
 
     //api for Schedules
