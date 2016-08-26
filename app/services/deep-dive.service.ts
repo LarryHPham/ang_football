@@ -12,7 +12,7 @@ declare var moment;
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleUrl();
-  private _apiUrlTdl: string = GlobalSettings.getApiUrlTdl();
+  private _apiUrl: string = GlobalSettings.getApiUrlTdl();
   private _recUrl: string = GlobalSettings.getRecUrl();
   // private _apiToken: string = 'BApA7KEfj';
   // private _headerName: string = 'X-SNT-TOKEN';
@@ -32,7 +32,7 @@ export class DeepDiveService {
   //Configure HTTP Headers
   var headers = this.setToken();
 
-  var callURL = this._apiUrlTdl + '/' + 'articleBatch/';
+  var callURL = this._apiUrl + '/' + 'articleBatch/';
   if(typeof limit == 'undefined'){
     callURL += "/5";
   } else {
@@ -54,7 +54,7 @@ export class DeepDiveService {
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
   var headers = this.setToken();
-  var callURL = this._apiUrlTdl+'/'+ 'article/' + articleID;
+  var callURL = this._apiUrl+'/'+ 'article/' + articleID;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -74,7 +74,7 @@ export class DeepDiveService {
     state = 'null';
   }
   // var callURL = this._apiUrl+'/articleBatch/division/'+state+'/'+startNum+'/'+limit;
-  var callURL = this._apiUrlTdl+'/articleBatch/9/1';//TODO waiting on api to finish
+  var callURL = this._apiUrl+'/articleBatch/9/1';//TODO waiting on api to finish
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
