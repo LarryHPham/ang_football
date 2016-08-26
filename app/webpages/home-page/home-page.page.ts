@@ -231,7 +231,6 @@ export class PickTeamPage{
       this._geoLocation.getGeoLocation()
         .subscribe(
           geoLocationData => {
-            console.log(geoLocationData[0]);
             this.geoLocationState = geoLocationData[0].state;
             this.geoLocationCity = geoLocationData[0].city;
 

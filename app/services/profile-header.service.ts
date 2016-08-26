@@ -335,7 +335,7 @@ export class ProfileHeaderService {
         {
           label: headerData.stat1Type,
           labelCont: headerData.stat1Desc,
-          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1).toString() : null
+          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1) : null
         },
         {
           label: headerData.stat2Type,

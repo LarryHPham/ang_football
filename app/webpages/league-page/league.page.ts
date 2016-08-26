@@ -419,9 +419,9 @@ export class LeaguePage implements OnInit {
       //if(event.tab != null){
         let listName = event.tab.tabDataKey;
         var matches = this.positionData.filter(tab => tab.tabDataKey == listName);
-        console.log(3,matches);
+        //console.log(3,matches);
         if(matches.length > 0){
-          console.log(4,matches[0]);
+          //console.log(4,matches[0]);
           this.positionParams = {
 
             scope:  'scope=nfl', //TODO change to active scope
@@ -452,11 +452,8 @@ export class LeaguePage implements OnInit {
       this.listService.getListModuleService(tab, params)
           .subscribe(updatedTab => {
               //do nothing?
-              console.log('updatedTab', updatedTab);
-              console.log(this.positionData);
               var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
               matches[0] = updatedTab;
-              console.log(this.positionData);
           }, err => {
               tab.isLoaded = true;
               console.log('Error: Loading MVP Pitchers: ', err);

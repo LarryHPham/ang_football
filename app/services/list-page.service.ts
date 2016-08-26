@@ -213,8 +213,6 @@ export class ListPageService {
       newCallURL += query[q] + '&';
     }
 
-    console.log('newCallURL '+newCallURL);
-
     // console.log("list module url: " + callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
