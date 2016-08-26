@@ -110,7 +110,6 @@ export class SchedulesPage implements OnInit{
           }
       );
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, 1, teamId, (schedulesData) => {
-        console.log('got DATA!=>', schedulesData);
         this.schedulesData = schedulesData;
         if(typeof this.tabData == 'undefined'){
             this.tabData = schedulesData.tabs;
@@ -140,7 +139,6 @@ export class SchedulesPage implements OnInit{
           }
       );
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, 1, null, (schedulesData) => {
-        console.log('got DATA!=>', schedulesData);
         this.schedulesData = schedulesData;
         if(typeof this.tabData == 'undefined'){
             this.tabData = schedulesData.tabs;
