@@ -5,7 +5,7 @@ import {ROUTER_PROVIDERS, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {AppDomain} from './app-domain/app.domain';
 import {GlobalFunctions} from './global/global-functions';
 import {GlobalSettings} from './global/global-settings';
-import {MLBGlobalFunctions} from './global/mlb-global-functions';
+import {TDLGlobalFunctions} from './global/tdl-global-functions';
 import {SearchService} from './services/search.service';
 import {DraftHistoryService, MLBDraftHistoryService} from './services/draft-history.service'; //testing a proof of concept
 import {provide} from "@angular/core";
@@ -25,7 +25,7 @@ bootstrap(AppDomain, [
     HTTP_PROVIDERS,
     ROUTER_DIRECTIVES,
     GlobalFunctions,
-    MLBGlobalFunctions,
+    TDLGlobalFunctions,
     SearchService,
     provide(DraftHistoryService, {useClass: MLBDraftHistoryService}),
     provide(Window, {useValue: window})

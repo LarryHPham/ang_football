@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
@@ -189,7 +189,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
         var playerRoute = null;
         if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-          playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
+          playerRoute = TDLGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
         }
         var playerLinkText = {
           route: playerRoute,
@@ -243,10 +243,10 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
       var playerRoute = null;
       if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-        playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
+        playerRoute = TDLGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
         }
-      playerRoute = MLBGlobalFunctions.formatPlayerRoute("boston-red-sox", "david-price", "95151"); //todo
-      var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
+      playerRoute = TDLGlobalFunctions.formatPlayerRoute("boston-red-sox", "david-price", "95151"); //todo
+      var teamRoute = TDLGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
       var listData = {
         dataPoints: ListPageService.detailsData(
           [//main left text

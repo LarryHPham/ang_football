@@ -3,12 +3,12 @@ import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 
 @Injectable()
 export class LandingPageService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  constructor(public http: Http, private _mlbGlobalFunctions: MLBGlobalFunctions){}
+  constructor(public http: Http, private _TDLGlobalFunctions: TDLGlobalFunctions){}
   setToken(){
     var headers = new Headers();
     return headers;
@@ -42,12 +42,12 @@ export class LandingPageService {
           val.teamFirstName = val.teamFirstName.toUpperCase();
           val.teamLastName = val.teamLastName.replace("Diamondbacks","D-backs");
           var teamName = val.teamFirstName + ' ' + val.teamLastName;
-          val.teamRoute = MLBGlobalFunctions.formatTeamRoute(teamName, val.teamId.toString());
+          val.teamRoute = TDLGlobalFunctions.formatTeamRoute(teamName, val.teamId.toString());
           val.imageData= {
             imageClass: "image-100",
             mainImage: {
               imageUrl:  GlobalSettings.getImageUrl(val.teamLogo),
-              urlRouteArray: MLBGlobalFunctions.formatTeamRoute(teamName, val.teamId.toString()),
+              urlRouteArray: TDLGlobalFunctions.formatTeamRoute(teamName, val.teamId.toString()),
               hoverText: "<i class='fa fa-mail-forward home-team-image-fa'></i>",// style='font-size:30px;'
               imageClass: "border-3"
             }

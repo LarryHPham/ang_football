@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {StatsTableTabData} from '../fe-core/components/player-stats/player-stats.component';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Link} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
 export interface PlayerStatsData {
@@ -122,14 +122,14 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
       tense = " had";
       temporalInfo = " in " + item.seasonId;
     }
-    var playerRoute = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
+    var playerRoute = TDLGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
     var playerLinkText = {
       route: playerRoute,
       text: item.playerName,
       class: 'text-heavy'
 
     }
-    var teamRoute =this.isTeamProfilePage ? null : MLBGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+    var teamRoute =this.isTeamProfilePage ? null : TDLGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
     var teamLinkText = {
       route: teamRoute,
       text: item.teamName
@@ -301,7 +301,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
       case "name":
         display = item.playerName;
         sort = item.playerLastName + ", " + item.playerFirstName;
-        link = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId);
+        link = TDLGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId);
         imageUrl = item.fullPlayerImageUrl;
         break;
 

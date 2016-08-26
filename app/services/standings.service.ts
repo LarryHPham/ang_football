@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
 import {Conference, Division, SportPageParameters} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {TeamStandingsData, TDLStandingsTabdata, MLBStandingsTableModel, MLBStandingsTableData} from './standings.data';
 import {StandingsTableTabData} from '../fe-core/components/standings/standings.component';
@@ -10,7 +10,7 @@ import {GlobalSettings} from '../global/global-settings';
 
 @Injectable()
 export class StandingsService {
-  constructor(public http: Http, private _mlbFunctions: MLBGlobalFunctions){}
+  constructor(public http: Http, private _mlbFunctions: TDLGlobalFunctions){}
 
   private getLinkToPage(pageParams: SportPageParameters, teamName: string): Array<any> {
     var pageName = "Standings-page";

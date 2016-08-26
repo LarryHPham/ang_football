@@ -4,7 +4,7 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {RosterModuleData} from '../fe-core/modules/team-roster/team-roster.module';
 import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/roster.data';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
 

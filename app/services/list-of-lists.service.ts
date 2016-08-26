@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions}  from '../global/mlb-global-functions';
+import {TDLGlobalFunctions}  from '../global/tdl-global-functions';
 import {GlobalSettings}  from '../global/global-settings';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
@@ -110,9 +110,9 @@ export class ListOfListsService {
         if( itemInfo.target == "player") {
           itemProfile       = itemTargetData.playerName;
           itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.imageUrl);
-          itemRoute         = MLBGlobalFunctions.formatPlayerRoute(itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
-          itemSubImg        = MLBGlobalFunctions.formatTeamLogo(itemTargetData.teamName);
-          itemSubRoute      = MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
+          itemRoute         = TDLGlobalFunctions.formatPlayerRoute(itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
+          itemSubImg        = TDLGlobalFunctions.formatTeamLogo(itemTargetData.teamName);
+          itemSubRoute      = TDLGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
           profileLinkText   = {
             route: itemRoute,
             text: itemProfile,
@@ -122,7 +122,7 @@ export class ListOfListsService {
         } else if ( itemInfo.target == "team" ) {
           itemProfile       = itemTargetData.teamName;
           itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
-          itemRoute         = MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
+          itemRoute         = TDLGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
           profileLinkText   = {
             route: itemRoute,
             text: itemProfile
@@ -143,7 +143,7 @@ export class ListOfListsService {
           description: itemDescription,
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData.lastUpdated),
           circleImageUrl: itemImgUrl,
-          circleImageRoute: MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId), //replacement for
+          circleImageRoute: TDLGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId), //replacement for
           rank: itemTargetData.rank,
           rankClass: "image-48-rank"
         });
@@ -207,13 +207,13 @@ export class ListOfListsService {
         ctaBtn        : '',
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
-        ctaUrl        : MLBGlobalFunctions.formatListRoute(ctaUrlArray)
+        ctaUrl        : TDLGlobalFunctions.formatListRoute(ctaUrlArray)
       };
 
       itemListData.forEach(function(val, index) {
         let itemUrlRouteArray = itemListInfo.target == "player"  ?
-          MLBGlobalFunctions.formatPlayerRoute('st-louis-cardinals', 'adam-wainwright', '96049') :
-          MLBGlobalFunctions.formatTeamRoute('st-louis-cardinals', '2805');
+          TDLGlobalFunctions.formatPlayerRoute('st-louis-cardinals', 'adam-wainwright', '96049') :
+          TDLGlobalFunctions.formatTeamRoute('st-louis-cardinals', '2805');
           // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
           let firstItemHover = "<p>View</p><p>Profile</p>";
         listData.dataPoints.push(
@@ -227,8 +227,8 @@ export class ListOfListsService {
             },
             subImages         : index > 0 ? null : [
               // {
-              //   imageUrl      : itemListInfo.target == "player" ? MLBGlobalFunctions.formatTeamLogo(val.teamName) : null,
-              //   urlRouteArray : itemListInfo.target == "player" ? MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId) : null,
+              //   imageUrl      : itemListInfo.target == "player" ? TDLGlobalFunctions.formatTeamLogo(val.teamName) : null,
+              //   urlRouteArray : itemListInfo.target == "player" ? TDLGlobalFunctions.formatTeamRoute(val.teamName, val.teamId) : null,
               //   hoverText     : itemListInfo.target == "player" ? "<i class='fa fa-mail-forward'></i>" : null,
               //   imageClass    : itemListInfo.target == "player" ? "image-round-sub image-40-sub image-round-lower-right" : null
               // },

@@ -4,7 +4,7 @@ import {RosterTabData} from '../fe-core/components/roster/roster.component';
 import {SliderCarousel,SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Conference, Division} from '../global/global-interface';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {RosterService} from './roster.service';
 
@@ -127,18 +127,18 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   }
 
   convertToCarouselItem(val:TeamRosterData, index:number):SliderCarouselInput {
-    var playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
-    var teamRoute = this.isTeamProfilePage ? null : MLBGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
+    var playerRoute = TDLGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
+    var teamRoute = this.isTeamProfilePage ? null : TDLGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
     var curYear = new Date().getFullYear();
 
-    // var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(val.height);
+    // var formattedHeight = TDLGlobalFunctions.formatHeightWithFoot(val.height);
     var formattedSalary = "N/A";
     if ( val.playerSalary != null ) {
       formattedSalary = "$" + GlobalFunctions.nFormatter(Number(val.playerSalary));
     }
 
     var playerNum = val.playerJerseyNumber != null ? "<span class='text-heavy'>No. " + val.playerJerseyNumber + "</span>," : "";
-    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + MLBGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
+    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + TDLGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
     var playerWeight = val.playerWeight != null ? "<span class='text-heavy'>" + val.playerWeight + "</span> " : "N/A";
     var playerSalary = "<span class='text-heavy'>" + formattedSalary + "</span> per year.";
 
@@ -249,7 +249,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       case "name":
         display = item.playerFirstName + " " + item.playerLastName;
         sort = item.playerLastName + ', ' + item.playerFirstName;
-        link = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
+        link = TDLGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
         imageUrl = GlobalSettings.getImageUrl(item.playerHeadshotUrl);
         break;
 
@@ -259,7 +259,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
         break;
 
       case "ht":
-        display = item.playerHeight != null ? MLBGlobalFunctions.formatHeight(MLBGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
+        display = item.playerHeight != null ? TDLGlobalFunctions.formatHeight(TDLGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
         displayAsRawText = true;
         sort = item.playerHeight != null ? Number(item.playerHeight) : null;
         break;

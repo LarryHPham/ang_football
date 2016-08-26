@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {TableTabData, TableComponentData} from '../fe-core/components/schedules/schedules.component';
 import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
 import {Conference, Division} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {TDLGlobalFunctions} from '../global/tdl-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
@@ -124,8 +124,8 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     }
     let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
     let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
-    var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : MLBGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
-    var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : MLBGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+    var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : TDLGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
+    var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : TDLGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
     //TEST colors
     item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
     item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
@@ -135,7 +135,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(Number(Number(item.eventTimestamp)*1000)*1000).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A') + " ET", //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A z'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.team1Stadium,
       detail2Value:item.team1City + ', ' + item.team1State,
@@ -333,7 +333,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         sort = item.team2Name;
         imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
         if ( !this.isTeamProfilePage || this.curTeam != item.team2Id ) {
-          link = MLBGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
+          link = TDLGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
         }
         break;
 
@@ -344,7 +344,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         sort = item.team1Name;
         imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
         if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
-          link = MLBGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+          link = TDLGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
         }
         break;
 

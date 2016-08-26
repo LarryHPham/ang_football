@@ -9,7 +9,7 @@ import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.c
 import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
 import {DeepDiveService} from '../../services/deep-dive.service'
 import {GlobalFunctions} from "../../global/global-functions";
-import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
+import {TDLGlobalFunctions} from "../../global/tdl-global-functions";
 import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
