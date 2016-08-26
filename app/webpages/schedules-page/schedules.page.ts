@@ -111,8 +111,10 @@ export class SchedulesPage implements OnInit{
       );
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, 1, teamId, (schedulesData) => {
         this.schedulesData = schedulesData;
-        if(typeof this.tabData == 'undefined'){
+        if(typeof this.tabData == 'undefined' && this.schedulesData != null){
             this.tabData = schedulesData.tabs;
+        }else if(this.schedulesData == null){
+          this.isError = true;
         }
         this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
       })
@@ -140,8 +142,10 @@ export class SchedulesPage implements OnInit{
       );
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, 1, null, (schedulesData) => {
         this.schedulesData = schedulesData;
-        if(typeof this.tabData == 'undefined'){
-            this.tabData = schedulesData.tabs;
+        if(typeof this.tabData == 'undefined' && this.schedulesData != null){
+            this.tabData = schedulesData != null ?schedulesData.tabs:null;
+        }else if(this.schedulesData == null){
+          this.isError = true;
         }
         this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
       })
@@ -152,8 +156,6 @@ export class SchedulesPage implements OnInit{
   //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
   setPaginationParams(input, tabKey: string, pageNum: number) {
       // var pageType;
-      // console.log(params)
-      //'/schedules/:teamName/:teamId/:pageNum'
       var navigationParams = {
         pageNum: pageNum,
         tab: tabKey
