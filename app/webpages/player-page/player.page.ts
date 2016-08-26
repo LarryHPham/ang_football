@@ -188,7 +188,7 @@ export class PlayerPage implements OnInit {
               this.getBoxScores(this.dateParam);
 
               /*** Keep Up With Everything [Player Name] ***/
-              this.getSchedulesData('pre-event');//grab pre event data for upcoming games
+              this.getSchedulesData('postgame');//grab pre event data for upcoming games
               this.setupSeasonstatsData();
               this.setupComparisonData();
               /*** Other [League Name] Content You May Love ***/
