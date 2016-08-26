@@ -4,7 +4,7 @@ import {Http} from '@angular/http';
 
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
-import {TDLGlobalFunctions} from '../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {DirectoryProfileItem, DirectoryItems} from '../fe-core/modules/directory/directory.data';
 declare var moment: any;
 
@@ -129,7 +129,7 @@ export class DirectoryService {
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: TDLGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.teamId),
+          route: VerticalGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.teamId),
           text: data.listItemsProfileName
         },
         {
@@ -160,11 +160,11 @@ export class DirectoryService {
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: TDLGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
+          route: VerticalGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
           text: data.listItemsProfileName
         },
         {
-          route: TDLGlobalFunctions.formatTeamRoute(teamName, data.teamId),
+          route: VerticalGlobalFunctions.formatTeamRoute(teamName, data.teamId),
           text: teamName
         },
         {

@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {TableTabData, TableComponentData} from '../fe-core/components/season-stats/season-stats.component';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Season} from '../global/global-interface';
-import {TDLGlobalFunctions} from '../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
@@ -131,12 +131,12 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
   convertToCarouselItem(item: TeamSeasonStatsData, index:number): SliderCarouselInput {
     var playerData = item.playerInfo != null ? item.playerInfo : null;
 
-    var playerRoute = TDLGlobalFunctions.formatPlayerRoute(playerData.teamName,playerData.playerName,playerData.playerId.toString());
+    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(playerData.teamName,playerData.playerName,playerData.playerId.toString());
     var playerRouteText = {
       route: playerRoute,
       text: playerData.playerName
     }
-    var teamRoute = TDLGlobalFunctions.formatTeamRoute(playerData.teamName, playerData.teamId);
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerData.teamName, playerData.teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerData.teamName,
@@ -321,7 +321,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
         }
         else {
           display = item.teamInfo.teamName;
-          link = TDLGlobalFunctions.formatTeamRoute(item.teamInfo.teamName,item.teamInfo.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(item.teamInfo.teamName,item.teamInfo.teamId);
         }
         sort = item.teamInfo.teamName;
         break;

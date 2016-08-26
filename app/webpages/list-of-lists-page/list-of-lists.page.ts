@@ -15,7 +15,7 @@ import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {PaginationFooter, PaginationParameters} from "../../fe-core/components/pagination-footer/pagination-footer.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
-import {TDLGlobalFunctions} from "../../global/tdl-global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
@@ -75,13 +75,13 @@ export class ListOfListsPage implements OnInit{
                 switch ( urlParams.type ) {
                     case "player":
                         profileName = list.targetData.playerName;
-                        profileRoute = TDLGlobalFunctions.formatPlayerRoute(list.targetData.teamName, list.targetData.playerName, list.targetData.playerId);
+                        profileRoute = VerticalGlobalFunctions.formatPlayerRoute(list.targetData.teamName, list.targetData.playerName, list.targetData.playerId);
                         profileImage = GlobalSettings.getImageUrl(list.targetData.imageUrl);
                         break;
 
                     case "team":
                         profileName = list.targetData.teamName;
-                        profileRoute = TDLGlobalFunctions.formatTeamRoute(list.targetData.teamName, list.targetData.teamId);
+                        profileRoute = VerticalGlobalFunctions.formatTeamRoute(list.targetData.teamName, list.targetData.teamId);
                         profileImage = GlobalSettings.getImageUrl(list.targetData.teamLogo);
                         break;
 

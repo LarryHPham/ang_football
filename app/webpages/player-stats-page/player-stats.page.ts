@@ -17,7 +17,7 @@ import {MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from '../../services/
 import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
-import {TDLGlobalFunctions} from '../../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
@@ -64,7 +64,7 @@ export class PlayerStatsPage implements OnInit {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
           this._title.setTitle(GlobalSettings.getPageTitle("Player Stats", data.teamName));
-          var teamRoute = TDLGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
+          var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
           this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
           this.tabs = this._statsService.initializeAllTabs(data.teamName, false);
         },

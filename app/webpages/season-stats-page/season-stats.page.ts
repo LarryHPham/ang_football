@@ -9,7 +9,7 @@ import {LoadingComponent} from '../../fe-core/components/loading/loading.compone
 import {ErrorComponent} from '../../fe-core/components/error/error.component';
 import {MLBSeasonStatsTabData, MLBSeasonStatsTableData} from '../../services/season-stats-page.data';
 import {GlobalFunctions} from '../../global/global-functions';
-import {TDLGlobalFunctions} from '../../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {Season, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 
@@ -41,7 +41,7 @@ export class SeasonStatsPage implements OnInit {
   constructor(private _params: RouteParams,
               private _profileService: ProfileHeaderService,
               private _seasonStatsPageService: SeasonStatsPageService,
-              private _mlbFunctions: TDLGlobalFunctions,
+              private _mlbFunctions: VerticalGlobalFunctions,
               private _title: Title) {
     _title.setTitle(GlobalSettings.getPageTitle("Season Stats"));
     var playerId = _params.get("playerId");
@@ -51,7 +51,7 @@ export class SeasonStatsPage implements OnInit {
   private setupTitleData(imageUrl: string, teamName: string, playerId: string, playerName: string) {
     var profileLink = ["League-page"];
     if ( playerId ) {
-      profileLink = TDLGlobalFunctions.formatPlayerRoute(teamName, playerName, playerId);
+      profileLink = VerticalGlobalFunctions.formatPlayerRoute(teamName, playerName, playerId);
     }
     var title = this._seasonStatsPageService.getPageTitle(this.pageParams, playerName);
     this.titleData = {

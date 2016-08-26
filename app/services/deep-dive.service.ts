@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {TDLGlobalFunctions} from '../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {DomSanitizationService} from '@angular/platform-browser';
 
@@ -192,7 +192,7 @@ export class DeepDiveService {
           keyword: val['keyword'],
           teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
           id:val['id'],
-          articlelink: TDLGlobalFunctions.formatSynRoute('story', val.id),
+          articlelink: VerticalGlobalFunctions.formatSynRoute('story', val.id),
           date: date.day,
         };
         transformData.push(carData);
@@ -209,7 +209,7 @@ export class DeepDiveService {
     data.forEach(function(val, index){
       var date = GlobalFunctions.formatDate(val.publishedDate);
       var s = {
-          stackRowsRoute: TDLGlobalFunctions.formatSynRoute('story', val.id),
+          stackRowsRoute: VerticalGlobalFunctions.formatSynRoute('story', val.id),
           keyword: val.keyword,
           publishedDate: date.month + " " + date.day + ", " + date.year,
           provider1: val.author != null ? val.author : "",
@@ -220,7 +220,7 @@ export class DeepDiveService {
             imageClass: "image-100x56",
             imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
             hoverText: "View",
-            urlRouteArray: TDLGlobalFunctions.formatSynRoute('story', val.id)
+            urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', val.id)
           }
       }
       articleStackArray.push(s);
@@ -234,7 +234,7 @@ export class DeepDiveService {
       if (val.length != 0) {
       var date = GlobalFunctions.formatDate(val.timestamp*1000);
       var s = {
-          stackRowsRoute: TDLGlobalFunctions.formatAiArticleRoute('postgame-report', val.event),
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute('postgame-report', val.event),
           keyword: 'POST GAME REPORT',
           publishedDate: date.month + " " + date.day + ", " + date.year,
           provider1: '',
@@ -244,7 +244,7 @@ export class DeepDiveService {
           imageClass: "image-100x56",
           hoverText: "View",
           imageUrl: val.home.images[0] != null ? val.home.images[0] : sampleImage,
-          urlRouteArray: TDLGlobalFunctions.formatAiArticleRoute('postgame-report', val.event)
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute('postgame-report', val.event)
           }
       }
       articleStackArray.push(s);
@@ -260,7 +260,7 @@ export class DeepDiveService {
     for (var key in data) {
       if (data.hasOwnProperty(key) && data[key].displayHeadline != null && i <= 8) {
         var s = {
-            stackRowsRoute: TDLGlobalFunctions.formatAiArticleRoute(key, data.eventId),
+            stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId),
             keyword: 'PLAYER COMPARISON',
             publishedDate: date.month + " " + date.day + ", " + date.year,
             provider1: '',
@@ -270,7 +270,7 @@ export class DeepDiveService {
               imageClass: "image-100x56",
               imageUrl: data[key].image != null ? data[key].image : sampleImage,
               hoverText: "View",
-              urlRouteArray: TDLGlobalFunctions.formatAiArticleRoute(key, data.eventId)
+              urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId)
             }
         }
         articleStackArray.push(s);
@@ -287,7 +287,7 @@ export class DeepDiveService {
     var date = topData.publishedDate != null ? GlobalFunctions.formatDate(topData.publishedDate) : null;
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
     var articleStackData = {
-        articleStackRoute: TDLGlobalFunctions.formatSynRoute('story', topData.id),
+        articleStackRoute: VerticalGlobalFunctions.formatSynRoute('story', topData.id),
         keyword: topData.keyword,
         date: date != null ? date.month + " " + date.day + ", " + date.year: "",
         headline: topData.title,
@@ -298,7 +298,7 @@ export class DeepDiveService {
           imageClass: "image-320x180",
           imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
           hoverText: "View Article",
-          urlRouteArray: TDLGlobalFunctions.formatSynRoute('story', topData.id)
+          urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', topData.id)
         }
     };
     return articleStackData;
@@ -352,7 +352,7 @@ export class DeepDiveService {
       }
       ret[i]['keyword'] = ret[i]['sidekickTitle'].toUpperCase();
       ret[i]['bg_image_var'] = this._sanitizer.bypassSecurityTrustStyle("url(" + ret[i]['image'] + ")");
-      ret[i]['new_date'] = TDLGlobalFunctions.convertAiDate(ret[i]['dateline']);
+      ret[i]['new_date'] = VerticalGlobalFunctions.convertAiDate(ret[i]['dateline']);
       ret[i]['event_id'] = eventID;
     }
     return ret;
@@ -364,7 +364,7 @@ export class DeepDiveService {
       let date = GlobalFunctions.formatDate(val.publishedDate);
       val["date"] = date.month + " " + date.day + ", " + date.year + " " + date.time + " " + date.a + " EST";
       val["image"] = GlobalSettings.getImageUrl(val.imagePath);
-      val["newsRoute"] = TDLGlobalFunctions.formatNewsRoute(val.id);
+      val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}
     })
     return data;

@@ -3,7 +3,7 @@ import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {CircleImageData} from '../fe-core/components/images/image-data';
-import {TDLGlobalFunctions} from '../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division, SportPageParameters} from '../global/global-interface';
 import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
@@ -239,12 +239,12 @@ export class SchedulesService {
       let time = moment(val.startDateTimestamp).tz('America/New_York').format('h:mm A z');
       newData = {
         date: date + " &bull; " + time,
-        awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.awayTeamLogo), TDLGlobalFunctions.formatTeamRoute(val.awayTeamName, val.awayTeamId)),
-        homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.homeTeamLogo), TDLGlobalFunctions.formatTeamRoute(val.homeTeamName, val.homeTeamId)),
+        awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.awayTeamLogo), VerticalGlobalFunctions.formatTeamRoute(val.awayTeamName, val.awayTeamId)),
+        homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.homeTeamLogo), VerticalGlobalFunctions.formatTeamRoute(val.homeTeamName, val.homeTeamId)),
         awayTeamName: val.awayTeamLastName,
         homeTeamName: val.homeTeamLastName,
-        awayLink: TDLGlobalFunctions.formatTeamRoute(val.awayTeamName, val.awayTeamId),
-        homeLink: TDLGlobalFunctions.formatTeamRoute(val.homeTeamName, val.homeTeamId),
+        awayLink: VerticalGlobalFunctions.formatTeamRoute(val.awayTeamName, val.awayTeamId),
+        homeLink: VerticalGlobalFunctions.formatTeamRoute(val.homeTeamName, val.homeTeamId),
         reportDisplay: reportText,
         reportLink: reportLink,
         isLive: val.live == true ? 'schedule-live' : '',

@@ -5,7 +5,7 @@ import {GlobalSettings} from "./global-settings";
 
 @Injectable()
 
-export class TDLGlobalFunctions {
+export class VerticalGlobalFunctions {
 
   constructor() {
 

@@ -4,7 +4,7 @@ import {Http} from '@angular/http';
 
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
-import {TDLGlobalFunctions} from '../global/tdl-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {DataItem, ProfileHeaderData} from '../fe-core/modules/profile-header/profile-header.module';
 import {TitleInputData} from '../fe-core/components/title/title.component';
 import {Division, Conference, SportPageParameters} from '../global/global-interface';
@@ -228,7 +228,7 @@ export class ProfileHeaderService {
     var teamId = data.pageParams.teamId ? data.pageParams.teamId : null;
     return {
       imageURL: data.fullProfileImageUrl, //TODO
-      imageRoute: TDLGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
+      imageRoute: VerticalGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
@@ -260,7 +260,7 @@ export class ProfileHeaderService {
     var yearPluralStr = "years";
 
     var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
-    var formattedHeight = TDLGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
+    var formattedHeight = VerticalGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
     var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
@@ -319,7 +319,7 @@ export class ProfileHeaderService {
         {
           label: "Team",
           value: headerData.teamFullName,
-          routerLink: TDLGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
+          routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
         },
         {
           label: "Jersey Number",
@@ -343,12 +343,12 @@ export class ProfileHeaderService {
         },
         {
           label: headerData.stat3Type,
-          labelCont: TDLGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
+          labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
           value: headerData.stat3.toString()
         },
         {
           label: headerData.stat4Type,
-          labelCont: TDLGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
+          labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
           value: headerData.stat4.toString()
         }
       ]
