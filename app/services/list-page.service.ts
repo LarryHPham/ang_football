@@ -125,72 +125,77 @@ export class ListPageService {
     var tabArray: Array<positionMVPTabData> = [];
 
     //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
-    if(moduleType == 'pitcher'){
-      tabArray.push(new positionMVPTabData('W/L', 'pitcher-win-record', profileType));
+    if(moduleType == 'qb'){
+      tabArray.push(new positionMVPTabData('W/L', 'passing_attempts', profileType));
       tabArray.push(new positionMVPTabData('Innings Pitched', 'pitcher-innings-pitched', profileType));
       tabArray.push(new positionMVPTabData('Strikeouts', 'pitcher-strikeouts', profileType));
       tabArray.push(new positionMVPTabData('ERA', 'pitcher-earned-run-average', profileType));
       tabArray.push(new positionMVPTabData('Hits', 'pitcher-hits-allowed', profileType));
-    } else if (moduleType == 'batter') {//defaults to 'batter' if nothing is sent to moduleType
+     } else if (moduleType == 'pitcher') {//defaults to 'batter' if nothing is sent to moduleType
       tabArray.push(new positionMVPTabData('Home Runs', 'batter-home-runs', profileType));
       tabArray.push(new positionMVPTabData('Batting Avg.', 'batter-batting-average', profileType));
       tabArray.push(new positionMVPTabData('RBIs', 'batter-runs-batted-in', profileType));
       tabArray.push(new positionMVPTabData('Hits', 'batter-hits', profileType));
       tabArray.push(new positionMVPTabData('Walks', 'batter-bases-on-balls', profileType));
       tabArray.push(new positionMVPTabData('OBP', 'batter-on-base-percentage', profileType));
-    } //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
-
-    else if(moduleType == 'Cornerback' || 'Defensive end' || 'Defensive back' || 'Defensive lineman' || 'Defensive tackle' || 'Safety' || 'Linebacker'){
-      tabArray.push(new positionMVPTabData('Total Tackles', '', profileType));
-      tabArray.push(new positionMVPTabData('Total Sacks', '', profileType));
-      tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
-      tabArray.push(new positionMVPTabData('Forced Fumbles', '', profileType));
-      tabArray.push(new positionMVPTabData('Passes Defended', '', profileType));
-    }
-    else if (moduleType == 'Kicker') {
-      tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
-      tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
-      tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
-      tabArray.push(new positionMVPTabData('Total Points', '', profileType));
-      tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
-    }
-    else if (moduleType == 'Punter') {
-      tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
-      tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
-      tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
-      tabArray.push(new positionMVPTabData('Total Points', '', profileType));
-      tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
-    }
-    else if (moduleType == 'Quarterback') {
-      tabArray.push(new positionMVPTabData('Passer Rating', '', profileType));
-      tabArray.push(new positionMVPTabData('Passing Yards', '', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
-      tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
-      tabArray.push(new positionMVPTabData('Completions', '', profileType));
-    }
-    else if (moduleType == 'Running back') {
-      tabArray.push(new positionMVPTabData('Rushing Yards', '', profileType));
-      tabArray.push(new positionMVPTabData('Rushing Attempts', '', profileType));
-      tabArray.push(new positionMVPTabData('Yards Per Carry', '', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
-      tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
-    }
-    else if (moduleType == 'Return specialist') {
-      tabArray.push(new positionMVPTabData('Return Yards', '', profileType));
-      tabArray.push(new positionMVPTabData('Return Attempts', '', profileType));
-      tabArray.push(new positionMVPTabData('Return Average', '', profileType));
-      tabArray.push(new positionMVPTabData('Longest Return', '', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
-    }
-    else if (moduleType == 'Wide receiver' || 'Tight end') {
-      tabArray.push(new positionMVPTabData('Receiving Yards', '', profileType));
-      tabArray.push(new positionMVPTabData('Receptions', '', profileType));
-      tabArray.push(new positionMVPTabData('Average Yards Per Receptio', '', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
-      tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
-    }
-
-
+    } else if (moduleType == 'batter') {//defaults to 'batter' if nothing is sent to moduleType
+     tabArray.push(new positionMVPTabData('Home Runs', 'batter-home-runs', profileType));
+     tabArray.push(new positionMVPTabData('Batting Avg.', 'batter-batting-average', profileType));
+     tabArray.push(new positionMVPTabData('RBIs', 'batter-runs-batted-in', profileType));
+     tabArray.push(new positionMVPTabData('Hits', 'batter-hits', profileType));
+     tabArray.push(new positionMVPTabData('Walks', 'batter-bases-on-balls', profileType));
+     tabArray.push(new positionMVPTabData('OBP', 'batter-on-base-percentage', profileType));
+   }
+    // } //generate a static list of tab array based on the moduleType to emit the tabData and have a tabDisplay for the DOM
+    //
+    // else if(moduleType == 'Cornerback' || 'Defensive end' || 'Defensive back' || 'Defensive lineman' || 'Defensive tackle' || 'Safety' || 'Linebacker'){
+    //   tabArray.push(new positionMVPTabData('Total Tackles', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Total Sacks', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Forced Fumbles', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Passes Defended', '', profileType));
+    // }
+    // else if (moduleType == 'Kicker') {
+    //   tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Total Points', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
+    // }
+    // else if (moduleType == 'Punter') {
+    //   tabArray.push(new positionMVPTabData('Field Goals Made', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Field Goals Percentage Made', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Extra Points Made', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Total Points', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Average Points Per Game', '', profileType));
+    // }
+    // else if (moduleType == 'Quarterback') {
+    //   tabArray.push(new positionMVPTabData('Passer Rating', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Passing Yards', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Interceptions', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Completions', '', profileType));
+    // }
+    // else if (moduleType == 'Running back') {
+    //   tabArray.push(new positionMVPTabData('Rushing Yards', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Rushing Attempts', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Yards Per Carry', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
+    // }
+    // else if (moduleType == 'Return specialist') {
+    //   tabArray.push(new positionMVPTabData('Return Yards', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Return Attempts', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Return Average', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Longest Return', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+    // }
+    // else if (moduleType == 'Wide receiver' || 'Tight end') {
+    //   tabArray.push(new positionMVPTabData('Receiving Yards', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Receptions', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Average Yards Per Receptio', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Touchdowns', '', profileType));
+    //   tabArray.push(new positionMVPTabData('Yards Per Game', '', profileType));
 
     return tabArray;
   }
@@ -201,10 +206,13 @@ export class ListPageService {
     var headers = this.setToken();
 
     var callURL = this._apiUrl+'/list';
+    var newCallURL = 'http://dev-touchdownloyal-api.synapsys.us'+'/list/';
 
     for(var q in query){
       callURL += "/" + query[q];
+      newCallURL += query[q] + '&';
     }
+
     // console.log("list module url: " + callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
@@ -346,7 +354,7 @@ export class ListPageService {
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
       var teamLocation = val.teamCity + ", " + val.teamState;
-      var statDescription = VerticalGlobalFunctions.formatStatName(detailInfo.stat) + ' for ' + currentYear;
+      var statDescription = detailInfo.stat + ' for ' + currentYear;
       var rank = ((Number(data.query.pageNum) - 1) * Number(data.query.limit)) + (index+1);
       val.listRank = rank;
       if(data.query.profile == 'team'){

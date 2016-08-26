@@ -5,412 +5,383 @@ import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carouse
 import {Link} from '../global/global-interface';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
+import {PlayerStatsService} from'./player-stats.service';
 
 export interface PlayerStatsData {
-  teamName: string,
-  teamId: string;
-  teamLogo: string,
-  playerName: string;
-  playerFirstName: string;
-  playerLastName: string;
-  playerId: string;
-  playerHeadshot: string;
-  backgroundImage: string;
-  seasonId: string;
-  lastUpdate: string;
+    teamName: string,
+    teamId: string;
+    teamLogo: string,
+    playerName: string;
+    playerFirstName: string;
+    playerLastName: string;
+    playerId: string;
+    jerseyNumber:string;
+    backgroundImage: string;
+    seasonId: string;
+    lastUpdate: string;
+    playerPosition:string;
+    teamMarket:string;
+    stat1: string;
+    stat2: string;
+    stat3: string;
+    stat4: string;
+    stat5: string;
+    stat6: string;
+    stat7: string;
+    stat8: string;
+    stat1Type: string;
+    stat2Type: string;
+    stat3Type: string;
+    stat4Type: string;
+    stat5Type: string;
+    stat6Type: string;
+    stat7Type: string;
+    stat8Type: string;
+    SeasonBase:string;
+    leagueId;
+    leagueAbbreviation;
+    lastUpdated;
+    playerHeadshot;
 
-  //Batting Stats
-  batAverage: number;
-  batHomeRuns: string;
-  batRbi: string;
-  batSluggingPercentage: number;
-  batHits: string;
-  batBasesOnBalls: string;
-  batOnBasePercentage: number;
+    /**
+     * - Formatted from the lastUpdatedDate
+     */
+    displayDate?: string;
 
-  //Pitching Stats
-  pitchEra: number;
-  pitchWins: string;
-  pitchLosses: string;
-  pitchStrikeouts: string;
-  pitchInningsPitched: string;
-  pitchBasesOnBalls: string;
-  whip: number;
-  pitchSaves: string;
+    fullPlayerImageUrl?: string;
 
-  /**
-   * - Formatted from the lastUpdatedDate
-   */
-  displayDate?: string;
+    fullTeamImageUrl?: string;
 
-  fullPlayerImageUrl?: string;
-
-  fullTeamImageUrl?: string;
-
-  fullBackgroundImageUrl?: string;
+    fullBackgroundImageUrl?: string;
 }
 
 export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsData> {
-  tabTitle: string;
+    tabTitle: string;
 
-  tableName: string;
+    tableName: string;
 
-  isLoaded: boolean;
+    isLoaded: boolean;
 
-  hasError: boolean;
+    hasError: boolean;
 
-  tableData: TableModel<PlayerStatsData>;
+    tableData: TableModel<PlayerStatsData>;
 
-  seasonTableData: { [key: string]: TableModel<PlayerStatsData> } = {};
+    seasonTableData: { [key: string]: TableModel<PlayerStatsData> } = {};
 
-  seasonIds: Array<{key: string, value: string}> = []
+    seasonIds: Array<{key: string, value: string}> = []
 
-  glossary: Array<{key: string, value: string}>;
+    glossary: Array<{key: string, value: string}>;
 
-  isActive: boolean;
+    isActive: boolean;
 
-  isPitcherTable: boolean;
+    tabActive: string;
 
-  isTeamProfilePage: boolean;
+    isTeamProfilePage: boolean;
+    subTabs:Array<any>;
 
-  constructor(teamName: string, tabName: string, isPitcherTable: boolean, isActive: boolean, isTeamProfilePage: boolean) {
-    this.tabTitle = tabName;
-    this.tableName = "<span class='text-heavy'>" + teamName + "</span> " + tabName + " Stats";
-    this.isActive = isActive;
-    this.isPitcherTable = isPitcherTable;
-    this.isTeamProfilePage = isTeamProfilePage;
-    if ( this.isPitcherTable ) {
-      this.glossary = [
-        {key: "W/L", value: "Wins/Losses"},
-        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
-        {key: "IP", value: "Innings Pitched"},
-        {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
-        {key: "SO", value: "Strikeouts"},
-        {key: "SV", value: "Saves"},
-        {key: "ERA", value: "Earned Run Average"}
-      ];
+    constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean) {
+        this.tabActive = tabActive;
+        this.tableName = "<span class='text-heavy'>" + tabActive + "</span> " + " : Team Player Stats";
+        this.isActive = isActive;
+
+        this.isTeamProfilePage = isTeamProfilePage;
+
+        function getTabTitle(tabActive){
+            return {
+                Passing:{
+                    title: "Passing",
+                    glossary:[
+                        {key: "ATT", value: "Wins/Losses"},
+                        {key: "COMP", value: "Walks Pitched (Bases on Balls)"},
+                        {key: "YDS", value: "Innings Pitched"},
+                        {key: "AVG", value: "Walks + Hits per Inning Pitched"},
+                        {key: "TD", value: "Strikeouts"},
+                        {key: "INT", value: "Saves"},
+                        {key: "RATE", value: "Earned Run Average"}
+                    ]
+                },
+                Rushing:{
+                    title: "Rushing",
+                    glossary:[
+                        {key: "ATT", value: "Wins/Losses"},
+                        {key: "YDS", value: "Walks Pitched (Bases on Balls)"},
+                        {key: "AVG", value: "Innings Pitched"},
+                        {key: "TD", value: "Walks + Hits per Inning Pitched"},
+                        {key: "YDS/G", value: "Strikeouts"},
+                        {key: "FUM", value: "Saves"},
+                        {key: "1DN", value: "Earned Run Average"}
+                    ]
+                },
+                Recieving:{
+                    title: "Recieving",
+                    glossary:[
+                        {key: "W/L", value: "Wins/Losses"},
+                        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
+                        {key: "IP", value: "Innings Pitched"},
+                        {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
+                        {key: "SO", value: "Strikeouts"},
+                        {key: "SV", value: "Saves"},
+                        {key: "ERA", value: "Earned Run Average"}
+                    ]
+                },
+                Defense:{
+                    title: "Defense",
+                    glossary:[
+                        {key: "W/L", value: "Wins/Losses"},
+                        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
+                        {key: "IP", value: "Innings Pitched"},
+                        {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
+                        {key: "SO", value: "Strikeouts"},
+                        {key: "SV", value: "Saves"},
+                        {key: "ERA", value: "Earned Run Average"}
+                    ]
+                },
+                Special:{
+                    title:"Special Teams",
+                    glossary:[
+                        {key: "W/L", value: "Wins/Losses"},
+                        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
+                        {key: "IP", value: "Innings Pitched"},
+                        {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
+                        {key: "SO", value: "Strikeouts"},
+                        {key: "SV", value: "Saves"},
+                        {key: "ERA", value: "Earned Run Average"}
+                    ],
+
+                },
+            }[tabActive];
+        }
+
+        this.tabTitle= getTabTitle(tabActive).title;
+        this.glossary=getTabTitle(tabActive).glossary;
+
+
+        var currYear = new Date().getFullYear();
+        var year = currYear-1;
+        for ( var i = 0; i < 1; i++ ) {
+            this.seasonIds.push({
+                key: year.toString(),
+                //value: i == 0 ? "Current Season" : year.toString() + " Season"
+                value: year.toString()
+            });
+            year--;
+        }
+        this.subTabs= [
+            {
+                key:'Kicking', value:'Kicking'
+            },
+            {
+                key:'Punting',value:'Punting'
+            },
+            {
+                key:'Returning',value:'Returning'
+            },
+            {
+                key:'Safety',value:'Safety'
+            }];
+
     }
-    else {
-      this.glossary = [
-        {key: "HR", value: "Homeruns"},
-        {key: "BB", value: "Walks (Bases on Balls)"},
-        {key: "BA", value: "Batting Average"},
-        {key: "OBP", value: "On-Base Percentage"},
-        {key: "RBI", value: "Runs Batted In"},
-        {key: "SLG", value: "Slugging Percentage"},
-        {key: "H", value: "Hits"}
-      ];
-    }
-    var currYear = new Date().getFullYear();
-    var year = currYear;
-    for ( var i = 0; i < 5; i++ ) {
-      this.seasonIds.push({
-        key: year.toString(),
-        value: i == 0 ? "Current Season" : year.toString() + " Season"
-      });
-      year--;
-    }
-  }
 
-  convertToCarouselItem(item: PlayerStatsData, index:number): SliderCarouselInput {
-    var description: Array<Link | string> = [];
-    var tense = " has";
-    var temporalInfo = "";
-    var subHeaderYear = "Current ";
-    if ( item.seasonId != this.seasonIds[0].key ) {
-      subHeaderYear = item.seasonId + " ";
-      tense = " had";
-      temporalInfo = " in " + item.seasonId;
-    }
-    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
-    var playerLinkText = {
-      route: playerRoute,
-      text: item.playerName,
-      class: 'text-heavy'
+    convertToCarouselItem(item: PlayerStatsData, index:number): SliderCarouselInput {
+        var description: Array<Link | string> = [];
+        var tense = " has";
+        var temporalInfo = "";
+        var subHeaderYear = "Current ";
+        if ( item.seasonId != this.seasonIds[0].key ) {
+            subHeaderYear = item.seasonId + " ";
+            tense = " had";
+            temporalInfo = " in " + item.seasonId;
+        }
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
+        var playerLinkText = {
+            route: playerRoute,
+            text: item.playerName,
+            class: 'text-heavy'
 
+        }
+        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+        var teamLinkText = {
+            route: teamRoute,
+            text: item.teamName
+        }
+
+        function getTabDescription(tabActive){
+            return {
+                Passing:{
+                    description:[playerLinkText, tense + "a total of ## attempts with ## Completions, ## Passing Yards and ## Touchdowns."],
+                },
+                Rushing:{
+                    description:[playerLinkText, tense + "a total of ## attempts with ## Completions, ## Rushing Yards and ## Touchdowns."],
+                },
+                Recieving:{
+                    description:[playerLinkText, tense + "a total of ## Receptions, ## Completions, ## Recieving Yards and ## Average."],
+                },
+                Defense:{
+                    description:[playerLinkText, tense + "a total of ## Solo Tackles, ## Assists, ## Total Tackles and ## sacks."],
+                },
+                Special:{
+
+                },
+            }[tabActive];
+        }
+        return SliderCarousel.convertToCarouselItemType1(index, {
+            backgroundImage: item.fullBackgroundImageUrl,
+            copyrightInfo: GlobalSettings.getCopyrightInfo(),
+            subheader: [" Player Stats - ", teamLinkText],
+            profileNameLink: playerLinkText,
+            description: getTabDescription(this.tabActive).description,
+            lastUpdatedDate: item.displayDate,
+            circleImageUrl: item.fullPlayerImageUrl,
+            circleImageRoute: playerRoute
+            // subImageUrl: item.fullTeamImageUrl,
+            // subImageRoute: teamRoute
+        });
     }
-    var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
-    var teamLinkText = {
-      route: teamRoute,
-      text: item.teamName
-    }
-    if ( this.isPitcherTable ) {
-      var strikeoutsText = item.pitchStrikeouts == "1" ? "Strikeout" : "Strikeouts";
-      var winsText = item.pitchWins == "1" ? "Win" : "Wins";
-      var savesText = item.pitchSaves == "1" ? "Save" : "Saves";
-      description = [playerLinkText, tense + " a <span class='text-heavy'>" + (item.pitchEra != null ? item.pitchEra.toFixed(2) : "N/A") +
-                    " ERA</span> with <span class='text-heavy'>" + item.pitchStrikeouts + " " + strikeoutsText +
-                    "</span>, <span class='text-heavy'>" + item.pitchWins + " " + winsText +
-                    "</span> and <span class='text-heavy'>" + item.pitchSaves + " " + savesText +
-                    "</span>" + temporalInfo + "."];
-    }
-    else {
-      var homeRunsText = item.batHomeRuns == "1" ? "Home Run" : "Home Runs";
-      var rbiText = item.batRbi == "1" ? "RBI" : "RBIs";
-      description = [playerLinkText, tense + " a <span class='text-heavy'>" + (item.batAverage != null ? item.batAverage.toPrecision(3) : "N/A") +
-                    " Batting Average</span> with <span class='text-heavy'>" + item.batHomeRuns + " " + homeRunsText +
-                    "</span>, <span class='text-heavy'>" + item.batRbi + " " + rbiText +
-                    "</span> and a <span class='text-heavy'>" + (item.batSluggingPercentage != null ? item.batSluggingPercentage.toPrecision(3) : "N/A") +
-                    " Slugging Percentage</span>" + temporalInfo + "."];
-    }
-    return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: item.fullBackgroundImageUrl,
-      copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [subHeaderYear, teamLinkText, " Player Stats"],
-      profileNameLink: playerLinkText,
-      description: description,
-      lastUpdatedDate: item.displayDate,
-      circleImageUrl: item.fullPlayerImageUrl,
-      circleImageRoute: playerRoute
-      // subImageUrl: item.fullTeamImageUrl,
-      // subImageRoute: teamRoute
-    });
-  }
 }
 
 export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
-  columns: Array<TableColumn>;
+    columns: Array<TableColumn>;
 
-  rows: Array<PlayerStatsData>;
+    rows: Array<PlayerStatsData>;
 
-  selectedKey:string = "";
+    selectedKey:string = "";
 
-  isPitcher: boolean;
+    istab: string;
 
-  constructor(rows: Array<PlayerStatsData>, isPitcher: boolean) {
-    this.rows = rows;
-    if ( this.rows === undefined || this.rows === null ) {
-      this.rows = [];
+    constructor(rows: Array<PlayerStatsData> ,tabActive: string) {
+
+        this.rows = rows;
+
+        if ( this.rows === undefined || this.rows === null ) {
+            this.rows = [];
+        }
+        this.istab = tabActive;
+
+        function getTabTableData(tabActive){
+            return{
+                columns:[{
+                    headerValue: "Player Name",
+                    columnClass: "image-column",
+                    key: "name"
+                },{
+                    headerValue: rows[0].stat1Type,
+                    columnClass: "data-column",
+                    isNumericType: true,
+                    key: "stat1-type"
+                },{
+                    headerValue: rows[0].stat2Type,
+                    columnClass: "data-column",
+                    isNumericType: true,
+                    key: "stat2-type"
+                },{
+                    headerValue: rows[0].stat3Type,
+                    columnClass: "data-column",
+                    isNumericType: true,
+                    key: "stat3-type"
+                },{
+                    headerValue: rows[0].stat4Type,
+                    columnClass: "data-column",
+                    sortDirection: 1, //ascending
+                    isNumericType: true,
+                    key: "stat4-type"
+                },{
+                    headerValue: rows[0].stat5Type,
+                    columnClass: "data-column",
+                    isNumericType: true,
+                    key: "stat5-type"
+                },{
+                    headerValue: rows[0].stat6Type,
+                    columnClass: "data-column",
+                    isNumericType: true,
+                    key: "stat6-type"
+                },{
+                    headerValue: rows[0].stat7Type,
+                    columnClass: "data-column",
+                    isNumericType: true,
+                    key: "stat7-type"
+                }]
+            }
+        }
+        this.columns=getTabTableData(tabActive).columns;
+        //this.columns = getTabTableData(tabActive).columns;
     }
-    this.isPitcher = isPitcher;
-    if ( this.isPitcher ) {
-      this.columns = [{
-        headerValue: "Player Name",
-        columnClass: "image-column",
-        key: "name"
-      },{
-        headerValue: "W/L",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "wl"
-      },{
-        headerValue: "IP",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "ip"
-      },{
-        headerValue: "SO",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "so"
-      },{
-        headerValue: "ERA",
-        columnClass: "data-column",
-        sortDirection: 1, //ascending
-        isNumericType: true,
-        key: "era"
-      },{
-        headerValue: "BB",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "pbb"
-      },{
-        headerValue: "WHIP",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "whip"
-      },{
-        headerValue: "SV",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "sv"
-      }]
+
+
+    setSelectedKey(key: string) {
+        this.selectedKey = key;
     }
-    else {
-      this.columns = [{
-        headerValue: "Player Name",
-        columnClass: "image-column",
-        key: "name"
-      },{
-        headerValue: "HR",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "hr"
-      },{
-        headerValue: "BA",
-        columnClass: "data-column",
-        sortDirection: -1, //descending
-        isNumericType: true,
-        key: "ba"
-      },{
-        headerValue: "RBI",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "rbi"
-      },{
-        headerValue: "H",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "h"
-      },{
-        headerValue: "BB",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "bbb"
-      },{
-        headerValue: "OBP",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "obp"
-      },{
-        headerValue: "SLG",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "slg"
-      }]
-    };
-  }
 
-  setSelectedKey(key: string) {
-    this.selectedKey = key;
-  }
-
-  getSelectedKey(): string {
-    return this.selectedKey;
-  }
-
-  setRowSelected(rowIndex:number) {
-    if ( rowIndex >= 0 && rowIndex < this.rows.length ) {
-      this.selectedKey = this.rows[rowIndex].playerId;
+    getSelectedKey(): string {
+        return this.selectedKey;
     }
-    else {
-      this.selectedKey = null;
+
+    setRowSelected(rowIndex:number) {
+        if ( rowIndex >= 0 && rowIndex < this.rows.length ) {
+            this.selectedKey = this.rows[rowIndex].playerId;
+        }
+        else {
+            this.selectedKey = null;
+        }
     }
-  }
 
-  isRowSelected(item:PlayerStatsData, rowIndex:number): boolean {
-    return this.selectedKey == item.playerId;
-  }
-
-  getCellData(item:PlayerStatsData, column:TableColumn):CellData {
-    var display = null;
-    var sort: any = null;
-    var link: Array<any> = null;
-    var imageUrl: string = null;
-    switch (column.key) {
-      case "name":
-        display = item.playerName;
-        sort = item.playerLastName + ", " + item.playerFirstName;
-        link = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId);
-        imageUrl = item.fullPlayerImageUrl;
-        break;
-
-      //BATTING
-      case "hr":
-        if ( item.batHomeRuns != null ) {
-          display = item.batHomeRuns;
-          sort = Number(item.batHomeRuns);
-        }
-        break;
-
-      case "ba":
-        if ( item.batAverage != null ) {
-          display = item.batAverage.toFixed(3);
-          sort = Number(item.batAverage);
-        }
-        break;
-
-      case "rbi":
-        if ( item.batRbi != null ) {
-          display = item.batRbi;
-          sort = Number(item.batRbi);
-        }
-        break;
-
-      case "h":
-        if ( item.batHits != null ) {
-          display = item.batHits;
-          sort = Number(item.batHits);
-        }
-        break;
-
-      case "bbb":
-        if ( item.batBasesOnBalls != null ) {
-          display = item.batBasesOnBalls;
-          sort = Number(item.batBasesOnBalls);
-        }
-        break;
-
-      case "obp":
-        if ( item.batOnBasePercentage != null ) {
-          display = item.batOnBasePercentage.toFixed(3);
-          sort = Number(item.batOnBasePercentage);
-        }
-        break;
-
-      case "slg":
-        if ( item.batSluggingPercentage != null ) {
-          display = item.batSluggingPercentage.toFixed(3);
-          sort = Number(item.batSluggingPercentage);
-        }
-        break;
-
-      //PITCHING
-      case "wl":
-        if ( item.pitchWins != null && item.pitchLosses != null ) {
-          display = item.pitchWins + "-" + item.pitchLosses;
-          var wins = item.pitchWins + "";
-          var losses = item.pitchLosses + "";
-          sort = ('00000' + wins).substr(wins.length) + "/" + ('00000' + losses).substr(losses.length); //pad with zeros
-        }
-
-        break;
-
-      case "ip":
-        if ( item.pitchInningsPitched != null ) {
-          display = item.pitchInningsPitched.toString();
-          sort = Number(item.pitchInningsPitched);
-        }
-        break;
-
-      case "so":
-        if ( item.pitchStrikeouts != null ) {
-          display = item.pitchStrikeouts.toString();
-          sort = Number(item.pitchStrikeouts);
-        }
-        break;
-
-      case "era":
-        if ( item.pitchEra != null ) {
-          display = item.pitchEra.toFixed(2);
-          sort = Number(item.pitchEra);
-        }
-        break;
-
-      case "pbb":
-        if ( item.pitchBasesOnBalls != null ) {
-          display = item.pitchBasesOnBalls.toString();
-          sort = Number(item.pitchBasesOnBalls);
-        }
-        break;
-
-      case "whip":
-        if ( item.whip != null ) {
-          display = item.whip.toFixed(2);
-          sort = Number(item.whip);
-        }
-        break;
-
-      case "sv":
-        if ( item.pitchSaves != null ) {
-          display = item.pitchSaves.toString();
-          sort = Number(item.pitchSaves);
-        }
-        break;
+    isRowSelected(item:PlayerStatsData, rowIndex:number): boolean {
+        return this.selectedKey == item.playerId;
     }
-    if ( display == null ) {
-      display = "N/A";
+
+    getCellData(item:PlayerStatsData, column:TableColumn):CellData {
+
+        var display=null;
+        var sort: any = null;
+        var link: Array<any> = null;
+        var imageUrl: string = null;
+        var presentColumn;
+        function tabCellData(columnType) {
+            return{
+                "name":{
+                    display : item.playerFirstName + " " + item.playerLastName,
+                    sort : item.playerLastName + ', ' + item.playerFirstName,
+                    link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                    imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
+                },
+                "stat1-type":{
+                    display:item.stat1 != null ? item.stat1: 'N/A',
+                    sort : item.stat1 != null ? Number(item.stat1) : null,
+                },
+                "stat2-type":{
+                    display:item.stat2 != null ? item.stat2: 'N/A',
+                    sort : item.stat2 != null ? Number(item.stat2) : null,
+                },
+                "stat3-type":{
+                    display:item.stat3 != null ? item.stat3: 'N/A',
+                    sort : item.stat3 != null ? Number(item.stat3) : null,
+                },
+                "stat4-type":{
+                    display:item.stat4 != null ? item.stat4: 'N/A',
+                    sort : item.stat4 != null ? Number(item.stat4) : null,
+                },
+                "stat5-type":{
+                    display:item.stat5 != null ? item.stat5: 'N/A',
+                    sort : item.stat5 != null ? Number(item.stat5) : null,
+                },
+                "stat6-type":{
+                    display:item.stat6 != null ? item.stat6: 'N/A',
+                    sort : item.stat6 != null ? Number(item.stat6) : null,
+                },
+                "stat7-type":{
+                    display:item.stat7 != null ? item.stat7: 'N/A',
+                    sort : item.stat7 != null ? Number(item.stat7) : null,
+                },
+
+            }[columnType];
+        }
+        presentColumn = tabCellData(column.key);
+
+
+
+       return new CellData(presentColumn.display,presentColumn.sort,presentColumn.link,presentColumn.imageUrl);
+
+
     }
-    return new CellData(display, sort, link, imageUrl);
-  }
+
+
 }

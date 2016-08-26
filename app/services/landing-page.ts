@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router-deprecated';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
@@ -8,15 +9,33 @@ import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 @Injectable()
 export class LandingPageService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  constructor(public http: Http, private _VerticalGlobalFunctions: VerticalGlobalFunctions){}
+
+  public partnerID: string;
+
+  constructor(
+    public http: Http,
+    private _router:Router
+  ){
+
+  }
+
   setToken(){
     var headers = new Headers();
     return headers;
   }
-  getLandingPageService(){
+
+  getLandingPageService(scope, geoLocation?){
     var headers = this.setToken();
     var fullUrl = this._apiUrl + "/landingPage/teams";
-    return this.http.get(fullUrl, {
+
+    if (location) {
+      var newFullUrl = 'http://dev-touchdownloyal-api.synapsys.us'+'/landingPage/'+scope+'/'+geoLocation; //TODO
+    }
+    else {
+      var newFullUrl = 'http://dev-touchdownloyal-api.synapsys.us'+'/landingPage/'+scope //TODO
+    }
+
+    return this.http.get(newFullUrl, {
       headers: headers
     })
     .map(
@@ -25,11 +44,12 @@ export class LandingPageService {
     .map(
       data => {
         return {
-            league: this.landingData(data.data)
+            league: this.landingData(data)
         };
       }
     )
   }// getLandingPageservice ends
+
   landingData(data){
     var self = this;
     var leagueArray = [];
@@ -39,15 +59,15 @@ export class LandingPageService {
       for(var division in data[league]){//get each division within league data
         var div = data[league][division];
         div.forEach(function(val, index){//start converting team info
-          val.teamFirstName = val.teamFirstName.toUpperCase();
-          val.teamLastName = val.teamLastName.replace("Diamondbacks","D-backs");
-          var teamName = val.teamFirstName + ' ' + val.teamLastName;
-          val.teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamName, val.teamId.toString());
+          val.name = val.name.toUpperCase();
+          val.nickname = val.nickname.replace("Diamondbacks","D-backs");
+          var teamName = val.name + ' ' + val.nickname;
+          val.teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamName, val.id.toString());
           val.imageData= {
             imageClass: "image-100",
             mainImage: {
               imageUrl:  GlobalSettings.getImageUrl(val.teamLogo),
-              urlRouteArray: VerticalGlobalFunctions.formatTeamRoute(teamName, val.teamId.toString()),
+              urlRouteArray: VerticalGlobalFunctions.formatTeamRoute(teamName, val.id.toString()),
               hoverText: "<i class='fa fa-mail-forward home-team-image-fa'></i>",// style='font-size:30px;'
               imageClass: "border-3"
             }
@@ -59,10 +79,11 @@ export class LandingPageService {
         });
       }
       leagueArray.push({//once all divisions are done push the league info into final array
-        displayName:"<span class='text-heavy'>" + league.toUpperCase() + " LEAGUE</span> TEAMS<span class='text-heavy'>:</span>",
+        displayName:"<span class='text-heavy'>" + league.toUpperCase() + "</span> TEAMS<span class='text-heavy'>:</span>",
         dataArray:divisionArray
       });
     }
     return leagueArray;
-  }
+  } //landingData
+
 }// LandingPageService ends

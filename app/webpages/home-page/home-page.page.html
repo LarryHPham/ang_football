@@ -7,13 +7,14 @@
           <div class="home-hero-info">
             <h1>{{homeHeading1}}</h1>
             <h4>{{homeSubHeading1}}</h4>
-            <div class="home-hero-info-search col-xs-4">
+            <div class="home-hero-info-search">
               <search [searchInput]="searchInput"></search>
             </div>
           </div>
         </div>
       </div>
       <h2 class="home-mlbhdr"><span class="home-main-h2" [innerHtml]="homeHeading2"></span></h2>
+      <span class="home-mlbhdr-location" *ngIf="homeLocationHeading" [innerHtml]="homeLocationHeading"></span>
       <!-- <div class="home-main col-xs-10"> -->
       <div class="home-main {{gridLMain}}">
         <!--Extra span is needed to restrict width of top/bottom header border-->
@@ -27,7 +28,7 @@
               <!-- ngFor here to get all the teams in the same division -->
               <a [routerLink]="team.teamRoute" class="home-team" *ngFor="let team of division.dataArray">
                 <circle-image [data]="team.imageData"></circle-image>
-                <div class="home-team-name">{{team.teamFirstName}}<p>{{team.teamLastName}}</p></div>
+                <div class="home-team-name">{{team.name}}<p>{{team.nickname}}</p></div>
                 <i class="fa fa-angle-right"></i>
               </a>
             </div>

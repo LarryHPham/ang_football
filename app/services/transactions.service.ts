@@ -131,7 +131,7 @@ export class TransactionsService {
     }
 
     return {
-      tabs: this.getTabs(errorMessagePrepend, false),
+      tabs: this.getTabs(errorMessagePrepend, true),
       profileName: profileName,
       ctaRoute: route
     }
