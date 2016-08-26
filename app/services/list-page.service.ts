@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {DetailListInput} from '../fe-core/components/detailed-list-item/detailed-list-item.component';
 import {MVPTabData} from '../fe-core/components/mvp-list/mvp-list.component';
@@ -286,7 +286,7 @@ export class ListPageService {
         var rank = ((Number(data.query.pageNum) - 1) * Number(data.query.limit)) + (index+1);
         val.rank = rank.toString();
 
-        var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
           text: val.teamName
@@ -308,7 +308,7 @@ export class ListPageService {
           description = ['<i class="fa fa-map-marker text-master"></i>', val.teamCity + ', ' + val.teamState];
         } else { //if profile == 'player'
           ctaDesc = 'Interested in discovering more about this player?';
-          primaryRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName,val.playerName,val.playerId.toString());
+          primaryRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,val.playerName,val.playerId.toString());
           primaryImage = GlobalSettings.getImageUrl(val.imageUrl);
 
           profileLinkText = {
@@ -333,7 +333,7 @@ export class ListPageService {
           profileNameLink: profileLinkText,
           description: description,
           dataValue: val.stat,
-          dataLabel: MLBGlobalFunctions.formatStatName(carInfo.stat)+' for '+ currentYear,
+          dataLabel: VerticalGlobalFunctions.formatStatName(carInfo.stat)+' for '+ currentYear,
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
           rank: val.rank
@@ -352,13 +352,13 @@ export class ListPageService {
     var detailData = data.listData;
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
-      var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+      var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = detailInfo.stat + ' for ' + currentYear;
       var rank = ((Number(data.query.pageNum) - 1) * Number(data.query.limit)) + (index+1);
       val.listRank = rank;
       if(data.query.profile == 'team'){
-        var divisionName = MLBGlobalFunctions.formatShortNameDivison(val.conferenceName) + val.divisionName.charAt(0).toUpperCase();
+        var divisionName = VerticalGlobalFunctions.formatShortNameDivison(val.conferenceName) + val.divisionName.charAt(0).toUpperCase();
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
@@ -381,7 +381,7 @@ export class ListPageService {
         };
       }else if(data.query.profile == 'player'){
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
-        var playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
         var position = val.position.join(", ");
         return {
           dataPoints: ListPageService.detailsData(

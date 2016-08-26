@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {CircleImageData} from '../fe-core/components/images/image-data';
@@ -213,10 +213,10 @@ export class TransactionsService {
 
       //if data is coming through then run through the transforming function for the module
       carouselArray = data.map((val, index) => {
-        var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var playerRoute = null;
         if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
-          playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
+          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
         }
         var teamLinkText = {
           route: teamId == val.teamId ? null : teamRoute,
@@ -268,7 +268,7 @@ export class TransactionsService {
     listDataArray = data.map(function(val, index){
       var playerRoute = null;
       if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
-        playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
       }
       var playerTextLink = {
         route: playerRoute,

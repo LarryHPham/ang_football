@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {StatsTableTabData} from '../fe-core/components/player-stats/player-stats.component';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Link} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {PlayerStatsService} from'./player-stats.service';
 
@@ -192,14 +192,14 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             tense = " had";
             temporalInfo = " in " + item.seasonId;
         }
-        var playerRoute = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
         var playerLinkText = {
             route: playerRoute,
             text: item.playerName,
             class: 'text-heavy'
 
         }
-        var teamRoute =this.isTeamProfilePage ? null : MLBGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
         var teamLinkText = {
             route: teamRoute,
             text: item.teamName
@@ -340,7 +340,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                 "name":{
                     display : item.playerFirstName + " " + item.playerLastName,
                     sort : item.playerLastName + ', ' + item.playerFirstName,
-                    link : MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                    link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
                 },
                 "stat1-type":{

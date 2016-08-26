@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 
 @Injectable()
 export class LandingPageService {
@@ -14,7 +14,6 @@ export class LandingPageService {
 
   constructor(
     public http: Http,
-    private _mlbGlobalFunctions: MLBGlobalFunctions,
     private _router:Router
   ){
 
@@ -63,12 +62,12 @@ export class LandingPageService {
           val.name = val.name.toUpperCase();
           val.nickname = val.nickname.replace("Diamondbacks","D-backs");
           var teamName = val.name + ' ' + val.nickname;
-          val.teamRoute = MLBGlobalFunctions.formatTeamRoute(teamName, val.id.toString());
+          val.teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamName, val.id.toString());
           val.imageData= {
             imageClass: "image-100",
             mainImage: {
               imageUrl:  GlobalSettings.getImageUrl(val.teamLogo),
-              urlRouteArray: MLBGlobalFunctions.formatTeamRoute(teamName, val.id.toString()),
+              urlRouteArray: VerticalGlobalFunctions.formatTeamRoute(teamName, val.id.toString()),
               hoverText: "<i class='fa fa-mail-forward home-team-image-fa'></i>",// style='font-size:30px;'
               imageClass: "border-3"
             }

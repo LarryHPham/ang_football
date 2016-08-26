@@ -18,7 +18,7 @@ import {TDLStandingsTabdata,MLBStandingsTableData} from '../../services/standing
 import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
@@ -39,7 +39,7 @@ export class StandingsPage implements OnInit {
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
-              private _mlbFunctions: MLBGlobalFunctions) {
+              private _mlbFunctions: VerticalGlobalFunctions) {
     _title.setTitle(GlobalSettings.getPageTitle("Standings"));
 
     var type = _params.get("type");

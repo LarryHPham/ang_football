@@ -9,8 +9,7 @@ export class GlobalSettings {
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
-    private static _apiUrl:string = '-homerunloyal-api.synapsys.us';
-    private static _apiUrlTdl:string = '-touchdownloyal-api.synapsys.us';
+    private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
@@ -78,7 +77,7 @@ export class GlobalSettings {
     }
     static getApiUrlTdl():string {//TODO
         //[https:]//[prod]-homerunloyal-api.synapsys.us
-        return this._proto + "//" + this.getEnv(this._env) + this._apiUrlTdl;
+        return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
 
     }
 
