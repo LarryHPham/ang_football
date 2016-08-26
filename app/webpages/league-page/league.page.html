@@ -17,8 +17,11 @@
     <transactions-module *ngIf="transactionsData" [data]="transactionsData" (tabSwitched)="transactionsTab($event)"></transactions-module>
     <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace"></responsive-widget>
-    <mvp-module *ngIf="batterData" [title]="'Batter'" [mvpData]="batterData" [query]="batterParams" (tabSelected)="batterTab($event)"></mvp-module>
-    <mvp-module *ngIf="pitcherData" [title]="'Pitcher'" [mvpData]="pitcherData" [query]="pitcherParams" (tabSelected)="pitcherTab($event)"></mvp-module>
+    <!-- <mvp-module *ngIf="batterData" [title]="'Batter'" [mvpData]="batterData" [query]="batterParams" (tabSelected)="batterTab($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+    <mvp-module *ngIf="pitcherData" [title]="'Pitcher'" [mvpData]="pitcherData" [query]="pitcherParams" (tabSelected)="pitcherTab($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module> -->
+
+    <mvp-module *ngIf="positionData && positionParams" [title]="'Position'" [mvpData]="positionData" [query]="positionParams" (tabSelected)="positionDropdown($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+
     <responsive-widget *ngIf="pitcherData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName"></comparison-module>
     <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>

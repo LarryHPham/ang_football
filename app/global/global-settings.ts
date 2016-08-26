@@ -9,8 +9,7 @@ export class GlobalSettings {
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
-    private static _apiUrl:string = '-homerunloyal-api.synapsys.us';
-    private static _apiUrlTdl:string = '-touchdownloyal-api.synapsys.us';
+    private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
@@ -78,7 +77,7 @@ export class GlobalSettings {
     }
     static getApiUrlTdl():string {//TODO
         //[https:]//[prod]-homerunloyal-api.synapsys.us
-        return this._proto + "//" + this.getEnv(this._env) + this._apiUrlTdl;
+        return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
 
     }
 
@@ -195,13 +194,17 @@ export class GlobalSettings {
         router.root.subscribe (
             route => {
                 let partnerID = null;
-                let scope = this.getSportLeagueAbbrv();
+                let scope = route.instruction.params["scope"];
                 if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
                   partnerID = route.instruction.params["partner_id"];
-                  scope = route.instruction.params["scope"];
                 }else if(window.location.hostname.split(".")[0].toLowerCase() == "baseball"){
                   partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
                 }
+
+                if ( scope == null ) {
+                  scope = this.getSportLeagueAbbrv();
+                }
+                
                 subscribeListener({
                   partnerID: partnerID == '' ? null : partnerID,
                   scope: this.getScope(scope)

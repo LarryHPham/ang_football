@@ -4,7 +4,7 @@ import {Http} from '@angular/http';
 
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {DataItem, ProfileHeaderData} from '../fe-core/modules/profile-header/profile-header.module';
 import {TitleInputData} from '../fe-core/components/title/title.component';
 import {Division, Conference, SportPageParameters} from '../global/global-interface';
@@ -228,7 +228,7 @@ export class ProfileHeaderService {
     var teamId = data.pageParams.teamId ? data.pageParams.teamId : null;
     return {
       imageURL: data.fullProfileImageUrl, //TODO
-      imageRoute: MLBGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
+      imageRoute: VerticalGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
@@ -251,6 +251,7 @@ export class ProfileHeaderService {
     if (!data.headerData) {
       return null;
     }
+
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
@@ -260,7 +261,7 @@ export class ProfileHeaderService {
     var yearPluralStr = "years";
 
     var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
-    var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
+    var formattedHeight = VerticalGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
     var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
@@ -319,7 +320,7 @@ export class ProfileHeaderService {
         {
           label: "Team",
           value: headerData.teamFullName,
-          routerLink: MLBGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
+          routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
         },
         {
           label: "Jersey Number",
@@ -334,7 +335,7 @@ export class ProfileHeaderService {
         {
           label: headerData.stat1Type,
           labelCont: headerData.stat1Desc,
-          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1).toString() : null
+          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1) : null
         },
         {
           label: headerData.stat2Type,
@@ -343,13 +344,13 @@ export class ProfileHeaderService {
         },
         {
           label: headerData.stat3Type,
-          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
-          value: headerData.stat3.toString()
+          labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
+          value: headerData.stat3 ? GlobalFunctions.commaSeparateNumber(headerData.stat3).toString() : null
         },
         {
           label: headerData.stat4Type,
-          labelCont: MLBGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-          value: headerData.stat4.toString()
+          labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
+          value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
         }
       ]
     }

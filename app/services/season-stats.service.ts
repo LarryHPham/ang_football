@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 // import {ComparisonBarList} from './common-interfaces';
@@ -166,7 +166,7 @@ export class SeasonStatsService {
         }
         else if ( leaderValue ) {
           var playerName = stats[index].leaderName;
-          var linkToPlayer = MLBGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
+          var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
           infoBox = [{
               teamName: stats[index].leaderTeamName,
               playerName: playerName,
@@ -180,7 +180,7 @@ export class SeasonStatsService {
                 },
               },
               routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: MLBGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
+              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
             }];
         }
       }
@@ -253,7 +253,7 @@ export class SeasonStatsService {
     if ( !playerInfo[0] ) {
       return null;
     }
-    var teamRoute = MLBGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerInfo[0].teamName,
@@ -383,7 +383,7 @@ export class SeasonStatsService {
 
 @Injectable()
 export class SeasonStatsPageService {
-  constructor(public http: Http, private _mlbFunctions: MLBGlobalFunctions){}
+  constructor(public http: Http, private _mlbFunctions: VerticalGlobalFunctions){}
 
   getPageTitle( pageParams: SportPageParameters, playerName: string): string {
     let pageTitle = "Season Stats";

@@ -5,7 +5,7 @@ import {GlobalSettings} from "./global-settings";
 
 @Injectable()
 
-export class MLBGlobalFunctions {
+export class VerticalGlobalFunctions {
 
   constructor() {
 

@@ -7,13 +7,14 @@
           <div class="home-hero-info">
             <h1>{{homeHeading1}}</h1>
             <h4>{{homeSubHeading1}}</h4>
-            <div class="home-hero-info-search col-xs-4">
+            <div class="home-hero-info-search">
               <search [searchInput]="searchInput"></search>
             </div>
           </div>
         </div>
       </div>
       <h2 class="home-mlbhdr"><span class="home-main-h2" [innerHtml]="homeHeading2"></span></h2>
+      <span class="home-mlbhdr-location" *ngIf="homeLocationHeading" [innerHtml]="homeLocationHeading"></span>
       <!-- <div class="home-main col-xs-10"> -->
       <div class="home-main {{gridLMain}}">
         <!--Extra span is needed to restrict width of top/bottom header border-->
@@ -27,7 +28,7 @@
               <!-- ngFor here to get all the teams in the same division -->
               <a [routerLink]="team.teamRoute" class="home-team" *ngFor="let team of division.dataArray">
                 <circle-image [data]="team.imageData"></circle-image>
-                <div class="home-team-name">{{team.teamFirstName}}<p>{{team.teamLastName}}</p></div>
+                <div class="home-team-name">{{team.name}}<p>{{team.nickname}}</p></div>
                 <i class="fa fa-angle-right"></i>
               </a>
             </div>
@@ -39,7 +40,9 @@
       <!-- home main ends -->
     </div>
   </div>
-  <div *ngIf="displayData" class="home-slider col-xs-12">
+
+  <!--DOES THIS NEED TO BE INLCUDED-->
+  <!-- <div *ngIf="displayData" class="home-slider col-xs-12">
     <slider-button (scrollRight)="right()" (scrollLeft)="left()"></slider-button>
     <div class="home-slider-news col-xs-offset-2 col-xs-3">
       <div>{{_sportLeagueAbbrv}}</div>
@@ -50,7 +53,8 @@
           <span>{{buttonFullList}}</span>
       </a>
     </div>
-  </div>
+  </div>-->
+
   <!-- end of news data carousel -->
   <div class="home-features {{gridFeaturesCol}}">
     <div class="home-features-title"><img src='{{imgIcon1}}' /><h2><span class="text-heavy">Features</span> to Note</h2></div>
@@ -60,7 +64,7 @@
       </a>
       <div class="home-features-tile-no-hover"><h3><b>Dive deep</b></h3> <h4>into key information</h4>
       </div>
-      <a [routerLink]="['League-page', {leagueId: _sportLeagueAbbrv}]" [ngStyle]="{'background-image': 'url('+imageTile2+')'}" class="home-features-tile2"><h3>{{homeFeaturesTile3}}</h3>
+      <a [routerLink]="['League-page', {leagueId: activeDivision}]" [ngStyle]="{'background-image': 'url('+imageTile2+')'}" class="home-features-tile2"><h3>{{homeFeaturesTile3}}</h3>
         <span class="tile-button">{{homeFeaturesButton3}}</span>
       </a>
       <a [routerLink]="['Schedules-page-league', {pageNum:1}]" [ngStyle]="{'background-image': 'url('+imageTile3+')'}" class="home-features-tile3"><h3>{{homeFeaturesTile4}}</h3>

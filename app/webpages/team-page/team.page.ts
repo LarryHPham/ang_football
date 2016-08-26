@@ -192,7 +192,6 @@ export class TeamPage implements OnInit {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             this.setupProfileData(this.partnerID,this.scope);
-
         });
     }
 
@@ -353,15 +352,9 @@ export class TeamPage implements OnInit {
     //api for Schedules
     private getSchedulesData(status){
       var limit = 5;
-      this._schedulesService.getSchedulesService(this.scope, 'team', status, limit, 1, true, this.pageParams.teamId) // isTeamProfilePage = true
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.schedulesData = schedulesData;
+      }) // isTeamProfilePage = true
     }
 
     private getImages(imageData) {
