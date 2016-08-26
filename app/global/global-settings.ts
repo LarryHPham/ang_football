@@ -9,7 +9,7 @@ export class GlobalSettings {
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
-    private static _apiUrl:string = '-homerunloyal-api.synapsys.us';
+    private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
     private static _apiUrlTdl:string = '-touchdownloyal-api.synapsys.us';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
@@ -198,10 +198,10 @@ export class GlobalSettings {
                 let scope = this.getSportLeagueAbbrv();
                 if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
                   partnerID = route.instruction.params["partner_id"];
-                  scope = route.instruction.params["scope"];
-                }else if(window.location.hostname.split(".")[0].toLowerCase() == "baseball"){
+                }else if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
                   partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
                 }
+                scope = route.instruction.params["scope"];
                 subscribeListener({
                   partnerID: partnerID == '' ? null : partnerID,
                   scope: this.getScope(scope)

@@ -49,8 +49,7 @@ export interface SchedulesData {
   team2Losses: string,
   articleUrl: string, //TODO missing
   results:string, //TODO missing
-  targetTeamWinsCurrent: string; //TODO missing
-  targetTeamLossesCurrent: string; //TODO missing
+  targetTeam: string; //TODO missing
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -405,12 +404,19 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
       case "rec":
         //shows the record of the current teams game at that time
-        display = item.targetTeamWinsCurrent + " - " + item.targetTeamLossesCurrent;
-        if (Number(item.targetTeamWinsCurrent) > Number(item.targetTeamLossesCurrent)) {
-          sort = (Number(item.targetTeamWinsCurrent)/(Number(item.targetTeamLossesCurrent)+(Number(item.targetTeamWinsCurrent))));
+        if(item.targetTeam == item.team1Id){
+          var currentWins = item.team1Record.split('-')[0];
+          var currentLosses = item.team1Record.split('-')[1];
+        }else{
+          var currentWins = item.team2Record.split('-')[0];
+          var currentLosses = item.team2Record.split('-')[1];
+        }
+        display = currentWins + " - " + currentLosses;
+        if (Number(currentWins) > Number(currentLosses)) {
+          sort = (Number(currentWins)/(Number(currentLosses)+(Number(currentWins))));
         }
         else {
-          sort = (Number(item.targetTeamLossesCurrent)/(Number(item.targetTeamWinsCurrent)+(Number(item.targetTeamLossesCurrent))));
+          sort = (Number(currentLosses)/(Number(currentWins)+(Number(currentLosses))));
         }
         break;
     }

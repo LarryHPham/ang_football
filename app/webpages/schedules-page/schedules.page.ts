@@ -112,23 +112,26 @@ export class SchedulesPage implements OnInit{
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, 1, teamId, (schedulesData) => {
         console.log('got DATA!=>', schedulesData);
         this.schedulesData = schedulesData;
+        if(typeof this.tabData == 'undefined'){
+            this.tabData = schedulesData.tabs;
+        }
+        this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
       })
     }else{
       this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
       this.profHeadService.getLeagueProfile(this.scope)
       .subscribe(
           data => {
-            console.log('profile Header',data);
             var currentDate = new Date();// no stat for date so will grab current year client is on
             var display:string;
             if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
               display = "Current Season"
             }
-            var pageTitle = display + " Schedules - " + data.headerData.leagueAbbreviatedName;
+            var pageTitle = display + " Schedules - " + data.headerData.leagueFullName;
             this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
             this.errorData = {
-              data: data.headerData.leagueAbbreviatedName + " has no record of any more games for the current season.",
-              icon: "fa fa-remove"
+              data: data.headerData.leagueFullName + " has no record of any more games for the current season.",
+              icon: "fa fa-calendar-times-o"
             }
           },
           err => {
@@ -136,9 +139,13 @@ export class SchedulesPage implements OnInit{
             console.log('Error: Schedules Profile Header API: ', err);
           }
       );
-      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'leaue', status, this.limit, 1, null, (schedulesData) => {
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, 1, null, (schedulesData) => {
         console.log('got DATA!=>', schedulesData);
         this.schedulesData = schedulesData;
+        if(typeof this.tabData == 'undefined'){
+            this.tabData = schedulesData.tabs;
+        }
+        this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
       })
     }
   }
