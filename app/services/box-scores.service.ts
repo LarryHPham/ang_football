@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
 import {CircleImageData} from '../fe-core/components/images/image-data';
@@ -111,13 +111,13 @@ export class BoxScoresService {
       var Box = {
         keyword: p,
         date: date.month + " " + date.day + ", " + date.year,
-        url: MLBGlobalFunctions.formatAiArticleRoute(p, val.event),
+        url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
         teaser: teaser,
         imageConfig:{
           imageClass: "image-320x180-sm",
           imageUrl: val.home.images[0] != null ? val.home.images[0] : sampleImage,
           hoverText: "View Article",
-          urlRouteArray: MLBGlobalFunctions.formatAiArticleRoute(p, val.event)
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
         }
       }
       boxArray.push(Box);
@@ -213,8 +213,8 @@ export class BoxScoresService {
     let awayData = data.awayTeamInfo;
     let homeData = data.homeTeamInfo;
     var left, right;
-    var homeRoute = MLBGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-    var awayRoute = MLBGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+    var homeRoute = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
+    var awayRoute = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
     if(profile == 'team'){
       if(teamId == homeData.id){
         homeRoute = null;
@@ -269,8 +269,8 @@ export class BoxScoresService {
       let awayData = data.awayTeamInfo;
       let homeData = data.homeTeamInfo;
       let gameInfo = data.gameInfo;
-      let homeLink = MLBGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-      let awayLink = MLBGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+      let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
+      let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
       var aiContent = data.aiContent != null ? self.formatArticle(data):null;
 
       if(teamId != null && profile == 'team'){//if league then both items will link
@@ -369,8 +369,8 @@ export class BoxScoresService {
       let awayData = data.awayTeamInfo;
       let homeData = data.homeTeamInfo;
       let gameInfo = data.gameInfo;
-      let homeLink = MLBGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-      let awayLink = MLBGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+      let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
+      let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
       var aiContent = data.aiContent != null ? self.formatArticle(data):null;
 
       if(teamId != null && profile == 'team'){//if league then both items will link

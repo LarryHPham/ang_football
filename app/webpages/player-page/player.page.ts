@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router, RouteParams, RouteConfig} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {MLBPageParameters} from '../../global/global-interface';
+import {SportPageParameters} from '../../global/global-interface';
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
 import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
@@ -27,7 +27,7 @@ import {ComparisonStatsService} from '../../services/comparison-stats.service';
 import {CommentModule} from '../../fe-core/modules/comment/comment.module';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
@@ -101,7 +101,7 @@ declare var moment;
 
 export class PlayerPage implements OnInit {
   public widgetPlace: string = "widgetForModule";
-  pageParams:MLBPageParameters;
+  pageParams:SportPageParameters;
   partnerID:string = null;
   hasError: boolean = false;
 
@@ -129,6 +129,7 @@ export class PlayerPage implements OnInit {
   listOfListsData: Object; // paginated data to be displayed
   twitterData: Array<twitterModuleData>;
   schedulesData:any;
+  scope: string;
 
   constructor(private _params:RouteParams,
               private _router:Router,
@@ -152,6 +153,7 @@ export class PlayerPage implements OnInit {
 
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
+        this.scope = parentParams.scope;
     });
   }
 
@@ -217,16 +219,6 @@ private dailyUpdateModule(playerId: number) {
         });
 }
 
-  //grab tab to make api calls for post of pre event table
-  private scheduleTab(tab) {
-      if(tab == 'Upcoming Games'){
-          this.getSchedulesData('pre-event');
-      }else if(tab == 'Previous Games'){
-          this.getSchedulesData('post-event');
-      }else{
-          this.getSchedulesData('post-event');// fall back just in case no status event is present
-      }
-  }
   private setupSeasonstatsData() {
       this._seasonStatsService.getPlayerStats(this.pageParams.playerId)
       .subscribe(
@@ -238,20 +230,23 @@ private dailyUpdateModule(playerId: number) {
           });
   }
   //api for Schedules
+  //grab tab to make api calls for post of pregame table
+  private scheduleTab(tab) {
+      if(tab == 'Upcoming Games'){
+          this.getSchedulesData('pregame');
+      }else if(tab == 'Previous Games'){
+          this.getSchedulesData('postgame');
+      }else{
+          this.getSchedulesData('postgame');// fall back just in case no status event is present
+      }
+  }
+
+  //api for Schedules
   private getSchedulesData(status){
     var limit = 5;
-    if(status == 'post-event'){
-      limit = 3;
-    }
-    this._schedulesService.getSchedulesService('team', status, limit, 1, false, this.pageParams.teamId)// isTeamProfilePage = false
-    .subscribe(
-      data => {
-        this.schedulesData = data;
-      },
-      err => {
-        console.log("Error getting Schedules Data");
-      }
-    )
+    this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.teamId, (schedulesData) => {
+      this.schedulesData = schedulesData;
+    }) // isTeamProfilePage = true
   }
 
   private getTwitterService() {

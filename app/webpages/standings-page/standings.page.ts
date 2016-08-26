@@ -13,12 +13,12 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {StandingsService} from '../../services/standings.service';
-import {MLBStandingsTabData,MLBStandingsTableData} from '../../services/standings.data';
+import {TDLStandingsTabdata,MLBStandingsTableData} from '../../services/standings.data';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
@@ -29,8 +29,8 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 })
 
 export class StandingsPage implements OnInit {
-  public tabs: Array<MLBStandingsTabData>;
-  public pageParams: MLBPageParameters = {}
+  public tabs: Array<TDLStandingsTabdata>;
+  public pageParams: SportPageParameters = {}
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;
@@ -39,7 +39,7 @@ export class StandingsPage implements OnInit {
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
-              private _mlbFunctions: MLBGlobalFunctions) {
+              private _mlbFunctions: VerticalGlobalFunctions) {
     _title.setTitle(GlobalSettings.getPageTitle("Standings"));
 
     var type = _params.get("type");
@@ -55,22 +55,28 @@ export class StandingsPage implements OnInit {
   getGlossaryValue():Array<GlossaryData>{
     this.glossary = [
         {
-          terms: "<span class='text-heavy'>W:</span> Value 1",
+          terms: "<span class='text-heavy'>W/L/T:</span> Total Wins",
         },
         {
-          terms: "<span class='text-heavy'>L:</span> Value 2",
+          terms: "<span class='text-heavy'>CONF:</span> Conference Record",
         },
         {
-          terms: "<span class='text-heavy'>PCT:</span> Value 3",
+          terms: "<span class='text-heavy'>STRK:</span> Streak",
         },
         {
-          terms: "<span class='text-heavy'>DIV:</span> Value 4",
+          terms: "<span class='text-heavy'>HM:</span> Home",
         },
         {
-          terms: "<span class='text-heavy'>CONF:</span> Value 5",
+          terms: "<span class='text-heavy'>RD:</span> Road",
         },
         {
-          terms: "<span class='text-heavy'>PA:</span> Value 6",
+          terms: "<span class='text-heavy'>PF:</span> Value 6",
+        },
+        {
+          terms: "<span class='text-heavy'>PA:</span> Points Allowed",
+        },
+        {
+          terms: "<span class='text-heavy'>RANK</span> Team Rank",
         }
       ]
     return this.glossary;
@@ -95,7 +101,7 @@ export class StandingsPage implements OnInit {
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", "MLB"));
+      this._title.setTitle(GlobalSettings.getPageTitle("Standings", "NFL"));//TODO
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),

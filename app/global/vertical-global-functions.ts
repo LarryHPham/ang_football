@@ -5,7 +5,7 @@ import {GlobalSettings} from "./global-settings";
 
 @Injectable()
 
-export class MLBGlobalFunctions {
+export class VerticalGlobalFunctions {
 
   constructor() {
 
@@ -134,7 +134,7 @@ export class MLBGlobalFunctions {
     return heightStr ? heightStr.replace(/(\d+)-(\d+)/, "$1'$2\"") : "N/A";
   }
   static formatHeightInches(heightStr: string) {
-    var heightInFeet = Math.round((Number(heightStr) / 12));
+    var heightInFeet = (Number(heightStr) / 12)|0;
     var inches = Number(heightStr) % 12;
     return heightInFeet + "-" + inches;
   }
@@ -377,5 +377,5 @@ export class MLBGlobalFunctions {
       else {
         return statDesc;
       }
-  } //static playerProfileStatDesc
+  } //static nonRankedDataPoints
 }

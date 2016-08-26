@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {CircleImageData} from '../fe-core/components/images/image-data';
@@ -14,6 +14,7 @@ declare var moment: any;
 
 interface TransactionInfo {
     transactionDate: string;
+    type?: string;
     id: string;
     teamKey: string;
     personKey: string;
@@ -130,7 +131,7 @@ export class TransactionsService {
     }
 
     return {
-      tabs: this.getTabs(errorMessagePrepend, false),
+      tabs: this.getTabs(errorMessagePrepend, true),
       profileName: profileName,
       ctaRoute: route
     }
@@ -152,6 +153,7 @@ export class TransactionsService {
 
     //http://dev-homerunloyal-api.synapsys.us/league/transactions/injuries/desc/5/1
     var callURL = this._apiUrl + '/';
+
     if ( teamId ) {
        callURL += 'team/transactions/'+teamId + '/';
     }
@@ -159,7 +161,6 @@ export class TransactionsService {
        callURL += 'league/transactions/';
     }
     callURL += tab.tabDataKey+'/'+sort+'/'+limit+'/'+page;
-
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
     // and MLB profile pages
@@ -189,7 +190,7 @@ export class TransactionsService {
     return [SliderCarousel.convertToCarouselItemType1(2, {
       backgroundImage: null,
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [tab.tabDisplay + ' Report'],
+      subheader: [tab.tabDisplay],
       profileNameLink: null,
       description: [tab.isLoaded ? tab.errorMessage : ""],
       lastUpdatedDate: null,
@@ -212,28 +213,37 @@ export class TransactionsService {
 
       //if data is coming through then run through the transforming function for the module
       carouselArray = data.map((val, index) => {
-        var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var playerRoute = null;
         if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
-          playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
+          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
         }
         var teamLinkText = {
           route: teamId == val.teamId ? null : teamRoute,
-          text: val.teamName,
-          class: 'text-heavy'
+          text: val.teamName
         };
         var playerLinkText = {
           route: playerRoute,
           text: val.playerName,
           class: 'text-heavy'
         };
+
+        //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
+        var description;
+        if (val.type == "Suspension") {
+          description = val.playerName + " was " + val.contents
+        }
+        else {
+          description = val.playerName + ", for the " + val.teamName + ",was suspensed for " + val.contents;
+        }
+
         return SliderCarousel.convertToCarouselItemType1(index, {
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
-          subheader: [tab.tabDisplay + ' Report - ', teamLinkText],
+          subheader: [tab.tabDisplay + ' - ', teamLinkText],
           profileNameLink: playerLinkText,
           description: [
-              this.getTabSingularName(tab.tabDataKey) + ' date - ' + val.repDate + ': ' + val.contents
+              description
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdate),
@@ -258,7 +268,7 @@ export class TransactionsService {
     listDataArray = data.map(function(val, index){
       var playerRoute = null;
       if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
-        playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
       }
       var playerTextLink = {
         route: playerRoute,

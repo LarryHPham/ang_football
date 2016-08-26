@@ -4,7 +4,7 @@ import {Http} from '@angular/http';
 
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {DirectoryProfileItem, DirectoryItems} from '../fe-core/modules/directory/directory.data';
 declare var moment: any;
 
@@ -29,7 +29,7 @@ interface DirectoryListData<T> {
 }
 
 interface MLBTeamDirectoryData {
-  id: string;
+  teamId: string;
   pageHeaderParentProfileName: string;
   listItemsProfileName: string;
   listItemsAssociatedProfile: string;
@@ -96,8 +96,7 @@ export class DirectoryService {
           var items = data.data;
           var firstItem = items.length > 0 ? items[0] : null;//TODO
           return {
-            // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting for data
-            totalItems: 20,//TODO waiting for data
+            totalItems: firstItem ? firstItem.resultCount : 0,
             items: items.map(value => this.convertPlayerDataToDirectory(value))
           }
         });
@@ -115,8 +114,7 @@ export class DirectoryService {
         var items = data.data;
         var firstItem = items.length > 0 ? items[0] : null;
         return {
-          // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting on data
-          totalItems: 20,
+          totalItems: firstItem ? firstItem.resultCount : 0,
           items: data.data.map(value => this.convertTeamDataToDirectory(value))
         }
       });
@@ -131,11 +129,11 @@ export class DirectoryService {
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: MLBGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.id),
+          route: VerticalGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.teamId),
           text: data.listItemsProfileName
         },
         {
-          text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " "  + (data.dataValueOne ? data.dataValueOne : "N/A")
+          text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " " + (data.dataValueOne ? data.dataValueOne : "N/A")
         },
         {
           text: data.listItemsAssociatedProfile ? this._globalFunc.capitalizeFirstLetter(data.listItemsAssociatedProfile) : "N/A"
@@ -162,11 +160,11 @@ export class DirectoryService {
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: MLBGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
+          route: VerticalGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
           text: data.listItemsProfileName
         },
         {
-          route: MLBGlobalFunctions.formatTeamRoute(teamName, data.teamId),
+          route: VerticalGlobalFunctions.formatTeamRoute(teamName, data.teamId),
           text: teamName
         },
         {

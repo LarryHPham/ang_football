@@ -4,7 +4,7 @@ import {RosterTabData} from '../fe-core/components/roster/roster.component';
 import {SliderCarousel,SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Conference, Division} from '../global/global-interface';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {RosterService} from './roster.service';
 
@@ -127,18 +127,18 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   }
 
   convertToCarouselItem(val:TeamRosterData, index:number):SliderCarouselInput {
-    var playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
-    var teamRoute = this.isTeamProfilePage ? null : MLBGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
+    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
+    var teamRoute = this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
     var curYear = new Date().getFullYear();
 
-    // var formattedHeight = MLBGlobalFunctions.formatHeightWithFoot(val.height);
+    // var formattedHeight = VerticalGlobalFunctions.formatHeightWithFoot(val.height);
     var formattedSalary = "N/A";
     if ( val.playerSalary != null ) {
       formattedSalary = "$" + GlobalFunctions.nFormatter(Number(val.playerSalary));
     }
 
     var playerNum = val.playerJerseyNumber != null ? "<span class='text-heavy'>No. " + val.playerJerseyNumber + "</span>," : "";
-    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + MLBGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
+    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + VerticalGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
     var playerWeight = val.playerWeight != null ? "<span class='text-heavy'>" + val.playerWeight + "</span> " : "N/A";
     var playerSalary = "<span class='text-heavy'>" + formattedSalary + "</span> per year.";
 
@@ -177,7 +177,8 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
   columns: Array<TableColumn> = [{
       headerValue: "Player",
       columnClass: "image-column",
-      key: "name"
+      key: "name",
+      sortDirection: 1 //ascending
     },{
       headerValue: "Pos.",
       columnClass: "data-column",
@@ -202,7 +203,6 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       headerValue: "Salary",
       columnClass: "data-column",
       isNumericType: true,
-      sortDirection: -1, //descending
       key: "sal"
     }
   ];
@@ -249,7 +249,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       case "name":
         display = item.playerFirstName + " " + item.playerLastName;
         sort = item.playerLastName + ', ' + item.playerFirstName;
-        link = MLBGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
+        link = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
         imageUrl = GlobalSettings.getImageUrl(item.playerHeadshotUrl);
         break;
 
@@ -259,7 +259,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
         break;
 
       case "ht":
-        display = item.playerHeight != null ? MLBGlobalFunctions.formatHeight(MLBGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
+        display = item.playerHeight != null ? VerticalGlobalFunctions.formatHeight(VerticalGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
         displayAsRawText = true;
         sort = item.playerHeight != null ? Number(item.playerHeight) : null;
         break;

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {MLBPageParameters} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {SportPageParameters} from '../global/global-interface';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
@@ -150,7 +150,7 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
 
 @Injectable()
 export class ComparisonStatsService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
+  private _apiUrl: string = GlobalSettings.getApiUrlTdl();
 
   private pitchingFields = [//TODO
     "pitchWins",
@@ -172,7 +172,7 @@ export class ComparisonStatsService {
 
   constructor(public http: Http) { }
 
-  getInitialPlayerStats(pageParams: MLBPageParameters): Observable<ComparisonModuleData> {
+  getInitialPlayerStats(pageParams: SportPageParameters): Observable<ComparisonModuleData> {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
     return this.callPlayerComparisonAPI(teamId, playerId, data => {

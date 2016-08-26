@@ -15,7 +15,7 @@ export class FooterService {
   // getDykService(profile, id){
   getFooterService(scope: string, profile: string){
     var headers = this.setToken();
-    var fullUrl = 'http://dev-touchdownloyal-api.synapsys.us';//TODO
+    var fullUrl = GlobalSettings.getApiUrlTdl();//TODO
     //example url = 'http://dev-touchdownloyal-api.synapsys.us/footer/nfl/player';
     fullUrl += "/footer";
     if(scope !== undefined){
@@ -44,18 +44,16 @@ export class FooterService {
     //Build alphabet array for navigation links
     for ( var i in data ) {
       var text = i.toUpperCase();
-      if(data[i] == true){
-        navigationArray.push({
-          text: text,
-          active: true,
-          route: ['Directory-page-starts-with',
-          {
-            type: profile,
-            page: 1,
-            startsWith: text
-          }]
-        });
-      }
+      navigationArray.push({
+        text: text,
+        active: data[i],
+        route: ['Directory-page-starts-with',
+        {
+          type: profile+'s',
+          page: 1,
+          startsWith: text
+        }]
+      });
     }
     return navigationArray;
     }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
@@ -9,16 +9,21 @@ import {DirectoryService, DirectoryType, DirectorySearchParams} from '../../serv
 import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} from '../../fe-core/modules/directory/directory.data';
 import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {FooterService} from '../../services/footer.service';
+import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
 
 @Component({
     selector: 'Directory-page',
     templateUrl: './app/webpages/directory-page/directory.page.html',
-    directives: [SidekickWrapper, DirectoryModule],
-    providers: [DirectoryService, Title]
+    directives: [PaginationFooter, SidekickWrapper, DirectoryModule],
+    providers: [DirectoryService, Title, FooterService]
 })
 
 export class DirectoryPage {
   public data: DirectoryModuleData;
+
+  public partnerID:string;
+  public scope: string;
 
   public currentPage: number = 1;
 
@@ -28,43 +33,54 @@ export class DirectoryPage {
 
   public listingsLimit: number = 20;
 
+  public maxPages: number;
+
   public isError: boolean = false;
 
   public pageType: DirectoryType;
 
-  constructor(private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title) {
-    _title.setTitle(GlobalSettings.getPageTitle("Directory"));
-    var page = _params.get("page");
-    this.currentPage = Number(page);
+  public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
 
-    var type = _params.get("type");
-    switch ( type ) {
-      case "players":
-        this.pageType = DirectoryType.players;
-        break;
+  paginationParameters:PaginationParameters;
 
-      case "teams":
-        this.pageType = DirectoryType.teams;
-        break;
+  navLists: Array<Link>;
 
-      default:
-        this.pageType = DirectoryType.none;
-        break;
-    }
+  constructor(private _footerService: FooterService, private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title, private _router: Router) {
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.partnerID = parentParams.partnerID;
+        this.scope = parentParams.scope;
 
-    let startsWith = _params.get("startsWith");
-    if ( startsWith !== undefined && startsWith !== null ) {
-       this.newlyAdded = startsWith.toLowerCase() === "new";
-       this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;
-    }
+        _title.setTitle(GlobalSettings.getPageTitle("Directory"));
+        var page = _params.get("page");
+        this.currentPage = Number(page);
 
-    if ( this.currentPage === 0 ) {
-      this.currentPage = 1; //page index starts at one
-    }
-  }
+        var type = _params.get("type");
+        switch ( type ) {
+          case "players":
+          this.pageType = DirectoryType.players;
+          this.getNav(this._sportLeagueAbbrv, "player");
+          break;
 
-  ngOnInit() {
-      this.getDirectoryData();
+          case "teams":
+          this.pageType = DirectoryType.teams;
+          this.getNav(this._sportLeagueAbbrv, "team");
+          break;
+
+          default:
+          this.pageType = DirectoryType.none;
+          break;
+        }
+
+        let startsWith = _params.get("startsWith");
+        if ( startsWith !== undefined && startsWith !== null ) {
+          this.newlyAdded = startsWith.toLowerCase() === "new";
+          this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;
+        }
+
+        if ( this.currentPage === 0 ) {
+          this.currentPage = 1; //page index starts at one
+        }
+    });
   }
 
   getDirectoryData() {
@@ -87,10 +103,39 @@ export class DirectoryPage {
       );
   }
 
+  setPaginationParams(input) {
+      var info = input;
+      var params = this._params.params;
+      //path: '/directory/:type/:startsWith/page/:page',
+      var navigationParams = {
+        type: params['type'],
+        startsWith:this.startsWith,
+        page: this.currentPage,
+      };
+
+      var navigationPage = this.data ? "Directory-page-starts-with" : "Error-page";
+      let max = Math.round(info.totalItems/this.listingsLimit)
+      this.paginationParameters = {
+        index: params['page'] != null ? Number(params['page']) : null,
+        max: max,
+        paginationType: 'page',
+        navigationPage: navigationPage,
+        navigationParams: navigationParams,
+        indexKey: 'page'
+      };
+  }
+
+  newIndex(index){
+    this.currentPage = index;
+    window.scrollTo(0, 0);
+  }
+
+
   setupData(listings: DirectoryItems) {
     let pageParams = {
       type: DirectoryType[this.pageType]
     };
+
     let lowerCaseType = "";
     let titleCaseType = "";
 
@@ -110,8 +155,7 @@ export class DirectoryPage {
         titleCaseType = "[Type]";
         break;
     }
-
-    let directoryListTitle = "Latest NFL " + titleCaseType + " Profiles in the Nation.";//TODO NFL/NCAAF
+    let directoryListTitle = "Latest " + this._sportLeagueAbbrv + " " + titleCaseType + " Profiles in the Nation.";
     let noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s";
     let pagingDescription = titleCaseType + " profiles";
     let navTitle = "Browse all " + lowerCaseType + " profiles from A to Z";
@@ -121,7 +165,6 @@ export class DirectoryPage {
       pageParams["startsWith"] = this.startsWith;
       noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s starting with the letter '" + this.startsWith + "'";
     }
-
     let data:DirectoryModuleData = {
       pageName: pageName,
       breadcrumbList: [{
@@ -132,7 +175,10 @@ export class DirectoryPage {
       noResultsMessage: noResultsMessage,
       listingItems: null,
       listingsLimit: this.listingsLimit,
-      navigationData: this.setupAlphabeticalNavigation(navTitle),
+      navigationData: {
+        title: navTitle,
+        links: this.navLists ? this.navLists : null
+      },
       pagingDescription: pagingDescription,
       pageParams: pageParams
     };
@@ -148,14 +194,19 @@ export class DirectoryPage {
     }
 
     this.data = data;
+
+    //generate pagingation parameters for pagination footer
+    this.setPaginationParams(listings);
   }
 
-  setupAlphabeticalNavigation(title: string): NavigationData {
-      var navigationArray = GlobalFunctions.setupAlphabeticalNavigation(DirectoryType[this.pageType]);
-
-      return {
-        title: title,
-        links: navigationArray
-      };
+  getNav(scope, profile) {
+    this._footerService.getFooterService(scope, profile)
+    .subscribe(data => {
+      this.navLists = data;
+      this.getDirectoryData();
+    },
+    err => {
+      console.log("Error getting navigation data");
+    });
   }
 }

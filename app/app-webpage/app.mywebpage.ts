@@ -33,7 +33,6 @@ import {HeadlineDataService} from "../global/global-ai-headline-module-service";
 
 import {ModulePage} from "../webpages/module-page/module.page";
 import {ImagesTestPage} from "../webpages/images-test-page/images-test.page";
-import {DesignPage} from "../webpages/design-page/design.page";
 
 import {PartnerHeader} from "../global/global-service";
 import {SanitizeHtml} from "../fe-core/pipes/safe.pipe";
@@ -255,11 +254,6 @@ declare var jQuery: any;
         component: ModulePage
     },
     {
-        path: '/design/:teamId',
-        name: 'Design-page',
-        component: DesignPage,
-    },
-    {
         path: '/images-test',
         name: 'Images-test-page',
         component: ImagesTestPage,
@@ -302,11 +296,11 @@ export class MyAppComponent implements OnInit{
   }
 
   getPartnerHeader(){//Since it we are receiving
+
     if(this.partnerID != null){
       this._partnerData.getPartnerData(this.partnerID)
       .subscribe(
         partnerScript => {
-          //console.log(partnerScript);
           this.partnerData = partnerScript;
           this.partnerScript = this.partnerData['results'].header.script;
         }
