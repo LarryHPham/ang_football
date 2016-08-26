@@ -68,66 +68,6 @@ export class SchedulesService {
       return headers;
   }
 
-  // getSchedulesService(scope, profile, eventStatus, limit, pageNum, isTeamProfilePage?: boolean, id?, year?){
-  //   //Configure HTTP Headers
-  //   var headers = this.setToken();
-  //   var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
-  //   var displayYear;
-  //   var eventTab:boolean = false;
-  //
-  //   if(typeof year == 'undefined'){
-  //     year = new Date().getFullYear();//once we have historic data we shall show this
-  //   }
-  //
-  //   if(jsYear == year){
-  //     displayYear = "Current Season";
-  //   }else{
-  //     displayYear = year;
-  //   }
-  //
-  //   //eventType determines which tab is highlighted
-  //   if(eventStatus == 'pregame'){
-  //     eventTab = true;
-  //   }else{
-  //     eventTab = false;
-  //   }
-  //
-  //
-  //   //http://dev-touchdownloyal-api.synapsys.us/schedule/league/nfl/postgame/6/2
-  //   this._apiUrl = "http://dev-touchdownloyal-api.synapsys.us";
-  //   var callURL = this._apiUrl+'/schedule/'+profile;
-  //
-  //   if(profile == 'league'){//if league call then add scope
-  //     callURL += '/'+ scope;
-  //   }
-  //
-  //   if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
-  //     callURL += '/'+id;
-  //   }
-  //   callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-  //
-  //   console.log('API:',callURL);
-  //   return this.http.get(callURL, {headers: headers})
-  //     .map(res => res.json())
-  //     .map(data => {
-  //       console.log(1, data);
-  //       var tableData = this.setupTableData(eventStatus, year, data.data, id, limit, isTeamProfilePage);
-  //       var tabData = [
-  //         {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
-  //         {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
-  //       ];
-  //       return {
-  //         data:tableData,
-  //         tabs:tabData,
-  //         carData: this.setupCarouselData(data.data, tableData[0], limit),
-  //         pageInfo:{
-  //           totalPages: data.data[0].totalPages,
-  //           totalResults: data.data[0].totalResults,
-  //         }
-  //       };
-  //     });
-  // }
-
   //possibly simpler version of getting schedules api call
   getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
     //Configure HTTP Headers
@@ -174,26 +114,21 @@ export class SchedulesService {
 
     this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId)
     .subscribe( data => {
-      var scheduleData;
-      if(data.data != null){
-        let isTeamProfilePage = profile == 'league' ? false :true;
-        var tableData = this.setupTableData(eventStatus, year, data.data.games, teamId, limit, isTeamProfilePage);
-        var tabData = [
-          {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
-          {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
-        ];
-
-        scheduleData = {
-          data:tableData,
-          tabs:tabData,
-          carData: this.setupCarouselData(data.data.games, tableData[0], limit),
-          pageInfo:{
-            totalPages: data.data.info.pages,
-            totalResults: data.data.info.total,
-          }
+      var gamesData = data.data != null? data.data.games:null;
+      let isTeamProfilePage = profile == 'league' ? false :true;
+      var tableData = this.setupTableData(eventStatus, year, gamesData, teamId, limit, isTeamProfilePage);
+      var tabData = [
+        {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
+        {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
+      ];
+      var scheduleData = {
+        data:tableData,
+        tabs:tabData,
+        carData: this.setupCarouselData(gamesData, tableData[0], limit),
+        pageInfo:{
+          totalPages: data.data != null ? data.data.info.pages:0,
+          totalResults: data.data != null ? data.data.info.total:0,
         }
-      }else{
-        scheduleData = null;
       }
       callback(scheduleData);
     })
