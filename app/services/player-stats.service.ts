@@ -1,7 +1,6 @@
 import {Injectable, Input, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-
 import {SportPageParameters} from '../global/global-interface';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
@@ -19,7 +18,6 @@ export class PlayerStatsService implements OnDestroy{
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Recieving", "Defense", "Special" ];
     public allStatistics: Array<PlayerStatsData>;
-
 
     constructor(public http: Http){}
 
@@ -71,7 +69,7 @@ export class PlayerStatsService implements OnDestroy{
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
         standingsTab.tableData = null;
-        standingsTab.tabActive="Passing";
+        // standingsTab.tabActive="Passing";
 
         if(standingsTab.tabActive=="Special"){
             var  tabName=columnTabType.toLowerCase();
