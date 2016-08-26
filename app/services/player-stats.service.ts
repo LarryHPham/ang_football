@@ -1,7 +1,8 @@
 import {Injectable, Input, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {SportsPageParameters} from '../global/global-interface';
+
+import {SportPageParameters} from '../global/global-interface';
 import {MLBGlobalFunctions} from '../global/mlb-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
@@ -18,6 +19,7 @@ export class PlayerStatsService implements OnDestroy{
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Recieving", "Defense", "Special" ];
     public allStatistics: Array<PlayerStatsData>;
+
 
     constructor(public http: Http){}
 
@@ -44,7 +46,7 @@ export class PlayerStatsService implements OnDestroy{
         };
     }
 
-    getStatsTabData(tabData: Array<any>, pageParams: SportsPageParameters, tabDataLoaded: Function, maxRows?: number) {
+    getStatsTabData(tabData: Array<any>, pageParams: SportPageParameters, tabDataLoaded: Function, maxRows?: number) {
         if ( !tabData || tabData.length <= 1 ) {
             console.log("Error getting stats data - invalid tabData object");
             return;
@@ -108,7 +110,7 @@ export class PlayerStatsService implements OnDestroy{
         return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, false, isTeamProfilePage));
     }
 
-    private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportsPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
+    private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
         let table = new MLBPlayerStatsTableModel(data, standingsTab.tabActive);
         //Limit to maxRows, if necessary
         if ( maxRows !== undefined ) {
