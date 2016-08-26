@@ -14,14 +14,11 @@ export class SearchService{
     public pageMax: number = 10;
     public searchJSON: any;
 
-    // public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
-    public searchAPI: string = 'http://dev-touchdownloyal-api.synapsys.us/landingPage/search';
-    constructor(private http: Http){
+    public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
+    constructor(private http: Http, private _router:Router){
 
         //Get initial search JSON data
-        // GlobalSettings.getParentParams(_router, parentParams =>
-        //   this.getSearchJSON(parentParams.scope)
-        // );
+        this.getSearchJSON()
     }
 
     //Function get search JSON object
@@ -237,18 +234,6 @@ export class SearchService{
       },{
         key: 'ncaaf',
         value: 'NCAAF',
-      },{
-        key: 'a',
-        value: 'A',
-      },{
-        key: 'b',
-        value: 'B',
-      },{
-        key: 'c',
-        value: 'C',
-      },{
-        key: 'd',
-        value: 'D',
       }];
       return dropdownFilter;
     }
@@ -324,7 +309,7 @@ export class SearchService{
             if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
                 relativePath = item.scope+ '/' + relativePath.substr(1);
             }
-            let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span></p>';
+            let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '/<b>' + relativePath + '</b></p>';
             let regExp = new RegExp(playerName, 'g');
             let description = item.playerDescription.replace(regExp, ('<span class="text-heavy">' + playerName + '</span>'));
 
