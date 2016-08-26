@@ -237,6 +237,18 @@ export class SearchService{
       },{
         key: 'ncaaf',
         value: 'NCAAF',
+      },{
+        key: 'a',
+        value: 'A',
+      },{
+        key: 'b',
+        value: 'B',
+      },{
+        key: 'c',
+        value: 'C',
+      },{
+        key: 'd',
+        value: 'D',
       }];
       return dropdownFilter;
     }
