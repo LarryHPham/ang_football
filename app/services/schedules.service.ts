@@ -175,7 +175,6 @@ export class SchedulesService {
     this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId)
     .subscribe( data => {
       var scheduleData;
-      console.log('schedule api',data);
       if(data.data != null){
         let isTeamProfilePage = profile == 'league' ? false :true;
         var tableData = this.setupTableData(eventStatus, year, data.data.games, teamId, limit, isTeamProfilePage);
