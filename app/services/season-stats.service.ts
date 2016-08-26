@@ -11,7 +11,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {ComparisonBarInput} from '../fe-core/components/comparison-bar/comparison-bar.component';
 import {SeasonStatsModuleData, SeasonStatsTabData} from '../fe-core/modules/season-stats/season-stats.module';
 
-import {Season, MLBPageParameters} from '../global/global-interface';
+import {Season, SportPageParameters} from '../global/global-interface';
 import {TeamSeasonStatsData, MLBSeasonStatsTabData, MLBSeasonStatsTableModel, MLBSeasonStatsTableData} from './season-stats-page.data';
 import {TableTabData} from '../fe-core/components/season-stats/season-stats.component';
 
@@ -86,110 +86,110 @@ export class SeasonStatsService {
   }
 
   getPlayerStats(playerId: number): Observable<SeasonStatsModuleData> {
-    let url = this._apiUrl + "/player/seasonStats/" + playerId;
-    // console.log("player stats: " + url);
+    // let url = this._apiUrl + "/player/seasonStats/" + playerId;
+    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + "11288";
     return this.http.get(url)
       .map(res => res.json())
       .map(data => this.formatData(data.data));
   }
 
   private formatData(data: APISeasonStatsData): SeasonStatsModuleData {
-    if ( !data || !data.playerInfo ) {
+    if ( !data ) {
       return null;
     }
 
-    var fields = data.playerInfo.position[0].charAt(0) == "P" ? this.pitchingFields : this.battingFields;
+    //var fields = data.playerInfo.position[0].charAt(0) == "P" ? this.pitchingFields : this.battingFields;
     let playerInfo = data.playerInfo;
     let stats = data.stats;
 
     //Check to see if the position list contains pitcher abbreviation
     //in order to select the appropriate fields
-    let isPitcher = playerInfo.position.filter(item => item == "P").length > 0;
+    //let isPitcher = playerInfo.position.filter(item => item == "P").length > 0;
     var seasonStatTabs = [];
     var curYear = new Date().getFullYear();
 
     //Load 4 years worth of data, starting from current year
     for ( var year = curYear; year > curYear-4; year-- ) {
       var strYear = year.toString();
-      seasonStatTabs.push(this.getTabData(strYear, data, playerInfo.playerName, isPitcher, year == curYear));
+      seasonStatTabs.push(this.getTabData(strYear, data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, year == curYear));
     }
     //Load "Career Stats" data
-    seasonStatTabs.push(this.getTabData("Career", data, playerInfo.playerName, isPitcher));
+    seasonStatTabs.push(this.getTabData("Career", data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false));
     return {
       tabs: seasonStatTabs,
-      profileName: playerInfo.playerName,
-      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, curYear.toString()),
-      pageRouterLink: this.getLinkToPage(Number(playerInfo.playerId), playerInfo.playerName),
-      playerInfo: playerInfo
+      profileName: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName,
+      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), strYear),
+      pageRouterLink: this.getLinkToPage(Number(playerInfo[0].playerId), playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName),
+      playerInfo: playerInfo,
+      stats: stats
     };
   }
 
   private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean): Array<ComparisonBarInput> {
-    if(stats.player !== undefined){ //catch if no data for season
-    let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
+    if(stats !== undefined){ //catch if no data for season
+    //let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
     let bars: Array<ComparisonBarInput> = [];
 
-    for ( var index in statsToInclude ) {
-      var fieldName = statsToInclude[index];
+    for ( var index in stats ) {
+      var fieldName = stats[index].statType;
       var infoBox = null;
 
       //catch no stat data
-      var worstValue = stats.worst[fieldName] != undefined ? stats.worst[fieldName] : null;
-      var leaderValue = stats.leader[fieldName] != undefined ? stats.leader[fieldName] : null;
-      var playerValue = stats.player[fieldName] != undefined ? stats.player[fieldName] : null;
+      var worstValue = stats[index].statAverage != undefined ? stats[index].statAverage : null;
+      var leaderValue = stats[index].leaderStat != undefined ? stats[index].leaderStat : null;
+      var playerValue = stats[index].stat != undefined ? stats[index].stat : null;
       var dataPoints = [];
 
       //Set up data points
       if ( isCareer ) {
         dataPoints = [{
           value: this.formatValue(fieldName, playerValue),
-          color: '#BC1624'
+          color: '#2d3e50'
         }];
       }
       else {
-        var avgValue = stats.average[fieldName] != null ? stats.average[fieldName] : 'N/A';
+        var avgValue = stats[index].statAverage  != null ? stats[index].statAverage  : 'N/A';
         var infoIcon = 'fa-info-circle';
         dataPoints = [{
           value: this.formatValue(fieldName, playerValue),
-          color: '#BC1624',
+          color: '#2d3e50',
           fontWeight: '800'
         },
         {
           value: this.formatValue(fieldName, avgValue),
-          color: '#444444',
+          color: '#999999',
         }];
 
         //Set up info box only for non-career tabs
         if ( leaderValue == null ) {
           console.log("Error - leader value is null for " + fieldName);
         }
-        else if ( leaderValue.players && leaderValue.players.length > 0 ) {
-          var firstPlayer = leaderValue.players[0];
-          var playerName = firstPlayer.firstName + ' ' + firstPlayer.playerLastName;
-          var linkToPlayer = MLBGlobalFunctions.formatPlayerRoute(firstPlayer.teamName, playerName, firstPlayer.playerId);
+        else if ( leaderValue ) {
+          var playerName = stats[index].leaderName;
+          var linkToPlayer = MLBGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
           infoBox = [{
-              teamName: firstPlayer.teamLastName,
+              teamName: stats[index].leaderName,
               playerName: playerName,
               infoBoxImage : {
                 imageClass: "image-40",
                 mainImage: {
-                  imageUrl: GlobalSettings.getImageUrl(firstPlayer.playerHeadshot),
+                  imageUrl: GlobalSettings.getImageUrl(""),
                   imageClass: "border-1",
                   urlRouteArray:  linkToPlayer,
                   hoverText: "<i class='fa fa-mail-forward infobox-list-fa'></i>",
                 },
               },
               routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: MLBGlobalFunctions.formatTeamRoute(firstPlayer.teamName, firstPlayer.teamId),
+              routerLinkTeam: MLBGlobalFunctions.formatTeamRoute(stats[index].leaderName, stats[index].leaderId),
             }];
         }
       }
 
       bars.push({
-        title: this.getKeyDisplayTitle(fieldName),
+        title: SeasonStatsService.getKeyDisplayTitle(fieldName),
         data: dataPoints,
-        minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue.statValue)) : null,
-        maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue.statValue)) : null,
+        minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue)) : null,
+        maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue)) : null,
         info: infoIcon != null ? infoIcon : null,
         infoBoxDetails: infoBox,
         qualifierLabel: SeasonStatsService.getQualifierLabel(fieldName)
@@ -205,15 +205,15 @@ export class SeasonStatsService {
     var subTitle;
     var tabTitle;
     var longSeasonName; // for display in the carousel and module title
-    var isCareer = seasonId.toLowerCase() == "career";
-    var bars: Array<ComparisonBarInput> = this.getBarData(data.stats[seasonId.toLowerCase()], isCareer, isPitcher);
+    var isCareer = seasonId == "career";
+    var bars: Array<ComparisonBarInput> = this.getBarData(data.stats[seasonId], isCareer, isPitcher);
 
     if ( isCareer ) {
       tabTitle = "Career Stats";
       subTitle = tabTitle;
       longSeasonName = "Career";
       legendValues = [
-          { title: playerName,    color: '#BC2027' },
+          { title: playerName,    color: '#2d3e50' },
           { title: "Stat High",  color: "#E1E1E1" }
       ];
     }
@@ -229,12 +229,12 @@ export class SeasonStatsService {
         longSeasonName = subTitle;
       }
       legendValues = [
-          { title: playerName,    color: '#BC2027' },
-          { title: 'MLB Average', color: '#444444' },
-          { title: "MLB Leader",  color: "#E1E1E1" }
+          { title: playerName,    color: '#2d3e50' },
+          { title: 'NFL Average', color: '#999999' },
+          { title: "NFL Leader",  color: "#E1E1E1" }
       ];
     }
-
+    if(bars != null && bars.length == 0){ bars = undefined};
     return {
       longSeasonName: longSeasonName,
       tabTitle: tabTitle,
@@ -249,27 +249,31 @@ export class SeasonStatsService {
     };
   }
 
-  static getCarouselData(playerInfo: SeasonStatsPlayerData, longSeasonName: string): SliderCarouselInput {
-    if ( !playerInfo ) {
+  static getCarouselData(playerInfo: SeasonStatsPlayerData, stats, longSeasonName: string, currentTab): SliderCarouselInput {
+    if ( !playerInfo[0] ) {
       return null;
     }
-    var teamRoute = MLBGlobalFunctions.formatTeamRoute(playerInfo.teamName, playerInfo.teamId);
+    var teamRoute = MLBGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
     var teamRouteText = {
       route: teamRoute,
-      text: playerInfo.teamName,
+      text: playerInfo[0].teamName,
       class: 'text-heavy'
     };
     var playerRouteText = {
-      text: playerInfo.playerName
+      text: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName
     };
+    var description: any = ["No Information for this season"];
+    if (stats[currentTab] != null && stats[currentTab].length > 0) {
+      description = [playerRouteText, " has a total of ", Number(stats[currentTab][0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[currentTab][0].statType) , " with " , Number(stats[currentTab][1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[currentTab][1].statType) , " and " , Number(stats[currentTab][2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[currentTab][2].statType) ];
+    }
     return SliderCarousel.convertToCarouselItemType1(1, {
-      backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo.liveImage),
+      backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].liveImage),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [longSeasonName + " Stats Report"],
       profileNameLink: playerRouteText,
-      description: ["Team: ", teamRouteText],
-      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo.lastUpdate),
-      circleImageUrl: GlobalSettings.getImageUrl(playerInfo.playerHeadshot),
+      description: description,
+      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo[0].lastUpdate),
+      circleImageUrl: GlobalSettings.getImageUrl(playerInfo[0].playerHeadshot),
       circleImageRoute: null, //? the single item on the player profile page, so no link is needed
       // subImageUrl: GlobalSettings.getImageUrl(data.playerInfo.teamLogo),
       // subImageRoute: teamRoute
@@ -290,21 +294,26 @@ export class SeasonStatsService {
     }
   }
 
-  private getKeyDisplayTitle(key: string): string {
-    switch (key) {
-      case "batHomeRuns": return "Home Runs (HR)";
-      case "batAverage": return "Batting Average (BA)";
-      case "batRbi": return "Runs Batted In (RBI)";
-      case "batHits": return "Hits (H)";
-      case "batBasesOnBalls": return "Walks (BB)";
-
-      case "pitchWins": return "Wins";
-      case "pitchInningsPitched": return "Innings Pitched (IP)";
-      case "pitchStrikeouts": return "Strike Outs (SO)";
-      case "pitchEra": return "ERA";
-      case "pitchHits": return "Hits";
-      default: return null;
-    }
+  static getKeyDisplayTitle(key: string): string {
+    key = key.replace(/_/g, " ");
+    key = key.replace("player", "");
+    key = key.toLowerCase().replace(/\b[a-z](?=[a-z]{2})/g, function(letter) {
+    return letter.toUpperCase(); } );
+    return key;
+    // switch (key) {
+    //   case "batHomeRuns": return "Home Runs (HR)";
+    //   case "batAverage": return "Batting Average (BA)";
+    //   case "batRbi": return "Runs Batted In (RBI)";
+    //   case "batHits": return "Hits (H)";
+    //   case "batBasesOnBalls": return "Walks (BB)";
+    //
+    //   case "pitchWins": return "Wins";
+    //   case "pitchInningsPitched": return "Innings Pitched (IP)";
+    //   case "pitchStrikeouts": return "Strike Outs (SO)";
+    //   case "pitchEra": return "ERA";
+    //   case "pitchHits": return "Hits";
+    //   default: return null;
+    // }
   }
 
   private formatValue(fieldName: string, value: string): string {
@@ -332,7 +341,7 @@ export class SeasonStatsService {
 export class SeasonStatsPageService {
   constructor(public http: Http, private _mlbFunctions: MLBGlobalFunctions){}
 
-  getPageTitle( pageParams: MLBPageParameters, playerName: string): string {
+  getPageTitle( pageParams: SportPageParameters, playerName: string): string {
     let pageTitle = "Season Stats";
     if ( playerName ) {
       pageTitle = "Season Stats - " + playerName;
@@ -340,7 +349,7 @@ export class SeasonStatsPageService {
     return pageTitle;
   }
 
-  initializeAllTabs(pageParams: MLBPageParameters): Array<MLBSeasonStatsTabData> {
+  initializeAllTabs(pageParams: SportPageParameters): Array<MLBSeasonStatsTabData> {
     let tabs: Array<MLBSeasonStatsTabData> = [];
     var curYear = new Date().getFullYear();
     var year = curYear;
@@ -360,7 +369,7 @@ export class SeasonStatsPageService {
     return tabs;
   }
 
-  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: MLBPageParameters, onTabsLoaded: Function, maxRows?: number){
+  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number){
       var playerId = pageParams.playerId;
       //example url: http://dev-homerunloyal-api.synapsys.us/player/statsDetail/96652
       let url = GlobalSettings.getApiUrl() + "/player/statsDetail/" + playerId;

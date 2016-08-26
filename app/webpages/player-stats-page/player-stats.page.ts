@@ -14,7 +14,7 @@ import {PlayerStatsService} from '../../services/player-stats.service';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from '../../services/player-stats.data';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
@@ -31,7 +31,7 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 export class PlayerStatsPage implements OnInit {
   public tabs: Array<MLBPlayerStatsTableData>;
 
-  public pageParams: MLBPageParameters = {}
+  public pageParams: SportPageParameters = {}
 
   public titleData: TitleInputData = {
     imageURL: "/app/public/profile_placeholder.png",

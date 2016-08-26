@@ -66,7 +66,7 @@ export class MLBStandingsTableData implements TableComponentData<TeamStandingsDa
 
 }
 
-export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsData> {
+export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsData> {
 
   title: string;
 

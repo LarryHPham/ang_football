@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router, RouteParams, RouteConfig} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
-import {MLBPageParameters} from '../../global/global-interface';
+import {SportPageParameters} from '../../global/global-interface';
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
 import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
@@ -27,7 +27,7 @@ import {ComparisonStatsService} from '../../services/comparison-stats.service';
 import {CommentModule} from '../../fe-core/modules/comment/comment.module';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
@@ -101,7 +101,7 @@ declare var moment;
 
 export class PlayerPage implements OnInit {
   public widgetPlace: string = "widgetForModule";
-  pageParams:MLBPageParameters;
+  pageParams:SportPageParameters;
   partnerID:string = null;
   hasError: boolean = false;
 
