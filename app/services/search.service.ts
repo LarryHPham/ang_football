@@ -5,7 +5,7 @@ import {Http} from '@angular/http';
 import {SearchComponentResult, SearchComponentData} from '../fe-core/components/search/search.component';
 import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions}  from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions}  from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 declare let Fuse: any;
 
@@ -13,17 +13,23 @@ declare let Fuse: any;
 export class SearchService{
     public pageMax: number = 10;
     public searchJSON: any;
+
     // public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
     public searchAPI: string = 'http://dev-touchdownloyal-api.synapsys.us/landingPage/search';
     constructor(private http: Http){
+
         //Get initial search JSON data
-        this.getSearchJSON();
+        // GlobalSettings.getParentParams(_router, parentParams =>
+        //   this.getSearchJSON(parentParams.scope)
+        // );
     }
 
     //Function get search JSON object
     getSearchJSON(){
-        return this.http.get(this.searchAPI, {
 
+      //this.newSearchAPI = this.newSearchAPI+scope;
+
+        return this.http.get(this.searchAPI, {
             })
             .map(
                 res => res.json()
@@ -104,7 +110,7 @@ export class SearchService{
             let teamName = item.teamName;
 
             //generate route for team
-            let route = MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -136,7 +142,7 @@ export class SearchService{
             count++;
             let item = playerResults[i];
             let playerName = item.playerName;
-            let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
+            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -181,13 +187,17 @@ export class SearchService{
           players: [],
           teams: []
         };
+
+        //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
+        scope = scope == 'ncaaf'?'fbs':'nfl';
+
         if(scope !== null){
           data[scope]['players'].forEach(function(item){
-            item['scope'] = scope;
+            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
             dataSearch.players.push(item);
           });
           data[scope]['teams'].forEach(function(item){
-            item['scope'] = scope;
+            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
             dataSearch.teams.push(item);
           })
         }else{
@@ -292,7 +302,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
-            let route = MLBGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
+            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -302,7 +312,7 @@ export class SearchService{
             if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
                 relativePath = item.scope+ '/' + relativePath.substr(1);
             }
-            let urlText = GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span>';
+            let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span></p>';
             let regExp = new RegExp(playerName, 'g');
             let description = item.playerDescription.replace(regExp, ('<span class="text-heavy">' + playerName + '</span>'));
 
@@ -338,7 +348,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
-            let route = MLBGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{

@@ -10,7 +10,7 @@ import {LoadingComponent} from "../../fe-core/components/loading/loading.compone
 import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
-import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {TransactionsComponent, TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
 import {SportPageParameters} from '../../global/global-interface';
@@ -66,7 +66,7 @@ export class TransactionsPage implements OnInit{
             profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
             this.profileHeaderData = profileHeaderData;
 
-            var teamRoute = MLBGlobalFunctions.formatTeamRoute(data.teamName, this.pageParams.teamId.toString());
+            var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, this.pageParams.teamId.toString());
           },
           err => {
             this.isError= true;
@@ -87,7 +87,7 @@ export class TransactionsPage implements OnInit{
             profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
             this.profileHeaderData = profileHeaderData;
 
-            var teamRoute = MLBGlobalFunctions.formatTeamRoute(this.profileName, null);
+            var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.profileName, null);
           },
           err => {
             this.isError= true;
