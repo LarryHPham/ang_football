@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 // import {ComparisonBarList} from './common-interfaces';
@@ -11,7 +11,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {ComparisonBarInput} from '../fe-core/components/comparison-bar/comparison-bar.component';
 import {SeasonStatsModuleData, SeasonStatsTabData} from '../fe-core/modules/season-stats/season-stats.module';
 
-import {Season, MLBPageParameters} from '../global/global-interface';
+import {Season, SportPageParameters} from '../global/global-interface';
 import {TeamSeasonStatsData, MLBSeasonStatsTabData, MLBSeasonStatsTableModel, MLBSeasonStatsTableData} from './season-stats-page.data';
 import {TableTabData} from '../fe-core/components/season-stats/season-stats.component';
 
@@ -87,7 +87,7 @@ export class SeasonStatsService {
 
   getPlayerStats(playerId: number): Observable<SeasonStatsModuleData> {
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
-    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + "11288";
+    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + playerId;
     return this.http.get(url)
       .map(res => res.json())
       .map(data => this.formatData(data.data));
@@ -118,9 +118,10 @@ export class SeasonStatsService {
     return {
       tabs: seasonStatTabs,
       profileName: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName,
-      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, curYear.toString()),
+      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), strYear),
       pageRouterLink: this.getLinkToPage(Number(playerInfo[0].playerId), playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName),
-      playerInfo: playerInfo
+      playerInfo: playerInfo,
+      stats: stats
     };
   }
 
@@ -130,7 +131,7 @@ export class SeasonStatsService {
     let bars: Array<ComparisonBarInput> = [];
 
     for ( var index in stats ) {
-      var fieldName = stats[index].statType.replace(/_/g," ");
+      var fieldName = stats[index].statType;
       var infoBox = null;
 
       //catch no stat data
@@ -156,7 +157,7 @@ export class SeasonStatsService {
         },
         {
           value: this.formatValue(fieldName, avgValue),
-          color: '#272727',
+          color: '#999999',
         }];
 
         //Set up info box only for non-career tabs
@@ -165,9 +166,9 @@ export class SeasonStatsService {
         }
         else if ( leaderValue ) {
           var playerName = stats[index].leaderName;
-          var linkToPlayer = MLBGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
+          var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
           infoBox = [{
-              teamName: stats[index].leaderName,
+              teamName: stats[index].leaderTeamName,
               playerName: playerName,
               infoBoxImage : {
                 imageClass: "image-40",
@@ -179,13 +180,13 @@ export class SeasonStatsService {
                 },
               },
               routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: MLBGlobalFunctions.formatTeamRoute(stats[index].leaderName, stats[index].leaderId),
+              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
             }];
         }
       }
 
       bars.push({
-        title: this.getKeyDisplayTitle(fieldName),
+        title: SeasonStatsService.getKeyDisplayTitle(fieldName),
         data: dataPoints,
         minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue)) : null,
         maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue)) : null,
@@ -229,7 +230,7 @@ export class SeasonStatsService {
       }
       legendValues = [
           { title: playerName,    color: '#2d3e50' },
-          { title: 'NFL Average', color: '#272727' },
+          { title: 'NFL Average', color: '#999999' },
           { title: "NFL Leader",  color: "#E1E1E1" }
       ];
     }
@@ -248,11 +249,11 @@ export class SeasonStatsService {
     };
   }
 
-  static getCarouselData(playerInfo: SeasonStatsPlayerData, longSeasonName: string): SliderCarouselInput {
+  static getCarouselData(playerInfo: SeasonStatsPlayerData, stats, longSeasonName: string, currentTab): SliderCarouselInput {
     if ( !playerInfo[0] ) {
       return null;
     }
-    var teamRoute = MLBGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerInfo[0].teamName,
@@ -261,18 +262,66 @@ export class SeasonStatsService {
     var playerRouteText = {
       text: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName
     };
+    var description: any = ["No Information for this season"];
+    if (stats[currentTab] != null && stats[currentTab].length > 0) {
+      description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText);
+    }
     return SliderCarousel.convertToCarouselItemType1(1, {
       backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].liveImage),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [longSeasonName + " Stats Report"],
       profileNameLink: playerRouteText,
-      description: ["Team: ", teamRouteText],
-      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo[0].lastUpdate),
+      description: description,
+      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo[0].lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(playerInfo[0].playerHeadshot),
       circleImageRoute: null, //? the single item on the player profile page, so no link is needed
       // subImageUrl: GlobalSettings.getImageUrl(data.playerInfo.teamLogo),
       // subImageRoute: teamRoute
     });
+  }
+
+  static getDescription(stats, position, playerRouteText) {
+    var description;
+    switch(position) {
+      case "QB":
+          description = [playerRouteText, " has a total of ", Number(stats[2].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) , " with " , Number(stats[3].stat).toFixed(0)  , " " , "Completions" , " and " , Number(stats[0].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) ];
+          break;
+      case "CB":
+      case "DB":
+      case "DE":
+      case "DL":
+      case "DT":
+      case "LB":
+      case "S":
+          description = [playerRouteText, " has a total of ", Number(stats[3].stat).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats[0].stat).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats[4].stat).toFixed(0)  , " " , "Total Sacks" ];
+          break;
+      case "C":
+      case "G":
+      case "LS":
+      case "OL":
+      case "OT":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "games played" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "games started"];
+          break;
+      case "K":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Field Goals Made" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Attempts" , " and " , Number(stats[3].stat).toFixed(0)  , " " , "Extra Points Made" ];
+          break;
+      case "P":
+          description = [playerRouteText, " has ", Number(stats[4].stat).toFixed(0) , " " , "Total Punts" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Gross Punting Yards" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Longest Punt" ];
+          break;
+      case "RB":
+          description = [playerRouteText, " has a total of ", Number(stats[1].stat).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[4].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[0].stat).toFixed(0)  , " " , "Attempts" ];
+          break;
+      case "RS":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) ];
+          break;
+      case "TE":
+      case "WR":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Receptions" ];
+          break;
+      default:
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) ];
+      }
+    return description;
   }
 
   static getQualifierLabel(key: string): string {
@@ -289,7 +338,9 @@ export class SeasonStatsService {
     }
   }
 
-  private getKeyDisplayTitle(key: string): string {
+  static getKeyDisplayTitle(key: string): string {
+    key = key.replace(/_/g, " ");
+    key = key.replace("player", "");
     key = key.toLowerCase().replace(/\b[a-z](?=[a-z]{2})/g, function(letter) {
     return letter.toUpperCase(); } );
     return key;
@@ -332,9 +383,9 @@ export class SeasonStatsService {
 
 @Injectable()
 export class SeasonStatsPageService {
-  constructor(public http: Http, private _mlbFunctions: MLBGlobalFunctions){}
+  constructor(public http: Http, private _mlbFunctions: VerticalGlobalFunctions){}
 
-  getPageTitle( pageParams: MLBPageParameters, playerName: string): string {
+  getPageTitle( pageParams: SportPageParameters, playerName: string): string {
     let pageTitle = "Season Stats";
     if ( playerName ) {
       pageTitle = "Season Stats - " + playerName;
@@ -342,7 +393,7 @@ export class SeasonStatsPageService {
     return pageTitle;
   }
 
-  initializeAllTabs(pageParams: MLBPageParameters): Array<MLBSeasonStatsTabData> {
+  initializeAllTabs(pageParams: SportPageParameters): Array<MLBSeasonStatsTabData> {
     let tabs: Array<MLBSeasonStatsTabData> = [];
     var curYear = new Date().getFullYear();
     var year = curYear;
@@ -362,7 +413,7 @@ export class SeasonStatsPageService {
     return tabs;
   }
 
-  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: MLBPageParameters, onTabsLoaded: Function, maxRows?: number){
+  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number){
       var playerId = pageParams.playerId;
       //example url: http://dev-homerunloyal-api.synapsys.us/player/statsDetail/96652
       let url = GlobalSettings.getApiUrl() + "/player/statsDetail/" + playerId;

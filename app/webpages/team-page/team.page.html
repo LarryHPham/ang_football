@@ -4,10 +4,8 @@
   <error-component *ngIf="hasError"></error-component>
   <div *ngIf="profileHeaderData && pageParams">
     <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
-    <video-module *ngIf="videoData" [firstVideo]="firstVideo"  [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
-
     <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
-    <daily-update-module [profileName]="profileHeaderData.profileName" [data]="dailyUpdateData"></daily-update-module>
+    <daily-update-module [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
     <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <!-- <articles-module></articles-module> -->
     <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>

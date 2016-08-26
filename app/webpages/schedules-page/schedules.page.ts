@@ -38,10 +38,12 @@ export class SchedulesPage implements OnInit{
   isError: boolean = false;
   schedulesData:any;
   tabData: any;
+  limit:number = 10;
 
   initialPage: number;
   initialTabKey: string;
   selectedTabKey: string;
+  scope:string;
 
   constructor(private _schedulesService:SchedulesService,
           private profHeadService:ProfileHeaderService,
@@ -49,16 +51,20 @@ export class SchedulesPage implements OnInit{
           private _title: Title, private _router: Router) {
       _title.setTitle(GlobalSettings.getPageTitle("Schedules"));
 
-      this.initialPage = Number(this.params.get("pageNum"));
-      this.initialTabKey = this.params.get("tab");
+      GlobalSettings.getParentParams(_router, parentParams => {
+          this.scope = parentParams.scope;
+          this.initialPage = Number(this.params.get("pageNum"));
+          this.initialTabKey = this.params.get("tab");
+      });
+
     }
 
   //grab tab to make api calls for post of pre event table
   private scheduleTab(tab) {
     if ( tab == 'Upcoming Games' ){
-        this.selectedTabKey = "pre-event";
+        this.selectedTabKey = "pregame";
     } else {
-        this.selectedTabKey = "post-event";
+        this.selectedTabKey = "postgame";
     }
     // Uncomment if we want to enable URL changing when switching tabs.
     // However! with the way the scroll-to-top is set up, it will move the
@@ -103,22 +109,16 @@ export class SchedulesPage implements OnInit{
               // this.isError = true;
           }
       );
-      this._schedulesService.getSchedulesService('team', status, 10, pageNum, false, teamId) // isTeamProfilePage = false
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-            if(typeof this.tabData == 'undefined'){
-                this.tabData = data.tabs;
-            }
-          this.setPaginationParams(data.pageInfo, status, pageNum);
-        },
-        err => {
-          console.log("Error getting Schedules Data");
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, 1, teamId, (schedulesData) => {
+        this.schedulesData = schedulesData;
+        if(typeof this.tabData == 'undefined'){
+            this.tabData = schedulesData.tabs;
         }
-      )
+        this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
+      })
     }else{
-      this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "MLB"));
-      this.profHeadService.getLeagueProfile()
+      this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
+      this.profHeadService.getLeagueProfile(this.scope)
       .subscribe(
           data => {
             var currentDate = new Date();// no stat for date so will grab current year client is on
@@ -126,11 +126,11 @@ export class SchedulesPage implements OnInit{
             if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
               display = "Current Season"
             }
-            var pageTitle = display + " Schedules - " + data.headerData.leagueAbbreviatedName;
+            var pageTitle = display + " Schedules - " + data.headerData.leagueFullName;
             this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
             this.errorData = {
-              data: data.headerData.leagueAbbreviatedName + " has no record of any more games for the current season.",
-              icon: "fa fa-remove"
+              data: data.headerData.leagueFullName + " has no record of any more games for the current season.",
+              icon: "fa fa-calendar-times-o"
             }
           },
           err => {
@@ -138,20 +138,13 @@ export class SchedulesPage implements OnInit{
             console.log('Error: Schedules Profile Header API: ', err);
           }
       );
-      this._schedulesService.getSchedulesService('league', status, 10, pageNum)
-      .subscribe(
-        data => {
-          // console.log('got scheuldes data');
-          this.schedulesData = data;
-          if(typeof this.tabData == 'undefined'){
-              this.tabData = data.tabs;
-          }
-          this.setPaginationParams(data.pageInfo, status, pageNum);
-        },
-        err => {
-          console.log("Error getting Schedules Data");
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, 1, null, (schedulesData) => {
+        this.schedulesData = schedulesData;
+        if(typeof this.tabData == 'undefined'){
+            this.tabData = schedulesData.tabs;
         }
-      )
+        this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
+      })
     }
   }
 
@@ -190,7 +183,7 @@ export class SchedulesPage implements OnInit{
 
   ngOnInit() {
     if( !this.initialTabKey ){
-      this.initialTabKey = 'pre-event';
+      this.initialTabKey = 'pregame';
     }
     if ( this.initialPage <= 0 ) {
       this.initialPage = 1;

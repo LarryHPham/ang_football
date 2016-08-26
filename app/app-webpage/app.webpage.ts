@@ -35,7 +35,6 @@ import {HeadlineDataService} from "../global/global-ai-headline-module-service";
 
 import {ModulePage} from "../webpages/module-page/module.page";
 import {ImagesTestPage} from "../webpages/images-test-page/images-test.page";
-import {DesignPage} from "../webpages/design-page/design.page";
 
 import {SanitizeHtml} from "../fe-core/pipes/safe.pipe";
 import {SanitizeStyle} from "../fe-core/pipes/safe.pipe";
@@ -129,12 +128,12 @@ declare var jQuery: any;
         component: MVPListPage
     },
     {
-        path: '/schedules/mlb/:pageNum',
+        path: '/schedules/league/:pageNum',
         name: 'Schedules-page-league',
         component: SchedulesPage
     },
     {
-        path: '/schedules/mlb/:tab/:pageNum',
+        path: '/schedules/league/:tab/:pageNum',
         name: 'Schedules-page-league-tab',
         component: SchedulesPage
     },
@@ -253,11 +252,6 @@ declare var jQuery: any;
         path: '/fe-core/modules/:teamID',
         name: 'Module-page',
         component: ModulePage
-    },
-    {
-        path: '/design/:teamId',
-        name: 'Design-page',
-        component: DesignPage,
     },
     {
         path: '/images-test',

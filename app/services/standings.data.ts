@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {StandingsTableTabData, TableComponentData} from '../fe-core/components/standings/standings.component';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Conference, Division} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
@@ -66,7 +66,7 @@ export class MLBStandingsTableData implements TableComponentData<TeamStandingsDa
 
 }
 
-export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsData> {
+export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsData> {
 
   title: string;
 
@@ -126,7 +126,7 @@ export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsD
     var teamRoute = null;
     var yearEnd = Number(item.seasonBase)+1;
     if ( this.currentTeamId != item.teamId ) {
-      teamRoute = MLBGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+      teamRoute = VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
     }
     var teamNameLink = {
         route: teamRoute,
@@ -238,7 +238,7 @@ export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
         display = item.teamName;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
-          link = MLBGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
         }
         imageUrl = item.fullImageUrl;
         break;

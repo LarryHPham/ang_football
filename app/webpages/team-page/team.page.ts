@@ -4,7 +4,7 @@ import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalFunctions} from "../../global/global-functions";
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from "../../global/global-settings";
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
 import {ErrorComponent} from '../../fe-core/components/error/error.component';
@@ -32,7 +32,7 @@ import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comp
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {SchedulesService} from '../../services/schedules.service';
@@ -127,7 +127,7 @@ declare var moment;
 export class TeamPage implements OnInit {
     public widgetPlace: string = "widgetForModule";
     headerData:any;
-    pageParams:MLBPageParameters;
+    pageParams:SportPageParameters;
     partnerID:string = null;
     scope:string = null;
     hasError: boolean = false;
@@ -192,7 +192,6 @@ export class TeamPage implements OnInit {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             this.setupProfileData(this.partnerID,this.scope);
-
         });
     }
 
@@ -353,15 +352,9 @@ export class TeamPage implements OnInit {
     //api for Schedules
     private getSchedulesData(status){
       var limit = 5;
-      this._schedulesService.getSchedulesService(this.scope, 'team', status, limit, 1, true, this.pageParams.teamId) // isTeamProfilePage = true
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.schedulesData = schedulesData;
+      }) // isTeamProfilePage = true
     }
 
     private getImages(imageData) {
