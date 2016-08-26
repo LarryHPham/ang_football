@@ -14,6 +14,7 @@
         </div>
       </div>
       <h2 class="home-mlbhdr"><span class="home-main-h2" [innerHtml]="homeHeading2"></span></h2>
+      <span class="home-mlbhdr-location" *ngIf="homeLocationHeading" [innerHtml]="homeLocationHeading"></span>
       <!-- <div class="home-main col-xs-10"> -->
       <div class="home-main {{gridLMain}}">
         <!--Extra span is needed to restrict width of top/bottom header border-->

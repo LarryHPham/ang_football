@@ -8,8 +8,6 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 import {TwitterModule, twitterModuleData} from "../../fe-core/modules/twitter/twitter.module";
 import {TwitterService} from '../../services/twitter.service';
 
-
-
 import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comparison/comparison.module';
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
@@ -217,7 +215,7 @@ export class LeaguePage implements OnInit {
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
-				// this.batterData = this.listService.getMVPTabs('batter', 'module');
+				        // this.batterData = this.listService.getMVPTabs('batter', 'module');
                 // if ( this.batterData && this.batterData.length > 0 ) {
                 //     this.batterTab(this.batterData[0]);
                 // }
@@ -227,7 +225,8 @@ export class LeaguePage implements OnInit {
                 // }
 
                 this.globalPosition = 'qb';
-                this.positionData = this.listService.getMVPTabs(this.globalPosition, 'module');
+
+                this.positionData = this.listService.getMVPTabs(this.globalPosition.key, 'module');
                 if ( this.positionData && this.positionData.length > 0 ) {
 
                   //default params
@@ -413,10 +412,10 @@ export class LeaguePage implements OnInit {
     }
 
     private positionDropdown(event) {
-      console.log(1,event);
+      //console.log(1,event);
       this.positionData = this.checkToResetTabs(event);
-      console.log(2,this.positionData);
-      console.log('league.page - positionData');
+      //console.log(2,this.positionData);
+      //console.log('league.page - positionData');
       //if(event.tab != null){
         let listName = event.tab.tabDataKey;
         var matches = this.positionData.filter(tab => tab.tabDataKey == listName);
@@ -442,14 +441,14 @@ export class LeaguePage implements OnInit {
             // limit: this.listMax,
             // pageNum: 1
           }
-          console.log(5,this.positionParams);
+          //console.log(5,this.positionParams);
           this.getMVPService(matches[0], this.positionParams);
         }
       //}
     }
 
     getMVPService(tab, params){
-      console.log(6, 'get tab data');
+      //console.log(6, 'get tab data');
       this.listService.getListModuleService(tab, params)
           .subscribe(updatedTab => {
               //do nothing?
@@ -466,13 +465,21 @@ export class LeaguePage implements OnInit {
 
     //function to check if selected position in dropdown is currently active
     private checkToResetTabs(event) {
+      //console.log('checkToResetTabs - event');
+      //console.log(event);
       let localPosition = event.position;
-      if ( localPosition != this.globalPosition ) {
-        this.globalPosition = event.position;
-        return this.listService.getMVPTabs(event.position, 'module');
-      }else{
-        return this.positionData;
-      }
+      //console.log("checkToResetTabs - localPosition");
+      //console.log(localPosition);
+
+      // if ( localPosition != this.globalPosition ) {
+      //   //console.log('checkToResetTabs - if statement true');
+      //   //console.log(event);
+      //   this.globalPosition = event.position;
+      //   return this.listService.getMVPTabs(this.globalPosition, 'module');
+      // } else {
+      //console.log('checkToResetTabs - if statement false');
+      return this.positionData;
+
     } //private checkToResetTabs
 
 

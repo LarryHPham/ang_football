@@ -36,6 +36,8 @@ export class LandingPageService {
       var newFullUrl = 'http://dev-touchdownloyal-api.synapsys.us'+'/landingPage/'+scope //TODO
     }
 
+    console.log(newFullUrl);
+
     return this.http.get(newFullUrl, {
       headers: headers
     })
@@ -80,7 +82,7 @@ export class LandingPageService {
         });
       }
       leagueArray.push({//once all divisions are done push the league info into final array
-        displayName:"<span class='text-heavy'>" + league.toUpperCase() + " LEAGUE</span> TEAMS<span class='text-heavy'>:</span>",
+        displayName:"<span class='text-heavy'>" + league.toUpperCase() + "</span> TEAMS<span class='text-heavy'>:</span>",
         dataArray:divisionArray
       });
     }

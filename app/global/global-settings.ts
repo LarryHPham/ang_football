@@ -195,13 +195,17 @@ export class GlobalSettings {
         router.root.subscribe (
             route => {
                 let partnerID = null;
-                let scope = this.getSportLeagueAbbrv();
+                let scope = route.instruction.params["scope"];
                 if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
                   partnerID = route.instruction.params["partner_id"];
-                  scope = route.instruction.params["scope"];
                 }else if(window.location.hostname.split(".")[0].toLowerCase() == "baseball"){
                   partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
                 }
+
+                if ( scope == null ) {
+                  scope = this.getSportLeagueAbbrv();
+                }
+                
                 subscribeListener({
                   partnerID: partnerID == '' ? null : partnerID,
                   scope: this.getScope(scope)

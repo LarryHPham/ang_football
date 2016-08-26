@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {GlobalSettings} from "../../global/global-settings";
+import {GlobalFunctions} from '../../global/global-functions';
 import {SliderButton} from "../../fe-core/components/buttons/slider/slider.button";
 import {CircleImage} from '../../fe-core/components/images/circle-image';
 import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
@@ -40,9 +41,14 @@ export class PickTeamPage{
     public displayData: Object;
 
     public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public _sportLeagueSegments: string = GlobalSettings.getSportLeagueSegments();
+
     public _collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
     public _collegeDivisonFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+    public _collegeDivisionSegments: string = GlobalSettings.getCollegeDivisionSegments();
+
     public activeDivision: string;
+    public activeDivisionSegments: string;
 
     public imgHero1: string = "/app/public/homePage_hero1.png";
     public imgIcon1: string = "/app/public/homePage_icon1.png";
@@ -52,6 +58,7 @@ export class PickTeamPage{
     public homeHeading1: string;
     public homeSubHeading1: string;
     public homeHeading2: string;
+    public homeLocationHeading: string;
     public homeFeaturesTile1: string;
     public homeFeaturesTile3: string;
     public homeFeaturesTile4: string;
@@ -75,7 +82,8 @@ export class PickTeamPage{
 
     public partnerData: any;
     public partnerID: string;
-    public geoLocation:string;
+    public geoLocationState:string;
+    public geoLocationCity: string;
 
     public scope: string;
 
@@ -88,14 +96,12 @@ export class PickTeamPage{
     ) {
       _title.setTitle(GlobalSettings.getPageTitle(""));
 
-      console.log('hello1');
       this.getListData();
 
       GlobalSettings.getParentParams(_router, parentParams => {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
         this.isHomeRunZone = partnerHome;
 
-        console.log('hello2');
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
 
@@ -109,9 +115,11 @@ export class PickTeamPage{
         //set the active league variables based on scope
         if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
           this.activeDivision = this._collegeDivisonFullAbbrv;
+          this.activeDivisionSegments = this._collegeDivisionSegments;
         }
         else {
           this.activeDivision = this._sportLeagueAbbrv;
+          this.activeDivisionSegments = this._sportLeagueSegments;
         }
 
         this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
@@ -187,6 +195,13 @@ export class PickTeamPage{
       }
     }
 
+    setLocationHeaderString(state) {
+      //only set for NCAAF
+      if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
+        this.homeLocationHeading = 'Showing '+this.activeDivision+ ' Football '+ this.activeDivisionSegments.toLowerCase() + ' located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + GlobalFunctions.fullstate(state);
+      }
+    }
+
     getPartnerHeader() {//Since it we are receiving
       if(this.partnerID != null){
         this._partnerData.getPartnerData(this.partnerID)
@@ -195,10 +210,11 @@ export class PickTeamPage{
             this.partnerData = partnerScript;
             //super long way from partner script to get location using geo location api
             var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
+            this.setLocationHeaderString(state);
 
             if ( state != null ) {
               state = state.toLowerCase();
-              this.geoLocation = state;
+              this.geoLocationState = state;
 
               this.getData(this.scope, state);
             }
@@ -215,18 +231,21 @@ export class PickTeamPage{
       this._geoLocation.getGeoLocation()
         .subscribe(
           geoLocationData => {
-            this.geoLocation = geoLocationData[0].state;
-            this.geoLocation = this.geoLocation.toLowerCase();
-            this.getData(scope, this.geoLocation);
+            console.log(geoLocationData[0]);
+            this.geoLocationState = geoLocationData[0].state;
+            this.geoLocationCity = geoLocationData[0].city;
+
+            this.setLocationHeaderString(this.geoLocationState);
+
+            this.getData(scope, this.geoLocationState);
           },
           err => {
-            this.geoLocation = defaultState;
+            this.geoLocationState = defaultState;
           }
       );
     } //getGeoLocation
 
     getData(scope, geoLocation?){
-      console.log('hello');
       this._landingPageService.getLandingPageService(scope, geoLocation)
         .subscribe(data => {
           this.teams = data.league;

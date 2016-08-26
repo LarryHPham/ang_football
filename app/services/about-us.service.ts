@@ -42,7 +42,9 @@ export class AboutUsService {
   getData(partnerID: string, scope: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
-    
+
+    console.log(newUrl);
+
     return this.http.get(newUrl)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, scope) )
