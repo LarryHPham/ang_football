@@ -87,7 +87,7 @@ export class SeasonStatsService {
 
   getPlayerStats(playerId: number): Observable<SeasonStatsModuleData> {
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
-    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + "11288";
+    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + playerId;
     return this.http.get(url)
       .map(res => res.json())
       .map(data => this.formatData(data.data));
@@ -168,7 +168,7 @@ export class SeasonStatsService {
           var playerName = stats[index].leaderName;
           var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
           infoBox = [{
-              teamName: stats[index].leaderName,
+              teamName: stats[index].leaderTeamName,
               playerName: playerName,
               infoBoxImage : {
                 imageClass: "image-40",
@@ -180,7 +180,7 @@ export class SeasonStatsService {
                 },
               },
               routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderName, stats[index].leaderId),
+              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
             }];
         }
       }
@@ -264,7 +264,7 @@ export class SeasonStatsService {
     };
     var description: any = ["No Information for this season"];
     if (stats[currentTab] != null && stats[currentTab].length > 0) {
-      description = [playerRouteText, " has a total of ", Number(stats[currentTab][0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[currentTab][0].statType) , " with " , Number(stats[currentTab][1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[currentTab][1].statType) , " and " , Number(stats[currentTab][2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[currentTab][2].statType) ];
+      description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText);
     }
     return SliderCarousel.convertToCarouselItemType1(1, {
       backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].liveImage),
@@ -272,12 +272,56 @@ export class SeasonStatsService {
       subheader: [longSeasonName + " Stats Report"],
       profileNameLink: playerRouteText,
       description: description,
-      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo[0].lastUpdate),
+      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo[0].lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(playerInfo[0].playerHeadshot),
       circleImageRoute: null, //? the single item on the player profile page, so no link is needed
       // subImageUrl: GlobalSettings.getImageUrl(data.playerInfo.teamLogo),
       // subImageRoute: teamRoute
     });
+  }
+
+  static getDescription(stats, position, playerRouteText) {
+    var description;
+    switch(position) {
+      case "QB":
+          description = [playerRouteText, " has a total of ", Number(stats[2].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) , " with " , Number(stats[3].stat).toFixed(0)  , " " , "Completions" , " and " , Number(stats[0].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) ];
+          break;
+      case "CB":
+      case "DB":
+      case "DE":
+      case "DL":
+      case "DT":
+      case "LB":
+      case "S":
+          description = [playerRouteText, " has a total of ", Number(stats[3].stat).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats[0].stat).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats[4].stat).toFixed(0)  , " " , "Total Sacks" ];
+          break;
+      case "C":
+      case "G":
+      case "LS":
+      case "OL":
+      case "OT":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "games played" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "games started"];
+          break;
+      case "K":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Field Goals Made" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Attempts" , " and " , Number(stats[3].stat).toFixed(0)  , " " , "Extra Points Made" ];
+          break;
+      case "P":
+          description = [playerRouteText, " has ", Number(stats[4].stat).toFixed(0) , " " , "Total Punts" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Gross Punting Yards" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Longest Punt" ];
+          break;
+      case "RB":
+          description = [playerRouteText, " has a total of ", Number(stats[1].stat).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[4].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[0].stat).toFixed(0)  , " " , "Attempts" ];
+          break;
+      case "RS":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) ];
+          break;
+      case "TE":
+      case "WR":
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Receptions" ];
+          break;
+      default:
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) ];
+      }
+    return description;
   }
 
   static getQualifierLabel(key: string): string {
