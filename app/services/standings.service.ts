@@ -40,11 +40,11 @@ export class StandingsService {
 
   getPageTitle(pageParams: SportPageParameters, teamName: string): string {
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = "NFL Standings Breakdown";
+    let pageTitle = "Football Standings Breakdown";
     if ( teamName ) {
-      pageTitle = "NFL Standings - " + teamName;//TODO
+      pageTitle = "Football Standings - " + teamName;//TODO
     }
-    console.log("PAGE TITLE", pageTitle);
+    console.log("page title", pageTitle);
     return pageTitle;
   }
 
@@ -60,7 +60,7 @@ export class StandingsService {
     let tabs: Array<TDLStandingsTabdata> = [];
 
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
-      //Is an MLB page: show MLB, then American, then National
+      //Is an TLD page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
       tabs.push(this.createTab(false, currentTeamId, Conference.afc));//TODO
       tabs.push(this.createTab(false, currentTeamId, Conference.nfc));//TODO
@@ -105,23 +105,23 @@ export class StandingsService {
       standingsTab.hasError = false;
       console.log("URL", url);
       this.http.get(url)
-          .map(res => res.json())
-          .map(data => this.setupTabData(standingsTab, data.data, maxRows))
-          .subscribe(data => {
-            console.log("DATA", data);
-            standingsTab.isLoaded = true;
-            standingsTab.hasError = false;
-            standingsTab.sections = data;
-            if ( selectedKey ) {
-              standingsTab.setSelectedKey(selectedKey);
-            }
-            onTabsLoaded(data);
-          },
-          err => {
-            standingsTab.isLoaded = true;
-            standingsTab.hasError = true;
-            console.log("Error getting standings data");
-          });
+        .map(res => res.json())
+        .map(data => this.setupTabData(standingsTab, data.data, maxRows))
+        .subscribe(data => {
+          console.log("DATA", data);
+          standingsTab.isLoaded = true;
+          standingsTab.hasError = false;
+          standingsTab.sections = data;
+          if ( selectedKey ) {
+            standingsTab.setSelectedKey(selectedKey);
+          }
+          onTabsLoaded(data);
+        },
+        err => {
+          standingsTab.isLoaded = true;
+          standingsTab.hasError = true;
+          console.log("Error getting standings data");
+        });
     }
   }
 
