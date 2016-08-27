@@ -290,53 +290,92 @@ export class VerticalGlobalFunctions {
   static formatStatName(stat: string) {
     //coming from backend as a stat in the list info
    switch (stat) {
-     //pitcher
-     case 'pitcher-wins-losses':
-      return "W/L";
-     case 'pitcher-innings-pitched':
-      return "Innings pitched";
-     case 'pitcher-strikeouts':
-      return "Strikeouts";
-     case 'pitcher-earned-run-average':
-      return "ERA";
-     case 'pitcher-hits-allowed':
-      return "Hits Allowed";
 
-     case 'pitcher-bases-on-balls':
-      return "Walks";
-     case 'pitcher-runs-allowed':
-      return "Runs allowed";
-     case 'pitcher-earned-runs':
-      return "Runs earned";
+    //CB, DE. DB, DL, DT, S, LB
+    case 'player_defense_total_tackles':
+      return "Total Tackles";
+    case 'player_defense_sacks':
+      return "Total Sacks";
+    case 'player_defense_interceptions':
+      return "Interceptions";
+    case 'player_defense_forced_fumbles':
+      return "Forced Fumbles";
+    case 'player_defense_passes_defended':
+      return "Passes Defended";
 
-     //batter
-     case 'batter-home-runs':
-      return "Home runs";
-     case 'batter-batting-average':
-      return "Batting average";
-     case 'batter-runs-batted-in':
-      return "RBIs";
-     case 'batter-hits':
-      return "Hits";
-     case 'batter-bases-on-balls':
-      return "Walks";
-     case 'batter-stolen-bases':
-      return "Stolen bases";
+    // K
+    case 'player_kicking_field_goals_made':
+      return "Field Goals Made";
+    case 'player_kicking_field_goal_percentage_made':
+      return "Field Goal Percentage Made";
+    case 'player_kicking_extra_points_made':
+      return "Extra Points Made";
+    case 'player_kicking_total_points_scored':
+      return "Total Points";
+    case 'player_kicking_total_points_per_game':
+      return "Average Points Per Game";
 
-     case 'batter-triples':
-      return "Triples ";
-     case 'batter-strikeouts':
-      return "Strikeouts";
-     case 'batter-singles':
-      return "Singles";
-     case 'batter-runs':
-      return "Runs";
-     case 'batter-on-base-percentage':
-      return "OBP";
-     case 'batter-doubles':
-      return "Doubles";
+    // P
+    case 'player_punting_gross_yards':
+      return "Gross Punting Yards";
+    case 'player_punting_punts':
+      return "Total Punts";
+    case 'player_punting_average':
+      return "Average Distance Punt";
+    case 'player_punting_inside_twenty':
+      return "Punt % Within 20";
+    case 'player_punting_longest_punt':
+      return "Longest Punt";
 
-     default: return GlobalFunctions.toTitleCase(stat.replace(/-/g, ' '));
+    // QB
+    case 'passer_rating':
+      return "Passer Rating";
+    case 'passing_yards':
+      return "Passing Yards";
+    case 'passing_touchdowns':
+      return "Touchdowns";
+    case 'passing_interceptions':
+      return "Interceptions";
+    case 'passing_completions':
+      return "Completions";
+
+    // RB
+    case 'player_rushing_yards':
+      return "Rushing Yards";
+    case 'player_rushing_attempts':
+      return "Ruhing Attempts";
+    case 'player_rushing_yards_per_carry':
+      return "Yards Per Carry";
+    case 'player_rushing_touchdowns':
+      return "Touchdowns";
+    case 'player_rushing_yards_per_carry':
+      return "Yards Per Game";
+
+    // RS
+    case 'player_returning_yards':
+      return "Rushing Yards";
+    case 'player_rushing_attempts':
+      return "Ruhing Attempts";
+    case 'player_rushing_yards_per_carry':
+      return "Yards Per Carry";
+    case 'player_rushing_touchdowns':
+      return "Touchdowns";
+    case 'player_rushing_yards_per_carry':
+      return "Yards Per Game";
+
+    // WR, TE
+    case 'player_receiving_yards':
+      return "Receiving Yards";
+    case 'player_receiving_receptions':
+      return "Receptions";
+    case 'player_receiving_average_per_reception':
+      return "Average Yards Per Reception";
+    case 'player_receiving_touchdowns':
+      return "Touchdowns";
+    case 'player_returning_touchdowns':
+      return "Yards Per Game";
+
+     default: return GlobalFunctions.toTitleCase(stat.replace(/_/g, ' '));
    }
   }
 

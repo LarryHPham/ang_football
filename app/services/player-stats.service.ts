@@ -69,7 +69,7 @@ export class PlayerStatsService implements OnDestroy{
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
         standingsTab.tableData = null;
-        standingsTab.tabActive="Passing";
+        // standingsTab.tabActive="Passing";
 
         if(standingsTab.tabActive=="Special"){
             var  tabName=columnTabType.toLowerCase();
