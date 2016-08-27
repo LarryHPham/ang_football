@@ -138,7 +138,7 @@ export class LeaguePage implements OnInit {
 
     positionParams: any;
     positionData: Array<positionMVPTabData>;
-    globalPosition:any;
+    globalMVPPosition:any;
 
     imageData:any;
     copyright:any;
@@ -192,7 +192,6 @@ export class LeaguePage implements OnInit {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
 
-
             this.setupProfileData(this.partnerID, this.scope);
         });
     }
@@ -224,17 +223,17 @@ export class LeaguePage implements OnInit {
                 //     this.pitcherTab(this.pitcherData[0]);
                 // }
 
-                this.globalPosition = 'qb';
-
-                this.positionData = this.listService.getMVPTabs(this.globalPosition.key, 'module');
+                //Initial position to display in MVP
+                this.globalMVPPosition = 'qb';
+                this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
                 if ( this.positionData && this.positionData.length > 0 ) {
-
                   //default params
                   this.positionDropdown({
                       tab: this.positionData[0],
-                      position: this.globalPosition
+                      position: this.globalMVPPosition
                   });
                 }
+
                 this.setupComparisonData();
 
                 /*** Keep Up With Everything MLB ***/
@@ -371,13 +370,13 @@ export class LeaguePage implements OnInit {
 
     //api for BOX SCORES
     private getBoxScores(dateParams?) {
-        if ( dateParams != null ) {
-            this.dateParam = dateParams;
-        }
-        this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-            this.boxScoresData = boxScoresData;
-            this.currentBoxScores = currentBoxScores;
-        })
+        // if ( dateParams != null ) {
+        //     this.dateParam = dateParams;
+        // }
+        // this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+        //     this.boxScoresData = boxScoresData;
+        //     this.currentBoxScores = currentBoxScores;
+        // })
     }
 
     private getImages(imageData) {
@@ -406,43 +405,49 @@ export class LeaguePage implements OnInit {
     }
 
     private positionDropdown(event) {
-      //console.log(1,event);
       this.positionData = this.checkToResetTabs(event);
-      //console.log(2,this.positionData);
-      //console.log('league.page - positionData');
-      //if(event.tab != null){
-        let listName = event.tab.tabDataKey;
-        var matches = this.positionData.filter(tab => tab.tabDataKey == listName);
-        //console.log(3,matches);
-        if(matches.length > 0){
-          //console.log(4,matches[0]);
+      if(event.tab != null){
+        var matches = this.checkMatchingTabs(event);
+
+        if(matches != null){
           this.positionParams = {
-
-            scope:  'scope=nfl', //TODO change to active scope
-            target: 'target=player',
-            statName: 'statName='+matches[0].tabDataKey,
-            ordering: 'ordering=desc',
-            perPageCount: 'perPageCount='+this.listMax,
-            pageNumber: 'pageNumber='+1
-
-            //OLD API
-            // profile: 'player',
-            // // position: this.globalPosition,
-            // listname: matches[0].tabDataKey,
-            // sort: 'asc',
-            // conference: 'all',
-            // division: 'all',
-            // limit: this.listMax,
-            // pageNum: 1
+            scope:  'nfl', //TODO change to active scope
+            target: 'player',
+            statName: matches.tabDataKey,
+            ordering: 'asc',
+            perPageCount: this.listMax,
+            pageNumber: 1
           }
-          //console.log(5,this.positionParams);
-          this.getMVPService(matches[0], this.positionParams);
+          this.getMVPService(matches, this.positionParams);
         }
-      //}
+      }
+    }
+
+    //function to check if selected position in dropdown is currently active
+    private checkMatchingTabs(event) {
+      let localPosition = event.position;
+      let listName = event.tab.tabDataKey;
+
+      if(event.position != this.globalMVPPosition){
+        return this.positionData[0];
+      }else{
+        return this.positionData.filter(tab => tab.tabDataKey == listName)[0];
+      }
+    }
+
+    //function to check if selected position in dropdown is currently active
+    private checkToResetTabs(event) {
+      let localPosition = event.position;
+
+      if ( localPosition != this.globalMVPPosition ) {
+        this.globalMVPPosition = event.position;
+        return this.listService.getMVPTabs(this.globalMVPPosition, 'module');
+      } else {
+        return this.positionData;
+      } //private checkToResetTabs
     }
 
     getMVPService(tab, params){
-      //console.log(6, 'get tab data');
       this.listService.getListModuleService(tab, params)
           .subscribe(updatedTab => {
               //do nothing?
@@ -453,25 +458,6 @@ export class LeaguePage implements OnInit {
               console.log('Error: Loading MVP Pitchers: ', err);
           })
     }
-
-    //function to check if selected position in dropdown is currently active
-    private checkToResetTabs(event) {
-      //console.log('checkToResetTabs - event');
-      //console.log(event);
-      let localPosition = event.position;
-      //console.log("checkToResetTabs - localPosition");
-      //console.log(localPosition);
-
-      // if ( localPosition != this.globalPosition ) {
-      //   //console.log('checkToResetTabs - if statement true');
-      //   //console.log(event);
-      //   this.globalPosition = event.position;
-      //   return this.listService.getMVPTabs(this.globalPosition, 'module');
-      // } else {
-      //console.log('checkToResetTabs - if statement false');
-      return this.positionData;
-
-    } //private checkToResetTabs
 
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
