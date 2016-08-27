@@ -29,11 +29,6 @@ export class BoxScoresService {
   //Configure HTTP Headers
   var headers = this.setToken();
 
-  if(teamId != null){
-    teamId = '/' + teamId;
-  }else{
-    teamId = '';
-  }
   //player profile are treated as teams
   if(profile == 'player'){
     profile = 'team'
@@ -42,8 +37,7 @@ export class BoxScoresService {
   }
 
   //date needs to be the date coming in AS EST and come back as UTC
-  var callURL = this._apiUrl+'/'+profile+'/boxScores'+teamId+'/'+ date;
-  //console.log(callURL);
+  var callURL = this._apiUrl+'/boxScores/'+profile+'/'+teamId+'/'+ date;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -136,7 +130,7 @@ export class BoxScoresService {
     var convertedDate = month + ' ' + day + ordinal + ', ' + year;
 
     moduleTitle = "Box Scores - " + team + ': ' +convertedDate;
-    return {      
+    return {
       moduleTitle: moduleTitle,
       hasIcon: false,
       iconClass: '',
@@ -151,19 +145,12 @@ export class BoxScoresService {
   //Configure HTTP Headers
   var headers = this.setToken();
 
-  if(teamId != null){
-    teamId = '/' + teamId;
-  }else{
-    teamId = '';
-  }
-
   //player profile are treated as teams
   if(profile == 'player'){
     profile = 'team'
   }
 
-  var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly'+teamId+'/'+ date;
-  // console.log(callURL);
+  var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -175,18 +162,12 @@ export class BoxScoresService {
   //Configure HTTP Headers
   var headers = this.setToken();
 
-  if(teamId != null){
-    teamId = '/' + teamId;
-  }else{
-    teamId = '';
-  }
   //player profile are treated as teams
   if(profile == 'player'){
     profile = 'team'
   }
 
-  var callURL = this._apiUrl+'/'+profile+'/gameDates'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
-  // console.log(callURL);
+  var callURL = this._apiUrl+'/'+profile+'/gameDates/'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -195,14 +176,84 @@ export class BoxScoresService {
   }
 
   transformBoxScores(boxScores){
+    var boxScoreObj = {};
     var newBoxScores = {};
-    for(var dates in boxScores){
+
+    boxScores.forEach(function(val){
+
+      let date = moment(val.startDateTime).unix() * 1000;
+      boxScoreObj[date] = {};
+      boxScoreObj[date]['gameInfo']= {
+        eventId: val.eventId,
+        eventStatus: "postGame",
+        seasonId: val.seasonId,
+        inningsPlayed: val.eventQuarter,
+        live: true,
+        startDateTime: val.eventDate,
+        startDateTimestamp: val.eventStartTime,
+        dataPointCategories:['Score','Poss','Yards']
+      };
+      boxScoreObj[date]['homeTeamInfo']= {
+        name: val.team1FullName,
+        id: val.team1Id,
+        firstName: val.team1Market,//TODO val.team1Market
+        lastName: val.team1Name,//TODO val.team1Name
+        abbreviation: val.team1Abbreviation,
+        logo: val.team1Logo,
+        colors: val.team1ColorHex,//TODO val.team1ColorHex
+        outcome: val.team1Outcome, // val.team1Outcome
+        score: val.team1Score,
+        dataP1:val.team1Score,
+        dataP2:val.team1Possession,
+        dataP3:val.team1Yards,
+        winRecord: val.team1Record != null ? val.team1Record.split('-')[0]:null,
+        lossRecord: val.team1Record != null ? val.team1Record.split('-')[1]:null,
+      };
+      boxScoreObj[date]['awayTeamInfo']= {
+        name: val.team2FullName,
+        id: val.team2Id,
+        firstName: val.team2Market,//TODO val.team2Market
+        lastName: val.team2Name,//TODO val.team2Name
+        abbreviation: val.team2Abbreviation,
+        logo: val.team2Logo,
+        colors: val.team2ColorHex,//TODO val.team2ColorHex
+        outcome: val.team2Outcome, // val.team2Outcome
+        score: val.team2Score,
+        dataP1:val.team2Score,
+        dataP2:val.team2Possession,
+        dataP3:val.team2Yards,
+        winRecord: val.team1Record != null ? val.team2Record.split('-')[0]:null,
+        lossRecord: val.team1Record != null ? val.team2Record.split('-')[1]:null,
+      };
+      boxScoreObj[date]['p1']={
+        home:val.team1Q1Score,
+        away:val.team2Q1Score
+      };
+      boxScoreObj[date]['p2']={
+        home:val.team1Q2Score,
+        away:val.team2Q2Score
+      };
+      boxScoreObj[date]['p3']={
+        home:val.team1Q3Score,
+        away:val.team2Q3Score
+      };
+      boxScoreObj[date]['p4']={
+        home:val.team1Q4Score,
+        away:val.team2Q5Score
+      };
+      boxScoreObj[date]['p5']={
+        home:val.team1OtScore,
+        away:val.team2OtScore
+      };
+      boxScoreObj[date]['aiContent'] = null;
+    })
+    for(var dates in boxScoreObj){
         var dayDate = moment(Number(dates)).tz('America/New_York').format('YYYY-MM-DD');
         if(typeof newBoxScores[dayDate] == 'undefined'){
            newBoxScores[dayDate] = [];
-           newBoxScores[dayDate].push(boxScores[dates]);
+           newBoxScores[dayDate].push(boxScoreObj[dates]);
         }else{
-          newBoxScores[dayDate].push(boxScores[dates]);
+          newBoxScores[dayDate].push(boxScoreObj[dates]);
         }
     }
     return newBoxScores;
@@ -317,23 +368,24 @@ export class BoxScoresService {
         gameHappened:gameInfo.inningsPlayed != null ?  true : false,
         //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
         inning:inningTitle,
+        dataPointCategories:gameInfo.dataPointCategories,
         homeData:{
           homeTeamName: homeData.lastName,
           homeImageConfig:link1,
           homeLink: homeLink,
           homeRecord: homeWin +'-'+ homeLoss,
-          runs:homeData.score,
-          hits:homeData.hits,
-          errors:homeData.errors
+          DP1:homeData.dataP1,
+          DP2:homeData.dataP2,
+          DP3:homeData.dataP3
         },
         awayData:{
           awayTeamName:awayData.lastName,
           awayImageConfig:link2,
           awayLink: awayLink,
           awayRecord: awayWin +'-'+ awayLoss,
-          runs:awayData.score,
-          hits:awayData.hits,
-          errors:awayData.errors
+          DP1:awayData.dataP1,
+          DP2:awayData.dataP2,
+          DP3:awayData.dataP3
         }
       };
       if(teamId != null){
@@ -417,23 +469,24 @@ export class BoxScoresService {
         gameHappened:gameInfo.inningsPlayed != null ?  true : false,
         //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
         inning:inningTitle,
+        dataPointCategories:gameInfo.dataPointCategories,
         homeData:{
           homeTeamName: homeData.lastName,
           homeImageConfig:link1,
           homeLink: homeLink,
           homeRecord: homeWin +'-'+ homeLoss,
-          runs:homeData.score,
-          hits:homeData.hits,
-          errors:homeData.errors
+          DP1:homeData.dataP1,
+          DP2:homeData.dataP2,
+          DP3:homeData.dataP3
         },
         awayData:{
           awayTeamName:awayData.lastName,
           awayImageConfig:link2,
           awayLink: awayLink,
           awayRecord: awayWin +'-'+ awayLoss,
-          runs:awayData.score,
-          hits:awayData.hits,
-          errors:awayData.errors
+          DP1:awayData.dataP1,
+          DP2:awayData.dataP2,
+          DP3:awayData.dataP3
         }
       };
       if(teamId != null){

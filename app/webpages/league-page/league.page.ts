@@ -145,7 +145,7 @@ export class LeaguePage implements OnInit {
     imageTitle:any;
     isProfilePage:boolean = true;
     profileType:string = "league";
-    profileName:string = "MLB";
+    profileName:string = "TDL";
     listMax:number = 10;
     listOfListsData:Object; // paginated data to be displayed
     newsDataArray: Array<Object>;
@@ -176,23 +176,21 @@ export class LeaguePage implements OnInit {
                 private listService:ListPageService,
                 private videoBatchService:VideoService,
                 private _params: RouteParams) {
-        _title.setTitle(GlobalSettings.getPageTitle("MLB"));
+        _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
-        // this.currentYear = new Date().getFullYear();
-
-        //for boxscores
-        var currentUnixDate = new Date().getTime();
-        //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
-        this.dateParam ={
-          profile:'league',//current profile page
-          teamId:null,
-          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-        }
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
 
-
+            //for boxscores
+            var currentUnixDate = new Date().getTime();
+            //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
+            this.dateParam ={
+              profile:'league',//current profile page
+              teamId: this.scope,
+              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              date: '2015-09-03'
+            }
             this.setupProfileData(this.partnerID, this.scope);
         });
     }
@@ -204,12 +202,12 @@ export class LeaguePage implements OnInit {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
 
-            ///*** About MLB ***/
+            ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-                this.profileName = "MLB"; //leagueShortName
+                this.profileName = "TDL"; //leagueShortName
 
-                /*** Keep Up With Everything MLB ***/
+                /*** Keep Up With Everything TDL ***/
                 this.getBoxScores(this.dateParam);
                 this.getSchedulesData('postgame');//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
@@ -237,7 +235,7 @@ export class LeaguePage implements OnInit {
                 }
                 this.setupComparisonData();
 
-                /*** Keep Up With Everything MLB ***/
+                /*** Keep Up With Everything TDL ***/
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
@@ -375,6 +373,8 @@ export class LeaguePage implements OnInit {
             this.dateParam = dateParams;
         }
         this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+          console.log(boxScoresData);
+          console.log(currentBoxScores);
             this.boxScoresData = boxScoresData;
             this.currentBoxScores = currentBoxScores;
         })
