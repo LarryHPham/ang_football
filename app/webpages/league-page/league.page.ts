@@ -418,10 +418,6 @@ export class LeaguePage implements OnInit {
             perPageCount: this.listMax,
             pageNumber: 1
           }
-
-          console.log('6');
-          console.log(this.positionParams);
-          console.log(matches);
           this.getMVPService(matches, this.positionParams);
         }
       }
