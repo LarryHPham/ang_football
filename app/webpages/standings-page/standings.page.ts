@@ -13,7 +13,7 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {StandingsService} from '../../services/standings.service';
-import {TDLStandingsTabdata,MLBStandingsTableData} from '../../services/standings.data';
+import {TDLStandingsTabdata,VerticalStandingsTableData} from '../../services/standings.data';
 
 import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
@@ -70,7 +70,7 @@ export class StandingsPage implements OnInit {
           terms: "<span class='text-heavy'>RD:</span> Road",
         },
         {
-          terms: "<span class='text-heavy'>PF:</span> Value 6",
+          terms: "<span class='text-heavy'>PF:</span> Points For",
         },
         {
           terms: "<span class='text-heavy'>PA:</span> Points Allowed",
@@ -121,7 +121,7 @@ export class StandingsPage implements OnInit {
     });
   }
 
-  private getLastUpdatedDateForPage(data: MLBStandingsTableData[]) {
+  private getLastUpdatedDateForPage(data: VerticalStandingsTableData[]) {
       //Getting the first 'lastUpdatedDate' listed in the StandingsData
       if ( data && data.length > 0 &&
         data[0].tableData && data[0].tableData.rows &&

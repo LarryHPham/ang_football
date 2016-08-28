@@ -374,10 +374,10 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         //whomever wins the game then their text gets bolded as winner
         var home = item.team1Abbreviation + " " + item.team1Score;
         var away = item.team2Abbreviation + " " + item.team2Score;
-        if(item.team1Outcome == 'win'){
+        if(item.team1Outcome == 'W'){
           home = "<span class='text-heavy'>" + home + "</span>";
           sort = Number(item.team1Score);
-        } else if(item.team2Outcome == 'win'){
+        } else if(item.team2Outcome == 'W'){
           away = "<span class='text-heavy'>" + away + "</span>";
           sort = Number(item.team2Score);
         }
@@ -391,13 +391,14 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         //shows the current teams w/l of the current game
         var scoreHome = Number(item.team1Score);
         var scoreAway = Number(item.team2Score);
+
         if (scoreHome > scoreAway) {
-          display = item.team1Outcome.charAt(0).toUpperCase() + " " + scoreHome + " - " + scoreAway;
+          display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
           sort = (scoreHome/scoreHome+scoreAway);
         }
         else
         {
-          display = item.team1Outcome.charAt(0).toUpperCase() + " " + scoreAway + " - " + scoreHome;
+          display = item.team1Outcome + " " + scoreAway + " - " + scoreHome;
             sort = (scoreHome/scoreHome+scoreAway);
         }
         break;
