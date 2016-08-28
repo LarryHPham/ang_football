@@ -44,7 +44,6 @@ export class StandingsService {
     if ( teamName ) {
       pageTitle = "Football Standings - " + teamName;//TODO
     }
-    console.log("page title", pageTitle);
     return pageTitle;
   }
 
@@ -103,12 +102,10 @@ export class StandingsService {
       }
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
-      console.log("URL", url);
       this.http.get(url)
         .map(res => res.json())
         .map(data => this.setupTabData(standingsTab, data.data, maxRows))
         .subscribe(data => {
-          console.log("DATA", data);
           standingsTab.isLoaded = true;
           standingsTab.hasError = false;
           standingsTab.sections = data;
@@ -221,7 +218,6 @@ export class StandingsService {
         return leagueName + " " + (makeDivisionBold ? "<span class='text-heavy'>" + divisionName + "</span>" : divisionName);
       }
       else {
-        console.log("league name", leagueName);
         return leagueName;
       }
     }
