@@ -1,9 +1,8 @@
 import {Injectable, Input, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {SportPageParameters} from '../global/global-interface';
-
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from './player-stats.data';
