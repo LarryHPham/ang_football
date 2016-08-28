@@ -16,7 +16,7 @@ export class GlobalSettings {
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php'
 
-    private static _imageUrl:string = '-sports-images.synapsys.us';
+    private static _imageUrl:string = 'images.synapsys.us';
     private static _articleUrl:string = '-homerunloyal-ai.synapsys.us/';
     private static _recommendUrl:string = '-homerunloyal-ai.synapsys.us/headlines/event/';
     private static _headlineUrl:string = '-homerunloyal-ai.synapsys.us/headlines/team/';
@@ -204,7 +204,7 @@ export class GlobalSettings {
                 if ( scope == null ) {
                   scope = this.getSportLeagueAbbrv();
                 }
-                
+
                 subscribeListener({
                   partnerID: partnerID == '' ? null : partnerID,
                   scope: this.getScope(scope)
