@@ -181,7 +181,7 @@ export class BoxScoresService {
 
     boxScores.forEach(function(val){
 
-      let date = moment(val.startDateTime).unix() * 1000;
+      let date = moment(val.eventDate).unix() * 1000;
       boxScoreObj[date] = {};
       boxScoreObj[date]['gameInfo']= {
         eventId: val.eventId,
