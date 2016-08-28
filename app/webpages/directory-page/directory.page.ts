@@ -49,7 +49,6 @@ export class DirectoryPage {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
-
         _title.setTitle(GlobalSettings.getPageTitle("Directory"));
         var page = _params.get("page");
         this.currentPage = Number(page);
@@ -93,7 +92,7 @@ export class DirectoryPage {
       newlyAdded: this.newlyAdded
     }
 
-    this._directoryService.getData(this.pageType, params)
+    this._directoryService.getData(this.scope, this.pageType, params)
       .subscribe(
           data => this.setupData(data),
           err => {
