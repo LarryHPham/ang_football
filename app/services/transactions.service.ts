@@ -14,7 +14,7 @@ declare var moment: any;
 
 interface TransactionInfo {
     transactionDate: string;
-    type?: string;
+    transactionType?: string;
     id: string;
     teamKey: string;
     personKey: string;
@@ -88,10 +88,10 @@ export class TransactionsService {
 
       tabs.forEach(tab => {
         tab.sortOptions = [
-          { key: "recent", value: "Most Recent"},
-          { key: "oldest", value: "Oldest First"}
+          { key: "2015", value: "2015"},
+          { key: "2016", value: "2016"}
         ],
-        tab.selectedSort = "recent",
+        tab.selectedSort = "2016",
         tab.errorMessage = errorMessagePrepend + tab.tabDisplay.toLowerCase(),
         tab.includeDropdown = isPage
         tab.carData = this.getEmptyCarousel(tab); //must be called after the rest is set up
@@ -137,36 +137,34 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?, transType?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
-    if( sort == "desc" ){
-      tab.selectedSort = "recent";
-    } else if( sort == "asc" ){
-      tab.selectedSort = "oldest";
-    } else {
-      sort = "desc";
-      tab.selectedSort = "recent";
+
+    if( year == "2016" ){
+      tab.selectedSort = "2016";
+    } else if( sort == "2015" ){
+      tab.selectedSort = "2015";
     }
+
     if( limit == null){ limit = 10;}
     if( page == null){ page = 1;}
+    if ( transType == null) { transType = 'all'};
 
-    //http://dev-homerunloyal-api.synapsys.us/league/transactions/injuries/desc/5/1
     var callURL = this._apiUrl + '/';
 
     if ( teamId ) {
-       callURL += 'team/transactions/'+teamId + '/';
+       callURL += 'transactions/team/'+ teamId + '/';
     }
     else {
-       callURL += 'league/transactions/';
+       callURL += 'transactions/league/';
     }
-    callURL += tab.tabDataKey+'/'+sort+'/'+limit+'/'+page;
+    callURL += transType + '/' + sort + '/' + limit + '/'+page;
+
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
     // and MLB profile pages
     var currentTeam = type == "module" ? teamId : null;
-
-    // console.log("transactions url: " + callURL);
 
     return this.http.get( callURL, {headers: headers})
       .map(res => res.json())
@@ -214,6 +212,7 @@ export class TransactionsService {
       //if data is coming through then run through the transforming function for the module
       carouselArray = data.map((val, index) => {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
         if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
           playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
@@ -224,17 +223,17 @@ export class TransactionsService {
         };
         var playerLinkText = {
           route: playerRoute,
-          text: val.playerName,
+          text: playerFullName,
           class: 'text-heavy'
         };
 
         //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
         var description;
-        if (val.type == "Suspension") {
-          description = val.playerName + " was " + val.contents
-        }
+
+        if (val.transactionType == "suspension") {}
+        else if (val.transactionType == "injury") {}
         else {
-          description = val.playerName + ", for the " + val.teamName + ",was suspensed for " + val.contents;
+          description = playerFullName + " was " + val.transactionType + " from the " + val.teamName + ".";
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {

@@ -348,7 +348,7 @@ export class ListPageService {
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
       var teamLocation = val.teamMarket;
-      var statDescription = detailData.statType + ' for ' + currentYear;
+      var statDescription = val.statDescription + ' for ' + currentYear;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
       val.listRank = rank;
       if(data.query.target == 'team'){
@@ -358,12 +358,12 @@ export class ListPageService {
             [ //main left text
               {route: teamRoute, text: val.teamName, class: "dataBox-mainLink"}
             ],
-            val.stat,
             [ //sub left text
               {text: teamLocation},
               {text: "   |   ", class: "separator"},
               {text: "Division: " + divisionName},
             ],
+            val.stat,
             statDescription,
             'fa fa-map-marker'),
           imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(''), teamRoute, val.listRank),
@@ -382,16 +382,15 @@ export class ListPageService {
             [ //main left text
               {route: playerRoute, text: playerFullName, class: "dataBox-mainLink"}
             ],
-            val.stat,
             [ //sub left text
-              {route: teamRoute, text: val.teamName, class: "dataBox-subLink"},
+              {route: teamRoute, text: 'Team: '+val.teamName, class: "dataBox-subLink"},
               {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.uniformNumber},
-              {text: "   |   ", class: "separator"},
-              {text: position},
+              {text: "Jersey: #" + val.uniformNumber}
             ],
+            val.stat,
             statDescription,
-            null),
+            null
+          ),
             imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(''),playerRoute, val.listRank, '', null),
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
@@ -457,10 +456,15 @@ export class ListPageService {
     };
   }
 
-  static detailsData(mainLeftText: Link[], mainRightValue: string,
-                     subLeftText: Link[], subRightValue: string, subIcon?: string,
-                     dataLeftText?: Link[], dataRightValue?: string) {
-
+  static detailsData(
+    mainLeftText: Link[],
+    subLeftText: Link[],
+    mainRightValue: string,
+    subRightValue: string,
+    subIcon?: string,
+    dataLeftText?: Link[],
+    dataRightValue?: string
+  ) {
     if(!dataLeftText) {
       dataLeftText = [];
     }
@@ -470,20 +474,20 @@ export class ListPageService {
     }
 
     var details = [
+      // {
+      //   style:'detail-small',
+      //   mainText: dataLeftText,
+      //   subText: dataRightText
+      // },
       {
-        style:'detail-small',
-        leftText: dataLeftText,
-        rightText: dataRightText
+        style:'detail-left',
+        mainText: mainLeftText,
+        subText: subLeftText
       },
       {
-        style:'detail-large',
-        leftText: mainLeftText,
-        rightText:[{text: mainRightValue}]
-      },
-      {
-        style:'detail-medium',
-        leftText: subLeftText,
-        rightText:[{text: subRightValue}],
+        style:'detail-right',
+        mainText: [{text: mainRightValue}],
+        subText:[{text: subRightValue}],
         icon:subIcon,
       },
     ];

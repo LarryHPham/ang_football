@@ -206,7 +206,7 @@ export class LeaguePage implements OnInit {
             ///*** About MLB ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-                this.profileName = "MLB"; //leagueShortName
+                this.profileName = this.scope.toUpperCase(); //leagueShortName
 
                 /*** Keep Up With Everything MLB ***/
                 this.getBoxScores(this.dateParam);
@@ -411,17 +411,13 @@ export class LeaguePage implements OnInit {
 
         if(matches != null){
           this.positionParams = {
-            scope:  'nfl', //TODO change to active scope
+            scope:  this.scope, //TODO change to active scope
             target: 'player',
             statName: matches.tabDataKey,
             ordering: 'asc',
             perPageCount: this.listMax,
             pageNumber: 1
           }
-
-          console.log('6');
-          console.log(this.positionParams);
-          console.log(matches);
           this.getMVPService(matches, this.positionParams);
         }
       }

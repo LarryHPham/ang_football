@@ -198,7 +198,7 @@ export class PickTeamPage{
     setLocationHeaderString(state) {
       //only set for NCAAF
       if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
-        this.homeLocationHeading = 'Showing '+this.activeDivision+ ' Football '+ this.activeDivisionSegments.toLowerCase() + '<span class="location-designation">located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + '<span class="location-title">' + GlobalFunctions.fullstate(state) + '</span>';
+        this.homeLocationHeading = 'Showing '+this.activeDivision+ ' Football '+ this.activeDivisionSegments.toLowerCase() + '<span class="location-designation"> located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + '<span class="location-title">' + GlobalFunctions.fullstate(state) + '</span>';
       }
     }
 
