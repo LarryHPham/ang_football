@@ -373,8 +373,6 @@ export class LeaguePage implements OnInit {
             this.dateParam = dateParams;
         }
         this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-          console.log(boxScoresData);
-          console.log(currentBoxScores);
             this.boxScoresData = boxScoresData;
             this.currentBoxScores = currentBoxScores;
         })
