@@ -191,22 +191,21 @@ export class TeamPage implements OnInit {
         GlobalSettings.getParentParams(_router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
+
+            var currDate = new Date();
+            var currentUnixDate = currDate.getTime();
+            //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
+            this.dateParam ={
+              profile:'team',//current profile page
+              teamId:this.pageParams.teamId, // teamId if it exists
+              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              date: '2015-09-03'
+            }
             this.setupProfileData(this.partnerID,this.scope);
         });
     }
 
     ngOnInit() {
-      var currDate = new Date();
-    //   this.currentYear = currDate.getFullYear();
-      var currentUnixDate = currDate.getTime();
-      //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
-      this.dateParam ={
-        profile:'team',//current profile page
-        teamId:this.pageParams.teamId, // teamId if it exists
-        date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-      }
-
-
 
     }
 
