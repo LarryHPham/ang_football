@@ -22,32 +22,34 @@ export interface DailyUpdateChart {
 }
 
 interface DataSeries {
-  name: string,
-  key: string
+  name: string;
+  key: string;
 }
 
 interface APIDailyUpdateData {
   lastUpdated: string;
-  backgroundImage: string,
+  backgroundImage: string;
   pitcher: boolean;
-  seasonStats: Array<any>,
-  recentGames: Array<APIGameData>
+  seasonStats: Array<any>;
+  recentGames: Array<APIGameData>;
 }
 
 interface APIGameData {
-  pointsFor: string,
-  opponentTeamName: string,
-  pointsAgainst: string
+  pointsFor: any;//TODO to
+  opponentTeamName: any;
+  pointsAgainst: any;
+  eventId: string;
+  teamId: string;
 }
 
 interface PostGameArticleData {
-  eventId: string,
-  teamId: string,
-  url?: Object,
-  pubDate: string,
-  headline: string,
-  text: Array<any>,
-  img: string
+  eventId: string;
+  teamId: string;
+  url?: Object;
+  pubDate: string;
+  headline: string;
+  text: Array<any>;
+  img: string;
 }
 
 @Injectable()

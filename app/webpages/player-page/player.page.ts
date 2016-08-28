@@ -177,13 +177,13 @@ export class PlayerPage implements OnInit {
               this.dailyUpdateModule(this.pageParams.playerId);
 
 
-
               //get current date for box-scores
               var currentUnixDate = new Date().getTime();
               this.dateParam ={
                 profile:'player',
                 teamId:this.teamId, // teamId if it exists
-                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+                // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+                date: '2015-09-03'
               }
               this.getBoxScores(this.dateParam);
 

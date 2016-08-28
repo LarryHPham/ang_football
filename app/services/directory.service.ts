@@ -73,19 +73,25 @@ interface MLBPlayerDirectoryData {
 export class DirectoryService {
   constructor(public http: Http, private _globalFunc: GlobalFunctions){}
 
-  getData(pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
+  getData(scope: string, pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
     switch ( pageType ) {
       case DirectoryType.players:
-        return this.getPlayerData(searchParams);
+        return this.getPlayerData(scope, searchParams);
 
       case DirectoryType.teams:
-        return this.getTeamData(searchParams);
+        return this.getTeamData(scope, searchParams);
     }
     return null;
   }
 
-  getPlayerData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() + '/directory/nfl/player';//TODO
+  getPlayerData(scope, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
+    let url = GlobalSettings.getApiUrlTdl() + '/directory/';
+    if(scope !== null) {
+      url += scope;
+    } else {
+      url += 'nfl';
+    }
+    url += '/player';
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -94,7 +100,7 @@ export class DirectoryService {
         .map(res => res.json())
         .map(data => {
           var items = data.data;
-          var firstItem = items.length > 0 ? items[0] : null;//TODO
+          var firstItem = items.length > 0 ? items[0] : null;
           return {
             totalItems: firstItem ? firstItem.resultCount : 0,
             items: items.map(value => this.convertPlayerDataToDirectory(value))
@@ -102,8 +108,14 @@ export class DirectoryService {
         });
   }
 
-  getTeamData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() +  '/directory/nfl/team';//TODO
+  getTeamData(scope, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
+    let url = GlobalSettings.getApiUrlTdl() +  '/directory/';
+    if(scope !== null) {
+      url += scope;
+    } else {
+      url += 'nfl';
+    }
+    url += '/team';
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -148,7 +160,7 @@ export class DirectoryService {
 
   convertPlayerDataToDirectory(data: MLBPlayerDirectoryData): DirectoryProfileItem {
     var location = "N/A";
-    if ( data.city && data.area ) {//TODO waiting on data
+    if ( data.city && data.area ) {
       location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
     }
     var teamName = data.teamFirstName + " " + data.teamLastName;//TODO waiting on data to be updated, teamName should be using listItemsAssociatedProfile
