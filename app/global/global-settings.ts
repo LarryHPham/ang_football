@@ -91,7 +91,7 @@ export class GlobalSettings {
     }
 
     static getImageUrl(relativePath):string {
-        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/no-image.svg';
+        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: '/app/public/no-image.svg';
         return relPath;
     }
 
