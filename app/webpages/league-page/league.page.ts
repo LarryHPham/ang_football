@@ -60,6 +60,8 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
 import {VideoModule} from "../../fe-core/modules/video/video.module";
 import {VideoService} from "../../services/video.service";
 
+import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
+
 declare var moment;
 
 @Component({
@@ -86,7 +88,8 @@ declare var moment;
         NewsModule,
         ListOfListsModule,
         ImagesMedia,
-        ResponsiveWidget
+        ResponsiveWidget,
+        ArticlesModule
       ],
     providers: [
         VideoService,

@@ -14,4 +14,14 @@ export class HeadlineDataService {
             .map(res => res.json())
             .map(data => data);
     }
+
+    getAiHeadlineDataLeague(count) {
+        if(count == null){
+            count = 10;
+        }
+        var fullUrl = GlobalSettings.getHeadlineUrl();
+        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&affiliation=nfl&articleType=pregame-report")
+            .map(res => res.json())
+            .map(data => data);
+    }
 }
