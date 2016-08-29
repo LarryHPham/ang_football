@@ -56,7 +56,6 @@ export class DeepDiveService {
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-      // console.log( "article service", callURL, data);
       return data;
     })
   }
@@ -88,17 +87,6 @@ export class DeepDiveService {
     })
   }
 
-  // getDeepDiveVideoService(articleID){
-  // //Configure HTTP Headers
-  // var headers = this.setToken();
-  // var callURL = this._apiUrl + '/article/video/' + articleID;
-  // console.log("VIDEO URL", callURL);
-  // return this.http.get(callURL, {headers: headers})
-  //   .map(res => res.json())
-  //   .map(data => {
-  //     return data;
-  //   })
-  // }
 
   getDeepDiveVideoBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
@@ -119,8 +107,6 @@ export class DeepDiveService {
   if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     callURL += '/' + state;
   }
-  console.log("VIDEO URL", callURL);
-
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -157,13 +143,6 @@ export class DeepDiveService {
       return data;
     })
   }
-  // getdeepDiveData(deepDiveData, callback:Function, dataParam) {
-  // if(deepDiveData == null){
-  //   deepDiveData = {};
-  //
-  // }else {
-  //   }
-  // }
 
   getAiArticleData(state){
     var headers = this.setToken();
@@ -220,7 +199,6 @@ export class DeepDiveService {
   }
 
   transformToArticleRow(data){
-    console.log("ARTICLE ROW", data);
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data = data.data.slice(1,9);
@@ -300,7 +278,6 @@ export class DeepDiveService {
 
 
   transformToArticleStack(data){
-    console.log("ARTICLE STACK", data);
     var sampleImage = "/app/public/placeholder_XL.png";
     var topData = data.data[0];
     var date = topData.publishedDate != null ? GlobalFunctions.formatDate(topData.publishedDate) : null;
