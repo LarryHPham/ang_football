@@ -127,7 +127,6 @@ export class SeasonStatsService {
   }
 
   private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean, scope): Array<ComparisonBarInput> {
-    console.log(scope);
     if(stats !== undefined){ //catch if no data for season
     //let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
     let bars: Array<ComparisonBarInput> = [];
@@ -283,7 +282,6 @@ export class SeasonStatsService {
   }
 
   static getDescription(stats, position, playerRouteText, scope) {
-    console.log("scope: " + scope);
     var description;
     switch(position) {
       case "QB":
@@ -342,7 +340,6 @@ export class SeasonStatsService {
   }
 
   static getKeyDisplayTitle(key: string, scope): string {
-    console.log("scope: " + scope);
     key = key.replace(/_/g, " ");
     key = key.replace("player", "");
     key = key.replace(scope, "");

@@ -150,7 +150,7 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
 
 @Injectable()
 export class ComparisonStatsService {
-  private _apiUrl: string = GlobalSettings.getApiUrlTdl();
+  private _apiUrl: string = GlobalSettings.getApiUrl();
 
   private pitchingFields = [//TODO
     "pitchWins",
@@ -224,6 +224,7 @@ export class ComparisonStatsService {
 
   getPlayerList(teamId: string): Observable<Array<{key: string, value: string, class: string}>> {
     //http://dev-homerunloyal-api.synapsys.us/team/comparisonRoster/2800
+    //
     let playersUrl = this._apiUrl + "/team/comparisonRoster/" + teamId;
     return this.http.get(playersUrl)
       .map(res => res.json())
