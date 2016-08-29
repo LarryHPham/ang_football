@@ -13,8 +13,6 @@ export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleUrl();
   private _recUrl: string = GlobalSettings.getRecUrl();
-  // private _apiToken: string = 'BApA7KEfj';
-  // private _headerName: string = 'X-SNT-TOKEN';
 
   constructor(
     public http: Http,
@@ -26,28 +24,6 @@ export class DeepDiveService {
       //headers.append(this.headerName, this.apiToken);
       return headers;
   }
-
-  // getDeepDiveService(batchId: number, limit: number){
-  // //Configure HTTP Headers
-  // var headers = this.setToken();
-  //
-  // var callURL = this._apiUrl + '/' + 'articleBatch/';
-  // if(typeof limit == 'undefined'){
-  //   callURL += "/5";
-  // } else {
-  //   callURL += "/" + limit;
-  // }
-  // if(typeof batchId == 'undefined'){
-  //   callURL += "1";
-  // } else {
-  //   callURL += batchId;
-  // }
-  // return this.http.get(callURL, {headers: headers})
-  //   .map(res => res.json())
-  //   .map(data => {
-  //     return data;
-  //   })
-  // }
 
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
@@ -79,7 +55,7 @@ export class DeepDiveService {
   if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     callURL += '/' + state;
   }
-  console.log("URL", callURL);
+  // console.log("URL", callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -166,9 +142,9 @@ export class DeepDiveService {
       });
   }
 
-  getCarouselData(data, limit, batch, state, callback:Function) {
+  getCarouselData(scope, data, limit, batch, state, callback:Function) {
     //always returns the first batch of articles
-       this.getDeepDiveBatchService(limit, batch, state)
+       this.getDeepDiveBatchService(scope, limit, batch, state)
        .subscribe(data=>{
          var transformedData = this.carouselTransformData(data.data);
          callback(transformedData);

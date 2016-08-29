@@ -88,7 +88,7 @@ export class DirectoryService {
   }
 
   getPlayerData(scope, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() + '/directory/';
+    let url = GlobalSettings.getApiUrl() + '/directory/';
     if(scope !== null) {
       url += scope;
     } else {
@@ -112,7 +112,7 @@ export class DirectoryService {
   }
 
   getTeamData(scope, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() +  '/directory/';
+    let url = GlobalSettings.getApiUrl() +  '/directory/';
     if(scope !== null) {
       url += scope;
     } else {
