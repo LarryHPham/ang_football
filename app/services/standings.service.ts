@@ -92,7 +92,7 @@ export class StandingsService {
     }
     //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
-      let url = GlobalSettings.getApiUrlTdl() + "/standings";
+      let url = GlobalSettings.getApiUrl() + "/standings";
       //TODO
       if ( standingsTab.conference !== undefined ) {
       //  url += "/conference/" + Conference[standingsTab.conference];

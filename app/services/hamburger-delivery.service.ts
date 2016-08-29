@@ -51,7 +51,7 @@ export class HamburgerDeliveryService {
         url: ['Contact-us-page']
       },
       {
-        menuTitle: "Disclamer",
+        menuTitle: "Disclaimer",
         url: ['Disclaimer-page']
     }];
 
