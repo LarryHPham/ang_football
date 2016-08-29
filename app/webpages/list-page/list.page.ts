@@ -79,22 +79,21 @@ export class ListPage implements OnInit {
       var info = input.listInfo;
       var params = this.params.params;
       var navigationParams = {
-        profile: params['profile'],
-        listname: params['listname'],
-        sort: params['sort'],
-        conference: params['conference'],
-        division: params['division'],
-        limit: params['limit'],
+        pageNumber: params['pageNumber'],
+        statName: params['statName'],
+        ordering: params['ordering'],
+        perPageCount: params['perPageCount'],
+        target: params['target'],
       };
       var navigationPage = this.detailedDataArray ? "List-page" : "Error-page";
 
       this.paginationParameters = {
-        index: params['pageNum'] != null ? Number(params['pageNum']) : null,
+        index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
         max: Number(input.pageCount),
         paginationType: 'page',
         navigationPage: navigationPage,
         navigationParams: navigationParams,
-        indexKey: 'pageNum'
+        indexKey: 'pageNumber'
       };
   }
 
@@ -175,7 +174,6 @@ export class ListPage implements OnInit {
   ngOnInit(){
     this._profileService.getLeagueProfile()
     .subscribe(data => {
-      console.log(this.params.params);
         this.getListPage(this.params.params);
     }, err => {
         console.log("Error loading MLB profile");
