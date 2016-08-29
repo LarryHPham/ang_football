@@ -35,11 +35,9 @@ interface APIDailyUpdateData {
 }
 
 interface APIGameData {
-  pointsFor: any;//TODO to
-  opponentTeamName: any;
-  pointsAgainst: any;
-  eventId: string;
-  teamId: string;
+  pointsFor: string;
+  opponentTeamName: string;
+  pointsAgainst: string;
 }
 
 interface PostGameArticleData {
@@ -79,25 +77,36 @@ export class DailyUpdateService {
   }
 
   private formatTeamData(data: APIDailyUpdateData, teamId: number): DailyUpdateData {
-    data = data[0];
+    // check if it report exists and it isn't just an error message string
+    if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" ) {
+      data['postgame-report'] = {
+        displayHeadline: "Perez's hot bat not enough for Royals win",
+        dateline: "Saturday, August 27, 2016 11:30 PM EDT",
+        article: [
+          "<a href=\"/player/kansas-city-royals/salvador-perez/93144\">Lorem Ipsum</a> delor sid ex communicae desporado conica <a href=\"#\">Flur de Li</a>, rey dunesty flex beamer contorte<a href=\"#\">Sore cacorde tagain</a>.",
+          "Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain."
+        ],
+      }
+    }
+    
     if ( !data ) {
       throw new Error("Error! Data is null from Team Daily Update API");
     }
 
     //Setting up season stats
     var stats = [];
-    if ( data["wins"] != null ) {
+    if ( data.recentGames[0]["wins"] != null ) {
       var apiSeasonStats = {
-        totalWins: data["wins"] ? data["wins"] : "N/A",
-        totalLosses: data["losses"] ? data["losses"] : "N/A",
-        lastUpdated: data["lastUpdate"] ? data["lastUpdate"] : "N/A",
-        pointsPerGame: data["pointsPerGame"] ? data["pointsPerGame"] : "N/A",
-        passingYardsPerGame: data["passingYardsPerGame"] ? data["passingYardsPerGame"] : "N/A",
-        rushingYardsPerGame: data["rushingYardsPerGame"] ? data["rushingYardsPerGame"] : "N/A",
+        totalWins: data.recentGames[0]["wins"] ? data.recentGames[0]["wins"] : "N/A",
+        totalLosses: data.recentGames[0]["losses"] ? data.recentGames[0]["losses"] : "N/A",
+        lastUpdated: data.recentGames[0]["lastUpdate"] ? data.recentGames[0]["lastUpdate"] : "N/A",
+        pointsPerGame: data.recentGames[0]["pointsPerGame"] ? data.recentGames[0]["pointsPerGame"] : "N/A",
+        passingYardsPerGame: data.recentGames[0]["passingYardsPerGame"] ? data.recentGames[0]["passingYardsPerGame"] : "N/A",
+        rushingYardsPerGame: data.recentGames[0]["rushingYardsPerGame"] ? data.recentGames[0]["rushingYardsPerGame"] : "N/A",
       }
       var record = "N/A";
-      if ( data["wins"] != null && data["losses"] != null ) {
-        record = data["wins"] + "-" + data["losses"];
+      if ( data.recentGames[0]["wins"] != null && data.recentGames[0]["losses"] != null ) {
+        record = data.recentGames[0]["wins"] + "-" + data.recentGames[0]["losses"];
       }
       stats = [
         {
@@ -107,17 +116,17 @@ export class DailyUpdateService {
         },
         {
           name: "Average Points Per Game",
-          value: data["pointsPerGame"] != null ? data["pointsPerGame"] : "N/A",
+          value: data.recentGames[0]["pointsPerGame"] != null ? data.recentGames[0]["pointsPerGame"] : "N/A",
           icon: "fa-tdpoints"
         },
         {
           name: "Passing Yards Per Game",
-          value: data["passingYardsPerGame"] != null ? data["passingYardsPerGame"] : "N/A",
+          value: data.recentGames[0]["passingYardsPerGame"] != null ? data.recentGames[0]["passingYardsPerGame"] : "N/A",
           icon: "fa-tdball"
         },
         {
           name: "Rushing Yards Per Game",
-          value: data["rushingYardsPerGame"] != null ? data["rushingYardsPerGame"] : "N/A",
+          value: data.recentGames[0]["rushingYardsPerGame"] != null ? data.recentGames[0]["rushingYardsPerGame"] : "N/A",
           icon: "fa-tdrushing"
         }
       ]
@@ -134,34 +143,34 @@ export class DailyUpdateService {
     };
     data.recentGames =[
       {
-        pointsFor: data["game1Stat1"] != null ? data["game1Stat1"] : "N/A",
-        pointsAgainst: data["game1Stat2"] != null ? data["game1Stat2"] : "N/A",
-        opponentTeamName: data["game1AgainstNick"] != null ? data["game1AgainstNick"] : "N/A"
+        pointsFor: data.recentGames[0]["game1Stat1"] != null ? data.recentGames[0]["game1Stat1"] : "N/A",
+        pointsAgainst: data.recentGames[0]["game1Stat2"] != null ? data.recentGames[0]["game1Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game1AgainstNick"] != null ? data.recentGames[0]["game1AgainstNick"] : "N/A"
       },
       {
-        pointsFor: data["game2Stat1"] != null ? data["game2Stat1"] : "N/A",
-        pointsAgainst: data["game2Stat2"] != null ? data["game2Stat2"] : "N/A",
-        opponentTeamName: data["game2AgainstNick"] != null ? data["game2AgainstNick"] : "N/A"
+        pointsFor: data.recentGames[0]["game2Stat1"] != null ? data.recentGames[0]["game2Stat1"] : "N/A",
+        pointsAgainst: data.recentGames[0]["game2Stat2"] != null ? data.recentGames[0]["game2Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game2AgainstNick"] != null ? data.recentGames[0]["game2AgainstNick"] : "N/A"
       },
       {
-        pointsFor: data["game3Stat1"] != null ? data["game3Stat1"] : "N/A",
-        pointsAgainst: data["game3Stat2"] != null ? data["game3Stat2"] : "N/A",
-        opponentTeamName: data["game3AgainstNick"] != null ? data["game3AgainstNick"] : "N/A"
+        pointsFor: data.recentGames[0]["game3Stat1"] != null ? data.recentGames[0]["game3Stat1"] : "N/A",
+        pointsAgainst: data.recentGames[0]["game3Stat2"] != null ? data.recentGames[0]["game3Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game3AgainstNick"] != null ? data.recentGames[0]["game3AgainstNick"] : "N/A"
       },
       {
-        pointsFor: data["game4Stat1"] != null ? data["game4Stat1"] : "N/A",
-        pointsAgainst: data["game4Stat2"] != null ? data["game4Stat2"] : "N/A",
-        opponentTeamName: data["game4AgainstNick"] != null ? data["game4AgainstNick"] : "N/A"
+        pointsFor: data.recentGames[0]["game4Stat1"] != null ? data.recentGames[0]["game4Stat1"] : "N/A",
+        pointsAgainst: data.recentGames[0]["game4Stat2"] != null ? data.recentGames[0]["game4Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game4AgainstNick"] != null ? data.recentGames[0]["game4AgainstNick"] : "N/A"
       }
     ]
     var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
-    //this.getPostGameArticle(data);  TODO turn back on
+    this.getPostGameArticle(data);
 
     if ( chart ) {
         return {
           hasError: false,
           lastUpdateDate: data.lastUpdated ? GlobalFunctions.formatUpdatedDate(data.lastUpdated) : "",
-          fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(data["backgroundUrl"]),
+          fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(data.recentGames[0]["backgroundUrl"]),
           type: "Team",
           wrapperStyle: {},
           seasonStats: stats,
