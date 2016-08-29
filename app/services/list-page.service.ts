@@ -71,8 +71,8 @@ export class positionMVPTabData implements MVPTabData {
 
 @Injectable()
 export class ListPageService {
-  // private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _apiUrl: string = "http://dev-homerunloyal-api.synapsys.us";
+  private _apiUrl: string = GlobalSettings.getApiUrl();
+  //private _apiUrl: string = "http://dev-homerunloyal-api.synapsys.us";
 
   constructor(public http: Http) {}
 
@@ -99,9 +99,8 @@ export class ListPageService {
 
   var callURL = this._apiUrl+'/list';
 
-  for(var q in query){
-    callURL += "/" + query[q];
-  }
+  console.log(query);
+  callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber;
   return this.http.get( callURL, {headers: headers})
     .map(res => res.json())
     .map(

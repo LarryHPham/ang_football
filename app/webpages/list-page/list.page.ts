@@ -175,6 +175,7 @@ export class ListPage implements OnInit {
   ngOnInit(){
     this._profileService.getLeagueProfile()
     .subscribe(data => {
+      console.log(this.params.params);
         this.getListPage(this.params.params);
     }, err => {
         console.log("Error loading MLB profile");
