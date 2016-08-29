@@ -5,7 +5,7 @@ import {Http} from '@angular/http';
 import {TitleInputData} from "../fe-core/components/title/title.component";
 import {GlobalFunctions} from "../global/global-functions";
 import {GlobalSettings} from "../global/global-settings";
-import {MLBGlobalFunctions} from "../global/mlb-global-functions";
+import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
 import {AuBlockData, AboutUsModel} from "../webpages/about-us-page/about-us.page";
 
 export interface AboutUsInterface {
@@ -42,7 +42,7 @@ export class AboutUsService {
   getData(partnerID: string, scope: string): Observable<AboutUsModel> {
     let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
     let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
-    
+
     return this.http.get(newUrl)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, scope) )
@@ -67,7 +67,7 @@ export class AboutUsService {
     let championshipTeamMarket = data[0].championshipTeamMarket;
     let championshipTeamName = data[0].championshipTeamName;
     let imageUrl = data[0].imageUrl;
-    let championshipTeamLink = MLBGlobalFunctions.formatTeamRoute(championshipTeamName, championshipTeamId);
+    let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(championshipTeamName, championshipTeamId);
     let lastUpdated = this.formatDate(data[0].unixTimestamp);
 
     // Set auBlocks vars based on divisionScope

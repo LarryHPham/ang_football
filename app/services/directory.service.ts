@@ -4,7 +4,7 @@ import {Http} from '@angular/http';
 
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {DirectoryProfileItem, DirectoryItems} from '../fe-core/modules/directory/directory.data';
 declare var moment: any;
 
@@ -29,7 +29,7 @@ interface DirectoryListData<T> {
 }
 
 interface MLBTeamDirectoryData {
-  id: string;
+  teamId: string;
   pageHeaderParentProfileName: string;
   listItemsProfileName: string;
   listItemsAssociatedProfile: string;
@@ -67,25 +67,34 @@ interface MLBPlayerDirectoryData {
   resultCount: number;
   pageCount: number;
   dayOfWeek: string;
+  playerCity: string;
+  playerState: string;
+
 }
 
 @Injectable()
 export class DirectoryService {
   constructor(public http: Http, private _globalFunc: GlobalFunctions){}
 
-  getData(pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
+  getData(scope: string, pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
     switch ( pageType ) {
       case DirectoryType.players:
-        return this.getPlayerData(searchParams);
+        return this.getPlayerData(scope, searchParams);
 
       case DirectoryType.teams:
-        return this.getTeamData(searchParams);
+        return this.getTeamData(scope, searchParams);
     }
     return null;
   }
 
-  getPlayerData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() + '/directory/nfl/player';//TODO
+  getPlayerData(scope, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
+    let url = GlobalSettings.getApiUrl() + '/directory/';
+    if(scope !== null) {
+      url += scope;
+    } else {
+      url += 'nfl';
+    }
+    url += '/player';
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -94,17 +103,22 @@ export class DirectoryService {
         .map(res => res.json())
         .map(data => {
           var items = data.data;
-          var firstItem = items.length > 0 ? items[0] : null;//TODO
+          var firstItem = items.length > 0 ? items[0] : null;
           return {
-            // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting for data
-            totalItems: 20,//TODO waiting for data
+            totalItems: firstItem ? firstItem.resultCount : 0,
             items: items.map(value => this.convertPlayerDataToDirectory(value))
           }
         });
   }
 
-  getTeamData(searchParams: DirectorySearchParams): Observable<DirectoryItems> {
-    let url = GlobalSettings.getApiUrlTdl() +  '/directory/nfl/team';//TODO
+  getTeamData(scope, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
+    let url = GlobalSettings.getApiUrl() +  '/directory/';
+    if(scope !== null) {
+      url += scope;
+    } else {
+      url += 'nfl';
+    }
+    url += '/team';
     if ( searchParams.startsWith ) {
       url += "/" + searchParams.startsWith;
     }
@@ -115,8 +129,7 @@ export class DirectoryService {
         var items = data.data;
         var firstItem = items.length > 0 ? items[0] : null;
         return {
-          // totalItems: firstItem ? firstItem.resultCount : 0,//TODO waiting on data
-          totalItems: 20,
+          totalItems: firstItem ? firstItem.resultCount : 0,
           items: data.data.map(value => this.convertTeamDataToDirectory(value))
         }
       });
@@ -131,11 +144,11 @@ export class DirectoryService {
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: MLBGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.id),
+          route: VerticalGlobalFunctions.formatTeamRoute(data.listItemsProfileName, data.teamId),
           text: data.listItemsProfileName
         },
         {
-          text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " "  + (data.dataValueOne ? data.dataValueOne : "N/A")
+          text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " " + (data.dataValueOne ? data.dataValueOne : "N/A")
         },
         {
           text: data.listItemsAssociatedProfile ? this._globalFunc.capitalizeFirstLetter(data.listItemsAssociatedProfile) : "N/A"
@@ -150,10 +163,10 @@ export class DirectoryService {
 
   convertPlayerDataToDirectory(data: MLBPlayerDirectoryData): DirectoryProfileItem {
     var location = "N/A";
-    if ( data.city && data.area ) {//TODO waiting on data
-      location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
+    if ( data.playerCity && data.playerState ) {
+      location = data.playerCity + ", " + data.playerState;
     }
-    var teamName = data.teamFirstName + " " + data.teamLastName;//TODO waiting on data to be updated, teamName should be using listItemsAssociatedProfile
+    var teamName = data.teamFirstName + " " + data.teamLastName;
     var date = moment(Number(data.lastUpdated) * 1000);
     var dayOfWeek = date.format('dddd, ');
     var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
@@ -162,12 +175,12 @@ export class DirectoryService {
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: MLBGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
+          route: VerticalGlobalFunctions.formatPlayerRoute(teamName, data.listItemsProfileName, data.playerId),
           text: data.listItemsProfileName
         },
         {
-          route: MLBGlobalFunctions.formatTeamRoute(teamName, data.teamId),
-          text: teamName
+          route: VerticalGlobalFunctions.formatTeamRoute(teamName, data.teamId),
+          text: 'Team: ' + teamName
         },
         {
           text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " " + (data.dataValueOne ? data.dataValueOne : "N/A")

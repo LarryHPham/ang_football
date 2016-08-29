@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteParams} from '@angular/router-deprecated';
+import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
@@ -10,10 +10,10 @@ import {LoadingComponent} from "../../fe-core/components/loading/loading.compone
 import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
-import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {TransactionsComponent, TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
-import {MLBPageParameters} from '../../global/global-interface';
+import {SportPageParameters} from '../../global/global-interface';
 
 declare var moment:any;
 
@@ -27,7 +27,7 @@ declare var moment:any;
 
 export class TransactionsPage implements OnInit{
   profileHeaderData: TitleInputData;
-  pageParams:MLBPageParameters;
+  pageParams:SportPageParameters;
 
   tabs: Array<TransactionTabData>;
 
@@ -39,10 +39,17 @@ export class TransactionsPage implements OnInit{
   selectedTabKey: string;
   listSort: string = "recent";
 
-  constructor(private _transactionsService:TransactionsService,
+  public scope: string;
+  public partnerID:string;
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
+  constructor(private _router:Router,
+              private _transactionsService:TransactionsService,
               private _profileService:ProfileHeaderService,
               private _params: RouteParams,
               private _title: Title) {
+
     _title.setTitle(GlobalSettings.getPageTitle("Transactions"));
     this.pageParams = {
         teamId: _params.get("teamId") ? Number(_params.get("teamId")) : null
@@ -50,6 +57,11 @@ export class TransactionsPage implements OnInit{
     this.limit = Number(this._params.params['limit']);
     this.pageNum = Number(this._params.params['pageNum']);
 
+    GlobalSettings.getParentParams(this._router, parentParams => {
+        this.partnerID = parentParams.partnerID;
+        this.scope = parentParams.scope;
+      }
+    );
   }
 
   getProfileInfo() {
@@ -57,6 +69,7 @@ export class TransactionsPage implements OnInit{
       this._profileService.getTeamProfile(this.pageParams.teamId)
       .subscribe(
           data => {
+
             //var stats = data.headerData.stats;
             var profileHeaderData = this._profileService.convertTeamPageHeader(data, "");
             this.profileName = data.headerData.teamName;
@@ -66,7 +79,7 @@ export class TransactionsPage implements OnInit{
             profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
             this.profileHeaderData = profileHeaderData;
 
-            var teamRoute = MLBGlobalFunctions.formatTeamRoute(data.teamName, this.pageParams.teamId.toString());
+            var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, this.pageParams.teamId.toString());
           },
           err => {
             this.isError= true;
@@ -79,7 +92,7 @@ export class TransactionsPage implements OnInit{
       this._profileService.getLeagueProfile()
         .subscribe(
           data => {
-            this.profileName = data.headerData.leagueAbbreviatedName;
+            this.profileName = this.scope.toUpperCase();
             var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
@@ -87,7 +100,7 @@ export class TransactionsPage implements OnInit{
             profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
             this.profileHeaderData = profileHeaderData;
 
-            var teamRoute = MLBGlobalFunctions.formatTeamRoute(this.profileName, null);
+            var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.profileName, null);
           },
           err => {
             this.isError= true;

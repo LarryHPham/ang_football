@@ -4,7 +4,7 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {RosterModuleData} from '../fe-core/modules/team-roster/team-roster.module';
 import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/roster.data';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
 
@@ -44,9 +44,10 @@ export class RosterService {
       });
   }//getRosterService ends
 
-  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean): RosterModuleData<TeamRosterData> {
+  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
     return {
-        moduleTitle: this.getModuleTitle(teamName),
+        moduleTitle: "Team Roster",
+        moduleIdentifier: " - " + fullTeam + " " + teamName,
         pageRouterLink: this.getLinkToPage(teamId, teamName),
         tabs: this.initializeAllTabs(teamId.toString(), conference, 5, isTeamProfilePage)
     };

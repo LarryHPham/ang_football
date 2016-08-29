@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {MLBPageParameters} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {SportPageParameters} from '../global/global-interface';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
@@ -172,7 +172,7 @@ export class ComparisonStatsService {
 
   constructor(public http: Http) { }
 
-  getInitialPlayerStats(pageParams: MLBPageParameters): Observable<ComparisonModuleData> {
+  getInitialPlayerStats(pageParams: SportPageParameters): Observable<ComparisonModuleData> {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
     return this.callPlayerComparisonAPI(teamId, playerId, data => {
@@ -224,6 +224,7 @@ export class ComparisonStatsService {
 
   getPlayerList(teamId: string): Observable<Array<{key: string, value: string, class: string}>> {
     //http://dev-homerunloyal-api.synapsys.us/team/comparisonRoster/2800
+    //
     let playersUrl = this._apiUrl + "/team/comparisonRoster/" + teamId;
     return this.http.get(playersUrl)
       .map(res => res.json())

@@ -15,7 +15,7 @@ import {ErrorComponent} from "../../fe-core/components/error/error.component";
 import {PaginationFooter, PaginationParameters} from "../../fe-core/components/pagination-footer/pagination-footer.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
-import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
@@ -98,6 +98,7 @@ export class ListOfListsPage implements OnInit{
                         profileName = list.targetData[0].teamName;
                     //    profileRoute = MLBGlobalFunctions.formatTeamRoute(list.targetData[0].teamName, list.targetData[0].teamId);
                       //  profileImage = GlobalSettings.getImageUrl(list.targetData.teamLogo);
+
                         break;
 
                     default: break;

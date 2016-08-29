@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {TableTabData, TableComponentData} from '../fe-core/components/schedules/schedules.component';
 import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
 import {Conference, Division} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
@@ -11,47 +11,45 @@ import {Gradient} from '../global/global-gradient';
 declare var moment: any;
 
 export interface SchedulesData {
+  //TEAM1 => HOME
+  //TEAM2 => AWAY
   index:any;
   backgroundImage: string,
-  startDateTimestamp: string,
-  eventId: string,
+  eventTimestamp: number,
+  id: string,//id from API
   eventStatus: string,
-  homeTeamId: string,
-  awayTeamId: string,
-  siteId: string,
-  homeScore: string,
-  awayScore: string,
-  homeOutcome: string,
-  awayOutcome: string,
+  team1Id: string,
+  team2Id: string,
+  team1Score: string,
+  team2Score: string,
+  team1Outcome: string,
+  team2Outcome: string,
   seasonId: string,
-  homeTeamLogo: string,
-  homeTeamColors: string,
-  homeTeamCity: string,
-  homeTeamState: string,
-  homeTeamVenue: string,
-  homeTeamFirstName: string,
-  homeTeamLastName: string,
-  homeTeamName: string,
-  homeTeamNickname: string,
-  homeTeamAbbreviation: string,
-  homeTeamWins: string,
-  homeTeamLosses: string,
-  awayTeamLogo: string,
-  awayTeamColors: string,
-  awayTeamCity: string,
-  awayTeamState: string,
-  awayTeamVenue: string,
-  awayTeamFirstName: string,
-  awayTeamLastName: string,
-  awayTeamName: string,
-  awayTeamNickname: string,
-  awayTeamAbbreviation: string,
-  awayTeamWins: string,
-  awayTeamLosses: string,
-  reportUrlMod: string,
-  results:string,
-  targetTeamWinsCurrent: string;
-  targetTeamLossesCurrent: string;
+  team1Logo: string,
+  team1ColorHex: string,
+  team1City: string,
+  team1State: string,
+  team1Stadium: string,
+  team1Market: string, //first name
+  team1Name: string, //last name
+  team1Abbreviation: string,
+  team1Record:string;
+  team1Wins: string,
+  team1Losses: string,
+  team2Logo: string,
+  team2ColorHex: string,
+  team2City: string,
+  team2State: string,
+  team2Stadium: string,
+  team2Market: string, //first name
+  team2Name: string, //last name
+  team2Abbreviation: string,
+  team2Record:string;
+  team2Wins: string,
+  team2Losses: string,
+  articleUrl: string, //TODO missing
+  results:string, //TODO missing
+  targetTeam: string; //TODO missing
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -83,7 +81,7 @@ export interface SchedulesData {
   awayRecord?: string;
 }
 
-export class MLBScheduleTabData implements TableTabData<SchedulesData> {
+export class ScheduleTabData implements TableTabData<SchedulesData> {
 
   title: string;
 
@@ -95,7 +93,7 @@ export class MLBScheduleTabData implements TableTabData<SchedulesData> {
 
   isActive: boolean;
 
-  sections: Array<MLBSchedulesTableData>;
+  sections: Array<SchedulesTableData>;
 
   constructor(title: string, isActive: boolean) {
     this.title = title;
@@ -104,7 +102,7 @@ export class MLBScheduleTabData implements TableTabData<SchedulesData> {
   }
 }
 
-export class MLBSchedulesTableData implements TableComponentData<SchedulesData> {
+export class SchedulesTableData implements TableComponentData<SchedulesData> {
   groupName: string;
 
   tableData: any;
@@ -124,22 +122,27 @@ export class MLBSchedulesTableData implements TableComponentData<SchedulesData> 
     }else{
       var displayNext = 'Previous Game:';
     }
-    var teamRouteAway = this.currentTeamProfile == item.awayTeamId ? null : MLBGlobalFunctions.formatTeamRoute(item.awayTeamName, item.awayTeamId);
-    var teamRouteHome = this.currentTeamProfile == item.homeTeamId ? null : MLBGlobalFunctions.formatTeamRoute(item.homeTeamName, item.homeTeamId);
-    var colors = Gradient.getColorPair(item.awayTeamColors.split(','), item.homeTeamColors.split(','));
+    let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
+    let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
+    var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
+    var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+    //TEST colors
+    item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
+    item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
+    var colors = Gradient.getColorPair(item.team2ColorHex.split(','), item.team1ColorHex.split(','));
 
     return {//placeholder data
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(item.startDateTimestamp).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A') + " ET", //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A z'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
-      detail1Value:item.homeTeamVenue,
-      detail2Value:item.homeTeamCity + ', ' + item.homeTeamState,
+      detail1Value:item.team1Stadium,
+      detail2Value:item.team1City + ', ' + item.team1State,
       imageConfig1:{//AWAY
         imageClass: "image-125",
         mainImage: {
-          imageUrl: GlobalSettings.getImageUrl(item.awayTeamLogo),
+          imageUrl: GlobalSettings.getImageUrl(item.team2Logo),
           urlRouteArray: teamRouteAway,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
@@ -148,7 +151,7 @@ export class MLBSchedulesTableData implements TableComponentData<SchedulesData> 
       imageConfig2:{//HOME
         imageClass: "image-125",
         mainImage: {
-          imageUrl: GlobalSettings.getImageUrl(item.homeTeamLogo),
+          imageUrl: GlobalSettings.getImageUrl(item.team1Logo),
           urlRouteArray: teamRouteHome,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
@@ -156,17 +159,17 @@ export class MLBSchedulesTableData implements TableComponentData<SchedulesData> 
       },
       teamUrl1: teamRouteAway,
       teamUrl2: teamRouteHome,
-      teamName1: item.awayTeamName,
-      teamName2: item.homeTeamName,
-      teamLocation1:item.awayTeamCity + ', ' + item.awayTeamState,
-      teamLocation2:item.homeTeamCity + ', ' + item.homeTeamState,
+      teamName1: awayFullTeamName,
+      teamName2: homeFullTeamName,
+      teamLocation1:item.team2City + ', ' + item.team2State,
+      teamLocation2:item.team1City + ', ' + item.team1State,
       teamRecord1:item.awayRecord,
       teamRecord2:item.homeRecord,
     };
   }
 }
 
-export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
+export class SchedulesTableModel implements TableModel<SchedulesData> {
   columns: Array<TableColumn>;
 
   rows: Array<SchedulesData>;
@@ -285,7 +288,7 @@ export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
 
   setRowSelected(rowIndex:number) {
     if ( rowIndex >= 0 && rowIndex < this.rows.length ) {
-      this.selectedKey = this.rows[rowIndex].eventId;
+      this.selectedKey = this.rows[rowIndex].id;
     }
     else {
       this.selectedKey = null;
@@ -293,7 +296,7 @@ export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
   }
 
   isRowSelected(item:SchedulesData, rowIndex:number): boolean {
-    return this.selectedKey == item.eventId;
+    return this.selectedKey == item.id;
   }
 
   getCellData(item:SchedulesData, column:TableColumn):CellData {
@@ -305,41 +308,43 @@ export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
 
     var hdrColumnKey = column.key;
     if ( column.key == "opp" ) {
-        hdrColumnKey = this.curTeam == item.homeTeamId ? "away" : "home";
+        hdrColumnKey = this.curTeam == item.team1Id ? "away" : "home";
     }
 
     switch (hdrColumnKey) {
       case "date":
-        display = GlobalFunctions.formatDateWithAPMonth(item.startDateTimestamp, "", "D");
-        sort = item.startDateTimestamp;
+        display = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
+        sort = Number(item.eventTimestamp)*1000;
         break;
 
       case "t":
         if(item.eventStatus != 'cancelled'){
-          display = moment(item.startDateTimestamp).tz('America/New_York').format('h:mm') + " <sup> "+moment(item.startDateTimestamp).tz('America/New_York').format('A')+" </sup>";
+          display = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('h:mm') + " <sup> "+moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('A')+" </sup>";
         }else{
           display = "Cancelled";
         }
-        sort = item.startDateTimestamp;
+        sort = Number(item.eventTimestamp)*1000;
         break;
 
       case "away":
+        let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
         isLocation = true;
-        display = item.awayTeamLastName.length > 10 ? item.awayTeamNickname : item.awayTeamLastName;
-        sort = item.awayTeamLastName;
-        imageUrl = GlobalSettings.getImageUrl(item.awayTeamLogo);
-        if ( !this.isTeamProfilePage || this.curTeam != item.awayTeamId ) {
-          link = MLBGlobalFunctions.formatTeamRoute(item.awayTeamName, item.awayTeamId);
+        display = item.team2Name.length > 10 ? item.team2Abbreviation : item.team2Name;
+        sort = item.team2Name;
+        imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
+        if ( !this.isTeamProfilePage || this.curTeam != item.team2Id ) {
+          link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
         }
         break;
 
       case "home":
+      let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
         isLocation = true;
-        display = item.homeTeamLastName.length > 10 ? item.homeTeamNickname : item.homeTeamLastName;
-        sort = item.homeTeamLastName;
-        imageUrl = GlobalSettings.getImageUrl(item.homeTeamLogo);
-        if ( !this.isTeamProfilePage || this.curTeam != item.homeTeamId ) {
-          link = MLBGlobalFunctions.formatTeamRoute(item.homeTeamName, item.homeTeamId);
+        display = item.team1Name.length > 10 ? item.team1Abbreviation : item.team1Name;
+        sort = item.team1Name;
+        imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
+        if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
+          link = VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
         }
         break;
 
@@ -350,9 +355,9 @@ export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
           if ( status ) {
             // console.log("partnerCheck", partnerCheck);
             if(partnerCheck.isPartner){
-              display = "<a href='" + '/' + partnerCheck.partnerName + item.reportUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
+              display = "<a href='" + '/' + partnerCheck.partnerName + item.articleUrl + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
-              display = "<a href='" + item.reportUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
+              display = "<a href='" + item.articleUrl + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }
           }
         }
@@ -360,51 +365,59 @@ export class MLBSchedulesTableModel implements TableModel<SchedulesData> {
         break;
 
       case "r":
-        if( !item.homeTeamAbbreviation ) {
-          item.homeTeamAbbreviation = "N/A";
+        if( !item.team1Abbreviation ) {
+          item.team1Abbreviation = "N/A";
         }
-        if( !item.awayTeamAbbreviation ) {
-          item.awayTeamAbbreviation = "N/A";
+        if( !item.team2Abbreviation ) {
+          item.team2Abbreviation = "N/A";
         }
         //whomever wins the game then their text gets bolded as winner
-        var home = item.homeTeamAbbreviation + " " + item.homeScore;
-        var away = item.awayTeamAbbreviation + " " + item.awayScore;
-        if(item.homeOutcome == 'win'){
+        var home = item.team1Abbreviation + " " + item.team1Score;
+        var away = item.team2Abbreviation + " " + item.team2Score;
+        if(item.team1Outcome == 'W'){
           home = "<span class='text-heavy'>" + home + "</span>";
-          sort = Number(item.homeScore);
-        } else if(item.awayOutcome == 'win'){
+          sort = Number(item.team1Score);
+        } else if(item.team2Outcome == 'W'){
           away = "<span class='text-heavy'>" + away + "</span>";
-          sort = Number(item.awayScore);
+          sort = Number(item.team2Score);
         }
         else {
-          sort = Number(item.awayScore);
+          sort = Number(item.team2Score);
         }
         display = home + " - " + away;
         break;
 
       case "wl":
         //shows the current teams w/l of the current game
-        var scoreHome = Number(item.homeScore);
-        var scoreAway = Number(item.awayScore);
+        var scoreHome = Number(item.team1Score);
+        var scoreAway = Number(item.team2Score);
+
         if (scoreHome > scoreAway) {
-          display = item.homeOutcome.charAt(0).toUpperCase() + " " + scoreHome + " - " + scoreAway;
+          display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
           sort = (scoreHome/scoreHome+scoreAway);
         }
         else
         {
-          display = item.homeOutcome.charAt(0).toUpperCase() + " " + scoreAway + " - " + scoreHome;
+          display = item.team1Outcome + " " + scoreAway + " - " + scoreHome;
             sort = (scoreHome/scoreHome+scoreAway);
         }
         break;
 
       case "rec":
         //shows the record of the current teams game at that time
-        display = item.targetTeamWinsCurrent + " - " + item.targetTeamLossesCurrent;
-        if (Number(item.targetTeamWinsCurrent) > Number(item.targetTeamLossesCurrent)) {
-          sort = (Number(item.targetTeamWinsCurrent)/(Number(item.targetTeamLossesCurrent)+(Number(item.targetTeamWinsCurrent))));
+        if(item.targetTeam == item.team1Id){
+          var currentWins = item.team1Record.split('-')[0];
+          var currentLosses = item.team1Record.split('-')[1];
+        }else{
+          var currentWins = item.team2Record.split('-')[0];
+          var currentLosses = item.team2Record.split('-')[1];
+        }
+        display = currentWins + " - " + currentLosses;
+        if (Number(currentWins) > Number(currentLosses)) {
+          sort = (Number(currentWins)/(Number(currentLosses)+(Number(currentWins))));
         }
         else {
-          sort = (Number(item.targetTeamLossesCurrent)/(Number(item.targetTeamWinsCurrent)+(Number(item.targetTeamLossesCurrent))));
+          sort = (Number(currentLosses)/(Number(currentWins)+(Number(currentLosses))));
         }
         break;
     }

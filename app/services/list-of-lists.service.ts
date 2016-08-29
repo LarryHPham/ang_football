@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions}  from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions}  from '../global/vertical-global-functions';
 import {GlobalSettings}  from '../global/global-settings';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
@@ -131,9 +131,9 @@ export class ListOfListsService {
         if( itemInfo.target == "player") {
           itemProfile       = itemTargetData.playerName;
           itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.imageUrl);
-          itemRoute         = MLBGlobalFunctions.formatPlayerRoute(itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
-          itemSubImg        = MLBGlobalFunctions.formatTeamLogo(itemTargetData.teamName);
-          itemSubRoute      = MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
+          itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
+          itemSubImg        = VerticalGlobalFunctions.formatTeamLogo(itemTargetData.teamName);
+          itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
           profileLinkText   = {
             route: itemRoute,
             text: itemProfile,
@@ -143,7 +143,7 @@ export class ListOfListsService {
         } else if ( itemInfo.target == "team" ) {
           itemProfile       = itemTargetData.teamName;
           itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
-          itemRoute         = MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
+          itemRoute         = VerticalGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
           profileLinkText   = {
             route: itemRoute,
             text: itemProfile
@@ -164,7 +164,7 @@ export class ListOfListsService {
           description: itemDescription,
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData.lastUpdated),
           circleImageUrl: itemImgUrl,
-          circleImageRoute: MLBGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId), //replacement for
+          circleImageRoute: VerticalGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId), //replacement for
           rank: itemTargetData.rank,
           rankClass: "image-48-rank"
         });
@@ -241,17 +241,25 @@ export class ListOfListsService {
         ctaText       : 'View The List',
         // ctaUrl        : MLBGlobalFunctions.formatListRoute(ctaUrlArray)
         ctaUrl        : null
+    //    ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArray)
       };
 
     console.log(itemListData[0].rank + itemListData[0].teamName);
 
       itemListData.forEach(function(val, index) {
         let itemUrlRouteArray = itemListInfo.target == "player"  ?
-          MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
-          MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-          console.log(val);
-          let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
+          // MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
+          // MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+          // console.log(val);
+          // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
         //  let firstItemHover = "<p>View</p><p>Profile</p>";
+        //----
+
+          VerticalGlobalFunctions.formatPlayerRoute('st-louis-cardinals', 'adam-wainwright', '96049') :
+          VerticalGlobalFunctions.formatTeamRoute('st-louis-cardinals', '2805');
+          // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
+          let firstItemHover = "<p>View</p><p>Profile</p>";
+
         listData.dataPoints.push(
           {
             imageClass : index > 0 ? "image-43" : "image-121",
@@ -263,8 +271,8 @@ export class ListOfListsService {
             },
             subImages         : index > 0 ? null : [
               // {
-              //   imageUrl      : itemListInfo.target == "player" ? MLBGlobalFunctions.formatTeamLogo(val.teamName) : null,
-              //   urlRouteArray : itemListInfo.target == "player" ? MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId) : null,
+              //   imageUrl      : itemListInfo.target == "player" ? VerticalGlobalFunctions.formatTeamLogo(val.teamName) : null,
+              //   urlRouteArray : itemListInfo.target == "player" ? VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId) : null,
               //   hoverText     : itemListInfo.target == "player" ? "<i class='fa fa-mail-forward'></i>" : null,
               //   imageClass    : itemListInfo.target == "player" ? "image-round-sub image-40-sub image-round-lower-right" : null
               // },

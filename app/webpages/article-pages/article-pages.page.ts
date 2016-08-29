@@ -11,7 +11,7 @@ import {LoadingComponent} from "../../fe-core/components/loading/loading.compone
 import {ArticleData} from "../../global/global-interface";
 import {ArticleDataService} from "../../global/global-article-page-service";
 import {GlobalFunctions} from "../../global/global-functions";
-import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
@@ -133,9 +133,9 @@ export class ArticlePages implements OnInit {
     //            if (strToParse != null) {
     //                var urlInfo = strToParse[1].split("/");
     //                if (urlInfo[1] == "player") {
-    //                    var url = MLBGlobalFunctions.formatPlayerRoute(urlInfo[2], urlInfo[3], urlInfo[4].slice(0, 5));
+    //                    var url = VerticalGlobalFunctions.formatPlayerRoute(urlInfo[2], urlInfo[3], urlInfo[4].slice(0, 5));
     //                } else if (urlInfo[1] == "team") {
-    //                    var url = MLBGlobalFunctions.formatTeamRoute(urlInfo[2], urlInfo[3].slice(0, 4));
+    //                    var url = VerticalGlobalFunctions.formatTeamRoute(urlInfo[2], urlInfo[3].slice(0, 4));
     //                }
     //                data['article'][index] = val.replace(strToParse[0], url);
     //            }
@@ -155,7 +155,7 @@ export class ArticlePages implements OnInit {
                     content: data[val].article[0],
                     eventId: data['meta-data']['current'].eventId,
                     eventType: val,
-                    url: MLBGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId),
+                    url: VerticalGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId),
                     rawUrl: window.location.protocol + "//" + window.location.host + "/articles/" + val + "/" + data['meta-data']['current'].eventId
                 };
             }
@@ -221,7 +221,7 @@ export class ArticlePages implements OnInit {
         if (this.articleType == "playerRoster") {
             data['article'].forEach(function (val) {
                 if (val['playerRosterModule']) {
-                    let playerUrl = MLBGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
+                    let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
                     val['player'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -248,7 +248,7 @@ export class ArticlePages implements OnInit {
         if (this.articleType == 'playerComparison') {
             data['article'][2]['playerComparisonModule'].forEach(function (val, index) {
                 if (index == 0) {
-                    let urlPlayerLeft = MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
+                    let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -270,7 +270,7 @@ export class ArticlePages implements OnInit {
                     links.push(val['imageLeft'], val['imageLeftSmall']);
                 }
                 if (index == 1) {
-                    let urlPlayerRight = MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
+                    let urlPlayerRight = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageRight'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -299,8 +299,8 @@ export class ArticlePages implements OnInit {
                 if (index == 1 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftTop = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
-                    let urlTeamRightTop = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
+                    let urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
+                    let urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
                     val['teamLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -342,8 +342,8 @@ export class ArticlePages implements OnInit {
                 if (index == 5 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftBottom = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
-                    let urlTeamRightBottom = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
+                    let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
+                    let urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
                     val['teamLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -389,7 +389,7 @@ export class ArticlePages implements OnInit {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
                 if (val['teamRecordModule'] && isFirstTeam) {
-                    let urlFirstTeam = MLBGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
+                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
                     val['imageTop'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -412,7 +412,7 @@ export class ArticlePages implements OnInit {
                     return isFirstTeam = false;
                 }
                 if (val['teamRecordModule'] && !isFirstTeam) {
-                    let urlSecondTeam = MLBGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
+                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
                     val['imageBottom'] = {
                         imageClass: "image-121",
                         mainImage: {

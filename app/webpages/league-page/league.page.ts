@@ -23,7 +23,7 @@ import {BoxScoresModule} from '../../fe-core/modules/box-scores/box-scores.modul
 import {BoxScoresService} from '../../services/box-scores.service';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {SchedulesModule} from '../../fe-core/modules/schedules/schedules.module';
@@ -35,7 +35,7 @@ import {ListPageService, positionMVPTabData} from '../../services/list-page.serv
 import {ProfileHeaderData, ProfileHeaderModule} from '../../fe-core/modules/profile-header/profile-header.module';
 import {IProfileData, ProfileHeaderService} from '../../services/profile-header.service';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 
 import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
@@ -57,6 +57,8 @@ import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carou
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {VideoModule} from "../../fe-core/modules/video/video.module";
+import {VideoService} from "../../services/video.service";
 
 declare var moment;
 
@@ -64,6 +66,7 @@ declare var moment;
     selector: 'League-page',
     templateUrl: './app/webpages/league-page/league.page.html',
     directives: [
+        VideoModule,
         SidekickWrapper,
         LoadingComponent,
         ErrorComponent,
@@ -86,6 +89,7 @@ declare var moment;
         ResponsiveWidget
       ],
     providers: [
+        VideoService,
         BoxScoresService,
         SchedulesService,
         ListPageService,
@@ -106,7 +110,7 @@ declare var moment;
 export class LeaguePage implements OnInit {
     public widgetPlace: string = "widgetForModule";
 
-    pageParams:MLBPageParameters = {};
+    pageParams:SportPageParameters = {};
     partnerID:string = null;
     hasError: boolean = false;
 
@@ -124,6 +128,9 @@ export class LeaguePage implements OnInit {
     currentBoxScores:any;
     dateParam:any;
 
+    firstVideo:string;
+    videoData:any;
+
     batterParams:any;
     batterData:Array<positionMVPTabData>;
     pitcherParams:any;
@@ -131,13 +138,14 @@ export class LeaguePage implements OnInit {
 
     positionParams: any;
     positionData: Array<positionMVPTabData>;
+    globalMVPPosition:any;
 
     imageData:any;
     copyright:any;
     imageTitle:any;
     isProfilePage:boolean = true;
     profileType:string = "league";
-    profileName:string = "MLB";
+    profileName:string = "TDL";
     listMax:number = 10;
     listOfListsData:Object; // paginated data to be displayed
     newsDataArray: Array<Object>;
@@ -166,24 +174,23 @@ export class LeaguePage implements OnInit {
                 private _transactionsService: TransactionsService,
                 private _lolService: ListOfListsService,
                 private listService:ListPageService,
+                private videoBatchService:VideoService,
                 private _params: RouteParams) {
-        _title.setTitle(GlobalSettings.getPageTitle("MLB"));
+        _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
-        // this.currentYear = new Date().getFullYear();
-
-        //for boxscores
-        var currentUnixDate = new Date().getTime();
-        //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
-        this.dateParam ={
-          profile:'league',//current profile page
-          teamId:null,
-          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-        }
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
 
-
+            //for boxscores
+            var currentUnixDate = new Date().getTime();
+            //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
+            this.dateParam ={
+              profile:'league',//current profile page
+              teamId: this.scope,
+              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              date: '2015-09-03'
+            }
             this.setupProfileData(this.partnerID, this.scope);
         });
     }
@@ -195,38 +202,46 @@ export class LeaguePage implements OnInit {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
 
-            ///*** About MLB ***/
+            ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-                this.profileName = "MLB"; //leagueShortName
+                this.profileName = "TDL"; //leagueShortName
 
-                /*** Keep Up With Everything MLB ***/
+                /*** Keep Up With Everything TDL ***/
                 this.getBoxScores(this.dateParam);
-                this.getSchedulesData('pre-event');//grab pre event data for upcoming games
+                this.getSchedulesData('postgame');//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
-                this.batterData = this.listService.getMVPTabs('batter', 'module');
-                if ( this.batterData && this.batterData.length > 0 ) {
-                    this.batterTab(this.batterData[0]);
-                }
-                this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
-                if ( this.pitcherData && this.pitcherData.length > 0 ) {
-                    this.pitcherTab(this.pitcherData[0]);
+				        // this.batterData = this.listService.getMVPTabs('batter', 'module');
+                // if ( this.batterData && this.batterData.length > 0 ) {
+                //     this.batterTab(this.batterData[0]);
+                // }
+                // this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
+                // if ( this.pitcherData && this.pitcherData.length > 0 ) {
+                //     this.pitcherTab(this.pitcherData[0]);
+                // }
+
+                //Initial position to display in MVP
+                this.globalMVPPosition = 'qb';
+                this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
+                if ( this.positionData && this.positionData.length > 0 ) {
+                  //default params
+                  this.positionDropdown({
+                      tab: this.positionData[0],
+                      position: this.globalMVPPosition
+                  });
                 }
 
-                this.positionData = this.listService.getMVPTabs('position', 'module');
-                if ( this.positionData && this.positionData.length > 0 ) {
-                  this.positionTab(this.positionData[0]);
-                }
                 this.setupComparisonData();
 
-                /*** Keep Up With Everything MLB ***/
+                /*** Keep Up With Everything TDL ***/
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
                 this.setupListOfListsModule();
                 this.getDykService(this.profileType);
+                this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
              },
             err => {
@@ -240,29 +255,41 @@ export class LeaguePage implements OnInit {
     //grab tab to make api calls for post of pre event table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pre-event');
+            this.getSchedulesData('pregame');
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('post-event');
+            this.getSchedulesData('postgame');
         }else{
-            this.getSchedulesData('post-event');// fall back just in case no status event is present
+            this.getSchedulesData('postgame');// fall back just in case no status event is present
         }
     }
 
     //api for Schedules
     private getSchedulesData(status){
       var limit = 5;
-      if(status == 'post-event'){
+      if(status == 'postgame'){
         limit = 3;
       }
-      this._schedulesService.getSchedulesService('league', status, limit, 1)
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.schedulesData = schedulesData;
+      }) // isTeamProfilePage = true
+    }
+
+    private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
+
+        this.videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
+            .subscribe(data => {
+
+                    this.firstVideo = data.data[first].videoLink;
+                    this.videoData = data.data.slice(1);
+
+                },
+                err => {
+
+                    console.log("Error getting video data");
+                }
+
+            );
+
     }
 
     private transactionsTab(tab) {
@@ -376,18 +403,61 @@ export class LeaguePage implements OnInit {
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
-    private positionTab(tab: positionMVPTabData) {
-      this.positionParams = {
-        profile: 'player',
-        position: 'position',
-        listname: tab.tabDataKey,
-        sort: '',
-        conference: '',
-        division: '',
-        limit: '',
-        pageNum: 1
+    private positionDropdown(event) {
+      this.positionData = this.checkToResetTabs(event);
+      if(event.tab != null){
+        var matches = this.checkMatchingTabs(event);
+
+        if(matches != null){
+          this.positionParams = {
+            scope:  this.scope, //TODO change to active scope
+            target: 'player',
+            statName: matches.tabDataKey,
+            ordering: 'asc',
+            perPageCount: this.listMax,
+            pageNumber: 1
+          }
+          this.getMVPService(matches, this.positionParams);
+        }
       }
     }
+
+    //function to check if selected position in dropdown is currently active
+    private checkMatchingTabs(event) {
+      let localPosition = event.position;
+      let listName = event.tab.tabDataKey;
+
+      if(event.position != this.globalMVPPosition){
+        return this.positionData[0];
+      }else{
+        return this.positionData.filter(tab => tab.tabDataKey == listName)[0];
+      }
+    }
+
+    //function to check if selected position in dropdown is currently active
+    private checkToResetTabs(event) {
+      let localPosition = event.position;
+
+      if ( localPosition != this.globalMVPPosition ) {
+        this.globalMVPPosition = event.position;
+        return this.listService.getMVPTabs(this.globalMVPPosition, 'module');
+      } else {
+        return this.positionData;
+      } //private checkToResetTabs
+    }
+
+    getMVPService(tab, params){
+      this.listService.getListModuleService(tab, params)
+          .subscribe(updatedTab => {
+              //do nothing?
+              var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+              matches[0] = updatedTab;
+          }, err => {
+              tab.isLoaded = true;
+              console.log('Error: Loading MVP Pitchers: ', err);
+          })
+    }
+
 
     //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
     private batterTab(tab: positionMVPTabData) {
