@@ -49,7 +49,7 @@ export class PlayerStatsService implements OnDestroy{
             console.log("Error getting stats data - invalid tabData object");
             return;
         }
-        console.log(tabData," now what?")
+
 
         var standingsTab: MLBPlayerStatsTableData = tabData[0];
         var tabName:string="passing"
