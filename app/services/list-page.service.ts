@@ -27,8 +27,8 @@ interface PlayerItem {
     playerName: string,
     playerFirstName: string,
     playerLastName: string,
-    imageUrl: string,
-    uniformNumber: string,
+    playerHeadshotUrl: string,
+    playerJerseyNumber: string,
     playerPosition: string[],
     teamState: string,
     teamCity: string,
@@ -305,7 +305,7 @@ export class ListPageService {
         } else { //if profile == 'player'
           ctaDesc = 'Interested in discovering more about this player?';
           primaryRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,playerName,val.playerId.toString());
-          primaryImage = GlobalSettings.getImageUrl(val.imageUrl);
+          primaryImage = GlobalSettings.getImageUrl(val.playerHeadshotUrl);
 
           profileLinkText = {
             route: primaryRoute,
@@ -316,7 +316,7 @@ export class ListPageService {
             'Team: ',
             teamLinkText,
             '<span class="separator">   |   </span> ',
-            'Jersey No: #'+val.uniformNumber
+            'Jersey No: #'+val.playerJerseyNumber
           ];
         }
 
@@ -366,7 +366,7 @@ export class ListPageService {
             val.stat,
             statDescription,
             'fa fa-map-marker'),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(''), teamRoute, val.listRank),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshotUrl), teamRoute, val.listRank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -391,7 +391,7 @@ export class ListPageService {
             statDescription,
             null
           ),
-            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(''),playerRoute, val.listRank, '', null),
+            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
           ctaBtn:'',

@@ -15,6 +15,7 @@ declare var moment: any;
 interface TransactionInfo {
     transactionDate: string;
     transactionType?: string;
+    playerPosition: string;
     id: string;
     teamKey: string;
     personKey: string;
@@ -88,10 +89,11 @@ export class TransactionsService {
 
       tabs.forEach(tab => {
         tab.sortOptions = [
-          { key: "2015", value: "2015"},
-          { key: "2016", value: "2016"}
+          { key: "2016", value: "2016"},
+          { key: "2015", value: "2015"}
         ],
-        tab.selectedSort = "2016",
+
+        tab.sortTitle = "Season: ",
         tab.errorMessage = errorMessagePrepend + tab.tabDisplay.toLowerCase(),
         tab.includeDropdown = isPage
         tab.carData = this.getEmptyCarousel(tab); //must be called after the rest is set up
@@ -137,19 +139,19 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?, transType?, year?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
 
     if( year == "2016" ){
       tab.selectedSort = "2016";
-    } else if( sort == "2015" ){
+    } else if( year == "2015" ){
       tab.selectedSort = "2015";
     }
 
     if( limit == null){ limit = 10;}
     if( page == null){ page = 1;}
-    if ( transType == null) { transType = 'all'};
+    if ( year == null ) { year ="2016" };
 
     var callURL = this._apiUrl + '/';
 
@@ -159,7 +161,7 @@ export class TransactionsService {
     else {
        callURL += 'transactions/league/';
     }
-    callURL += transType + '/' + sort + '/' + limit + '/'+page;
+    callURL += year + '/' + tab.tabDataKey + '/' + page + '/' + limit;
 
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
@@ -214,6 +216,7 @@ export class TransactionsService {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
+
         if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
           playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
         }
@@ -230,10 +233,14 @@ export class TransactionsService {
         //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
         var description;
 
-        if (val.transactionType == "suspension") {}
-        else if (val.transactionType == "injury") {}
+        if (val.transactionType == "suspension") {
+          description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " was " + val.contents;
+        }
+        else if (val.transactionType == "injuries") {
+          description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " is out with " + val.contents;
+        }
         else {
-          description = playerFullName + " was " + val.transactionType + " from the " + val.teamName + ".";
+          description = playerFullName + " was " + val.contents;
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {
@@ -245,7 +252,7 @@ export class TransactionsService {
               description
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
-          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdate),
+          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
           circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
           circleImageRoute: playerRoute
           // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
@@ -255,6 +262,7 @@ export class TransactionsService {
     }
     return carouselArray;
   }
+
 
   listTransactions(data: Array<TransactionInfo>, type: string): Array<TransactionsListInput>{
     let self = this;
@@ -278,7 +286,7 @@ export class TransactionsService {
       return {
         dataPoints: [{
           style   : 'transactions-small',
-          data    : GlobalFunctions.formatDateWithAPMonth(new Date(val['repDate']), "", " DD, YYYY"),
+          data    : GlobalFunctions.formatLongDate(val.transactionDate),
           value   : [playerTextLink, val.contents],
           url     : null
         }],

@@ -76,7 +76,7 @@ export class MVPListPage implements OnInit {
       imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: "MLB's Most Valuable Players",
+      text3: "Most Valuable Players",
       icon: 'fa fa-map-marker'
     };
 
@@ -87,7 +87,7 @@ export class MVPListPage implements OnInit {
           imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
-          text3: "MLB's Most Valuable Players",
+          text3: "Most Valuable Players",
           icon: 'fa fa-map-marker'
         };
         this.loadTabs();
