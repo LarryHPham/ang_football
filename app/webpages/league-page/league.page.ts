@@ -410,7 +410,7 @@ export class LeaguePage implements OnInit {
 
         if(matches != null){
           this.positionParams = {
-            scope:  'nfl', //TODO change to active scope
+            scope:  this.scope, //TODO change to active scope
             target: 'player',
             statName: matches.tabDataKey,
             ordering: 'asc',
