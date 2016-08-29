@@ -27,65 +27,59 @@ export class DeepDiveService {
       return headers;
   }
 
-  getDeepDiveService(batchId: number, limit: number){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-
-  var callURL = this._apiUrl + '/' + 'articleBatch/';
-  if(typeof limit == 'undefined'){
-    callURL += "/5";
-  } else {
-    callURL += "/" + limit;
-  }
-  if(typeof batchId == 'undefined'){
-    callURL += "1";
-  } else {
-    callURL += batchId;
-  }
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      // console.log("deep dive data", callURL, data);
-      return data;
-    })
-  }
+  // getDeepDiveService(batchId: number, limit: number){
+  // //Configure HTTP Headers
+  // var headers = this.setToken();
+  //
+  // var callURL = this._apiUrl + '/' + 'articleBatch/';
+  // if(typeof limit == 'undefined'){
+  //   callURL += "/5";
+  // } else {
+  //   callURL += "/" + limit;
+  // }
+  // if(typeof batchId == 'undefined'){
+  //   callURL += "1";
+  // } else {
+  //   callURL += batchId;
+  // }
+  // return this.http.get(callURL, {headers: headers})
+  //   .map(res => res.json())
+  //   .map(data => {
+  //     return data;
+  //   })
+  // }
 
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
   var headers = this.setToken();
-  var callURL = this._apiUrl+'/'+ 'article/' + articleID;
+  var callURL = this._apiUrl + '/article/' + articleID;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-      // console.log( "article service", callURL, data);
       return data;
     })
   }
 
-  getDeepDiveBatchService(limit, startNum, state?){
+  getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   if(startNum == null){
     startNum = 1;
   }
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
-  }
-  // var callURL = this._apiUrl+'/articleBatch/division/'+state+'/'+startNum+'/'+limit;
-  var callURL = this._apiUrl+'/articleBatch/9/1';//TODO waiting on api to finish
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      // console.log("deep dive batch", callURL, data);
-      return data;
-    })
-  }
 
-  getDeepDiveVideoService(articleID){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  var callURL = this._apiUrl+'/'+ 'article/video/'+ articleID;
+  // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
+  var callURL = this._apiUrl + '/articleBatch/';
+  if(scope != null){
+    callURL += scope;
+  } else {
+    callURL += 'nfl';
+  }
+  callURL += '/' + limit + '/' + startNum;
+  if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
+    callURL += '/' + state;
+  }
+  console.log("URL", callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -93,7 +87,8 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveVideoBatchService(limit, startNum, state?){
+
+  getDeepDiveVideoBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
   var headers = this.setToken();
   if(startNum == null){
@@ -102,7 +97,16 @@ export class DeepDiveService {
   if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     state = 'null';
   }
-  var callURL = this._apiUrl+'/'+ 'article/video/batch/division/' + state + '/' + startNum + '/' + limit ;
+  var callURL = this._apiUrl + '/videoBatch/';
+  if(scope != null){
+    callURL += scope;
+  } else {
+    callURL += 'nfl';
+  }
+  callURL += '/' + limit + '/' + startNum;
+  if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
+    callURL += '/' + state;
+  }
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -116,7 +120,7 @@ export class DeepDiveService {
   if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     state = 'null';
   }
-  var callURL = this._articleUrl+'recent-games/'+state;
+  var callURL = this._articleUrl + 'recent-games/' + state;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -138,13 +142,6 @@ export class DeepDiveService {
 
       return data;
     })
-  }
-  getdeepDiveData(deepDiveData, callback:Function, dataParam) {
-  if(deepDiveData == null){
-    deepDiveData = {};
-
-  }else {
-    }
   }
 
   getAiArticleData(state){

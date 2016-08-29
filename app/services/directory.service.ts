@@ -67,6 +67,9 @@ interface MLBPlayerDirectoryData {
   resultCount: number;
   pageCount: number;
   dayOfWeek: string;
+  playerCity: string;
+  playerState: string;
+
 }
 
 @Injectable()
@@ -160,10 +163,10 @@ export class DirectoryService {
 
   convertPlayerDataToDirectory(data: MLBPlayerDirectoryData): DirectoryProfileItem {
     var location = "N/A";
-    if ( data.city && data.area ) {
-      location = data.city + ", " + GlobalFunctions.stateToAP(data.area);
+    if ( data.playerCity && data.playerState ) {
+      location = data.playerCity + ", " + data.playerState;
     }
-    var teamName = data.teamFirstName + " " + data.teamLastName;//TODO waiting on data to be updated, teamName should be using listItemsAssociatedProfile
+    var teamName = data.teamFirstName + " " + data.teamLastName;
     var date = moment(Number(data.lastUpdated) * 1000);
     var dayOfWeek = date.format('dddd, ');
     var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
@@ -177,7 +180,7 @@ export class DirectoryService {
         },
         {
           route: VerticalGlobalFunctions.formatTeamRoute(teamName, data.teamId),
-          text: teamName
+          text: 'Team: ' + teamName
         },
         {
           text: this._globalFunc.capitalizeFirstLetter(data.dataPointOne) + " " + (data.dataValueOne ? data.dataValueOne : "N/A")
