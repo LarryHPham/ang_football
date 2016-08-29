@@ -1,7 +1,7 @@
 import {Injectable, Input, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {SportsPageParameters} from '../global/global-interface';
+import {SportPageParameters} from '../global/global-interface';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
@@ -44,7 +44,7 @@ export class PlayerStatsService implements OnDestroy{
         };
     }
 
-    getStatsTabData(tabData: Array<any>, pageParams: SportsPageParameters, tabDataLoaded: Function, maxRows?: number) {
+    getStatsTabData(tabData: Array<any>, pageParams: SportPageParameters, tabDataLoaded: Function, maxRows?: number) {
         if ( !tabData || tabData.length <= 1 ) {
             console.log("Error getting stats data - invalid tabData object");
             return;
@@ -69,7 +69,7 @@ export class PlayerStatsService implements OnDestroy{
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
         standingsTab.tableData = null;
-        standingsTab.tabActive="Passing";
+        // standingsTab.tabActive="Passing";
 
         if(standingsTab.tabActive=="Special"){
             var  tabName=columnTabType.toLowerCase();
@@ -108,7 +108,7 @@ export class PlayerStatsService implements OnDestroy{
         return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, false, isTeamProfilePage));
     }
 
-    private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportsPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
+    private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
         let table = new MLBPlayerStatsTableModel(data, standingsTab.tabActive);
         //Limit to maxRows, if necessary
         if ( maxRows !== undefined ) {

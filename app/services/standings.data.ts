@@ -48,16 +48,16 @@ export interface TeamStandingsData {
   fullBackgroundImageUrl?: string;
 }
 
-export class MLBStandingsTableData implements TableComponentData<TeamStandingsData> {
+export class VerticalStandingsTableData implements TableComponentData<TeamStandingsData> {
   groupName: string;
 
-  tableData: MLBStandingsTableModel;
+  tableData: VerticalStandingsTableModel;
 
   conference: Conference;
 
   division: Division;
 
-  constructor(title: string, conference: Conference, division: Division, table: MLBStandingsTableModel) {
+  constructor(title: string, conference: Conference, division: Division, table: VerticalStandingsTableModel) {
     this.groupName = title;
     this.conference = conference;
     this.division = division;
@@ -76,7 +76,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
 
   hasError: boolean;
 
-  sections: Array<MLBStandingsTableData>;
+  sections: Array<VerticalStandingsTableData>;
 
   conference: Conference;
 
@@ -148,7 +148,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
   }
 }
 
-export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
+export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
   // title: string;
 
   columns: Array<TableColumn> = [{
