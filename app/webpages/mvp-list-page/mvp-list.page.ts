@@ -135,6 +135,7 @@ export class MVPListPage implements OnInit {
   }
 
   getStandardList(tab: positionMVPTabData){
+
     this.queryParams.listname = tab.tabDataKey;
     this._service.getListModuleService(tab, this.queryParams)
       .subscribe(
@@ -171,6 +172,5 @@ export class MVPListPage implements OnInit {
       tabRoute = ["MVP-list-tab-page", { type: this._params.params['type'], tab: tab.tabDataKey, pageNum: "1"}];
       this._router.navigate(tabRoute);
      }
-
   }
 }
