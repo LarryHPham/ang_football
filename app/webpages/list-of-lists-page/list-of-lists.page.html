@@ -6,7 +6,7 @@
   <loading-component *ngIf="!detailedDataArray && !isError"></loading-component>
   <error-component *ngIf="isError"></error-component>
 
-  <slider-carousel *ngIf="carouselDataArray" [carouselData]="carouselDataArray" [footerStyle]="footerStyle"></slider-carousel>
+  <slider-carousel *ngIf="carouselArray" [carouselData]="carouselArray" [footerStyle]="footerStyle"></slider-carousel>
   <!--<div *ngFor="let itemData of detailedDataArray"> {{ itemData | json }}</div>-->
   <list-of-lists-item *ngFor="let itemData of detailedDataArray; let rowIndex = index" [item] = 'itemData' [rowIndex] = 'rowIndex'></list-of-lists-item>
   <pagination-footer *ngIf="paginationParameters" [paginationParameters]="paginationParameters"></pagination-footer>

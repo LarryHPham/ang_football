@@ -79,7 +79,7 @@ export class DailyUpdateService {
     //http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800
     // let url = GlobalSettings.getApiUrl() + '/team/dailyUpdate/' + teamId;
     let url = "http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800"; //place holder data for QA review
-  
+
     return this.http.get(url)
         .map(res => res.json())
         .map(data => this.formatTeamData(data.data, teamId));
@@ -98,6 +98,28 @@ export class DailyUpdateService {
       if ( apiSeasonStats.totalWins != null && apiSeasonStats.totalLosses != null ) {
         record = apiSeasonStats.totalWins + "-" + apiSeasonStats.totalLosses;
       }
+      // stats = [
+      //   {
+      //     name: "Win Loss Record",
+      //     value: record,
+      //     icon: "fa-trophy"
+      //   },
+      //   {
+      //     name: "Hits",
+      //     value: apiSeasonStats.batHits != null ? apiSeasonStats.batHits : "N/A", //TODO: get hits from API
+      //     icon: "fa-batt-and-ball" //TODO: use 'baseball and bat' icon
+      //   },
+      //   {
+      //     name: "Earned Runs Average",
+      //     value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
+      //     icon: "fa-batter" //TODO: use 'batter swinging' icon
+      //   },
+      //   {
+      //     name: "Runs Batted In",
+      //     value: apiSeasonStats.batRbi != null ? Number(apiSeasonStats.batRbi) : "N/A",
+      //     icon: "fa-batter-alt" //TODO: get 'batter standing' icon
+      //   }
+      // ]
       stats = [
         {
           name: "Win Loss Record",
@@ -105,19 +127,19 @@ export class DailyUpdateService {
           icon: "fa-trophy"
         },
         {
-          name: "Hits",
+          name: "Average Points Per Game",
           value: apiSeasonStats.batHits != null ? apiSeasonStats.batHits : "N/A", //TODO: get hits from API
-          icon: "fa-batt-and-ball" //TODO: use 'baseball and bat' icon
+          icon: "fa-tdpoints"//TODO: use 'baseball and bat' icon
         },
         {
-          name: "Earned Runs Average",
+          name: "Passing Yards Per Game",
           value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
-          icon: "fa-batter" //TODO: use 'batter swinging' icon
+          icon: "fa-tdball" //TODO: use 'batter swinging' icon
         },
         {
-          name: "Runs Batted In",
+          name: "Rushing Yards Per Game",
           value: apiSeasonStats.batRbi != null ? Number(apiSeasonStats.batRbi) : "N/A",
-          icon: "fa-batter-alt" //TODO: get 'batter standing' icon
+          icon: "fa-tdrushing" //TODO: get 'batter standing' icon
         }
       ]
     }
@@ -153,8 +175,8 @@ export class DailyUpdateService {
 
 
   getPlayerDailyUpdate(playerId: number): Observable<DailyUpdateData> {
-    //http://dev-homerunloyal-api.synapsys.us/player/dailyUpdate/2800
-    let url = GlobalSettings.getApiUrl() + '/player/dailyUpdate/' + playerId;
+  let url =  "http://dev-homerunloyal-api.synapsys.us/player/dailyUpdate/2800";
+  //  let url = GlobalSettings.getApiUrl() + '/player/dailyUpdate/' + playerId;
 
     // console.log("getting daily update for player " + playerId + ": " + url);
     return this.http.get(url)
@@ -231,22 +253,22 @@ export class DailyUpdateService {
         {
           name: "Win Loss Record",
           value: record,
-          icon: "fa-trophy"
+          icon: "fa-tdrushat"
         },
         {
           name: "Innings Pitched",
           value: apiSeasonStats.pitchInningsPitched != null ? apiSeasonStats.pitchInningsPitched : "N/A",
-          icon: "fa-baseball-diamond" //TODO: get 'baseball field' icon
+          icon: "fa-tdrecyards" //TODO: get 'baseball field' icon
         },
         {
           name: "Strike Outs",
           value: apiSeasonStats.pitchStrikeouts != null ? apiSeasonStats.pitchStrikeouts : "N/A",
-          icon: "fa-baseball-crest" //TODO: get '2 baseball bats' icon
+          icon: "fa-tdrushing" //TODO: get '2 baseball bats' icon
         },
         {
           name: "Earned Runs Average",
           value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
-          icon: "fa-batter" //TODO: use 'batter swinging' icon
+          icon: "fa-tdpoints" //TODO: use 'batter swinging' icon
         }
       ]
   }

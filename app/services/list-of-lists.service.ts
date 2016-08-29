@@ -9,7 +9,7 @@ import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carouse
 declare var moment: any;
 @Injectable()
 export class ListOfListsService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
+  private _apiUrlTdl: string = GlobalSettings.getApiUrlTdl();
 
   // private _apiToken: string = 'BApA7KEfj';
   // private _headerName: string = 'X-SNT-TOKEN';
@@ -29,41 +29,60 @@ export class ListOfListsService {
     // Configure HTTP Headers
     var headers = this.setToken();
 
-    // let type    = urlParams.type;
-    let id      = urlParams.id != null ? urlParams.id : "";
-    var limit   = urlParams.limit != null ? urlParams.limit: 4;
-    var pageNum = urlParams.pageNum != null ? urlParams.pageNum : 1;
+    let callURL = this._apiUrlTdl + '/listOfLists/';
 
-    // Set scope for url based on type
-    let callURL = this._apiUrl + '/listOfLists/';
-    switch ( profileType ) {
-      case "player":
-        var scope   = urlParams.scope != null ? urlParams.scope : "league";
-        callURL += 'player/' + id + '/' + scope +'/'+ limit +'/' + pageNum;
-        break;
+    // var newParams = {
+    //   scope: urlParams.scope,   //TO-DO
+    //   target: 'team', //TO-DO
+    //   perPageCount: urlParams['perPageCount'],
+    //   pageNumber: urlParams['pageNumber'],
+    //   targetId: urlParams['targetId']
+    //
+    // }
 
-      case "team":
-        callURL += 'team/' + id + '/' + limit +'/' + pageNum;
-        break;
+    let id      = urlParams.targetId != null ? urlParams.targetId : "";
+    var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
+    var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
 
-      case "league":
-        callURL += 'league/' + limit +'/' + pageNum;
-        break;
-    }
 
-    // console.log("list of lists url " + callURL);
+    var url_api = "scope=" + 'nfl' + "&target=" + 'player' + "&perPageCount=" + limit + "&pageNumber=" + pageNum + "&targetId=" + id;
+
+    callURL += url_api;
+
+
+
+    // scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
+
+    // for(var q of urlParams){
+    //   console.log("url", urlParams[q]);
+    //   if(q == 'scope'){
+    //     callURL+= q +'='+urlParams[q];
+    //
+    //   }else{
+    //     callURL += '&'+q+'='+urlParams[q];
+    //   }
+    // }
+    // if(newParams.scope == 'nfl') {
+    //   callURL+= "scope=" + newParams.scope + "&target=" + newParams.target + "&perPageCount=" + newParams.perPageCount + "&pageNumber=" + newParams.pageNumber + "&targetId=" + newParams.targetId;
+    // }
+
+
+
+    console.log("list of lists url " + callURL);
     return this.http.get( callURL, {
         headers: headers
       })
       .map(res => res.json())
       .map(
         data => {
+          console.log(data);
           if ( !data || !data.data ) {
             return null;
           }
           var lastUpdated = "";
           if ( data && data.data && data.data.length > 0 && data.data != undefined) {
             lastUpdated = data.data[0].targetData;
+            console.log(data.data[0].targetData);
 
           }
           return {
@@ -89,10 +108,11 @@ export class ListOfListsService {
     if(data.length == 0){
       carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
     }else{
+    //  console.log(data);
       //if data is coming through then run through the transforming function for the module
       data.forEach(function(val, index){
         if( val.listData[0] == null) return;
-        let itemInfo          = val.listInfo;
+        let itemInfo          = val.listInfo; //names of the individual lists.
         let itemTargetData    = val.targetData;
         let itemProfile       = null;
         let itemImgUrl        = null;
@@ -100,8 +120,9 @@ export class ListOfListsService {
         let itemSubImg        = null;
         let itemSubRoute      = null;
         // let itemHasHover      = version == "page";
-        // let ctaUrlArray       = itemInfo.url.split("/");
-        let itemStatName      = (itemInfo.stat).replace(/-/g," ");
+      //  let ctaUrlArray       = itemInfo.url.split("/");
+        let ctaUrlArray       = null;
+        let itemStatName      = 'test'; //TODO
         // let updatedDate       = moment(itemTargetData.lastUpdated).format('dddd, MMMM Do, YYYY');
         let itemDescription   = [];
         let rankStr = itemTargetData.rank + GlobalFunctions.Suffix(Number(itemTargetData.rank));
@@ -170,17 +191,26 @@ export class ListOfListsService {
     let dummyIcon         = "fa fa-mail-forward";
 
     data.forEach(function(item, index){
+
+
+
       let itemInfo = item.listInfo;
       let itemListData = item.listData;
+      let itemTarget = item.targetData;
+
+      console.log(itemTarget.teamName);
+
       if( itemListData.length<1 ) return;
       itemListData.unshift(item.targetData);
-      itemListData = itemListData.slice(0, 6);
+      itemListData = itemListData.slice(1, 7);
 
       let itemListInfo = item['listInfo'];
-      let ctaUrlArray = itemListInfo.url.split("/");
+      //console.log(item.listInfo);
+      //  let ctaUrlArray = itemListInfo.url.split("/");
+      let ctaUrlArray = 'test';
       // removes first empty item and second "list" item
-      ctaUrlArray.splice(0,2);
-      ctaUrlArray.push.apply(ctaUrlArray,["10","1"]);
+      //  ctaUrlArray.splice(0,2);
+      //  ctaUrlArray.push.apply(ctaUrlArray,["10","1"]);
 
       var profileTypePlural = "types";
       if ( itemListInfo.target == "player" ) {
@@ -189,33 +219,39 @@ export class ListOfListsService {
       else if ( itemListInfo.target == "team" ) {
         profileTypePlural = "teams";
       }
+      console.log('item list data', itemListData);
 
       var listData = {
-        url           : itemListInfo.url           != null  ? itemListInfo.url          : dummyUrl,
-        name          : itemListInfo.name          != null  ? itemListInfo.name         : dummyName,
-        target        : itemInfo.target,
-        stat          : itemListInfo.stat          != null  ? itemListInfo.stat         : dummyStat,
-        ordering      : itemListInfo.ordering      != null  ? itemListInfo.ordering     : dummyOrdering,
-        scope         : itemListInfo.scope         != null  ? itemListInfo.scope        : dummyScope,
-        conference    : itemListInfo.conference    != null  ? itemListInfo.conference   : dummyConference,
-        division      : itemListInfo.division      != null  ? itemListInfo.division     : dummyDivision,
-        listCount     : itemListInfo.listCount     != null  ? itemListInfo.listCount    : dummyListCount,
-        pageCount     : itemListInfo.pageCount     != null  ? itemListInfo.pageCount    : dummyPageCount,
-        listRank      : itemListInfo.listRank      != null  ? itemListInfo.listRank     : dummyListRank,
-        icon          : itemListInfo.icon          != null  ? itemListInfo.icon         : dummyIcon,
+      //  url           : itemListInfo.url           != null  ? itemListInfo.url          : dummyUrl,
+          name          : itemInfo.listName           != null  ? itemInfo.listName         : dummyName,
+      //    target        : itemTarget.target,
+    //    stat          : itemListInfo.stat          != null  ? itemListInfo.stat         : dummyStat,
+    //    ordering      : itemListInfo.ordering      != null  ? itemListInfo.ordering     : dummyOrdering,
+    //    scope         : itemListInfo.scope         != null  ? itemListInfo.scope        : dummyScope,
+    //    conference    : itemListInfo.conference    != null  ? itemListInfo.conference   : dummyConference,
+    //    division      : itemListInfo.division      != null  ? itemListInfo.division     : dummyDivision,
+          topname       : itemTarget.teamName        != null  ? itemTarget.teamName : itemTarget.playerFirstName + itemTarget.playerLastname,
+          listCount     : itemInfo.resultCount       != null  ? itemInfo.resultCount    : dummyListCount,
+          pageCount     : itemInfo.pageCount         != null  ? itemInfo.pageCount    : dummyPageCount,
+          listRank      : itemListData.rank      != null  ? itemListData.rank     : dummyListRank,
+    //    icon          : itemListInfo.icon          != null  ? itemListInfo.icon         : dummyIcon,
         dataPoints    : [],
         ctaBtn        : '',
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
-        ctaUrl        : MLBGlobalFunctions.formatListRoute(ctaUrlArray)
+        // ctaUrl        : MLBGlobalFunctions.formatListRoute(ctaUrlArray)
+        ctaUrl        : null
       };
+
+    console.log(itemListData[0].rank + itemListData[0].teamName);
 
       itemListData.forEach(function(val, index) {
         let itemUrlRouteArray = itemListInfo.target == "player"  ?
-          MLBGlobalFunctions.formatPlayerRoute('st-louis-cardinals', 'adam-wainwright', '96049') :
-          MLBGlobalFunctions.formatTeamRoute('st-louis-cardinals', '2805');
-          // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
-          let firstItemHover = "<p>View</p><p>Profile</p>";
+          MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
+          MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+          console.log(val);
+          let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
+        //  let firstItemHover = "<p>View</p><p>Profile</p>";
         listData.dataPoints.push(
           {
             imageClass : index > 0 ? "image-43" : "image-121",
@@ -239,9 +275,11 @@ export class ListOfListsService {
           }
         )
       });
+  //    console.log(listData);
       listDataArray.push(listData);
     });
     return listDataArray;
+
   }
 
   imageData(imageClass, imageBorder, mainImg, mainImgRoute, subImgClass?, subImg?, subRoute?, rank?, hasHover?){

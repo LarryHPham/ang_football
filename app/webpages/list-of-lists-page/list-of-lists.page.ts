@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteParams} from '@angular/router-deprecated';
+import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {DetailedListItem, DetailListInput} from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
@@ -49,12 +49,25 @@ export class ListOfListsPage implements OnInit{
     constructor(private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
         private _params: RouteParams,
-        private _title: Title) {
-        _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
-        this.pageType = this._params.get("type");
-        if ( this.pageType == null ) {
-            this.pageType = "league";
-        }
+        private _title: Title, private _router:Router) {
+          GlobalSettings.getParentParams(this._router, parentParams => {
+              _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
+              this._params['scope'] = parentParams.scope;
+              this.pageType = this._params.get("type");
+              if ( this.pageType == null ) {
+                  this.pageType = "league";
+                  this._profileService.getLeagueProfile()
+                  .subscribe(data => {
+                      this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
+                  }, err => {
+                      console.log("Error loading MLB profile");
+                  });
+              }else{
+                this.getListOfListsPage(this._params.params);
+              }
+
+          });
+
     }
 
     getListOfListsPage(urlParams, logoUrl?: string) {
@@ -69,24 +82,28 @@ export class ListOfListsPage implements OnInit{
                 this.setPaginationParams(list.pagination);
                 this.carouselDataArray = list.carData;
 
+
                 var profileName = "League";
                 var profileRoute = ["League-page"];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
-                switch ( urlParams.type ) {
+
+                switch ( urlParams.target ) {
                     case "player":
-                        profileName = list.targetData.playerName;
-                        profileRoute = MLBGlobalFunctions.formatPlayerRoute(list.targetData.teamName, list.targetData.playerName, list.targetData.playerId);
-                        profileImage = GlobalSettings.getImageUrl(list.targetData.imageUrl);
+                        profileName = list.targetData[0].playerFirstName + " " + list.targetData[0].playerLastName;
+                    //    profileRoute = MLBGlobalFunctions.formatPlayerRoute(list.targetData.teamName, list.targetData.playerName, list.targetData.playerId);
+                    //    profileImage = GlobalSettings.getImageUrl(list.targetData.imageUrl);
                         break;
 
                     case "team":
-                        profileName = list.targetData.teamName;
-                        profileRoute = MLBGlobalFunctions.formatTeamRoute(list.targetData.teamName, list.targetData.teamId);
-                        profileImage = GlobalSettings.getImageUrl(list.targetData.teamLogo);
+                        profileName = list.targetData[0].teamName;
+                    //    profileRoute = MLBGlobalFunctions.formatTeamRoute(list.targetData[0].teamName, list.targetData[0].teamId);
+                      //  profileImage = GlobalSettings.getImageUrl(list.targetData.teamLogo);
                         break;
 
                     default: break;
                 }
+
+
                 this.profileName = profileName
                 this._title.setTitle(GlobalSettings.getPageTitle("List of Lists", this.profileName));
                 this.titleData = {
@@ -147,16 +164,6 @@ export class ListOfListsPage implements OnInit{
     }
 
     ngOnInit(){
-        if ( this.pageType == "league" ) {
-            this._profileService.getLeagueProfile()
-            .subscribe(data => {
-                this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
-            }, err => {
-                console.log("Error loading MLB profile");
-            });
-        }
-        else {
-            this.getListOfListsPage(this._params.params);
-        }
+
     }
 }
