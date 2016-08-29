@@ -32,6 +32,7 @@ export interface SeasonStatsPlayerData {
   lastUpdate: string;
   liveImage: string;
   lastUpdateTimestamp: string;
+  statScope: string;
 }
 
 // Interfaces to help convert API data into a ComparisonBarList that can be
@@ -125,7 +126,7 @@ export class SeasonStatsService {
     };
   }
 
-  private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean): Array<ComparisonBarInput> {
+  private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean, scope): Array<ComparisonBarInput> {
     if(stats !== undefined){ //catch if no data for season
     //let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
     let bars: Array<ComparisonBarInput> = [];
@@ -186,7 +187,7 @@ export class SeasonStatsService {
       }
 
       bars.push({
-        title: SeasonStatsService.getKeyDisplayTitle(fieldName),
+        title: SeasonStatsService.getKeyDisplayTitle(fieldName, scope),
         data: dataPoints,
         minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue)) : null,
         maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue)) : null,
@@ -206,7 +207,7 @@ export class SeasonStatsService {
     var tabTitle;
     var longSeasonName; // for display in the carousel and module title
     var isCareer = seasonId == "career";
-    var bars: Array<ComparisonBarInput> = this.getBarData(data.stats[seasonId], isCareer, isPitcher);
+    var bars: Array<ComparisonBarInput> = this.getBarData(data.stats[seasonId], isCareer, isPitcher, data.playerInfo[0].statScope);
 
     if ( isCareer ) {
       tabTitle = "Career Stats";
@@ -264,7 +265,7 @@ export class SeasonStatsService {
     };
     var description: any = ["No Information for this season"];
     if (stats[currentTab] != null && stats[currentTab].length > 0) {
-      description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText);
+      description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText, playerInfo[0].statScope);
     }
     return SliderCarousel.convertToCarouselItemType1(1, {
       backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].liveImage),
@@ -280,11 +281,11 @@ export class SeasonStatsService {
     });
   }
 
-  static getDescription(stats, position, playerRouteText) {
+  static getDescription(stats, position, playerRouteText, scope) {
     var description;
     switch(position) {
       case "QB":
-          description = [playerRouteText, " has a total of ", Number(stats[2].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) , " with " , Number(stats[3].stat).toFixed(0)  , " " , "Completions" , " and " , Number(stats[0].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) ];
+          description = [playerRouteText, " has a total of ", Number(stats[2].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType, scope) , " with " , Number(stats[3].stat).toFixed(0)  , " " , "Completions" , " and " , Number(stats[0].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType, scope)+"." ];
           break;
       case "CB":
       case "DB":
@@ -293,33 +294,33 @@ export class SeasonStatsService {
       case "DT":
       case "LB":
       case "S":
-          description = [playerRouteText, " has a total of ", Number(stats[3].stat).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats[0].stat).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats[4].stat).toFixed(0)  , " " , "Total Sacks" ];
+          description = [playerRouteText, " has a total of ", Number(stats[3].stat).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats[0].stat).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats[4].stat).toFixed(0)  , " " , "Total Sacks." ];
           break;
       case "C":
       case "G":
       case "LS":
       case "OL":
       case "OT":
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "games played" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "games started"];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Games Played" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Games Started."];
           break;
       case "K":
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Field Goals Made" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Attempts" , " and " , Number(stats[3].stat).toFixed(0)  , " " , "Extra Points Made" ];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Field Goals Made" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Attempts" , " and " , Number(stats[3].stat).toFixed(0)  , " " , "Extra Points Made." ];
           break;
       case "P":
-          description = [playerRouteText, " has ", Number(stats[4].stat).toFixed(0) , " " , "Total Punts" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Gross Punting Yards" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Longest Punt" ];
+          description = [playerRouteText, " has ", Number(stats[4].stat).toFixed(0) , " " , "Total Punts" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Gross Punting Yards." , " His Longest Punt was " , Number(stats[2].stat).toFixed(0)  , " Yards. "];
           break;
       case "RB":
-          description = [playerRouteText, " has a total of ", Number(stats[1].stat).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[4].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[0].stat).toFixed(0)  , " " , "Attempts" ];
+          description = [playerRouteText, " has a total of ", Number(stats[1].stat).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[4].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[0].stat).toFixed(0)  , " " , "Attempts." ];
           break;
       case "RS":
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) ];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType, scope) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType, scope) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType, scope)+"." ];
           break;
       case "TE":
       case "WR":
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Receptions" ];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType, scope) , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Receptions." ];
           break;
       default:
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType) ];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType, scope) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType, scope) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType, scope)+"." ];
       }
     return description;
   }
@@ -338,9 +339,10 @@ export class SeasonStatsService {
     }
   }
 
-  static getKeyDisplayTitle(key: string): string {
+  static getKeyDisplayTitle(key: string, scope): string {
     key = key.replace(/_/g, " ");
     key = key.replace("player", "");
+    key = key.replace(scope, "");
     key = key.toLowerCase().replace(/\b[a-z](?=[a-z]{2})/g, function(letter) {
     return letter.toUpperCase(); } );
     return key;

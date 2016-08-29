@@ -28,6 +28,7 @@
     .globalDefaultFont(24px, 400);
     @media @mobile {
       font-size: 16px;
+      line-height: 1.2em;
       text-align: center;
     }
   }
@@ -46,16 +47,28 @@
       width: auto;
       text-align: center;
       margin: 0 auto;
-      padding: 15px;
+      padding: 15px 10px;
       border-top: 1px solid black;
       border-bottom: 1px solid black;
     }
     &-location {
       display: block;
-      margin: 10px auto 0 auto;
+      margin: 5px auto 0 auto;
       text-align: center;
       line-height: 14px;
       .globalDefaultFont(12px, 400);
+      .location-designation {
+        display: inline;
+        @media @mobile {
+          display: block;
+        }
+      }
+      .location-title {
+        .globalDefaultFont(12px, 800);
+      }
+      .fa {
+        margin: 0 -1px 0 -1px;
+      }
     }
   }
   &-hero {
@@ -188,6 +201,7 @@
     &-col{
       overflow: auto;
       margin-bottom: 20px;
+      padding-bottom: 10px;
       border-bottom: 1px solid @highlightGrey;
       @media @mobile {
         .col-xs-12;
@@ -231,7 +245,7 @@
         display: none;
       }
     }
-    @media @desktop-l {
+    @media @desktop-m {
       &:hover {
         .fa-angle-right {
           display: block;
@@ -263,7 +277,7 @@
         margin-left: auto;
         margin-right: auto;
       }
-      @media @desktop-l {
+      @media @desktop-m {
         display: inline-block;
         vertical-align: middle;
         width: 100px;
@@ -282,7 +296,7 @@
       @media @tablet {
         padding-top: 20px
       }
-      @media @desktop-l {
+      @media @desktop-m {
         display: inline-block;
         vertical-align: middle;
         width: ~"calc(100% - 105px)";
@@ -292,13 +306,13 @@
 
       & > p {
         margin: 0;
-        line-height: 35px;
+        line-height: 30px;
         white-space: nowrap;
         .globalDefaultFont(20px, 800);
         @media @mobile {
           font-size: 16px;
         }
-        @media @desktop-l {
+        @media @desktop-m {
           line-height: 22px;
         }
       }

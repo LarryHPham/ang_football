@@ -39,7 +39,7 @@ export class DirectoryPage {
 
   public pageType: DirectoryType;
 
-  public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public _sportLeagueAbbrv: string;
 
   paginationParameters:PaginationParameters;
 
@@ -49,12 +49,15 @@ export class DirectoryPage {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
-
         _title.setTitle(GlobalSettings.getPageTitle("Directory"));
         var page = _params.get("page");
         this.currentPage = Number(page);
-
         var type = _params.get("type");
+        if(this.scope == 'fbs'){
+          this._sportLeagueAbbrv = GlobalSettings.getCollegeDivisionFullAbbrv();
+        } else {
+          this._sportLeagueAbbrv = GlobalSettings.getSportLeagueAbbrv();
+        }
         switch ( type ) {
           case "players":
           this.pageType = DirectoryType.players;
@@ -93,7 +96,7 @@ export class DirectoryPage {
       newlyAdded: this.newlyAdded
     }
 
-    this._directoryService.getData(this.pageType, params)
+    this._directoryService.getData(this.scope, this.pageType, params)
       .subscribe(
           data => this.setupData(data),
           err => {

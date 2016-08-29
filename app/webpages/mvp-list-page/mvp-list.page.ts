@@ -76,7 +76,7 @@ export class MVPListPage implements OnInit {
       imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: "MLB's Most Valuable Players",
+      text3: "Most Valuable Players",
       icon: 'fa fa-map-marker'
     };
 
@@ -87,7 +87,7 @@ export class MVPListPage implements OnInit {
           imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
-          text3: "MLB's Most Valuable Players",
+          text3: "Most Valuable Players",
           icon: 'fa fa-map-marker'
         };
         this.loadTabs();
@@ -135,6 +135,7 @@ export class MVPListPage implements OnInit {
   }
 
   getStandardList(tab: positionMVPTabData){
+
     this.queryParams.listname = tab.tabDataKey;
     this._service.getListModuleService(tab, this.queryParams)
       .subscribe(
@@ -171,6 +172,5 @@ export class MVPListPage implements OnInit {
       tabRoute = ["MVP-list-tab-page", { type: this._params.params['type'], tab: tab.tabDataKey, pageNum: "1"}];
       this._router.navigate(tabRoute);
      }
-
   }
 }
