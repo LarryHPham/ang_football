@@ -72,7 +72,7 @@ export class positionMVPTabData implements MVPTabData {
 @Injectable()
 export class ListPageService {
   // private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _apiUrl: string = "http://dev-homerunloyal-api.synapsys.us";
+  private _apiUrl: string = "http://dev-touchdownloyal-api.synapsys.us";
 
   constructor(public http: Http) {}
 
