@@ -15,7 +15,7 @@ export class FooterService {
   // getDykService(profile, id){
   getFooterService(scope: string, profile: string){
     var headers = this.setToken();
-    var fullUrl = GlobalSettings.getApiUrlTdl();//TODO
+    var fullUrl = GlobalSettings.getApiUrl();//TODO
     //example url = 'http://dev-touchdownloyal-api.synapsys.us/footer/nfl/player';
     fullUrl += "/footer";
     if(scope !== undefined){
