@@ -71,7 +71,7 @@ export class DailyUpdateService {
   }
 
   getTeamDailyUpdate(teamId: number): Observable<DailyUpdateData> {
-    let url = GlobalSettings.getApiUrlTdl() + '/dailyUpdate/team/' + teamId;
+    let url = GlobalSettings.getApiUrl() + '/dailyUpdate/team/' + teamId;
 
     return this.http.get(url)
         .map(res => res.json())
