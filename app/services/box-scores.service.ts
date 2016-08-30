@@ -129,7 +129,7 @@ export class BoxScoresService {
     var year = moment(date,"YYYY-MM-DD").tz('America/New_York').format("YYYY");
     var convertedDate = month + ' ' + day + ordinal + ', ' + year;
 
-    moduleTitle = "Box Scores - " + team + ': ' +convertedDate;
+    moduleTitle = "Box Scores <span class='mod-info'> - " + team + ': ' +convertedDate + '</span>';
     return {
       moduleTitle: moduleTitle,
       hasIcon: false,
@@ -158,6 +158,10 @@ export class BoxScoresService {
     })
   }
 
+  /**
+  * api to grab the dates that have games for box scores
+  * sends back => unixdate: true/false
+  */
   validateMonth(profile, date, teamId?){
   //Configure HTTP Headers
   var headers = this.setToken();
@@ -168,6 +172,7 @@ export class BoxScoresService {
   }
 
   var callURL = this._apiUrl+'/'+profile+'/gameDates/'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
+  console.log(callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -179,83 +184,153 @@ export class BoxScoresService {
     var boxScoreObj = {};
     var newBoxScores = {};
 
-    boxScores.forEach(function(val){
 
-      let date = moment(val.eventDate).unix() * 1000;
-      boxScoreObj[date] = {};
-      boxScoreObj[date]['gameInfo']= {
-        eventId: val.eventId,
-        eventStatus: "postGame",
-        seasonId: val.seasonId,
-        inningsPlayed: val.eventQuarter,
-        live: true,
-        startDateTime: val.eventDate,
-        startDateTimestamp: val.eventStartTime,
-        dataPointCategories:['Score','Poss','Yards']
-      };
-      boxScoreObj[date]['homeTeamInfo']= {
-        name: val.team1FullName,
-        id: val.team1Id,
-        firstName: val.team1Market,//TODO val.team1Market
-        lastName: val.team1Name,//TODO val.team1Name
-        abbreviation: val.team1Abbreviation,
-        logo: val.team1Logo,
-        colors: val.team1ColorHex,//TODO val.team1ColorHex
-        outcome: val.team1Outcome, // val.team1Outcome
-        score: val.team1Score,
-        dataP1:val.team1Score,
-        dataP2:val.team1Possession,
-        dataP3:val.team1Yards,
-        winRecord: val.team1Record != null ? val.team1Record.split('-')[0]:null,
-        lossRecord: val.team1Record != null ? val.team1Record.split('-')[1]:null,
-      };
-      boxScoreObj[date]['awayTeamInfo']= {
-        name: val.team2FullName,
-        id: val.team2Id,
-        firstName: val.team2Market,//TODO val.team2Market
-        lastName: val.team2Name,//TODO val.team2Name
-        abbreviation: val.team2Abbreviation,
-        logo: val.team2Logo,
-        colors: val.team2ColorHex,//TODO val.team2ColorHex
-        outcome: val.team2Outcome, // val.team2Outcome
-        score: val.team2Score,
-        dataP1:val.team2Score,
-        dataP2:val.team2Possession,
-        dataP3:val.team2Yards,
-        winRecord: val.team1Record != null ? val.team2Record.split('-')[0]:null,
-        lossRecord: val.team1Record != null ? val.team2Record.split('-')[1]:null,
-      };
-      boxScoreObj[date]['p1']={
-        home:val.team1Q1Score,
-        away:val.team2Q1Score
-      };
-      boxScoreObj[date]['p2']={
-        home:val.team1Q2Score,
-        away:val.team2Q2Score
-      };
-      boxScoreObj[date]['p3']={
-        home:val.team1Q3Score,
-        away:val.team2Q3Score
-      };
-      boxScoreObj[date]['p4']={
-        home:val.team1Q4Score,
-        away:val.team2Q5Score
-      };
-      boxScoreObj[date]['p5']={
-        home:val.team1OtScore,
-        away:val.team2OtScore
-      };
-      boxScoreObj[date]['aiContent'] = null;
-    })
-    for(var dates in boxScoreObj){
-        var dayDate = moment(Number(dates)).tz('America/New_York').format('YYYY-MM-DD');
-        if(typeof newBoxScores[dayDate] == 'undefined'){
-           newBoxScores[dayDate] = [];
-           newBoxScores[dayDate].push(boxScoreObj[dates]);
+    for(var dates in boxScores){
+      let YYYYMMDD = moment(Number(dates)).tz('America/New_York').format('YYYY-MM-DD');
+      //Converts data to what is neccessary for each of the formatting functions for each component of box scores
+        if(boxScores[dates]){
+          let team1Poss = boxScores[dates].team1Possession.split(':');
+          let team1HH = Number(team1Poss[0]);
+          let team1MM = Number(team1Poss[1]);
+          let team1SS = Number(team1Poss[2]);
+          if(team1HH > 0){
+            team1MM += (60 * team1HH);
+          }
+          let team2Poss = boxScores[dates].team2Possession.split(':').slice(1,3).join(':');
+          let team2HH = Number(team1Poss[0]);
+          let team2MM = Number(team1Poss[1]);
+          let team2SS = Number(team1Poss[2]);
+          if(team2HH > 0){
+            team2MM += (60 * team2HH);
+          }
+
+          // let newTeam1Poss = team1MM +':'+team1SS;
+          // let newTeam2Poss = team2MM +':'+team2SS;
+
+          let newTeam1Poss = '24:23';//TODO DUMMY DATA
+          let newTeam2Poss = '37:54';//TODO DUMMY DATA
+
+          boxScoreObj[dates] = {};
+          boxScoreObj[dates]['gameInfo']= {
+            eventId: boxScores[dates].eventId,
+            seasonId: boxScores[dates].seasonId,
+            inningsPlayed: boxScores[dates].eventQuarter,
+            timeLeft: boxScores[dates].eventQuarterTimeLeft,
+            live: true,
+            startDateTime: boxScores[dates].eventDate,
+            startDateTimestamp: boxScores[dates].eventStartTime,
+            dataPointCategories:['Score','Poss','Yards']
+          };
+          //0 = home team 1 = away team.
+          if(boxScores[dates].eventPossession == 0){
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = boxScores[dates].team1Abbreviation;
+          }else{
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = boxScores[dates].team2Abbreviation;
+          }
+          boxScoreObj[dates]['homeTeamInfo']= {
+            name: boxScores[dates].team1FullName,
+            id: boxScores[dates].team1Id,
+            firstName: boxScores[dates].team1Market,
+            lastName: boxScores[dates].team1Name,
+            abbreviation: boxScores[dates].team1Abbreviation,
+            logo: boxScores[dates].team1Logo,
+            colors: boxScores[dates].team1ColorHex,
+            outcome: boxScores[dates].team1Outcome,
+            score: boxScores[dates].team1Score,
+            dataP1:boxScores[dates].team1Score,
+            dataP2:newTeam1Poss,
+            // dataP2:boxScores[dates].team1Poss,
+            dataP3:boxScores[dates].team1Yards,
+            winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[0]:null,
+            lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[1]:null,
+          };
+          boxScoreObj[dates]['awayTeamInfo']= {
+            name: boxScores[dates].team2FullName,
+            id: boxScores[dates].team2Id,
+            firstName: boxScores[dates].team2Market,
+            lastName: boxScores[dates].team2Name,
+            abbreviation: boxScores[dates].team2Abbreviation,
+            logo: boxScores[dates].team2Logo,
+            colors: boxScores[dates].team2ColorHex,
+            outcome: boxScores[dates].team2Outcome,
+            score: boxScores[dates].team2Score,
+            dataP1:boxScores[dates].team2Score,
+            dataP2:newTeam2Poss,
+            // dataP2:boxScores[dates].team2Poss,
+            dataP3:boxScores[dates].team2Yards,
+            winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[0]:null,
+            lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[1]:null,
+          };
+          boxScoreObj[dates]['p1']={
+            home:boxScores[dates].team1Q1Score,
+            away:boxScores[dates].team2Q1Score
+          };
+          boxScoreObj[dates]['p2']={
+            home:boxScores[dates].team1Q2Score,
+            away:boxScores[dates].team2Q2Score
+          };
+          boxScoreObj[dates]['p3']={
+            home:boxScores[dates].team1Q3Score,
+            away:boxScores[dates].team2Q3Score
+          };
+          boxScoreObj[dates]['p4']={
+            home:boxScores[dates].team1Q4Score,
+            away:boxScores[dates].team2Q5Score
+          };
+          boxScoreObj[dates]['p5']={
+            home:boxScores[dates].team1OtScore,
+            away:boxScores[dates].team2OtScore
+          };
+
+          boxScoreObj[dates]['aiContent'] = {//TODO DUMMY DATA
+            event: "60169",
+              featuredReport: {
+                'pregame-report': {
+                displayHeadline: "Yankees step up to plate against Orioles",
+                metaHeadline: "Baltimore Orioles vs New York Yankees Saturday, September 3, 2016 at Oriole Park at Camden Yards",
+                dateline: null,
+                article: [
+                "On Sep. 3, the New York Yankees will travel to Baltimore, Md., to take on the Baltimore Orioles. Baltimore will look to guard their home field by stifling the Yankees' offense. So far this season, the Orioles' defense has allowed 4.65 runs per game on average. To silence the crowd, New York will need to be explosive out of the gate."
+                ]
+              }
+            },
+            home:{
+              images: [
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/4bf2e420-fbe4-4c3e-947f-2fb3deb1f5a2.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/2904a8e4-38de-4e36-bd62-375db797d0d6.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/c0874dc1-f65b-449d-8deb-6991481ff8b9.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/b26e3fdf-59c8-4db3-aa23-480e6f729c9c.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/686fc23c-d651-4dd8-8c35-20615555fffd.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/3a519543-9e60-4423-8826-4ff015b3010f.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/e77b46e0-2fe1-416d-bcd4-7107a5da52d7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/738df517-420d-4ff4-a255-2c2457348e41.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/fda7c0dd-9b90-45e3-a0d6-be4b5b7c4bd7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/94fa2a26-3889-4c63-bbaf-8786bed50c2f.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/98029b7d-7944-4208-8ef5-8bc29dec5124.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/4bdb612a-aa93-4570-b7a4-931dd6bef5c7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/5655bd4d-b08c-49f3-8f48-1e3a77c6851e.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/64eed990-cb91-4bef-b080-f26af042a085.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/5e6c1658-f023-4848-8f74-23e5b2fd1cb7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/249a610e-8b04-4cbb-b7dd-ced836c9d1b5.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/cad19ddf-cd5d-40de-b04c-3fc6a085c97c.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/ca14d063-d44d-4e19-8fb0-09e5c7b1d85f.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/d95ab13c-eeb4-4e81-8fb5-76ccafcb31a6.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/472cb019-3c74-4ef3-aa95-809cef65c4ff.jpg"
+              ],
+            }
+          };
         }else{
-          newBoxScores[dayDate].push(boxScoreObj[dates]);
+          boxScoreObj[dates] = null;
         }
-    }
+
+
+        if(typeof newBoxScores[dates] == 'undefined'){
+          newBoxScores[YYYYMMDD] = [];
+          newBoxScores[YYYYMMDD].push(boxScoreObj[dates]);
+        }else{
+          newBoxScores[YYYYMMDD].push(boxScoreObj[dates]);
+        }
+      }
     return newBoxScores;
   }
 
@@ -323,7 +398,6 @@ export class BoxScoresService {
       let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
       let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
       var aiContent = data.aiContent != null ? self.formatArticle(data):null;
-
       if(teamId != null && profile == 'team'){//if league then both items will link
         if(homeData.id == teamId){//if not league then check current team they are one
           homeLink = null;
@@ -353,9 +427,8 @@ export class BoxScoresService {
       var inningTitle = '';
 
       if(gameInfo.live){
-        let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : 'Top';
-        inningTitle = gameInfo.inningsPlayed != null ?  inningHalf + " of " + gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Inning" : '';
-
+        // let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : '';
+        inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
       }else{
         if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
           inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
@@ -369,6 +442,7 @@ export class BoxScoresService {
         //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
         inning:inningTitle,
         dataPointCategories:gameInfo.dataPointCategories,
+        verticalContent:gameInfo.verticalContent,
         homeData:{
           homeTeamName: homeData.lastName,
           homeImageConfig:link1,
@@ -454,8 +528,7 @@ export class BoxScoresService {
       var inningTitle = '';
 
       if(gameInfo.live){
-        let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : 'Top';
-        inningTitle = gameInfo.inningsPlayed != null ?  inningHalf + " of " + gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Inning" : '';
+        inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
 
       }else{
         if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
@@ -470,6 +543,7 @@ export class BoxScoresService {
         //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
         inning:inningTitle,
         dataPointCategories:gameInfo.dataPointCategories,
+        verticalContent:gameInfo.verticalContent,
         homeData:{
           homeTeamName: homeData.lastName,
           homeImageConfig:link1,
@@ -533,8 +607,9 @@ export class BoxScoresService {
     var awayLiveScore = 0;
     for(var score in data){
       if(score != 'aiContent' && score != 'awayTeamInfo' && score != 'homeTeamInfo' && score != 'gameInfo'){
+        let inningCategory = Number(score.replace('p',''));
         arrayScores.push({
-          inning:score.replace('p',''),//replace the letter 'p' in each inning
+          inning:inningCategory < 5 ? inningCategory: 'OT',//replace the letter 'p' in each inning
           scores:data[score]
         });
       }
