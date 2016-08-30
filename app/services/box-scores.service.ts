@@ -223,9 +223,9 @@ export class BoxScoresService {
           };
           //0 = home team 1 = away team.
           if(boxScores[dates].eventPossession == 0){
-            boxScoreObj[dates]['gameInfo']['verticalContent'] = boxScores[dates].team1Abbreviation;
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possesion:" + boxScores[dates].team1Abbreviation;
           }else{
-            boxScoreObj[dates]['gameInfo']['verticalContent'] = boxScores[dates].team2Abbreviation;
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possesion:" + boxScores[dates].team2Abbreviation;
           }
           boxScoreObj[dates]['homeTeamInfo']= {
             name: boxScores[dates].team1FullName,
@@ -348,8 +348,8 @@ export class BoxScoresService {
         awayRoute = null;
       }
     }
-      var homeLogo = this.imageData("image-68", "border-logo", GlobalSettings.getImageUrl(homeData.logo), homeRoute);
-      var awayLogo = this.imageData("image-68", "border-logo", GlobalSettings.getImageUrl(awayData.logo), awayRoute);
+      var homeLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(homeData.logo), homeRoute);
+      var awayLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(awayData.logo), awayRoute);
       right = {
         homeHex:homeData.colors.split(', ')[0], //parse out comma + space to grab only hex colors
         homeID:homeData.id,
