@@ -80,8 +80,9 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
     subTabs:Array<any>;
 
     constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean) {
+
         this.tabActive = tabActive;
-        this.tableName = "<span class='text-heavy'>" + tabActive + "</span> " + " : Team Player Stats";
+        this.tableName = "<span class='text-heavy'>" + getTabTitle(tabActive).title + "</span> " + " : Team Player Stats";
         this.isActive = isActive;
 
         this.isTeamProfilePage = isTeamProfilePage;
@@ -180,6 +181,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
     }
 
     convertToCarouselItem(item: PlayerStatsData, index:number): SliderCarouselInput {
+       //console.log(item[istab],"this one");
         var description: Array<Link | string> = [];
         var tense = " has";
         var temporalInfo = "";
@@ -203,6 +205,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
         }
 
         function getTabDescription(tabActive){
+
             return {
                 Passing:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " attempts with "+ item.stat2 +" Completions, " + item.stat3+ " Passing Yards and " + item.stat5 + " Touchdowns."],
@@ -218,17 +221,19 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                 },
                 Special:{
 
-                },
-                Kicking:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
-                Punting:{
+                kicking:{
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+
+                },
+                punting:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts "+ item.stat2 +" Yards " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
 
 
                 },
-                Returning:{
+                returning:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt "+ item.stat2 +" Yards " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
 
                 }
@@ -240,7 +245,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             copyrightInfo: GlobalSettings.getCopyrightInfo(),
             subheader: [" Player Stats - ", teamLinkText],
             profileNameLink: playerLinkText,
-            description: getTabDescription(this.tabActive).description,
+            description: this.tabActive =="Special"? getTabDescription(this.tabActive).description: getTabDescription(this.tabActive).description,
             lastUpdatedDate: item.displayDate,
             circleImageUrl: item.fullPlayerImageUrl,
             circleImageRoute: playerRoute
@@ -353,6 +358,10 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     sort : item.playerLastName + ', ' + item.playerFirstName,
                     link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
+                    bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
+                    bottomStat2:item.stat8 != null ? item.stat8: 'N/A',
+                    //bottomStat:'hi',
+                    //bottomStat2:'again',
                 },
                 "stat1-type":{
                     display:item.stat1 != null ? item.stat1: 'N/A',
@@ -383,7 +392,8 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                 "stat7-type":{
                     display:item.stat7 != null ? item.stat7: 'N/A',
                     sort : item.stat7 != null ? Number(item.stat7) : null,
-                },
+                }
+
 
             }[columnType];
         }
@@ -391,7 +401,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
 
 
 
-       return new CellData(presentColumn.display,presentColumn.sort,presentColumn.link,presentColumn.imageUrl);
+       return new CellData(presentColumn.display,presentColumn.sort,presentColumn.link,presentColumn.imageUrl, presentColumn.bottomStat, presentColumn.bottomStat2);
 
 
     }
