@@ -83,6 +83,7 @@ export class ListPage implements OnInit {
       var navigationParams = {
         pageNumber: params['pageNumber'],
         statName: params['statName'],
+        season: params['season'],
         ordering: params['ordering'],
         perPageCount: params['perPageCount'],
         target: params['target'],
@@ -131,6 +132,7 @@ export class ListPage implements OnInit {
           }
           this.setPaginationParams(list.pagination);
           this.carouselDataArray = list.carData;
+          this.sortSeason = list.seasons;
         },
         err => {
           this.isError = true;
@@ -182,11 +184,7 @@ export class ListPage implements OnInit {
     });
     var date = new Date();
     this.sortSeason = [
-      {key: "null", value: "All Seasons"},
-      {key: date.getFullYear() - 1, value: date.getFullYear() + " / " + (date.getFullYear() - 1)},
-      {key: date.getFullYear() - 2, value: (date.getFullYear() - 1) + " / " + (date.getFullYear() - 2)},
-      {key: date.getFullYear() - 3, value: (date.getFullYear() - 2) + " / " + (date.getFullYear() - 3)},
-      {key: date.getFullYear() - 4, value: (date.getFullYear() - 3) + " / " + (date.getFullYear() - 4)}
+      {key: "null", value: "All Seasons"}
     ];
   }
   dropdownChanged(event) {
