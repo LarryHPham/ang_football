@@ -183,15 +183,13 @@ export class ListPage implements OnInit {
     var date = new Date();
     this.sortSeason = [
       {key: "null", value: "All Seasons"},
-      {key: date.getFullYear(), value: date.getFullYear()},
-      {key: date.getFullYear() - 1, value: date.getFullYear() - 1},
-      {key: date.getFullYear() - 2, value: date.getFullYear() - 2},
-      {key: date.getFullYear() - 3, value: date.getFullYear() - 3},
-      {key: date.getFullYear() - 4, value: date.getFullYear() - 4}
+      {key: date.getFullYear() - 1, value: date.getFullYear() + " / " + (date.getFullYear() - 1)},
+      {key: date.getFullYear() - 2, value: (date.getFullYear() - 1) + " / " + (date.getFullYear() - 2)},
+      {key: date.getFullYear() - 3, value: (date.getFullYear() - 2) + " / " + (date.getFullYear() - 3)},
+      {key: date.getFullYear() - 4, value: (date.getFullYear() - 3) + " / " + (date.getFullYear() - 4)}
     ];
   }
   dropdownChanged(event) {
-    console.log(event);
     this.getStandardList(this.params.params, event);
   }
 }
