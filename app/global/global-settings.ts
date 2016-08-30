@@ -75,11 +75,6 @@ export class GlobalSettings {
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
 
     }
-    static getApiUrlTdl():string {//TODO
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
-        return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
-
-    }
 
     static getPartnerApiUrl(partnerID):string {
         return this._proto + "//"+ this._partnerApiUrl + partnerID;

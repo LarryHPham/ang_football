@@ -14,7 +14,8 @@ declare var moment: any;
 
 interface TransactionInfo {
     transactionDate: string;
-    type?: string;
+    transactionType?: string;
+    playerPosition: string;
     id: string;
     teamKey: string;
     personKey: string;
@@ -88,10 +89,11 @@ export class TransactionsService {
 
       tabs.forEach(tab => {
         tab.sortOptions = [
-          { key: "recent", value: "Most Recent"},
-          { key: "oldest", value: "Oldest First"}
+          { key: "2016", value: "2016"},
+          { key: "2015", value: "2015"}
         ],
-        tab.selectedSort = "recent",
+
+        tab.sortTitle = "Season: ",
         tab.errorMessage = errorMessagePrepend + tab.tabDisplay.toLowerCase(),
         tab.includeDropdown = isPage
         tab.carData = this.getEmptyCarousel(tab); //must be called after the rest is set up
@@ -137,36 +139,34 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
-    if( sort == "desc" ){
-      tab.selectedSort = "recent";
-    } else if( sort == "asc" ){
-      tab.selectedSort = "oldest";
-    } else {
-      sort = "desc";
-      tab.selectedSort = "recent";
+
+    if( year == "2016" ){
+      tab.selectedSort = "2016";
+    } else if( year == "2015" ){
+      tab.selectedSort = "2015";
     }
+
     if( limit == null){ limit = 10;}
     if( page == null){ page = 1;}
+    if ( year == null ) { year ="2016" };
 
-    //http://dev-homerunloyal-api.synapsys.us/league/transactions/injuries/desc/5/1
     var callURL = this._apiUrl + '/';
 
     if ( teamId ) {
-       callURL += 'team/transactions/'+teamId + '/';
+       callURL += 'transactions/team/'+ teamId + '/';
     }
     else {
-       callURL += 'league/transactions/';
+       callURL += 'transactions/league/';
     }
-    callURL += tab.tabDataKey+'/'+sort+'/'+limit+'/'+page;
+    callURL += year + '/' + tab.tabDataKey + '/' + page + '/' + limit;
+
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
     // and MLB profile pages
     var currentTeam = type == "module" ? teamId : null;
-
-    // console.log("transactions url: " + callURL);
 
     return this.http.get( callURL, {headers: headers})
       .map(res => res.json())
@@ -214,7 +214,9 @@ export class TransactionsService {
       //if data is coming through then run through the transforming function for the module
       carouselArray = data.map((val, index) => {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
+
         if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
           playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
         }
@@ -224,17 +226,21 @@ export class TransactionsService {
         };
         var playerLinkText = {
           route: playerRoute,
-          text: val.playerName,
+          text: playerFullName,
           class: 'text-heavy'
         };
 
         //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
         var description;
-        if (val.type == "Suspension") {
-          description = val.playerName + " was " + val.contents
+
+        if (val.transactionType == "suspension") {
+          description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " was " + val.contents;
+        }
+        else if (val.transactionType == "injuries") {
+          description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " is out with " + val.contents;
         }
         else {
-          description = val.playerName + ", for the " + val.teamName + ",was suspensed for " + val.contents;
+          description = playerFullName + " was " + val.contents;
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {
@@ -246,7 +252,7 @@ export class TransactionsService {
               description
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
-          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdate),
+          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
           circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
           circleImageRoute: playerRoute
           // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
@@ -256,6 +262,7 @@ export class TransactionsService {
     }
     return carouselArray;
   }
+
 
   listTransactions(data: Array<TransactionInfo>, type: string): Array<TransactionsListInput>{
     let self = this;
@@ -279,7 +286,7 @@ export class TransactionsService {
       return {
         dataPoints: [{
           style   : 'transactions-small',
-          data    : GlobalFunctions.formatDateWithAPMonth(new Date(val['repDate']), "", " DD, YYYY"),
+          data    : GlobalFunctions.formatLongDate(val.transactionDate),
           value   : [playerTextLink, val.contents],
           url     : null
         }],

@@ -48,6 +48,7 @@ export class DeepDivePage implements OnInit{
     public widgetPlace: string = "widgetForPage";
 
     //page variables
+    scope: string;
     partnerID: string;
     partnerData:any;
     profileName:string;
@@ -79,7 +80,7 @@ export class DeepDivePage implements OnInit{
 
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
-          
+          this.scope = parentParams.scope;
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           this.isHomeRunZone = partnerHome;
           if(this.partnerID != null){
@@ -128,7 +129,7 @@ export class DeepDivePage implements OnInit{
       }
 
     private getDataCarousel() {
-      this._deepDiveData.getCarouselData(this.carouselData, '25', '1', this.geoLocation, (carData)=>{
+      this._deepDiveData.getCarouselData(this.scope, this.carouselData, '25', '1', this.geoLocation, (carData)=>{
         this.carouselData = carData;
       })
     }
