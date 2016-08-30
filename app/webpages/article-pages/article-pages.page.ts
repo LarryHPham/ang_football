@@ -63,76 +63,82 @@ export class ArticlePages implements OnInit {
     partnerId:string;
     isSmall:boolean = false;
     rawUrl:string;
-    jsonUrl:string;
-    articleTitle:string;
-    affiliation:string;
     randomArticles:string;
+    scope:string = null;
 
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location) {
         window.scrollTo(0, 0);
+        GlobalSettings.getParentParams(_router, parentParams => {
+            this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
+            if (parentParams.partnerID != null) {
+                this.partnerId = parentParams.partnerID;
+            }
+            this.getArticles();
+        });
         this.eventID = _params.get('eventID');
         this.eventType = _params.get('eventType');
         if (this.eventType == "upcoming-game") {
             this.eventType = "upcoming";
         }
-        GlobalSettings.getParentParams(_router, parentParams => {
-            if (parentParams.partnerID != null) {
-                this.partnerId = parentParams.partnerID.replace("-", ".");
-            }
-            this.getArticles();
-        });
-        this.affiliation = "nfl";
     }
 
     getArticles() {
-        this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId)
+        this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope)
             .subscribe(
                 Article => {
-                    var articleType = [];
-                    if (Article['data'][0].article_type_id != null) {
-                        articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
-                    } else {
-                        articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                    if (Article['data'].length > 0) {
+                        var articleType = [];
+                        if (Article['data'][0].article_type_id != null) {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                        } else {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                        }
+                        this.articleType = articleType[1];
+                        this.articleSubType = articleType[2];
+                        this.isSmall = window.innerWidth <= 640;
+                        this.rawUrl = window.location.href;
+                        this.pageIndex = articleType[0];
+                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
+                        this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
+                        this.articleData = Article['data'][0]['article_data'][this.pageIndex];
+                        //this.teamId = ArticleData[pageIndex].teamId; turn on once ai billboard is wired up for football
+                        this.teamId = 2808;
+                        ArticlePages.setMetaTag(this.articleData.metaHeadline);
+                        //this.getCarouselImages(ArticleData[pageIndex]['images']);
+                        //this.imageLinks = this.getImageLinks(ArticleData[pageIndex]);
                     }
-                    this.articleType = articleType[1];
-                    this.articleSubType = articleType[2];
-                    this.jsonUrl = Article['data'][0].json_url;
-                    this.isSmall = window.innerWidth <= 640;
-                    this.rawUrl = window.location.href;
-                    this.articleTitle = Article['data'][0].title;
-                    this.pageIndex = articleType[0];
-                    this.getArticleData(this.jsonUrl);
-                    //this.getCarouselImages(ArticleData[pageIndex]['images']);
-                    //this.imageLinks = this.getImageLinks(ArticleData[pageIndex]);
                 },
                 err => {
                     this.error = true;
                     var self = this;
                     setTimeout(function () {
-                        //removes errored page from browser history
+                        //removes error page from browser history
                         self._location.replaceState('/');
                         //returns user to previous page
                         self._location.back();
                     }, 5000);
                 }
             );
-        this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.affiliation, this.eventType);
+        this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
         var random = [];
         for (var i = 0; i < 3; i++) {
             this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i])
                 .subscribe(
                     HeadlineData => {
-                        if (HeadlineData['data'][0].article_type_id != null) {
-                            var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_type_id, true);
-                        } else {
-                            var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_subtype_id, false);
+                        if (HeadlineData['data'].length > 0) {
+                            if (HeadlineData['data'][0].article_type_id != null) {
+                                var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_type_id, true);
+                            } else {
+                                var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_subtype_id, false);
+                            }
+                            this.eventID = HeadlineData['data'][0].event_id.toString();
+                            this.recommendedImageData = "derp";
+                            random.push(this.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
                         }
-                        this.eventID = HeadlineData['data'][0].event_id.toString();
-                        this.recommendedImageData = "derp";
-                        random.push(this.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
                     }
                 );
         }
@@ -146,21 +152,6 @@ export class ArticlePages implements OnInit {
         //            }
         //        );
         //}
-    }
-
-    getArticleData(jsonUrl) {
-        this._articleDataService.getArticleData(jsonUrl)
-            .subscribe(
-                ArticleData => {
-                    this.title = ArticleData[this.pageIndex].displayHeadline;
-                    this.date = ArticleData[this.pageIndex].dateline;
-                    this.comment = ArticleData[this.pageIndex].commentHeader;
-                    this.articleData = ArticleData[this.pageIndex];
-                    //this.teamId = ArticleData[pageIndex].teamId; turn on once ai billboard is wired up for football
-                    this.teamId = "2808";
-                    console.log(this.articleData);
-                    ArticlePages.setMetaTag(this.articleData.metaHeadline);
-                });
     }
 
     //Possible fix for partner site link issues.

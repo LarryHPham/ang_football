@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
-import {find} from "rxjs/operator/find";
 
 declare var moment:any;
 
@@ -626,6 +625,16 @@ export class GlobalFunctions {
         return {month: month, day: day, year: year, time: time, a: a, zone: zone}
     }
 
+    static formatShortDate(date) {
+        var month = moment.unix(date / 1000).format("MM");
+        var day = moment.unix(date / 1000).format("DD");
+        var year = moment.unix(date / 1000).format("YY");
+        var time = moment.unix(date / 1000).format("h:mm");
+        var a = moment.unix(date / 1000).format("A");
+        var zone = "EST"
+        return {month: month, day: day, year: year, time: time, a: a, zone: zone}
+    }
+
     /**
      * Returns a random list of articles
      */
@@ -676,88 +685,6 @@ export class GlobalFunctions {
         });
         return articles;
     }
-    return navigationArray;
-  }
-
-
- /**
-  * Create a valid value to set to routerLink by parsing a string delimited by a | pipe
-  * -- creating an object for params when the object syntax is present in string
-  * example input string: "Location-page|{‘loc’:'Industry-CA’}"
-  */
-  static parseToRoute(stringRoute) {
-    if(stringRoute == null){ return ["Error-page"];}
-    let stringRouteArr = stringRoute.split("|");
-
-    let generatedUrl = stringRouteArr.map(function (item) {
-      try {
-        return JSON.parse(item);
-      } catch (e) {
-      }
-      return item;
-    });
-    return generatedUrl;
-  }
-/**
- * Format value to Billion/Million/Thousand
- */
-  static nFormatter(num: number): string {
-  	if (num >= 1000000000) {
-  		return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-  	}
-  	if (num >= 1000000) {
-  		return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  	}
-  	if (num >= 1000) {
-  		return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  	}
-  	return num.toString();
-  }
-  /**
-  * Get website host name
-  */
-  static getHostName(url: string): string {
-      var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
-      if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
-      return match[2];
-      }
-      else {
-          return null;
-      }
-  }
-
-  /**
-   * Converts a given name to it's possessive version by checking to see if
-   * the last character is an 's' or not. If it's an 's', then only an
-   * apostrophe is added. Otherwise both an apostrophe and an 's' are added.
-   *
-   * If 'name' is null or empty, then it is returned unchanged.
-   */
-  static convertToPossessive(name: string) {
-    if ( !name || name.length == 0 ) return name;
-
-    var lastChar = name.charAt(name.length-1);
-    return lastChar == 's' ? name + "'" : name + "'s";
-  }
-  static formatDate(date) {
-    var month = moment.unix(date/1000).format("MMMM");
-    var day = moment.unix(date/1000).format("DD");
-    var year = moment.unix(date/1000).format("YYYY");
-    var time = moment.unix(date/1000).format("h:mm");
-    var a = moment.unix(date/1000).format("A");
-    var zone = "EST"
-    return {month: month, day: day, year: year, time: time, a: a, zone: zone}
-  }
-
-  static formatShortDate(date) {
-    var month = moment.unix(date/1000).format("MM");
-    var day = moment.unix(date/1000).format("DD");
-    var year = moment.unix(date/1000).format("YY");
-    var time = moment.unix(date/1000).format("h:mm");
-    var a = moment.unix(date/1000).format("A");
-    var zone = "EST"
-    return {month: month, day: day, year: year, time: time, a: a, zone: zone}
-  }
 
     static getArticleType(articleType, isMain) {
         var articleInformation = [];

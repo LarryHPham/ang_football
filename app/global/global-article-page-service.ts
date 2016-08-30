@@ -9,10 +9,10 @@ export class ArticleDataService {
     constructor(public http:Http) {
     }
 
-    getArticle(eventID, eventType, partnerId) {
+    getArticle(eventID, eventType, partnerId, scope) {
         var fullUrl = GlobalSettings.getArticleUrl();
         //having the query string is only temporary until the partner site link issue is figured out.
-        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "?partnerId=" + partnerId)
+        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "?partnerId=" + partnerId + "&affiliation=" + scope)
             .map(res => res.json())
             .map(data => data);
     }
@@ -23,16 +23,9 @@ export class ArticleDataService {
             .map(data => data);
     }
 
-    getRecommendationsData(eventID, eventType) {
+    getRecommendationsData(eventID, eventType, scope) {
         var fullUrl = GlobalSettings.getRecommendUrl();
-        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID)
-            .map(res => res.json())
-            .map(data => data);
-    }
-
-    getTrendingData() {
-        var fullUrl = GlobalSettings.getTrendingUrl();
-        return this.http.get(fullUrl)
+        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "&affiliation=" + scope)
             .map(res => res.json())
             .map(data => data);
     }
