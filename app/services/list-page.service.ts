@@ -37,7 +37,8 @@ interface PlayerItem {
     teamVenue: string,
     teamLogo: string,
     lastUpdated: string,
-    backgroundImage: string
+    backgroundImage: string,
+    playerHeadshotUrl: string
 }
 
 interface ListData {
@@ -71,8 +72,9 @@ export class positionMVPTabData implements MVPTabData {
 
 @Injectable()
 export class ListPageService {
-  // private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _apiUrl: string = "http://dev-homerunloyal-api.synapsys.us";
+
+  private _apiUrl: string = GlobalSettings.getApiUrl();
+
 
   constructor(public http: Http) {}
 
@@ -93,15 +95,13 @@ export class ListPageService {
     pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
-  getListPageService(query, errorMessage: string){
+  getListPageService(query, errorMessage: string, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   var callURL = this._apiUrl+'/list';
 
-  for(var q in query){
-    callURL += "/" + query[q];
-  }
+  callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
   return this.http.get( callURL, {headers: headers})
     .map(res => res.json())
     .map(
@@ -306,7 +306,7 @@ export class ListPageService {
         } else { //if profile == 'player'
           ctaDesc = 'Interested in discovering more about this player?';
           primaryRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,playerName,val.playerId.toString());
-          primaryImage = GlobalSettings.getImageUrl(val.imageUrl);
+          primaryImage = GlobalSettings.getImageUrl(val.playerHeadshotUrl);
 
           profileLinkText = {
             route: primaryRoute,
@@ -320,7 +320,6 @@ export class ListPageService {
             'Jersey No: #'+val.uniformNumber
           ];
         }
-
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
@@ -328,7 +327,7 @@ export class ListPageService {
           profileNameLink: profileLinkText,
           description: description,
           dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
-          dataLabel: val.statDescription+' for '+ currentYear,
+          dataLabel: val.statDescription +' for '+ currentYear,
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
           rank: val.rank
@@ -361,13 +360,13 @@ export class ListPageService {
             ],
             val.stat,
             [ //sub left text
-              {text: teamLocation},
+              {text: "<i class='fa fa-map-marker'></i>" + teamLocation},
               {text: "   |   ", class: "separator"},
               {text: "Division: " + divisionName},
             ],
             statDescription,
-            'fa fa-map-marker'),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(''), teamRoute, val.listRank),
+            null),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, val.listRank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -393,7 +392,7 @@ export class ListPageService {
             ],
             statDescription,
             null),
-            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(''),playerRoute, val.listRank, '', null),
+            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
           ctaBtn:'',
@@ -471,22 +470,22 @@ export class ListPageService {
     }
 
     var details = [
-      {
-        style:'detail-small',
-        leftText: dataLeftText,
-        rightText: dataRightText
-      },
-      {
-        style:'detail-large',
-        leftText: mainLeftText,
-        rightText:[{text: mainRightValue}]
-      },
-      {
-        style:'detail-medium',
-        leftText: subLeftText,
-        rightText:[{text: subRightValue}],
-        icon:subIcon,
-      },
+      // {
+     //   style:'detail-small',
+     //   mainText: dataLeftText,
+     //   subText: dataRightText
+     // },
+     {
+       style:'detail-left',
+       mainText: mainLeftText,
+       subText: subLeftText
+     },
+     {
+       style:'detail-right',
+       mainText: [{text: mainRightValue}],
+       subText:[{text: subRightValue}],
+       icon:subIcon,
+     },
     ];
     return details;
   }

@@ -591,4 +591,14 @@ export class GlobalFunctions {
     var zone = "EST"
     return {month: month, day: day, year: year, time: time, a: a, zone: zone}
   }
+
+  static formatShortDate(date) {
+    var month = moment.unix(date/1000).format("MM");
+    var day = moment.unix(date/1000).format("DD");
+    var year = moment.unix(date/1000).format("YY");
+    var time = moment.unix(date/1000).format("h:mm");
+    var a = moment.unix(date/1000).format("A");
+    var zone = "EST"
+    return {month: month, day: day, year: year, time: time, a: a, zone: zone}
+  }
 }

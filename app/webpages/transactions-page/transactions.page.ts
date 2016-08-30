@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteParams} from '@angular/router-deprecated';
+import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
@@ -39,10 +39,17 @@ export class TransactionsPage implements OnInit{
   selectedTabKey: string;
   listSort: string = "recent";
 
-  constructor(private _transactionsService:TransactionsService,
+  public scope: string;
+  public partnerID:string;
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
+  constructor(private _router:Router,
+              private _transactionsService:TransactionsService,
               private _profileService:ProfileHeaderService,
               private _params: RouteParams,
               private _title: Title) {
+
     _title.setTitle(GlobalSettings.getPageTitle("Transactions"));
     this.pageParams = {
         teamId: _params.get("teamId") ? Number(_params.get("teamId")) : null
@@ -50,6 +57,11 @@ export class TransactionsPage implements OnInit{
     this.limit = Number(this._params.params['limit']);
     this.pageNum = Number(this._params.params['pageNum']);
 
+    GlobalSettings.getParentParams(this._router, parentParams => {
+        this.partnerID = parentParams.partnerID;
+        this.scope = parentParams.scope;
+      }
+    );
   }
 
   getProfileInfo() {
@@ -57,6 +69,7 @@ export class TransactionsPage implements OnInit{
       this._profileService.getTeamProfile(this.pageParams.teamId)
       .subscribe(
           data => {
+
             //var stats = data.headerData.stats;
             var profileHeaderData = this._profileService.convertTeamPageHeader(data, "");
             this.profileName = data.headerData.teamName;
@@ -79,7 +92,7 @@ export class TransactionsPage implements OnInit{
       this._profileService.getLeagueProfile()
         .subscribe(
           data => {
-            this.profileName = data.headerData.leagueAbbreviatedName;
+            this.profileName = this.scope.toUpperCase();
             var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
