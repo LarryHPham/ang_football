@@ -91,7 +91,7 @@ export class GlobalSettings {
     }
 
     static getBackgroundImageUrl(relativePath):string {
-        var relPath = relativePath != null ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/drk-linen.png';
+        var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: '/app/public/drk-linen.png';
         return relPath;
     }
 
