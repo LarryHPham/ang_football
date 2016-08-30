@@ -191,7 +191,6 @@ export class ListPage implements OnInit {
     ];
   }
   dropdownChanged(event) {
-    console.log(event);
     this.getStandardList(this.params.params, event);
   }
 }
