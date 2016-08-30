@@ -28,7 +28,7 @@ interface PlayerItem {
     playerFirstName: string,
     playerLastName: string,
     imageUrl: string,
-    uniformNumber: string,
+    playerJerseyNumber: string,
     playerPosition: string[],
     teamState: string,
     teamCity: string,
@@ -118,13 +118,23 @@ export class ListPageService {
           carData: ListPageService.carDataPage(data.data, 'page', errorMessage),
           listData: ListPageService.detailedData(data.data),
           pagination: data.data.listInfo,
-          listDisplayName: data.data.listInfo.name
+          listDisplayName: data.data.listInfo.name,
+          seasons: this.formatSeasons(data.data.listInfo.seasons)
         }
       },
       err => {
         console.log('INVALID DATA');
       }
     )
+  }
+
+  formatSeasons (data) {
+    console.log(data);
+    var outputArray = [{key: "null", value: "All Seasons"}];
+    for (var i=0; i < data.length; i++) {
+      outputArray.push({key:  data[i] , value: (Number(data[i]) + 1) + ' / ' + data[i]});
+    }
+    return outputArray;
   }
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
@@ -322,7 +332,7 @@ export class ListPageService {
             'Team: ',
             teamLinkText,
             '<span class="separator">   |   </span> ',
-            'Jersey No: #'+val.uniformNumber
+            'Jersey No: #'+val.playerJerseyNumber
           ];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
@@ -353,7 +363,7 @@ export class ListPageService {
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
       var teamLocation = val.teamMarket;
-      var statDescription = detailData.statType + ' for ' + currentYear;
+      var statDescription = val.statDescription + ' for ' + currentYear;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
       val.listRank = rank;
       if(data.query.target == 'team'){
@@ -391,7 +401,7 @@ export class ListPageService {
             [ //sub left text
               {route: teamRoute, text: val.teamName, class: "dataBox-subLink"},
               {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.uniformNumber},
+              {text: "Jersey: #" + val.playerJerseyNumber},
               {text: "   |   ", class: "separator"},
               {text: position},
             ],
