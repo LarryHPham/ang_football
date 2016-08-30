@@ -129,7 +129,6 @@ export class ListPageService {
   }
 
   formatSeasons (data) {
-    console.log(data);
     var outputArray = [{key: "null", value: "All Seasons"}];
     for (var i=0; i < data.length; i++) {
       outputArray.push({key:  data[i] , value: (Number(data[i]) + 1) + ' / ' + data[i]});
