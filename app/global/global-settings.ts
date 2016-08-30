@@ -45,7 +45,7 @@ export class GlobalSettings {
     private static _collegeDivisionChampionship: string = "National Championships";
     private static _collegeDivisionSegments: string = "Conferences";
 
-    private static _estYear: string = "© 2016";
+    private static _estYear: string = " 2016";
     private static _copyrightInfo: string = "USA Today Sports Images";
 
     static getEnv(env:string):string {
