@@ -115,7 +115,7 @@ export class PlayerPage implements OnInit {
   currentBoxScores:any;
   dateParam:any;
 
-  imageData:any;
+  imageData:Array<any>;
   copyright:any;
     imageTitle:any;
   profileType:string = "player";

@@ -32,9 +32,9 @@ export interface NavigationData {
 }
 
 export interface Images {
-    image_url: string;
-    image_title: string;
-    image_copyright: string;
+    imageUrl: string;
+    imageDescription: string;
+    imageCopyright: string;
     image_date: string;
     image_height: string;
     image_width: string;

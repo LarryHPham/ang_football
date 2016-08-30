@@ -143,7 +143,7 @@ export class LeaguePage implements OnInit {
     positionData: Array<positionMVPTabData>;
     globalMVPPosition:any;
 
-    imageData:any;
+    imageData:Array<any>;
     copyright:any;
     imageTitle:any;
     isProfilePage:boolean = true;
@@ -382,7 +382,7 @@ export class LeaguePage implements OnInit {
     }
 
     private getImages(imageData) {
-        this._imagesService.getImages(this.profileType)
+        this._imagesService.getImages(this.profileType, this.scope)
             .subscribe(data => {
                     return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
                 },
