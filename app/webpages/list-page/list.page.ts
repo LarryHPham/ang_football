@@ -19,11 +19,12 @@ import {GlobalSettings} from "../../global/global-settings";
 import {DynamicWidgetCall} from "../../services/dynamic-list-page.service";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {DropdownComponent} from '../../fe-core/components/dropdown/dropdown.component';
 
 @Component({
     selector: 'list-page',
     templateUrl: './app/webpages/list-page/list.page.html',
-    directives: [SidekickWrapper, ErrorComponent, LoadingComponent,PaginationFooter, BackTabComponent, TitleComponent, SliderCarousel, DetailedListItem,  ModuleFooter, ResponsiveWidget],
+    directives: [SidekickWrapper, ErrorComponent, LoadingComponent,PaginationFooter, BackTabComponent, TitleComponent, SliderCarousel, DetailedListItem,  ModuleFooter, ResponsiveWidget, DropdownComponent],
     providers: [ListPageService, DynamicWidgetCall, Title, ProfileHeaderService],
     inputs:[]
 })
@@ -44,6 +45,7 @@ export class ListPage implements OnInit {
   sw: string;
   input: string;
   pageNumber: number;
+  sortSeason: Array<any>;
 
   constructor(private listService:ListPageService,
               private _profileService: ProfileHeaderService,
@@ -115,9 +117,9 @@ export class ListPage implements OnInit {
   }
 
 
-  getStandardList(urlParams){
+  getStandardList(urlParams, season?){
     var errorMessage = "Sorry, we do not currently have any data for this list";
-    this.listService.getListPageService(urlParams, errorMessage)
+    this.listService.getListPageService(urlParams, errorMessage, season)
       .subscribe(
         list => {
           this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
@@ -178,6 +180,18 @@ export class ListPage implements OnInit {
     }, err => {
         console.log("Error loading MLB profile");
     });
+    var date = new Date();
+    this.sortSeason = [
+      {key: "null", value: "All Seasons"},
+      {key: date.getFullYear(), value: date.getFullYear()},
+      {key: date.getFullYear() - 1, value: date.getFullYear() - 1},
+      {key: date.getFullYear() - 2, value: date.getFullYear() - 2},
+      {key: date.getFullYear() - 3, value: date.getFullYear() - 3},
+      {key: date.getFullYear() - 4, value: date.getFullYear() - 4}
+    ];
   }
-
+  dropdownChanged(event) {
+    console.log(event);
+    this.getStandardList(this.params.params, event);
+  }
 }
