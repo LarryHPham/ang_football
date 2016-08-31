@@ -170,6 +170,7 @@ export class ComparisonStatsService {
   private defenseFields = ["SOLO", "AST", "TOT", "SACK", "PD", "INT", "FF"];
   private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
   private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
+  private returningFields = ["TEST1", "TEST2"];//TODO
 
   constructor(public http: Http) { }
 
@@ -216,7 +217,7 @@ export class ComparisonStatsService {
         team2Data
       ];
 
-      console.log("moduleData", moduleData);
+      // console.log("moduleData", moduleData);
       return moduleData;
     });
   }
@@ -270,11 +271,11 @@ export class ComparisonStatsService {
       //http://dev-homerunloyal-api.synapsys.us/player/comparison/league
       url += "league/nfl";//TODO
     }
-    console.log("url", url);
+    // console.log("url", url);
     return this.http.get(url)
       .map(res => res.json())
       .map(data => {
-        dataLoaded(data.data);
+        return dataLoaded(data.data);
       });
   }
 
@@ -359,7 +360,9 @@ export class ComparisonStatsService {
       fields = this.kickingFields;
     } else if(position == "P"){
       fields = this.puntingFields;
-    } else if(position == "KR" || position == "PR" || position == "RS")
+    } else if(position == "KR" || position == "PR" || position == "RS"){
+      fields = this.returningFields;
+    }
     // var colors = Gradient.getColorPair(data.playerOne.teamColors, data.playerTwo.teamColors);
     var colors = Gradient.getColorPair(['#2D3E50'], ['#999']);//TODO
     data.playerOne.mainTeamColor = colors[0];

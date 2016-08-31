@@ -210,9 +210,9 @@ export class StandingsService {
    */
   private formatGroupName(conference: Conference, division: Division, makeDivisionBold?: boolean): string {
     if ( conference !== undefined && conference !== null ) {
-      let leagueName = " League";
+      let leagueName = GlobalFunctions.toTitleCase(Conference[conference]) + " League";
       if ( division !== undefined && division !== null ) {
-        var divisionName = "division";
+        var divisionName = GlobalFunctions.toTitleCase(Division[division]);
         return leagueName + " " + (makeDivisionBold ? "<span class='text-heavy'>" + divisionName + "</span>" : divisionName);
       }
       else {
