@@ -136,8 +136,6 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
         teamData.playerList = [];
         this._service.getPlayerList(newTeamId).subscribe(data => {
           teamData.playerList = data;
-          //TODO - widen dropdown to
-          // teamData.playerList[1].value += "Something longer than ever";
           listLoaded(teamData.playerList);
         },
         err => {
@@ -178,11 +176,14 @@ export class ComparisonStatsService {
   getInitialPlayerStats(pageParams: SportPageParameters): Observable<ComparisonModuleData> {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
+
     return this.callPlayerComparisonAPI(teamId, playerId, data => {
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
         return null;
       }
+    // try{
+      // console.log("DATA", data, "player one keys", data.playerOne.statistics);
       data.playerOne.statistics = this.formatPlayerData(data.playerOne.playerId, data.data);
       data.playerTwo.statistics = this.formatPlayerData(data.playerTwo.playerId, data.data);
       data.bestStatistics = this.formatPlayerData("statHigh", data.data);
@@ -190,6 +191,9 @@ export class ComparisonStatsService {
       data.bars = this.createComparisonBars(data);
       var playerName1 = data.playerOne.playerFirstName + " " + data.playerOne.playerLastName;
       var playerName2 = data.playerTwo.playerFirstName + " " + data.playerTwo.playerLastName;
+    // }catch(error){
+    //   console.log("ERROR", error);
+    // }
       var team1Data = {
         teamId: data.playerOne.teamId,
         playerList: [{key: data.playerOne.playerId, value: playerName1}]
@@ -199,7 +203,8 @@ export class ComparisonStatsService {
         teamId: data.playerTwo.teamId,
         playerList: [{key: data.playerTwo.playerId, value: playerName2}]
       };
-      console.log("TEST", team1Data, team2Data);
+
+
       var moduleData = new MLBComparisonModuleData(this);
       moduleData.data = data;
       moduleData.teamList = [
@@ -210,6 +215,7 @@ export class ComparisonStatsService {
         team1Data,
         team2Data
       ];
+
       console.log("moduleData", moduleData);
       return moduleData;
     });
@@ -224,7 +230,6 @@ export class ComparisonStatsService {
       else {
         existingData.playerTwo = apiData.playerOne;
       }
-      console.log("getSinglePlayerStats", existingData);
       return this.createComparisonBars(existingData);
     });
   }
@@ -236,7 +241,6 @@ export class ComparisonStatsService {
     return this.http.get(playersUrl)
       .map(res => res.json())
       .map(data => {
-        console.log("GET PLAYER LIST", data);
         return this.formatPlayerList(data.data);
     });
   }
@@ -247,7 +251,6 @@ export class ComparisonStatsService {
     return this.http.get(teamsUrl)
       .map(res => res.json())
       .map(data => {
-        console.log("team list", data);
         return this.formatTeamList(data.data);
     });
   }
@@ -267,11 +270,11 @@ export class ComparisonStatsService {
       //http://dev-homerunloyal-api.synapsys.us/player/comparison/league
       url += "league/nfl";//TODO
     }
-
+    console.log("url", url);
     return this.http.get(url)
       .map(res => res.json())
       .map(data => {
-        return dataLoaded(data.data);
+        dataLoaded(data.data);
       });
   }
 
@@ -299,7 +302,6 @@ export class ComparisonStatsService {
     Array.prototype.push.apply(list, this.formatPlayerPositionList("Kicking", playerList.kicking));
     Array.prototype.push.apply(list, this.formatPlayerPositionList("Punting", playerList.punting));
     Array.prototype.push.apply(list, this.formatPlayerPositionList("Returning", playerList.returning));
-    console.log("formatPlayerList", list);
     return list;
   }
 
