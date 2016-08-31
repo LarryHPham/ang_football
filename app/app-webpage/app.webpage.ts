@@ -128,22 +128,22 @@ declare var jQuery: any;
         component: MVPListPage
     },
     {
-        path: '/schedules/league/:pageNum',
+        path: '/schedules/league/:year/:pageNum',
         name: 'Schedules-page-league',
         component: SchedulesPage
     },
     {
-        path: '/schedules/league/:tab/:pageNum',
+        path: '/schedules/league/:year/:tab/:pageNum',
         name: 'Schedules-page-league-tab',
         component: SchedulesPage
     },
     {
-        path: '/schedules/:teamName/:teamId/:pageNum',
+        path: '/schedules/:teamName/:teamId/:year/:pageNum',
         name: 'Schedules-page-team',
         component: SchedulesPage
     },
     {
-        path: '/schedules/:teamName/:tab/:teamId/:pageNum',
+        path: '/schedules/:teamName/:year/:tab/:teamId/:pageNum',
         name: 'Schedules-page-team-tab',
         component: SchedulesPage
     },
