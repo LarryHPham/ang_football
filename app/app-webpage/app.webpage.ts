@@ -168,7 +168,7 @@ declare var jQuery: any;
         component: ListPage
     },
     {
-        path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
+        path: '/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
         name: 'List-page',
         component: ListPage
     },
