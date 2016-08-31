@@ -157,6 +157,7 @@ export class TeamPage implements OnInit {
 
     schedulesData:any;
     scheduleFilter1:any;
+    scheduleFilter2:any;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -346,6 +347,9 @@ export class TeamPage implements OnInit {
         }else{
             this.getSchedulesData('postgame');// fall back just in case no status event is present
         }
+    }
+    private filterDropdown(filter){
+      //TODO
     }
 
     //api for Schedules

@@ -33,7 +33,7 @@ export class BoxScoresService {
   if(profile == 'player'){
     profile = 'team'
   }else if (profile == 'league'){
-    // date += '/addAi'
+    date += '/addAi'
   }
 
   //date needs to be the date coming in AS EST and come back as UTC
