@@ -61,6 +61,8 @@ import {VideoModule} from "../../fe-core/modules/video/video.module";
 import {VideoService} from "../../services/video.service";
 
 import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {HeadlineData} from "../../global/global-interface";
 
 declare var moment;
 
@@ -116,6 +118,9 @@ export class LeaguePage implements OnInit {
     pageParams:SportPageParameters = {};
     partnerID:string = null;
     hasError: boolean = false;
+    headlineError:boolean = false;
+
+    headlineData:HeadlineData;
 
     standingsData:StandingsModuleData;
 
@@ -178,6 +183,7 @@ export class LeaguePage implements OnInit {
                 private _lolService: ListOfListsService,
                 private listService:ListPageService,
                 private videoBatchService:VideoService,
+                private _headlineDataService:HeadlineDataService,
                 private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
@@ -209,7 +215,7 @@ export class LeaguePage implements OnInit {
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = "TDL"; //leagueShortName
-
+                this.getLeagueHeadlines(this.headlineData);
                 /*** Keep Up With Everything TDL ***/
                 this.getBoxScores(this.dateParam);
                 this.getSchedulesData('postgame');//grab pre event data for upcoming games
@@ -368,6 +374,22 @@ export class LeaguePage implements OnInit {
             err => {
                 console.log("Error getting news data");
             });
+    }
+    //api for League Headline Module
+    private getLeagueHeadlines() {
+        if (this.scope == "ncaaf") {
+            this.scope = "ncaa";
+        }
+        this._headlineDataService.getAiHeadlineDataLeague(null, this.scope)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData;
+                },
+                err => {
+                    this.headlineError = true;
+                    console.log("Error loading AI headline data for League Page", err);
+                }
+            )
     }
 
     //api for BOX SCORES

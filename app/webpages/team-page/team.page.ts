@@ -71,6 +71,8 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {VideoModule} from "../../fe-core/modules/video/video.module";
 import {VideoService} from "../../services/video.service";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {HeadlineData} from "../../global/global-interface";
 
 declare var moment;
 
@@ -131,7 +133,8 @@ export class TeamPage implements OnInit {
     partnerID:string = null;
     scope:string = null;
     hasError: boolean = false;
-
+    headlineError:boolean = false;
+    headlineData:HeadlineData;
     profileHeaderData:ProfileHeaderData;
     profileData:IProfileData;
     comparisonModuleData: ComparisonModuleData;
@@ -183,6 +186,7 @@ export class TeamPage implements OnInit {
                 private _twitterService: TwitterService,
                 private _comparisonService: ComparisonStatsService,
                 private _dailyUpdateService: DailyUpdateService,
+                private _headlineDataService:HeadlineDataService,
                 private _videoBatchService: VideoService) {
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
@@ -228,6 +232,7 @@ export class TeamPage implements OnInit {
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
+                this.getHeadlines(this.headlineData);
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
@@ -324,6 +329,23 @@ export class TeamPage implements OnInit {
             err => {
                 console.log("Error getting news data");
             });
+    }
+
+    //api for Headline Module
+    private getHeadlines(){
+        if (this.scope == "ncaaf") {
+            this.scope = "ncaa";
+        }
+        this._headlineDataService.getAiHeadlineData(this.scope.toUpperCase(), this.pageParams.teamId)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData;
+                },
+                err => {
+                    this.headlineError = true;
+                    console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
+                }
+            )
     }
 
     //api for BOX SCORES

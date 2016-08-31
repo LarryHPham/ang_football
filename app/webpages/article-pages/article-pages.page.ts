@@ -115,6 +115,7 @@ export class ArticlePages implements OnInit {
                 err => {
                     this.error = true;
                     var self = this;
+                    console.log('Error loading article data, ', err);
                     setTimeout(function () {
                         //removes error page from browser history
                         self._location.replaceState('/');
@@ -126,7 +127,7 @@ export class ArticlePages implements OnInit {
         this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
         var random = [];
         for (var i = 0; i < 3; i++) {
-            this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i])
+            this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i], this.scope)
                 .subscribe(
                     HeadlineData => {
                         if (HeadlineData['data'].length > 0) {
@@ -137,7 +138,7 @@ export class ArticlePages implements OnInit {
                             }
                             this.eventID = HeadlineData['data'][0].event_id.toString();
                             this.recommendedImageData = "derp";
-                            random.push(this.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
+                            random.push(ArticlePages.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
                         }
                     }
                 );
@@ -171,36 +172,6 @@ export class ArticlePages implements OnInit {
     //        });
     //    } catch (err) {
     //    }
-    //}
-
-    //getTrendingArticles(data) {
-    //    var articles = [];
-    //    var images = [];
-    //    data['data'].forEach(function (val, index) {
-    //        if (this.articleTitle != val.title) {
-    //            articles[index - 1] = {
-    //                title: val.title,
-    //                date: val.last_updated + " EST",
-    //                content: val.teaser,
-    //                eventId: val.event_id,
-    //                eventType: "pregame-report",
-    //                url: VerticalGlobalFunctions.formatArticleRoute("pregame-report", val.event_id),
-    //                rawUrl: window.location.protocol + "//" + window.location.host + "nfl/articles/pregame-report/" + val.event_id
-    //            };
-    //        }
-    //    });
-    //    //Object.keys(data['meta-data']['images']).forEach(function (val, index) {
-    //    //    images[index] = data['meta-data']['images'][val];
-    //    //});
-    //    //this.trendingImages = images[0].concat(images[1]);
-    //    //this.trendingImages.sort(function () {
-    //    //    return 0.5 - Math.random()
-    //    //});
-    //    //articles.sort(function () {
-    //    //    return 0.5 - Math.random()
-    //    //});
-    //    console.log(articles);
-    //    this.trendingData = articles;
     //}
 
     getCarouselImages(data) {
@@ -475,7 +446,7 @@ export class ArticlePages implements OnInit {
         return this.images = imageList;
     }
 
-    getRandomArticles(recommendations, pageIndex, eventID) {
+    static getRandomArticles(recommendations, pageIndex, eventID) {
         var articles = {
             title: recommendations.title,
             eventType: pageIndex,

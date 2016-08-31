@@ -17,7 +17,7 @@ export class GlobalSettings {
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
-    private static _imageUrl:string = '-sports-images.synapsys.us';
+    private static _imageUrl:string = 'images.synapsys.us';
     private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
     private static _homepageUrl:string = '.touchdownloyal.com';
     private static _homepageLinkName:string = 'touchdownloyal';
