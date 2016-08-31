@@ -160,7 +160,9 @@ export class LeaguePage implements OnInit {
     faqData: Array<faqModuleData>;
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
+
     schedulesData:any;
+    scheduleFilter:any;
 
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
@@ -279,6 +281,12 @@ export class LeaguePage implements OnInit {
         limit = 3;
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.scheduleFilter=[
+          {key:'2016', value: '2016'},
+          {key:'2015', value: '2015'},
+          {key:'2014', value: '2014'},
+          {key:'2013', value: '2013'}
+        ];
         this.schedulesData = schedulesData;
       }) // isTeamProfilePage = true
     }
