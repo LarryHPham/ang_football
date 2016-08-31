@@ -170,7 +170,7 @@ export class ComparisonStatsService {
   private defenseFields = ["SOLO", "AST", "TOT", "SACK", "PD", "INT", "FF"];
   private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
   private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
-  private returningFields = ["TEST1", "TEST2"];//TODO
+  private returningFields = ["K.ATT", "K.YDS", "K.AVG", "P.ATT", "P.YDS", "P.AVG", "TD"];//TODO
 
   constructor(public http: Http) { }
 
