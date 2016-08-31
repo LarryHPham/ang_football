@@ -10,7 +10,7 @@
         <!-- <headline-component [title]="'Keep Up With Everything ' + profileHeaderData.profileName"></headline-component> -->
         <!-- <box-scores *ngIf="dateParam" [boxScores]="currentBoxScores" [calendarParams]="dateParam" (dateEmit)="getBoxScores($event)"></box-scores>
         <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-        <schedules *ngIf="schedulesData" [profHeader]="profileHeaderData" [data]="schedulesData" (tabSelected)="scheduleTab($event)"></schedules>
+        <schedules *ngIf="schedulesData" [profHeader]="profileHeaderData" [data]="schedulesData" [filter1]="scheduleFilter" (tabSelected)="scheduleTab($event)"></schedules>
         <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)"></standings-module>
         <season-stats-module *ngIf="seasonStatsData" [pageParams]="pageParams" [data]="seasonStatsData"></season-stats-module>
