@@ -128,7 +128,10 @@ export class PlayerPage implements OnInit {
   dykData: Array<dykModuleData>;
   listOfListsData: Object; // paginated data to be displayed
   twitterData: Array<twitterModuleData>;
+
   schedulesData:any;
+  scheduleFilter:any;
+
   scope: string;
 
   constructor(private _params:RouteParams,
@@ -242,9 +245,15 @@ private dailyUpdateModule(playerId: number) {
   }
 
   //api for Schedules
-  private getSchedulesData(status){
+  private getSchedulesData(status, year?){
     var limit = 5;
     this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.teamId, (schedulesData) => {
+      this.scheduleFilter=[
+        {key:'2016', value: '2016'},
+        {key:'2015', value: '2015'},
+        {key:'2014', value: '2014'},
+        {key:'2013', value: '2013'}
+      ];
       this.schedulesData = schedulesData;
     }) // isTeamProfilePage = true
   }

@@ -33,7 +33,7 @@ export class BoxScoresService {
   if(profile == 'player'){
     profile = 'team'
   }else if (profile == 'league'){
-    date += '/addAi'
+    // date += '/addAi'
   }
 
   //date needs to be the date coming in AS EST and come back as UTC
@@ -45,7 +45,7 @@ export class BoxScoresService {
       var transformedDate = this.transformBoxScores(data.data);
       return {
         transformedDate:transformedDate,
-        aiArticle: profile == 'league' ? data.aiContent : null
+        aiArticle: profile == 'league' && data.aiContent != null ? data.aiContent : null
       };
     })
   }
@@ -142,20 +142,20 @@ export class BoxScoresService {
   * sends back => unixdate: true/false
   */
   weekCarousel(profile, date, teamId?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
+    //Configure HTTP Headers
+    var headers = this.setToken();
 
-  //player profile are treated as teams
-  if(profile == 'player'){
-    profile = 'team'
-  }
+    //player profile are treated as teams
+    if(profile == 'player'){
+      profile = 'team'
+    }
 
-  var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
+    var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
   }
 
   /**
@@ -163,20 +163,20 @@ export class BoxScoresService {
   * sends back => unixdate: true/false
   */
   validateMonth(profile, date, teamId?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
+    //Configure HTTP Headers
+    var headers = this.setToken();
 
-  //player profile are treated as teams
-  if(profile == 'player'){
-    profile = 'team'
-  }
+    //player profile are treated as teams
+    if(profile == 'player'){
+      profile = 'team'
+    }
 
-  var callURL = this._apiUrl+'/'+profile+'/gameDates/'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
+    var callURL = this._apiUrl+'/'+profile+'/gameDates/'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
   }
 
   transformBoxScores(boxScores){
@@ -233,7 +233,7 @@ export class BoxScoresService {
             lastName: boxScores[dates].team1Name,
             abbreviation: boxScores[dates].team1Abbreviation,
             logo: boxScores[dates].team1Logo,
-            colors: boxScores[dates].team1ColorHex,
+            colors: boxScores[dates].team1ColorHex != null ? boxScores[dates].team1ColorHex : '#a2a2a2',
             outcome: boxScores[dates].team1Outcome,
             score: boxScores[dates].team1Score,
             dataP1:boxScores[dates].team1Score,
@@ -250,7 +250,7 @@ export class BoxScoresService {
             lastName: boxScores[dates].team2Name,
             abbreviation: boxScores[dates].team2Abbreviation,
             logo: boxScores[dates].team2Logo,
-            colors: boxScores[dates].team2ColorHex,
+            colors: boxScores[dates].team2ColorHex ? boxScores[dates].team2ColorHex : '#fefefe',
             outcome: boxScores[dates].team2Outcome,
             score: boxScores[dates].team2Score,
             dataP1:boxScores[dates].team2Score,
@@ -323,13 +323,13 @@ export class BoxScoresService {
         }
 
 
-        if(typeof newBoxScores[dates] == 'undefined'){
+        if(typeof newBoxScores[YYYYMMDD] == 'undefined'){
           newBoxScores[YYYYMMDD] = [];
           newBoxScores[YYYYMMDD].push(boxScoreObj[dates]);
         }else{
           newBoxScores[YYYYMMDD].push(boxScoreObj[dates]);
         }
-      }
+      }//end of For Loop
     return newBoxScores;
   }
 

@@ -45,9 +45,9 @@ export class SchedulesService {
   getModuleTitle(teamName?: string): string {
     let moduletitle = "Weekly Schedules";
     if ( teamName ) {
-      moduletitle += " - " + teamName;
+      moduletitle += "<span class='mod-info'> - " + teamName + "</span>";
     } else {
-      moduletitle += " - League";
+      moduletitle += "<span class='mod-info> - League" + "</span>";
     }
     return moduletitle;
   }// Sets the title of the modules with data returned by schedules
@@ -82,7 +82,8 @@ export class SchedulesService {
     if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
-    callURL += '/'+eventStatus+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
+    callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
+    console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -97,12 +98,13 @@ export class SchedulesService {
 
     if(typeof year == 'undefined'){
       year = new Date().getFullYear();//once we have historic data we shall show this
+      year = 2015;// TODO test
     }
 
     if(jsYear == year){
       displayYear = "Current Season";
     }else{
-      displayYear = year;
+      displayYear = year + " Season";
     }
 
     //eventType determines which tab is highlighted
@@ -112,25 +114,27 @@ export class SchedulesService {
       eventTab = false;
     }
 
-    this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId)
+    this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year)
     .subscribe( data => {
       var gamesData = data.data != null? data.data.games:null;
-      let isTeamProfilePage = profile == 'league' ? false :true;
-      var tableData = this.setupTableData(eventStatus, year, gamesData, teamId, limit, isTeamProfilePage);
-      var tabData = [
-        {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
-        {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
-      ];
-      var scheduleData = {
-        data:tableData,
-        tabs:tabData,
-        carData: this.setupCarouselData(gamesData, tableData[0], limit),
-        pageInfo:{
-          totalPages: data.data != null ? data.data.info.pages:0,
-          totalResults: data.data != null ? data.data.info.total:0,
+      if(gamesData.length > 0){
+        let isTeamProfilePage = profile == 'league' ? false :true;
+        var tableData = this.setupTableData(eventStatus, year, gamesData, teamId, limit, isTeamProfilePage);
+        var tabData = [
+          {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
+          {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
+        ];
+        var scheduleData = {
+          data:tableData,
+          tabs:tabData,
+          carData: this.setupCarouselData(gamesData, tableData[0], limit),
+          pageInfo:{
+            totalPages: data.data != null ? data.data.info.pages:0,
+            totalResults: data.data != null ? data.data.info.total:0,
+          }
         }
+        callback(scheduleData);
       }
-      callback(scheduleData);
     })
   }
 
