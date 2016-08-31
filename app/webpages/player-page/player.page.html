@@ -1,9 +1,8 @@
 <sidekick-wrapper>
-<section class="page profile-container player-page">
+<section class="page profile-container">
     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
     <error-component *ngIf="hasError"></error-component>
     <div *ngIf="profileHeaderData && pageParams">
-      <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId"></comparison-module>
         <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
         <!-- <profile-header *ngIf="profileHeaderData" [profileHeaderData]="profileHeaderData"></profile-header>
         <daily-update-module [profileName]="profileHeaderData.profileName" [data]="dailyUpdateData"></daily-update-module>
@@ -16,6 +15,7 @@
         <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)"></standings-module>
         <season-stats-module *ngIf="seasonStatsData" [pageParams]="pageParams" [data]="seasonStatsData"></season-stats-module>
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget> -->
+        <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId"></comparison-module>
         <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
         <!-- <div class="profile-carousel-container">
             <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>

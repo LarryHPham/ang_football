@@ -176,11 +176,9 @@ export class ComparisonStatsService {
   constructor(public http: Http) { }
 
   getInitialPlayerStats(pageParams: SportPageParameters): Observable<ComparisonModuleData> {
-    console.log("pageParams", pageParams);
-    var teamId = pageParams.teamId != null ? pageParams.teamId : null;
-    var playerId = pageParams.playerId != null ? pageParams.playerId : null;
+    var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
+    var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
     return this.callPlayerComparisonAPI(teamId, playerId, data => {
-      console.log("data", data);
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
         return null;
@@ -201,7 +199,7 @@ export class ComparisonStatsService {
         teamId: data.playerTwo.teamId,
         playerList: [{key: data.playerTwo.playerId, value: playerName2}]
       };
-
+      console.log("TEST", team1Data, team2Data);
       var moduleData = new MLBComparisonModuleData(this);
       moduleData.data = data;
       moduleData.teamList = [

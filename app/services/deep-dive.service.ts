@@ -104,18 +104,25 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiHeavyBatchService(state?){
+  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?){//TODO update api call
   //Configure HTTP Headers
-    state = state.toUpperCase();
   var headers = this.setToken();
-  if(state == null){
-    state = 'CA';
+  if(scope == null){
+    scope = 'nfl';
   }
-  var callURL = this._articleUrl+'player-comparisons/'+state;
+  if(key == null){
+    key == "player-comparisons";
+  }
+  key = key.replace(' ', '-');
+  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+  if(page == null || count == null){
+    page = 1;
+    count = 1;
+  }
+  callURL += '&page=' + page + '&count=' + count;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-
       return data;
     })
   }
@@ -224,16 +231,17 @@ export class DeepDiveService {
     });
     return articleStackArray;
   }
-  transformToAiHeavyArticleRow(data){
+  transformToAiHeavyArticleRow(data, key){
+    // console.log("transformToAiHeavyArticleRow", data);
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
-    var date = GlobalFunctions.formatDate(data.timestamp*1000);
+    var date = data.last_updated;//TDDO
     var i = 1;
     for (var key in data) {
       if (data.hasOwnProperty(key) && data[key].displayHeadline != null && i <= 8) {
         var s = {
             stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId),
-            keyword: 'PLAYER COMPARISON',
+            keyword: key.toUpperCase(),
             publishedDate: date.month + " " + date.day + ", " + date.year,
             provider1: '',
             provider2: '',
