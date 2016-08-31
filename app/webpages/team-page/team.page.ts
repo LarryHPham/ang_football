@@ -141,7 +141,7 @@ export class TeamPage implements OnInit {
     dailyUpdateData: DailyUpdateData;
     firstVideo:string;
     videoData:any;
-    imageData:any;
+    imageData:Array<any>;
     copyright:any;
     imageTitle: any;
     profileType:string = "team";
