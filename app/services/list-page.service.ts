@@ -225,9 +225,6 @@ export class ListPageService {
       }
     }
 
-    console.log('getListModuleService');
-    console.log(callURL);
-
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(
