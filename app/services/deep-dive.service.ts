@@ -12,7 +12,6 @@ declare var moment;
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleUrl();
-  private _recUrl: string = GlobalSettings.getRecUrl();
 
   constructor(
     public http: Http,
@@ -55,7 +54,6 @@ export class DeepDiveService {
   if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     callURL += '/' + state;
   }
-  // console.log("URL", callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -90,13 +88,22 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiBatchService(state?){
+  getDeepDiveAiBatchService(scope, key?, page?, count?){
   //Configure HTTP Headers
   var headers = this.setToken();
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
+  if(scope == null){
+    scope = 'nfl';
   }
-  var callURL = this._articleUrl + 'recent-games/' + state;
+  if(key == null){
+    key == "postgame-report";
+  }
+  key = key.replace(' ', '-');
+  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+  if(page == null || count == null){
+    page = 1;
+    count = 1;
+  }
+  callURL += '&page=' + page + '&count=' + count;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -104,18 +111,24 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiHeavyBatchService(state?){
+  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?){//TODO update api call
   //Configure HTTP Headers
-    state = state.toUpperCase();
   var headers = this.setToken();
-  if(state == null){
-    state = 'CA';
+  if(scope == null){
+    scope = 'nfl';
   }
-  var callURL = this._articleUrl+'player-comparisons/'+state;
+  if(key == null){
+    key == "player comparisons";
+  }
+  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+  if(page == null || count == null){
+    page = 1;
+    count = 1;
+  }
+  callURL += '&page=' + page + '&count=' + count;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-
       return data;
     })
   }
@@ -131,10 +144,10 @@ export class DeepDiveService {
       });
   }
 
-  getRecArticleData(region, pageNum, pageCount){
+  getRecArticleData(scope){
     var headers = this.setToken();
     //this is the sidkeick url
-    var callURL = this._recUrl + "/" + region + "/" + pageNum + "/" + pageCount;
+    var callURL = this._articleUrl + "sidekick/NFL";//TODO won't need uppercase after ai fixes
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -199,56 +212,57 @@ export class DeepDiveService {
     });
     return articleStackArray;
   }
-  transformToAiArticleRow(data){
+  transformToAiArticleRow(data, key){
+    data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data.forEach(function(val, index){
-      if (val.length != 0) {
-      var date = GlobalFunctions.formatDate(val.timestamp*1000);
+      for(var p in val.article_data){
+        var dataLists = val.article_data[p];
+      }
       var s = {
-          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute('postgame-report', val.event),
-          keyword: 'POST GAME REPORT',
-          publishedDate: date.month + " " + date.day + ", " + date.year,
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
+          keyword: key.toUpperCase(),
+          publishedDate: dataLists.dateline ,
           provider1: '',
           provider2: '',
-          description: val.featuredReport['postgame-report'].displayHeadline,
+          description: dataLists.displayHeadline,
           imageConfig: {
           imageClass: "image-100x56",
           hoverText: "View",
-          imageUrl: val.home.images[0] != null ? val.home.images[0] : sampleImage,
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute('postgame-report', val.event)
+          imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
       articleStackArray.push(s);
-    }
     });
+
     return articleStackArray;
   }
-  transformToAiHeavyArticleRow(data){
+  transformToAiHeavyArticleRow(data, key){
+    data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
-    var date = GlobalFunctions.formatDate(data.timestamp*1000);
-    var i = 1;
-    for (var key in data) {
-      if (data.hasOwnProperty(key) && data[key].displayHeadline != null && i <= 8) {
-        var s = {
-            stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId),
-            keyword: 'PLAYER COMPARISON',
-            publishedDate: date.month + " " + date.day + ", " + date.year,
-            provider1: '',
-            provider2: '',
-            description: data[key].displayHeadline,
-            imageConfig: {
-              imageClass: "image-100x56",
-              imageUrl: data[key].image != null ? data[key].image : sampleImage,
-              hoverText: "View",
-              urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId)
-            }
-        }
-        articleStackArray.push(s);
-        i = i + 1;
+    data.forEach(function(val, index){
+      for(var p in val.article_data){
+        var eventType = val.article_data[p];
       }
-    }
+      var s = {
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
+          keyword: key.toUpperCase(),
+          publishedDate: eventType.dateline,
+          provider1: '',
+          provider2: '',
+          description: eventType.metaHeadline,
+          imageConfig: {
+            imageClass: "image-100x56",
+            hoverText: "View",
+            imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
+            urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
+          }
+      }
+      articleStackArray.push(s);
+    });
     return articleStackArray;
   }
 
@@ -276,66 +290,42 @@ export class DeepDiveService {
     return articleStackData;
   }
   transformToRecArticles(data){
-    var articleTypes = [];
+    data = data.data;
+    var sampleImage = "/app/public/placeholder_XL.png";
+    var articleStackArray = [];
     var articles = [];
-    var images = [];
-
-    var homeId = data['meta-data']['current']['homeTeamId'];
-    var awayId = data['meta-data']['current']['awayTeamId'];
-
+    var eventID = null;
     for(var obj in data){
-      if(obj == "meta-data")continue;
-      articleTypes.push(obj);
-      articles.push(data[obj]);
-    }
-
-    var eventID = data['meta-data']['current']['eventId'];
-
-    //set up the images array
-    for(var obj in data['meta-data']['images']){
-      // -1 on the length of images array to reserve one image for home/away specific article photo
-      for(var i = 0; i < data['meta-data']['images'][obj].length - 1; i++){
-        images.push(data['meta-data']['images'][obj][i]);
+      if(obj != "meta-data" && obj != "timestamp"){
+        var a = {
+          keyword: obj,
+          info: data[obj]
+        }
+        articles.push(a);
+      } else {
+        var eventID = data['meta-data']['current']['eventID'];
       }
     }
-
-    // to mix up the images
-    function shuffle(a) {
-      var j, x, i;
-      for (i = a.length; i; i--) {
-        j = Math.floor(Math.random() * i);
-        x = a[i - 1];
-        a[i - 1] = a[j];
-        a[j] = x;
-      }
-    }
-    shuffle(images);
-
-    var ret = [];
-    for(var i = 0; i < 6; i++){
-      ret[i] = articles[i];
-      ret[i]['type'] = articleTypes[i];
-      if(ret[i]['type'].split('-')[1] == 'home'){
-        ret[i]['image'] = data['meta-data']['images'][homeId][data['meta-data']['images'][homeId].length - 1];
-      }else if(ret[i]['type'].split('-')[1]  == 'away'){
-        ret[i]['image'] = data['meta-data']['images'][awayId][data['meta-data']['images'][awayId].length - 1];
-      }else{
-        ret[i]['image'] = images[i];
-      }
-      ret[i]['keyword'] = ret[i]['sidekickTitle'].toUpperCase();
-      ret[i]['bg_image_var'] = this._sanitizer.bypassSecurityTrustStyle("url(" + ret[i]['image'] + ")");
-      ret[i]['new_date'] = VerticalGlobalFunctions.convertAiDate(ret[i]['dateline']);
-      ret[i]['event_id'] = eventID;
-    }
-    return ret;
+    articles = articles.slice(1,7);//get first 6 articles
+    articles.forEach(function(val, index){
+      var info = val.info;
+      var s = {
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
+          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
+          keyword: val.keyword,
+          new_date: info.dateline,
+          displayHeadline: info.displayHeadline,
+        }
+      articleStackArray.push(s);
+    });
+    return articleStackArray;
   }
 
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      let date = GlobalFunctions.formatDate(val.publishedDate);
-      val["date"] = date.month + " " + date.day + ", " + date.year + " " + date.time + " " + date.a + " EST";
-      val["image"] = GlobalSettings.getImageUrl(val.imagePath);
+      val["date"] = val.dateline;
+      val["image"] = GlobalSettings.getImageUrl(val.image);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}
     })

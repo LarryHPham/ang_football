@@ -4,6 +4,7 @@ import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalFunctions} from "../../global/global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from "../../global/global-settings";
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
@@ -11,8 +12,6 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {CommentModule} from '../../fe-core/modules/comment/comment.module';
 import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
-
-
 
 import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
 
@@ -156,7 +155,9 @@ export class TeamPage implements OnInit {
     // currentYear: any;
 
     schedulesData:any;
-
+    scheduleFilter1:Array<any>;
+    selectedFilter1:string;
+    eventStatus: any;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -199,7 +200,7 @@ export class TeamPage implements OnInit {
               profile:'team',//current profile page
               teamId:this.pageParams.teamId, // teamId if it exists
               // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2015-09-03'
+              date: '2016-09-08'
             }
             this.setupProfileData(this.partnerID,this.scope);
         });
@@ -231,8 +232,9 @@ export class TeamPage implements OnInit {
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
-                this.getSchedulesData('postgame');//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
+                this.eventStatus = 'pregame';
+                this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+                // this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -340,20 +342,34 @@ export class TeamPage implements OnInit {
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pregame');
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('postgame');
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
         }else{
-            this.getSchedulesData('postgame');// fall back just in case no status event is present
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
         }
+    }
+    private filterDropdown(filter){
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
     }
 
     //api for Schedules
-    private getSchedulesData(status){
+    private getSchedulesData(status, year?){
       var limit = 5;
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        if(status == 'pregame'){
+          this.scheduleFilter1=null;
+        }else{
+          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            this.scheduleFilter1 = schedulesData.seasons;
+          }
+        }
         this.schedulesData = schedulesData;
-      }) // isTeamProfilePage = true
+      }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
 
     private getImages(imageData) {

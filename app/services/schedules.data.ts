@@ -47,7 +47,7 @@ export interface SchedulesData {
   team2Record:string;
   team2Wins: string,
   team2Losses: string,
-  articleUrl: string, //TODO missing
+  aiUrlMod: string, //TODO missing
   results:string, //TODO missing
   targetTeam: string; //TODO missing
   /**
@@ -117,7 +117,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
 
   updateCarouselData(item: SchedulesData, index:number){//ANY CHANGES HERE CHECK setupTableData in schedules.service.ts
     var displayNext = '';
-    if(item.eventStatus == 'pre-event'){
+    if(item.eventStatus == 'pregame'){
       var displayNext = 'Next Game:';
     }else{
       var displayNext = 'Previous Game:';
@@ -184,7 +184,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
     //find if current team is home or away and set the name to the current objects name
     this.curTeam = teamId ? teamId.toString() : null;
     this.isTeamProfilePage = isTeamProfilePage;
-    if(eventStatus === 'pre-event'){
+    if(eventStatus === 'pregame'){
       this.columns = [{
          headerValue: "DATE",
          columnClass: "date-column",
@@ -351,13 +351,12 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
       case "gs":
       var partnerCheck = GlobalSettings.getHomeInfo();
         if (item.eventStatus != 'cancelled'){
-          var status = item.eventStatus === 'pre-event' ? "Pregame" : (item.eventStatus === 'post-event' ? "Postgame" : null);
+          var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           if ( status ) {
-            // console.log("partnerCheck", partnerCheck);
             if(partnerCheck.isPartner){
-              display = "<a href='" + '/' + partnerCheck.partnerName + item.articleUrl + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
+              display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
-              display = "<a href='" + item.articleUrl + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
+              display = "<a href='" + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }
           }
         }
@@ -392,6 +391,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         var scoreHome = Number(item.team1Score);
         var scoreAway = Number(item.team2Score);
 
+        item.team1Outcome = item.team1Outcome != null ? item.team1Outcome: '';
         if (scoreHome > scoreAway) {
           display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
           sort = (scoreHome/scoreHome+scoreAway);
