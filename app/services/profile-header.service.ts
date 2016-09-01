@@ -155,8 +155,6 @@ export class ProfileHeaderService {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
 
-    console.log(url);
-
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {

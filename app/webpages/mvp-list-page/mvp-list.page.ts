@@ -159,8 +159,6 @@ export class MVPListPage implements OnInit{
 
   getStandardList(tab: positionMVPTabData){
 
-    console.log('getStandardList');
-
     this.queryParams.statName = tab.tabDataKey;
 
     this._service.getListModuleService(tab, this.queryParams)
@@ -179,8 +177,6 @@ export class MVPListPage implements OnInit{
   }
 
   tabSelected(event) {
-
-    console.log('tabSelected');
 
     var tabRoute;
     var tabNameFrom = this.selectedTabName; //get the tab we are changing from into a var before we change it
@@ -219,7 +215,6 @@ export class MVPListPage implements OnInit{
     let localPosition = event.position;
 
     if ( localPosition != this.globalMVPPosition ) {
-      console.log('localPosition != this.globalMVPPosition');
       return this._service.getMVPTabs(event.position, 'page');
     } else {
       return this.tabs;
