@@ -141,7 +141,7 @@ export class GlobalFunctions {
      * @param {string} def - (Optional) The default string value to use if the value is undefined. If it's not included, then "" is used as the def string.
      * @returns {string}
      */
-      static commaSeparateNumber(value:number, def?:string): string {
+      static commaSeparateNumber(value:number, def?:string) {
       if ( value === null || value === undefined ) {
         return def || "";
       }
@@ -174,6 +174,11 @@ export class GlobalFunctions {
         return "$" + GlobalFunctions.commaSeparateNumber(value);
       }
     }
+
+    static roundToDecimal(num) {
+      return Math.round(num * 100) / 100;
+    } //static roundToDecimal
+
 
     /**
      * - Returns the full state name corresponding to the given postal code.
