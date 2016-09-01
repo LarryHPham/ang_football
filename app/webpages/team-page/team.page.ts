@@ -365,12 +365,13 @@ export class TeamPage implements OnInit {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
         }else{
-          console.log('SCHEDULE FILTER 1 ',this.scheduleFilter1);
           if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
         this.schedulesData = schedulesData;
+        console.log('SCHEDULE FILTER 1 ',this.scheduleFilter1);
+        console.log(this.schedulesData);
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
 

@@ -203,11 +203,8 @@ export class BoxScoresService {
             team2MM += (60 * team2HH);
           }
 
-          // let newTeam1Poss = team1MM +':'+team1SS;
-          // let newTeam2Poss = team2MM +':'+team2SS;
-
-          let newTeam1Poss = '24:23';//TODO DUMMY DATA
-          let newTeam2Poss = '37:54';//TODO DUMMY DATA
+          let newTeam1Poss = team1MM +':'+team1SS;
+          let newTeam2Poss = team2MM +':'+team2SS;
 
           boxScoreObj[dates] = {};
           boxScoreObj[dates]['gameInfo']= {
@@ -215,7 +212,7 @@ export class BoxScoresService {
             seasonId: boxScores[dates].seasonId,
             inningsPlayed: boxScores[dates].eventQuarter,
             timeLeft: boxScores[dates].eventQuarterTimeLeft,
-            live: true,
+            live: boxScores[dates].liveStatus == 'Y'?true:false,
             startDateTime: boxScores[dates].eventDate,
             startDateTimestamp: boxScores[dates].eventStartTime,
             dataPointCategories:['Score','Poss','Yards']
@@ -238,7 +235,6 @@ export class BoxScoresService {
             score: boxScores[dates].team1Score,
             dataP1:boxScores[dates].team1Score,
             dataP2:newTeam1Poss,
-            // dataP2:boxScores[dates].team1Poss,
             dataP3:boxScores[dates].team1Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[1]:null,
@@ -255,7 +251,6 @@ export class BoxScoresService {
             score: boxScores[dates].team2Score,
             dataP1:boxScores[dates].team2Score,
             dataP2:newTeam2Poss,
-            // dataP2:boxScores[dates].team2Poss,
             dataP3:boxScores[dates].team2Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[1]:null,
