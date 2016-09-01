@@ -88,14 +88,14 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiBatchService(scope, key?, page?, count?){//TODO update api call
+  getDeepDiveAiBatchService(scope, key?, page?, count?){
   //Configure HTTP Headers
   var headers = this.setToken();
   if(scope == null){
     scope = 'nfl';
   }
   if(key == null){
-    key == "pregame-report";// need to be postgame
+    key == "postgame-report";
   }
   key = key.replace(' ', '-');
   var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;

@@ -47,7 +47,7 @@ export interface SchedulesData {
   team2Record:string;
   team2Wins: string,
   team2Losses: string,
-  articleUrl: string, //TODO missing
+  aiUrlMod: string, //TODO missing
   results:string, //TODO missing
   targetTeam: string; //TODO missing
   /**
@@ -354,9 +354,9 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           if ( status ) {
             if(partnerCheck.isPartner){
-              display = "<a href='" + '/' + partnerCheck.partnerName + item.articleUrl + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
+              display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
-              display = "<a href='" + item.articleUrl + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
+              display = "<a href='" + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }
           }
         }

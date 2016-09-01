@@ -92,11 +92,11 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                 Passing:{
                     title: "Passing",
                     glossary:[
-                        {key: "ATT", value: "Wins/Losses"},
-                        {key: "COMP", value: "Walks Pitched (Bases on Balls)"},
-                        {key: "YDS", value: "Innings Pitched"},
-                        {key: "AVG", value: "Walks + Hits per Inning Pitched"},
-                        {key: "TD", value: "Strikeouts"},
+                        {key: "ATT", value: "Attempts"},
+                        {key: "COMP", value: "Completions"},
+                        {key: "YDS", value: "Passing Yards"},
+                        {key: "AVG", value: "Average"},
+                        {key: "TD", value: "Touchdowns"},
                         {key: "INT", value: "Saves"},
                         {key: "RATE", value: "Earned Run Average"}
                     ]
@@ -104,11 +104,11 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                 Rushing:{
                     title: "Rushing",
                     glossary:[
-                        {key: "ATT", value: "Wins/Losses"},
-                        {key: "YDS", value: "Walks Pitched (Bases on Balls)"},
-                        {key: "AVG", value: "Innings Pitched"},
-                        {key: "TD", value: "Walks + Hits per Inning Pitched"},
-                        {key: "YDS/G", value: "Strikeouts"},
+                        {key: "ATT", value: "Attempts"},
+                        {key: "YDS", value: "Rushing Yards"},
+                        {key: "AVG", value: "Average"},
+                        {key: "TD", value: "Touchdowns"},
+                        {key: "YDS/G", value: "Yards per Game"},
                         {key: "FUM", value: "Saves"},
                         {key: "1DN", value: "Earned Run Average"}
                     ]
@@ -116,33 +116,33 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                 Receiving:{
                     title: "Receiving",
                     glossary:[
-                        {key: "W/L", value: "Wins/Losses"},
-                        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
-                        {key: "IP", value: "Innings Pitched"},
-                        {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
-                        {key: "SO", value: "Strikeouts"},
-                        {key: "SV", value: "Saves"},
-                        {key: "ERA", value: "Earned Run Average"}
+                        {key: "REC", value: "Receptions"},
+                        {key: "TAR", value: "Target"},
+                        {key: "YDS", value: "Receiving Yards"},
+                        {key: "AVG", value: "Average"},
+                        {key: "TD", value: "Touchdowns"},
+                        {key: "YDS/G", value: "Yards per Game"},
+                        {key: "1DN", value: "Touchdown"}
                     ]
                 },
                 Defense:{
                     title: "Defense",
                     glossary:[
-                        {key: "W/L", value: "Wins/Losses"},
-                        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
-                        {key: "IP", value: "Innings Pitched"},
-                        {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
-                        {key: "SO", value: "Strikeouts"},
-                        {key: "SV", value: "Saves"},
-                        {key: "ERA", value: "Earned Run Average"}
+                        {key: "SOLO", value: "Solo Tackles"},
+                        {key: "AST", value: "Assists"},
+                        {key: "TOT", value: "Total Tackles"},
+                        {key: "SACK", value: "Sacks"},
+                        {key: "PD", value: "Strikeouts"},
+                        {key: "INT", value: "Saves"},
+                        {key: "FF", value: "Earned Run Average"}
                     ]
                 },
                 Special:{
                     title:"Special Teams",
                     glossary:[
-                        {key: "W/L", value: "Wins/Losses"},
-                        {key: "BB", value: "Walks Pitched (Bases on Balls)"},
-                        {key: "IP", value: "Innings Pitched"},
+                        {key: "FGM", value: "Field Goals Made"},
+                        {key: "FGA", value: "Field Goals Average"},
+                        {key: "FG%", value: "Field Goals Percentage"},
                         {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
                         {key: "SO", value: "Strikeouts"},
                         {key: "SV", value: "Saves"},
