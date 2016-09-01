@@ -131,7 +131,6 @@ export class DeepDiveService {
     state = 'CA';
   }
   callURL += '&page=' + page + '&count=' + count + '&state=' + state;
-  console.log("url", callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
