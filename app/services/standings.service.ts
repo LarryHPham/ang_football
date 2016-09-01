@@ -102,7 +102,7 @@ export class StandingsService {
         .map(res => res.json())
         .map(data => this.setupTabData(standingsTab, data.data, maxRows))
         .subscribe(data => {
-          // console.log("data", data);
+          console.log("data", data);
           standingsTab.isLoaded = true;
           standingsTab.hasError = false;
           standingsTab.sections = data;
@@ -121,14 +121,14 @@ export class StandingsService {
 
   private createTab(selectTab: boolean, teamId: string, conference?: Conference, division?: Division) {
     let title = this.formatGroupName(conference, division) + " Standings";
-    //console.log("createTab", conference, division);
+    console.log("createTab", conference, division);
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
 
   private setupTabData(standingsTab: TDLStandingsTabdata, apiData: any, maxRows: number): Array<VerticalStandingsTableData> {
     var sections: Array<VerticalStandingsTableData> = [];
     var totalRows = 0;
-    //console.log("setupTabData", standingsTab);
+    console.log("setupTabData", standingsTab);
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
       standingsTab.division !== null && standingsTab.division !== undefined ) {
       //get only the single division
@@ -210,9 +210,9 @@ export class StandingsService {
    */
   private formatGroupName(conference: Conference, division: Division, makeDivisionBold?: boolean): string {
     if ( conference !== undefined && conference !== null ) {
-      let leagueName = GlobalFunctions.toTitleCase(Conference[conference]) + " League";
+      let leagueName = " League";
       if ( division !== undefined && division !== null ) {
-        var divisionName = GlobalFunctions.toTitleCase(Division[division]);
+        var divisionName = "division";
         return leagueName + " " + (makeDivisionBold ? "<span class='text-heavy'>" + divisionName + "</span>" : divisionName);
       }
       else {
