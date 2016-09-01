@@ -131,16 +131,11 @@ export class LeaguePage implements OnInit {
     firstVideo:string;
     videoData:any;
 
-    batterParams:any;
-    batterData:Array<positionMVPTabData>;
-    pitcherParams:any;
-    pitcherData:Array<positionMVPTabData>;
-
     positionParams: any;
     positionData: Array<positionMVPTabData>;
     globalMVPPosition:any;
 
-    imageData:any;
+    imageData:Array<any>;
     copyright:any;
     imageTitle:any;
     isProfilePage:boolean = true;
@@ -152,10 +147,12 @@ export class LeaguePage implements OnInit {
     faqData: Array<faqModuleData>;
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
+
     schedulesData:any;
+    scheduleFilter:any;
 
     public scope: string;
-    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
 
@@ -211,19 +208,12 @@ export class LeaguePage implements OnInit {
                 this.getBoxScores(this.dateParam);
                 this.getSchedulesData('postgame');//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
+
+
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
-				        // this.batterData = this.listService.getMVPTabs('batter', 'module');
-                // if ( this.batterData && this.batterData.length > 0 ) {
-                //     this.batterTab(this.batterData[0]);
-                // }
-                // this.pitcherData = this.listService.getMVPTabs('pitcher', 'module');
-                // if ( this.pitcherData && this.pitcherData.length > 0 ) {
-                //     this.pitcherTab(this.pitcherData[0]);
-                // }
-
                 //Initial position to display in MVP
-                this.globalMVPPosition = 'qb';
+                this.globalMVPPosition = 'cb';
                 this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
                 if ( this.positionData && this.positionData.length > 0 ) {
                   //default params
@@ -270,6 +260,12 @@ export class LeaguePage implements OnInit {
         limit = 3;
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.scheduleFilter=[
+          {key:'2016', value: '2016'},
+          {key:'2015', value: '2015'},
+          {key:'2014', value: '2014'},
+          {key:'2013', value: '2013'}
+        ];
         this.schedulesData = schedulesData;
       }) // isTeamProfilePage = true
     }
@@ -384,7 +380,7 @@ export class LeaguePage implements OnInit {
     }
 
     private getImages(imageData) {
-        this._imagesService.getImages(this.profileType)
+        this._imagesService.getImages(this.profileType, this.scope)
             .subscribe(data => {
                     return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
                 },
@@ -399,7 +395,7 @@ export class LeaguePage implements OnInit {
                 this.comparisonModuleData = data;
             },
             err => {
-                console.log("Error getting comparison data for mlb", err);
+                console.log("Error getting comparison data", err);
             });
     }
 
@@ -409,30 +405,37 @@ export class LeaguePage implements OnInit {
     }
 
     private positionDropdown(event) {
+
       this.positionData = this.checkToResetTabs(event);
+
       if(event.tab != null){
+
         var matches = this.checkMatchingTabs(event);
+
+        this.globalMVPPosition = event.position;
 
         if(matches != null){
           this.positionParams = {
             scope:  this.scope, //TODO change to active scope
             target: 'player',
+            position: event.position,
             statName: matches.tabDataKey,
             ordering: 'asc',
             perPageCount: this.listMax,
             pageNumber: 1
           }
-          this.getMVPService(matches, this.positionParams);
         }
       }
     }
 
     //function to check if selected position in dropdown is currently active
     private checkMatchingTabs(event) {
+
       let localPosition = event.position;
       let listName = event.tab.tabDataKey;
 
       if(event.position != this.globalMVPPosition){
+        this.positionData[0].isLoaded = false;
         return this.positionData[0];
       }else{
         return this.positionData.filter(tab => tab.tabDataKey == listName)[0];
@@ -441,11 +444,11 @@ export class LeaguePage implements OnInit {
 
     //function to check if selected position in dropdown is currently active
     private checkToResetTabs(event) {
+
       let localPosition = event.position;
 
       if ( localPosition != this.globalMVPPosition ) {
-        this.globalMVPPosition = event.position;
-        return this.listService.getMVPTabs(this.globalMVPPosition, 'module');
+        return this.listService.getMVPTabs(event.position, 'module');
       } else {
         return this.positionData;
       } //private checkToResetTabs
@@ -461,46 +464,5 @@ export class LeaguePage implements OnInit {
               tab.isLoaded = true;
               console.log('Error: Loading MVP Pitchers: ', err);
           })
-    }
-
-
-    //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    private batterTab(tab: positionMVPTabData) {
-        this.batterParams = { //Initial load for mvp Data
-            profile: 'player',
-            listname: tab.tabDataKey,
-            sort: 'asc',
-            conference: 'all',
-            division: 'all',
-            limit: this.listMax,
-            pageNum: 1
-        };
-        this.listService.getListModuleService(tab, this.batterParams)
-            .subscribe(updatedTab => {
-                //do nothing?
-            }, err => {
-                tab.isLoaded = true;
-                console.log('Error: Loading MVP Batters: ', err);
-              })
-    }
-
-    //each time a tab is selected the carousel needs to change accordingly to the correct list being shown
-    private pitcherTab(tab: positionMVPTabData) {
-        this.pitcherParams = { //Initial load for mvp Data
-            profile: 'player',
-            listname: tab.tabDataKey,
-            sort: 'asc',
-            conference: 'all',
-            division: 'all',
-            limit: this.listMax,
-            pageNum: 1
-        };
-        this.listService.getListModuleService(tab, this.pitcherParams)
-            .subscribe(updatedTab => {
-                //do nothing?
-            }, err => {
-                tab.isLoaded = true;
-                console.log('Error: Loading MVP Pitchers: ', err);
-            })
     }
 }

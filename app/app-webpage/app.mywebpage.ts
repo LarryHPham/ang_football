@@ -168,7 +168,7 @@ declare var jQuery: any;
         component: ListPage
     },
     {
-        path: '/list/:profile/:listname/:sort/:conference/:division/:limit/:pageNum',
+        path: '/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
         name: 'List-page',
         component: ListPage
     },
@@ -189,7 +189,7 @@ declare var jQuery: any;
     },
     {
         path: '/transactions/league/:limit/:pageNum',
-        name: 'Transactions-mlb-page',
+        name: 'Transactions-tdl-page',
         component: TransactionsPage
     },
     {

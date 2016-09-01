@@ -20,7 +20,7 @@
   }
   h3{
     .globalDefaultFont(32px, 400);
-    @media @mobile {
+    @media @mobile { f
       font-size: 18px;
     }
   }
@@ -134,12 +134,16 @@
         }
       }//home-hero-info-search ends
       .search-large {
+        background-color: transparent;
         @media @mobile {
           height: 35px;
           padding-right: 50px;
           .globalDefaultFont(14px, 400);
         }
         .search-input-container {
+          background: white;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
           @media @mobile {
             right: 50px;
           }
@@ -201,6 +205,7 @@
     &-col{
       overflow: auto;
       margin-bottom: 20px;
+      padding-bottom: 10px;
       border-bottom: 1px solid @highlightGrey;
       @media @mobile {
         .col-xs-12;
@@ -243,6 +248,18 @@
       .fa-angle-right {
         display: none;
       }
+    }
+    @media @tablet {
+      &:hover{
+        color: @masterBrandColor;
+        background-color: @highlightGrey;
+        .border-3 img{
+          box-shadow: 0 0 0 3px @white;
+        }
+        .image-round-hover div{
+          .flexDisplay;
+        }
+      }//home-team hover ends
     }
     @media @desktop-m {
       &:hover {
@@ -337,16 +354,7 @@
         margin:auto; //fix text overlap on safari
       }
     }
-    &:hover{
-      color: @masterBrandColor;
-      background-color: @highlightGrey;
-      .border-3 img{
-        box-shadow: 0 0 0 3px @white;
-      }
-      .image-round-hover div{
-        .flexDisplay;
-      }
-    }//home-team hover ends
+
   }//home-team ends
   &-slider{
     background-image: url('/app/public/homePage_hero2.png');

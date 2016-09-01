@@ -27,7 +27,7 @@ interface PlayerItem {
     playerName: string,
     playerFirstName: string,
     playerLastName: string,
-    playerHeadshotUrl: string,
+    imageUrl: string,
     playerJerseyNumber: string,
     playerPosition: string[],
     teamState: string,
@@ -37,7 +37,8 @@ interface PlayerItem {
     teamVenue: string,
     teamLogo: string,
     lastUpdated: string,
-    backgroundImage: string
+    backgroundImage: string,
+    playerHeadshotUrl: string
 }
 
 interface ListData {
@@ -71,8 +72,9 @@ export class positionMVPTabData implements MVPTabData {
 
 @Injectable()
 export class ListPageService {
-  // private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _apiUrl: string = "http://dev-homerunloyal-api.synapsys.us";
+
+  private _apiUrl: string = GlobalSettings.getApiUrl();
+
 
   constructor(public http: Http) {}
 
@@ -93,15 +95,18 @@ export class ListPageService {
     pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
-  getListPageService(query, errorMessage: string){
+  getListPageService(query, errorMessage: string, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   var callURL = this._apiUrl+'/list';
-
-  for(var q in query){
-    callURL += "/" + query[q];
+  if (season == null || season == undefined || season == "null") {
+    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber;
   }
+  else {
+    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
+  }
+
   return this.http.get( callURL, {headers: headers})
     .map(res => res.json())
     .map(
@@ -113,7 +118,8 @@ export class ListPageService {
           carData: ListPageService.carDataPage(data.data, 'page', errorMessage),
           listData: ListPageService.detailedData(data.data),
           pagination: data.data.listInfo,
-          listDisplayName: data.data.listInfo.name
+          listDisplayName: data.data.listInfo.name,
+          seasons: this.formatSeasons(data.data.listInfo.seasons)
         }
       },
       err => {
@@ -122,39 +128,47 @@ export class ListPageService {
     )
   }
 
+  formatSeasons (data) {
+    var outputArray = [{key: "null", value: "All Seasons"}];
+    for (var i=0; i < data.length; i++) {
+      outputArray.push({key:  data[i] , value: (Number(data[i]) + 1) + ' / ' + data[i]});
+    }
+    return outputArray;
+  }
+
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
   getMVPTabs(moduleType: string, profileType: string): Array<positionMVPTabData>{
     var tabArray: Array<positionMVPTabData> = [];
 
     switch(moduleType) {
       case 'cb':
-      case 'de':
       case 'db':
+      case 'de':
       case 'dl':
       case 'dt':
-      case 's':
+      case 'saf':
       case 'lb':
-      tabArray.push(new positionMVPTabData('Total Tackles', 'player_defense_total_tackles', profileType));
-      tabArray.push(new positionMVPTabData('Total Sacks', 'player_defense_sacks', profileType));
-      tabArray.push(new positionMVPTabData('Interceptions', 'player_defense_interceptions', profileType));
-      tabArray.push(new positionMVPTabData('Forced Fumbles', 'player_defense_forced_fumbles', profileType));
-      tabArray.push(new positionMVPTabData('Passes Defended', 'player_defense_passes_defended', profileType));
+      tabArray.push(new positionMVPTabData('Total Tackles', 'defense_total_tackles', profileType));
+      tabArray.push(new positionMVPTabData('Total Sacks', 'defense_sacks', profileType));
+      tabArray.push(new positionMVPTabData('Interceptions', 'defense_interceptions', profileType));
+      tabArray.push(new positionMVPTabData('Forced Fumbles', 'defense_forced_fumbles', profileType));
+      tabArray.push(new positionMVPTabData('Passes Defended', 'defense_passes_defended', profileType));
       break;
 
       case 'k' :
-      tabArray.push(new positionMVPTabData('Field Goals Made', 'player_kicking_field_goals_made', profileType));
-      tabArray.push(new positionMVPTabData('Field Goal Percentage Made', 'player_kicking_field_goal_percentage_made', profileType));
-      tabArray.push(new positionMVPTabData('Extra Points Made', 'player_kicking_extra_points_made', profileType));
-      tabArray.push(new positionMVPTabData('Total Points', 'player_kicking_total_points_scored', profileType));
-      tabArray.push(new positionMVPTabData('Average Points Per Game', 'player_kicking_total_points_per_game', profileType));
+      tabArray.push(new positionMVPTabData('Field Goals Made', 'kicking_field_goals_made', profileType));
+      tabArray.push(new positionMVPTabData('Field Goal Percentage Made', 'kicking_field_goal_percentage_made', profileType));
+      tabArray.push(new positionMVPTabData('Extra Points Made', 'kicking_extra_points_made', profileType));
+      tabArray.push(new positionMVPTabData('Total Points', 'kicking_total_points_scored', profileType));
+      tabArray.push(new positionMVPTabData('Average Points Per Game', 'kicking_total_points_per_game', profileType));
       break;
 
       case 'p' :
-      tabArray.push(new positionMVPTabData('Gross Punting Yards', 'player_punting_gross_yards', profileType));
-      tabArray.push(new positionMVPTabData('Total Punts', 'player_punting_punts', profileType));
-      tabArray.push(new positionMVPTabData('Average Distance Punt', 'player_punting_average', profileType));
-      tabArray.push(new positionMVPTabData('Punt % Within 20', 'player_punting_inside_twenty', profileType));
-      tabArray.push(new positionMVPTabData('Longest Punt', 'player_punting_longest_punt', profileType));
+      tabArray.push(new positionMVPTabData('Gross Punting Yards', 'punting_gross_yards', profileType));
+      tabArray.push(new positionMVPTabData('Total Punts', 'punting_punts', profileType));
+      tabArray.push(new positionMVPTabData('Average Distance Punt', 'punting_average', profileType));
+      tabArray.push(new positionMVPTabData('Punt % Within 20', 'punting_inside_twenty', profileType));
+      tabArray.push(new positionMVPTabData('Longest Punt', 'punting_longest_punt', profileType));
       break;
 
       case 'qb' :
@@ -166,29 +180,31 @@ export class ListPageService {
       break;
 
       case 'rb' :
-      tabArray.push(new positionMVPTabData('Rushing Yards', 'player_rushing_yards', profileType));
-      tabArray.push(new positionMVPTabData('Ruhing Attempts', 'player_rushing_attempts', profileType));
-      tabArray.push(new positionMVPTabData('Yards Per Carry', 'player_rushing_yards_per_carry', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', 'player_rushing_touchdowns', profileType));
-      tabArray.push(new positionMVPTabData('Yards Per Game', 'player_rushing_yards_per_carry', profileType));
+      tabArray.push(new positionMVPTabData('Rushing Yards', 'rushing_yards', profileType));
+      tabArray.push(new positionMVPTabData('Ruhing Attempts', 'rushing_attempts', profileType));
+      tabArray.push(new positionMVPTabData('Yards Per Carry', 'rushing_yards_per_carry', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', 'rushing_touchdowns', profileType));
+      tabArray.push(new positionMVPTabData('Yards Per Game', 'rushing_yards_per_carry', profileType));
       break;
 
       case 'rs' :
-      tabArray.push(new positionMVPTabData('Return Yards', 'player_returning_yards', profileType));
-      tabArray.push(new positionMVPTabData('Return Attempts', 'player_returning_attempts', profileType));
-      tabArray.push(new positionMVPTabData('Return Average', 'player_returning_average_yards', profileType));
-      tabArray.push(new positionMVPTabData('Longest Run', 'player_returning_longest_return', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', 'player_returning_touchdowns', profileType));
+      tabArray.push(new positionMVPTabData('Return Yards', 'returning_yards', profileType));
+      tabArray.push(new positionMVPTabData('Return Attempts', 'returning_attempts', profileType));
+      tabArray.push(new positionMVPTabData('Return Average', 'returning_average_yards', profileType));
+      tabArray.push(new positionMVPTabData('Longest Run', 'returning_longest_return', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', 'returning_touchdowns', profileType));
       break;
 
       case 'wr' :
       case 'te' :
-      tabArray.push(new positionMVPTabData('Receiving Yards', 'player_receiving_yards', profileType));
-      tabArray.push(new positionMVPTabData('Receptions', 'player_receiving_receptions', profileType));
-      tabArray.push(new positionMVPTabData('Average Yards Per Reception', 'player_receiving_average_per_reception', profileType));
-      tabArray.push(new positionMVPTabData('Touchdowns', 'player_receiving_touchdowns', profileType));
-      tabArray.push(new positionMVPTabData('Yards Per Game', 'player_returning_touchdowns', profileType));
+      tabArray.push(new positionMVPTabData('Receiving Yards', 'receiving_yards', profileType));
+      tabArray.push(new positionMVPTabData('Receptions', 'receiving_receptions', profileType));
+      tabArray.push(new positionMVPTabData('Average Yards Per Reception', 'receiving_average_per_reception', profileType));
+      tabArray.push(new positionMVPTabData('Touchdowns', 'receiving_touchdowns', profileType));
+      tabArray.push(new positionMVPTabData('Yards Per Game', 'returning_touchdowns', profileType));
       break;
+
+      default: null;
     }
 
     return tabArray;
@@ -221,38 +237,12 @@ export class ListPageService {
           return tab;
         }
       );
-  }
+  } // getListModuleService
 
   formatData(key: string, data: Array<PlayerItem>) {
       data.forEach(item => {
         var temp = Number(item.statType);
         item.statType = temp.toFixed(0);
-        // switch (key) {
-        //   case 'pitcher-strikeouts':
-        //   case "pitcher-innings-pitched":
-        //   case 'pitcher-hits-allowed':
-        //   case 'batter-bases-on-balls':
-        //   case 'batter-home-runs':
-        //   case 'batter-runs-batted-in':
-        //   case 'batter-hits':
-        //       // format as integer
-        //       var temp = Number(item.stat);
-        //       item.stat = temp.toFixed(0);
-        //     break;
-        //
-        //   case 'pitcher-earned-run-average':
-        //       var temp = Number(item.stat);
-        //       item.stat = temp.toFixed(2); // format as integer
-        //       break;
-        //   case 'batter-on-base-percentage':
-        //   case 'batter-batting-average':
-        //       var temp = Number(item.stat);
-        //       item.stat = temp.toFixed(3); // format as integer
-        //       break;
-        //
-        //   default:
-        //     //do nothing
-        // }
       });
   }
 
@@ -320,7 +310,6 @@ export class ListPageService {
             'Jersey No: #'+val.playerJerseyNumber
           ];
         }
-
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
@@ -329,6 +318,7 @@ export class ListPageService {
           description: description,
           dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
           dataLabel: val.statDescription+' for '+ currentYear,
+          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
           rank: val.rank
@@ -359,15 +349,16 @@ export class ListPageService {
             [ //main left text
               {route: teamRoute, text: val.teamName, class: "dataBox-mainLink"}
             ],
+            val.stat,
             [ //sub left text
-              {text: teamLocation},
+              {text: "<i class='fa fa-map-marker'></i>" + teamLocation},
               {text: "   |   ", class: "separator"},
               {text: "Division: " + divisionName},
             ],
-            val.stat,
+            GlobalFunctions.commaSeparateNumber(val.stat),
             statDescription,
-            'fa fa-map-marker'),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshotUrl), teamRoute, val.listRank),
+            null),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, val.listRank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -383,15 +374,16 @@ export class ListPageService {
             [ //main left text
               {route: playerRoute, text: playerFullName, class: "dataBox-mainLink"}
             ],
-            [ //sub left text
-              {route: teamRoute, text: 'Team: '+val.teamName, class: "dataBox-subLink"},
-              {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.uniformNumber}
-            ],
             val.stat,
+            [ //sub left text
+              {route: teamRoute, text: val.teamName, class: "dataBox-subLink"},
+              {text: "   |   ", class: "separator"},
+              {text: "Jersey: #" + val.playerJerseyNumber},
+              {text: "   |   ", class: "separator"},
+              {text: "Jersey: #" + val.playerJerseyNumber}
+            ],
             statDescription,
-            null
-          ),
+            null),
             imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
@@ -457,15 +449,10 @@ export class ListPageService {
     };
   }
 
-  static detailsData(
-    mainLeftText: Link[],
-    subLeftText: Link[],
-    mainRightValue: string,
-    subRightValue: string,
-    subIcon?: string,
-    dataLeftText?: Link[],
-    dataRightValue?: string
-  ) {
+  static detailsData(mainLeftText: Link[], mainRightValue: string,
+                     subLeftText: Link[], subRightValue: string, subIcon?: string,
+                     dataLeftText?: Link[], dataRightValue?: string) {
+
     if(!dataLeftText) {
       dataLeftText = [];
     }
@@ -476,21 +463,21 @@ export class ListPageService {
 
     var details = [
       // {
-      //   style:'detail-small',
-      //   mainText: dataLeftText,
-      //   subText: dataRightText
-      // },
-      {
-        style:'detail-left',
-        mainText: mainLeftText,
-        subText: subLeftText
-      },
-      {
-        style:'detail-right',
-        mainText: [{text: mainRightValue}],
-        subText:[{text: subRightValue}],
-        icon:subIcon,
-      },
+     //   style:'detail-small',
+     //   mainText: dataLeftText,
+     //   subText: dataRightText
+     // },
+     {
+       style:'detail-left',
+       mainText: mainLeftText,
+       subText: subLeftText
+     },
+     {
+       style:'detail-right',
+       mainText: [{text: mainRightValue}],
+       subText:[{text: subRightValue}],
+       icon:subIcon,
+     },
     ];
     return details;
   }

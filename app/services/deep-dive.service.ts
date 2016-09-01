@@ -55,7 +55,6 @@ export class DeepDiveService {
   if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
     callURL += '/' + state;
   }
-  // console.log("URL", callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -90,13 +89,22 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiBatchService(state?){
+  getDeepDiveAiBatchService(scope, key?, page?, count?){//TODO update api call
   //Configure HTTP Headers
   var headers = this.setToken();
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
+  if(scope == null){
+    scope = 'nfl';
   }
-  var callURL = this._articleUrl + 'recent-games/' + state;
+  if(key == null){
+    key == "pregame-report";// need to be postgame
+  }
+  key = key.replace(' ', '-');
+  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+  if(page == null || count == null){
+    page = 1;
+    count = 1;
+  }
+  callURL += '&page=' + page + '&count=' + count;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -104,18 +112,24 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiHeavyBatchService(state?){
+  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?){//TODO update api call
   //Configure HTTP Headers
-    state = state.toUpperCase();
   var headers = this.setToken();
-  if(state == null){
-    state = 'CA';
+  if(scope == null){
+    scope = 'nfl';
   }
-  var callURL = this._articleUrl+'player-comparisons/'+state;
+  if(key == null){
+    key == "player comparisons";
+  }
+  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+  if(page == null || count == null){
+    page = 1;
+    count = 1;
+  }
+  callURL += '&page=' + page + '&count=' + count;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-
       return data;
     })
   }
@@ -199,56 +213,57 @@ export class DeepDiveService {
     });
     return articleStackArray;
   }
-  transformToAiArticleRow(data){
+  transformToAiArticleRow(data, key){
+    data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data.forEach(function(val, index){
-      if (val.length != 0) {
-      var date = GlobalFunctions.formatDate(val.timestamp*1000);
+      for(var p in val.article_data){
+        var dataLists = val.article_data[p];
+      }
       var s = {
-          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute('postgame-report', val.event),
-          keyword: 'POST GAME REPORT',
-          publishedDate: date.month + " " + date.day + ", " + date.year,
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
+          keyword: key.toUpperCase(),
+          publishedDate: dataLists.dateline ,
           provider1: '',
           provider2: '',
-          description: val.featuredReport['postgame-report'].displayHeadline,
+          description: dataLists.displayHeadline,
           imageConfig: {
           imageClass: "image-100x56",
           hoverText: "View",
-          imageUrl: val.home.images[0] != null ? val.home.images[0] : sampleImage,
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute('postgame-report', val.event)
+          imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
       articleStackArray.push(s);
-    }
     });
+
     return articleStackArray;
   }
-  transformToAiHeavyArticleRow(data){
+  transformToAiHeavyArticleRow(data, key){
+    data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
-    var date = GlobalFunctions.formatDate(data.timestamp*1000);
-    var i = 1;
-    for (var key in data) {
-      if (data.hasOwnProperty(key) && data[key].displayHeadline != null && i <= 8) {
-        var s = {
-            stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId),
-            keyword: 'PLAYER COMPARISON',
-            publishedDate: date.month + " " + date.day + ", " + date.year,
-            provider1: '',
-            provider2: '',
-            description: data[key].displayHeadline,
-            imageConfig: {
-              imageClass: "image-100x56",
-              imageUrl: data[key].image != null ? data[key].image : sampleImage,
-              hoverText: "View",
-              urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, data.eventId)
-            }
-        }
-        articleStackArray.push(s);
-        i = i + 1;
+    data.forEach(function(val, index){
+      for(var p in val.article_data){
+        var eventType = val.article_data[p];
       }
-    }
+      var s = {
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
+          keyword: key.toUpperCase(),
+          publishedDate: eventType.dateline,
+          provider1: '',
+          provider2: '',
+          description: eventType.metaHeadline,
+          imageConfig: {
+            imageClass: "image-100x56",
+            hoverText: "View",
+            imageUrl: eventType.images != null ? eventType.images : sampleImage,
+            urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
+          }
+      }
+      articleStackArray.push(s);
+    });
     return articleStackArray;
   }
 

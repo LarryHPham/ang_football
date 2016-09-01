@@ -81,12 +81,12 @@ export class DailyUpdateService {
 
   private formatTeamData(data: APIDailyUpdateData, teamId: number): DailyUpdateData {
     // check if it report exists and it isn't just an error message string
-    if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" ) {
+    if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) ) {
       data['postgame-report'] = {
         displayHeadline: "Perez's hot bat not enough for Royals win",
         dateline: "Saturday, August 27, 2016 11:30 PM EDT",
         article: [
-          "<a href=\"/player/kansas-city-royals/salvador-perez/93144\">Lorem Ipsum</a> delor sid ex communicae desporado conica <a href=\"#\">Flur de Li</a>, rey dunesty flex beamer contorte<a href=\"#\">Sore cacorde tagain</a>.",
+          "<a href=\"/player/kansas-city-royals/salvador-perez/93144\">Lorem Ipsum</a> delor sid ex communicae desporado conica <a href=\"#\">Flur de Li</a>, rey dunesty flex beamer contorte <a href=\"#\">Sore cacorde tagain</a>.",
           "Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain."
         ],
       }

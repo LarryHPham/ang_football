@@ -80,8 +80,9 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
     subTabs:Array<any>;
 
     constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean) {
+
         this.tabActive = tabActive;
-        this.tableName = "<span class='text-heavy'>" + tabActive + "</span> " + " : Team Player Stats";
+        this.tableName = "<span class='text-heavy'>" + getTabTitle(tabActive).title + "</span> " + " : Team Player Stats";
         this.isActive = isActive;
 
         this.isTeamProfilePage = isTeamProfilePage;
@@ -112,8 +113,8 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "1DN", value: "Earned Run Average"}
                     ]
                 },
-                Recieving:{
-                    title: "Recieving",
+                Receiving:{
+                    title: "Receiving",
                     glossary:[
                         {key: "W/L", value: "Wins/Losses"},
                         {key: "BB", value: "Walks Pitched (Bases on Balls)"},
@@ -158,7 +159,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
 
         var currYear = new Date().getFullYear();
         var year = currYear-1;
-        for ( var i = 0; i < 1; i++ ) {
+        for ( var i = 0; i < 2; i++ ) {
             this.seasonIds.push({
                 key: year.toString(),
                 //value: i == 0 ? "Current Season" : year.toString() + " Season"
@@ -175,14 +176,12 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             },
             {
                 key:'Returning',value:'Returning'
-            },
-            {
-                key:'Safety',value:'Safety'
             }];
 
     }
 
     convertToCarouselItem(item: PlayerStatsData, index:number): SliderCarouselInput {
+       //console.log(item[istab],"this one");
         var description: Array<Link | string> = [];
         var tense = " has";
         var temporalInfo = "";
@@ -195,7 +194,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
         var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
         var playerLinkText = {
             route: playerRoute,
-            text: item.playerName,
+            text: item.playerFirstName+" "+item.playerLastName,
             class: 'text-heavy'
 
         }
@@ -206,22 +205,39 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
         }
 
         function getTabDescription(tabActive){
+
             return {
                 Passing:{
-                    description:[playerLinkText, tense + "a total of ## attempts with ## Completions, ## Passing Yards and ## Touchdowns."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " attempts with "+ item.stat2 +" Completions, " + item.stat3+ " Passing Yards and " + item.stat5 + " Touchdowns."],
                 },
                 Rushing:{
-                    description:[playerLinkText, tense + "a total of ## attempts with ## Completions, ## Rushing Yards and ## Touchdowns."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " attempts with "+ item.stat2 +" Rushing Yards, " + item.stat3+ " Average and " + item.stat4 + " Touchdowns."],
                 },
-                Recieving:{
-                    description:[playerLinkText, tense + "a total of ## Receptions, ## Completions, ## Recieving Yards and ## Average."],
+                Receiving:{
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Receptions "+  item.stat2+ " Targets " + item.stat3 + " Receiving Yards and " + item.stat4 + " Average."],
                 },
                 Defense:{
-                    description:[playerLinkText, tense + "a total of ## Solo Tackles, ## Assists, ## Total Tackles and ## sacks."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Solo Tackles "+ item.stat2 +" Assists " + item.stat3+ " Total Tackles and " + item.stat5 + " Sacks."],
                 },
                 Special:{
 
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+
                 },
+                kicking:{
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+
+                },
+                punting:{
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts "+ item.stat2 +" Yards " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
+
+
+                },
+                returning:{
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt "+ item.stat2 +" Yards " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
+
+                }
+
             }[tabActive];
         }
         return SliderCarousel.convertToCarouselItemType1(index, {
@@ -229,7 +245,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             copyrightInfo: GlobalSettings.getCopyrightInfo(),
             subheader: [" Player Stats - ", teamLinkText],
             profileNameLink: playerLinkText,
-            description: getTabDescription(this.tabActive).description,
+            description: this.tabActive =="Special"? getTabDescription(this.tabActive).description: getTabDescription(this.tabActive).description,
             lastUpdatedDate: item.displayDate,
             circleImageUrl: item.fullPlayerImageUrl,
             circleImageRoute: playerRoute
@@ -276,12 +292,13 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                 },{
                     headerValue: rows[0].stat3Type,
                     columnClass: "data-column",
+                    sortDirection: -1, //descending
                     isNumericType: true,
                     key: "stat3-type"
+
                 },{
                     headerValue: rows[0].stat4Type,
                     columnClass: "data-column",
-                    sortDirection: 1, //ascending
                     isNumericType: true,
                     key: "stat4-type"
                 },{
@@ -342,6 +359,10 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     sort : item.playerLastName + ', ' + item.playerFirstName,
                     link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
+                    bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
+                    bottomStat2:item.stat8 != null ? item.stat8: 'N/A',
+                    //bottomStat:'hi',
+                    //bottomStat2:'again',
                 },
                 "stat1-type":{
                     display:item.stat1 != null ? item.stat1: 'N/A',
@@ -351,14 +372,18 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     display:item.stat2 != null ? item.stat2: 'N/A',
                     sort : item.stat2 != null ? Number(item.stat2) : null,
                 },
+
                 "stat3-type":{
+
                     display:item.stat3 != null ? item.stat3: 'N/A',
                     sort : item.stat3 != null ? Number(item.stat3) : null,
+
                 },
                 "stat4-type":{
                     display:item.stat4 != null ? item.stat4: 'N/A',
                     sort : item.stat4 != null ? Number(item.stat4) : null,
                 },
+
                 "stat5-type":{
                     display:item.stat5 != null ? item.stat5: 'N/A',
                     sort : item.stat5 != null ? Number(item.stat5) : null,
@@ -370,7 +395,8 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                 "stat7-type":{
                     display:item.stat7 != null ? item.stat7: 'N/A',
                     sort : item.stat7 != null ? Number(item.stat7) : null,
-                },
+                }
+
 
             }[columnType];
         }
@@ -378,7 +404,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
 
 
 
-       return new CellData(presentColumn.display,presentColumn.sort,presentColumn.link,presentColumn.imageUrl);
+       return new CellData(presentColumn.display,presentColumn.sort,presentColumn.link,presentColumn.imageUrl, presentColumn.bottomStat, presentColumn.bottomStat2);
 
 
     }

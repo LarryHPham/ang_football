@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Output,EventEmitter, OnInit} from '@angular/core';
 import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
 import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
 import {DraftHistoryService} from '../../services/draft-history.service';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {ListPageService, positionMVPTabData} from '../../services/list-page.service';
 import {FooterStyle} from '../../fe-core/components/module-footer/module-footer.component';
 import {ProfileHeaderService} from '../../services/profile-header.service';
@@ -26,15 +27,22 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
     inputs:[]
 })
 
-export class MVPListPage implements OnInit {
+export class MVPListPage implements OnInit{
+
+  @Output() tabSelectedListener = new EventEmitter();
+
+  scope: string;
   tabs: Array<positionMVPTabData>;
   profileHeaderData: TitleInputData;
-
   paginationParameters:PaginationParameters;
   listType: string;
+  position: string;
+  tab: string;
+  pageNum: any;
   queryParams: any;
   isError: boolean = false;
   selectedTabName: string;
+  globalMVPPosition: string;
 
   footerStyle: FooterStyle = {
     ctaBoxClass: " mvp-page-car-footer",
@@ -46,37 +54,47 @@ export class MVPListPage implements OnInit {
               private _params: RouteParams,
               private _profileService: ProfileHeaderService,
               private _title: Title, private _router: Router) {
-    _title.setTitle(GlobalSettings.getPageTitle("MLB's Most Valuable Players"));
+    _title.setTitle(GlobalSettings.getPageTitle("Most Valuable Players"));
 
-    this.listType = _params.get("type");
-    if ( this.listType != "pitcher" ) {
-      this.listType = "batter";
-    }
+    GlobalSettings.getParentParams(this._router, parentParams => {
+        this.scope = parentParams.scope;
 
-    var pageNumber = Number(_params.get("pageNum"));
-    if ( !pageNumber ) {
-      pageNumber = 1;
-    }
+        this.listType = _params.get("type");
+        this.tab = _params.get("tab");
+        this.pageNum = _params.get("pageNum");
 
-    var tabKey = _params.get("tab");
-    this.queryParams = { //Initial load for mvp Data
-        profile: 'player',
-        listname: tabKey,
-        sort: 'asc',
-        conference: 'all',
-        division: 'all',
-        limit: 10,
-        pageNum: pageNumber
-    };
+        //Initial set for global MVP position
+        this.globalMVPPosition = this.listType;
+        this.position = this.listType;
+
+        if ( !this.pageNum ) {
+          this.pageNum = 1;
+        }
+
+        this.queryParams = { //Initial load for mvp Data
+          scope: this.scope, //TODO change to active scope
+          target: 'player',
+          position: this.listType,
+          statName: this.tab,
+          ordering: 'asc',
+          perPageCount: 50,
+          pageNumber: this.pageNum
+        };
+        this.startUp();
+    });
   }
 
   ngOnInit(){
+    this.position = this.listType;
+  }
+
+  startUp(){
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: "Most Valuable Players",
+      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.position+"s",
       icon: 'fa fa-map-marker'
     };
 
@@ -87,29 +105,34 @@ export class MVPListPage implements OnInit {
           imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
-          text3: "Most Valuable Players",
+          text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + VerticalGlobalFunctions.convertPositionAbbrv(this.listType)+"s",
           icon: 'fa fa-map-marker'
         };
         this.loadTabs();
       }, err => {
-        console.log("Error loading MLB profile");
+        console.log("Error loading profile");
       });
   }
-
+  ////////////////
+  //// BEGINNING OF INFINITE LOOP
+  ///////////////
   loadTabs() {
-
-    this.tabs = this._service.getMVPTabs(this.listType, 'page');
-    if ( this.tabs != null && this.tabs.length > 0 ) {
-      var selectedTab = this.tabs[0];
-      if ( this.queryParams.listname ) {
-        var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.listname);
-        if ( matchingTabs.length > 0 ) {
-          selectedTab = matchingTabs[0];
-        }
-      }
-      this.selectedTabName = selectedTab.tabDisplayTitle;
-      this.getStandardList(selectedTab);
-    }
+    // this.tabs = this._service.getMVPTabs(this.listType, 'page');
+    //
+    // if ( this.tabs != null && this.tabs.length > 0 ) {
+    //   var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
+    //
+    //   if ( this.queryParams.statName ) {
+    //     var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
+    //
+    //     if ( matchingTabs.length > 0 ) {
+    //       selectedTab = matchingTabs[0];
+    //     }
+    //   }
+    //   this.selectedTabName = selectedTab.tabDisplayTitle;
+    //
+    //   this.getStandardList(selectedTab);
+    // }
   }
 
   //PAGINATION
@@ -135,12 +158,14 @@ export class MVPListPage implements OnInit {
   }
 
   getStandardList(tab: positionMVPTabData){
-    this.queryParams.listname = tab.tabDataKey;
+
+    this.queryParams.statName = tab.tabDataKey;
+
     this._service.getListModuleService(tab, this.queryParams)
       .subscribe(
         tab => {
           if ( tab.data.listInfo ) {
-            tab.data.listInfo.pageNum = this.queryParams.pageNum;
+            tab.data.listInfo.pageNum = this.queryParams.pageNumber;
           }
           this.setPaginationParams(tab.data.listInfo);
         },
@@ -151,26 +176,61 @@ export class MVPListPage implements OnInit {
       );
   }
 
-  tabSelected(tab: positionMVPTabData) {
+  tabSelected(event) {
+
     var tabRoute;
     var tabNameFrom = this.selectedTabName; //get the tab we are changing from into a var before we change it
-    var tabNameTo = tab.tabDisplayTitle;
-    if ( this.selectedTabName != tab.tabDisplayTitle ) {
+    var tabNameTo = event.tab.tabDisplayTitle;
+
+    if ( this.selectedTabName != event.tab.tabDisplayTitle ) {
       this.queryParams.pageNum = 1;
     }
-    if (!tab.listData) { //let the page handle the service call if there's no data
-      this.getStandardList(tab);
+    if (!event.tab.listData) { //let the page handle the service call if there's no data
+      this.getStandardList(event.tab);
     }
     else {
-      this.setPaginationParams(tab.data.listInfo);
+      this.setPaginationParams(event.tab.data.listInfo);
     }
-    this.selectedTabName = tab.tabDisplayTitle;//line added to update the current tab variable when tabs are changed without reloading the page
+    this.selectedTabName = event.tab.tabDisplayTitle;//line added to update the current tab variable when tabs are changed without reloading the page
 
     //actually redirect the page on tab change to update the URL for deep linking and to fix the pagination bug
     if (tabNameTo !== tabNameFrom) {
-      tabRoute = ["MVP-list-tab-page", { type: this._params.params['type'], tab: tab.tabDataKey, pageNum: "1"}];
+      tabRoute = ["MVP-list-tab-page", { type: event.position, tab: event.tab.tabDataKey, pageNum: "1"}];
       this._router.navigate(tabRoute);
      }
+     this.tabs = this.checkToResetTabs(event);
 
-  }
+     if(event.tab != null){
+       var matches = this.checkMatchingTabs(event);
+       this.globalMVPPosition = event.position;
+
+       if (matches != null) {
+         tabRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: "1"}];
+         this._router.navigate(tabRoute);
+       }
+     }
+  } //tabSelected(tab: positionMVPTabData)
+
+  private checkToResetTabs(event) {
+    let localPosition = event.position;
+
+    if ( localPosition != this.globalMVPPosition ) {
+      return this._service.getMVPTabs(event.position, 'page');
+    } else {
+      return this.tabs;
+    } //private checkToResetTabs
+  } //private checkToResetTabs
+
+  private checkMatchingTabs(event) {
+    let tabRoute;
+    let localPosition = event.position;
+    let listName = event.tab.tabDataKey;
+
+    if(event.position != this.globalMVPPosition){
+      this.tabs[0].isLoaded = false;
+      return this.tabs[0];
+    } else {
+      return this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
+    }
+  } //private checkMatchingTabs
 }
