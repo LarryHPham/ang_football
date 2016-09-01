@@ -12,7 +12,6 @@ declare var moment;
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleUrl();
-  private _recUrl: string = GlobalSettings.getRecUrl();
 
   constructor(
     public http: Http,
@@ -145,10 +144,10 @@ export class DeepDiveService {
       });
   }
 
-  getRecArticleData(region, pageNum, pageCount){
+  getRecArticleData(scope){
     var headers = this.setToken();
     //this is the sidkeick url
-    var callURL = this._recUrl + "/" + region + "/" + pageNum + "/" + pageCount;
+    var callURL = this._articleUrl + "sidekick/NFL";//TODO won't need uppercase after ai fixes
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -258,7 +257,7 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             hoverText: "View",
-            imageUrl: eventType.images != null ? eventType.images : sampleImage,
+            imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
             urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
@@ -291,66 +290,42 @@ export class DeepDiveService {
     return articleStackData;
   }
   transformToRecArticles(data){
-    var articleTypes = [];
+    data = data.data;
+    var sampleImage = "/app/public/placeholder_XL.png";
+    var articleStackArray = [];
     var articles = [];
-    var images = [];
-
-    var homeId = data['meta-data']['current']['homeTeamId'];
-    var awayId = data['meta-data']['current']['awayTeamId'];
-
+    var eventID = null;
     for(var obj in data){
-      if(obj == "meta-data")continue;
-      articleTypes.push(obj);
-      articles.push(data[obj]);
-    }
-
-    var eventID = data['meta-data']['current']['eventId'];
-
-    //set up the images array
-    for(var obj in data['meta-data']['images']){
-      // -1 on the length of images array to reserve one image for home/away specific article photo
-      for(var i = 0; i < data['meta-data']['images'][obj].length - 1; i++){
-        images.push(data['meta-data']['images'][obj][i]);
+      if(obj != "meta-data" && obj != "timestamp"){
+        var a = {
+          keyword: obj,
+          info: data[obj]
+        }
+        articles.push(a);
+      } else {
+        var eventID = data['meta-data']['current']['eventID'];
       }
     }
-
-    // to mix up the images
-    function shuffle(a) {
-      var j, x, i;
-      for (i = a.length; i; i--) {
-        j = Math.floor(Math.random() * i);
-        x = a[i - 1];
-        a[i - 1] = a[j];
-        a[j] = x;
-      }
-    }
-    shuffle(images);
-
-    var ret = [];
-    for(var i = 0; i < 6; i++){
-      ret[i] = articles[i];
-      ret[i]['type'] = articleTypes[i];
-      if(ret[i]['type'].split('-')[1] == 'home'){
-        ret[i]['image'] = data['meta-data']['images'][homeId][data['meta-data']['images'][homeId].length - 1];
-      }else if(ret[i]['type'].split('-')[1]  == 'away'){
-        ret[i]['image'] = data['meta-data']['images'][awayId][data['meta-data']['images'][awayId].length - 1];
-      }else{
-        ret[i]['image'] = images[i];
-      }
-      ret[i]['keyword'] = ret[i]['sidekickTitle'].toUpperCase();
-      ret[i]['bg_image_var'] = this._sanitizer.bypassSecurityTrustStyle("url(" + ret[i]['image'] + ")");
-      ret[i]['new_date'] = VerticalGlobalFunctions.convertAiDate(ret[i]['dateline']);
-      ret[i]['event_id'] = eventID;
-    }
-    return ret;
+    articles = articles.slice(1,7);//get first 6 articles
+    articles.forEach(function(val, index){
+      var info = val.info;
+      var s = {
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
+          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
+          keyword: val.keyword,
+          new_date: info.dateline,
+          displayHeadline: info.displayHeadline,
+        }
+      articleStackArray.push(s);
+    });
+    return articleStackArray;
   }
 
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      let date = GlobalFunctions.formatDate(val.publishedDate);
-      val["date"] = date.month + " " + date.day + ", " + date.year + " " + date.time + " " + date.a + " EST";
-      val["image"] = GlobalSettings.getImageUrl(val.imagePath);
+      val["date"] = val.dateline;
+      val["image"] = GlobalSettings.getImageUrl(val.image);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}
     })
