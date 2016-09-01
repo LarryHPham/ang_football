@@ -33,13 +33,13 @@ export class ListOfListsService {
 
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
-
+    console.log(urlParams);
     let id      = urlParams.targetId != null ? urlParams.targetId : "";
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
     var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
-    let target = urlParams.target != null ? urlParams.target : "team";
+    let target = urlParams.target != null ? urlParams.target : "player";
 
-    console.log('url Pararms', urlParams);
+
     var url_api = "scope=" + 'nfl' + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + "&targetId=" + id;
 
     callURL += url_api;
@@ -59,7 +59,7 @@ export class ListOfListsService {
     // if(newParams.scope == 'nfl') {
     //   callURL+= "scope=" + newParams.scope + "&target=" + newParams.target + "&perPageCount=" + newParams.perPageCount + "&pageNumber=" + newParams.pageNumber + "&targetId=" + newParams.targetId;
     // }
-
+    console.log('LIST OF LISTS URL', callURL);
 
 
     return this.http.get( callURL, {
@@ -68,7 +68,7 @@ export class ListOfListsService {
       .map(res => res.json())
       .map(
         data => {
-          console.log('hello',data);
+          console.log('DATA', data);
 
           if ( !data || !data.data ) {
             return null;
@@ -167,7 +167,6 @@ export class ListOfListsService {
         carouselArray.push(carouselItem);
       });
     }
-     console.log('TRANSFORMED CAROUSEL', carouselArray);
     return carouselArray;
 
   }
@@ -204,7 +203,7 @@ export class ListOfListsService {
       //  let ctaUrlArray = itemListInfo.url.split("/");
       //let ctaUrlArray = 'test';
 
-      //:target/:statName/:ordering/:perPageCount/:pageNumber',
+      //:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
       /*
       let listRoute = ['List-page', {
         target      : kebabArr[0],
@@ -217,6 +216,7 @@ export class ListOfListsService {
       let ctaUrlArr = [
         itemTarget[0]['rankType'],
         itemTarget[0]['statType'],
+        itemInfo.seasons,
         itemInfo.ordering,
         10,
         1
@@ -257,11 +257,10 @@ export class ListOfListsService {
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
         // ctaUrl        : MLBGlobalFunctions.formatListRoute(ctaUrlArray)
-        //ctaUrl        : ctaUrl
+      //  ctaUrl        : null
         ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArr)  != null ? VerticalGlobalFunctions.formatListRoute(ctaUrlArr) : dummyUrl
       };
 
-      console.log(listData);
 
 
       itemListData.forEach(function(val, index) {
@@ -275,14 +274,24 @@ export class ListOfListsService {
 
           VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
           VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+
           // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
           let firstItemHover = "<p>View</p><p>Profile</p>";
+          
+          if (itemTarget[0].teamLogo == null) {
+            itemTarget[0].teamLogo = itemTarget[0].playerHeadshotUrl;
+          }
+          if (itemTarget[0].playerHeadshotUrl == null) {
+            itemTarget[0].playerHeadshotUrl = itemTarget[0].teamLogo;
+          }
+
+
         //  console.log('imageURL', val);
         listData.dataPoints.push(
           {
             imageClass : index > 0 ? "image-43" : "image-121",
             mainImage: {
-              imageUrl        : itemTarget[0].teamLogo != null ? GlobalSettings.getImageUrl(itemTarget[0].teamLogo) : GlobalSettings.getImageUrl(itemTarget[0].teamLogo),
+              imageUrl        : GlobalSettings.getImageUrl(itemTarget[0].teamLogo) != null ? GlobalSettings.getImageUrl(itemTarget[0].playerHeadshotUrl) : GlobalSettings.getImageUrl(itemTarget[0].playerHeadshotUrl),
               urlRouteArray   : version == "page" || index > 0 ? itemUrlRouteArray : null,
               hoverText       : index > 0 ? "<i class='fa fa-mail-forward'></i>" : firstItemHover,
               imageClass      : index > 0 ? "border-1" : "border-2"
@@ -301,7 +310,6 @@ export class ListOfListsService {
           }
         )
       });
-      console.log('listData.Datapoints',listData.dataPoints);
 
       listDataArray.push(listData);
     });

@@ -247,9 +247,10 @@ export class VerticalGlobalFunctions {
     let listRoute = ['List-page', {
       target      : urlArr[0],
       statName    : urlArr[1],
-      ordering    : urlArr[2],
-      perPageCount: urlArr[3],
-      pageNumber  : urlArr[4],
+      season      : urlArr[2],
+      ordering    : urlArr[3],
+      perPageCount: urlArr[4],
+      pageNumber  : urlArr[5]
 
     }];
     return listRoute;

@@ -233,7 +233,7 @@ export class TeamPage implements OnInit {
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
                 this.getSchedulesData('postgame');//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
+          //      this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -323,6 +323,7 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         id : this.pageParams.teamId
       }
+      console.log('NEWS SERVICE',this.scope,params);
         this._newsService.getNewsService(this.scope,params, "team", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;

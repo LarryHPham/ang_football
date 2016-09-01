@@ -338,13 +338,15 @@ export class LeaguePage implements OnInit {
 
     private setupListOfListsModule() {
         let params = {
+          targetId : 11621,
           limit : 4,
           pageNum : 1
         }
-        this._lolService.getListOfListsService(params, "league", "module")
+        this._lolService.getListOfListsService(params, "player", "module")
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
+                    this.listOfListsData["id"] = this.pageParams.teamId;
                     this.listOfListsData["type"] = "league";
                 },
                 err => {

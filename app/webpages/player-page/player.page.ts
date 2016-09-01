@@ -302,7 +302,6 @@ private dailyUpdateModule(playerId: number) {
                 console.log("Error getting news data");
             });
     }
-
     //api for BOX SCORES
     //function for MLB/Team Profiles
     private getBoxScores(dateParams?) {

@@ -42,7 +42,7 @@ export class NewsService {
     )
     .map(
       data => {
-        console.log('DATA FOR NEWS');
+        console.log('DATA FOR NEWS',data);
         return {
           news: this.newsData(data.data)
         };
@@ -54,13 +54,15 @@ export class NewsService {
     var newsArray = [];
     var dummyImg = "/app/public/no-image.svg";
     var _getHostName = GlobalFunctions.getHostName;
+    console.log(data);
     data.forEach(function(val, index){
       var News = {
         title: val.title,
         description: val.teaser.replace(/<\/?[^>]+(>|$)/g, ""),
         newsUrl: val.articleUrl,
         author: _getHostName(val.articleUrl) != null ? _getHostName(val.articleUrl) : 'Anonymous',
-        published: val.publishedDateFormatted,
+        published: moment(+val.publishedDate).format("dddd MMMM do, YYYY"),
+        backgroundImage: GlobalSettings.getImageUrl('/TDL/stock_images/TDL_Stock-3.png'),
         footerData: {
           infoDesc: 'Want to check out the full story?',
           text: 'READ THE ARTICLE',
