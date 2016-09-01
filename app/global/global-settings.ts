@@ -17,7 +17,7 @@ export class GlobalSettings {
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php'
 
     private static _imageUrl:string = 'images.synapsys.us';
-    private static _articleUrl:string = '-homerunloyal-ai.synapsys.us/';
+    private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
     private static _recommendUrl:string = '-homerunloyal-ai.synapsys.us/headlines/event/';
     private static _headlineUrl:string = '-homerunloyal-ai.synapsys.us/headlines/team/';
     private static _trendingUrl:string = '-homerunloyal-ai.synapsys.us/sidekick';

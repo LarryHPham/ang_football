@@ -64,7 +64,7 @@ export class PlayerStatsService implements OnDestroy{
             }
         }else{
              columnTabType = tabData[1];
-            console.log(tabData ,"this one sort")
+            //console.log(tabData ,"this one sort")
             if ( !columnTabType && standingsTab.subTabs.length > 0 ) {
                 columnTabType = standingsTab.subTabs[0].key;
 
@@ -151,7 +151,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
         });
-        console.log(table, standingsTab.tabActive, this.tabName," now check");
+        //.log(table, standingsTab.tabActive, this.tabName," now check");
         return table;
     }
 }

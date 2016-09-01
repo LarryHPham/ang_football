@@ -61,15 +61,15 @@ export class StandingsService {
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an TLD page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
-      tabs.push(this.createTab(false, currentTeamId, Conference.afc));//TODO
-      tabs.push(this.createTab(false, currentTeamId, Conference.nfc));//TODO
+      tabs.push(this.createTab(false, currentTeamId, "Division"));//TODO
+      tabs.push(this.createTab(false, currentTeamId, "Conference"));//TODO
       tabs.push(this.createTab(true, currentTeamId));
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
       //Is a League page: show All Divisions, then American, then National
       tabs.push(this.createTab(false, currentTeamId));
       tabs.push(this.createTab(pageParams.conference === Conference.afc, currentTeamId, Conference.afc));
-      tabs.push(this.createTab(pageParams.conference === Conference.nfc, currentTeamId, Conference.nfc));
+      tabs.push(this.createTab(pageParams.conference === Conference.NFC, currentTeamId, Conference.NFC));
     }
     else {
       //Is a Team page: show team's division, then team's league, then MLB
@@ -94,18 +94,15 @@ export class StandingsService {
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       //TODO
-      if ( standingsTab.conference !== undefined ) {
-      //  url += "/conference/" + Conference[standingsTab.conference];
-       url += "/conference/nfl";
-      } else {
-       url += "/league/nfl";
-      }
+
+      url += "/division/nfl/2015";
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
       this.http.get(url)
         .map(res => res.json())
         .map(data => this.setupTabData(standingsTab, data.data, maxRows))
         .subscribe(data => {
+          // console.log("data", data);
           standingsTab.isLoaded = true;
           standingsTab.hasError = false;
           standingsTab.sections = data;
@@ -124,13 +121,14 @@ export class StandingsService {
 
   private createTab(selectTab: boolean, teamId: string, conference?: Conference, division?: Division) {
     let title = this.formatGroupName(conference, division) + " Standings";
+    //console.log("createTab", conference, division);
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
 
   private setupTabData(standingsTab: TDLStandingsTabdata, apiData: any, maxRows: number): Array<VerticalStandingsTableData> {
     var sections: Array<VerticalStandingsTableData> = [];
     var totalRows = 0;
-
+    //console.log("setupTabData", standingsTab);
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
       standingsTab.division !== null && standingsTab.division !== undefined ) {
       //get only the single division
