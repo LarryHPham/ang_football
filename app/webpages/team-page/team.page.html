@@ -1,5 +1,5 @@
 <sidekick-wrapper>
-<section class="page profile-container team-page">
+<section class="page profile-container">
   <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
   <error-component *ngIf="hasError"></error-component>
   <div *ngIf="profileHeaderData && pageParams">
@@ -12,11 +12,11 @@
     <!-- <headline-component [title]="'Keep Up With Everything ' + profileHeaderData.profileName"></headline-component> -->
     <box-scores *ngIf="dateParam" [boxScores]="currentBoxScores" [calendarParams]="dateParam" (dateEmit)="getBoxScores($event)"></box-scores>
     <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-    <schedules *ngIf="schedulesData" [profHeader]="profileHeaderData" [data]="schedulesData" [filter1]="scheduleFilter1" [filter2]="scheduleFilter2" (tabSelected)="scheduleTab($event)" (selectedKeyFilter)="filterDropdown($event)"></schedules>
+    <schedules *ngIf="schedulesData" [profHeader]="profileHeaderData" [data]="schedulesData" (tabSelected)="scheduleTab($event)"></schedules>
     <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)"></standings-module>
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace"></responsive-widget>
     <team-roster-module *ngIf="rosterData" [data]="rosterData"></team-roster-module>
-    <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
+    <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" [profileHeader]="profileHeaderData" [profileData]="profileData" (tabSelected)="playerStatsTabSelected($event)" ></player-stats-module>
     <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <transactions-module *ngIf="transactionsData" [data]="transactionsData" (tabSwitched)="transactionsTab($event)"></transactions-module>
     <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>

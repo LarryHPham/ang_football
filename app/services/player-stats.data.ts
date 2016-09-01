@@ -290,16 +290,17 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     isNumericType: true,
                     key: "stat2-type"
                 },{
+                    headerValue: rows[0].stat3Type,
+                    columnClass: "data-column",
+                    sortDirection: -1, //descending
+                    isNumericType: true,
+                    key: "stat3-type"
+
+                },{
                     headerValue: rows[0].stat4Type,
                     columnClass: "data-column",
                     isNumericType: true,
                     key: "stat4-type"
-                },{
-                    headerValue: rows[0].stat3Type,
-                    columnClass: "data-column",
-                    sortDirection: 1, //ascending
-                    isNumericType: true,
-                    key: "stat3-type"
                 },{
                     headerValue: rows[0].stat5Type,
                     columnClass: "data-column",
@@ -371,16 +372,18 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     display:item.stat2 != null ? item.stat2: 'N/A',
                     sort : item.stat2 != null ? Number(item.stat2) : null,
                 },
-                "stat4-type":{
-                    display:item.stat4 != null ? item.stat4: 'N/A',
-                    sort : item.stat4 != null ? Number(item.stat4) : null,
-                },
+
                 "stat3-type":{
 
                     display:item.stat3 != null ? item.stat3: 'N/A',
                     sort : item.stat3 != null ? Number(item.stat3) : null,
 
                 },
+                "stat4-type":{
+                    display:item.stat4 != null ? item.stat4: 'N/A',
+                    sort : item.stat4 != null ? Number(item.stat4) : null,
+                },
+
                 "stat5-type":{
                     display:item.stat5 != null ? item.stat5: 'N/A',
                     sort : item.stat5 != null ? Number(item.stat5) : null,

@@ -1,5 +1,5 @@
 export enum Season { regularSeason, postSeason }//TODO - regularSeason, postSeason
-export enum Conference { afc, nfc } //to get string value: Conference[myValue], where myValues is a Conference value
+export enum Conference { AFC, NFC } //to get string value: Conference[myValue], where myValues is a Conference value
 export enum Division { east, west, north, south }  //to get string value: Year[myValue], where myValues is a Year value
 export interface SportPageParameters {
   conference?: Conference;
