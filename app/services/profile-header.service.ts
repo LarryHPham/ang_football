@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
 
+import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
@@ -48,7 +49,7 @@ interface PlayerProfileHeaderData {
     dob: string;
     height: string;
     weight: number;
-    playerHeadShot?: string; //todo - missing
+    playerHeadshotUrl?: string; //todo - missing
     backgroundUrl: string; //todo - missing
     seasonId: string;
     lastUpdated: string;
@@ -60,16 +61,16 @@ interface PlayerProfileHeaderData {
     draftTeam?: string;
 
   //Stats
-    stat1: number;
+    stat1: any;
     stat1Type: string;
     stat1Desc: string;
-    stat2: number;
+    stat2: any;
     stat2Type: string;
     stat2Desc: string;
-    stat3: number;
+    stat3: any;
     stat3Type: string;
     stat3Desc: string;
-    stat4: number;
+    stat4: any;
     stat4Type: string;
     stat4Desc: string;
 }
@@ -142,12 +143,19 @@ export class ProfileHeaderService {
 
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public scope: string;
 
-  constructor(public http: Http){}
+  constructor(public http: Http, private _router:Router){
+    GlobalSettings.getParentParams(_router, parentParams =>
+      this.scope = parentParams.scope
+    );
+  }
 
   getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
-    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
+
+    console.log(url);
 
     return this.http.get(url)
         .map(res => res.json())
@@ -166,7 +174,7 @@ export class ProfileHeaderService {
               playerName: headerData.playerFullName
             },
             fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
-            fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadShot),
+            fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
             headerData: headerData,
             profileName: headerData.playerFullName,
             profileId: headerData.playerId.toString(),
@@ -176,7 +184,7 @@ export class ProfileHeaderService {
   } //getPlayerProfile
 
   getTeamProfile(teamId: number): Observable<TeamProfileData> {
-    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/team/' + teamId;
 
     return this.http.get(url)
@@ -192,7 +200,7 @@ export class ProfileHeaderService {
               conference: headerData.conferenceName,
             },
             fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
-            fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.profileImage),
+            fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
             headerData: headerData,
             teamName: headerData.teamName,
             profileName: headerData.teamName,
@@ -203,7 +211,7 @@ export class ProfileHeaderService {
   } //getTeamProfile
 
   getLeagueProfile(scope?): Observable<LeagueProfileData> {
-    let url = 'http://dev-touchdownloyal-api.synapsys.us';
+    let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/league/' + scope;
 
     return this.http.get(url)
@@ -251,7 +259,6 @@ export class ProfileHeaderService {
     if (!data.headerData) {
       return null;
     }
-
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
@@ -261,7 +268,7 @@ export class ProfileHeaderService {
     var yearPluralStr = "years";
 
     var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
-    var formattedHeight = VerticalGlobalFunctions.formatHeightWithFoot(headerData.height); //[6-foot-11]
+    var formattedHeight = headerData.height ? VerticalGlobalFunctions.formatHeightWithFoot(headerData.height) : "N/A"; //[6-foot-11]
     var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
@@ -282,15 +289,69 @@ export class ProfileHeaderService {
     }
 
     var description;
-    //NCAA
-    if ( headerData.class != null ) {
+    //NCAA - specific data points for NCAA
+    if ( this.scope != this.sportLeagueAbbrv.toLowerCase() ) {
       description = headerData.playerFullName + " a " +
                     headerData.class + " " +
                     headerData.position + " for the " +
                     fullTeamName + " is No. " +
-                    headerData.jerseyNumber + " and stands at " +
-                    formattedHeight + " tall and weighs in at " +
-                    formattedWeight + " lbs."
+                    headerData.jerseyNumber;
+
+                    if (formattedHeight != "N/A") {
+                        description = description + " and stands at " +
+                        formattedHeight + " tall";
+                    }
+                    if ( formattedWeight != "N/A" ) {
+                      description = description + " and weighs in at " + formattedWeight
+                    }
+                    description = description + ".";
+
+      var header: ProfileHeaderData = {
+        profileName: headerData.playerFullName,
+        profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
+        backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
+        profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
+        profileTitleLastPart: '',
+        lastUpdatedDate: headerData.lastUpdated,
+        description: description,
+        topDataPoints: [
+          {
+            label: "Team",
+            value: headerData.teamFullName,
+            routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
+          },
+          {
+            label: "Jersey Number",
+            value: headerData.jerseyNumber ? '#'+headerData.jerseyNumber.toString() : null
+          },
+          {
+            label: "Position",
+            value: headerData.position ? headerData.position.toString() : null //todo
+          }
+        ],
+        bottomDataPoints: [
+          {
+            label: headerData.stat1Type,
+            labelCont: headerData.stat1Desc,
+            value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(headerData.stat1) ) : null
+          },
+          {
+            label: headerData.stat2Type,
+            labelCont: headerData.stat1Desc,
+            value: headerData.stat2 ? GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(headerData.stat2) ) : null
+          },
+          {
+            label: headerData.stat3Type,
+            labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
+            value: headerData.stat3 ? VerticalGlobalFunctions.formatHeightDigits(headerData.stat3).toString() : null
+          },
+          {
+            label: headerData.stat4Type,
+            labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
+            value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
+          }
+        ]
+      } //var header: ProfileHeaderData = {
     }
     //PRO
     else {
@@ -303,56 +364,62 @@ export class ProfileHeaderService {
                     headerData.playerFirstName + " was born in " +
                     formattedBirthlocation + " on " +
                     formattedBirthDate + " and is " +
-                    formattedAge + " years old, with a height of " +
-                    formattedHeight + " and weighing in at " +
-                    formattedWeight + "lbs.";
-    }
+                    formattedAge;
 
-    var header: ProfileHeaderData = {
-      profileName: headerData.playerFullName,
-      profileImageUrl: headerData.playerHeadShot,
-      backgroundImageUrl: headerData.backgroundUrl,
-      profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
-      profileTitleLastPart: '',
-      lastUpdatedDate: headerData.lastUpdated,
-      description: description,
-      topDataPoints: [
-        {
-          label: "Team",
-          value: headerData.teamFullName,
-          routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
-        },
-        {
-          label: "Jersey Number",
-          value: headerData.jerseyNumber ? '#'+headerData.jerseyNumber.toString() : null
-        },
-        {
-          label: "Position",
-          value: headerData.position ? headerData.position.toString() : null //todo
-        }
-      ],
-      bottomDataPoints: [
-        {
-          label: headerData.stat1Type,
-          labelCont: headerData.stat1Desc,
-          value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber(headerData.stat1) : null
-        },
-        {
-          label: headerData.stat2Type,
-          labelCont: headerData.stat1Desc,
-          value: headerData.stat2 ? GlobalFunctions.commaSeparateNumber(headerData.stat2).toString() : null
-        },
-        {
-          label: headerData.stat3Type,
-          labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
-          value: headerData.stat3 ? GlobalFunctions.commaSeparateNumber(headerData.stat3).toString() : null
-        },
-        {
-          label: headerData.stat4Type,
-          labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-          value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
-        }
-      ]
+                    if (formattedHeight != "N/A") {
+                        description = description + ", with a height of " + formattedHeight;
+                    }
+                    if ( formattedWeight != "N/A" ) {
+                      description = description + " and weighing in at " + formattedWeight
+                    }
+                    description = description + ".";
+
+      var header: ProfileHeaderData = {
+        profileName: headerData.playerFullName,
+        profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
+        backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
+        profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
+        profileTitleLastPart: '',
+        lastUpdatedDate: headerData.lastUpdated,
+        description: description,
+        topDataPoints: [
+          {
+            label: "Team",
+            value: headerData.teamFullName,
+            routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
+          },
+          {
+            label: "Jersey Number",
+            value: headerData.jerseyNumber ? '#'+headerData.jerseyNumber.toString() : null
+          },
+          {
+            label: "Position",
+            value: headerData.position ? headerData.position.toString() : null //todo
+          }
+        ],
+        bottomDataPoints: [
+          {
+            label: headerData.stat1Type,
+            labelCont: headerData.stat1Desc,
+            value: headerData.stat1 ? GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(headerData.stat1) ) : null
+          },
+          {
+            label: headerData.stat2Type,
+            labelCont: headerData.stat1Desc,
+            value: headerData.stat2 ?  GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(headerData.stat2) ) : null
+          },
+          {
+            label: headerData.stat3Type,
+            labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
+            value: headerData.stat3 ? GlobalFunctions.commaSeparateNumber(headerData.stat3).toString() : null
+          },
+          {
+            label: headerData.stat4Type,
+            labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
+            value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
+          }
+        ]
+      } //var header: ProfileHeaderData = {
     }
 
     return header;
@@ -379,8 +446,8 @@ export class ProfileHeaderService {
 
     var header: ProfileHeaderData = {
       profileName: headerData.teamName,
-      profileImageUrl: headerData.backgroundUrl,
-      backgroundImageUrl: headerData.backgroundUrl,
+      profileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
+      backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
       profileTitleFirstPart: headerData.teamMarket,
       profileTitleLastPart: headerData.teamName,
       lastUpdatedDate: headerData.lastUpdated,
@@ -442,7 +509,7 @@ export class ProfileHeaderService {
     }
 
     var description = "The "+leagueAbbreviatedName+" consists of " + GlobalFunctions.formatNumber(data.totalTeams) +
-                      " teams and " + GlobalFunctions.formatNumber(data.totalPlayers) + " players. " +
+                      " teams and " + GlobalFunctions.commaSeparateNumber(data.totalPlayers) + " players. " +
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
