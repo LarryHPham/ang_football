@@ -120,8 +120,8 @@ export class DeepDivePage implements OnInit{
       }
     }
 
-    private getDeepDiveVideoBatch(region, numItems, startNum){
-        this._deepDiveData.getDeepDiveVideoBatchService(numItems, startNum, region).subscribe(
+    private getDeepDiveVideoBatch(){
+        this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
           data => {
             this.videoData = data.data;
           }
