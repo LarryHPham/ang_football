@@ -4,6 +4,7 @@ import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalFunctions} from "../../global/global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from "../../global/global-settings";
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
@@ -11,8 +12,6 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {CommentModule} from '../../fe-core/modules/comment/comment.module';
 import {HeadlineComponent} from '../../fe-core/components/headline/headline.component';
-
-
 
 import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
 
@@ -156,8 +155,9 @@ export class TeamPage implements OnInit {
     // currentYear: any;
 
     schedulesData:any;
-    scheduleFilter1:any;
-    scheduleFilter2:any;
+    scheduleFilter1:Array<any>;
+    selectedFilter1:string;
+    eventStatus: any;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -232,7 +232,8 @@ export class TeamPage implements OnInit {
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
-                this.getSchedulesData('postgame');//grab pregame data for upcoming games
+                this.eventStatus = 'pregame';
+                this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
@@ -341,33 +342,34 @@ export class TeamPage implements OnInit {
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pregame');
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('postgame');
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
         }else{
-            this.getSchedulesData('postgame');// fall back just in case no status event is present
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
         }
     }
     private filterDropdown(filter){
-      //TODO
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
     }
 
     //api for Schedules
     private getSchedulesData(status, year?){
       var limit = 5;
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-        this.scheduleFilter1=[
-          {key:'2016', value: '2016'},
-          {key:'2015', value: '2015'},
-          {key:'2014', value: '2014'},
-          {key:'2013', value: '2013'}
-        ];
-        this.scheduleFilter2=[
-          {key:'1', value: 'Week1'},
-          {key:'2', value: 'Week2'},
-          {key:'3', value: 'Week3'},
-          {key:'4', value: 'Week4'}
-        ];
+        console.log(schedulesData);
+        if(status == 'pregame'){
+          this.scheduleFilter1=null;
+        }else{
+          console.log('SCHEDULE FILTER 1 ',this.scheduleFilter1);
+          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            this.scheduleFilter1 = schedulesData.seasons;
+          }
+        }
         this.schedulesData = schedulesData;
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }

@@ -83,7 +83,7 @@ export class SchedulesService {
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-    // console.log(callURL);
+    console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -95,11 +95,6 @@ export class SchedulesService {
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
     var displayYear;
     var eventTab:boolean = false;
-
-    if(typeof year == 'undefined'){
-      year = new Date().getFullYear();//once we have historic data we shall show this
-      year = 2015;// TODO test
-    }
 
     if(jsYear == year){
       displayYear = "Current Season";
@@ -131,14 +126,24 @@ export class SchedulesService {
           pageInfo:{
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
-          }
+          },
+          seasons: data.data != null ? this.formatYearDropdown(data.data.info.seasons):null
         }
         callback(scheduleData);
       }
     })
   }
 
-
+  formatYearDropdown(data){
+    let yearArray = [];
+    data.forEach(function(val){
+      let yearObj = {};
+      yearObj['key'] = val;
+      yearObj['value'] = val;
+      yearArray.push(yearObj);
+    })
+    return yearArray;
+  }
 
   setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
     this.getSchedule(scope, 'league', eventStatus, limit, pageNum)

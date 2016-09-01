@@ -62,7 +62,6 @@ export class VerticalGlobalFunctions {
     return articleRoute ? articleRoute : ['Error-page'];
   }
 
-
   /**
      * - Pass in datapoints to required parameters and formats
    * them into a single route that is in lowerCase Kebab.
@@ -183,47 +182,54 @@ export class VerticalGlobalFunctions {
     }
   }
 
-  // static MLBPosition(position: string): string{
-  //     if( typeof position == 'undefined' || position === null){
-  //       return position;
-  //     }
-  //     var posFullName = {
-  //       1: 'Pitcher',
-  //       2: 'Catcher',
-  //       3: '1st Baseman',
-  //       4: '2nd Baseman',
-  //       5: '3rd Baseman',
-  //       6: 'Shortstop',
-  //       7: 'Left Field',
-  //       8: 'Center Field',
-  //       9: 'Right Field',
-  //       D: 'Designated Hitter'
-  //     };
-  //     let upperPosition = position.toUpperCase();
-  //     let displayPosition = posFullName[upperPosition];
-  //     return displayPosition !== undefined ? displayPosition: position;
-  //   }
-
-  // static MLBPositionToAB(position: string): string{
-  //     if( typeof position == 'undefined' || position === null ){
-  //       return 'DH';
-  //     }
-  //     var posAbbrName = {
-  //       1: 'P',
-  //       2: 'C',
-  //       3: '1B',
-  //       4: '2B',
-  //       5: '3B',
-  //       6: 'S',
-  //       7: 'LF',
-  //       8: 'CF',
-  //       9: 'RF',
-  //       D: 'DH',
-  //     };
-  //     let upperPosition = position.toUpperCase();
-  //     let displayAbbrPosition = posAbbrName[upperPosition];
-  //     return displayAbbrPosition !== undefined ? displayAbbrPosition: position;
-  //   }
+  static getWeekDropdown(scope){
+    let weekDropdown = []
+    if(scope == 'nfl'){
+      weekDropdown = [
+        {key:'1', value: 'Week1'},
+        {key:'2', value: 'Week2'},
+        {key:'3', value: 'Week3'},
+        {key:'4', value: 'Week4'},
+        {key:'5', value: 'Week5'},
+        {key:'6', value: 'Week6'},
+        {key:'7', value: 'Week7'},
+        {key:'8', value: 'Week8'},
+        {key:'9', value: 'Week9'},
+        {key:'10', value: 'Week10'},
+        {key:'11', value: 'Week11'},
+        {key:'12', value: 'Week12'},
+        {key:'13', value: 'Week13'},
+        {key:'14', value: 'Week14'},
+        {key:'15', value: 'Week15'},
+        {key:'16', value: 'Week16'},
+        {key:'17', value: 'Week17'},
+        {key:'18', value: 'Wild Card'},
+        {key:'19', value: 'Divisional Round'},
+        {key:'20', value: 'Pro Bowl'},
+        {key:'21', value: 'Super Bowl'},
+      ];
+    }else if (scope == 'ncaaf'){
+      weekDropdown = [
+        {key:'1', value: 'Week1'},
+        {key:'2', value: 'Week2'},
+        {key:'3', value: 'Week3'},
+        {key:'4', value: 'Week4'},
+        {key:'5', value: 'Week5'},
+        {key:'6', value: 'Week6'},
+        {key:'7', value: 'Week7'},
+        {key:'8', value: 'Week8'},
+        {key:'9', value: 'Week9'},
+        {key:'10', value: 'Week10'},
+        {key:'11', value: 'Week11'},
+        {key:'12', value: 'Week12'},
+        {key:'13', value: 'Week13'},
+        {key:'14', value: 'Week14'},
+        {key:'15', value: 'Week15'},
+        {key:'16', value: 'Bowls'}
+      ];
+    }
+    return weekDropdown;
+  }
 
 
   /**
