@@ -50,10 +50,10 @@ export class DeepDiveService {
   } else {
     callURL += 'nfl';
   }
-  callURL += '/' + limit + '/' + startNum;
-  if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    callURL += '/' + state;
+  if(state == null){
+    state = 'CA';
   }
+  callURL += '/' + limit + '/' + startNum + '/' + state;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -88,7 +88,7 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiBatchService(scope, key?, page?, count?){
+  getDeepDiveAiBatchService(scope, key?, page?, count?, state?){
   //Configure HTTP Headers
   var headers = this.setToken();
   if(scope == null){
@@ -97,13 +97,15 @@ export class DeepDiveService {
   if(key == null){
     key == "postgame-report";
   }
-  key = key.replace(' ', '-');
   var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
   if(page == null || count == null){
     page = 1;
     count = 1;
   }
-  callURL += '&page=' + page + '&count=' + count;
+  if(state == null){
+    state = 'CA';
+  }
+  callURL += '&page=' + page + '&count=' + count + '&state=' + state;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -111,21 +113,25 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?){//TODO update api call
+  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?, state?){//TODO update api call
   //Configure HTTP Headers
   var headers = this.setToken();
   if(scope == null){
     scope = 'nfl';
   }
   if(key == null){
-    key == "player comparisons";
+    key == "player-comparisons";
   }
   var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
   if(page == null || count == null){
     page = 1;
     count = 1;
   }
-  callURL += '&page=' + page + '&count=' + count;
+  if(state == null){
+    state = 'CA';
+  }
+  callURL += '&page=' + page + '&count=' + count + '&state=' + state;
+  console.log("url", callURL);
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -220,10 +226,11 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var dataLists = val.article_data[p];
       }
+      var date = dataLists.dateline;
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
           keyword: key.toUpperCase(),
-          publishedDate: dataLists.dateline ,
+          publishedDate: date,
           provider1: '',
           provider2: '',
           description: dataLists.displayHeadline,
@@ -239,6 +246,7 @@ export class DeepDiveService {
 
     return articleStackArray;
   }
+
   transformToAiHeavyArticleRow(data, key){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
@@ -266,7 +274,6 @@ export class DeepDiveService {
     return articleStackArray;
   }
 
-
   transformToArticleStack(data){
     var sampleImage = "/app/public/placeholder_XL.png";
     var topData = data.data[0];
@@ -289,6 +296,7 @@ export class DeepDiveService {
     };
     return articleStackData;
   }
+
   transformToRecArticles(data){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
@@ -309,10 +317,14 @@ export class DeepDiveService {
     articles = articles.slice(1,7);//get first 6 articles
     articles.forEach(function(val, index){
       var info = val.info;
+      //TODO
+      /*var month = info.substr(0, date.indexOf(' ');
+      month = GlobalFunctions.formatAPMonth(Number(month));
+      console.log(month);*/
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
-          keyword: val.keyword,
+          keyword: val.keyword.toUpperCase(),
           new_date: info.dateline,
           displayHeadline: info.displayHeadline,
         }
@@ -331,9 +343,12 @@ export class DeepDiveService {
     })
     return data;
   }
-  transformTileStack(data) {
+  transformTileStack(data, scope) {
     data = data.data;
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the MLB'];
+    if(scope == null){
+      scope = 'NFL';
+    }
+    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope];
     let pickATeam = ['Pick-team-page'];
     let leaguePage = ['League-page'];
     var tileLink = [pickATeam, pickATeam, leaguePage];
