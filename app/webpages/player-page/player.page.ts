@@ -280,7 +280,12 @@ private dailyUpdateModule(playerId: number) {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService(this.profileName)
+      let params = {
+        limit:10,
+        pageNum:1,
+        id: this.pageParams.teamId
+      }
+        this._newsService.getNewsService(this.scope,params,'player','module')
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },

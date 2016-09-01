@@ -90,14 +90,14 @@ export class ListOfListsPage implements OnInit{
                 switch ( urlParams.target ) {
                     case "player":
                         profileName = list.targetData[0].playerFirstName + " " + list.targetData[0].playerLastName;
-                    //    profileRoute = MLBGlobalFunctions.formatPlayerRoute(list.targetData.teamName, list.targetData.playerName, list.targetData.playerId);
-                    //    profileImage = GlobalSettings.getImageUrl(list.targetData.imageUrl);
+                        profileRoute = VerticalGlobalFunctions.formatPlayerRoute(list.targetData[0].teamName, profileName, list.targetData[0].playerId);
+                    //    profileImage = GlobalSettings.getImageUrl(list.targetData[0].imageUrl);
                         break;
 
                     case "team":
                         profileName = list.targetData[0].teamName;
-                    //    profileRoute = MLBGlobalFunctions.formatTeamRoute(list.targetData[0].teamName, list.targetData[0].teamId);
-                      //  profileImage = GlobalSettings.getImageUrl(list.targetData.teamLogo);
+                        profileRoute = VerticalGlobalFunctions.formatTeamRoute(list.targetData[0].teamName, list.targetData[0].teamId);
+                      //  profileImage = GlobalSettings.getImageUrl(list.targetData[0].teamLogo);
 
                         break;
 
@@ -128,22 +128,22 @@ export class ListOfListsPage implements OnInit{
     //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
     setPaginationParams(input) {
         var params = this._params.params;
-
+        console.log('apparently these are the params',this._params.params);
         var navigationParams = {
-            limit      : params['limit'],
-            pageNum    : params['pageNum'],
+            limit      : params['perPageCount'],
+            pageNum    : params['pageNumber'],
         };
 
         if(params['scope'] != null) {
            navigationParams['scope'] = params['scope'];
         }
 
-        if(params['id'] != null) {
-           navigationParams['id'] = params['id'];
+        if(params['targetId'] != null) {
+           navigationParams['targetId'] = params['targetId'];
         }
 
         if ( this.pageType != "league" ) {
-           navigationParams['type'] = this.pageType;
+           navigationParams['target'] = this.pageType;
         }
 
         var navigationPage = this.pageType == "league" ? 'List-of-lists-league-page' : 'List-of-lists-page';
@@ -155,7 +155,7 @@ export class ListOfListsPage implements OnInit{
         }
 
         this.paginationParameters = {
-            index: params['pageNum'] != null ? Number(params['pageNum']) : null,
+            index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
             max: Number(input.pageCount),
             paginationType: 'page',
             navigationPage: navigationPage,

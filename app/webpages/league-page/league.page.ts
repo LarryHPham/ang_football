@@ -358,7 +358,12 @@ export class LeaguePage implements OnInit {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService('Major League Baseball')
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id: ''
+      }
+        this._newsService.getNewsService(this.scope,params, "league", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },

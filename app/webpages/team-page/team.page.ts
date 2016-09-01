@@ -317,7 +317,12 @@ export class TeamPage implements OnInit {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService(this.profileName)
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id : this.pageParams.teamId
+      }
+        this._newsService.getNewsService(this.scope,params, "team", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },

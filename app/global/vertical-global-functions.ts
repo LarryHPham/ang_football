@@ -231,21 +231,20 @@ export class VerticalGlobalFunctions {
    * @param urlArr
    * @returns {any}
    */
-  //path: '/list/:profile/:listname/:sort/:conference/:division/:limit/:pageNum',
+  //path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
   static formatListRoute(urlArr: Array<any>): Array<any> {
     for(var arg in urlArr) {
       if (arg == null) return ['Error-page'];
     }
-    let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
+    // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
 
     let listRoute = ['List-page', {
-      profile     : kebabArr[0],
-      listname    : kebabArr[1],
-      sort        : kebabArr[2],
-      conference  : kebabArr[3],
-      division    : kebabArr[4],
-      limit       : kebabArr[5],
-      pageNum     : kebabArr[6]
+      target      : urlArr[0],
+      statName    : urlArr[1],
+      ordering    : urlArr[2],
+      perPageCount: urlArr[3],
+      pageNumber  : urlArr[4],
+
     }];
     return listRoute;
   }

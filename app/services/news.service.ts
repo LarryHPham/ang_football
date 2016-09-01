@@ -7,7 +7,7 @@ import {GlobalSettings} from '../global/global-settings';
 declare var moment: any;
 @Injectable()
 export class NewsService {
-  private _apiUrl: string = GlobalSettings.getNewsUrl();
+  private _apiUrl: string = GlobalSettings.getApiUrl();
   constructor(public http: Http){}
 
   setToken(){
@@ -15,12 +15,25 @@ export class NewsService {
     return headers;
   }
 
-  getNewsService(newsSubject){
+  getNewsService(scope, urlParams, profileType: string, pageType: string){
     var headers = this.setToken();
-    var fullUrl = this._apiUrl + "/news/?action=get_sports_news&q=";
-    if(typeof newsSubject != "undefined"){
-      fullUrl += newsSubject;
+    var fullUrl = this._apiUrl;
+    let type;
+    if (profileType == "team" || profileType == "player" ) {
+      type = "articleBatchTeam";
     }
+    else {
+      type = "articleBatch";
+    }
+
+
+    let targetId = '/' + urlParams.id;
+    if (urlParams.id == null || urlParams.id == '') {
+      targetId = '';
+    }
+
+    fullUrl += '/'+type+'/'+scope+'/'+urlParams.limit+'/'+urlParams.pageNum+targetId;
+    console.log('FULL NEWS URL',fullUrl);
     return this.http.get(fullUrl, {
       headers: headers
     })
@@ -29,12 +42,13 @@ export class NewsService {
     )
     .map(
       data => {
+        console.log('DATA FOR NEWS');
         return {
-          news: this.newsData(data)
+          news: this.newsData(data.data)
         };
     })
   }//getNewsService ends
-  
+
   newsData(data){
     var self = this;
     var newsArray = [];
@@ -43,17 +57,19 @@ export class NewsService {
     data.forEach(function(val, index){
       var News = {
         title: val.title,
-        description: val.description,
-        newsUrl: val.link,
-        author: _getHostName(val.link) != null ? _getHostName(val.link) : 'Anonymous',
-        published: moment.unix(val.pubDate_ut).format('dddd MMMM Do, YYYY'),//convert unix time to readable
+        description: val.teaser.replace(/<\/?[^>]+(>|$)/g, ""),
+        newsUrl: val.articleUrl,
+        author: _getHostName(val.articleUrl) != null ? _getHostName(val.articleUrl) : 'Anonymous',
+        published: val.publishedDateFormatted,
         footerData: {
           infoDesc: 'Want to check out the full story?',
           text: 'READ THE ARTICLE',
-          url: val.link,
+          url: val.articleUrl,
           hrefUrl: true
         }
       };
+      console.log('News Car',News);
+
       newsArray.push(News);
     });
     return newsArray;
