@@ -132,10 +132,20 @@ export class VerticalGlobalFunctions {
   static formatHeight(heightStr: string) {
     return heightStr ? heightStr.replace(/(\d+)-(\d+)/, "$1'$2\"") : "N/A";
   }
+
   static formatHeightInches(heightStr: string) {
     var heightInFeet = (Number(heightStr) / 12)|0;
     var inches = Number(heightStr) % 12;
     return heightInFeet + "-" + inches;
+  }
+
+  static formatHeightInchesWithFoot(heightStr: string) {
+    var heightInFeet = (Number(heightStr) / 12)|0;
+    var inches = Number(heightStr) % 12;
+    if (inches == 0) {
+      return heightInFeet + " foot";
+    }
+    return heightInFeet + "-foot-" + inches;
   }
 
   static formatHeightDigits(height) {
