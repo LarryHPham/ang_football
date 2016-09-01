@@ -57,22 +57,26 @@ export class StandingsService {
 
   initializeAllTabs(pageParams: SportPageParameters, currentTeamId?: string): Array<TDLStandingsTabdata> {
     let tabs: Array<TDLStandingsTabdata> = [];
+    /*console.log(1, 'initializing', pageParams);*/
 
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an TLD page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
-      tabs.push(this.createTab(false, currentTeamId, "Division"));//TODO
-      tabs.push(this.createTab(false, currentTeamId, "Conference"));//TODO
+      /*console.log('league conference tabs',Conference, Division);*/
       tabs.push(this.createTab(true, currentTeamId));
+      tabs.push(this.createTab(false, currentTeamId, 'Division'));//TODO
+      tabs.push(this.createTab(false, currentTeamId, 'Conference'));//TODO
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
       //Is a League page: show All Divisions, then American, then National
+      /*console.log('league division tabs');*/
       tabs.push(this.createTab(false, currentTeamId));
-      tabs.push(this.createTab(pageParams.conference === Conference.afc, currentTeamId, Conference.afc));
+      tabs.push(this.createTab(pageParams.conference === Conference.AFC, currentTeamId, Conference.AFC));
       tabs.push(this.createTab(pageParams.conference === Conference.NFC, currentTeamId, Conference.NFC));
     }
     else {
       //Is a Team page: show team's division, then team's league, then MLB
+      /*console.log('team tabs');*/
       tabs.push(this.createTab(true, currentTeamId, pageParams.conference, pageParams.division));
       tabs.push(this.createTab(false, currentTeamId, pageParams.conference));
       tabs.push(this.createTab(false, currentTeamId));
@@ -90,19 +94,20 @@ export class StandingsService {
     if ( selectedKey == null ) {
       selectedKey = pageParams.teamId;
     }
-    //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl
+    //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl/2015
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       //TODO
-
+      /*console.log('PAGE PARAMS', pageParams);*/
       url += "/division/nfl/2015";
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
+      /*console.log(url);*/
       this.http.get(url)
         .map(res => res.json())
         .map(data => this.setupTabData(standingsTab, data.data, maxRows))
         .subscribe(data => {
-          // console.log("data", data);
+          /*console.log("data", data);*/
           standingsTab.isLoaded = true;
           standingsTab.hasError = false;
           standingsTab.sections = data;
@@ -121,21 +126,21 @@ export class StandingsService {
 
   private createTab(selectTab: boolean, teamId: string, conference?: Conference, division?: Division) {
     let title = this.formatGroupName(conference, division) + " Standings";
-    //console.log("createTab", conference, division);
+    /*console.log("createTab", conference, division);*/
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
 
   private setupTabData(standingsTab: TDLStandingsTabdata, apiData: any, maxRows: number): Array<VerticalStandingsTableData> {
     var sections: Array<VerticalStandingsTableData> = [];
     var totalRows = 0;
-    //console.log("setupTabData", standingsTab);
+    /*console.log("setupTabData", standingsTab);*/
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
       standingsTab.division !== null && standingsTab.division !== undefined ) {
       //get only the single division
       var conferenceKey = Conference[standingsTab.conference];
       var divisionKey = Division[standingsTab.division];
       var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
-      sections.push(this.setupTableData(standingsTab.currentTeamId, standingsTab.conference, standingsTab.division, divData, maxRows, false));
+      sections.push(this.setupTableData(standingsTab.currentTeamId, conferenceKey, divisionKey, divData, maxRows, false));
     }
     else {
       //other load all provided divisions
@@ -159,6 +164,7 @@ export class StandingsService {
   }
 
   private setupTableData(teamId: string, conference:Conference, division:Division, rows: Array<TeamStandingsData>, maxRows: number, includeTableName: boolean): VerticalStandingsTableData {
+    /*console.log('Setting Up Table Data',conference,division);*/
     let groupName = this.formatGroupName(conference, division);
 
     //Limit to maxRows, if necessary
@@ -182,9 +188,9 @@ export class StandingsService {
       value.teamPointsAllowed = value.teamPointsAllowed;
     });
 
-    let tableName = this.formatGroupName(conference, division, true);
+    let tableName = this.formatGroupName(Conference[conference], Division[division], true);
     var table = new VerticalStandingsTableModel(rows, teamId);
-    return new VerticalStandingsTableData(includeTableName ? tableName : "", conference, division, table);
+    return new VerticalStandingsTableData(includeTableName ? tableName : "", Conference[conference], Division[division], table);
   }
 
   /**
@@ -210,10 +216,10 @@ export class StandingsService {
    */
   private formatGroupName(conference: Conference, division: Division, makeDivisionBold?: boolean): string {
     if ( conference !== undefined && conference !== null ) {
-      let leagueName = GlobalFunctions.toTitleCase(Conference[conference]) + " League";
+      let leagueName = conference;
       if ( division !== undefined && division !== null ) {
-        var divisionName = GlobalFunctions.toTitleCase(Division[division]);
-        return leagueName + " " + (makeDivisionBold ? "<span class='text-heavy'>" + divisionName + "</span>" : divisionName);
+        var divisionName = division;
+        return (makeDivisionBold ? "<span class='text-heavy'>" + divisionName + "</span>" : divisionName);
       }
       else {
         return leagueName;
