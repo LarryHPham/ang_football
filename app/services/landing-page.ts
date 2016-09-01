@@ -26,13 +26,13 @@ export class LandingPageService {
 
   getLandingPageService(scope, geoLocation?){
     var headers = this.setToken();
-    var fullUrl = this._apiUrl + "/landingPage/teams";
+    var fullUrl = this._apiUrl;
 
-    if (location) {
-      var newFullUrl = 'http://dev-touchdownloyal-api.synapsys.us'+'/landingPage/'+scope+'/'+geoLocation; //TODO
+    if (geoLocation) {
+      var newFullUrl = this._apiUrl+'/landingPage/'+scope+'/'+geoLocation; //TODO
     }
     else {
-      var newFullUrl = 'http://dev-touchdownloyal-api.synapsys.us'+'/landingPage/'+scope //TODO
+      var newFullUrl = this._apiUrl+'/landingPage/'+scope //TODO
     }
 
     return this.http.get(newFullUrl, {
@@ -66,7 +66,7 @@ export class LandingPageService {
           val.imageData= {
             imageClass: "image-100",
             mainImage: {
-              imageUrl:  GlobalSettings.getImageUrl(val.teamLogo),
+              imageUrl:  GlobalSettings.getImageUrl(val.logo_url),
               urlRouteArray: VerticalGlobalFunctions.formatTeamRoute(teamName, val.id.toString()),
               hoverText: "<i class='fa fa-mail-forward home-team-image-fa'></i>",// style='font-size:30px;'
               imageClass: "border-3"
