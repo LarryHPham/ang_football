@@ -135,7 +135,7 @@ export class LeaguePage implements OnInit {
     positionData: Array<positionMVPTabData>;
     globalMVPPosition:any;
 
-    imageData:any;
+    imageData:Array<any>;
     copyright:any;
     imageTitle:any;
     isProfilePage:boolean = true;
@@ -147,7 +147,9 @@ export class LeaguePage implements OnInit {
     faqData: Array<faqModuleData>;
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
+
     schedulesData:any;
+    scheduleFilter:any;
 
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
@@ -258,6 +260,12 @@ export class LeaguePage implements OnInit {
         limit = 3;
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.scheduleFilter=[
+          {key:'2016', value: '2016'},
+          {key:'2015', value: '2015'},
+          {key:'2014', value: '2014'},
+          {key:'2013', value: '2013'}
+        ];
         this.schedulesData = schedulesData;
       }) // isTeamProfilePage = true
     }
@@ -367,7 +375,7 @@ export class LeaguePage implements OnInit {
     }
 
     private getImages(imageData) {
-        this._imagesService.getImages(this.profileType)
+        this._imagesService.getImages(this.profileType, this.scope)
             .subscribe(data => {
                     return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
                 },

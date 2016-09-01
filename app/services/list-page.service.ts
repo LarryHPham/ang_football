@@ -27,7 +27,7 @@ interface PlayerItem {
     playerName: string,
     playerFirstName: string,
     playerLastName: string,
-    playerHeadshotUrl: string,
+    imageUrl: string,
     playerJerseyNumber: string,
     playerPosition: string[],
     teamState: string,
@@ -37,7 +37,8 @@ interface PlayerItem {
     teamVenue: string,
     teamLogo: string,
     lastUpdated: string,
-    backgroundImage: string
+    backgroundImage: string,
+    playerHeadshotUrl: string
 }
 
 interface ListData {
@@ -71,8 +72,9 @@ export class positionMVPTabData implements MVPTabData {
 
 @Injectable()
 export class ListPageService {
-  // private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _apiUrl: string = "http://dev-touchdownloyal-api.synapsys.us";
+
+  private _apiUrl: string = GlobalSettings.getApiUrl();
+
 
   constructor(public http: Http) {}
 
@@ -93,20 +95,19 @@ export class ListPageService {
     pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
-  getListPageService(query, errorMessage: string){
-    //Configure HTTP Headers
-    var headers = this.setToken();
+  getListPageService(query, errorMessage: string, season?){
+  //Configure HTTP Headers
+  var headers = this.setToken();
 
-    var callURL = this._apiUrl+'/list';
+  var callURL = this._apiUrl+'/list';
+  if (season == null || season == undefined || season == "null") {
+    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber;
+  }
+  else {
+    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
+  }
 
-    for(var q in query) {
-      if(q == 'scope'){
-        callURL += '/' + q +'='+ query[q];
-      }else{
-        callURL += '&' + q +'='+ query[q];
-      }
-    }
-    return this.http.get( callURL, {headers: headers})
+  return this.http.get( callURL, {headers: headers})
     .map(res => res.json())
     .map(
       data => {
@@ -117,13 +118,22 @@ export class ListPageService {
           carData: ListPageService.carDataPage(data.data, 'page', errorMessage),
           listData: ListPageService.detailedData(data.data),
           pagination: data.data.listInfo,
-          listDisplayName: data.data.listInfo.name
+          listDisplayName: data.data.listInfo.name,
+          seasons: this.formatSeasons(data.data.listInfo.seasons)
         }
       },
       err => {
         console.log('INVALID DATA');
       }
     )
+  }
+
+  formatSeasons (data) {
+    var outputArray = [{key: "null", value: "All Seasons"}];
+    for (var i=0; i < data.length; i++) {
+      outputArray.push({key:  data[i] , value: (Number(data[i]) + 1) + ' / ' + data[i]});
+    }
+    return outputArray;
   }
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
@@ -303,7 +313,6 @@ export class ListPageService {
             'Jersey No: #'+val.playerJerseyNumber
           ];
         }
-
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
           backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
@@ -343,15 +352,16 @@ export class ListPageService {
             [ //main left text
               {route: teamRoute, text: val.teamName, class: "dataBox-mainLink"}
             ],
+            val.stat,
             [ //sub left text
-              {text: teamLocation},
+              {text: "<i class='fa fa-map-marker'></i>" + teamLocation},
               {text: "   |   ", class: "separator"},
               {text: "Division: " + divisionName},
             ],
             GlobalFunctions.commaSeparateNumber(val.stat),
             statDescription,
-            'fa fa-map-marker'),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshotUrl), teamRoute, val.listRank),
+            null),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, val.listRank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -367,16 +377,17 @@ export class ListPageService {
             [ //main left text
               {route: playerRoute, text: playerFullName, class: "dataBox-mainLink"}
             ],
+            val.stat,
             [ //sub left text
-              {route: teamRoute, text: 'Team: '+val.teamName, class: "dataBox-subLink"},
+              {route: teamRoute, text: val.teamName, class: "dataBox-subLink"},
+              {text: "   |   ", class: "separator"},
+              {text: "Jersey: #" + val.playerJerseyNumber},
               {text: "   |   ", class: "separator"},
               {text: "Jersey: #" + val.playerJerseyNumber}
             ],
-            val.stat,
             statDescription,
-            null
-          ),
-          imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
+            null),
+            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
           ctaBtn:'',
@@ -441,15 +452,10 @@ export class ListPageService {
     };
   }
 
-  static detailsData(
-    mainLeftText: Link[],
-    subLeftText: Link[],
-    mainRightValue: string,
-    subRightValue: string,
-    subIcon?: string,
-    dataLeftText?: Link[],
-    dataRightValue?: string
-  ) {
+  static detailsData(mainLeftText: Link[], mainRightValue: string,
+                     subLeftText: Link[], subRightValue: string, subIcon?: string,
+                     dataLeftText?: Link[], dataRightValue?: string) {
+
     if(!dataLeftText) {
       dataLeftText = [];
     }
@@ -460,21 +466,21 @@ export class ListPageService {
 
     var details = [
       // {
-      //   style:'detail-small',
-      //   mainText: dataLeftText,
-      //   subText: dataRightText
-      // },
-      {
-        style:'detail-left',
-        mainText: mainLeftText,
-        subText: subLeftText
-      },
-      {
-        style:'detail-right',
-        mainText: [{text: mainRightValue}],
-        subText:[{text: subRightValue}],
-        icon:subIcon,
-      },
+     //   style:'detail-small',
+     //   mainText: dataLeftText,
+     //   subText: dataRightText
+     // },
+     {
+       style:'detail-left',
+       mainText: mainLeftText,
+       subText: subLeftText
+     },
+     {
+       style:'detail-right',
+       mainText: [{text: mainRightValue}],
+       subText:[{text: subRightValue}],
+       icon:subIcon,
+     },
     ];
     return details;
   }

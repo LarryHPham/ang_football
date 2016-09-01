@@ -17,7 +17,7 @@ export class GlobalSettings {
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php'
 
     private static _imageUrl:string = 'images.synapsys.us';
-    private static _articleUrl:string = '-homerunloyal-ai.synapsys.us/';
+    private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
     private static _recommendUrl:string = '-homerunloyal-ai.synapsys.us/headlines/event/';
     private static _headlineUrl:string = '-homerunloyal-ai.synapsys.us/headlines/team/';
     private static _trendingUrl:string = '-homerunloyal-ai.synapsys.us/sidekick';
@@ -45,7 +45,7 @@ export class GlobalSettings {
     private static _collegeDivisionChampionship: string = "National Championships";
     private static _collegeDivisionSegments: string = "Conferences";
 
-    private static _estYear: string = "© 2016";
+    private static _estYear: string = " 2016";
     private static _copyrightInfo: string = "USA Today Sports Images";
 
     static getEnv(env:string):string {
@@ -91,7 +91,7 @@ export class GlobalSettings {
     }
 
     static getBackgroundImageUrl(relativePath):string {
-        var relPath = relativePath != null ? this._proto + "//" + "prod" + this._imageUrl + relativePath: '/app/public/drk-linen.png';
+        var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: '/app/public/drk-linen.png';
         return relPath;
     }
 

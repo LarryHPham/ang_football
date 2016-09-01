@@ -141,7 +141,7 @@ export class TeamPage implements OnInit {
     dailyUpdateData: DailyUpdateData;
     firstVideo:string;
     videoData:any;
-    imageData:any;
+    imageData:Array<any>;
     copyright:any;
     imageTitle: any;
     profileType:string = "team";
@@ -156,7 +156,8 @@ export class TeamPage implements OnInit {
     // currentYear: any;
 
     schedulesData:any;
-
+    scheduleFilter1:any;
+    scheduleFilter2:any;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -348,13 +349,28 @@ export class TeamPage implements OnInit {
             this.getSchedulesData('postgame');// fall back just in case no status event is present
         }
     }
+    private filterDropdown(filter){
+      //TODO
+    }
 
     //api for Schedules
-    private getSchedulesData(status){
+    private getSchedulesData(status, year?){
       var limit = 5;
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        this.scheduleFilter1=[
+          {key:'2016', value: '2016'},
+          {key:'2015', value: '2015'},
+          {key:'2014', value: '2014'},
+          {key:'2013', value: '2013'}
+        ];
+        this.scheduleFilter2=[
+          {key:'1', value: 'Week1'},
+          {key:'2', value: 'Week2'},
+          {key:'3', value: 'Week3'},
+          {key:'4', value: 'Week4'}
+        ];
         this.schedulesData = schedulesData;
-      }) // isTeamProfilePage = true
+      }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
 
     private getImages(imageData) {

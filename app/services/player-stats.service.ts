@@ -13,7 +13,8 @@ import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from
 @Injectable()
 export class PlayerStatsService implements OnDestroy{
 
-
+    tabName:string="passing"
+    seasonId:string="2015";
 
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
@@ -52,18 +53,18 @@ export class PlayerStatsService implements OnDestroy{
 
 
         var standingsTab: MLBPlayerStatsTableData = tabData[0];
-        var tabName:string="passing"
-        var seasonId:string="2015";
+
         var columnTabType:string="passing"
 
         if(tabData[1]== "2015"||tabData[1]== "2014" ){
-               seasonId = tabData[1];
-            if ( !seasonId && standingsTab.seasonIds.length > 0 ) {
-                seasonId = standingsTab.seasonIds[0].key;
+               this.seasonId = tabData[1];
+            if ( !this.seasonId && standingsTab.seasonIds.length > 0 ) {
+                this.seasonId = standingsTab.seasonIds[0].key;
 
             }
         }else{
              columnTabType = tabData[1];
+            //console.log(tabData ,"this one sort")
             if ( !columnTabType && standingsTab.subTabs.length > 0 ) {
                 columnTabType = standingsTab.subTabs[0].key;
 
@@ -91,13 +92,13 @@ export class PlayerStatsService implements OnDestroy{
         // standingsTab.tabActive="Passing";
 
         if(standingsTab.tabActive=="Special"){
-            tabName=columnTabType.toLowerCase();
+            this.tabName=columnTabType.toLowerCase();
 
         }else {
-            tabName = standingsTab.tabTitle.toLowerCase();
+            this.tabName = standingsTab.tabTitle.toLowerCase();
 
         }
-        let url = "http://dev-touchdownloyal-api.synapsys.us/teamPlayerStats/team/"+ seasonId+ "/" +pageParams.teamId +'/'+ tabName ;
+        let url = "http://dev-touchdownloyal-api.synapsys.us/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
        
         this.http.get(url)
             .map(res => res.json())
@@ -136,6 +137,8 @@ export class PlayerStatsService implements OnDestroy{
         if ( maxRows !== undefined ) {
             table.rows = table.rows.slice(0, maxRows);
         }
+        table.istab=this.tabName;
+
 
         //Set display values
         table.rows.forEach((value, index) => {
@@ -148,7 +151,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
         });
-
+        //.log(table, standingsTab.tabActive, this.tabName," now check");
         return table;
     }
 }
