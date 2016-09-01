@@ -200,7 +200,7 @@ export class TeamPage implements OnInit {
               profile:'team',//current profile page
               teamId:this.pageParams.teamId, // teamId if it exists
               // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2015-09-03'
+              date: '2016-09-08'
             }
             this.setupProfileData(this.partnerID,this.scope);
         });
@@ -234,7 +234,7 @@ export class TeamPage implements OnInit {
                 this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
+                // this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -343,7 +343,7 @@ export class TeamPage implements OnInit {
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+          this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1);
@@ -361,7 +361,6 @@ export class TeamPage implements OnInit {
     private getSchedulesData(status, year?){
       var limit = 5;
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-        console.log(schedulesData);
         if(status == 'pregame'){
           this.scheduleFilter1=null;
         }else{
@@ -370,8 +369,6 @@ export class TeamPage implements OnInit {
           }
         }
         this.schedulesData = schedulesData;
-        console.log('SCHEDULE FILTER 1 ',this.scheduleFilter1);
-        console.log(this.schedulesData);
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
 
