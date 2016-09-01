@@ -184,7 +184,7 @@ export class TransactionsService {
           console.log('Error getting transaction data for ' + tab.tabDataKey);
         }
       );
-  }
+  } //getTransactionsService
 
   getEmptyCarousel(tab: TransactionTabData): Array<SliderCarouselInput> {
     return [SliderCarousel.convertToCarouselItemType1(2, {
