@@ -148,6 +148,20 @@ export interface HeadlineData {
     }
 }
 
+export interface Article {
+    data: {
+        affiliation?: string;
+        article_subtype_id?: string;
+        json_url?: string;
+        article_type_id?: string;
+        event_id?: string;
+        id?: string;
+        last_updated?: string;
+        season_id?: string;
+        teaser?: string;
+        title?: string;
+    }
+}
 
 export interface ArticleData {
     displayHeadline?: string;
