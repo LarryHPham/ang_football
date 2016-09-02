@@ -233,7 +233,7 @@ export class TeamPage implements OnInit {
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
-                this.getHeadlines(this.headlineData);
+                this.getHeadlines();
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
@@ -261,6 +261,21 @@ export class TeamPage implements OnInit {
                 console.log("Error getting team profile data for " + this.pageParams.teamId, err);
             }
         );
+    }
+
+    //api for Headline Module
+    private getHeadlines(){
+        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        this._headlineDataService.getAiHeadlineData(scope, this.pageParams.teamId)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData.data;
+                    console.log(this.headlineData);
+                },
+                err => {
+                    console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
+                }
+            )
     }
 
     private dailyUpdateModule(teamId: number) {
@@ -330,23 +345,6 @@ export class TeamPage implements OnInit {
             err => {
                 console.log("Error getting news data");
             });
-    }
-
-    //api for Headline Module
-    private getHeadlines(){
-        if (this.scope == "ncaaf") {
-            this.scope = "ncaa";
-        }
-        this._headlineDataService.getAiHeadlineData(this.scope.toUpperCase(), this.pageParams.teamId)
-            .subscribe(
-                HeadlineData => {
-                    this.headlineData = HeadlineData;
-                },
-                err => {
-                    this.headlineError = true;
-                    console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
-                }
-            )
     }
 
     //api for BOX SCORES

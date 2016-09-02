@@ -18,6 +18,8 @@ import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 
+declare var moment;
+
 @Component({
     selector: 'article-pages',
     templateUrl: './app/webpages/article-pages/article-pages.page.html',
@@ -32,38 +34,38 @@ import {HeadlineDataService} from "../../global/global-ai-headline-module-servic
         LoadingComponent,
         TrendingComponent,
         SidekickContainerComponent
-    ]
+    ],
 })
 
 export class ArticlePages implements OnInit {
     article:Article;
     articleData:ArticleData;
-    randomHeadlines:Array<any>;
-    imageData:any;
+    copyright:Array<any>;
     images:Array<any>;
-    eventID:string;
-    eventType:string;
-    title:string;
-    date:string;
-    content:string;
-    comment:string;
-    pageIndex:string;
-    articleType:string;
-    articleSubType:string;
+    imageData:Array<any>;
     imageLinks:Array<any>;
-    recommendedImageData:any;
-    copyright:any;
-    imageTitle:any;
-    teamId:number;
+    imageTitle:Array<any>;
+    randomHeadlines:Array<any>;
+    recommendedImageData:Array<any>;
     trendingData:Array<any>;
     trendingImages:Array<any>;
+    aiSidekick:boolean = true;
     error:boolean = false;
     hasImages:boolean = false;
-    aiSidekick:boolean = true;
-    partnerId:string;
     isSmall:boolean = false;
-    rawUrl:string;
+    teamId:number;
+    articleType:string;
+    articleSubType:string;
+    content:string;
+    comment:string;
+    eventID:string;
+    eventType:string;
+    date:string;
+    pageIndex:string;
+    partnerId:string;
     randomArticles:string;
+    rawUrl:string;
+    title:string;
     scope:string = null;
 
     constructor(private _params:RouteParams,
@@ -105,11 +107,14 @@ export class ArticlePages implements OnInit {
                         this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
-                        //this.teamId = ArticleData[pageIndex].teamId; turn on once ai billboard is wired up for football
-                        this.teamId = 2808;
+                        this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
                         ArticlePages.setMetaTag(this.articleData.metaHeadline);
-                        //this.getCarouselImages(ArticleData[pageIndex]['images']);
-                        //this.imageLinks = this.getImageLinks(ArticleData[pageIndex]);
+                        if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
+                            this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
+                        } else {
+                            this.hasImages = false;
+                        }
+                        this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
                     }
                 },
                 err => {
@@ -130,7 +135,7 @@ export class ArticlePages implements OnInit {
             this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i], this.scope)
                 .subscribe(
                     HeadlineData => {
-                        if (HeadlineData['data'].length > 0) {
+                        if (HeadlineData['data']) {
                             if (HeadlineData['data'][0].article_type_id != null) {
                                 var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_type_id, true);
                             } else {
@@ -144,68 +149,31 @@ export class ArticlePages implements OnInit {
                 );
         }
         this.randomHeadlines = random;
-        //if (this.articleTitle != undefined) {
-        //    this._headlineDataService.getAiHeadlineDataLeague()
-        //        .subscribe(
-        //            TrendingData => {
-        //                console.log(TrendingData);
-        //                this.getTrendingArticles(TrendingData);
-        //            }
-        //        );
-        //}
     }
-
-    //Possible fix for partner site link issues.
-    //parseLinks(data) {
-    //    try {
-    //        data['article'].map(function (val, index) {
-    //            var strToParse = val.match("<a href=" + "(.*?)" + "</a>");
-    //            if (strToParse != null) {
-    //                var urlInfo = strToParse[1].split("/");
-    //                if (urlInfo[1] == "player") {
-    //                    var url = VerticalGlobalFunctions.formatPlayerRoute(urlInfo[2], urlInfo[3], urlInfo[4].slice(0, 5));
-    //                } else if (urlInfo[1] == "team") {
-    //                    var url = VerticalGlobalFunctions.formatTeamRoute(urlInfo[2], urlInfo[3].slice(0, 4));
-    //                }
-    //                data['article'][index] = val.replace(strToParse[0], url);
-    //            }
-    //        });
-    //    } catch (err) {
-    //    }
-    //}
 
     getCarouselImages(data) {
         var images = [];
-        var copyData = [];
-        var description = [];
-        var imageCount = 10;
-        var image;
-        var copyright;
-        var title;
-        if (this.articleType == "gameModule") {
-            if (Object.keys(data).length == 4) {
-                imageCount = 5;
-            }
+        var imageArray = [];
+        var copyArray = [];
+        var titleArray = [];
+        if (this.articleType == "gameModule" || this.articleType == "teamRecord") {
+            images = data['home_images'].concat(data['away_images']);
         } else if (this.articleType == "playerRoster") {
-            imageCount = 2;
+            images = data['home_images'];
         }
+        images.sort(function () {
+            return 0.5 - Math.random()
+        });
         try {
-            if (Object.keys(data).length > 0) {
-                for (var id in data) {
-                    data[id].forEach(function (val, index) {
-                        if (index < imageCount) {
-                            image = val['image'];
-                            copyright = val['copyright'];
-                            title = val['title'];
-                            images.push(image);
-                            copyData.push(copyright);
-                            description.push(title);
-                        }
-                    });
-                }
-                this.imageData = images;
-                this.copyright = copyData;
-                this.imageTitle = description;
+            images.forEach(function (val) {
+                imageArray.push(GlobalSettings.getBackgroundImageUrl(val['image_url']));
+                copyArray.push(val['image_copyright']);
+                titleArray.push(val['image_title']);
+            });
+            if (imageArray) {
+                this.imageData = imageArray;
+                this.copyright = copyArray;
+                this.imageTitle = titleArray;
             } else {
                 this.imageData = null;
                 this.copyright = null;
@@ -340,7 +308,7 @@ export class ArticlePages implements OnInit {
                     };
                     links.push(val['teamLeft'], val['teamRight'], val['teamLeftSmall'], val['teamRightSmall'], shortDate);
                 }
-                if (index == 5 && val['gameModule']) {
+                if (index == 4 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
                     let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
@@ -451,8 +419,8 @@ export class ArticlePages implements OnInit {
             title: recommendations.title,
             eventType: pageIndex,
             eventID: eventID,
-            //images: self.images[imageCount],
-            date: recommendations.last_updated,
+            images: GlobalSettings.getBackgroundImageUrl(recommendations.image_url),
+            date: moment(recommendations.last_updated).format('MMMM DD, YYYY'),
             keyword: "BASEBALL"
         };
         return articles;

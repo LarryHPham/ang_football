@@ -54,6 +54,7 @@ import {DailyUpdateService, DailyUpdateData} from "../../services/daily-update.s
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {FantasyModule} from "../../fe-core/modules/fantasy/fantasy.module";
 
 declare var moment;
 
@@ -79,7 +80,8 @@ declare var moment;
       ListOfListsModule,
       DailyUpdateModule,
       ImagesMedia,
-      ResponsiveWidget
+      ResponsiveWidget,
+      FantasyModule
     ],
     providers: [
       BoxScoresService,

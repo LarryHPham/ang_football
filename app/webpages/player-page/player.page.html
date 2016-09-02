@@ -3,6 +3,7 @@
     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
     <error-component *ngIf="hasError"></error-component>
     <div *ngIf="profileHeaderData && pageParams">
+        <fantasy-module [profHeader]="profileHeaderData"></fantasy-module>
         <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
         <profile-header *ngIf="profileHeaderData" [profileHeaderData]="profileHeaderData"></profile-header>
         <daily-update-module [profileName]="profileHeaderData.profileName" [data]="dailyUpdateData"></daily-update-module>
