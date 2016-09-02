@@ -88,53 +88,53 @@ export class DeepDiveService {
   }
 
   getDeepDiveAiBatchService(scope, key?, page?, count?, state?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  if(scope == null){
-    scope = 'nfl';
-  }
-  if(key == null){
-    key == "postgame-report";
-  }
-  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
-  if(page == null || count == null){
-    page = 1;
-    count = 1;
-  }
-  if(state == null){
-    state = 'CA';
-  }
-  callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
+    //Configure HTTP Headers
+    var headers = this.setToken();
+    if(scope == null){
+      scope = 'nfl';
+    }
+    if(key == null){
+      key == "postgame-report";
+    }
+    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+    if(page == null || count == null){
+      page = 1;
+      count = 1;
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
   }
 
   getDeepDiveAiHeavyBatchService(scope, key?, page?, count?, state?){//TODO update api call
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  if(scope == null){
-    scope = 'nfl';
-  }
-  if(key == null){
-    key == "player-comparisons";
-  }
-  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
-  if(page == null || count == null){
-    page = 1;
-    count = 1;
-  }
-  if(state == null){
-    state = 'CA';
-  }
-  callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
+    //Configure HTTP Headers
+    var headers = this.setToken();
+    if(scope == null){
+      scope = 'nfl';
+    }
+    if(key == null){
+      key == "player-comparisons";
+    }
+    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+    if(page == null || count == null){
+      page = 1;
+      count = 1;
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
   }
 
   getAiArticleData(state){
