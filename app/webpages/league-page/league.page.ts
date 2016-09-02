@@ -266,7 +266,6 @@ export class LeaguePage implements OnInit {
       if(filter.value == 'filter2'){
         this.selectedFilter2 = filter.key;
       }
-      console.log('Filter',this.selectedFilter1, this.selectedFilter2);
       this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
@@ -288,7 +287,6 @@ export class LeaguePage implements OnInit {
           this.scheduleFilter2 = schedulesData.weeks;
         }
         this.schedulesData = schedulesData;
-        console.log(this.schedulesData);
       }, year, week) // isTeamProfilePage = true
     }
 

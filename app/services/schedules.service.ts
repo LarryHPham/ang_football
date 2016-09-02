@@ -74,7 +74,6 @@ export class SchedulesService {
     var headers = this.setToken();
 
     var callURL = this._apiUrl+'/schedule/'+profile;
-    console.log('year', year, 'week', week);
     if(typeof year == 'undefined'){
       year = null;
     }
@@ -92,7 +91,6 @@ export class SchedulesService {
     if(typeof week != 'undefined'){
       callURL += '/'+week;
     }
-    console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
