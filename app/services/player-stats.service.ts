@@ -151,7 +151,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
         });
-        //.log(table, standingsTab.tabActive, this.tabName," now check");
+        //console.log(table, standingsTab.tabActive, this.tabName," now check");
         return table;
     }
 }

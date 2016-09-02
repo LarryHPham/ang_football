@@ -38,4 +38,23 @@ export class ImagesService {
             titleArray: titleArray
         }
     }
+
+    getImageArrayAI(imageData) {
+        var imageArray = [];
+        var copyArray = [];
+        var titleArray = [];
+        imageData.forEach(function (val, index) {
+            val['images'] = GlobalSettings.getBackgroundImageUrl(val['image_url']);
+            val['copyright'] = val['image_copyright'];
+            val['title'] = val['image_title'];
+            imageArray.push(val['images']);
+            copyArray.push(val['copyright']);
+            titleArray.push(val['title']);
+        });
+        return {
+            imageArray: imageArray,
+            copyArray: copyArray,
+            titleArray: titleArray
+        }
+    }
 }
