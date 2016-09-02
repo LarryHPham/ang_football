@@ -82,9 +82,17 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
 
   division: Division;
 
+  season: any;
+
   selectedKey: string;
 
   currentTeamId: string;
+
+  conferences: Array<any>;
+
+  divisions: Array<any>;
+
+  seasons: Array<any>;
 
   constructor(title: string, conference: Conference, division: Division, isActive: boolean, teamId: string) {
     this.title = title;
