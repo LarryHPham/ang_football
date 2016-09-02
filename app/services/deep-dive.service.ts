@@ -5,9 +5,8 @@ import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {DomSanitizationService} from '@angular/platform-browser';
-
-
 declare var moment;
+
 @Injectable()
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
@@ -105,7 +104,7 @@ export class DeepDiveService {
   if(state == null){
     state = 'CA';
   }
-  callURL += '&page=' + page + '&count=' + count + '&state=' + state;
+  callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -130,7 +129,7 @@ export class DeepDiveService {
   if(state == null){
     state = 'CA';
   }
-  callURL += '&page=' + page + '&count=' + count + '&state=' + state;
+  callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -149,10 +148,20 @@ export class DeepDiveService {
       });
   }
 
-  getRecArticleData(scope){
+  getRecArticleData(scope, state, batch, limit){
     var headers = this.setToken();
+    if(scope == null){
+      scope = 'NFL';
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    if(batch == null || limit == null){
+      batch = 1;
+      limit = 1;
+    }
     //this is the sidkeick url
-    var callURL = this._articleUrl + "sidekick/NFL";//TODO won't need uppercase after ai fixes
+    var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -225,7 +234,8 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var dataLists = val.article_data[p];
       }
-      var date = dataLists.dateline;
+      var date = moment(Number(val.last_updated) * 1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
           keyword: key.toUpperCase(),
@@ -254,10 +264,12 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var eventType = val.article_data[p];
       }
+      var date = moment(Number(val.last_updated) * 1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
           keyword: key.toUpperCase(),
-          publishedDate: eventType.dateline,
+          publishedDate: date,
           provider1: '',
           provider2: '',
           description: eventType.metaHeadline,
@@ -313,13 +325,10 @@ export class DeepDiveService {
         var eventID = data['meta-data']['current']['eventID'];
       }
     }
-    articles = articles.slice(1,7);//get first 6 articles
     articles.forEach(function(val, index){
       var info = val.info;
       //TODO
-      /*var month = info.substr(0, date.indexOf(' ');
-      month = GlobalFunctions.formatAPMonth(Number(month));
-      console.log(month);*/
+      var month = info.dateline;
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
