@@ -61,6 +61,10 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
 import {VideoModule} from "../../fe-core/modules/video/video.module";
 import {VideoService} from "../../services/video.service";
 
+import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {HeadlineData} from "../../global/global-interface";
+
 declare var moment;
 
 @Component({
@@ -87,7 +91,8 @@ declare var moment;
         NewsModule,
         ListOfListsModule,
         ImagesMedia,
-        ResponsiveWidget
+        ResponsiveWidget,
+        ArticlesModule
       ],
     providers: [
         VideoService,
@@ -114,6 +119,9 @@ export class LeaguePage implements OnInit {
     pageParams:SportPageParameters = {};
     partnerID:string = null;
     hasError: boolean = false;
+    headlineError:boolean = false;
+
+    headlineData:HeadlineData;
 
     standingsData:StandingsModuleData;
 
@@ -177,6 +185,7 @@ export class LeaguePage implements OnInit {
                 private _lolService: ListOfListsService,
                 private listService:ListPageService,
                 private videoBatchService:VideoService,
+                private _headlineDataService:HeadlineDataService,
                 private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
@@ -208,7 +217,7 @@ export class LeaguePage implements OnInit {
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = "TDL"; //leagueShortName
-
+                this.getLeagueHeadlines(this.headlineData);
                 /*** Keep Up With Everything TDL ***/
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
@@ -246,6 +255,21 @@ export class LeaguePage implements OnInit {
 
         );
     }
+
+    //api for League Headline Module
+    private getLeagueHeadlines() {
+        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        this._headlineDataService.getAiHeadlineDataLeague(null, scope)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData;
+                },
+                err => {
+                    console.log("Error loading AI headline data for League Page", err);
+                }
+            )
+    }
+
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
