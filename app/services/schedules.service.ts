@@ -69,12 +69,12 @@ export class SchedulesService {
   }
 
   //possibly simpler version of getting schedules api call
-  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
+  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?, week?){
     //Configure HTTP Headers
     var headers = this.setToken();
 
     var callURL = this._apiUrl+'/schedule/'+profile;
-
+    console.log('year', year, 'week', week);
     if(typeof year == 'undefined'){
       year = null;
     }
@@ -87,6 +87,12 @@ export class SchedulesService {
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
+
+    //optional week parameters
+    if(typeof week != 'undefined'){
+      callURL += '/'+week;
+    }
+    console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -112,7 +118,7 @@ export class SchedulesService {
       eventTab = false;
     }
 
-    this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year)
+    this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year, week)
     .subscribe( data => {
       var gamesData = data.data != null? data.data.games:null;
       var scheduleData;
@@ -130,7 +136,8 @@ export class SchedulesService {
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
           },
-          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons):null
+          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons):null,
+          weeks: data.data.info.weeks.length > 0 ? this.formatWeekDropdown(data.data.info.weeks):null
         }
         callback(scheduleData);
       },
@@ -143,6 +150,16 @@ export class SchedulesService {
       let yearObj = {};
       yearObj['key'] = val;
       yearObj['value'] = val;
+      yearArray.push(yearObj);
+    })
+    return yearArray;
+  }
+  formatWeekDropdown(data){
+    let yearArray = [];
+    data.forEach(function(val){
+      let yearObj = {};
+      yearObj['key'] = val;
+      yearObj['value'] = 'Week '+val;
       yearArray.push(yearObj);
     })
     return yearArray;

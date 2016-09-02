@@ -191,7 +191,7 @@ export class LeaguePage implements OnInit {
               profile:'league',//current profile page
               teamId: this.scope,
               // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-08'
+              date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID, this.scope);
         });
@@ -210,7 +210,7 @@ export class LeaguePage implements OnInit {
                 this.profileName = "TDL"; //leagueShortName
 
                 /*** Keep Up With Everything TDL ***/
-                this.getBoxScores(this.dateParam);
+                // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
@@ -253,19 +253,25 @@ export class LeaguePage implements OnInit {
           this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
           this.eventStatus = 'postgame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     }
     private filterDropdown(filter){
-      this.selectedFilter1 = filter.key;
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      if(filter.value == 'filter1'){
+        this.selectedFilter1 = filter.key;
+      }
+      if(filter.value == 'filter2'){
+        this.selectedFilter2 = filter.key;
+      }
+      console.log('Filter',this.selectedFilter1, this.selectedFilter2);
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
     //api for Schedules
-    private getSchedulesData(status, year?){
+    private getSchedulesData(status, year?, week?){
       var limit = 5;
       if(status == 'postgame'){
         limit = 3;
@@ -279,10 +285,11 @@ export class LeaguePage implements OnInit {
           }
         }
         if(this.scheduleFilter2 == null){
-          this.scheduleFilter2 = VerticalGlobalFunctions.getWeekDropdown(this.scope);
+          this.scheduleFilter2 = schedulesData.weeks;
         }
         this.schedulesData = schedulesData;
-      }, year) // isTeamProfilePage = true
+        console.log(this.schedulesData);
+      }, year, week) // isTeamProfilePage = true
     }
 
 
