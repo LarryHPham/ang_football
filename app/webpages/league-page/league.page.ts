@@ -52,6 +52,7 @@ import {ListOfListsModule} from "../../fe-core/modules/list-of-lists/list-of-lis
 import {ListOfListsService} from "../../services/list-of-lists.service";
 
 import {GlobalSettings} from "../../global/global-settings";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {ImagesService} from "../../services/carousel.service";
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
@@ -59,6 +60,10 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {VideoModule} from "../../fe-core/modules/video/video.module";
 import {VideoService} from "../../services/video.service";
+
+import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {HeadlineData} from "../../global/global-interface";
 
 declare var moment;
 
@@ -86,7 +91,8 @@ declare var moment;
         NewsModule,
         ListOfListsModule,
         ImagesMedia,
-        ResponsiveWidget
+        ResponsiveWidget,
+        ArticlesModule
       ],
     providers: [
         VideoService,
@@ -113,6 +119,9 @@ export class LeaguePage implements OnInit {
     pageParams:SportPageParameters = {};
     partnerID:string = null;
     hasError: boolean = false;
+    headlineError:boolean = false;
+
+    headlineData:HeadlineData;
 
     standingsData:StandingsModuleData;
 
@@ -149,7 +158,11 @@ export class LeaguePage implements OnInit {
     twitterData: Array<twitterModuleData>;
 
     schedulesData:any;
-    scheduleFilter:any;
+    scheduleFilter1:Array<any>;
+    scheduleFilter2:Array<any>;
+    selectedFilter1:string
+    selectedFilter2:string;
+    eventStatus: string;
 
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
@@ -172,6 +185,7 @@ export class LeaguePage implements OnInit {
                 private _lolService: ListOfListsService,
                 private listService:ListPageService,
                 private videoBatchService:VideoService,
+                private _headlineDataService:HeadlineDataService,
                 private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
@@ -186,7 +200,7 @@ export class LeaguePage implements OnInit {
               profile:'league',//current profile page
               teamId: this.scope,
               // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2015-09-03'
+              date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID, this.scope);
         });
@@ -203,12 +217,12 @@ export class LeaguePage implements OnInit {
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = "TDL"; //leagueShortName
-
+                this.getLeagueHeadlines(this.headlineData);
                 /*** Keep Up With Everything TDL ***/
-                this.getBoxScores(this.dateParam);
-                this.getSchedulesData('postgame');//grab pre event data for upcoming games
+                // this.getBoxScores(this.dateParam);
+                this.eventStatus = 'pregame';
+                this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
-
 
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
@@ -242,33 +256,69 @@ export class LeaguePage implements OnInit {
         );
     }
 
-    //grab tab to make api calls for post of pre event table
+    //api for League Headline Module
+    private getLeagueHeadlines() {
+        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        this._headlineDataService.getAiHeadlineDataLeague(null, scope)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData;
+                },
+                err => {
+                    console.log("Error loading AI headline data for League Page", err);
+                }
+            )
+    }
+
+    //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pregame');
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('postgame');
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
-            this.getSchedulesData('postgame');// fall back just in case no status event is present
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
+    }
+    private filterDropdown(filter){
+      if(filter.value == 'filter1'){
+        this.selectedFilter1 = filter.key;
+      }
+      if(filter.value == 'filter2'){
+        this.selectedFilter2 = filter.key;
+      }
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
     //api for Schedules
-    private getSchedulesData(status){
+    private getSchedulesData(status, year?, week?){
       var limit = 5;
       if(status == 'postgame'){
         limit = 3;
       }
+      if(typeof year == 'undefined'){
+        year == new Date().getFullYear();
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-        this.scheduleFilter=[
-          {key:'2016', value: '2016'},
-          {key:'2015', value: '2015'},
-          {key:'2014', value: '2014'},
-          {key:'2013', value: '2013'}
-        ];
+        if(status == 'pregame'){
+          this.scheduleFilter1=null;
+        }else{
+          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            this.scheduleFilter1 = schedulesData.seasons;
+          }
+        }
+        if(this.scheduleFilter2 == null){
+          this.scheduleFilter2 = schedulesData.weeks;
+        }
         this.schedulesData = schedulesData;
-      }) // isTeamProfilePage = true
+      }, year, week) // isTeamProfilePage = true
     }
+
+
+
 
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
 
@@ -392,7 +442,7 @@ export class LeaguePage implements OnInit {
     }
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.pageParams).subscribe(
+        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
                 this.comparisonModuleData = data;
             },

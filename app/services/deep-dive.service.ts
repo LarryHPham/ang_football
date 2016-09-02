@@ -5,9 +5,8 @@ import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {DomSanitizationService} from '@angular/platform-browser';
-
-
 declare var moment;
+
 @Injectable()
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
@@ -50,10 +49,10 @@ export class DeepDiveService {
   } else {
     callURL += 'nfl';
   }
-  callURL += '/' + limit + '/' + startNum;
-  if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    callURL += '/' + state;
+  if(state == null){
+    state = 'CA';
   }
+  callURL += '/' + limit + '/' + startNum + '/' + state;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -88,49 +87,54 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveAiBatchService(scope, key?, page?, count?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  if(scope == null){
-    scope = 'nfl';
-  }
-  if(key == null){
-    key == "postgame-report";
-  }
-  key = key.replace(' ', '-');
-  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
-  if(page == null || count == null){
-    page = 1;
-    count = 1;
-  }
-  callURL += '&page=' + page + '&count=' + count;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
+  getDeepDiveAiBatchService(scope, key?, page?, count?, state?){
+    //Configure HTTP Headers
+    var headers = this.setToken();
+    if(scope == null){
+      scope = 'nfl';
+    }
+    if(key == null){
+      key == "postgame-report";
+    }
+    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+    if(page == null || count == null){
+      page = 1;
+      count = 1;
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
   }
 
-  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?){//TODO update api call
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  if(scope == null){
-    scope = 'nfl';
-  }
-  if(key == null){
-    key == "player comparisons";
-  }
-  var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
-  if(page == null || count == null){
-    page = 1;
-    count = 1;
-  }
-  callURL += '&page=' + page + '&count=' + count;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
+  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?, state?){//TODO update api call
+    //Configure HTTP Headers
+    var headers = this.setToken();
+    if(scope == null){
+      scope = 'nfl';
+    }
+    if(key == null){
+      key == "player-comparisons";
+    }
+    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+    if(page == null || count == null){
+      page = 1;
+      count = 1;
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
   }
 
   getAiArticleData(state){
@@ -144,10 +148,20 @@ export class DeepDiveService {
       });
   }
 
-  getRecArticleData(scope){
+  getRecArticleData(scope, state, batch, limit){
     var headers = this.setToken();
+    if(scope == null){
+      scope = 'NFL';
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    if(batch == null || limit == null){
+      batch = 1;
+      limit = 1;
+    }
     //this is the sidkeick url
-    var callURL = this._articleUrl + "sidekick/NFL";//TODO won't need uppercase after ai fixes
+    var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -170,7 +184,8 @@ export class DeepDiveService {
       arrayData.forEach(function(val,index){
         var curdate = new Date();
         var curmonthdate = curdate.getDate();
-        var date = GlobalFunctions.formatDate(val.publishedDate);
+        var date = moment(Number(val.publishedDate));
+        date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + date.format('hh:mm A') + ' ET';
         let carData = {
           image_url: GlobalSettings.getImageUrl(val['imagePath']),
           title:  "<span> Today's News </span>" + val['title'],
@@ -178,10 +193,9 @@ export class DeepDiveService {
           teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
           id:val['id'],
           articlelink: VerticalGlobalFunctions.formatSynRoute('story', val.id),
-          date: date.day,
+          date: date,
         };
         transformData.push(carData);
-
       });
 
       return transformData;
@@ -204,7 +218,7 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
-            hoverText: "View",
+            /*hoverText: "View",*/
             urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', val.id)
           }
       }
@@ -220,16 +234,18 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var dataLists = val.article_data[p];
       }
+      var date = moment(Number(val.last_updated) * 1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
           keyword: key.toUpperCase(),
-          publishedDate: dataLists.dateline ,
+          publishedDate: date,
           provider1: '',
           provider2: '',
           description: dataLists.displayHeadline,
           imageConfig: {
           imageClass: "image-100x56",
-          hoverText: "View",
+          /*hoverText: "View",*/
           imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
@@ -239,6 +255,7 @@ export class DeepDiveService {
 
     return articleStackArray;
   }
+
   transformToAiHeavyArticleRow(data, key){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
@@ -247,16 +264,18 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var eventType = val.article_data[p];
       }
+      var date = moment(Number(val.last_updated) * 1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
           keyword: key.toUpperCase(),
-          publishedDate: eventType.dateline,
+          publishedDate: date,
           provider1: '',
           provider2: '',
           description: eventType.metaHeadline,
           imageConfig: {
             imageClass: "image-100x56",
-            hoverText: "View",
+            /*hoverText: "View",*/
             imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
             urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
@@ -265,7 +284,6 @@ export class DeepDiveService {
     });
     return articleStackArray;
   }
-
 
   transformToArticleStack(data){
     var sampleImage = "/app/public/placeholder_XL.png";
@@ -283,12 +301,13 @@ export class DeepDiveService {
         imageConfig: {
           imageClass: "image-320x180",
           imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
-          hoverText: "View Article",
+          /*hoverText: "View Article",*/
           urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', topData.id)
         }
     };
     return articleStackData;
   }
+
   transformToRecArticles(data){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
@@ -306,14 +325,15 @@ export class DeepDiveService {
         var eventID = data['meta-data']['current']['eventID'];
       }
     }
-    articles = articles.slice(1,7);//get first 6 articles
     articles.forEach(function(val, index){
       var info = val.info;
+      var date = moment(Number(info.dateline)*1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
-          keyword: val.keyword,
-          new_date: info.dateline,
+          keyword: val.keyword.toUpperCase(),
+          new_date: date,
           displayHeadline: info.displayHeadline,
         }
       articleStackArray.push(s);
@@ -331,9 +351,12 @@ export class DeepDiveService {
     })
     return data;
   }
-  transformTileStack(data) {
+  transformTileStack(data, scope) {
     data = data.data;
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the MLB'];
+    if(scope == null){
+      scope = 'NFL';
+    }
+    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope.toUpperCase()];
     let pickATeam = ['Pick-team-page'];
     let leaguePage = ['League-page'];
     var tileLink = [pickATeam, pickATeam, leaguePage];

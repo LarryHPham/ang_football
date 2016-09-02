@@ -70,6 +70,8 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {VideoModule} from "../../fe-core/modules/video/video.module";
 import {VideoService} from "../../services/video.service";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {HeadlineData} from "../../global/global-interface";
 
 declare var moment;
 
@@ -130,7 +132,8 @@ export class TeamPage implements OnInit {
     partnerID:string = null;
     scope:string = null;
     hasError: boolean = false;
-
+    headlineError:boolean = false;
+    headlineData:HeadlineData;
     profileHeaderData:ProfileHeaderData;
     profileData:IProfileData;
     comparisonModuleData: ComparisonModuleData;
@@ -184,6 +187,7 @@ export class TeamPage implements OnInit {
                 private _twitterService: TwitterService,
                 private _comparisonService: ComparisonStatsService,
                 private _dailyUpdateService: DailyUpdateService,
+                private _headlineDataService:HeadlineDataService,
                 private _videoBatchService: VideoService) {
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
@@ -200,7 +204,7 @@ export class TeamPage implements OnInit {
               profile:'team',//current profile page
               teamId:this.pageParams.teamId, // teamId if it exists
               // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-08'
+              date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID,this.scope);
         });
@@ -229,6 +233,7 @@ export class TeamPage implements OnInit {
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
+                this.getHeadlines();
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
@@ -258,6 +263,20 @@ export class TeamPage implements OnInit {
                 console.log("Error getting team profile data for " + this.pageParams.teamId, err);
             }
         );
+    }
+
+    //api for Headline Module
+    private getHeadlines(){
+        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        this._headlineDataService.getAiHeadlineData(scope, this.pageParams.teamId)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData.data;
+                },
+                err => {
+                    console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
+                }
+            )
     }
 
     private dailyUpdateModule(teamId: number) {
@@ -390,7 +409,7 @@ export class TeamPage implements OnInit {
     }
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.pageParams).subscribe(
+        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
                 this.comparisonModuleData = data;
             },
