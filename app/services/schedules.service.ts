@@ -126,7 +126,6 @@ export class SchedulesService {
           {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
           {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
         ];
-        console.log(data.data.info.seasons.sort(function(a, b){return b-a}));
         scheduleData = {
           data:tableData,
           tabs:tabData,
