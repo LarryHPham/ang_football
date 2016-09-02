@@ -95,7 +95,6 @@ export class DirectoryPage {
       startsWith: this.startsWith,
       newlyAdded: this.newlyAdded
     }
-
     this._directoryService.getData(this.scope, this.pageType, params)
       .subscribe(
           data => this.setupData(data),
@@ -117,7 +116,7 @@ export class DirectoryPage {
       };
 
       var navigationPage = this.data ? "Directory-page-starts-with" : "Error-page";
-      let max = Math.round(info.totalItems/this.listingsLimit)
+      let max = Math.ceil(info.totalItems/this.listingsLimit);
       this.paginationParameters = {
         index: params['page'] != null ? Number(params['page']) : null,
         max: max,
