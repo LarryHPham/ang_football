@@ -98,7 +98,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "AVG", value: "Average"},
                         {key: "TD", value: "Touchdowns"},
                         {key: "INT", value: "Saves"},
-                        {key: "RATE", value: "Earned Run Average"}
+                        {key: "RATE", value: "Run Average"}
                     ]
                 },
                 Rushing:{
@@ -110,7 +110,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "TD", value: "Touchdowns"},
                         {key: "YDS/G", value: "Yards per Game"},
                         {key: "FUM", value: "Saves"},
-                        {key: "1DN", value: "Earned Run Average"}
+                        {key: "1DN", value: "Run Average"}
                     ]
                 },
                 Receiving:{
@@ -134,7 +134,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "SACK", value: "Sacks"},
                         {key: "PD", value: "Strikeouts"},
                         {key: "INT", value: "Saves"},
-                        {key: "FF", value: "Earned Run Average"}
+                        {key: "FF", value: "Run Average"}
                     ]
                 },
                 Special:{
@@ -146,7 +146,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "WHIP", value: "Walks + Hits per Inning Pitched"},
                         {key: "SO", value: "Strikeouts"},
                         {key: "SV", value: "Saves"},
-                        {key: "ERA", value: "Earned Run Average"}
+                        {key: "ERA", value: "Run Average"}
                     ],
 
                 },
