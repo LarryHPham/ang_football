@@ -28,7 +28,7 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
     providers: [StandingsService, ProfileHeaderService, Title],
 })
 
-export class StandingsPage implements OnInit {
+export class StandingsPage{
   public tabs: Array<TDLStandingsTabdata>;
   public pageParams: SportPageParameters = {}
   public titleData: TitleInputData;
@@ -36,6 +36,7 @@ export class StandingsPage implements OnInit {
   public hasError: boolean = false;
   public scope: string;
   public glossary: Array<GlossaryData>;
+  public seasonsArray: Array<any>;
   constructor(private _params: RouteParams,
               private _router:Router,
               private _title: Title,
@@ -126,6 +127,13 @@ export class StandingsPage implements OnInit {
       this.getLastUpdatedDateForPage(data);
     });
   }
+
+  private standingsFilterSelected(tabData: Array<any>) {
+    this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      this.getLastUpdatedDateForPage(data);
+    });
+  }
+
 
   private getLastUpdatedDateForPage(data: VerticalStandingsTableData[]) {
       //Getting the first 'lastUpdatedDate' listed in the StandingsData
