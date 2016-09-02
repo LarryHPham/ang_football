@@ -351,7 +351,7 @@ private dailyUpdateModule(playerId: number) {
     }
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.pageParams).subscribe(
+        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
               this.comparisonModuleData = data;
             },
