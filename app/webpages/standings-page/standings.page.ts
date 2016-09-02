@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {RouteParams} from "@angular/router-deprecated";
+import {RouteParams, Router} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
@@ -34,23 +34,29 @@ export class StandingsPage implements OnInit {
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;
+  public scope: string;
   public glossary: Array<GlossaryData>;
   constructor(private _params: RouteParams,
+              private _router:Router,
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
               private _mlbFunctions: VerticalGlobalFunctions) {
     _title.setTitle(GlobalSettings.getPageTitle("Standings"));
-
-    var type = _params.get("type");
-    if ( type !== null && type !== undefined ) {
-      type = type.toLowerCase();
-      this.pageParams.conference = Conference[type];
-    }
-    var teamId = _params.get("teamId");
-    if ( type == "team" && teamId !== null && teamId !== undefined ) {
-      this.pageParams.teamId = Number(teamId);
-    }
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.scope = parentParams.scope;
+        var type = _params.get("type");
+        if ( type !== null && type !== undefined ) {
+          type = type.toLowerCase();
+          this.pageParams.conference = Conference[type];
+        }
+        var teamId = _params.get("teamId");
+        if ( type == "team" && teamId !== null && teamId !== undefined ) {
+          this.pageParams.teamId = Number(teamId);
+        }
+        this.pageParams.scope = this.scope;
+        this.getTabs();
+    });
   }
   getGlossaryValue():Array<GlossaryData>{
     this.glossary = [
@@ -81,7 +87,7 @@ export class StandingsPage implements OnInit {
       ]
     return this.glossary;
   }
-  ngOnInit() {
+  getTabs() {
     this.getGlossaryValue();
     if ( this.pageParams.teamId ) {
       this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(

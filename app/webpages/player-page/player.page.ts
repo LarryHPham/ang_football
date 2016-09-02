@@ -198,7 +198,7 @@ export class PlayerPage implements OnInit {
               this.getImages(this.imageData);
               this.getDykService();
               this.getFaqService();
-              this.setupListOfListsModule();
+              // this.setupListOfListsModule();
               this.getNewsService();
 
               /*** Interact With [League Name]’s Fans ***/
@@ -362,8 +362,8 @@ private dailyUpdateModule(playerId: number) {
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData.listData;
-            this.listOfListsData["type"] = "player";
-            this.listOfListsData["id"] = this.pageParams.playerId;
+            // this.listOfListsData["type"] = "player";
+            // this.listOfListsData["id"] = this.pageParams.playerId;
           },
           err => {
             console.log('Error: listOfListsData API: ', err);

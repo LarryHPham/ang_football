@@ -30,17 +30,24 @@ export class ListOfListsService {
   getListOfListsService(urlParams, profileType: string, pageType: string){
     // Configure HTTP Headers
     var headers = this.setToken();
-
+    let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
-    console.log(urlParams);
-    let id      = urlParams.targetId != null ? urlParams.targetId : "";
+    let id      = urlParams.id != null ? urlParams.id : "";
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
     var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
-    let target = urlParams.target != null ? urlParams.target : "player";
+    var target =  profileType;
+
+    if (profileType == 'league' && pageType == 'module') {
+      id = '';
+      targetbit = '';
+
+    }
 
 
-    var url_api = "scope=" + 'nfl' + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + "&targetId=" + id;
+    var url_api = "scope=" + 'nfl' + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
+
+
 
     callURL += url_api;
 
@@ -157,8 +164,8 @@ export class ListOfListsService {
           subheader: ["Related List - ", profileLinkText],
           profileNameLink: {text: itemInfo.listName},
           description: itemDescription,
-        //ask  lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData[0].lastUpdated),
-          lastUpdatedDate: 'last-updated',
+          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData[0].lastUpdated),
+      //    lastUpdatedDate: 'last-updated',
           circleImageUrl: itemImgUrl,
           circleImageRoute: VerticalGlobalFunctions.formatTeamRoute(itemTargetData[0].teamName, itemTargetData[0].teamId), //replacement for
           rank: itemTargetData[0].rank,
@@ -194,6 +201,8 @@ export class ListOfListsService {
       let itemTarget = item.targetData;
 
 
+      
+      console.log('typeee2',itemListData);
       if( itemListData.length<1 ) return;
       itemListData.unshift(item.targetData);
       itemListData = itemListData.slice(1, 7);
@@ -237,22 +246,35 @@ export class ListOfListsService {
         profileTypePlural = "teams";
       }
 
+      let id;
+      switch(itemTarget[0]['rankType']) {
+        case 'team':
+          id = itemTarget[0]['teamId'];
+          break;
+        case 'player':
+          id = itemTarget[0]['playerId'];
+          break
+        default:
+          id = 'player';
+      }
+      console.log("typee33",id);
 
       var listData = {
       // url           : itemListInfo.url           != null  ? itemListInfo.url          : dummyUrl,
         name          : itemInfo.listName           != null  ? itemInfo.listName         : dummyName,
-      // target        : itemTarget.target,
+        target        : itemTarget[0].rankType,
     //   stat          : itemListInfo.stat          != null  ? itemListInfo.stat         : dummyStat,
     //   ordering      : itemListInfo.ordering      != null  ? itemListInfo.ordering     : dummyOrdering,
     //   scope         : itemListInfo.scope         != null  ? itemListInfo.scope        : dummyScope,
     //   conference    : itemListInfo.conference    != null  ? itemListInfo.conference   : dummyConference,
     //   division      : itemListInfo.division      != null  ? itemListInfo.division     : dummyDivision,
-        topname       : itemTarget.teamName        != null  ? itemTarget.teamName : itemTarget.playerFirstName + itemTarget.playerLastname,
+        topname       : itemTarget[0].teamName        != null  ? itemTarget[0].teamName : itemTarget[0].playerFirstName + itemTarget[0].playerLastname,
         listCount     : itemInfo.resultCount       != null  ? itemInfo.resultCount    : dummyListCount,
         pageCount     : itemInfo.pageCount         != null  ? itemInfo.pageCount    : dummyPageCount,
         listRank      : itemListData.rank      != null  ? itemListData.rank     : dummyListRank,
     //    icon          : itemListInfo.icon          != null  ? itemListInfo.icon         : dummyIcon,
         dataPoints    : [],
+        id            : id,
         ctaBtn        : '',
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
@@ -277,7 +299,7 @@ export class ListOfListsService {
 
           // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
           let firstItemHover = "<p>View</p><p>Profile</p>";
-          
+
           if (itemTarget[0].teamLogo == null) {
             itemTarget[0].teamLogo = itemTarget[0].playerHeadshotUrl;
           }

@@ -25,7 +25,7 @@
         <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
         <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
         <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        <list-of-lists *ngIf="profileHeaderData && listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData"></list-of-lists>
+        <!-- <list-of-lists *ngIf="profileHeaderData && listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData"></list-of-lists> -->
         <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
         <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace"></responsive-widget>
         <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->

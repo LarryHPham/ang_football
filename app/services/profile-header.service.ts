@@ -259,14 +259,14 @@ export class ProfileHeaderService {
     }
     var headerData = data.headerData;
 
-    var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
+    var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
 
     var formattedYearsInLeague = headerData.experience ? headerData.experience.toString() : "N/A";
     var firstSentence = "";
     var yearPluralStr = "years";
 
     var formattedAge = headerData.age ? headerData.age.toString() : "N/A";
-    var formattedHeight = headerData.height ? VerticalGlobalFunctions.formatHeightWithFoot(headerData.height) : "N/A"; //[6-foot-11]
+    var formattedHeight = headerData.height ? VerticalGlobalFunctions.formatHeightInchesWithFoot(headerData.height) : "N/A"; //[6-foot-11]
     var formattedWeight = headerData.weight ? headerData.weight.toString() : "N/A";
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
@@ -300,7 +300,7 @@ export class ProfileHeaderService {
                         formattedHeight + " tall";
                     }
                     if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighs in at " + formattedWeight
+                      description = description + " and weighs in at " + formattedWeight + " pounds";
                     }
                     description = description + ".";
 
@@ -335,7 +335,7 @@ export class ProfileHeaderService {
           },
           {
             label: headerData.stat2Type,
-            labelCont: headerData.stat1Desc,
+            labelCont: headerData.stat2Desc,
             value: headerData.stat2 ? GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(headerData.stat2) ) : null
           },
           {
@@ -365,10 +365,10 @@ export class ProfileHeaderService {
                     formattedAge;
 
                     if (formattedHeight != "N/A") {
-                        description = description + ", with a height of " + formattedHeight;
+                      description = description + ", with a height of " + formattedHeight;
                     }
                     if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighing in at " + formattedWeight
+                      description = description + " and weighing in at " + formattedWeight + " pounds";
                     }
                     description = description + ".";
 
@@ -403,7 +403,7 @@ export class ProfileHeaderService {
           },
           {
             label: headerData.stat2Type,
-            labelCont: headerData.stat1Desc,
+            labelCont: headerData.stat2Desc,
             value: headerData.stat2 ?  GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(headerData.stat2) ) : null
           },
           {
@@ -426,7 +426,7 @@ export class ProfileHeaderService {
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
 
-    var fullTeamName = headerData.teamMarket+', '+headerData.teamName;
+    var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
@@ -435,10 +435,9 @@ export class ProfileHeaderService {
     }
     var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
 
-    var description = "The" + fullTeamName +
+    var description = "The " + fullTeamName + ", " +
                       venueForDescription +
-                      "located in " + location +
-                      ". The " + fullTeamName +
+                      "located in " + location + ", " +
                       " are part of the " + headerData.divisionName +
                        ".";
 
@@ -458,10 +457,6 @@ export class ProfileHeaderService {
         {
           label: "Rank",
           value: headerData.rank ? headerData.rank.toString() : null
-        },
-        {
-          label: "Record",
-          value: headerData.leagueRecord
         }
       ],
       bottomDataPoints: [

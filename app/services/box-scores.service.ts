@@ -188,43 +188,22 @@ export class BoxScoresService {
       let YYYYMMDD = moment(Number(dates)).tz('America/New_York').format('YYYY-MM-DD');
       //Converts data to what is neccessary for each of the formatting functions for each component of box scores
         if(boxScores[dates]){
-          let team1Poss = boxScores[dates].team1Possession.split(':');
-          let team1HH = Number(team1Poss[0]);
-          let team1MM = Number(team1Poss[1]);
-          let team1SS = Number(team1Poss[2]);
-          if(team1HH > 0){
-            team1MM += (60 * team1HH);
-          }
-          let team2Poss = boxScores[dates].team2Possession.split(':').slice(1,3).join(':');
-          let team2HH = Number(team1Poss[0]);
-          let team2MM = Number(team1Poss[1]);
-          let team2SS = Number(team1Poss[2]);
-          if(team2HH > 0){
-            team2MM += (60 * team2HH);
-          }
-
-          // let newTeam1Poss = team1MM +':'+team1SS;
-          // let newTeam2Poss = team2MM +':'+team2SS;
-
-          let newTeam1Poss = '24:23';//TODO DUMMY DATA
-          let newTeam2Poss = '37:54';//TODO DUMMY DATA
-
           boxScoreObj[dates] = {};
           boxScoreObj[dates]['gameInfo']= {
             eventId: boxScores[dates].eventId,
             seasonId: boxScores[dates].seasonId,
             inningsPlayed: boxScores[dates].eventQuarter,
             timeLeft: boxScores[dates].eventQuarterTimeLeft,
-            live: true,
+            live: boxScores[dates].liveStatus == 'Y'?true:false,
             startDateTime: boxScores[dates].eventDate,
             startDateTimestamp: boxScores[dates].eventStartTime,
             dataPointCategories:['Score','Poss','Yards']
           };
           //0 = home team 1 = away team.
           if(boxScores[dates].eventPossession == 0){
-            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possesion:" + boxScores[dates].team1Abbreviation;
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possession:" + boxScores[dates].team1Abbreviation;
           }else{
-            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possesion:" + boxScores[dates].team2Abbreviation;
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possession:" + boxScores[dates].team2Abbreviation;
           }
           boxScoreObj[dates]['homeTeamInfo']= {
             name: boxScores[dates].team1FullName,
@@ -237,8 +216,7 @@ export class BoxScoresService {
             outcome: boxScores[dates].team1Outcome,
             score: boxScores[dates].team1Score,
             dataP1:boxScores[dates].team1Score,
-            dataP2:newTeam1Poss,
-            // dataP2:boxScores[dates].team1Poss,
+            dataP2:boxScores[dates].team1Possession,
             dataP3:boxScores[dates].team1Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[1]:null,
@@ -254,8 +232,7 @@ export class BoxScoresService {
             outcome: boxScores[dates].team2Outcome,
             score: boxScores[dates].team2Score,
             dataP1:boxScores[dates].team2Score,
-            dataP2:newTeam2Poss,
-            // dataP2:boxScores[dates].team2Poss,
+            dataP2:boxScores[dates].team2Possession,
             dataP3:boxScores[dates].team2Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[1]:null,

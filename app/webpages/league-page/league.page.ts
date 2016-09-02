@@ -229,7 +229,7 @@ export class LeaguePage implements OnInit {
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
-                this.setupListOfListsModule();
+                // this.setupListOfListsModule();
                 this.getDykService(this.profileType);
                 this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
@@ -342,12 +342,12 @@ export class LeaguePage implements OnInit {
           limit : 4,
           pageNum : 1
         }
-        this._lolService.getListOfListsService(params, "player", "module")
+        this._lolService.getListOfListsService(params, "league", "module")
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
-                    this.listOfListsData["id"] = this.pageParams.teamId;
-                    this.listOfListsData["type"] = "league";
+                    // this.listOfListsData["id"] = this.pageParams.teamId;
+                    // this.listOfListsData["type"] = "league";
                 },
                 err => {
                     console.log('Error: listOfListsData API: ', err);
