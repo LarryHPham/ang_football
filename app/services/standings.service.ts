@@ -117,8 +117,7 @@ export class StandingsService {
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       //TODO
-      /*console.log('PAGE PARAMS', pageParams);*/
-      url += "/nfl/" + season;
+      url += "/" + pageParams.scope + "/" + season;
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
       this.http.get(url)

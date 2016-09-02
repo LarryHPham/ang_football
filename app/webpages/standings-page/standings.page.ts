@@ -123,12 +123,14 @@ export class StandingsPage{
   }
 
   private standingsTabSelected(tabData: Array<any>) {
+    this.pageParams.scope = this.scope;
     this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
       this.getLastUpdatedDateForPage(data);
     });
   }
 
   private standingsFilterSelected(tabData: Array<any>) {
+    this.pageParams.scope = this.scope;
     this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
       this.getLastUpdatedDateForPage(data);
     });
