@@ -62,7 +62,6 @@ export class VerticalGlobalFunctions {
     return articleRoute ? articleRoute : ['Error-page'];
   }
 
-
   /**
      * - Pass in datapoints to required parameters and formats
    * them into a single route that is in lowerCase Kebab.
@@ -133,10 +132,26 @@ export class VerticalGlobalFunctions {
   static formatHeight(heightStr: string) {
     return heightStr ? heightStr.replace(/(\d+)-(\d+)/, "$1'$2\"") : "N/A";
   }
+
   static formatHeightInches(heightStr: string) {
     var heightInFeet = (Number(heightStr) / 12)|0;
     var inches = Number(heightStr) % 12;
     return heightInFeet + "-" + inches;
+  }
+
+  static formatHeightInchesWithFoot(heightStr: string) {
+    var heightInFeet = (Number(heightStr) / 12)|0;
+    var inches = Number(heightStr) % 12;
+    if (inches == 0) {
+      return heightInFeet + " foot";
+    }
+    return heightInFeet + "-foot-" + inches;
+  }
+
+  static formatHeightDigits(height) {
+    var feet =  height.slice(0, 1) + "'";
+    var inches = height.slice(1, 2) + '"';
+    return feet+inches;
   }
 
   /**
@@ -183,47 +198,54 @@ export class VerticalGlobalFunctions {
     }
   }
 
-  // static MLBPosition(position: string): string{
-  //     if( typeof position == 'undefined' || position === null){
-  //       return position;
-  //     }
-  //     var posFullName = {
-  //       1: 'Pitcher',
-  //       2: 'Catcher',
-  //       3: '1st Baseman',
-  //       4: '2nd Baseman',
-  //       5: '3rd Baseman',
-  //       6: 'Shortstop',
-  //       7: 'Left Field',
-  //       8: 'Center Field',
-  //       9: 'Right Field',
-  //       D: 'Designated Hitter'
-  //     };
-  //     let upperPosition = position.toUpperCase();
-  //     let displayPosition = posFullName[upperPosition];
-  //     return displayPosition !== undefined ? displayPosition: position;
-  //   }
-
-  // static MLBPositionToAB(position: string): string{
-  //     if( typeof position == 'undefined' || position === null ){
-  //       return 'DH';
-  //     }
-  //     var posAbbrName = {
-  //       1: 'P',
-  //       2: 'C',
-  //       3: '1B',
-  //       4: '2B',
-  //       5: '3B',
-  //       6: 'S',
-  //       7: 'LF',
-  //       8: 'CF',
-  //       9: 'RF',
-  //       D: 'DH',
-  //     };
-  //     let upperPosition = position.toUpperCase();
-  //     let displayAbbrPosition = posAbbrName[upperPosition];
-  //     return displayAbbrPosition !== undefined ? displayAbbrPosition: position;
-  //   }
+  static getWeekDropdown(scope){
+    let weekDropdown = []
+    if(scope == 'nfl'){
+      weekDropdown = [
+        {key:'1', value: 'Week1'},
+        {key:'2', value: 'Week2'},
+        {key:'3', value: 'Week3'},
+        {key:'4', value: 'Week4'},
+        {key:'5', value: 'Week5'},
+        {key:'6', value: 'Week6'},
+        {key:'7', value: 'Week7'},
+        {key:'8', value: 'Week8'},
+        {key:'9', value: 'Week9'},
+        {key:'10', value: 'Week10'},
+        {key:'11', value: 'Week11'},
+        {key:'12', value: 'Week12'},
+        {key:'13', value: 'Week13'},
+        {key:'14', value: 'Week14'},
+        {key:'15', value: 'Week15'},
+        {key:'16', value: 'Week16'},
+        {key:'17', value: 'Week17'},
+        {key:'18', value: 'Wild Card'},
+        {key:'19', value: 'Divisional Round'},
+        {key:'20', value: 'Pro Bowl'},
+        {key:'21', value: 'Super Bowl'},
+      ];
+    }else if (scope == 'ncaaf'){
+      weekDropdown = [
+        {key:'1', value: 'Week1'},
+        {key:'2', value: 'Week2'},
+        {key:'3', value: 'Week3'},
+        {key:'4', value: 'Week4'},
+        {key:'5', value: 'Week5'},
+        {key:'6', value: 'Week6'},
+        {key:'7', value: 'Week7'},
+        {key:'8', value: 'Week8'},
+        {key:'9', value: 'Week9'},
+        {key:'10', value: 'Week10'},
+        {key:'11', value: 'Week11'},
+        {key:'12', value: 'Week12'},
+        {key:'13', value: 'Week13'},
+        {key:'14', value: 'Week14'},
+        {key:'15', value: 'Week15'},
+        {key:'16', value: 'Bowls'}
+      ];
+    }
+    return weekDropdown;
+  }
 
 
   /**
@@ -290,45 +312,44 @@ export class VerticalGlobalFunctions {
   static formatStatName(stat: string) {
     //coming from backend as a stat in the list info
    switch (stat) {
-
     //CB, DE. DB, DL, DT, S, LB
-    case 'player_defense_total_tackles':
+    case 'defense_total_tackles':
       return "Total Tackles";
-    case 'player_defense_sacks':
+    case 'defense_sacks':
       return "Total Sacks";
-    case 'player_defense_interceptions':
+    case 'defense_interceptions':
       return "Interceptions";
-    case 'player_defense_forced_fumbles':
+    case 'defense_forced_fumbles':
       return "Forced Fumbles";
-    case 'player_defense_passes_defended':
+    case 'defense_passes_defended':
       return "Passes Defended";
 
     // K
-    case 'player_kicking_field_goals_made':
+    case 'kicking_field_goals_made':
       return "Field Goals Made";
-    case 'player_kicking_field_goal_percentage_made':
+    case 'kicking_field_goal_percentage_made':
       return "Field Goal Percentage Made";
-    case 'player_kicking_extra_points_made':
+    case 'kicking_extra_points_made':
       return "Extra Points Made";
-    case 'player_kicking_total_points_scored':
+    case 'kicking_total_points_scored':
       return "Total Points";
-    case 'player_kicking_total_points_per_game':
+    case 'kicking_total_points_per_game':
       return "Average Points Per Game";
 
     // P
-    case 'player_punting_gross_yards':
+    case 'punting_gross_yards':
       return "Gross Punting Yards";
-    case 'player_punting_punts':
+    case 'punting_punts':
       return "Total Punts";
-    case 'player_punting_average':
+    case 'punting_average':
       return "Average Distance Punt";
-    case 'player_punting_inside_twenty':
+    case 'punting_inside_twenty':
       return "Punt % Within 20";
-    case 'player_punting_longest_punt':
+    case 'punting_longest_punt':
       return "Longest Punt";
 
     // QB
-    case 'passer_rating':
+    case 'passing_rating':
       return "Passer Rating";
     case 'passing_yards':
       return "Passing Yards";
@@ -340,43 +361,91 @@ export class VerticalGlobalFunctions {
       return "Completions";
 
     // RB
-    case 'player_rushing_yards':
+    case 'rushing_yards':
       return "Rushing Yards";
-    case 'player_rushing_attempts':
+    case 'rushing_attempts':
       return "Ruhing Attempts";
-    case 'player_rushing_yards_per_carry':
+    case 'rushing_yards_per_carry':
       return "Yards Per Carry";
-    case 'player_rushing_touchdowns':
+    case 'rushing_touchdowns':
       return "Touchdowns";
-    case 'player_rushing_yards_per_carry':
+    case 'rushing_yards_per_carry':
       return "Yards Per Game";
 
     // RS
-    case 'player_returning_yards':
+    case 'returning_yards':
       return "Rushing Yards";
-    case 'player_rushing_attempts':
+    case 'rushing_attempts':
       return "Ruhing Attempts";
-    case 'player_rushing_yards_per_carry':
+    case 'rushing_yards_per_carry':
       return "Yards Per Carry";
-    case 'player_rushing_touchdowns':
+    case 'rushing_touchdowns':
       return "Touchdowns";
-    case 'player_rushing_yards_per_carry':
+    case 'rushing_yards_per_carry':
       return "Yards Per Game";
 
     // WR, TE
-    case 'player_receiving_yards':
+    case 'receiving_yards':
       return "Receiving Yards";
-    case 'player_receiving_receptions':
+    case 'receiving_receptions':
       return "Receptions";
-    case 'player_receiving_average_per_reception':
+    case 'receiving_average_per_reception':
       return "Average Yards Per Reception";
-    case 'player_receiving_touchdowns':
+    case 'receiving_touchdowns':
       return "Touchdowns";
-    case 'player_returning_touchdowns':
+    case 'returning_touchdowns':
       return "Yards Per Game";
 
      default: return GlobalFunctions.toTitleCase(stat.replace(/_/g, ' '));
    }
+  }
+
+  static convertPositionAbbrv(position) {
+    switch (position) {
+      case 'cb' :
+      return 'Cornerback';
+
+      case 'db' :
+      return 'Defensive Back';
+
+      case 'de' :
+      return 'Defensive End';
+
+      case 'dl' :
+      return 'Defensive Lineman';
+
+      case 'dt' :
+      return 'Defensive Tackle';
+
+      case 'saf' :
+      return 'Safety';
+
+      case 'lb' :
+      return 'Linebaker';
+
+      case 'k' :
+      return 'Kicker';
+
+      case 'p' :
+      return 'Punter';
+
+      case 'qb' :
+      return 'Quarterback';
+
+      case 'rb' :
+      return 'Runningback';
+
+      case 'rs' :
+      return 'Return specialist';
+
+      case 'wr' :
+      return 'Wide Receiver';
+
+      case 'te' :
+      return 'Tight End';
+
+      default : return null;
+    }
   }
 
   static formatSynRoute(articleType: string, eventID: string): Array<any> {

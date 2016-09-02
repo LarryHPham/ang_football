@@ -75,6 +75,10 @@ export class SchedulesService {
 
     var callURL = this._apiUrl+'/schedule/'+profile;
 
+    if(typeof year == 'undefined'){
+      year = null;
+    }
+
     if(profile == 'league'){//if league call then add scope
       callURL += '/'+ scope;
     }
@@ -83,7 +87,6 @@ export class SchedulesService {
       callURL += '/'+id;
     }
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-    // console.log(callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -96,12 +99,7 @@ export class SchedulesService {
     var displayYear;
     var eventTab:boolean = false;
 
-    if(typeof year == 'undefined'){
-      year = new Date().getFullYear();//once we have historic data we shall show this
-      year = 2015;// TODO test
-    }
-
-    if(jsYear == year){
+    if(jsYear == year || year == null){
       displayYear = "Current Season";
     }else{
       displayYear = year + " Season";
@@ -117,28 +115,38 @@ export class SchedulesService {
     this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year)
     .subscribe( data => {
       var gamesData = data.data != null? data.data.games:null;
-      if(gamesData.length > 0){
+      var scheduleData;
         let isTeamProfilePage = profile == 'league' ? false :true;
         var tableData = this.setupTableData(eventStatus, year, gamesData, teamId, limit, isTeamProfilePage);
         var tabData = [
           {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
           {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
         ];
-        var scheduleData = {
+        scheduleData = {
           data:tableData,
           tabs:tabData,
           carData: this.setupCarouselData(gamesData, tableData[0], limit),
           pageInfo:{
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
-          }
+          },
+          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons):null
         }
         callback(scheduleData);
-      }
-    })
+      },
+    err => callback(null))
   }
 
-
+  formatYearDropdown(data){
+    let yearArray = [];
+    data.forEach(function(val){
+      let yearObj = {};
+      yearObj['key'] = val;
+      yearObj['value'] = val;
+      yearArray.push(yearObj);
+    })
+    return yearArray;
+  }
 
   setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
     this.getSchedule(scope, 'league', eventStatus, limit, pageNum)

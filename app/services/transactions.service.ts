@@ -128,7 +128,7 @@ export class TransactionsService {
       errorMessagePrepend = "Sorry, the " + profileName + " do not currently have any data for ";
     }
     else { //is league-wide data
-      route = ['Transactions-mlb-page',{limit:1000, pageNum: 1}];
+      route = ['Transactions-tdl-page',{limit:1000, pageNum: 1}];
       errorMessagePrepend = "Sorry, " + profileName + " does not currently have any data for ";
     }
 
@@ -184,7 +184,7 @@ export class TransactionsService {
           console.log('Error getting transaction data for ' + tab.tabDataKey);
         }
       );
-  }
+  } //getTransactionsService
 
   getEmptyCarousel(tab: TransactionTabData): Array<SliderCarouselInput> {
     return [SliderCarousel.convertToCarouselItemType1(2, {
@@ -274,9 +274,9 @@ export class TransactionsService {
 
     listDataArray = data.map(function(val, index){
       var playerRoute = null;
-      if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
-        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
-      }
+
+      playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
+
       var playerTextLink = {
         route: playerRoute,
         text: val.playerLastName + ", " + val.playerFirstName + " ",
