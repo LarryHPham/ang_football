@@ -184,7 +184,8 @@ export class DeepDiveService {
       arrayData.forEach(function(val,index){
         var curdate = new Date();
         var curmonthdate = curdate.getDate();
-        var date = GlobalFunctions.formatDate(val.publishedDate);
+        var date = moment(Number(val.publishedDate));
+        date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + date.format('hh:mm A') + ' ET';
         let carData = {
           image_url: GlobalSettings.getImageUrl(val['imagePath']),
           title:  "<span> Today's News </span>" + val['title'],
@@ -192,10 +193,9 @@ export class DeepDiveService {
           teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
           id:val['id'],
           articlelink: VerticalGlobalFunctions.formatSynRoute('story', val.id),
-          date: date.day,
+          date: date,
         };
         transformData.push(carData);
-
       });
 
       return transformData;
@@ -327,13 +327,13 @@ export class DeepDiveService {
     }
     articles.forEach(function(val, index){
       var info = val.info;
-      //TODO
-      var month = info.dateline;
+      var date = moment(Number(info.dateline)*1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
           keyword: val.keyword.toUpperCase(),
-          new_date: info.dateline,
+          new_date: date,
           displayHeadline: info.displayHeadline,
         }
       articleStackArray.push(s);
