@@ -18,6 +18,7 @@ export interface PlayerData {
   playerFirstName: string;
   playerLastName: string;
   playerId: string;
+  playerPosition: string;
   playerHeadshot: string;
   teamLogo: string;
   teamName: string;
@@ -29,7 +30,6 @@ export interface PlayerData {
   weight: number;
   age: number;
   yearsExperience: number;
-  playerPosition: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -348,7 +348,7 @@ export class ComparisonStatsService {
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
     var fields = this.defenseFields;
     var position = data.playerOne.playerPosition;
-    if(data.playerOne.playerPostition == "QB"){
+    if(position == "QB"){
       fields = this.passingFields;
     } else if(position == "RB" || position == "FB" || position == "HB"){
       fields = this.rushingFields;
