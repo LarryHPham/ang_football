@@ -218,7 +218,7 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
-            hoverText: "View",
+            /*hoverText: "View",*/
             urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', val.id)
           }
       }
@@ -245,7 +245,7 @@ export class DeepDiveService {
           description: dataLists.displayHeadline,
           imageConfig: {
           imageClass: "image-100x56",
-          hoverText: "View",
+          /*hoverText: "View",*/
           imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
@@ -275,7 +275,7 @@ export class DeepDiveService {
           description: eventType.metaHeadline,
           imageConfig: {
             imageClass: "image-100x56",
-            hoverText: "View",
+            /*hoverText: "View",*/
             imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
             urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
@@ -301,7 +301,7 @@ export class DeepDiveService {
         imageConfig: {
           imageClass: "image-320x180",
           imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
-          hoverText: "View Article",
+          /*hoverText: "View Article",*/
           urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', topData.id)
         }
     };
@@ -356,7 +356,7 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope];
+    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope.toUpperCase()];
     let pickATeam = ['Pick-team-page'];
     let leaguePage = ['League-page'];
     var tileLink = [pickATeam, pickATeam, leaguePage];
