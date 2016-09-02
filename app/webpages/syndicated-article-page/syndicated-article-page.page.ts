@@ -65,7 +65,7 @@ export class SyndicatedArticlePage{
         this.getDeepDiveArticle(this.eventID);
       }
       else {
-        this.getDeepDiveVideo(this.eventID);
+        //this.getDeepDiveVideo(this.eventID);
       }
 
       GlobalSettings.getParentParams(_router, partnerID => {
@@ -105,14 +105,14 @@ export class SyndicatedArticlePage{
         }
       )
     }
-    private getDeepDiveVideo(articleID){
+    /*private getDeepDiveVideo(articleID){
       this._deepdiveservice.getDeepDiveVideoService(articleID).subscribe(
         data => {
           this.articleData = data.data;
           this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
         }
       )
-    }
+    }*/
 
     getGeoLocation() {
       var defaultState = 'ca';
@@ -148,11 +148,12 @@ export class SyndicatedArticlePage{
     }
 
     getRecomendationData(){
-      var state = this.geoLocation.toUpperCase(); //needed to uppoercase for ai to grab data correctly
-      this._deepdiveservice.getRecArticleData(state, '1', '1')
+      var state = 'KS'; //needed to uppoercase for ai to grab data correctly
+      this._deepdiveservice.getRecArticleData('nfl')
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
             this.recomendationData = [this.recomendationData[0], this.recomendationData[1], this.recomendationData[2]];
           });
+        console.log("recommended data", this.recomendationData);
     }
 }

@@ -33,7 +33,7 @@ export class BoxScoresService {
   if(profile == 'player'){
     profile = 'team'
   }else if (profile == 'league'){
-    date += '/addAi'
+    // date += '/addAi'
   }
 
   //date needs to be the date coming in AS EST and come back as UTC
@@ -216,7 +216,7 @@ export class BoxScoresService {
             outcome: boxScores[dates].team1Outcome,
             score: boxScores[dates].team1Score,
             dataP1:boxScores[dates].team1Score,
-            dataP2:boxScores[dates].team1Possession,
+            dataP2:boxScores[dates].team1Possession != ''? boxScores[dates].team1Possession:null,
             dataP3:boxScores[dates].team1Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[1]:null,
@@ -232,7 +232,7 @@ export class BoxScoresService {
             outcome: boxScores[dates].team2Outcome,
             score: boxScores[dates].team2Score,
             dataP1:boxScores[dates].team2Score,
-            dataP2:boxScores[dates].team2Possession,
+            dataP2:boxScores[dates].team2Possession != ''? boxScores[dates].team2Possession:null,
             dataP3:boxScores[dates].team2Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[1]:null,
@@ -362,7 +362,7 @@ export class BoxScoresService {
 
     // Sort games by time
     let sortedGames = game.sort(function(a, b) {
-      return new Date(a.gameInfo.startDateTime).getTime() - new Date(b.gameInfo.startDateTime).getTime();
+      return Number(a.gameInfo.startDateTimestamp) - Number(b.gameInfo.startDateTimestamp);
     });
 
     sortedGames.forEach(function(data,i){

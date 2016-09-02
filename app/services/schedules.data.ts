@@ -329,7 +329,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
       case "away":
         let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
         isLocation = true;
-        display = item.team2Name.length > 10 ? item.team2Abbreviation : item.team2Name;
+        display = awayFullTeamName.length > 10 ? item.team2Abbreviation : item.team2Name;
         sort = item.team2Name;
         imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
         if ( !this.isTeamProfilePage || this.curTeam != item.team2Id ) {
@@ -340,7 +340,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
       case "home":
       let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
         isLocation = true;
-        display = item.team1Name.length > 10 ? item.team1Abbreviation : item.team1Name;
+        display = homeFullTeamName.length > 10 ? item.team1Abbreviation : item.team1Name;
         sort = item.team1Name;
         imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
         if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
