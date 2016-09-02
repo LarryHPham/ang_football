@@ -129,7 +129,7 @@ export class ArticlePages implements OnInit {
                     }, 5000);
                 }
             );
-        this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
+        this.randomArticles = ArticlePages.getRandomArticles(this.randomArticles, this.scope, this.eventType);
         var random = [];
         for (var i = 0; i < 3; i++) {
             this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i], this.scope)

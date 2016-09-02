@@ -251,6 +251,20 @@ export class LeaguePage implements OnInit {
         );
     }
 
+    //api for League Headline Module
+    private getLeagueHeadlines() {
+        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        this._headlineDataService.getAiHeadlineDataLeague(null, scope)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData;
+                },
+                err => {
+                    console.log("Error loading AI headline data for League Page", err);
+                }
+            )
+    }
+
     //grab tab to make api calls for post of pre event table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
@@ -349,7 +363,7 @@ export class LeaguePage implements OnInit {
         let params = {
           limit : 4,
           pageNum : 1
-        }
+        };
         this._lolService.getListOfListsService(params, "league", "module")
             .subscribe(
                 listOfListsData => {
@@ -370,20 +384,6 @@ export class LeaguePage implements OnInit {
             err => {
                 console.log("Error getting news data");
             });
-    }
-    //api for League Headline Module
-    private getLeagueHeadlines() {
-        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
-        this._headlineDataService.getAiHeadlineDataLeague(null, scope)
-            .subscribe(
-                HeadlineData => {
-                    this.headlineData = HeadlineData;
-                },
-                err => {
-                    this.headlineError = true;
-                    console.log("Error loading AI headline data for League Page", err);
-                }
-            )
     }
 
     //api for BOX SCORES
