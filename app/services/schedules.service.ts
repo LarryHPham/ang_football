@@ -134,7 +134,7 @@ export class SchedulesService {
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
           },
-          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons):null,
+          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons.sort(function(a, b){return b-a})):null,
           weeks: data.data.info.weeks.length > 0 ? this.formatWeekDropdown(data.data.info.weeks):null
         }
         callback(scheduleData);
@@ -156,8 +156,25 @@ export class SchedulesService {
     let yearArray = [];
     data.forEach(function(val){
       let yearObj = {};
+      let weekDisplay;
+      switch(val){
+        case '18':
+          weekDisplay = 'Wild Card';
+        break;
+        case '19':
+          weekDisplay = 'Divisional Round';
+        break;
+        case '20':
+          weekDisplay = 'Pro Bowl';
+        break;
+        case '21':
+          weekDisplay = 'Super Bowl';
+        break;
+        default:
+        weekDisplay = 'Week '+val;
+      }
       yearObj['key'] = val;
-      yearObj['value'] = 'Week '+val;
+      yearObj['value'] = weekDisplay;
       yearArray.push(yearObj);
     })
     return yearArray;
