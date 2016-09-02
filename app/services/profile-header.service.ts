@@ -442,7 +442,7 @@ export class ProfileHeaderService {
                        ".";
 
     var header: ProfileHeaderData = {
-      profileName: headerData.teamName,
+      profileName: fullTeamName,
       profileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
       backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
       profileTitleFirstPart: headerData.teamMarket,
