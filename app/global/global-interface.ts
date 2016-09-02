@@ -11,6 +11,7 @@ export interface SportPageParameters {
   teamId?: number;
   playerId? :number;
   type?: string;
+  scope?: string;
 }
 
 export interface Link {

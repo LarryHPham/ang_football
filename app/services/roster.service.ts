@@ -33,8 +33,7 @@ export class RosterService {
     rosterTab.isLoaded = false;
     rosterTab.hasError = false;
 
-    // var fullUrl = this._apiUrl + "/team/roster/" + teamId;
-    var fullUrl = "http://dev-touchdownloyal-api.synapsys.us" + "/roster/" + teamId;
+    var fullUrl = this._apiUrl + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
     return this.http.get(fullUrl, {headers: this.setToken()})
       .map(res => res.json())
