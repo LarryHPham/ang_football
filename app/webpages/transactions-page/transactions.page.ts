@@ -39,6 +39,11 @@ export class TransactionsPage implements OnInit{
   selectedTabKey: string;
   listSort: string = "recent";
 
+  transactionsActiveTab: any;
+  transactionsData:TransactionTabData;
+  transactionFilter1: Array<any>;
+  dropdownKey1: string;
+
   public scope: string;
   public partnerID:string;
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
@@ -64,6 +69,14 @@ export class TransactionsPage implements OnInit{
     );
   }
 
+  ngOnInit(){
+    if(this.transactionFilter1 != null){
+      this.dropdownKey1 = this.transactionFilter1[0].key;
+    }
+    this.getProfileInfo();
+
+  }
+
   getProfileInfo() {
     if ( this.pageParams.teamId ) {
       this._profileService.getTeamProfile(this.pageParams.teamId)
@@ -72,9 +85,8 @@ export class TransactionsPage implements OnInit{
 
             //var stats = data.headerData.stats;
             var profileHeaderData = this._profileService.convertTeamPageHeader(data, "");
-            this.profileName = data.headerData.teamName;
+            this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
-
             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
             profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
             this.profileHeaderData = profileHeaderData;
@@ -109,38 +121,42 @@ export class TransactionsPage implements OnInit{
           }
         )
     }
-  }
+  } //getProfileInfo()
 
   getTransactionsPage() {
     var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.selectedTabKey);
+
     if ( matchingTabs.length > 0 ) {
       var tab = matchingTabs[0];
-      this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'page', this.sort, this.limit, this.pageNum)
-        .subscribe(data => {
-          //do nothing
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.transactionFilter1, 100, 1)
+        .subscribe(
+          transactionsData => {
+
+            //set years for dropdown
+            if ( this.transactionFilter1 == null ) {
+              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+            }
+
         }, err => {
           console.log("Error loading transaction data");
         })
     }
-  }
+  } //getTransactionsPage()
 
-  ngOnInit(){
-    this.getProfileInfo();
-  }
-
-  tabSwitched(tab) {
+  transactionsTab(tab) {
     if ( this.selectedTabKey ) {
       this.profileHeaderData.text3 = tab.tabDisplay + ' - ' + this.profileName;
     }
     this.selectedTabKey = tab.tabDataKey;
+    this.transactionsActiveTab = tab;
     this.getTransactionsPage();
-  }
+  } //transactionsTab(tab)
 
-  dropdownChanged(event) {
-    if( this.listSort != event ){
-      this.listSort = event;
-      this.sort = this.sort == "asc" ? "desc" : "asc";
-      this.getTransactionsPage();
-    }
+  transactionsFilterDropdown(filter) {
+    // if ( this.transactionsActiveTab == null ) {
+    //   this.transactionsActiveTab = this.transactionsData[0];
+    // }
+    // this.transactionFilter1 = filter.key;
+    // this.getTransactionsPage();
   }
 }

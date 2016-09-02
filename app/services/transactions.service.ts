@@ -49,7 +49,7 @@ interface TransactionInfo {
     pub2Id: string;
     pub2TeamId: string;
     lastUpdate: string;
-    playerHeadshot: string;
+    playerImage: string;
     teamLogo: string;
     totalResults: number;
     totalPages: number;
@@ -88,11 +88,6 @@ export class TransactionsService {
       }];
 
       tabs.forEach(tab => {
-        tab.sortOptions = [
-          { key: "2016", value: "2016"},
-          { key: "2015", value: "2015"}
-        ],
-
         tab.sortTitle = "Season: ",
         tab.errorMessage = errorMessagePrepend + tab.tabDisplay.toLowerCase(),
         tab.includeDropdown = isPage
@@ -108,6 +103,16 @@ export class TransactionsService {
       case "suspensions":     return "Suspension";
       case "injuries":        return "Injury";
     }
+  }
+
+  formatYearDropown() {
+    let currentYear = new Date().getFullYear();
+    let yearArray = [];
+    for ( var i = 0; i < 4; i++ ) {
+      var newYear = currentYear - i;
+      yearArray.push({key:newYear, value:newYear});
+    }
+    return yearArray;
   }
 
   getTabsForPage(profileName: string, teamId?: number) {
@@ -139,19 +144,13 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?, year?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, limit?, page?){
     //Configure HTTP Headers
     var headers = this.setToken();
 
-    if( year == "2016" ){
-      tab.selectedSort = "2016";
-    } else if( year == "2015" ){
-      tab.selectedSort = "2015";
-    }
-
-    if( limit == null){ limit = 10;}
+    if( limit == null){ limit = 5;}
     if( page == null){ page = 1;}
-    if ( year == null ) { year ="2016" };
+    if ( filter == null ) { filter ="2016" };
 
     var callURL = this._apiUrl + '/';
 
@@ -161,7 +160,9 @@ export class TransactionsService {
     else {
        callURL += 'transactions/league/';
     }
-    callURL += year + '/' + tab.tabDataKey + '/' + page + '/' + limit;
+
+    callURL += filter + '/' + tab.tabDataKey + '/' + page + '/' + limit;
+    console.log(callURL);
 
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
@@ -253,7 +254,7 @@ export class TransactionsService {
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
-          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
+          circleImageUrl: GlobalSettings.getImageUrl(val.playerImage),
           circleImageRoute: playerRoute
           // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
           // subImageRoute: teamRoute
@@ -290,7 +291,7 @@ export class TransactionsService {
           value   : [playerTextLink, val.contents],
           url     : null
         }],
-        imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute)
+        imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerImage), playerRoute)
       };
     });
     return listDataArray;

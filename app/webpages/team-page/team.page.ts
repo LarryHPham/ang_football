@@ -151,7 +151,9 @@ export class TeamPage implements OnInit {
     currentBoxScores:any;
     dateParam:any;
 
+    transactionsActiveTab: any;
     transactionsData:TransactionModuleData;
+    transactionFilter1: Array<any>;
     // currentYear: any;
 
     schedulesData:any;
@@ -206,9 +208,7 @@ export class TeamPage implements OnInit {
         });
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     /**
      *
@@ -283,9 +283,7 @@ export class TeamPage implements OnInit {
 
                     console.log("Error getting video data");
                 }
-
         );
-
     }
 
     private getTwitterService() {
@@ -372,6 +370,43 @@ export class TeamPage implements OnInit {
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
 
+    private transactionsTab(tab) {
+        this.transactionsActiveTab = tab;
+        this.getTransactionsData();
+    }
+    private transactionsFilterDropdown(filter) {
+      if ( this.transactionsActiveTab == null ) {
+        this.transactionsActiveTab = this.transactionsData.tabs[0];
+      }
+      this.transactionFilter1 = filter.key;
+      this.getTransactionsData();
+    }
+    private getTransactionsData() {
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.transactionFilter1)
+      .subscribe(
+          transactionsData => {
+            // for ( var i = 0; i < this.transactionsData.tabs.length; i++ ) {
+            //   this.transactionsData.tabs[i].isLoaded = false;
+            // }
+            // console.log('this.transactionsData');
+            // console.log(this.transactionsData);
+            console.log('this.transactionsActiveTab');
+            console.log(this.transactionsActiveTab);
+            // this.transactionsActiveTab.isLoaded = true;
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
+            console.log('getTransactionsData - filter');
+            console.log(transactionsData);
+
+              if ( this.transactionFilter1 == null ) {
+                this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              }
+          },
+          err => {
+          console.log('Error: transactionsData API: ', err);
+          }
+      );
+    }
+
     private getImages(imageData) {
         this._imagesService.getImages(this.profileType, this.pageParams.teamId)
             .subscribe(data => {
@@ -400,18 +435,6 @@ export class TeamPage implements OnInit {
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
-    }
-
-    private transactionsTab(tab) {
-        this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'module')
-        .subscribe(
-            transactionsData => {
-                //do nothing
-            },
-            err => {
-            console.log('Error: transactionsData API: ', err);
-            }
-        );
     }
 
     setupListOfListsModule() {

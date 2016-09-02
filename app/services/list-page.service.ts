@@ -95,6 +95,7 @@ export class ListPageService {
     pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
+
   getListPageService(query, errorMessage: string, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
@@ -385,6 +386,7 @@ export class ListPageService {
             statDescription,
             null),
             imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
+
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
           ctaBtn:'',
