@@ -204,7 +204,7 @@ export class TeamPage implements OnInit {
               profile:'team',//current profile page
               teamId:this.pageParams.teamId, // teamId if it exists
               // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-08'
+              date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID,this.scope);
         });
@@ -402,7 +402,7 @@ export class TeamPage implements OnInit {
     }
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.pageParams).subscribe(
+        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
                 this.comparisonModuleData = data;
             },
