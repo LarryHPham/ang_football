@@ -33,7 +33,6 @@ export class NewsService {
     }
 
     fullUrl += '/'+type+'/'+scope+'/'+urlParams.limit+'/'+urlParams.pageNum+targetId;
-    console.log('FULL NEWS URL',fullUrl);
     return this.http.get(fullUrl, {
       headers: headers
     })
@@ -42,7 +41,6 @@ export class NewsService {
     )
     .map(
       data => {
-        console.log('DATA FOR NEWS',data);
         return {
           news: this.newsData(data.data)
         };
@@ -54,7 +52,6 @@ export class NewsService {
     var newsArray = [];
     var dummyImg = "/app/public/no-image.svg";
     var _getHostName = GlobalFunctions.getHostName;
-    console.log(data);
     data.forEach(function(val, index){
       var News = {
         title: val.title,
@@ -70,7 +67,6 @@ export class NewsService {
           hrefUrl: true
         }
       };
-      console.log('News Car',News);
 
       newsArray.push(News);
     });

@@ -344,7 +344,6 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         id : this.pageParams.teamId
       }
-      console.log('NEWS SERVICE',this.scope,params);
         this._newsService.getNewsService(this.scope,params, "team", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;
@@ -446,7 +445,6 @@ export class TeamPage implements OnInit {
           limit : 5,
           pageNum : 1
         }
-        console.log('PAGE PARAMS',this.pageParams);
         this._lolService.getListOfListsService(params, "team", "module")
             .subscribe(
                 listOfListsData => {

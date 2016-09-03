@@ -44,29 +44,8 @@ export class ListOfListsService {
 
     }
 
-
     var url_api = "scope=" + 'nfl' + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
-
-
-
     callURL += url_api;
-
-
-    // scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
-
-    // for(var q of urlParams){
-    //   console.log("url", urlParams[q]);
-    //   if(q == 'scope'){
-    //     callURL+= q +'='+urlParams[q];
-    //
-    //   }else{
-    //     callURL += '&'+q+'='+urlParams[q];
-    //   }
-    // }
-    // if(newParams.scope == 'nfl') {
-    //   callURL+= "scope=" + newParams.scope + "&target=" + newParams.target + "&perPageCount=" + newParams.perPageCount + "&pageNumber=" + newParams.pageNumber + "&targetId=" + newParams.targetId;
-    // }
-    console.log('LIST OF LISTS URL', callURL);
 
 
     return this.http.get( callURL, {
@@ -75,7 +54,6 @@ export class ListOfListsService {
       .map(res => res.json())
       .map(
         data => {
-          console.log('DATA', data);
 
           if ( !data || !data.data ) {
             return null;
@@ -201,14 +179,12 @@ export class ListOfListsService {
       let itemTarget = item.targetData;
 
 
-      
-      console.log('typeee2',itemListData);
+
       if( itemListData.length<1 ) return;
       itemListData.unshift(item.targetData);
       itemListData = itemListData.slice(1, 7);
 
     //  let itemListInfo = item['listInfo'];
-      //console.log(item.listInfo);
       //  let ctaUrlArray = itemListInfo.url.split("/");
       //let ctaUrlArray = 'test';
 
@@ -231,8 +207,6 @@ export class ListOfListsService {
         1
       ]
 
-    //  var ctaUrlArray = ctaUrlArr.toString().replace(/,/g,'/');
-    //  console.log(ctaUrlArray);
 
       // removes first empty item and second "list" item
       //  ctaUrlArray.splice(0,2);
@@ -257,7 +231,6 @@ export class ListOfListsService {
         default:
           id = 'player';
       }
-      console.log("typee33",id);
 
       var listData = {
       // url           : itemListInfo.url           != null  ? itemListInfo.url          : dummyUrl,
@@ -287,12 +260,7 @@ export class ListOfListsService {
 
       itemListData.forEach(function(val, index) {
         let itemUrlRouteArray = itemTarget[0]['rankType'] == "player"  ?
-          // MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
-          // MLBGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-          // console.log(val);
-          // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
-        //  let firstItemHover = "<p>View</p><p>Profile</p>";
-        //----
+
 
           VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
           VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
@@ -308,7 +276,6 @@ export class ListOfListsService {
           }
 
 
-        //  console.log('imageURL', val);
         listData.dataPoints.push(
           {
             imageClass : index > 0 ? "image-43" : "image-121",
