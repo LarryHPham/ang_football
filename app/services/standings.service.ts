@@ -63,9 +63,9 @@ export class StandingsService {
       //Is an TLD page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
       /*console.log('league conference tabs',Conference, Division);*/
-      tabs.push(this.createTab(true, currentTeamId));
-      tabs.push(this.createTab(false, currentTeamId, 'Division'));//TODO
+      tabs.push(this.createTab(true, currentTeamId, 'Division'));//TODO
       tabs.push(this.createTab(false, currentTeamId, 'Conference'));//TODO
+      tabs.push(this.createTab(false, currentTeamId));
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
       //Is a League page: show All Divisions, then American, then National
