@@ -59,7 +59,10 @@ export class PlayerStatsService implements OnDestroy{
         if(tabData[1]== "2015"||tabData[1]== "2014" ){
                this.seasonId = tabData[1];
             if ( !this.seasonId && standingsTab.seasonIds.length > 0 ) {
+
+                console.log(standingsTab.seasonIds,"seasonId");
                 this.seasonId = standingsTab.seasonIds[0].key;
+
 
             }
         }else{
@@ -99,6 +102,7 @@ export class PlayerStatsService implements OnDestroy{
 
         }
         let url = "http://dev-touchdownloyal-api.synapsys.us/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
+        console.log("this is url: ", url);
        
         this.http.get(url)
             .map(res => res.json())
