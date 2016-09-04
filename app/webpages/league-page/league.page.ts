@@ -293,7 +293,6 @@ export class LeaguePage implements OnInit {
       if(this.selectedFilter2 != null && this.selectedFilter1 == null){
         this.selectedFilter1 = new Date().getFullYear().toString();
       }
-      console.log(this.selectedFilter1, this.selectedFilter2);
       this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
