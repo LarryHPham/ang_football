@@ -126,7 +126,6 @@ export class SchedulesService {
       var scheduleData;
         let isTeamProfilePage = profile == 'league' ? false :true;
         var tableData = this.setupTableData(eventStatus, year, gamesData, teamId, limit, isTeamProfilePage);
-        console.log(tableData);
         var tabData = [
           {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
           {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
@@ -263,7 +262,6 @@ export class SchedulesService {
       if(typeof teamId == 'undefined'){
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         rows.forEach(function(val,index){// seperate the dates into their own Obj tables for post game reports
-          console.log(val);
           var splitToDate = moment(val.startDateTimestamp).tz('America/New_York').format('YYYY-MM-DD');
           if(typeof dateObject[splitToDate] == 'undefined'){
             dateObject[splitToDate] = {};
@@ -275,12 +273,8 @@ export class SchedulesService {
           }
         });
         for(var date in dateObject){
-          console.log(dateObject[date]['display']);
           var newPostModel = new SchedulesTableModel(dateObject[date]['tableData'], eventStatus, teamId, isTeamProfilePage);
           var newPostTable = new SchedulesTableData(dateObject[date]['display'], newPostModel, currentTeamProfile);
-          console.log(newPostModel);
-          console.log(newPostTable);
-          postDate.push(newPostTable);
         }
         return postDate;
       }else{//if there is a teamID

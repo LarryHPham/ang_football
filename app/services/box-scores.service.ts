@@ -181,11 +181,11 @@ export class BoxScoresService {
 
   transformBoxScores(data){
     let boxScores = data.data;
-    let aiContent = data.aiContent;
     var boxScoreObj = {};
     var newBoxScores = {};
     for(var dates in boxScores){
       let YYYYMMDD = moment(Number(dates)).tz('America/New_York').format('YYYY-MM-DD');
+      let aiContent = boxScores[dates].aiContent;
       //Converts data to what is neccessary for each of the formatting functions for each component of box scores
         if(boxScores[dates]){
           boxScoreObj[dates] = {};
@@ -262,14 +262,7 @@ export class BoxScoresService {
             boxScoreObj[dates]['aiContent'] = {//TODO DUMMY DATA
               event: aiData.eventId,
               featuredReport: aiData.articleData,
-              home:{
-                images: [
-                ],
-              }
             };
-            aiContent.images.forEach(function(val){
-              boxScoreObj[dates]['aiContent']['home']['images'].push(GlobalSettings.getImageUrl(val.imageUrl));
-            })
           }
         }else{
           boxScoreObj[dates] = null;
@@ -531,16 +524,16 @@ export class BoxScoresService {
       gameArticle['report'] = "Read The Report";
       gameArticle['headline'] = aiContent.featuredReport[report].displayHeadline;
       gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
-      var i = aiContent['home']['images'];
+      var i = aiContent.featuredReport[report]['images']['home_images'];
       var random1 = Math.floor(Math.random() * i.length);
       var random2 = Math.floor(Math.random() * i.length);
       gameArticle['images'] = [];
 
       if(random1 == random2){
-        gameArticle['images'].push(i[random1]);
+        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
       }else{
-        gameArticle['images'].push(i[random1]);
-        gameArticle['images'].push(i[random2]);
+        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
       }
     }
     return gameArticle;
