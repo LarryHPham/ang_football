@@ -155,7 +155,7 @@ export class SyndicatedArticlePage{
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
             //this.recomendationData = [this.recomendationData[0], this.recomendationData[1], this.recomendationData[2]];
           });
-        console.log("recommended data", this.recomendationData);
+        //console.log("recommended data", this.recomendationData);
     }
     ngOnInit(){
         this.getRecomendationData()

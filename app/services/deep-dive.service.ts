@@ -162,7 +162,7 @@ export class DeepDiveService {
     }
     //this is the sidkeick url
     var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
-      console.log("url and data",callURL);
+      //console.log("url and data",callURL);
       return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
