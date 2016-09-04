@@ -1,4 +1,4 @@
-import {Component, AfterViewInit} from '@angular/core';
+import {Component, AfterViewInit,Input} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
@@ -51,6 +51,7 @@ export class SyndicatedArticlePage{
   public imageData: Array<string>;
   public imageTitle: Array<string>;
   public copyright: Array<string>;
+    @Input() scope: string;
   iframeUrl: any;
   constructor(
     private _params:RouteParams,
@@ -149,11 +150,14 @@ export class SyndicatedArticlePage{
 
     getRecomendationData(){
       var state = 'KS'; //needed to uppoercase for ai to grab data correctly
-      this._deepdiveservice.getRecArticleData('nfl')
+        this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation, 2, 3)
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
-            this.recomendationData = [this.recomendationData[0], this.recomendationData[1], this.recomendationData[2]];
+            //this.recomendationData = [this.recomendationData[0], this.recomendationData[1], this.recomendationData[2]];
           });
-        console.log("recommended data", this.recomendationData);
+        //console.log("recommended data", this.recomendationData);
+    }
+    ngOnInit(){
+        this.getRecomendationData()
     }
 }
