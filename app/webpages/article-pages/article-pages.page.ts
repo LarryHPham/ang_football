@@ -45,8 +45,8 @@ export class ArticlePages implements OnInit {
     imageData:Array<any>;
     imageLinks:Array<any>;
     imageTitle:Array<any>;
+    randomArticles:Array<any>;
     randomHeadlines:Array<any>;
-    recommendedImageData:Array<any>;
     trendingData:Array<any>;
     trendingImages:Array<any>;
     aiSidekick:boolean = true;
@@ -63,7 +63,6 @@ export class ArticlePages implements OnInit {
     date:string;
     pageIndex:string;
     partnerId:string;
-    randomArticles:string;
     rawUrl:string;
     title:string;
     scope:string = null;
@@ -129,7 +128,7 @@ export class ArticlePages implements OnInit {
                     }, 5000);
                 }
             );
-        this.randomArticles = ArticlePages.getRandomArticles(this.randomArticles, this.scope, this.eventType);
+        this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
         var random = [];
         for (var i = 0; i < 3; i++) {
             this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i], this.scope)
@@ -142,7 +141,6 @@ export class ArticlePages implements OnInit {
                                 var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_subtype_id, false);
                             }
                             this.eventID = HeadlineData['data'][0].event_id.toString();
-                            this.recommendedImageData = "derp";
                             random.push(ArticlePages.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
                         }
                     }
@@ -421,7 +419,7 @@ export class ArticlePages implements OnInit {
             eventID: eventID,
             images: GlobalSettings.getBackgroundImageUrl(recommendations.image_url),
             date: moment(recommendations.last_updated).format('MMMM DD, YYYY'),
-            keyword: "BASEBALL"
+            keyword: "FOOTBALL"
         };
         return articles;
     }
