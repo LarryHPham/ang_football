@@ -187,8 +187,8 @@ export class PlayerPage implements OnInit {
               this.dateParam ={
                 profile:'player',
                 teamId:this.teamId, // teamId if it exists
-                // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-                date: '2015-09-11'
+                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+                // date: '2015-09-11'
               }
               this.getBoxScores(this.dateParam);
 

@@ -199,8 +199,8 @@ export class LeaguePage implements OnInit {
             this.dateParam ={
               profile:'league',//current profile page
               teamId: this.scope,
-              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-11'
+              date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              // date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID, this.scope);
         });
@@ -290,6 +290,9 @@ export class LeaguePage implements OnInit {
       if(filter.value == 'filter2'){
         this.selectedFilter2 = filter.key;
       }
+      if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+        this.selectedFilter1 = new Date().getFullYear().toString();
+      }
       this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
@@ -316,9 +319,6 @@ export class LeaguePage implements OnInit {
         this.schedulesData = schedulesData;
       }, year, week) // isTeamProfilePage = true
     }
-
-
-
 
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
 
