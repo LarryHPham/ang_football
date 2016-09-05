@@ -15,6 +15,12 @@ export class DykService {
   getDykService(profile, id?){
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
+    fullUrl = "http://dev-touchdownloyal-api.synapsys.us";
+    /*
+     http://dev-touchdownloyal-api.synapsys.us/dyk/player/1
+     http://dev-touchdownloyal-api.synapsys.us/dyk/league/1
+     http://dev-touchdownloyal-api.synapsys.us/dyk/team/1
+    */
     fullUrl += "/dyk/"+profile;
     if(id !== undefined){
       fullUrl += "/" + id;

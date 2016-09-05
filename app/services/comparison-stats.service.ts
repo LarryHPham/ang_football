@@ -18,7 +18,6 @@ export interface PlayerData {
   playerFirstName: string;
   playerLastName: string;
   playerId: string;
-  playerPosition: string;
   playerHeadshot: string;
   teamLogo: string;
   teamName: string;
@@ -30,6 +29,7 @@ export interface PlayerData {
   weight: number;
   age: number;
   yearsExperience: number;
+  playerPosition: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -99,8 +99,6 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
       teamId: string,
       playerList: Array<{key: string, value: string}>
     }>;
-
-    scope: string;
 
     constructor(private _service: ComparisonStatsService) {}
 
@@ -173,11 +171,10 @@ export class ComparisonStatsService {
   private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
   private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
   private returningFields = ["K.ATT", "K.YDS", "K.AVG", "P.ATT", "P.YDS", "P.AVG", "TD"];//TODO
-  private scope: string;
+
   constructor(public http: Http) { }
 
-  getInitialPlayerStats(scope, pageParams: SportPageParameters): Observable<ComparisonModuleData> {
-    this.scope = scope;
+  getInitialPlayerStats(pageParams: SportPageParameters): Observable<ComparisonModuleData> {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
 
@@ -186,6 +183,8 @@ export class ComparisonStatsService {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
         return null;
       }
+    // try{
+      // console.log("DATA", data, "player one keys", data.playerOne.statistics);
       data.playerOne.statistics = this.formatPlayerData(data.playerOne.playerId, data.data);
       data.playerTwo.statistics = this.formatPlayerData(data.playerTwo.playerId, data.data);
       data.bestStatistics = this.formatPlayerData("statHigh", data.data);
@@ -193,6 +192,9 @@ export class ComparisonStatsService {
       data.bars = this.createComparisonBars(data);
       var playerName1 = data.playerOne.playerFirstName + " " + data.playerOne.playerLastName;
       var playerName2 = data.playerTwo.playerFirstName + " " + data.playerTwo.playerLastName;
+    // }catch(error){
+    //   console.log("ERROR", error);
+    // }
       var team1Data = {
         teamId: data.playerOne.teamId,
         playerList: [{key: data.playerOne.playerId, value: playerName1}]
@@ -234,6 +236,7 @@ export class ComparisonStatsService {
   }
 
   getPlayerList(teamId: string): Observable<Array<{key: string, value: string, class: string}>> {
+    //http://dev-homerunloyal-api.synapsys.us/team/comparisonRoster/2800
     //http://dev-touchdownloyal-api.synapsys.us/comparisonRoster/team/135
     let playersUrl = this._apiUrl + "/comparisonRoster/team/" + teamId;
     return this.http.get(playersUrl)
@@ -243,8 +246,9 @@ export class ComparisonStatsService {
     });
   }
 
-  getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
-    let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;//TODO
+  getTeamList(): Observable<Array<{key: string, value: string}>> {
+    let teamsUrl = this._apiUrl + "/comparisonTeamList/nfl";//TODO
+    // console.log("teams url: " + teamsUrl);
     return this.http.get(teamsUrl)
       .map(res => res.json())
       .map(data => {
@@ -285,8 +289,8 @@ export class ComparisonStatsService {
   */
   private formatTeamList(teamList) {
     return teamList.map(team => {
-      var teamName = team.name + " " + team.nickname;
-      return {key: team.id, value: teamName};
+      var teamName = team.teamFirstName + " " + team.teamLastName;
+      return {key: team.teamId, value: teamName};
     });
   }
 
@@ -348,7 +352,7 @@ export class ComparisonStatsService {
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
     var fields = this.defenseFields;
     var position = data.playerOne.playerPosition;
-    if(position == "QB"){
+    if(data.playerOne.playerPostition == "QB"){
       fields = this.passingFields;
     } else if(position == "RB" || position == "FB" || position == "HB"){
       fields = this.rushingFields;

@@ -64,7 +64,7 @@ export class DraftHistoryService {
 
 @Injectable()
 export class MLBDraftHistoryService extends DraftHistoryService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
+  private _apiUrl: string = "http://dev-touchdownloyal-api.synapsys.us";
   constructor(public http: Http){
     super();
   }
@@ -233,7 +233,6 @@ export class MLBDraftHistoryService extends DraftHistoryService {
   private detailedData(data: Array<PlayerDraftData>, sortBy){
     var listDataArray = data.map(function(val, index){
       var playerFullName = val.playerFirstName + " " + val.playerLastName;
-      var playerFullNameUrl = val.playerFirstName + "-" + val.playerLastName;
       if (val.playerCity == null || val.playerState == null){
         location = "N/A";
       }
@@ -243,7 +242,10 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       var rank = (index+1);
 
       var playerRoute = null;
-      playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullNameUrl, val.playerId);
+      if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
+        }
+      playerRoute = VerticalGlobalFunctions.formatPlayerRoute("boston-red-sox", "david-price", "95151"); //todo
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
       var listData = {
         dataPoints: ListPageService.detailsData(
@@ -252,9 +254,10 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           ],
           val.playerOverallPick+' Overall',
           [//sub left text
-            {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
+            {text:'<span class="hometown">Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
           ],
-          'Draft Round '+val.playerRound),
+          'Draft Round '+val.playerRound,
+          'fa fa-map-marker'),
         imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
         hasCTA:true,
         ctaDesc: playerRoute ? 'Want more info about this player?' : 'This player is currently not active.',

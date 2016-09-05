@@ -74,11 +74,13 @@ export class DeepDivePage implements OnInit{
       private _geoLocation:GeoLocation,
       private _partnerData: PartnerHeader,
       public ngZone:NgZone){
+
         // needs to get Geolocation first
+      this.profileName = "MLB";
+
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
-          this.profileName = this.scope;
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           this.isHomeRunZone = partnerHome;
           if(this.partnerID != null){

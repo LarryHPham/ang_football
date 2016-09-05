@@ -33,7 +33,7 @@ export class BoxScoresService {
   if(profile == 'player'){
     profile = 'team'
   }else if (profile == 'league'){
-    // date += '/addAi'
+    date += '/addAi'
   }
 
   //date needs to be the date coming in AS EST and come back as UTC
@@ -42,7 +42,7 @@ export class BoxScoresService {
     .map(res => res.json())
     .map(data => {
       // transform the data to YYYY-MM-DD objects from unix
-      var transformedDate = this.transformBoxScores(data);
+      var transformedDate = this.transformBoxScores(data.data);
       return {
         transformedDate:transformedDate,
         aiArticle: profile == 'league' && data.aiContent != null ? data.aiContent : null
@@ -179,13 +179,13 @@ export class BoxScoresService {
       })
   }
 
-  transformBoxScores(data){
-    let boxScores = data.data;
+  transformBoxScores(boxScores){
     var boxScoreObj = {};
     var newBoxScores = {};
+
+
     for(var dates in boxScores){
       let YYYYMMDD = moment(Number(dates)).tz('America/New_York').format('YYYY-MM-DD');
-      let aiContent = boxScores[dates].aiContent;
       //Converts data to what is neccessary for each of the formatting functions for each component of box scores
         if(boxScores[dates]){
           boxScoreObj[dates] = {};
@@ -216,7 +216,7 @@ export class BoxScoresService {
             outcome: boxScores[dates].team1Outcome,
             score: boxScores[dates].team1Score,
             dataP1:boxScores[dates].team1Score,
-            dataP2:boxScores[dates].team1Possession != ''? boxScores[dates].team1Possession:null,
+            dataP2:boxScores[dates].team1Possession,
             dataP3:boxScores[dates].team1Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team1Record.split('-')[1]:null,
@@ -232,7 +232,7 @@ export class BoxScoresService {
             outcome: boxScores[dates].team2Outcome,
             score: boxScores[dates].team2Score,
             dataP1:boxScores[dates].team2Score,
-            dataP2:boxScores[dates].team2Possession != ''? boxScores[dates].team2Possession:null,
+            dataP2:boxScores[dates].team2Possession,
             dataP3:boxScores[dates].team2Yards,
             winRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[0]:null,
             lossRecord: boxScores[dates].team1Record != null ? boxScores[dates].team2Record.split('-')[1]:null,
@@ -257,16 +257,48 @@ export class BoxScoresService {
             home:boxScores[dates].team1OtScore,
             away:boxScores[dates].team2OtScore
           };
-          if(aiContent != null){
-            let aiData = aiContent.featuredReport.article.data[0];
-            boxScoreObj[dates]['aiContent'] = {//TODO DUMMY DATA
-              event: aiData.eventId,
-              featuredReport: aiData.articleData,
-            };
-          }
+
+          boxScoreObj[dates]['aiContent'] = {//TODO DUMMY DATA
+            event: "60169",
+              featuredReport: {
+                'pregame-report': {
+                displayHeadline: "Yankees step up to plate against Orioles",
+                metaHeadline: "Baltimore Orioles vs New York Yankees Saturday, September 3, 2016 at Oriole Park at Camden Yards",
+                dateline: null,
+                article: [
+                "On Sep. 3, the New York Yankees will travel to Baltimore, Md., to take on the Baltimore Orioles. Baltimore will look to guard their home field by stifling the Yankees' offense. So far this season, the Orioles' defense has allowed 4.65 runs per game on average. To silence the crowd, New York will need to be explosive out of the gate."
+                ]
+              }
+            },
+            home:{
+              images: [
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/4bf2e420-fbe4-4c3e-947f-2fb3deb1f5a2.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/2904a8e4-38de-4e36-bd62-375db797d0d6.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/c0874dc1-f65b-449d-8deb-6991481ff8b9.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/b26e3fdf-59c8-4db3-aa23-480e6f729c9c.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/686fc23c-d651-4dd8-8c35-20615555fffd.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/3a519543-9e60-4423-8826-4ff015b3010f.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/e77b46e0-2fe1-416d-bcd4-7107a5da52d7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/738df517-420d-4ff4-a255-2c2457348e41.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/fda7c0dd-9b90-45e3-a0d6-be4b5b7c4bd7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/94fa2a26-3889-4c63-bbaf-8786bed50c2f.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/98029b7d-7944-4208-8ef5-8bc29dec5124.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/4bdb612a-aa93-4570-b7a4-931dd6bef5c7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/5655bd4d-b08c-49f3-8f48-1e3a77c6851e.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/64eed990-cb91-4bef-b080-f26af042a085.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/5e6c1658-f023-4848-8f74-23e5b2fd1cb7.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/249a610e-8b04-4cbb-b7dd-ced836c9d1b5.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/cad19ddf-cd5d-40de-b04c-3fc6a085c97c.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/ca14d063-d44d-4e19-8fb0-09e5c7b1d85f.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/d95ab13c-eeb4-4e81-8fb5-76ccafcb31a6.jpg",
+                "https://prod-sports-images.synapsys.us/mlb/players/liveimages/472cb019-3c74-4ef3-aa95-809cef65c4ff.jpg"
+              ],
+            }
+          };
         }else{
           boxScoreObj[dates] = null;
         }
+
 
         if(typeof newBoxScores[YYYYMMDD] == 'undefined'){
           newBoxScores[YYYYMMDD] = [];
@@ -330,7 +362,7 @@ export class BoxScoresService {
 
     // Sort games by time
     let sortedGames = game.sort(function(a, b) {
-      return Number(a.gameInfo.startDateTimestamp) - Number(b.gameInfo.startDateTimestamp);
+      return new Date(a.gameInfo.startDateTime).getTime() - new Date(b.gameInfo.startDateTime).getTime();
     });
 
     sortedGames.forEach(function(data,i){
@@ -524,16 +556,16 @@ export class BoxScoresService {
       gameArticle['report'] = "Read The Report";
       gameArticle['headline'] = aiContent.featuredReport[report].displayHeadline;
       gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
-      var i = aiContent.featuredReport[report]['images']['home_images'];
+      var i = aiContent['home']['images'];
       var random1 = Math.floor(Math.random() * i.length);
       var random2 = Math.floor(Math.random() * i.length);
       gameArticle['images'] = [];
 
       if(random1 == random2){
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        gameArticle['images'].push(i[random1]);
       }else{
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
+        gameArticle['images'].push(i[random1]);
+        gameArticle['images'].push(i[random2]);
       }
     }
     return gameArticle;

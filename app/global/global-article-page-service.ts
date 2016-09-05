@@ -6,26 +6,26 @@ import {GlobalSettings} from "../global/global-settings";
 
 export class ArticleDataService {
 
-    constructor(public http:Http) {
-    }
+    constructor(public http:Http) {}
 
-    getArticle(eventID, eventType, partnerId, scope) {
+    getArticleData(eventID, eventType, partnerId) {
         var fullUrl = GlobalSettings.getArticleUrl();
         //having the query string is only temporary until the partner site link issue is figured out.
-        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "?partnerId=" + partnerId + "&affiliation=" + scope)
+        return this.http.get(fullUrl + eventType + '/' + eventID + "?partnerId=" + partnerId)
             .map(res => res.json())
             .map(data => data);
     }
 
-    getArticleData(url) {
-        return this.http.get(url)
-            .map(res => res.json())
-            .map(data => data);
-    }
-
-    getRecommendationsData(eventID, eventType, scope) {
+    getRecommendationsData(eventID) {
         var fullUrl = GlobalSettings.getRecommendUrl();
-        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "&affiliation=" + scope)
+        return this.http.get(fullUrl + eventID)
+            .map(res => res.json())
+            .map(data => data);
+    }
+
+    getTrendingData() {
+        var fullUrl = GlobalSettings.getTrendingUrl();
+        return this.http.get(fullUrl)
             .map(res => res.json())
             .map(data => data);
     }

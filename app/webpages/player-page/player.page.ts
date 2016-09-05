@@ -130,9 +130,7 @@ export class PlayerPage implements OnInit {
   twitterData: Array<twitterModuleData>;
 
   schedulesData:any;
-  scheduleFilter1:Array<any>;
-  selectedFilter1:string;
-  eventStatus: string;
+  scheduleFilter:any;
 
   scope: string;
 
@@ -187,14 +185,13 @@ export class PlayerPage implements OnInit {
               this.dateParam ={
                 profile:'player',
                 teamId:this.teamId, // teamId if it exists
-                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-                // date: '2015-09-11'
+                // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+                date: '2015-09-03'
               }
               this.getBoxScores(this.dateParam);
 
               /*** Keep Up With Everything [Player Name] ***/
-              this.eventStatus = 'pregame';
-              this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+              this.getSchedulesData('postgame');//grab pre event data for upcoming games
               this.setupSeasonstatsData();
               this.setupComparisonData();
               /*** Other [League Name] Content You May Love ***/
@@ -235,39 +232,30 @@ private dailyUpdateModule(playerId: number) {
               console.log("Error getting season stats data for "+ this.pageParams.playerId, err);
           });
   }
-
   //api for Schedules
   //grab tab to make api calls for post of pregame table
   private scheduleTab(tab) {
       if(tab == 'Upcoming Games'){
-        this.eventStatus = 'pregame';
-        this.getSchedulesData(this.eventStatus, null);
+          this.getSchedulesData('pregame');
       }else if(tab == 'Previous Games'){
-        this.eventStatus = 'postgame';
-        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+          this.getSchedulesData('postgame');
       }else{
-        this.eventStatus = 'postgame';
-        this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
+          this.getSchedulesData('postgame');// fall back just in case no status event is present
       }
-  }
-  private filterDropdown(filter){
-    this.selectedFilter1 = filter.key;
-    this.getSchedulesData(this.eventStatus, this.selectedFilter1);
   }
 
   //api for Schedules
   private getSchedulesData(status, year?){
     var limit = 5;
     this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.teamId, (schedulesData) => {
-      if(status == 'pregame'){
-        this.scheduleFilter1=null;
-      }else{
-        if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-          this.scheduleFilter1 = schedulesData.seasons;
-        }
-      }
+      this.scheduleFilter=[
+        {key:'2016', value: '2016'},
+        {key:'2015', value: '2015'},
+        {key:'2014', value: '2014'},
+        {key:'2013', value: '2013'}
+      ];
       this.schedulesData = schedulesData;
-    }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
+    }) // isTeamProfilePage = true
   }
 
   private getTwitterService() {
@@ -351,7 +339,7 @@ private dailyUpdateModule(playerId: number) {
     }
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+        this._comparisonService.getInitialPlayerStats(this.pageParams).subscribe(
             data => {
               this.comparisonModuleData = data;
             },

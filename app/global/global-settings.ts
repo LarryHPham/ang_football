@@ -10,14 +10,17 @@ export class GlobalSettings {
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
     private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
-    private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
 
-    private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
+    private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php'
 
     private static _imageUrl:string = 'images.synapsys.us';
+    private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
+    private static _recommendUrl:string = '-homerunloyal-ai.synapsys.us/headlines/event/';
+    private static _headlineUrl:string = '-homerunloyal-ai.synapsys.us/headlines/team/';
+    private static _trendingUrl:string = '-homerunloyal-ai.synapsys.us/sidekick';
     private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
     private static _homepageUrl:string = '.touchdownloyal.com';
     private static _homepageLinkName:string = 'touchdownloyal';
@@ -97,18 +100,18 @@ export class GlobalSettings {
     }
 
     static getRecommendUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._recommendUrl;
     }
 
     static getTrendingUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._trendingUrl;
     }
     static getRecUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._recUrl;
     }
 
     static getHeadlineUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._headlineUrl;
     }
 
     static getNewsUrl():string {

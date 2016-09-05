@@ -69,11 +69,12 @@ export class SchedulesService {
   }
 
   //possibly simpler version of getting schedules api call
-  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?, week?){
+  getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?){
     //Configure HTTP Headers
     var headers = this.setToken();
 
     var callURL = this._apiUrl+'/schedule/'+profile;
+
     if(typeof year == 'undefined'){
       year = null;
     }
@@ -85,13 +86,7 @@ export class SchedulesService {
     if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
-
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-
-    //optional week parameters
-    if( week != null){
-      callURL += '/'+week;
-    }
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -99,7 +94,7 @@ export class SchedulesService {
       });
   }
 
-  getScheduleTable(dataSchedule, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, year?, week?){
+  getScheduleTable(dataSchedule, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, year?){
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
     var displayYear;
     var eventTab:boolean = false;
@@ -116,11 +111,8 @@ export class SchedulesService {
     }else{
       eventTab = false;
     }
-    if(typeof year == 'undefined'){
-      year = null;
-      week = null;
-    }
-    this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year, week)
+
+    this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year)
     .subscribe( data => {
       var gamesData = data.data != null? data.data.games:null;
       var scheduleData;
@@ -138,8 +130,7 @@ export class SchedulesService {
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
           },
-          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons.sort(function(a, b){return b-a})):null,
-          weeks: data.data.info.weeks.length > 0 ? this.formatWeekDropdown(data.data.info.weeks):null
+          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons):null
         }
         callback(scheduleData);
       },
@@ -152,33 +143,6 @@ export class SchedulesService {
       let yearObj = {};
       yearObj['key'] = val;
       yearObj['value'] = val;
-      yearArray.push(yearObj);
-    })
-    return yearArray;
-  }
-  formatWeekDropdown(data){
-    let yearArray = [];
-    data.forEach(function(val){
-      let yearObj = {};
-      let weekDisplay;
-      switch(val){
-        case '18':
-          weekDisplay = 'Wild Card';
-        break;
-        case '19':
-          weekDisplay = 'Divisional Round';
-        break;
-        case '20':
-          weekDisplay = 'Pro Bowl';
-        break;
-        case '21':
-          weekDisplay = 'Super Bowl';
-        break;
-        default:
-        weekDisplay = 'Week '+val;
-      }
-      yearObj['key'] = val;
-      yearObj['value'] = weekDisplay;
       yearArray.push(yearObj);
     })
     return yearArray;
@@ -238,7 +202,22 @@ export class SchedulesService {
     });
     return modifiedArray;
   }
-
+  getInning(url){// should only run if game is live and pregame
+    var inning = {
+      'pregame-report':0,
+      'first-inning-report':1,
+      'second-inning-report':2,
+      'third-inning-report':3,
+      'fourt-inning-report':4,
+      'fifth-inning-report':5,
+      'sixth-inning-report':6,
+      'seventh-inning-report':7,
+    }
+    if(inning[url] == null){
+      inning[url] = 8;
+    }
+    return inning[url];
+  }
 
   //rows is the data coming in
   private setupTableData(eventStatus, year, rows: Array<any>, teamId, maxRows: number, isTeamProfilePage: boolean): Array<SchedulesTableData> {
@@ -250,15 +229,15 @@ export class SchedulesService {
     var currentTeamProfile = teamId != null ? teamId : null;
     //TWO tables are to be made depending on what type of tabs the use is click on in the table
     if(eventStatus == 'pregame'){
-      let tableName = this.formatGroupName(year,eventStatus);
+      // let tableName = this.formatGroupName(year,eventStatus);
       var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);
-      var tableArray = new SchedulesTableData(tableName , table, currentTeamProfile);
+      var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
       return [tableArray];
     }else{
       var postDate = [];
       var dateObject = {};
 
-      let tableName = this.formatGroupName(year,eventStatus);
+      // let tableName = this.formatGroupName(year,eventStatus);
       if(typeof teamId == 'undefined'){
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         rows.forEach(function(val,index){// seperate the dates into their own Obj tables for post game reports
@@ -280,7 +259,8 @@ export class SchedulesService {
         return postDate;
       }else{//if there is a teamID
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
-        var tableArray = new SchedulesTableData(tableName , table, currentTeamProfile);
+        var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
+
         return [tableArray];
       }
     }

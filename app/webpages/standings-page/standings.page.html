@@ -4,7 +4,7 @@
     <title-component *ngIf="titleData" [titleData]="titleData"></title-component>
     <loading-component *ngIf="!profileLoaded && !hasError && !tabs"></loading-component>
     <error-component *ngIf="hasError"></error-component>
-    <standings-component *ngIf="tabs" [tabs]="tabs" [scope]="scope" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)"></standings-component>
+    <standings-component *ngIf="tabs" [tabs]="tabs" (tabSelected)="standingsTabSelected($event)"></standings-component>
     <glossary-component *ngIf="glossary" [glossaryData]="glossary"></glossary-component>
 </section>
 </sidekick-wrapper>
