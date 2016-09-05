@@ -203,8 +203,8 @@ export class TeamPage implements OnInit {
             this.dateParam ={
               profile:'team',//current profile page
               teamId:this.pageParams.teamId, // teamId if it exists
-              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-11'
+              date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              // date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID,this.scope);
         });
