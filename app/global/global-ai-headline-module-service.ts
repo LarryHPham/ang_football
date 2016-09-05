@@ -8,9 +8,19 @@ export class HeadlineDataService {
 
     constructor(public http:Http) {}
 
-    getAiHeadlineData(teamID) {
+    getAiHeadlineData(scope, teamID) {
         var fullUrl = GlobalSettings.getHeadlineUrl();
-        return this.http.get(fullUrl + teamID)
+        return this.http.get(fullUrl + 'headlines/' + scope + '/' + teamID)
+            .map(res => res.json())
+            .map(data => data);
+    }
+
+    getAiHeadlineDataLeague(count, scope) {
+        if(count == null){
+            count = 10;
+        }
+        var fullUrl = GlobalSettings.getHeadlineUrl();
+        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&affiliation=nfl&articleType=pregame-report" + "&affiliation=" + scope)
             .map(res => res.json())
             .map(data => data);
     }
