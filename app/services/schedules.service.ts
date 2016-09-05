@@ -85,10 +85,11 @@ export class SchedulesService {
     if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
+
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
 
     //optional week parameters
-    if(typeof week != 'undefined'){
+    if( week != null){
       callURL += '/'+week;
     }
     return this.http.get(callURL, {headers: headers})
@@ -115,7 +116,10 @@ export class SchedulesService {
     }else{
       eventTab = false;
     }
-
+    if(typeof year == 'undefined'){
+      year = null;
+      week = null;
+    }
     this.getSchedule(scope, profile, eventStatus, limit, pageNum, teamId, year, week)
     .subscribe( data => {
       var gamesData = data.data != null? data.data.games:null;
@@ -134,7 +138,7 @@ export class SchedulesService {
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
           },
-          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons):null,
+          seasons: data.data.info.seasons.length > 0 ? this.formatYearDropdown(data.data.info.seasons.sort(function(a, b){return b-a})):null,
           weeks: data.data.info.weeks.length > 0 ? this.formatWeekDropdown(data.data.info.weeks):null
         }
         callback(scheduleData);
@@ -156,8 +160,25 @@ export class SchedulesService {
     let yearArray = [];
     data.forEach(function(val){
       let yearObj = {};
+      let weekDisplay;
+      switch(val){
+        case '18':
+          weekDisplay = 'Wild Card';
+        break;
+        case '19':
+          weekDisplay = 'Divisional Round';
+        break;
+        case '20':
+          weekDisplay = 'Pro Bowl';
+        break;
+        case '21':
+          weekDisplay = 'Super Bowl';
+        break;
+        default:
+        weekDisplay = 'Week '+val;
+      }
       yearObj['key'] = val;
-      yearObj['value'] = 'Week '+val;
+      yearObj['value'] = weekDisplay;
       yearArray.push(yearObj);
     })
     return yearArray;
@@ -229,15 +250,15 @@ export class SchedulesService {
     var currentTeamProfile = teamId != null ? teamId : null;
     //TWO tables are to be made depending on what type of tabs the use is click on in the table
     if(eventStatus == 'pregame'){
-      // let tableName = this.formatGroupName(year,eventStatus);
+      let tableName = this.formatGroupName(year,eventStatus);
       var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);
-      var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
+      var tableArray = new SchedulesTableData(tableName , table, currentTeamProfile);
       return [tableArray];
     }else{
       var postDate = [];
       var dateObject = {};
 
-      // let tableName = this.formatGroupName(year,eventStatus);
+      let tableName = this.formatGroupName(year,eventStatus);
       if(typeof teamId == 'undefined'){
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         rows.forEach(function(val,index){// seperate the dates into their own Obj tables for post game reports
@@ -259,8 +280,7 @@ export class SchedulesService {
         return postDate;
       }else{//if there is a teamID
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
-        var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
-
+        var tableArray = new SchedulesTableData(tableName , table, currentTeamProfile);
         return [tableArray];
       }
     }
