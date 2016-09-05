@@ -8,8 +8,9 @@
     <transactions
       *ngIf="tabs"
       [tabs]="tabs"
-      (tabSwitched)="transactionsTab($event)"
       [transactionFilter1]="transactionFilter1"
+      [dropdownKey1]="dropdownKey1"
+      (tabSwitched)="transactionsTab($event)"
       (transactionKeyFilter)="transactionsFilterDropdown($event)">
     </transactions>
   </div>

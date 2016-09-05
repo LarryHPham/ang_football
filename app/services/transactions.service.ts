@@ -106,6 +106,7 @@ export class TransactionsService {
   }
 
   formatYearDropown() {
+    var test = 'test';
     let currentYear = new Date().getFullYear();
     let yearArray = [];
     for ( var i = 0; i < 4; i++ ) {
@@ -150,7 +151,7 @@ export class TransactionsService {
 
     if( limit == null){ limit = 5;}
     if( page == null){ page = 1;}
-    if ( filter == null ) { filter ="2016" };
+    if ( filter == null ) { filter = new Date().getFullYear() };
 
     var callURL = this._apiUrl + '/';
 
@@ -162,7 +163,6 @@ export class TransactionsService {
     }
 
     callURL += filter + '/' + tab.tabDataKey + '/' + page + '/' + limit;
-    console.log(callURL);
 
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
@@ -263,7 +263,6 @@ export class TransactionsService {
     }
     return carouselArray;
   }
-
 
   listTransactions(data: Array<TransactionInfo>, type: string): Array<TransactionsListInput>{
     let self = this;

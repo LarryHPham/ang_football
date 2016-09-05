@@ -29,8 +29,8 @@
 
     <transactions-module *ngIf="transactionsData"
       [data]="transactionsData"
+      [filter1]="transactionsFilter1"
       (tabSwitched)="transactionsTab($event)"
-      [transactionFilter1]="transactionFilter1"
       (transactionKeyFilter)="transactionsFilterDropdown($event)">
     </transactions-module>
 

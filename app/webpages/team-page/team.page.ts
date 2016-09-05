@@ -154,7 +154,7 @@ export class TeamPage implements OnInit {
     transactionsActiveTab: any;
     transactionsData:TransactionModuleData;
     transactionFilter1: Array<any>;
-    // currentYear: any;
+    dropdownKey1: string;
 
     schedulesData:any;
     scheduleFilter1:Array<any>;
@@ -378,28 +378,21 @@ export class TeamPage implements OnInit {
       if ( this.transactionsActiveTab == null ) {
         this.transactionsActiveTab = this.transactionsData.tabs[0];
       }
-      this.transactionFilter1 = filter.key;
+      this.dropdownKey1 = filter;
       this.getTransactionsData();
     }
     private getTransactionsData() {
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.transactionFilter1)
       .subscribe(
           transactionsData => {
-            // for ( var i = 0; i < this.transactionsData.tabs.length; i++ ) {
-            //   this.transactionsData.tabs[i].isLoaded = false;
-            // }
-            // console.log('this.transactionsData');
-            // console.log(this.transactionsData);
-            console.log('this.transactionsActiveTab');
-            console.log(this.transactionsActiveTab);
-            // this.transactionsActiveTab.isLoaded = true;
-            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
-            console.log('getTransactionsData - filter');
-            console.log(transactionsData);
-
-              if ( this.transactionFilter1 == null ) {
-                this.transactionFilter1 = this._transactionsService.formatYearDropown();
+            if ( this.transactionFilter1 == undefined ) {
+              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
               }
+            }
+
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
           console.log('Error: transactionsData API: ', err);

@@ -70,11 +70,7 @@ export class TransactionsPage implements OnInit{
   }
 
   ngOnInit(){
-    if(this.transactionFilter1 != null){
-      this.dropdownKey1 = this.transactionFilter1[0].key;
-    }
     this.getProfileInfo();
-
   }
 
   getProfileInfo() {
@@ -82,7 +78,6 @@ export class TransactionsPage implements OnInit{
       this._profileService.getTeamProfile(this.pageParams.teamId)
       .subscribe(
           data => {
-
             //var stats = data.headerData.stats;
             var profileHeaderData = this._profileService.convertTeamPageHeader(data, "");
             this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
@@ -125,16 +120,17 @@ export class TransactionsPage implements OnInit{
 
   getTransactionsPage() {
     var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.selectedTabKey);
-
     if ( matchingTabs.length > 0 ) {
       var tab = matchingTabs[0];
-      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.transactionFilter1, 100, 1)
+
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1, 100, 1)
         .subscribe(
           transactionsData => {
-
-            //set years for dropdown
-            if ( this.transactionFilter1 == null ) {
+            if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
+              }
             }
 
         }, err => {
@@ -149,14 +145,16 @@ export class TransactionsPage implements OnInit{
     }
     this.selectedTabKey = tab.tabDataKey;
     this.transactionsActiveTab = tab;
+
     this.getTransactionsPage();
   } //transactionsTab(tab)
 
   transactionsFilterDropdown(filter) {
-    // if ( this.transactionsActiveTab == null ) {
-    //   this.transactionsActiveTab = this.transactionsData[0];
-    // }
-    // this.transactionFilter1 = filter.key;
-    // this.getTransactionsPage();
-  }
+      if ( this.transactionsActiveTab == null ) {
+        this.transactionsActiveTab = this.transactionsData[0];
+      }
+      this.dropdownKey1 = filter;
+
+      this.getTransactionsPage();
+    } //transactionsFilterDropdown(filter)
 }
