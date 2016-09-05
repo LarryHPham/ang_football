@@ -275,6 +275,7 @@ export class SchedulesService {
         for(var date in dateObject){
           var newPostModel = new SchedulesTableModel(dateObject[date]['tableData'], eventStatus, teamId, isTeamProfilePage);
           var newPostTable = new SchedulesTableData(dateObject[date]['display'], newPostModel, currentTeamProfile);
+          postDate.push(newPostTable);
         }
         return postDate;
       }else{//if there is a teamID

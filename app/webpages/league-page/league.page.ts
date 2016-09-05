@@ -199,8 +199,8 @@ export class LeaguePage implements OnInit {
             this.dateParam ={
               profile:'league',//current profile page
               teamId: this.scope,
-              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-11'
+              date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              // date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID, this.scope);
         });

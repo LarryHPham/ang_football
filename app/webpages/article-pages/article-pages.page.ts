@@ -99,7 +99,7 @@ export class ArticlePages implements OnInit {
                         }
                         this.articleType = articleType[1];
                         this.articleSubType = articleType[2];
-                        this.isSmall = window.innerWidth <= 640;
+                        this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
