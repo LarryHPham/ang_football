@@ -174,7 +174,7 @@ export class SeasonStatsService {
               infoBoxImage : {
                 imageClass: "image-40",
                 mainImage: {
-                  imageUrl: GlobalSettings.getImageUrl(""),
+                  imageUrl: GlobalSettings.getImageUrl(stats[index].leaderHeadshotUrl),
                   imageClass: "border-1",
                   urlRouteArray:  linkToPlayer,
                   hoverText: "<i class='fa fa-mail-forward infobox-list-fa'></i>",
@@ -268,7 +268,7 @@ export class SeasonStatsService {
       description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText, playerInfo[0].statScope);
     }
     return SliderCarousel.convertToCarouselItemType1(1, {
-      backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].liveImage),
+      backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [longSeasonName + " Stats Report"],
       profileNameLink: playerRouteText,
@@ -418,7 +418,7 @@ export class SeasonStatsPageService {
   getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number){
       var playerId = pageParams.playerId;
       //example url: http://dev-homerunloyal-api.synapsys.us/player/statsDetail/96652
-      let url = GlobalSettings.getApiUrl() + "/player/statsDetail/" + playerId;
+      let url = GlobalSettings.getApiUrl() + "/seasonStats/page/player/" + playerId;
       seasonStatsTab.isLoaded = false;
       seasonStatsTab.hasError = false;
 
@@ -445,22 +445,15 @@ export class SeasonStatsPageService {
     var totalRows = 0;
     var seasonKey = seasonStatsTab.year;
     var tableData = {};
+
     //run through each object in the api and set the title of only the needed season for the table regular and post season
-    for(var season in apiData){
-      switch(season){
-        case 'regularSeason':
-          seasonTitle = "Regular Season";
-          break;
-        case 'postSeason':
-          seasonTitle = "Post Season";
-          break;
-        default:
-          break;
-      }
+    for(var season in apiData.stats){
+      if (season == seasonKey) {
+      seasonTitle = "Regular Season";
       // we only care about the tables that meet the switch cases being regular and post season
       if(seasonTitle != null){
         //set the section table to season
-        sectionTable = apiData[season];
+        sectionTable = apiData.stats[season];
         //section Table now need to be set to sectionYear which are each of the different stats for each season of that [YEAR] being 'total' and 'average' NOTE: 'total' is being sent back as 'stat'
         if(seasonKey == 'career'){
           let sectionTitle;
@@ -483,7 +476,7 @@ export class SeasonStatsPageService {
             if(sectionTitle != null){
               let sectionData = [];
               for(var year in sectionTable){//grab all season data and push them into a single array for career stats tab
-                sectionTable[year][statType].playerInfo = apiData.playerInfo;
+                sectionTable[year][statType].playerInfo = apiData.playerInfo[0];
                 sectionTable[year][statType].teamInfo = sectionTable[year].teamInfo != null ? sectionTable[year].teamInfo : {};
                 if(year != 'career'){
                   sectionData.push(sectionTable[year][statType]);
@@ -499,7 +492,14 @@ export class SeasonStatsPageService {
           }//END OF SEASON YEAR FOR LOOP
 
         }else{
-          var sectionYear = sectionTable[seasonKey];
+          var transData = {averages:{}, stats:{}};
+          for (var i =0; i < sectionTable.length; i++) {
+            transData.averages[sectionTable[i].statType] = sectionTable[i].seasonAverage;
+            transData.averages.seasonId = season;
+            transData.stats[sectionTable[i].statType] = sectionTable[i].stat;
+            transData.stats.seasonId = season;
+          }
+          var sectionYear = transData;
           if(sectionYear != null){// check if there are even stats for the season existing
             let sectionTitle;
             for(var statType in sectionYear){
@@ -516,14 +516,15 @@ export class SeasonStatsPageService {
               //run through each object in the api and set the title of only the needed section for the table averages and stats 'total'
               if(sectionTitle != null){
                 let sectionData = sectionYear[statType];
-                sectionData.playerInfo = apiData.playerInfo;
-                sectionData.teamInfo = sectionYear.teamInfo != null ? sectionYear.teamInfo : {};
+                sectionData.playerInfo = apiData.playerInfo[0];
+                sectionData.teamInfo = apiData.teamInfo != null ? apiData.teamInfo : {};
                 sections.push(this.setupTableData(sectionTitle, seasonKey, sectionData, maxRows));
               }//END OF SECTION TITLE IF STATEMENT
             }//END OF SEASON YEAR FOR LOOP
           }//end of season year if check
         }//end of season key check
       }//END OF SEASON TITLE IF STATEMENT
+    }
     }//END OF SEASON FOR LOOP
     // this.convertAPIData(apiData.regularSeason, tableData);
     return sections;

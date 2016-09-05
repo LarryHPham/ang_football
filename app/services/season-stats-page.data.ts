@@ -130,7 +130,6 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
 
   convertToCarouselItem(item: TeamSeasonStatsData, index:number): SliderCarouselInput {
     var playerData = item.playerInfo != null ? item.playerInfo : null;
-
     var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(playerData.teamName,playerData.playerName,playerData.playerId.toString());
     var playerRouteText = {
       route: playerRoute,
@@ -172,62 +171,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
     else if ( rows.length > 0 ) {
       // this.selectedKey = rows[0].playerId;
     }
-    isPitcher = this.rows[0]['playerInfo'].position[0].charAt(0) == "P" ? true : false;
-    this.isPitcher = isPitcher;
-    if(this.isPitcher){
-      this.columns = [{
-          headerValue: "Year",
-          columnClass: "date-column",
-          isNumericType: true,
-          sortDirection: 1, //descending
-          key: "year"
-        },{
-          headerValue: "Team",
-          columnClass: "image-column",
-          isNumericType: false,
-          key: "team"
-        },{
-          headerValue: "W/L",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "wl"
-        },{
-          headerValue: "IP",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "ip"
-        },{
-          headerValue: "SO",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "so"
-        },{
-          headerValue: "ERA",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "era"
-        },{
-          headerValue: "H",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "ph"
-        },{
-          headerValue: "ER",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "er"
-        },{
-          headerValue: "BB",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "pbb"
-        },{
-          headerValue: "WHIP",
-          columnClass: "data-column",
-          isNumericType: true,
-          key: "whip"
-        }]
-    } else {
+    console.log(rows);
       this.columns = [{
         headerValue: "Year",
         columnClass: "date-column",
@@ -239,47 +183,36 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
         isNumericType: false,
         key: "team"
       },{
-        headerValue: "R",
+        headerValue: "AST",
         columnClass: "data-column",
         isNumericType: true,
-        key: "r"
+        key: "player_defense_assists"
       },{
-        headerValue: "H",
+        headerValue: "SACK",
         columnClass: "data-column",
         isNumericType: true,
-        key: "h"
+        key: "player_defense_sacks"
       },{
-        headerValue: "HR",
+        headerValue: "FF",
         columnClass: "data-column",
         isNumericType: true,
-        key: "hr"
+        key: "player_defense_forced_fumbles"
       },{
-        headerValue: "RBI",
+        headerValue: "TOTAL",
         columnClass: "data-column",
         isNumericType: true,
-        key: "rbi"
+        key: "player_defense_total_tackles"
       },{
-        headerValue: "BB",
+        headerValue: "INT",
         columnClass: "data-column",
         isNumericType: true,
-        key: "bb"
+        key: "player_defense_interceptions"
       },{
-        headerValue: "AVG",
+        headerValue: "PD",
         columnClass: "data-column",
         isNumericType: true,
-        key: "avg"
-      },{
-        headerValue: "OBP",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "obp"
-      },{
-        headerValue: "SLG",
-        columnClass: "data-column",
-        isNumericType: true,
-        key: "slg"
+        key: "player_defense_passes_defended"
       }]
-    };
   }
 
   setSelectedKey(key: string) {
@@ -320,10 +253,10 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
           display = (item['sectionStat'] == "Average" ? "Total Average" : "Total").toUpperCase() + ":";
         }
         else {
-          display = item.teamInfo.teamName;
-          link = VerticalGlobalFunctions.formatTeamRoute(item.teamInfo.teamName,item.teamInfo.teamId);
+          display = item.playerInfo.teamMarket + " " + item.playerInfo.teamName;
+          link = VerticalGlobalFunctions.formatTeamRoute(item.playerInfo.teamName,item.playerInfo.teamId);
         }
-        sort = item.teamInfo.teamName;
+        sort = item.playerInfo.teamName;
         break;
 
       case "wl":
@@ -333,34 +266,34 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
         sort = ('00000' + wins).substr(wins.length) + "/" + ('00000' + losses).substr(losses.length); //pad with zeros
         break;
 
-      case "ip":
-        display = item.pitchInningsPitched != null ? Number(item.pitchInningsPitched).toFixed(1) : null;
-        sort = Number(item.pitchInningsPitched);
+      case "player_defense_assists":
+        display = item.player_defense_assists != null ? Number(item.player_defense_assists).toFixed(1) : null;
+        sort = Number(item.player_defense_assists);
         break;
 
-      case "so":
-        display = item.pitchStrikeouts != null ? Number(item.pitchStrikeouts).toFixed(0) : null;
-        sort = Number(item.pitchStrikeouts);
+      case "player_defense_sacks":
+        display = item.player_defense_sacks != null ? Number(item.player_defense_sacks).toFixed(0) : null;
+        sort = Number(item.player_defense_sacks);
         break;
 
-      case "era":
-        display = item.pitchEra != null ? Number(item.pitchEra).toFixed(2) : null;
-        sort = Number(item.pitchEra);
+      case "player_defense_forced_fumbles":
+        display = item.player_defense_forced_fumbles != null ? Number(item.player_defense_forced_fumbles).toFixed(2) : null;
+        sort = Number(item.player_defense_forced_fumbles);
         break;
 
-      case "ph":
-        display = item.pitchHits != null ? Number(item.pitchHits).toFixed(0) : null;
-        sort = Number(item.pitchHits);
+      case "player_defense_total_tackles":
+        display = item.player_defense_total_tackles != null ? Number(item.player_defense_total_tackles).toFixed(0) : null;
+        sort = Number(item.player_defense_total_tackles);
         break;
 
-      case "er":
-        display = item.pitchEarnedRuns != null ? Number(item.pitchEarnedRuns).toFixed(0) : null;
-        sort = Number(item.pitchEarnedRuns);
+      case "player_defense_interceptions":
+        display = item.player_defense_interceptions != null ? Number(item.player_defense_interceptions).toFixed(0) : null;
+        sort = Number(item.player_defense_interceptions);
         break;
 
-      case "pbb":
-        display = item.pitchBasesOnBalls != null ? Number(item.pitchBasesOnBalls).toFixed(0) : null;
-        sort = Number(item.pitchBasesOnBalls);
+      case "player_defense_passes_defended":
+        display = item.player_defense_passes_defended != null ? Number(item.player_defense_passes_defended).toFixed(0) : null;
+        sort = Number(item.player_defense_passes_defended);
         break;
 
       case "whip":

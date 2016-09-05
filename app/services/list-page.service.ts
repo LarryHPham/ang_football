@@ -338,7 +338,7 @@ export class ListPageService {
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-      var teamLocation = val.teamMarket;
+      var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = val.statDescription + ' for ' + currentYear;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
       val.listRank = rank;
