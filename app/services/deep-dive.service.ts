@@ -347,7 +347,7 @@ export class DeepDiveService {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
       val["date"] = val.dateline;
-      val["image"] = GlobalSettings.getImageUrl(val.image);
+      val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}
     })
