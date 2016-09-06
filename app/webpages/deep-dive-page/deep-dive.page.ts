@@ -78,8 +78,18 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
-          this.profileName = this.scope;
+          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
+          if (window.location.pathname == "/") {
+            let relPath = this.getRelativePath(_router);
+            if(partnerHome){
+              //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+              window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
+            }else{
+              //_router.navigate([relPath+'Default-home',{scope:'nfl'}]);
+              window.location.pathname = "/nfl";
+            }
+          }
           this.isHomeRunZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
@@ -89,32 +99,51 @@ export class DeepDivePage implements OnInit{
       });
     }
 
-    //api for Schedules
-    private getSideScroll(){
-      let self = this;
-
-      if(this.safeCall){
-        this.safeCall = false;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, 'league', 'pre-event', this.callLimit, this.callCount, (sideScrollData) => {
-          if(this.sideScrollData == null){
-            this.sideScrollData = sideScrollData;
+    getRelativePath(router:Router){
+      let counter = 0;
+      let hasParent = true;
+      let route = router;
+      for (var i = 0; hasParent == true; i++){
+        if(route.parent != null){
+          counter++;
+          route = route.parent;
+        }else{
+          hasParent = false;
+          let relPath = '';
+          for(var c = 1 ; c <= counter; c++){
+            relPath += '../';
           }
-          else{
-            sideScrollData.forEach(function(val,i){
-              self.sideScrollData.push(val);
-            })
-          }
-          this.safeCall = true;
-          this.callCount++;
-          this.scrollLength = this.sideScrollData.length;
-        })
+          return relPath;
+        }
       }
     }
+
+    //api for Schedules
+    // private getSideScroll(){
+    //   let self = this;
+    //
+    //   if(this.safeCall){
+    //     this.safeCall = false;
+    //     this._schedulesService.setupSlideScroll(this.sideScrollData, 'league', 'pre-event', this.callLimit, this.callCount, (sideScrollData) => {
+    //       if(this.sideScrollData == null){
+    //         this.sideScrollData = sideScrollData;
+    //       }
+    //       else{
+    //         sideScrollData.forEach(function(val,i){
+    //           self.sideScrollData.push(val);
+    //         })
+    //       }
+    //       this.safeCall = true;
+    //       this.callCount++;
+    //       this.scrollLength = this.sideScrollData.length;
+    //     })
+    //   }
+    // }
 
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
-        this.getSideScroll();
+      //  this.getSideScroll();
       }
     }
 
@@ -170,8 +199,8 @@ export class DeepDivePage implements OnInit{
 
     callModules(){
       this.getDataCarousel();
-      this.getDeepDiveVideoBatch(this.geoLocation, 1, 1);
-      this.getSideScroll();
+      this.getDeepDiveVideoBatch();
+    //  this.getSideScroll();
     }
     private onScroll(event) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {

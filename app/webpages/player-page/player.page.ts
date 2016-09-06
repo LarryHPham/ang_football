@@ -159,6 +159,7 @@ export class PlayerPage implements OnInit {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
+        this.pageParams.scope = this.scope;
     });
   }
 
@@ -201,7 +202,7 @@ export class PlayerPage implements OnInit {
               this.getImages(this.imageData);
               this.getDykService();
               this.getFaqService();
-              this.setupListOfListsModule();
+              // this.setupListOfListsModule();
               this.getNewsService();
 
               /*** Interact With [League Name]’s Fans ***/
@@ -301,7 +302,12 @@ private dailyUpdateModule(playerId: number) {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService(this.profileName)
+      let params = {
+        limit:10,
+        pageNum:1,
+        id: this.pageParams.teamId
+      }
+        this._newsService.getNewsService(this.scope,params,'player','module')
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },
@@ -309,7 +315,6 @@ private dailyUpdateModule(playerId: number) {
                 console.log("Error getting news data");
             });
     }
-
     //api for BOX SCORES
     //function for MLB/Team Profiles
     private getBoxScores(dateParams?) {
@@ -337,7 +342,7 @@ private dailyUpdateModule(playerId: number) {
     private setupTeamProfileData() {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, null, data.teamName);
+                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, data.teamName);
             },
             err => {
                 console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
@@ -370,8 +375,8 @@ private dailyUpdateModule(playerId: number) {
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData.listData;
-            this.listOfListsData["type"] = "player";
-            this.listOfListsData["id"] = this.pageParams.playerId;
+            // this.listOfListsData["type"] = "player";
+            // this.listOfListsData["id"] = this.pageParams.playerId;
           },
           err => {
             console.log('Error: listOfListsData API: ', err);
