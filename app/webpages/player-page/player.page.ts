@@ -159,6 +159,7 @@ export class PlayerPage implements OnInit {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
+        this.pageParams.scope = this.scope;
     });
   }
 

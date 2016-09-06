@@ -159,61 +159,102 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
 export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
   // title: string;
 
-  columns: Array<TableColumn> = [{//TODO
-      headerValue: "Team Name",
-      columnClass: "image-column",
-      key: "name"
-    },{
-      headerValue: "W/L/T",
-      columnClass: "data-column",
-      key: "wlt"
-    },{
-      headerValue: "CONF",
-      columnClass: "data-column",
-      sortDirection: -1, //descending
-      key: "conf"
-    },{
-      headerValue: "STRK",
-      columnClass: "data-column",
-      key: "strk"
-    },{
-      headerValue: "HM",
-      columnClass: "data-column",
-      key: "hm"
-    },{
-      headerValue: "RD",
-      columnClass: "data-column",
-      key: "rd"
-    },{
-      headerValue: "PF",
-      columnClass: "data-column",
-      key: "pf"
-    },{
-      headerValue: "PA",
-      columnClass: "data-column",
-      key: "pa"
-    },{
-      headerValue: "Rank:",
-      columnClass: "data-column",
-      key: "rank"
-    }];
-
+  columns: Array<TableColumn>;
   rows: Array<TeamStandingsData>;
 
   selectedKey: string = "";
-
+  scope: string;
   /**
    * The team id of the profile page displaying the Standings module. (Optional)
    */
   currentTeamId: string;
-  constructor(rows: Array<TeamStandingsData>, teamId: string) {
+  constructor(rows: Array<TeamStandingsData>, scope:string, teamId: string) {
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
       this.rows = [];
     }
     this.currentTeamId = teamId;
+    this.scope = scope;
+    this.setColumnDP();
   }
-
+  setColumnDP() : Array<TableColumn> {
+    if(this.scope == 'fbs'){
+      this.columns = [{//TODO
+          headerValue: "Team Name",
+          columnClass: "image-column",
+          key: "name"
+        },{
+          headerValue: "W/L/T",
+          columnClass: "data-column",
+          key: "wlt"
+        },{
+          headerValue: "CONF",
+          columnClass: "data-column",
+          sortDirection: -1, //descending
+          key: "conf"
+        },{
+          headerValue: "STRK",
+          columnClass: "data-column",
+          key: "strk"
+        },{
+          headerValue: "HM",
+          columnClass: "data-column",
+          key: "hm"
+        },{
+          headerValue: "RD",
+          columnClass: "data-column",
+          key: "rd"
+        },{
+          headerValue: "PF",
+          columnClass: "data-column",
+          key: "pf"
+        },{
+          headerValue: "PA",
+          columnClass: "data-column",
+          key: "pa"
+        },{
+          headerValue: "Rank:",
+          columnClass: "data-column",
+          key: "rank"
+        }];
+      } else {
+        this.columns = [{//TODO
+            headerValue: "Team Name",
+            columnClass: "image-column",
+            key: "name"
+          },{
+            headerValue: "W/L/T",
+            columnClass: "data-column",
+            key: "wlt"
+          },{
+            headerValue: "PCT",
+            columnClass: "data-column",
+            sortDirection: -1, //descending
+            key: "pct"
+          },{
+            headerValue: "DIV",
+            columnClass: "data-column",
+            key: "div"
+          },{
+            headerValue: "CONF",
+            columnClass: "data-column",
+            key: "conf"
+          },{
+            headerValue: "STRK",
+            columnClass: "data-column",
+            key: "strk"
+          },{
+            headerValue: "PF",
+            columnClass: "data-column",
+            key: "pf"
+          },{
+            headerValue: "PA",
+            columnClass: "data-column",
+            key: "pa"
+          }];
+      }
+      return this.columns;
+  }
   setSelectedKey(key: string) {
     this.selectedKey = key ? key : null;
   }
@@ -280,9 +321,19 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         sort = Number(item.teamPointsAllowed);
         break;
 
-      case "rank"://TODO
+      case "rank":
         display = item.leagueRank != null ? item.leagueRank : null;
         sort = Number(item.leagueRank);
+        break;
+
+      case "pct":
+        display = item.teamWinPercent != null ? item.teamWinPercent : null;
+        sort = item.teamWinPercent;
+        break;
+
+      case "div":
+        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
+        sort = item.teamDivisionRecord;
         break;
     }
     if ( display == null ) {

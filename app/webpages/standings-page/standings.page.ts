@@ -92,7 +92,7 @@ export class StandingsPage{
             value: "Total Points Against"
           },
           {
-            key: "<span class='text-heavy'>RANK</span>",
+            key: "<span class='text-heavy'>RANK:</span>",
             value: "Team Rank"
           }
         ]
@@ -150,7 +150,7 @@ export class StandingsPage{
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", "NFL"));//TODO
+      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));//TODO
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
