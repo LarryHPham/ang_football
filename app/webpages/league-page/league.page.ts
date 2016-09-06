@@ -197,7 +197,7 @@ export class LeaguePage implements OnInit {
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
-
+            this.pageParams.scope = this.scope;
             //for boxscores
             var currentUnixDate = new Date().getTime();
 
@@ -236,7 +236,7 @@ export class LeaguePage implements OnInit {
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
 
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
@@ -257,7 +257,7 @@ export class LeaguePage implements OnInit {
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
-                this.setupListOfListsModule();
+                // this.setupListOfListsModule();
                 this.getDykService(this.profileType);
                 this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
@@ -420,6 +420,7 @@ export class LeaguePage implements OnInit {
 
     private setupListOfListsModule() {
         let params = {
+          targetId : 11621,
           limit : 4,
           pageNum : 1
         }
@@ -427,7 +428,8 @@ export class LeaguePage implements OnInit {
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
-                    this.listOfListsData["type"] = "league";
+                    // this.listOfListsData["id"] = this.pageParams.teamId;
+                    // this.listOfListsData["type"] = "league";
                 },
                 err => {
                     console.log('Error: listOfListsData API: ', err);
@@ -436,7 +438,12 @@ export class LeaguePage implements OnInit {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService('Major League Baseball')
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id: ''
+      }
+        this._newsService.getNewsService(this.scope,params, "league", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },

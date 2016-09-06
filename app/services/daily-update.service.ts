@@ -73,6 +73,9 @@ export class DailyUpdateService {
   }
 
   getTeamDailyUpdate(teamId: number): Observable<DailyUpdateData> {
+    //http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800
+    // let url = GlobalSettings.getApiUrl() + '/team/dailyUpdate/' + teamId;
+  //  let url = "http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800"; //place holder data for QA review
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/team/' + teamId;
 
     return this.http.get(url)
@@ -122,7 +125,7 @@ export class DailyUpdateService {
         }
       }
     }
-    
+
     if ( !data ) {
       throw new Error("Error! Data is null from Team Daily Update API");
     }
@@ -142,6 +145,28 @@ export class DailyUpdateService {
       if ( data.recentGames[0]["wins"] != null && data.recentGames[0]["losses"] != null ) {
         record = data.recentGames[0]["wins"] + "-" + data.recentGames[0]["losses"];
       }
+      // stats = [
+      //   {
+      //     name: "Win Loss Record",
+      //     value: record,
+      //     icon: "fa-trophy"
+      //   },
+      //   {
+      //     name: "Hits",
+      //     value: apiSeasonStats.batHits != null ? apiSeasonStats.batHits : "N/A", //TODO: get hits from API
+      //     icon: "fa-batt-and-ball" //TODO: use 'baseball and bat' icon
+      //   },
+      //   {
+      //     name: "Earned Runs Average",
+      //     value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
+      //     icon: "fa-batter" //TODO: use 'batter swinging' icon
+      //   },
+      //   {
+      //     name: "Runs Batted In",
+      //     value: apiSeasonStats.batRbi != null ? Number(apiSeasonStats.batRbi) : "N/A",
+      //     icon: "fa-batter-alt" //TODO: get 'batter standing' icon
+      //   }
+      // ]
       stats = [
         {
           name: "Win Loss Record",
@@ -150,6 +175,7 @@ export class DailyUpdateService {
         },
         {
           name: "Average Points Per Game",
+
           value: data.recentGames[0]["pointsPerGame"] != null ? data.recentGames[0]["pointsPerGame"] : "N/A",
           icon: "fa-tdpoints"
         },
@@ -218,13 +244,14 @@ export class DailyUpdateService {
   }
 
   getPlayerDailyUpdate(playerId: number): Observable<DailyUpdateData> {
+
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/player/' + playerId;
 
     return this.http.get(url)
         .map(res => res.json())
         .map(data => this.formatPlayerData(data.data, playerId));
   }
-  
+
   private formatPlayerData(data: APIDailyUpdateData, playerId: number): DailyUpdateData {
     // check if it report exists and it isn't just an error message string
     if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) ) {
@@ -344,22 +371,22 @@ export class DailyUpdateService {
         {
           name: "Win Loss Record",
           value: record,
-          icon: "fa-trophy"
+          icon: "fa-tdrushat"
         },
         {
           name: "Innings Pitched",
           value: apiSeasonStats.pitchInningsPitched != null ? apiSeasonStats.pitchInningsPitched : "N/A",
-          icon: "fa-baseball-diamond" //TODO: get 'baseball field' icon
+          icon: "fa-tdrecyards" //TODO: get 'baseball field' icon
         },
         {
           name: "Strike Outs",
           value: apiSeasonStats.pitchStrikeouts != null ? apiSeasonStats.pitchStrikeouts : "N/A",
-          icon: "fa-baseball-crest" //TODO: get '2 baseball bats' icon
+          icon: "fa-tdrushing" //TODO: get '2 baseball bats' icon
         },
         {
           name: "Earned Runs Average",
           value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
-          icon: "fa-batter" //TODO: use 'batter swinging' icon
+          icon: "fa-tdpoints" //TODO: use 'batter swinging' icon
         }
       ]
   }
