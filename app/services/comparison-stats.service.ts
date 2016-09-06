@@ -360,7 +360,6 @@ export class ComparisonStatsService {
     }
     var teamColorsOne = data.playerOne.teamColors.split(", ");
     var teamColorsTwo = data.playerTwo.teamColors.split(", ");
-    console.log("teamColorsOne", teamColorsOne, teamColorsTwo);
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
