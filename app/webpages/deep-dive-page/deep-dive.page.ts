@@ -199,7 +199,7 @@ export class DeepDivePage implements OnInit{
 
     callModules(){
       this.getDataCarousel();
-      this.getDeepDiveVideoBatch(this.geoLocation, 1, 1);
+      this.getDeepDiveVideoBatch();
     //  this.getSideScroll();
     }
     private onScroll(event) {
