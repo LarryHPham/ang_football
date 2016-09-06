@@ -35,11 +35,13 @@ interface APIDailyUpdateData {
 }
 
 interface APIGameData {
-  pointsFor: string;
-  opponentTeamName: string;
-  pointsAgainst: string;
+  pointsFor?: string;
+  opponentTeamName?: string;
+  pointsAgainst?: string;
   eventId?: string;
   teamId?: string;
+  gameStat1?: string;
+  gameStat2?: string;
 }
 
 interface PostGameArticleData {
@@ -71,6 +73,9 @@ export class DailyUpdateService {
   }
 
   getTeamDailyUpdate(teamId: number): Observable<DailyUpdateData> {
+    //http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800
+    // let url = GlobalSettings.getApiUrl() + '/team/dailyUpdate/' + teamId;
+  //  let url = "http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800"; //place holder data for QA review
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/team/' + teamId;
 
     return this.http.get(url)
@@ -120,7 +125,7 @@ export class DailyUpdateService {
         }
       }
     }
-    
+
     if ( !data ) {
       throw new Error("Error! Data is null from Team Daily Update API");
     }
@@ -140,6 +145,28 @@ export class DailyUpdateService {
       if ( data.recentGames[0]["wins"] != null && data.recentGames[0]["losses"] != null ) {
         record = data.recentGames[0]["wins"] + "-" + data.recentGames[0]["losses"];
       }
+      // stats = [
+      //   {
+      //     name: "Win Loss Record",
+      //     value: record,
+      //     icon: "fa-trophy"
+      //   },
+      //   {
+      //     name: "Hits",
+      //     value: apiSeasonStats.batHits != null ? apiSeasonStats.batHits : "N/A", //TODO: get hits from API
+      //     icon: "fa-batt-and-ball" //TODO: use 'baseball and bat' icon
+      //   },
+      //   {
+      //     name: "Earned Runs Average",
+      //     value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
+      //     icon: "fa-batter" //TODO: use 'batter swinging' icon
+      //   },
+      //   {
+      //     name: "Runs Batted In",
+      //     value: apiSeasonStats.batRbi != null ? Number(apiSeasonStats.batRbi) : "N/A",
+      //     icon: "fa-batter-alt" //TODO: get 'batter standing' icon
+      //   }
+      // ]
       stats = [
         {
           name: "Win Loss Record",
@@ -148,6 +175,7 @@ export class DailyUpdateService {
         },
         {
           name: "Average Points Per Game",
+
           value: data.recentGames[0]["pointsPerGame"] != null ? data.recentGames[0]["pointsPerGame"] : "N/A",
           icon: "fa-tdpoints"
         },
@@ -215,10 +243,9 @@ export class DailyUpdateService {
     }
   }
 
-
   getPlayerDailyUpdate(playerId: number): Observable<DailyUpdateData> {
-    //http://dev-homerunloyal-api.synapsys.us/player/dailyUpdate/2800
-    let url = GlobalSettings.getApiUrl() + '/player/dailyUpdate/' + playerId;
+
+    let url = GlobalSettings.getApiUrl() + '/dailyUpdate/player/' + playerId;
 
     return this.http.get(url)
         .map(res => res.json())
@@ -226,54 +253,104 @@ export class DailyUpdateService {
   }
 
   private formatPlayerData(data: APIDailyUpdateData, playerId: number): DailyUpdateData {
+    // check if it report exists and it isn't just an error message string
+    if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) ) {
+      data['postgame-report'] = {
+        displayHeadline: "Perez's hot bat not enough for Royals win",
+        dateline: "Saturday, August 27, 2016 11:30 PM EDT",
+        article: [
+          "<a href=\"/player/kansas-city-royals/salvador-perez/93144\">Lorem Ipsum</a> delor sid ex communicae desporado conica <a href=\"#\">Flur de Li</a>, rey dunesty flex beamer contorte <a href=\"#\">Sore cacorde tagain</a>.",
+          "Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain."
+        ],
+      }
+    }
+
     if ( !data ) {
       throw new Error("Error! Data is null from Player Daily Update API");
     }
     //Setting up season stats
+    // TODO add cases for different positions
     var stats = [];
-    if ( data.seasonStats && data.seasonStats.length > 0 ) {
-      var apiSeasonStats = data.seasonStats[0];
-      stats = data.pitcher ? this.getPitcherStats(apiSeasonStats) : this.getBatterStats(apiSeasonStats);
+    if ( data.recentGames[0]["id"] != null ) {
+      stats = [
+        {
+          name: data.recentGames[0]["stat1Type"] != null ? data.recentGames[0]["stat1Type"] : "N/A",
+          value: data.recentGames[0]["stat1"] != null ? data.recentGames[0]["stat1"] : "N/A",
+          icon: "fa-trophy"
+        },
+        {
+          name: data.recentGames[0]["stat2Type"] != null ? data.recentGames[0]["stat2Type"] : "N/A",
+          value: data.recentGames[0]["stat2"] != null ? data.recentGames[0]["stat2"] : "N/A",
+          icon: "fa-trophy"
+        },
+        {
+          name: data.recentGames[0]["stat3Type"] != null ? data.recentGames[0]["stat3Type"] : "N/A",
+          value: data.recentGames[0]["stat3"] != null ? data.recentGames[0]["stat3"] : "N/A",
+          icon: "fa-trophy"
+        },
+        {
+          name: data.recentGames[0]["stat4Type"] != null ? data.recentGames[0]["stat4Type"] : "N/A",
+          value: data.recentGames[0]["stat4"] != null ? data.recentGames[0]["stat4"] : "N/A",
+          icon: "fa-trophy"
+        }
+      ]
+    }
+
+    var apiSeasonStats = {
+      lastUpdated: data.recentGames[0]["lastUpdated"] ? GlobalFunctions.formatUpdatedDate(data.recentGames[0]["lastUpdated"]) : "N/A",
     }
 
     //Setting up chart info
-    var seriesOne;
-    var seriesTwo;
-    if ( data.pitcher ) {
-      seriesOne = {
-        name: "Earned Runs",
-        key: "pitchEarnedRuns"
-      };
-      seriesTwo = {
-        name: "Hits",
-        key: "pitchHits"
-      };
-    }
-    else {
-      seriesOne = {
-        name: "Runs",
-        key: "batRunsScored"
-      };
-      seriesTwo = {
-        name: "Hits",
-        key: "batHits"
-      };
-    }
-    var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
-    this.getPostGameArticle(data); 
+    // TODO add cases for other positions
+    var seriesOne = {
+      name: data.recentGames[0]["gameStat1Type"] != null ? data.recentGames[0]["gameStat1Type"] : "N/A",
+      key: "gameStat1"
+    };
+    var seriesTwo = {
+      name: data.recentGames[0]["gameStat2Type"] != null ? data.recentGames[0]["gameStat2Type"] : "N/A",
+      key: "gameStat2"
+    };
+    data['recentGamesChartData'] =[
+      {
+        gameStat1: data.recentGames[0]["game1Stat1"] != null ? data.recentGames[0]["game1Stat1"] : "N/A",
+        gameStat2: data.recentGames[0]["game1Stat2"] != null ? data.recentGames[0]["game1Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game1AgainstNick"] != null ? data.recentGames[0]["game1AgainstNick"] : "N/A"
+      },
+      {
+        gameStat1: data.recentGames[0]["game2Stat1"] != null ? data.recentGames[0]["game2Stat1"] : "N/A",
+        gameStat2: data.recentGames[0]["game2Stat2"] != null ? data.recentGames[0]["game2Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game2AgainstNick"] != null ? data.recentGames[0]["game2AgainstNick"] : "N/A"
+      },
+      {
+        gameStat1: data.recentGames[0]["game3Stat1"] != null ? data.recentGames[0]["game3Stat1"] : "N/A",
+        gameStat2: data.recentGames[0]["game3Stat2"] != null ? data.recentGames[0]["game3Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game3AgainstNick"] != null ? data.recentGames[0]["game3AgainstNick"] : "N/A"
+      },
+      {
+        gameStat1: data.recentGames[0]["game4Stat1"] != null ? data.recentGames[0]["game4Stat1"] : "N/A",
+        gameStat2: data.recentGames[0]["game4Stat2"] != null ? data.recentGames[0]["game4Stat2"] : "N/A",
+        opponentTeamName: data.recentGames[0]["game4AgainstNick"] != null ? data.recentGames[0]["game4AgainstNick"] : "N/A"
+      }
+    ];
 
-    if(this.postGameArticleData.text && this.postGameArticleData.text.length>0){
-      let tempText = this.postGameArticleData.text.join(" ");
-      this.postGameArticleData.text = [tempText];
+    var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
+    this.getPostGameArticle(data);
+
+    let tempText = "";
+    if(this.postGameArticleData.text && this.postGameArticleData.text.length>0 && typeof(this.postGameArticleData.text) == "object") {
+      tempText = this.postGameArticleData.text.join(" ");
+    }else{
+      tempText = <any>this.postGameArticleData.text;
     }
+    this.postGameArticleData.text = [tempText];
 
     if ( chart ) {
       return {
         hasError: false,
-        lastUpdateDate: data.lastUpdated ? GlobalFunctions.formatUpdatedDate(data.lastUpdated) : "",
-        fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(data.backgroundImage),
+        lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
+        fullBackgroundImageUrl: data['postgame-report'].image != null ? GlobalSettings.getBackgroundImageUrl(data['postgame-report'].image.imageUrl) :  GlobalSettings.getBackgroundImageUrl(""),
         type: "Player",
-        wrapperStyle: {'padding-bottom': '10px'},
+        wrapperStyle: {},
         seasonStats: stats,
         chart: chart,
         postGameArticle: this.postGameArticleData
@@ -294,22 +371,22 @@ export class DailyUpdateService {
         {
           name: "Win Loss Record",
           value: record,
-          icon: "fa-trophy"
+          icon: "fa-tdrushat"
         },
         {
           name: "Innings Pitched",
           value: apiSeasonStats.pitchInningsPitched != null ? apiSeasonStats.pitchInningsPitched : "N/A",
-          icon: "fa-baseball-diamond" //TODO: get 'baseball field' icon
+          icon: "fa-tdrecyards" //TODO: get 'baseball field' icon
         },
         {
           name: "Strike Outs",
           value: apiSeasonStats.pitchStrikeouts != null ? apiSeasonStats.pitchStrikeouts : "N/A",
-          icon: "fa-baseball-crest" //TODO: get '2 baseball bats' icon
+          icon: "fa-tdrushing" //TODO: get '2 baseball bats' icon
         },
         {
           name: "Earned Runs Average",
           value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
-          icon: "fa-batter" //TODO: use 'batter swinging' icon
+          icon: "fa-tdpoints" //TODO: use 'batter swinging' icon
         }
       ]
   }
@@ -355,14 +432,15 @@ export class DailyUpdateService {
 
     articleData['eventId'] = data.recentGames[0]['id'] != null ? data.recentGames[0]['id'] : null;
     articleData['teamId'] = data.recentGames[0].teamId != null ? data.recentGames[0].teamId : null;
+    articleData['playerId'] = data.recentGames[0]["playerId"] != null ? data.recentGames[0]["playerId"] : null;
+    articleData['playerPosition'] = data.recentGames[0]["playerPosition"] != null ? data.recentGames[0]["playerPosition"] : null;
     articleData['url'] = articleData['eventId'] != null ? ['Article-pages', {eventType: 'postgame-report', eventID: articleData['eventId']}] : ['Error-page'];
-    articleData['pubDate'] = data['postgame-report'].dateline != null ? data['postgame-report'].dateline : null;
-    articleData['headline'] = data['postgame-report'].displayHeadline != null ? data['postgame-report'].displayHeadline : null;
+    articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? data['postgame-report'].article.data[0].lastUpdated : null;
+    articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
     articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;
     articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? GlobalSettings.getImageUrl(data['postgame-report'].article.data[0].imageUrl): null;
 
     this.postGameArticleData = <PostGameArticleData>articleData;
-
   }
 
   private getChart(data: APIDailyUpdateData, seriesOne: DataSeries, seriesTwo: DataSeries) {

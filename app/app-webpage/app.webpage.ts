@@ -217,21 +217,21 @@ declare var jQuery: any;
         name: 'Syndicated-article-page',
         component: SyndicatedArticlePage
 	  },
-    {
-        path: '/list-of-lists/:scope/:type/:id/:limit/:pageNum',
+    { // listOfLists/scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
+        path: '/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         name: 'List-of-lists-page-scoped',
         component: ListOfListsPage
     },
-    {
-        path: '/list-of-lists/:type/:id/:limit/:pageNum',
-        name: 'List-of-lists-page',
-        component: ListOfListsPage
-    },
-    {
-        path: '/list-of-lists/league/:limit/:pageNum',
-        name: 'List-of-lists-league-page',
-        component: ListOfListsPage
-    },
+    // {
+    //     path: '/list-of-lists/:type/:id/:limit/:pageNum',
+    //     name: 'List-of-lists-page',
+    //     component: ListOfListsPage
+    // },
+    // {
+    //     path: '/list-of-lists/league/:limit/:pageNum',
+    //     name: 'List-of-lists-league-page',
+    //     component: ListOfListsPage
+    // },
     //Error pages and error handling
     {
         path: '/error',
@@ -326,7 +326,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(){
     var script = document.createElement("script");
-    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
+    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
     document.head.appendChild(script);
     this.shiftContainer = this.getHeaderHeight() + 'px';
     //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts

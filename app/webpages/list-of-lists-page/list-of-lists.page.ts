@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteParams} from '@angular/router-deprecated';
+import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {DetailedListItem, DetailListInput} from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
@@ -49,12 +49,25 @@ export class ListOfListsPage implements OnInit{
     constructor(private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
         private _params: RouteParams,
-        private _title: Title) {
-        _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
-        this.pageType = this._params.get("type");
-        if ( this.pageType == null ) {
-            this.pageType = "league";
-        }
+        private _title: Title, private _router:Router) {
+          GlobalSettings.getParentParams(this._router, parentParams => {
+              _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
+              this._params['scope'] = parentParams.scope;
+              this.pageType = this._params.get("type");
+              if ( this.pageType == null ) {
+                  this.pageType = "league";
+                  this._profileService.getLeagueProfile()
+                  .subscribe(data => {
+                      this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
+                  }, err => {
+                      console.log("Error loading MLB profile");
+                  });
+              }else{
+                this.getListOfListsPage(this._params.params);
+              }
+
+          });
+
     }
 
     getListOfListsPage(urlParams, logoUrl?: string) {
@@ -69,24 +82,29 @@ export class ListOfListsPage implements OnInit{
                 this.setPaginationParams(list.pagination);
                 this.carouselDataArray = list.carData;
 
+
                 var profileName = "League";
                 var profileRoute = ["League-page"];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
-                switch ( urlParams.type ) {
+
+                switch ( urlParams.target ) {
                     case "player":
-                        profileName = list.targetData.playerName;
-                        profileRoute = VerticalGlobalFunctions.formatPlayerRoute(list.targetData.teamName, list.targetData.playerName, list.targetData.playerId);
-                        profileImage = GlobalSettings.getImageUrl(list.targetData.imageUrl);
+                        profileName = list.targetData[0].playerFirstName + " " + list.targetData[0].playerLastName;
+                        profileRoute = VerticalGlobalFunctions.formatPlayerRoute(list.targetData[0].teamName, profileName, list.targetData[0].playerId);
+                    //    profileImage = GlobalSettings.getImageUrl(list.targetData[0].imageUrl);
                         break;
 
                     case "team":
-                        profileName = list.targetData.teamName;
-                        profileRoute = VerticalGlobalFunctions.formatTeamRoute(list.targetData.teamName, list.targetData.teamId);
-                        profileImage = GlobalSettings.getImageUrl(list.targetData.teamLogo);
+                        profileName = list.targetData[0].teamName;
+                        profileRoute = VerticalGlobalFunctions.formatTeamRoute(list.targetData[0].teamName, list.targetData[0].teamId);
+                      //  profileImage = GlobalSettings.getImageUrl(list.targetData[0].teamLogo);
+
                         break;
 
                     default: break;
                 }
+
+
                 this.profileName = profileName
                 this._title.setTitle(GlobalSettings.getPageTitle("List of Lists", this.profileName));
                 this.titleData = {
@@ -110,22 +128,21 @@ export class ListOfListsPage implements OnInit{
     //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
     setPaginationParams(input) {
         var params = this._params.params;
-
         var navigationParams = {
-            limit      : params['limit'],
-            pageNum    : params['pageNum'],
+            limit      : params['perPageCount'],
+            pageNum    : params['pageNumber'],
         };
 
         if(params['scope'] != null) {
            navigationParams['scope'] = params['scope'];
         }
 
-        if(params['id'] != null) {
-           navigationParams['id'] = params['id'];
+        if(params['targetId'] != null) {
+           navigationParams['targetId'] = params['targetId'];
         }
 
         if ( this.pageType != "league" ) {
-           navigationParams['type'] = this.pageType;
+           navigationParams['target'] = this.pageType;
         }
 
         var navigationPage = this.pageType == "league" ? 'List-of-lists-league-page' : 'List-of-lists-page';
@@ -137,7 +154,7 @@ export class ListOfListsPage implements OnInit{
         }
 
         this.paginationParameters = {
-            index: params['pageNum'] != null ? Number(params['pageNum']) : null,
+            index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
             max: Number(input.pageCount),
             paginationType: 'page',
             navigationPage: navigationPage,
@@ -147,16 +164,6 @@ export class ListOfListsPage implements OnInit{
     }
 
     ngOnInit(){
-        if ( this.pageType == "league" ) {
-            this._profileService.getLeagueProfile()
-            .subscribe(data => {
-                this.getListOfListsPage(this._params.params, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
-            }, err => {
-                console.log("Error loading MLB profile");
-            });
-        }
-        else {
-            this.getListOfListsPage(this._params.params);
-        }
+
     }
 }
