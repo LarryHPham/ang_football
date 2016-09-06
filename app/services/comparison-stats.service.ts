@@ -23,7 +23,7 @@ export interface PlayerData {
   teamLogo: string;
   teamName: string;
   teamId: string;
-  teamColors: Array<string>;
+  teamColors: string;
   mainTeamColor: string;
   jerseyNumber: string;
   height: string;
@@ -358,8 +358,9 @@ export class ComparisonStatsService {
     } else if(position == "KR" || position == "PR" || position == "RS"){
       fields = this.returningFields;
     }
-    var teamColorsOne = data.playerOne.teamColors.split();
-    var teamColorsTwo = data.playerTwo.teamColors.split();
+    var teamColorsOne = data.playerOne.teamColors.split(", ");
+    var teamColorsTwo = data.playerTwo.teamColors.split(", ");
+    console.log("teamColorsOne", teamColorsOne, teamColorsTwo);
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
