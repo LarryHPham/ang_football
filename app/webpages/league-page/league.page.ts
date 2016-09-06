@@ -230,8 +230,8 @@ export class LeaguePage implements OnInit {
             ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-                this.profileName = "TDL"; //leagueShortName
-                this.getLeagueHeadlines(this.headlineData);
+                this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
+                this.getLeagueHeadlines();
                 /*** Keep Up With Everything TDL ***/
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
@@ -387,7 +387,6 @@ export class LeaguePage implements OnInit {
         this.partnerID = partnerID;
         this.isProfilePage = true;
         this.profileType = 'league';
-        this.profileName = "NFL";
 
         this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
             .subscribe(data => {
