@@ -15,7 +15,7 @@ export class PlayerStatsService implements OnDestroy{
 
     tabName:string="passing"
     seasonId:string="2015";
-
+    public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
     public allStatistics: Array<PlayerStatsData>;
@@ -96,6 +96,7 @@ export class PlayerStatsService implements OnDestroy{
 
         }else {
             this.tabName = standingsTab.tabTitle.toLowerCase();
+            this.GlossaryData=standingsTab.glossary;
 
         }
         let url = "http://dev-touchdownloyal-api.synapsys.us/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
