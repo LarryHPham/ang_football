@@ -327,7 +327,9 @@ export class BoxScoresService {
     var gameArray:Array<any> = [];
     let self = this;
     var twoBoxes = [];// used to put two games into boxes
-
+    if(teamId == 'nfl' || teamId == 'fbs' || teamId == 'ncaaf'){
+      teamId = null;
+    }
     // Sort games by time
     let sortedGames = game.sort(function(a, b) {
       return Number(a.gameInfo.startDateTimestamp) - Number(b.gameInfo.startDateTimestamp);

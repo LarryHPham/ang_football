@@ -49,7 +49,7 @@ interface TransactionInfo {
     pub2Id: string;
     pub2TeamId: string;
     lastUpdate: string;
-    playerHeadshot: string;
+    playerImage: string;
     teamLogo: string;
     totalResults: number;
     totalPages: number;
@@ -88,11 +88,6 @@ export class TransactionsService {
       }];
 
       tabs.forEach(tab => {
-        tab.sortOptions = [
-          { key: "2016", value: "2016"},
-          { key: "2015", value: "2015"}
-        ],
-
         tab.sortTitle = "Season: ",
         tab.errorMessage = errorMessagePrepend + tab.tabDisplay.toLowerCase(),
         tab.includeDropdown = isPage
@@ -110,6 +105,17 @@ export class TransactionsService {
     }
   }
 
+  formatYearDropown() {
+    var test = 'test';
+    let currentYear = new Date().getFullYear();
+    let yearArray = [];
+    for ( var i = 0; i < 4; i++ ) {
+      var newYear = currentYear - i;
+      yearArray.push({key:newYear, value:newYear});
+    }
+    return yearArray;
+  }
+
   getTabsForPage(profileName: string, teamId?: number) {
     var errorMessagePrepend;
     if ( teamId ) {
@@ -124,11 +130,11 @@ export class TransactionsService {
   loadAllTabsForModule(profileName: string, teamId?: number): TransactionModuleData {
     var route, errorMessagePrepend;
     if ( teamId ) {
-      route = ['Transactions-page',{teamName: GlobalFunctions.toLowerKebab(profileName), teamId:teamId, limit:1000, pageNum: 1}]
+      route = ['Transactions-page',{teamName: GlobalFunctions.toLowerKebab(profileName), teamId:teamId, limit:20, pageNum: 1}]
       errorMessagePrepend = "Sorry, the " + profileName + " do not currently have any data for ";
     }
     else { //is league-wide data
-      route = ['Transactions-tdl-page',{limit:1000, pageNum: 1}];
+      route = ['Transactions-tdl-page',{limit:20, pageNum: 1}];
       errorMessagePrepend = "Sorry, " + profileName + " does not currently have any data for ";
     }
 
@@ -139,19 +145,13 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, sort?, limit?, page?, year?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, sortOrder?, limit?, page?){
     //Configure HTTP Headers
     var headers = this.setToken();
-
-    if( year == "2016" ){
-      tab.selectedSort = "2016";
-    } else if( year == "2015" ){
-      tab.selectedSort = "2015";
-    }
-
-    if( limit == null){ limit = 10;}
-    if( page == null){ page = 1;}
-    if ( year == null ) { year ="2016" };
+    if( limit == null ){ limit = 4 };
+    if( page == null ){ page = 1 };
+    if ( sortOrder == null ) { sortOrder = 'desc' };
+    if ( filter == null ) { filter = new Date().getFullYear() };
 
     var callURL = this._apiUrl + '/';
 
@@ -161,7 +161,8 @@ export class TransactionsService {
     else {
        callURL += 'transactions/league/';
     }
-    callURL += year + '/' + tab.tabDataKey + '/' + page + '/' + limit;
+
+    callURL += filter + '/' + tab.tabDataKey + '/' + sortOrder + '/' + limit + '/' + page;
 
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
@@ -192,7 +193,7 @@ export class TransactionsService {
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [tab.tabDisplay],
       profileNameLink: null,
-      description: [tab.isLoaded ? tab.errorMessage : ""],
+      description: [tab.isLoaded ? tab.errorMessage : tab.errorMessage],
       lastUpdatedDate: null,
       circleImageUrl: "/app/public/no-image.svg",
       circleImageRoute: null
@@ -253,7 +254,7 @@ export class TransactionsService {
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
-          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
+          circleImageUrl: GlobalSettings.getImageUrl(val.playerImage),
           circleImageRoute: playerRoute
           // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
           // subImageRoute: teamRoute
@@ -262,7 +263,6 @@ export class TransactionsService {
     }
     return carouselArray;
   }
-
 
   listTransactions(data: Array<TransactionInfo>, type: string): Array<TransactionsListInput>{
     let self = this;
@@ -286,11 +286,12 @@ export class TransactionsService {
       return {
         dataPoints: [{
           style   : 'transactions-small',
-          data    : GlobalFunctions.formatLongDate(val.transactionDate),
+          data_shortFormDate :   moment(val.transactionDate).format("MM/DD/YY"),
+          data_longFormDate : GlobalFunctions.formatLongDate(val.transactionDate),
           value   : [playerTextLink, val.contents],
           url     : null
         }],
-        imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute)
+        imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerImage), playerRoute)
       };
     });
     return listDataArray;
