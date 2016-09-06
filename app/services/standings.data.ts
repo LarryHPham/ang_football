@@ -159,7 +159,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
 export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
   // title: string;
 
-  columns: Array<TableColumn> = [{
+  columns: Array<TableColumn> = [{//TODO
       headerValue: "Team Name",
       columnClass: "image-column",
       key: "name"
@@ -206,7 +206,6 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
    * The team id of the profile page displaying the Standings module. (Optional)
    */
   currentTeamId: string;
-
   constructor(rows: Array<TeamStandingsData>, teamId: string) {
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
