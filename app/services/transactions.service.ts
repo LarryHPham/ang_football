@@ -134,7 +134,7 @@ export class TransactionsService {
       errorMessagePrepend = "Sorry, the " + profileName + " do not currently have any data for ";
     }
     else { //is league-wide data
-      route = ['Transactions-tdl-page',{limit:1000, pageNum: 1}];
+      route = ['Transactions-tdl-page',{limit:20, pageNum: 1}];
       errorMessagePrepend = "Sorry, " + profileName + " does not currently have any data for ";
     }
 
@@ -145,12 +145,12 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, limit?, page?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, sortOrder?, limit?, page?){
     //Configure HTTP Headers
     var headers = this.setToken();
-
-    if( limit == null){ limit = 5;}
-    if( page == null){ page = 1;}
+    if( limit == null ){ limit = 4 };
+    if( page == null ){ page = 1 };
+    if ( sortOrder == null ) { sortOrder = 'desc' };
     if ( filter == null ) { filter = new Date().getFullYear() };
 
     var callURL = this._apiUrl + '/';
@@ -162,7 +162,7 @@ export class TransactionsService {
        callURL += 'transactions/league/';
     }
 
-    callURL += filter + '/' + tab.tabDataKey + '/' + page + '/' + limit;
+    callURL += filter + '/' + tab.tabDataKey + '/' + sortOrder + '/' + limit + '/' + page;
 
     // only set current team if it's a team profile page,
     // this module should also only be on the team profile
@@ -193,7 +193,7 @@ export class TransactionsService {
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [tab.tabDisplay],
       profileNameLink: null,
-      description: [tab.isLoaded ? tab.errorMessage : ""],
+      description: [tab.isLoaded ? tab.errorMessage : tab.errorMessage],
       lastUpdatedDate: null,
       circleImageUrl: "/app/public/no-image.svg",
       circleImageRoute: null
@@ -286,7 +286,8 @@ export class TransactionsService {
       return {
         dataPoints: [{
           style   : 'transactions-small',
-          data    : GlobalFunctions.formatLongDate(val.transactionDate),
+          data_shortFormDate :   moment(val.transactionDate).format("MM/DD/YY"),
+          data_longFormDate : GlobalFunctions.formatLongDate(val.transactionDate),
           value   : [playerTextLink, val.contents],
           url     : null
         }],
