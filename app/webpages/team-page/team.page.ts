@@ -154,8 +154,10 @@ export class TeamPage implements OnInit {
     currentBoxScores:any;
     dateParam:any;
 
+    transactionsActiveTab: any;
     transactionsData:TransactionModuleData;
-    // currentYear: any;
+    transactionFilter1: Array<any>;
+    dropdownKey1: string;
 
     schedulesData:any;
     scheduleFilter1:Array<any>;
@@ -210,9 +212,7 @@ export class TeamPage implements OnInit {
         });
     }
 
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     /**
      *
@@ -302,9 +302,7 @@ export class TeamPage implements OnInit {
 
                     console.log("Error getting video data");
                 }
-
         );
-
     }
 
     private getTwitterService() {
@@ -391,6 +389,36 @@ export class TeamPage implements OnInit {
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
 
+    private transactionsTab(tab) {
+        this.transactionsActiveTab = tab;
+        this.getTransactionsData();
+    }
+    private transactionsFilterDropdown(filter) {
+      if ( this.transactionsActiveTab == null ) {
+        this.transactionsActiveTab = this.transactionsData.tabs[0];
+      }
+      this.dropdownKey1 = filter;
+      this.getTransactionsData();
+    }
+    private getTransactionsData() {
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.transactionFilter1)
+      .subscribe(
+          transactionsData => {
+            if ( this.transactionFilter1 == undefined ) {
+              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
+              }
+            }
+
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
+          },
+          err => {
+          console.log('Error: transactionsData API: ', err);
+          }
+      );
+    }
+
     private getImages(imageData) {
         this._imagesService.getImages(this.profileType, this.pageParams.teamId)
             .subscribe(data => {
@@ -419,18 +447,6 @@ export class TeamPage implements OnInit {
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
-    }
-
-    private transactionsTab(tab) {
-        this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'module')
-        .subscribe(
-            transactionsData => {
-                //do nothing
-            },
-            err => {
-            console.log('Error: transactionsData API: ', err);
-            }
-        );
     }
 
     setupListOfListsModule() {
