@@ -217,7 +217,7 @@ export class LeaguePage implements OnInit {
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = "TDL"; //leagueShortName
-                this.getLeagueHeadlines(this.headlineData);
+                this.getLeagueHeadlines();
                 /*** Keep Up With Everything TDL ***/
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
