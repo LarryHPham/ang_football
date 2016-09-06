@@ -16,6 +16,9 @@
    .widget-page-wrapper{
      width: 105%;
    }
+  .widget-page-wrapper > .col-xs-4{
+    margin-left:30px;
+  }
 
   @media (max-width: 640px) {
     .widgetWrapper {
@@ -27,6 +30,7 @@
   }
   @media @mobile {
     .widgetWrapper {
+      padding-top: 20px;
       margin-left: -10px;
       width: ~"calc(100% + 20px)";
     }
@@ -36,6 +40,7 @@
     }
     .widgetForPage {
       width:100vw;
+      height: 270px;
     }
   }
   .carousel-container {
@@ -62,7 +67,7 @@
       border-radius: 60px;
     }
     .circles {
-      background-color: @homeRunLoyalImageHover;
+      background-color: @touchDownLoyalImageHover;
     }
     .circles:hover {
       background-color: @backgroundTransparent;
@@ -111,7 +116,7 @@
   &-content {
     position: relative;
     background-color: @white;
-    width: 960px;
+    width: 980px;
     @media (max-width: 1023px) {
       width: 640px;
     }
