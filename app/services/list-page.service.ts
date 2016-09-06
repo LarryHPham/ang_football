@@ -254,7 +254,7 @@ export class ListPageService {
       imageRoute: ["Home-page"],
       text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: profile.name,
+      text3: profile.listName,
       icon: 'fa fa-map-marker'
     };
   }
@@ -319,7 +319,6 @@ export class ListPageService {
           description: description,
           dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
           dataLabel: val.statDescription+' for '+ currentYear,
-          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
           rank: val.rank
