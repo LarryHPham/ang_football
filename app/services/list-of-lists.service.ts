@@ -47,6 +47,7 @@ export class ListOfListsService {
     var url_api = "scope=" + 'nfl' + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
 
+    console.log(callURL);
     return this.http.get( callURL, {
         headers: headers
       })
