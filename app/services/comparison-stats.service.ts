@@ -25,11 +25,11 @@ export interface PlayerData {
   teamId: string;
   teamColors: Array<string>;
   mainTeamColor: string;
-  jerseyNumber: number;
+  jerseyNumber: string;
   height: string;
-  weight: number;
-  age: number;
-  yearsExperience: number;
+  weight: string;
+  age: string;
+  yearExperience: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -358,7 +358,9 @@ export class ComparisonStatsService {
     } else if(position == "KR" || position == "PR" || position == "RS"){
       fields = this.returningFields;
     }
-    var colors = Gradient.getColorPair(data.playerOne.teamColors, data.playerTwo.teamColors);
+    var teamColorsOne = data.playerOne.teamColors.split();
+    var teamColorsTwo = data.playerTwo.teamColors.split();
+    var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
     var bars: ComparisonBarList = {};

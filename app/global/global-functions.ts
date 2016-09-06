@@ -6,6 +6,15 @@ declare var moment:any;
 @Injectable()
 
 export class GlobalFunctions {
+    /*convert from inches to ft-in format*/
+    static inchesToFeet(inch:number):string {
+      if(inch === undefined || inch === null){
+        return inch;
+      }
+      var feet = Math.floor(inch / 12);
+      inch %= 12;
+      return feet + "-" + inch;
+    }
     /**
      * Returns the approriate ordinal suffix for the given number
      *
