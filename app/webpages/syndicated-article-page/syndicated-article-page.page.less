@@ -118,10 +118,11 @@
       }
     }
     .grey-bar-credit {
-      width:100%;
+      //width:100%;
       color:#ccc;
       @media @mobile{
         right: -10px;
+        margin-right: 22px
       }
     }
   }
@@ -129,7 +130,7 @@
     position: relative;
     background-color: @white;
     width: 980px;
-    
+
     @media (max-width: 1023px) {
       width: 640px;
     }
@@ -188,14 +189,18 @@
     text-align: left;
     margin:15px 0 20px ;
     &-author {
-      display: none;
+      @media @mobile {
+        display: none;
+      }
     }
     @media @mobile {
       &-date {
         display:block;
         margin-top: 5px;
         p{
-          display: none;
+          @media @mobile {
+            display: none;
+          }
         }
       }
     }

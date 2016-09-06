@@ -78,7 +78,7 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
-          this.profileName = this.scope;
+          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/") {
             let relPath = this.getRelativePath(_router);
