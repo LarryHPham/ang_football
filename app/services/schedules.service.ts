@@ -183,7 +183,7 @@ export class SchedulesService {
     return yearArray;
   }
 
-  setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
+  setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function, year?, week?){
     this.getSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(data.data);

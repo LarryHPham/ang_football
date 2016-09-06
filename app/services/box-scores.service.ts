@@ -129,7 +129,7 @@ export class BoxScoresService {
     var year = moment(date,"YYYY-MM-DD").tz('America/New_York').format("YYYY");
     var convertedDate = month + ' ' + day + ordinal + ', ' + year;
 
-    moduleTitle = "Box Scores <span class='mod-info'> - " + team + ': ' +convertedDate + '</span>';
+    moduleTitle = "Box Scores <span class='mod-info'> - " + team + ' : ' +convertedDate + '</span>';
     return {
       moduleTitle: moduleTitle,
       hasIcon: false,

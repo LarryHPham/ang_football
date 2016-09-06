@@ -78,7 +78,7 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
-          this.profileName = this.scope;
+          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           this.isHomeRunZone = partnerHome;
           if(this.partnerID != null){
@@ -107,7 +107,7 @@ export class DeepDivePage implements OnInit{
           this.safeCall = true;
           this.callCount++;
           this.scrollLength = this.sideScrollData.length;
-        })
+        },null, null)
       }
     }
 
@@ -171,7 +171,7 @@ export class DeepDivePage implements OnInit{
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch(this.geoLocation, 1, 1);
-      this.getSideScroll();
+      // this.getSideScroll();
     }
     private onScroll(event) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
