@@ -143,7 +143,7 @@ export class TransactionsPage implements OnInit{
               }
             }
 
-            this.setPaginationParams();
+            this.setPaginationParams(transactionsData);
         }, err => {
           console.log("Error loading transaction data");
         })
@@ -169,7 +169,7 @@ export class TransactionsPage implements OnInit{
     this.getTransactionsPage();
   } //transactionsFilterDropdown(filter)
 
-  setPaginationParams() {
+  setPaginationParams(input) {
       var params = this._params.params;
 
       //path: '/directory/:type/:startsWith/page/:page',
@@ -191,7 +191,7 @@ export class TransactionsPage implements OnInit{
       }
 
       var navigationPage = params['teamId'] != null ? 'Transactions-page' : 'Transactions-tdl-page';
-      let max = Math.ceil(23/this.limit); //NEED Number of entries from API
+      let max = Math.ceil(input.totalTransactions/this.limit); //NEED Number of entries from API
 
       this.paginationParameters = {
         index: params['pageNum'] != null ? Number(params['pageNum']) : null,
