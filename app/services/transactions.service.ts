@@ -61,6 +61,8 @@ interface TransactionInfo {
 export class TransactionsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
+  public transactionsTotal: any;
+
   constructor(public http: Http) {}
 
   //Function to set custom headers
@@ -88,6 +90,7 @@ export class TransactionsService {
       }];
 
       tabs.forEach(tab => {
+        tab.totalTransactions = '',
         tab.sortTitle = "Season: ",
         tab.errorMessage = errorMessagePrepend + tab.tabDisplay.toLowerCase(),
         tab.includeDropdown = isPage
@@ -106,15 +109,15 @@ export class TransactionsService {
   }
 
   formatYearDropown() {
-    var test = 'test';
     let currentYear = new Date().getFullYear();
     let yearArray = [];
     for ( var i = 0; i < 4; i++ ) {
-      var newYear = currentYear - i;
-      yearArray.push({key:newYear, value:newYear});
+      let displayYear = currentYear - i;
+      let displaySeason = displayYear + '/' + (displayYear +1);
+      yearArray.push({key:displayYear, value:displaySeason});
     }
     return yearArray;
-  }
+  } //formatYearDropown()
 
   getTabsForPage(profileName: string, teamId?: number) {
     var errorMessagePrepend;
@@ -173,8 +176,9 @@ export class TransactionsService {
       .map(res => res.json())
       .map(
         data => {
-          tab.carData = this.carTransactions(data.data, type, tab, currentTeam);
-          tab.dataArray = this.listTransactions(data.data, type);
+          tab.totalTransactions = data.data.totalTransactions,
+          tab.carData = this.carTransactions(data.data.transactions, type, tab, currentTeam);
+          tab.dataArray = this.listTransactions(data.data.transactions, type);
           if ( tab.dataArray != null && tab.dataArray.length == 0 ) {
             tab.dataArray = null;
           }
@@ -218,9 +222,9 @@ export class TransactionsService {
         var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
 
-        if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
+        //if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
           playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
-        }
+        //}
         var teamLinkText = {
           route: teamId == val.teamId ? null : teamRoute,
           text: val.teamName
@@ -287,7 +291,7 @@ export class TransactionsService {
         dataPoints: [{
           style   : 'transactions-small',
           data_shortFormDate :   moment(val.transactionDate).format("MM/DD/YY"),
-          data_longFormDate : GlobalFunctions.formatLongDate(val.transactionDate),
+          data_longFormDate : moment(val.transactionDate).format("MMM. DD, YYYY"),
           value   : [playerTextLink, val.contents],
           url     : null
         }],
