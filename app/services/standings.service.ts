@@ -47,7 +47,7 @@ export class StandingsService {
     return pageTitle;
   }
 
-  loadAllTabsForModule(pageParams: SportPageParameters, currentTeamId?: string, currentTeamName?: string) {
+  loadAllTabsForModule(pageParams: SportPageParameters, scope?:string, currentTeamId?: string, currentTeamName?: string) {
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
         pageRouterLink: this.getLinkToPage(pageParams, currentTeamName),

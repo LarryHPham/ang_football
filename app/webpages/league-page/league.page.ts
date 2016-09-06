@@ -222,7 +222,7 @@ export class LeaguePage implements OnInit {
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
 
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 
