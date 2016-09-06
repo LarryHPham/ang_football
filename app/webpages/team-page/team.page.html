@@ -18,7 +18,7 @@
         [filter1]="scheduleFilter1"
         (tabSelected)="scheduleTab($event)"
         (selectedKeyFilter)="filterDropdown($event)"></schedules>
-    <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)"></standings-module>
+    <!-- <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)"></standings-module> -->
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace"></responsive-widget>
     <team-roster-module *ngIf="rosterData" [data]="rosterData"></team-roster-module>
     <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage" [profileData]="profileData" (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
@@ -33,8 +33,8 @@
     </transactions-module>
 
     <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-    <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
-    <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+    <!-- <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module> -->
+    <!-- <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget> -->
     <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'team'" [profileId]="pageParams.teamId"></comparison-module>
     <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
     <div class="profile-carousel-container">
@@ -45,7 +45,7 @@
     <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
     <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
     <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-    <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData"></list-of-lists>
+    <!-- <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData"></list-of-lists> -->
     <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
     <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
