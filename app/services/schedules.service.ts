@@ -87,7 +87,6 @@ export class SchedulesService {
     }
 
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-
     //optional week parameters
     if( week != null){
       callURL += '/'+week;
@@ -184,7 +183,7 @@ export class SchedulesService {
     return yearArray;
   }
 
-  setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function){
+  setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function, year?, week?){
     this.getSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(data.data);
