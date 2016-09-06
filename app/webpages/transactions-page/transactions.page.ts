@@ -14,13 +14,14 @@ import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {TransactionsComponent, TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
 import {SportPageParameters} from '../../global/global-interface';
+import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
 
 declare var moment:any;
 
 @Component({
     selector: 'transactions-page',
     templateUrl: './app/webpages/transactions-page/transactions.page.html',
-    directives: [SidekickWrapper, ErrorComponent, LoadingComponent, BackTabComponent, TitleComponent, TransactionsComponent],
+    directives: [PaginationFooter, SidekickWrapper, ErrorComponent, LoadingComponent, BackTabComponent, TitleComponent, TransactionsComponent],
     providers: [TransactionsService, ProfileHeaderService, Title],
     inputs:[]
 })
@@ -44,6 +45,8 @@ export class TransactionsPage implements OnInit{
   transactionFilter1: Array<any>;
   dropdownKey1: string;
 
+  paginationParameters: PaginationParameters;
+
   public scope: string;
   public partnerID:string;
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
@@ -56,17 +59,23 @@ export class TransactionsPage implements OnInit{
               private _title: Title) {
 
     _title.setTitle(GlobalSettings.getPageTitle("Transactions"));
+
     this.pageParams = {
-        teamId: _params.get("teamId") ? Number(_params.get("teamId")) : null
+      teamId: _params.get("teamId") ? Number(_params.get("teamId")) : null
     };
-    this.limit = Number(this._params.params['limit']);
-    this.pageNum = Number(this._params.params['pageNum']);
 
     GlobalSettings.getParentParams(this._router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
       }
     );
+
+    this.limit = Number(this._params.params['limit']);
+    this.pageNum = Number(this._params.params['pageNum']);
+
+    if ( this.pageNum === 0 ) {
+      this.pageNum = 1; //page index starts at one
+    }
   }
 
   ngOnInit(){
@@ -123,9 +132,10 @@ export class TransactionsPage implements OnInit{
     if ( matchingTabs.length > 0 ) {
       var tab = matchingTabs[0];
 
-      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1, 100, 1)
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
         .subscribe(
           transactionsData => {
+
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = this._transactionsService.formatYearDropown();
               if(this.dropdownKey1 == null){
@@ -133,6 +143,7 @@ export class TransactionsPage implements OnInit{
               }
             }
 
+            this.setPaginationParams();
         }, err => {
           console.log("Error loading transaction data");
         })
@@ -150,11 +161,45 @@ export class TransactionsPage implements OnInit{
   } //transactionsTab(tab)
 
   transactionsFilterDropdown(filter) {
-      if ( this.transactionsActiveTab == null ) {
-        this.transactionsActiveTab = this.transactionsData[0];
-      }
-      this.dropdownKey1 = filter;
+    if ( this.transactionsActiveTab == null ) {
+      this.transactionsActiveTab = this.transactionsData[0];
+    }
+    this.dropdownKey1 = filter;
 
-      this.getTransactionsPage();
-    } //transactionsFilterDropdown(filter)
+    this.getTransactionsPage();
+  } //transactionsFilterDropdown(filter)
+
+  setPaginationParams() {
+      var params = this._params.params;
+
+      //path: '/directory/:type/:startsWith/page/:page',
+      var navigationParams = {
+        limit: params['limit'],
+        pageNum: params['pageNum']
+      };
+
+      if(params['scope'] != null) {
+         navigationParams['scope'] = params['scope'];
+      }
+
+      if(params['teamId'] != null) {
+         navigationParams['teamId'] = params['teamId'];
+      }
+
+      if(params['teamName'] != null) {
+         navigationParams['teamName'] = params['teamName'];
+      }
+
+      var navigationPage = params['teamId'] != null ? 'Transactions-page' : 'Transactions-tdl-page';
+      let max = Math.ceil(23/this.limit); //NEED Number of entries from API
+
+      this.paginationParameters = {
+        index: params['pageNum'] != null ? Number(params['pageNum']) : null,
+        max: max,
+        paginationType: 'page',
+        navigationPage: navigationPage,
+        navigationParams: navigationParams,
+        indexKey: 'pageNum'
+      };
+  } //setPaginationParams(input)
 }
