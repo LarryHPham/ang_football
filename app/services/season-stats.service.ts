@@ -132,7 +132,7 @@ export class SeasonStatsService {
     let bars: Array<ComparisonBarInput> = [];
 
     for ( var index in stats ) {
-      var fieldName = stats[index].statType;
+      var fieldName = stats[index].statDescription;
       var infoBox = null;
 
       //catch no stat data
@@ -187,7 +187,7 @@ export class SeasonStatsService {
       }
 
       bars.push({
-        title: SeasonStatsService.getKeyDisplayTitle(fieldName, scope),
+        title: fieldName,
         data: dataPoints,
         minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue)) : null,
         maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue)) : null,
