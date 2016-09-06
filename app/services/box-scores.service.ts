@@ -422,7 +422,6 @@ export class BoxScoresService {
         gameArray.push(twoBoxes);
       }
     })
-    console.log(gameArray);
     return gameArray;
   }
 
