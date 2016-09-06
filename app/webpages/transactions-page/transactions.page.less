@@ -1,4 +1,8 @@
 .transactions {
+  .pane {
+    padding: 5px 15px 0 15px;
+  }
+
   &-page {
     &-title{
       .flexDisplay;
@@ -50,16 +54,33 @@
     } //&-container
 
     .no-data{
-      min-height: 130px; //min-height set so enough room is available to see entire dropdown when no data
       height: 70px;
       margin: 5px auto;
-    }
+    } //no-data
 
+    //following attributes added so entire dropdown can be seen when there is no data to display
+    overflow: visible;
+    .side-scroller {
+      overflow: visible;
+    }
     .pane {
-      .side-scroller {
-        min-height: 180px; //min-height set so enough room is available to see entire dropdown when no data
+      overflow: visible;
+    }
+    .dropdown-caret-top {
+      z-index: 1001;
+    }
+    .dropdown-list {
+      z-index: 1000;
+    }
+    //END following attributes added so entire dropdown can be seen when there is no data to display
+
+    .scc-details-desc {
+      @media @tablet {
+        min-height: 165px;
+        width: ~"calc(100% - 225px)";
       }
     }
+    
   } //&-page
 
-}
+} //transactions

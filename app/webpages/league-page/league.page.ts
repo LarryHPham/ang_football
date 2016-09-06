@@ -367,6 +367,7 @@ export class LeaguePage implements OnInit {
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {
+
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = this._transactionsService.formatYearDropown();
               if(this.dropdownKey1 == null){
@@ -503,7 +504,7 @@ export class LeaguePage implements OnInit {
             target: 'player',
             position: event.position,
             statName: matches.tabDataKey,
-            ordering: 'asc',
+            ordering: 'desc',
             perPageCount: this.listMax,
             pageNumber: 1
           }
