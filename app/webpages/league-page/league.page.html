@@ -20,7 +20,14 @@
     <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" [scope]="scope"></standings-module>
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-    <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData" [data]="transactionsData" (tabSwitched)="transactionsTab($event)"></transactions-module>
+
+    <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
+      [data]="transactionsData"
+      [transactionFilter1]="transactionFilter1"
+      [dropdownKey1]="dropdownKey1"
+      (tabSwitched)="transactionsTab($event)"
+      (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
+
     <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace"></responsive-widget>
     <!-- <mvp-module *ngIf="batterData" [title]="'Batter'" [mvpData]="batterData" [query]="batterParams" (tabSelected)="batterTab($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
