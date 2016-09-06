@@ -19,12 +19,13 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from "../../fe-core/components/responsive-widget/responsive-widget.component";
 
 @Component({
     selector: 'Player-stats-page',
     templateUrl: './app/webpages/player-stats-page/player-stats.page.html',
 
-    directives: [SidekickWrapper, BackTabComponent, TitleComponent, PlayerStatsComponent, LoadingComponent, ErrorComponent, DropdownComponent],
+    directives: [SidekickWrapper, BackTabComponent, TitleComponent, PlayerStatsComponent, LoadingComponent, ErrorComponent, DropdownComponent, ResponsiveWidget],
     providers: [ProfileHeaderService, PlayerStatsService],
 })
 
