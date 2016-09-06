@@ -80,6 +80,16 @@ export class DeepDivePage implements OnInit{
           this.scope = parentParams.scope;
           this.profileName = this.scope;
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
+          if (window.location.pathname == "/") {
+            let relPath = this.getRelativePath(_router);
+            if(partnerHome){
+              //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+              window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
+            }else{
+              //_router.navigate([relPath+'Default-home',{scope:'nfl'}]);
+              window.location.pathname = "/nfl";
+            }
+          }
           this.isHomeRunZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
@@ -87,6 +97,25 @@ export class DeepDivePage implements OnInit{
             this.getGeoLocation();
           }
       });
+    }
+
+    getRelativePath(router:Router){
+      let counter = 0;
+      let hasParent = true;
+      let route = router;
+      for (var i = 0; hasParent == true; i++){
+        if(route.parent != null){
+          counter++;
+          route = route.parent;
+        }else{
+          hasParent = false;
+          let relPath = '';
+          for(var c = 1 ; c <= counter; c++){
+            relPath += '../';
+          }
+          return relPath;
+        }
+      }
     }
 
     //api for Schedules

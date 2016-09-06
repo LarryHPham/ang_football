@@ -131,8 +131,6 @@ export class LeaguePage implements OnInit {
 
     comparisonModuleData: ComparisonModuleData;
 
-    transactionsData:TransactionModuleData;
-
     boxScoresData:any;
     currentBoxScores:any;
     dateParam:any;
@@ -157,6 +155,11 @@ export class LeaguePage implements OnInit {
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
 
+    transactionsData: TransactionModuleData;
+    transactionsActiveTab: any;
+    transactionFilter1: Array<any>;
+    dropdownKey1: string;
+
     schedulesData:any;
     scheduleFilter1:Array<any>;
     scheduleFilter2:Array<any>;
@@ -164,10 +167,12 @@ export class LeaguePage implements OnInit {
     selectedFilter2:string;
     eventStatus: string;
 
+    limit: number;
+    pageNum: number;
+
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
-
 
     constructor(private _router:Router,
                 private _title: Title,
@@ -195,15 +200,24 @@ export class LeaguePage implements OnInit {
 
             //for boxscores
             var currentUnixDate = new Date().getTime();
+
             //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
             this.dateParam ={
               profile:'league',//current profile page
               teamId: this.scope,
-              // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-              date: '2016-09-11'
+              date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              // date: '2016-09-11'
             }
+
             this.setupProfileData(this.partnerID, this.scope);
-        });
+        }); //GlobalSettings.getParentParams
+
+        this.limit = Number(this._params.params['limit']);
+        this.pageNum = Number(this._params.params['pageNum']);
+
+        if ( this.pageNum === 0 ) {
+          this.pageNum = 1; //page index starts at one
+        }
     }
 
     ngOnInit() {}
@@ -290,6 +304,9 @@ export class LeaguePage implements OnInit {
       if(filter.value == 'filter2'){
         this.selectedFilter2 = filter.key;
       }
+      if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+        this.selectedFilter1 = new Date().getFullYear().toString();
+      }
       this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
@@ -317,9 +334,6 @@ export class LeaguePage implements OnInit {
       }, year, week) // isTeamProfilePage = true
     }
 
-
-
-
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
 
         this.videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
@@ -339,16 +353,34 @@ export class LeaguePage implements OnInit {
     }
 
     private transactionsTab(tab) {
-        this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'module')
-        .subscribe(
-            transactionsData => {
-                //do nothing
-            },
-            err => {
-            console.log('Error: transactionsData API: ', err);
-            }
-        );
+        this.transactionsActiveTab = tab;
+        this.getTransactionsData();
     }
+    private transactionsFilterDropdown(filter) {
+      if ( this.transactionsActiveTab == null ) {
+        this.transactionsActiveTab = this.transactionsData[0];
+      }
+      this.dropdownKey1 = filter;
+      this.getTransactionsData();
+    }
+    private getTransactionsData() {
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
+      .subscribe(
+          transactionsData => {
+            if ( this.transactionFilter1 == undefined ) {
+              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
+              }
+            }
+
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
+          },
+          err => {
+          console.log('Error: transactionsData API: ', err);
+          }
+      );
+    } //private getTransactionsData
 
     private getTwitterService(profileType, partnerID, scope) {
         this.scope = scope;

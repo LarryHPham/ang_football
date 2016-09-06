@@ -95,6 +95,7 @@ export class ListPageService {
     pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
+
   getListPageService(query, errorMessage: string, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
@@ -253,7 +254,7 @@ export class ListPageService {
       imageRoute: ["Home-page"],
       text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: profile.name,
+      text3: profile.listName,
       icon: 'fa fa-map-marker'
     };
   }
@@ -318,7 +319,6 @@ export class ListPageService {
           description: description,
           dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
           dataLabel: val.statDescription+' for '+ currentYear,
-          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
           rank: val.rank
@@ -338,7 +338,7 @@ export class ListPageService {
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-      var teamLocation = val.teamMarket;
+      var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = val.statDescription + ' for ' + currentYear;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
       val.listRank = rank;
@@ -385,6 +385,7 @@ export class ListPageService {
             statDescription,
             null),
             imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
+
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
           ctaBtn:'',

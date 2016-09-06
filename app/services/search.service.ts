@@ -184,9 +184,8 @@ export class SearchService{
           players: [],
           teams: []
         };
-
         //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
-        scope = scope == 'ncaaf'?'fbs':'nfl';
+        scope = scope == 'ncaaf'?'fbs':scope;
 
         if(scope !== null){
           data[scope]['players'].forEach(function(item){
