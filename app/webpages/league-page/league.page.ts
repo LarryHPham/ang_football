@@ -197,7 +197,7 @@ export class LeaguePage implements OnInit {
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
-
+            this.pageParams.scope = this.scope;
             //for boxscores
             var currentUnixDate = new Date().getTime();
 
@@ -236,7 +236,7 @@ export class LeaguePage implements OnInit {
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams);
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
 
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
 

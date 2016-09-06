@@ -159,6 +159,7 @@ export class PlayerPage implements OnInit {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
+        this.pageParams.scope = this.scope;
     });
   }
 
@@ -341,7 +342,7 @@ private dailyUpdateModule(playerId: number) {
     private setupTeamProfileData() {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, null, data.teamName);
+                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, data.teamName);
             },
             err => {
                 console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
