@@ -90,7 +90,7 @@ export class DeepDivePage implements OnInit{
     }
 
     //api for Schedules
-    private getSideScroll(){
+    private getSideScroll(){//TODO waiting on Schedule to be done
       let self = this;
 
       if(this.safeCall){
@@ -170,7 +170,7 @@ export class DeepDivePage implements OnInit{
 
     callModules(){
       this.getDataCarousel();
-      this.getDeepDiveVideoBatch(this.geoLocation, 1, 1);
+      this.getDeepDiveVideoBatch();
       this.getSideScroll();
     }
     private onScroll(event) {
