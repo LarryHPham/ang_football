@@ -130,7 +130,6 @@ export class TeamPage implements OnInit {
     headerData:any;
     pageParams:SportPageParameters;
     partnerID:string = null;
-    scope:string = null;
     hasError: boolean = false;
     headlineError:boolean = false;
     headlineData:HeadlineData;
@@ -170,6 +169,10 @@ export class TeamPage implements OnInit {
     faqData: Array<faqModuleData>;
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
+
+    public scope: string;
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(private _params:RouteParams,
                 private _router:Router,
@@ -395,13 +398,13 @@ export class TeamPage implements OnInit {
     }
     private transactionsFilterDropdown(filter) {
       if ( this.transactionsActiveTab == null ) {
-        this.transactionsActiveTab = this.transactionsData.tabs[0];
+        this.transactionsActiveTab = this.transactionsData[0];
       }
       this.dropdownKey1 = filter;
       this.getTransactionsData();
     }
     private getTransactionsData() {
-      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.transactionFilter1)
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
       .subscribe(
           transactionsData => {
             if ( this.transactionFilter1 == undefined ) {
@@ -417,7 +420,7 @@ export class TeamPage implements OnInit {
           console.log('Error: transactionsData API: ', err);
           }
       );
-    }
+    } //private getTransactionsData
 
     private getImages(imageData) {
         this._imagesService.getImages(this.profileType, this.pageParams.teamId)

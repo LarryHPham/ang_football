@@ -24,9 +24,10 @@
     <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage" [profileData]="profileData" (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
     <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
 
-    <transactions-module *ngIf="transactionsData"
+    <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
       [data]="transactionsData"
-      [filter1]="transactionsFilter1"
+      [transactionFilter1]="transactionFilter1"
+      [dropdownKey1]="dropdownKey1"
       (tabSwitched)="transactionsTab($event)"
       (transactionKeyFilter)="transactionsFilterDropdown($event)">
     </transactions-module>
