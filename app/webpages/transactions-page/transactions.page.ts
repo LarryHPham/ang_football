@@ -15,13 +15,14 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {TransactionsComponent, TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
 import {SportPageParameters} from '../../global/global-interface';
 import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 declare var moment:any;
 
 @Component({
     selector: 'transactions-page',
     templateUrl: './app/webpages/transactions-page/transactions.page.html',
-    directives: [PaginationFooter, SidekickWrapper, ErrorComponent, LoadingComponent, BackTabComponent, TitleComponent, TransactionsComponent],
+    directives: [PaginationFooter, SidekickWrapper, ErrorComponent, LoadingComponent, BackTabComponent, TitleComponent, TransactionsComponent, ResponsiveWidget],
     providers: [TransactionsService, ProfileHeaderService, Title],
     inputs:[]
 })
