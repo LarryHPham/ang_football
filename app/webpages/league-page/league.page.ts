@@ -225,7 +225,6 @@ export class LeaguePage implements OnInit {
     private setupProfileData(partnerID, scope) {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
-              console.log(data)
             ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
