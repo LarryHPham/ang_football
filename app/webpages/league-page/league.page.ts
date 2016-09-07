@@ -166,6 +166,7 @@ export class LeaguePage implements OnInit {
     selectedFilter1:string
     selectedFilter2:string;
     eventStatus: string;
+    isFirstRun:number = 0;
 
     limit: number;
     pageNum: number;
@@ -233,7 +234,7 @@ export class LeaguePage implements OnInit {
                 this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
                 this.getLeagueHeadlines();
                 /*** Keep Up With Everything TDL ***/
-                // this.getBoxScores(this.dateParam);
+                this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
@@ -286,6 +287,7 @@ export class LeaguePage implements OnInit {
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
+        this.isFirstRun = 0;
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus, null);
@@ -298,16 +300,29 @@ export class LeaguePage implements OnInit {
         }
     }
     private filterDropdown(filter){
-      if(filter.value == 'filter1'){
-        this.selectedFilter1 = filter.key;
+      let tabCheck = 0;
+      if(this.eventStatus == 'postgame'){
+        tabCheck = 1;
       }
-      if(filter.value == 'filter2'){
-        this.selectedFilter2 = filter.key;
+      if(this.isFirstRun > tabCheck){
+        let filterChange = false;
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+          this.selectedFilter1 = filter.key;
+          filterChange = true;
+        }
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
+        }
+        if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+          this.selectedFilter1 = new Date().getFullYear().toString();
+        }
+        if(filterChange){
+          this.isFirstRun = 0;
+        }
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
       }
-      if(this.selectedFilter2 != null && this.selectedFilter1 == null){
-        this.selectedFilter1 = new Date().getFullYear().toString();
-      }
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+      this.isFirstRun++;
     }
 
     //api for Schedules
@@ -508,6 +523,7 @@ export class LeaguePage implements OnInit {
             perPageCount: this.listMax,
             pageNumber: 1
           }
+          this.getMVPService(matches, this.positionParams);
         }
       }
     }
