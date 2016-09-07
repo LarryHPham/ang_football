@@ -58,7 +58,7 @@ export class StandingsService {
   initializeAllTabs(pageParams: SportPageParameters, currentTeamId?: string): Array<TDLStandingsTabdata> {
     let tabs: Array<TDLStandingsTabdata> = [];
     if ( pageParams.conference === undefined || pageParams.conference === null ) {
-      //Is an TLD page: show DIVISION, then CONFERENCE, then NFL/NCAAF
+      //Is an stangings page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
       /*console.log('league conference tabs',Conference, Division);*/
       tabs.push(this.createTab(true, currentTeamId, 'Division'));//TODO
@@ -179,6 +179,9 @@ export class StandingsService {
 
   private createTab(selectTab: boolean, teamId: string, conference?, division?) {
     let title = this.formatGroupName(conference, division) + " Standings";
+    if (conference != null && (conference.includes("Division") || conference.includes("Conference"))) {
+      conference = null;
+    }
     /*console.log("createTab", conference, division);*/
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
