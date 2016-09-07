@@ -512,6 +512,12 @@ export class LeaguePage implements OnInit {
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
+    private standingsFilterSelected(tabData: Array<any>) {
+      this.pageParams.scope = this.scope;
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      });
+    }
+
     private positionDropdown(event) {
 
       this.positionData = this.checkToResetTabs(event);

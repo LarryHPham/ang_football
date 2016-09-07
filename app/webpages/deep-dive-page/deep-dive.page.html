@@ -4,7 +4,7 @@
     <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" [carData]="carouselData" [videoData]="videoData">
     </side-scroll-test>
     </div>
-    <div class="spacer"  id="deep-dive-blueBar">
+    <div class="spacer" id="deep-dive-blueBar">
       <section class="deep-dive-adWrap">
         <iframe *ngIf="scope == 'nfl'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
         <iframe *ngIf="scope == 'fbs'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/ncaafbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
