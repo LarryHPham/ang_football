@@ -223,8 +223,6 @@ export class TransactionsService {
         var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
 
-        console.log('carsouelArray - ', val);
-
         if (val.playerActive) {
           playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
         }
