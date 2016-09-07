@@ -38,7 +38,10 @@ interface PlayerItem {
     teamLogo: string,
     lastUpdated: string,
     backgroundImage: string,
-    playerHeadshotUrl: string
+    playerHeadshotUrl: string,
+    teamNickname: string,
+    seasonLong: string,
+    playerBirthplace: string
 }
 
 interface ListData {
@@ -275,7 +278,8 @@ export class ListPageService {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
-          text: val.teamName
+          text: val.teamNickname,
+          class: 'text-heavy'
         };
 
         var ctaDesc: string;
@@ -304,12 +308,7 @@ export class ListPageService {
             text: playerName
           };
 
-          description = [
-            'Team: ',
-            teamLinkText,
-            '<span class="separator">   |   </span> ',
-            'Jersey No: #'+val.playerJerseyNumber
-          ];
+          description = ['<i class="fa fa-map-marker text-master"></i>', val.playerBirthplace, '<span class="separator">   |   </span> ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
@@ -318,7 +317,7 @@ export class ListPageService {
           profileNameLink: profileLinkText,
           description: description,
           dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
-          dataLabel: val.statDescription+' for '+ currentYear,
+          dataLabel: val.statDescription+' for '+ val.seasonLong,
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
           rank: val.rank
@@ -338,11 +337,10 @@ export class ListPageService {
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
       var teamLocation = val.teamCity + ", " + val.teamState;
-      var statDescription = val.statDescription + ' for ' + currentYear;
+      var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
       val.listRank = rank;
       if(data.query.target == 'team'){
-        var divisionName = VerticalGlobalFunctions.formatShortNameDivison(val.conferenceName) + val.divisionName.charAt(0).toUpperCase();
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
@@ -351,10 +349,9 @@ export class ListPageService {
             val.stat,
             [ //sub left text
               {text: "<i class='fa fa-map-marker'></i>" + teamLocation},
-              {text: "   |   ", class: "separator"},
-              {text: "Division: " + divisionName},
+              {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
+              {text: "<span class='not-mobile'>Division: " + val.divisionName + "</span>"},
             ],
-            GlobalFunctions.commaSeparateNumber(val.stat),
             statDescription,
             null),
           imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, val.listRank),
@@ -375,11 +372,9 @@ export class ListPageService {
             ],
             val.stat,
             [ //sub left text
-              {route: teamRoute, text: val.teamName, class: "dataBox-subLink"},
-              {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.playerJerseyNumber},
-              {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.playerJerseyNumber}
+              {text: "<i class='fa fa-map-marker'></i>" + val.playerBirthplace},
+              {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
+              {route: teamRoute, text: "<span class='not-mobile text-heavy'>" + val.teamNickname + "</span>", class: "dataBox-subLink"}
             ],
             statDescription,
             null),
