@@ -33,7 +33,6 @@ export class NewsService {
     }
 
     fullUrl += '/'+type+'/'+scope+'/'+urlParams.limit+'/'+urlParams.pageNum+targetId;
-    console.log('NEWS scope',scope,fullUrl);
 
     return this.http.get(fullUrl, {
       headers: headers
@@ -71,7 +70,6 @@ export class NewsService {
           smalltext: 'READ STORY'
         }
       };
-      console.log('NEWS FOOTER DATA', News);
 
       newsArray.push(News);
     });

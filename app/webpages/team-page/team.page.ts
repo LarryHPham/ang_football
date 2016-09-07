@@ -484,12 +484,10 @@ export class TeamPage implements OnInit {
           pageNum : 1,
           scope : this.scope
         }
-        console.log('SCOPE',this.scope);
         this._lolService.getListOfListsService(params, "team", "module")
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
-                    console.log('listData',this.listOfListsData);
                     // this.listOfListsData["type"] = "team";
                     // this.listOfListsData["id"] = this.pageParams.teamId;
                 },

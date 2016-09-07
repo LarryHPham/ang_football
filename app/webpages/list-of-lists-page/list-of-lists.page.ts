@@ -74,13 +74,11 @@ export class ListOfListsPage implements OnInit{
         this.listService.getListOfListsService(urlParams, this.pageType, "page")
           .subscribe(
             list => {
-              console.log('hello',this.pageType);
                 if(list.listData.length == 0){//makes sure it only runs once
                     this.detailedDataArray = null;
                 }else{
                     this.detailedDataArray = list.listData;
                 }
-                console.log('LIST.PAGINATION',list.pagination);
                 this.setPaginationParams(list.pagination);
 
                 this.carouselDataArray = list.carData;
@@ -143,7 +141,6 @@ export class ListOfListsPage implements OnInit{
     setPaginationParams(input) {
         var params = this._params.params;
 
-        console.log('FUCK THIS SHIT',params);
 
         var navigationParams = {
             perPageCount     : params['perPageCount'],
@@ -180,7 +177,6 @@ export class ListOfListsPage implements OnInit{
             indexKey: 'pageNumber'
         };
 
-        console.log('PAGINATION parameterS',this.paginationParameters);
     }
 
     ngOnInit(){

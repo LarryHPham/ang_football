@@ -48,14 +48,12 @@ export class ListOfListsService {
 
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
-    console.log('CALLURL',callURL);
     return this.http.get( callURL, {
         headers: headers
       })
       .map(res => res.json())
       .map(
         data => {
-          console.log('LIST OF LISTS DATA',data);
           if ( !data || !data.data ) {
             return null;
           }
@@ -64,7 +62,6 @@ export class ListOfListsService {
             lastUpdated = data.data[0].targetData;
 
           }
-          console.log('PAGINATION BULLSHIT',data.data[0].listInfo);
           return {
             carData: this.carDataPage(data.data,target),
             listData: this.detailedData(data.data, pageType,target),
@@ -222,11 +219,9 @@ export class ListOfListsService {
       if (itemTarget['rankType'] == "player") {
         listype = itemTarget['statType'].replace('player_','');
       }
-      console.log('LISTYUPE',listype);
 
 
 
-      console.log('ITEM TARGET',itemTarget);
       let ctaUrlArr = [
         itemTarget['rankType'],
         listype,
@@ -285,7 +280,6 @@ export class ListOfListsService {
         ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArr)  != null ? VerticalGlobalFunctions.formatListRoute(ctaUrlArr) : dummyUrl
       };
 
-      console.log('FUCK THIS SHIT',listData);
 
 
       itemListData.forEach(function(val, index) {
