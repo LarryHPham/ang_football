@@ -1,4 +1,14 @@
 .list-page {
+  .mobile-only {
+    @media @tablet {
+      display: none;
+    }
+  }
+  .not-mobile {
+    @media @mobile {
+      display:none;
+    }
+  }
   .filters {
     padding-left: 10px;
     padding-right: 10px;
