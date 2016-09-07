@@ -44,6 +44,7 @@ export class MVPListPage implements OnInit{
   selectedTabName: string;
   globalMVPPosition: string;
   season: number;
+  listMax:number = 10;
 
   footerStyle: FooterStyle = {
     ctaBoxClass: " mvp-page-car-footer",
@@ -77,7 +78,7 @@ export class MVPListPage implements OnInit{
           target: 'player',
           position: this.listType,
           statName: this.tab,
-          ordering: 'asc',
+          ordering: 'desc',
           perPageCount: 50,
           pageNumber: this.pageNum,
           season: '2015'
@@ -115,9 +116,8 @@ export class MVPListPage implements OnInit{
         console.log("Error loading profile");
       });
   }
-  ////////////////
-  //// BEGINNING OF INFINITE LOOP
-  ///////////////
+
+
   loadTabs() {
     this.tabs = this._service.getMVPTabs(this.listType, 'page');
 
@@ -212,6 +212,36 @@ export class MVPListPage implements OnInit{
        }
      }
   } //tabSelected(tab: positionMVPTabData)
+
+  private positionDropdown(event) {
+
+    var pageRoute;
+    this.tabs = this.checkToResetTabs(event);
+
+    if(event.tab != null){
+
+      var matches = this.checkMatchingTabs(event);
+
+      this.globalMVPPosition = event.position;
+
+      if(matches != null){
+        this.queryParams = {
+          scope:  this.scope, //TODO change to active scope
+          target: 'player',
+          position: event.position,
+          statName: matches.tabDataKey,
+          ordering: 'asc',
+          perPageCount: this.listMax,
+          pageNumber: 1,
+          season: '2015'
+        }
+        this.getStandardList(matches);
+      }
+
+      pageRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: "1"}];
+      this._router.navigate(pageRoute);
+    }
+  }
 
   private checkToResetTabs(event) {
     let localPosition = event.position;

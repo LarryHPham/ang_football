@@ -160,6 +160,8 @@ export class LeaguePage implements OnInit {
     transactionFilter1: Array<any>;
     dropdownKey1: string;
 
+    isFirstRun: boolean = true;
+
     schedulesData:any;
     scheduleFilter1:Array<any>;
     scheduleFilter2:Array<any>;
@@ -225,7 +227,6 @@ export class LeaguePage implements OnInit {
     private setupProfileData(partnerID, scope) {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
-              console.log(data)
             ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
@@ -502,9 +503,10 @@ export class LeaguePage implements OnInit {
             target: 'player',
             position: event.position,
             statName: matches.tabDataKey,
-            ordering: 'desc',
+            ordering: 'asc',
             perPageCount: this.listMax,
-            pageNumber: 1
+            pageNumber: 1,
+            season: '2015'
           }
           this.getMVPService(matches, this.positionParams);
         }
@@ -517,7 +519,7 @@ export class LeaguePage implements OnInit {
       let localPosition = event.position;
       let listName = event.tab.tabDataKey;
 
-      if(event.position != this.globalMVPPosition){
+      if(event.position != this.globalMVPPosition && this.positionData != []){
         this.positionData[0].isLoaded = false;
         return this.positionData[0];
       }else{
@@ -538,14 +540,19 @@ export class LeaguePage implements OnInit {
     }
 
     getMVPService(tab, params){
-      this.listService.getListModuleService(tab, params)
-          .subscribe(updatedTab => {
-              //do nothing?
-              var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
-              matches[0] = updatedTab;
-          }, err => {
-              tab.isLoaded = true;
-              console.log('Error: Loading MVP Pitchers: ', err);
-          })
+      if(this.isFirstRun){
+        this.isFirstRun = false;
+        this.listService.getListModuleService(tab, params)
+            .subscribe(updatedTab => {
+                //do nothing?
+                var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+                matches[0] = updatedTab;
+                this.isFirstRun = true;
+            }, err => {
+                tab.isLoaded = true;
+                console.log('Error: Loading MVP Pitchers: ', err);
+            })
+      }
+
     }
 }

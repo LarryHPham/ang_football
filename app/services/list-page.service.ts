@@ -41,7 +41,7 @@ interface PlayerItem {
     playerHeadshotUrl: string,
     teamNickname: string,
     seasonLong: string,
-    playerCity: string
+    playerBirthplace: string
 }
 
 interface ListData {
@@ -51,6 +51,7 @@ interface ListData {
 }
 
 export class positionMVPTabData implements MVPTabData {
+  scope?: string;
   tabDataKey: string;
   tabDisplayTitle: string;
   errorData: any = {
@@ -230,6 +231,7 @@ export class ListPageService {
         callURL += '&' + q +'='+ query[q];
       }
     }
+    console.log(callURL);
 
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
@@ -276,7 +278,7 @@ export class ListPageService {
       //if data is coming through then run through the transforming function for the module
       carouselArray = carData.map(function(val, index){
         var carouselItem;
-        var rank = val.listRank;
+        var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
@@ -290,7 +292,7 @@ export class ListPageService {
         var profileLinkText: Link;
         var description: any;
         var playerName = val.playerFirstName + ' ' + val.playerLastName;
-        var playerCity = val.teamCity + " " + val.teamState;
+        var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var position = val.playerPosition;
 
         if(data.query.target == 'team') {
@@ -310,11 +312,11 @@ export class ListPageService {
             route: primaryRoute,
             text: playerName
           };
-          description = ['<i class="fa fa-map-marker text-master"></i>' + playerCity + '<span class="separator">   |   </span> ', teamLinkText];
+          description = ['<i class="fa fa-map-marker text-master"></i>' + playerBirthplace + '<span class="separator">   |   </span> ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
-          backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
+          backgroundImage: val.backgroundImage,
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: profileLinkText,
           description: description,
@@ -322,7 +324,7 @@ export class ListPageService {
           dataLabel: val.statDescription+' for '+ val.seasonLong,
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
-          rank: val.rank
+          rank: rank.toString()
         });
         return carouselItem;
       });
@@ -338,10 +340,10 @@ export class ListPageService {
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+      console.log(teamRoute);
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
-      val.listRank = rank;
       if(data.query.target == 'team'){
         return {
           dataPoints: ListPageService.detailsData(
@@ -367,14 +369,16 @@ export class ListPageService {
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
         var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
         var position = val.playerPosition;
+        var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
+        var stat = GlobalFunctions.commaSeparateNumber(val.stat);
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
               {route: playerRoute, text: playerFullName, class: "dataBox-mainLink"}
             ],
-            val.stat,
+            stat,
             [ //sub left text
-              {text: "<span class='not-mobile'><i class='fa fa-map-marker'></i>" + val.playerBirthplace + "</span>"},
+              {text: "<span class='not-mobile'><i class='fa fa-map-marker'></i>" + playerBirthplace + "</span>"},
               {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
               {route: teamRoute, text: "Team:<span class='text-heavy'> " + val.teamNickname + "</span>", class: "dataBox-subLink"}
             ],
