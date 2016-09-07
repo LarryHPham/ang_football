@@ -135,6 +135,7 @@ export class StandingsPage{
     if ( this.pageParams.teamId ) {
       this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
         data => {
+          console.log(data);
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
           this._title.setTitle(GlobalSettings.getPageTitle("Standings", data.teamName));
