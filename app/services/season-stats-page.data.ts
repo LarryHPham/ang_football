@@ -596,7 +596,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
 
     switch (column.key) {
       case "year":
-      if(item.seasonId != null) {
+      if(item.seasonId != null && item.seasonId != "") {
         display = (Number(item.seasonId.slice(-2)) + 1).toString() + " / " + item.seasonId.slice(-2);
       }
       else {
