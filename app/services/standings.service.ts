@@ -40,9 +40,9 @@ export class StandingsService {
 
   getPageTitle(pageParams: SportPageParameters, teamName: string): string {
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = "Football Standings Breakdown";
+    let pageTitle = pageParams.scope.toUpperCase() + " Standings Breakdown";
     if ( teamName ) {
-      pageTitle = "Football Standings - " + teamName;//TODO
+      pageTitle = pageParams.scope.toUpperCase() + " Standings - " + teamName;
     }
     return pageTitle;
   }

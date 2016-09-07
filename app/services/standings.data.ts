@@ -141,7 +141,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
         text: item.teamName
     };
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: item.fullBackgroundImageUrl,
+      backgroundImage: GlobalSettings.getImageUrl(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [item.seasonBase + "-" + yearEnd + " Season " + item.divisionName + " Standings"],
       profileNameLink: teamNameLink,
@@ -150,15 +150,13 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
           " is currently <span class='text-heavy'>ranked " + Number(item.divisionRank) + "</span>" + " in the <span class='text-heavy'>" + item.divisionName + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
-      circleImageUrl: item.fullImageUrl,
+      circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
       circleImageRoute: teamRoute
     });
   }
 }
 
 export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
-  // title: string;
-
   columns: Array<TableColumn>;
   rows: Array<TeamStandingsData>;
 
@@ -281,17 +279,18 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
+    var teamFullName = item.teamMarket + ' ' + item.teamName;
     switch (column.key) {
       case "name":
         display = item.teamName;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
-          link = VerticalGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
         }
-        imageUrl = item.fullImageUrl;
+        imageUrl = GlobalSettings.getImageUrl(item.teamLogo);
         break;
 
-      case "wlt"://TODO
+      case "wlt":
         display = item.teamOverallRecord != null ? item.teamOverallRecord : null;
         sort = item.teamOverallRecord;
         break;
@@ -306,12 +305,12 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         sort = item.streak;
         break;
 
-      case "hm"://TODO
+      case "hm":
         display = item.teamWinPercent != null ? item.teamWinPercent : null;
         sort = item.teamWinPercent;
         break;
 
-      case "rd"://TODO
+      case "rd":
         display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
         sort = item.teamDivisionRecord;
         break;
@@ -328,7 +327,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "pct":
         display = item.teamWinPercent != null ? item.teamWinPercent : null;
-        sort = item.teamWinPercent;
+        sort = Number(item.teamWinPercent);
         break;
 
       case "div":
