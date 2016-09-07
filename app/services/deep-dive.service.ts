@@ -331,7 +331,6 @@ export class DeepDiveService {
       var info = val.info;
       var date = moment(Number(info.dateline)*1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
-      console.log(val.keyword, eventID);
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
