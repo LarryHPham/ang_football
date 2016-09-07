@@ -202,7 +202,7 @@ export class PlayerPage implements OnInit {
               this.getImages(this.imageData);
               this.getDykService();
               this.getFaqService();
-              // this.setupListOfListsModule();
+              this.setupListOfListsModule();
               this.getNewsService();
 
               /*** Interact With [League Name]’s Fans ***/
@@ -367,9 +367,10 @@ private dailyUpdateModule(playerId: number) {
 
     setupListOfListsModule() {
       let params = {
-        id : this.pageParams.playerId,
+        targetId : this.pageParams.playerId,
         limit : 5,
-        pageNum : 1
+        pageNum : 1,
+        scope: this.scope
       }
       this._lolService.getListOfListsService(params, "player", "module")
         .subscribe(
