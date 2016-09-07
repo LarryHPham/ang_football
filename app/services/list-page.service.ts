@@ -105,7 +105,8 @@ export class ListPageService {
 
   var callURL = this._apiUrl+'/list';
   if (season == null || season == undefined || season == "null") {
-    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber;
+    var date = new Date;
+    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
   }
   else {
     callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
@@ -133,9 +134,9 @@ export class ListPageService {
   }
 
   formatSeasons (data) {
-    var outputArray = [{key: "null", value: "All Seasons"}];
+    var outputArray = [];
     for (var i=0; i < data.length; i++) {
-      outputArray.push({key:  data[i] , value: (Number(data[i]) + 1) + ' / ' + data[i]});
+      outputArray.push({key:  data[i] , value: data[i] + ' / ' + (Number(data[i]) + 1)});
     }
     return outputArray;
   }
@@ -278,7 +279,7 @@ export class ListPageService {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
-          text: val.teamNickname,
+          text: "Team: " + val.teamName,
           class: 'text-heavy'
         };
 
@@ -372,9 +373,9 @@ export class ListPageService {
             ],
             val.stat,
             [ //sub left text
-              {text: "<i class='fa fa-map-marker'></i>" + val.playerBirthplace},
+              {text: "<span class='not-mobile'><i class='fa fa-map-marker'></i>" + val.playerBirthplace + "</span>"},
               {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
-              {route: teamRoute, text: "<span class='not-mobile text-heavy'>" + val.teamNickname + "</span>", class: "dataBox-subLink"}
+              {route: teamRoute, text: "Team:<span class='text-heavy'> " + val.teamNickname + "</span>", class: "dataBox-subLink"}
             ],
             statDescription,
             null),

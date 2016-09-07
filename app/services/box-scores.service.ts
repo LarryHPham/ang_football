@@ -198,13 +198,13 @@ export class BoxScoresService {
             live: boxScores[dates].liveStatus == 'Y'?true:false,
             startDateTime: boxScores[dates].eventDate,
             startDateTimestamp: boxScores[dates].eventStartTime,
-            dataPointCategories:['Score','Poss','Yards']
+            dataPointCategories:['Score','Poss.','Yards']
           };
           //0 = home team 1 = away team.
           if(boxScores[dates].eventPossession == 0){
-            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possession:" + boxScores[dates].team1Abbreviation;
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possession: " + boxScores[dates].team1Abbreviation;
           }else{
-            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possession:" + boxScores[dates].team2Abbreviation;
+            boxScoreObj[dates]['gameInfo']['verticalContent'] = "Possession: " + boxScores[dates].team2Abbreviation;
           }
           boxScoreObj[dates]['homeTeamInfo']= {
             name: boxScores[dates].team1FullName,
