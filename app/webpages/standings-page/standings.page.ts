@@ -137,9 +137,10 @@ export class StandingsPage{
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          this._title.setTitle(GlobalSettings.getPageTitle("Standings", data.teamName));
-
-          var title = this._standingsService.getPageTitle(this.pageParams, data.teamName);
+          this.pageParams.scope = this.scope;
+          var teamFullName = data.headerData.teamMarket + ' ' + data.headerData.teamName;
+          this._title.setTitle(GlobalSettings.getPageTitle("Standings", teamFullName));
+          var title = this._standingsService.getPageTitle(this.pageParams, teamFullName);
           this.titleData = this._profileService.convertTeamPageHeader(data, title)
           this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
         },
@@ -150,7 +151,7 @@ export class StandingsPage{
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));//TODO
+      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),

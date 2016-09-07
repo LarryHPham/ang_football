@@ -248,7 +248,7 @@ export class DeepDiveService {
           imageConfig: {
           imageClass: "image-100x56",
           /*hoverText: "View",*/
-          imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
+          imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
@@ -278,7 +278,7 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             /*hoverText: "View",*/
-            imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
+            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,//TODO
             urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
@@ -332,7 +332,7 @@ export class DeepDiveService {
       var date = moment(Number(info.dateline)*1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
           keyword: val.keyword.toUpperCase(),
           new_date: date,

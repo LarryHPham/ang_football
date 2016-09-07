@@ -95,6 +95,11 @@ export class ScheduleTabData implements TableTabData<SchedulesData> {
 
   sections: Array<SchedulesTableData>;
 
+  errorData: any = {
+      data: "Sorry, we do not currently have any data for Schedule",
+      icon: "fa fa-remove"
+  };
+
   constructor(title: string, isActive: boolean) {
     this.title = title;
     this.isActive = isActive;
@@ -382,6 +387,8 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         if( !item.team2Abbreviation ) {
           item.team2Abbreviation = "N/A";
         }
+        item.team1Score = item.team1Score != null ? item.team1Score: 'N/A';
+        item.team2Score = item.team2Score != null ? item.team2Score: 'N/A';
         //whomever wins the game then their text gets bolded as winner
         var home = item.team1Abbreviation + " " + item.team1Score;
         var away = item.team2Abbreviation + " " + item.team2Score;

@@ -38,7 +38,7 @@ export class SchedulesPage implements OnInit{
   isError: boolean = false;
   tabData: any;
   limit:number = 10;
-  isFirstRun = true;
+  isFirstRun:number = 0;
 
   schedulesData:any;
   scheduleFilter1:Array<any>;
@@ -57,7 +57,7 @@ export class SchedulesPage implements OnInit{
           private params: RouteParams,
           private _title: Title, private _router: Router) {
       _title.setTitle(GlobalSettings.getPageTitle("Schedules"));
-      this.isFirstRun = true;
+      this.isFirstRun = 0;
       GlobalSettings.getParentParams(_router, parentParams => {
           this.scope = parentParams.scope;
           this.initialPage = Number(this.params.get("pageNum"));
@@ -72,17 +72,19 @@ export class SchedulesPage implements OnInit{
 
   //grab tab to make api calls for post of pre event table
   private scheduleTab(tab) {
-    var curPageNum = this.selectedTabKey == this.initialTabKey ? this.initialPage : 1;
-    this.isFirstRun = true;
-    this.initialPage = curPageNum;
+    this.isFirstRun = 0;
+    this.initialPage = 1;
     if(tab == 'Upcoming Games'){
       this.eventStatus = 'pregame';
+      this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus,this.initialPage, this.selectedFilter1,this.selectedFilter2);
     }else if(tab == 'Previous Games'){
       this.eventStatus = 'postgame';
+      this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);
     }else{
       this.eventStatus = 'pregame';
+      this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
     }
     // Uncomment if we want to enable URL changing when switching tabs.
@@ -109,122 +111,125 @@ export class SchedulesPage implements OnInit{
   }
 
   private getSchedulesData(status, pageNum, year?, week?){
-    if(this.isFirstRun){
-      var teamId = this.params.params['teamId']; //determines to call league page or team page for schedules-table
-
-      if(typeof year == 'undefined'){
-        year == new Date().getFullYear();
-        this.selectedFilter1 = year;
+    var teamId = this.params.params['teamId']; //determines to call league page or team page for schedules-table
+    if(typeof year == 'undefined'){
+      year == new Date().getFullYear();
+      this.selectedFilter1 = year;
+    }
+    if(teamId){
+      this.profHeadService.getTeamProfile(Number(teamId))
+      .subscribe(
+        data => {
+          this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
+          this.profileHeaderData = this.profHeadService.convertTeamPageHeader(data, "Current Season Schedule - " + data.teamName);
+          this.errorData = {
+            data: data.teamName + " has no record of any more games for the current season.",
+            icon: "fa fa-calendar-times-o"
+          }
+        },
+        err => {
+          this.isError= true;
+          console.log('Error: Schedules Profile Header API: ', err);
+          // this.isError = true;
+        }
+      );
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, this.initialPage, teamId, (schedulesData) => {
+        this.schedulesData = schedulesData;
+        if(this.schedulesData != null){
+          if(status == 'pregame'){
+            this.scheduleFilter1=null;
+          }else{
+            if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+              this.scheduleFilter1 = schedulesData.seasons;
+              if(this.selectedFilter1 == null){
+                this.schedulesData.seasons[0].key;
+              }
+            }
+          }
+          this.tabData = schedulesData.tabs;
+        }else if(this.schedulesData == null){
+          this.isError = true;
+        }
+        this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
+      },year, week)
+    }else{
+      this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
+      this.profHeadService.getLeagueProfile(this.scope)
+      .subscribe(
+        data => {
+          var currentDate = new Date();// no stat for date so will grab current year client is on
+          var display:string;
+          if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
+            display = "Current Season"
+          }
+          var pageTitle = display + " Schedules - " + data.headerData.leagueFullName;
+          this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
+          this.errorData = {
+            data: data.headerData.leagueFullName + " has no record of any more games for the current season.",
+            icon: "fa fa-calendar-times-o"
+          }
+        },
+        err => {
+          this.isError = true;
+          console.log('Error: Schedules Profile Header API: ', err);
+        }
+      );
+      if(status == 'pregame'){
+        this.scheduleFilter1=null;
       }
-      if(teamId){
-        this.isFirstRun = false;
-        this.profHeadService.getTeamProfile(Number(teamId))
-        .subscribe(
-          data => {
-            this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
-            this.profileHeaderData = this.profHeadService.convertTeamPageHeader(data, "Current Season Schedule - " + data.teamName);
-            this.errorData = {
-              data: data.teamName + " has no record of any more games for the current season.",
-              icon: "fa fa-calendar-times-o"
-            }
-          },
-          err => {
-            this.isError= true;
-            console.log('Error: Schedules Profile Header API: ', err);
-            // this.isError = true;
-          }
-        );
-        this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, this.initialPage, teamId, (schedulesData) => {
-          this.schedulesData = schedulesData;
-          if(typeof this.tabData == 'undefined' && this.schedulesData != null){
-            if(status == 'pregame'){
-              this.scheduleFilter1=null;
-            }else{
-              if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-                this.scheduleFilter1 = schedulesData.seasons;
-                if(this.selectedFilter1 == null){
-                  this.schedulesData.seasons[0].key;
-                }
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, this.initialPage, null, (schedulesData) => {
+        this.schedulesData = schedulesData;
+        if(this.schedulesData != null){
+          if(status == 'pregame'){
+            this.scheduleFilter1=null;
+          }else{
+            if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+              this.scheduleFilter1 = schedulesData.seasons;
+              if(this.selectedFilter1 == null && this.selectedFilter1 != schedulesData.seasons[0].key){
+                this.selectedFilter1 = this.schedulesData.seasons[0].key;
               }
             }
-            this.tabData = schedulesData.tabs;
-            this.isFirstRun = true;
-          }else if(this.schedulesData == null){
-            this.isError = true;
           }
-          this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
-        },year, week)
-      }else{
-        this.isFirstRun = false;
-        this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
-        this.profHeadService.getLeagueProfile(this.scope)
-        .subscribe(
-          data => {
-            var currentDate = new Date();// no stat for date so will grab current year client is on
-            var display:string;
-            if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
-              display = "Current Season"
+          if(this.scheduleFilter2 == null){
+            this.scheduleFilter2 = schedulesData.weeks;
+            if(this.selectedFilter2 == null){
+              this.selectedFilter2 = this.schedulesData.weeks[0].key;
             }
-            var pageTitle = display + " Schedules - " + data.headerData.leagueFullName;
-            this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
-            this.errorData = {
-              data: data.headerData.leagueFullName + " has no record of any more games for the current season.",
-              icon: "fa fa-calendar-times-o"
-            }
-          },
-          err => {
-            this.isError = true;
-            console.log('Error: Schedules Profile Header API: ', err);
           }
-        );
-        this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, this.initialPage, null, (schedulesData) => {
-          this.schedulesData = schedulesData;
-          if(typeof this.tabData == 'undefined' && this.schedulesData != null){
-            if(status == 'pregame'){
-              this.scheduleFilter1=null;
-            }else{
-              if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-                this.scheduleFilter1 = schedulesData.seasons;
-                if(this.selectedFilter1 == null){
-                  this.selectedFilter1 = this.schedulesData.seasons[0].key;
-                }
-              }
-            }
-            if(this.scheduleFilter2 == null){
-              this.scheduleFilter2 = schedulesData.weeks;
-              if(this.selectedFilter2 == null){
-                this.selectedFilter2 = this.schedulesData.weeks[0].key;
-              }
-            }
-            this.tabData = schedulesData != null ?schedulesData.tabs:null;
-            this.isFirstRun = true;
-          }else if(this.schedulesData == null){
-            this.isError = true;
-          }
-          this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
-        },year, week)
-      }
+          this.tabData = schedulesData != null ? schedulesData.tabs:null;
+        }else if(this.schedulesData == null){
+          this.isError = true;
+        }
+        this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
+      },year, week)
     }
   }
 
   private filterDropdown(filter){
-    var teamId = this.params.params['teamId'];
-    let filterChange = false;
-
-    if(filter.value == 'filter1' && this.eventStatus == 'postgame' && this.selectedFilter1 != filter.key){
-      this.selectedFilter1 = filter.key;
-      filterChange = true;
+    let tabCheck = 0;
+    if(this.eventStatus == 'postgame'){
+      tabCheck = 1;
     }
-    if(!teamId){
-      if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
-        this.selectedFilter2 = filter.key;
+    if(this.isFirstRun > tabCheck){
+      var teamId = this.params.params['teamId'];
+      let filterChange = false;
+      if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+        this.selectedFilter1 = filter.key;
         filterChange = true;
       }
+      if(!teamId){
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
+        }
+      }
+      if(filterChange){
+        this.isFirstRun = 0;
+        this.initialPage = 1;
+        this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
+      }
     }
-    if(filterChange){
-      this.isFirstRun = true;
-      this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
-    }
+    this.isFirstRun++;
   }
 
   //PAGINATION
@@ -255,7 +260,7 @@ export class SchedulesPage implements OnInit{
 
   newIndex(newPage) {
     window.scrollTo(0,0);
-    this.isFirstRun = true;
+    this.isFirstRun = 0;
     this.initialPage = newPage;
 
     this.getSchedulesData(this.selectedTabKey, newPage, this.selectedFilter1,this.selectedFilter2);

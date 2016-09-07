@@ -98,6 +98,30 @@ export class SchedulesService {
       });
   }
 
+  //Call made for slider carousel using BoxScore scheduler
+  getBoxSchedule(scope, profile, eventStatus, limit, pageNum, id?){
+    //Configure HTTP Headers
+    var headers = this.setToken();
+
+    var callURL = this._apiUrl+'/boxScores/schedule/'+profile;
+
+    if(profile == 'league'){//if league call then add scope
+      callURL += '/'+ scope;
+    }
+
+    if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
+      callURL += '/'+id;
+    }
+
+    callURL += '/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
+    //optional week parameters
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      });
+  }
+
   getScheduleTable(dataSchedule, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, year?, week?){
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
     var displayYear;
@@ -106,9 +130,9 @@ export class SchedulesService {
     if(jsYear == year || year == null){
       displayYear = "Current Season";
     }else{
-      displayYear = year + " Season";
+      var twoDigit = Number(year[2]+year[3]);
+      displayYear = twoDigit + '/' + (twoDigit+1) + " Season";
     }
-
     //eventType determines which tab is highlighted
     if(eventStatus == 'pregame'){
       eventTab = true;
@@ -153,12 +177,13 @@ export class SchedulesService {
       yearObj['value'] = val;
       yearArray.push(yearObj);
     })
-    return yearArray;
+    yearArray.unshift({key:null,value:'Current'});
+    return {data:yearArray,type:'Year: '};
   }
   formatWeekDropdown(data){
-    let yearArray = [];
+    let weekArray = [];
     data.forEach(function(val){
-      let yearObj = {};
+      let weekObj = {};
       let weekDisplay;
       switch(val){
         case '18':
@@ -176,15 +201,17 @@ export class SchedulesService {
         default:
         weekDisplay = 'Week '+val;
       }
-      yearObj['key'] = val;
-      yearObj['value'] = weekDisplay;
-      yearArray.push(yearObj);
+      weekObj['key'] = val;
+      weekObj['value'] = weekDisplay;
+      weekArray.push(weekObj);
     })
-    return yearArray;
+    weekArray.unshift({key:null,value:'All'});
+    return {data:weekArray,type:'Week: '};
   }
 
   setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function, year?, week?){
-    this.getSchedule(scope, 'league', eventStatus, limit, pageNum, null, year, week)
+    //(scope, profile, eventStatus, limit, pageNum, id?)
+    this.getBoxSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(data.data);
       callback(formattedData);
@@ -196,30 +223,29 @@ export class SchedulesService {
     var modifiedArray = [];
     var newData:scheduleBoxInput;
     //run through and convert data to what is needed for the component
-    data['games'].forEach(function(val,index){
+    data.forEach(function(val,index){
       let reportText = 'GAME REPORT';
       let partner = GlobalSettings.getHomeInfo();
       var reportLink;
-      let reportUrl = val.aiUrlMod.split('/')[2];
+      let reportUrl;
       if(val.eventStatus == 'inprogress'){
+        reportUrl = VerticalGlobalFunctions.formatArticleRoute('in-game-report',val.eventId);
           reportText = 'LIVE GAME REPORT';
       }else{
         if(val.eventStatus = 'pregame'){
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute('pregame-report',val.eventId);
           reportText = 'PRE GAME REPORT'
         }else if (val.eventStatus == 'postgame'){
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute('postgame-report',val.eventId);
           reportText = 'POST GAME REPORT';
         }else{
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute('postgame-report',val.eventId);
           reportText = 'POST GAME REPORT';
         }
       }
-      if(partner.isPartner){
-        reportLink = partner.partnerName + val.aiUrlMod;
-      }else{
-        reportLink = val.aiUrlMod;
-      }
 
-      let date = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('MMMM D, YYYY');
-      let time = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('h:mm A z');
+      let date = moment(Number(val.eventStartTime)).tz('America/New_York').format('MMMM D, YYYY');
+      let time = moment(Number(val.eventStartTime)).tz('America/New_York').format('h:mm A z');
       let team1FullName = val.team1Market + ' ' + val.tame1Name;
       let team2FullName = val.team2Market + ' ' + val.tame2Name;
       newData = {
@@ -231,7 +257,7 @@ export class SchedulesService {
         awayLink: VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id),
         homeLink: VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id),
         reportDisplay: reportText,
-        reportLink: reportLink,
+        reportLink: reportUrl,
         isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
         inning: val.eventQuarter != null ? "Current " + val.inning + ":" + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
       }
@@ -243,7 +269,6 @@ export class SchedulesService {
 
   //rows is the data coming in
   private setupTableData(eventStatus, year, rows: Array<any>, teamId, maxRows: number, isTeamProfilePage: boolean): Array<SchedulesTableData> {
-
     //Limit to maxRows, if necessary
     if ( maxRows !== undefined && rows.length > maxRows) {
       rows = rows.slice(0, maxRows);
@@ -253,7 +278,7 @@ export class SchedulesService {
     if(eventStatus == 'pregame'){
       let tableName = this.formatGroupName(year,eventStatus);
       var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);
-      var tableArray = new SchedulesTableData(tableName , table, currentTeamProfile);
+      var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
       return [tableArray];
     }else{
       var postDate = [];
@@ -262,17 +287,24 @@ export class SchedulesService {
       let tableName = this.formatGroupName(year,eventStatus);
       if(typeof teamId == 'undefined'){
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
-        rows.forEach(function(val,index){// seperate the dates into their own Obj tables for post game reports
-          var splitToDate = moment(val.startDateTimestamp).tz('America/New_York').format('YYYY-MM-DD');
-          if(typeof dateObject[splitToDate] == 'undefined'){
-            dateObject[splitToDate] = {};
-            dateObject[splitToDate]['tableData'] = [];
-            dateObject[splitToDate]['display'] = moment(val.startDateTimestamp).tz('America/New_York').format('dddd MMMM Do, YYYY') + " Games";
-            dateObject[splitToDate]['tableData'].push(val);
-          }else{
-            dateObject[splitToDate]['tableData'].push(val);
-          }
-        });
+        if(rows.length > 0){
+          rows.forEach(function(val,index){// seperate the dates into their own Obj tables for post game reports
+            var splitToDate = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('YYYY-MM-DD');
+            if(typeof dateObject[splitToDate] == 'undefined'){
+              dateObject[splitToDate] = {};
+              dateObject[splitToDate]['tableData'] = [];
+              dateObject[splitToDate]['display'] = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('dddd MMMM Do, YYYY') + " Games";
+              dateObject[splitToDate]['tableData'].push(val);
+            }else{
+              dateObject[splitToDate]['tableData'].push(val);
+            }
+          });
+        }else{
+          var splitToDate = moment().tz('America/New_York').format('YYYY-MM-DD');
+          dateObject[splitToDate] = {};
+          dateObject[splitToDate]['tableData'] = [];
+          dateObject[splitToDate]['display'] = moment().tz('America/New_York').format('dddd MMMM Do, YYYY') + " Games";
+        }
         for(var date in dateObject){
           var newPostModel = new SchedulesTableModel(dateObject[date]['tableData'], eventStatus, teamId, isTeamProfilePage);
           var newPostTable = new SchedulesTableData(dateObject[date]['display'], newPostModel, currentTeamProfile);
@@ -281,9 +313,10 @@ export class SchedulesService {
         return postDate;
       }else{//if there is a teamID
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
-        var tableArray = new SchedulesTableData(tableName , table, currentTeamProfile);
+        var tableArray = new SchedulesTableData('' , table, currentTeamProfile);
         return [tableArray];
       }
+
     }
   }
 

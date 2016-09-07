@@ -33,6 +33,7 @@ export class NewsService {
     }
 
     fullUrl += '/'+type+'/'+scope+'/'+urlParams.limit+'/'+urlParams.pageNum+targetId;
+
     return this.http.get(fullUrl, {
       headers: headers
     })
@@ -52,6 +53,7 @@ export class NewsService {
     var newsArray = [];
     var dummyImg = "/app/public/no-image.svg";
     var _getHostName = GlobalFunctions.getHostName;
+    var windowWidth = window.innerWidth;
     data.forEach(function(val, index){
       var News = {
         title: val.title,
@@ -64,7 +66,8 @@ export class NewsService {
           infoDesc: 'Want to check out the full story?',
           text: 'READ THE ARTICLE',
           url: val.articleUrl,
-          hrefUrl: true
+          hrefUrl: true,
+          smalltext: 'READ STORY'
         }
       };
 
