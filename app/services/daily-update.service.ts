@@ -88,43 +88,44 @@ export class DailyUpdateService {
 
   private formatTeamData(data: APIDailyUpdateData, teamId: number): DailyUpdateData {
     // check if it report exists and it isn't just an error message string
-    if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) || data['postgame-report'].article.status == "Error" ) {
-      data['postgame-report'] = {
-        displayHeadline: "Perez's hot bat not enough for Royals win",
-        dateline: "Saturday, August 27, 2016 11:30 PM EDT",
-        article: {
-          data: [
-            {
-              teaser: "Lorem Ipsum delor sid ex communicae desporado conica Flur de Li, rey dunesty flex beamer contorte Sore cacorde tagain. Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain.",
-              id: "23309",
-              title: "Eric Weddle's most recent game",
-              jsonUrl: "2016/nfl/player/player-daily-update/11886.json",
-              imageUrl: "/TDL/stock_images/TDL_Stock-4.png",
-              articleTypeId: "10",
-              articleSubtypeId: null,
-              eventId: null,
-              affiliation: "nfl",
-              seasonId: "2016",
-              lastUpdated: "2016-09-05 14:03:07",
-              playerId: "11886"
-            }
-          ]
-        },
-        image: {
-          affiliation : "nfl",
-          id : "17765",
-          imageCopyright : "USA Today Sports Images",
-          imageDate : "2016-08-20 00:00:00",
-          imageDescription : "NFL: Preseason-New York Jets at Washington Redskins",
-          imageId : "48267",
-          imageType : "liveimage",
-          imageUrl : "/nfl/players/liveimages/d23224c6-c422-4deb-b542-1dbd1a6be5c0.jpg",
-          lastUpdated : "2016-08-31 03:08:32",
-          playerId : "11470",
-          teamId : "137"
-        }
-      }
-    }
+    // DUMMY DATA \/\/\/
+    //if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) || data['postgame-report'].article.status == "Error" ) {
+    //  data['postgame-report'] = {
+    //    displayHeadline: "Perez's hot bat not enough for Royals win",
+    //    dateline: "Saturday, August 27, 2016 11:30 PM EDT",
+    //    article: {
+    //      data: [
+    //        {
+    //          teaser: "Lorem Ipsum delor sid ex communicae desporado conica Flur de Li, rey dunesty flex beamer contorte Sore cacorde tagain. Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain.",
+    //          id: "23309",
+    //          title: "Eric Weddle's most recent game",
+    //          jsonUrl: "2016/nfl/player/player-daily-update/11886.json",
+    //          imageUrl: "/TDL/stock_images/TDL_Stock-4.png",
+    //          articleTypeId: "10",
+    //          articleSubtypeId: null,
+    //          eventId: null,
+    //          affiliation: "nfl",
+    //          seasonId: "2016",
+    //          lastUpdated: "2016-09-05 14:03:07",
+    //          playerId: "11886"
+    //        }
+    //      ]
+    //    },
+    //    image: {
+    //      affiliation : "nfl",
+    //      id : "17765",
+    //      imageCopyright : "USA Today Sports Images",
+    //      imageDate : "2016-08-20 00:00:00",
+    //      imageDescription : "NFL: Preseason-New York Jets at Washington Redskins",
+    //      imageId : "48267",
+    //      imageType : "liveimage",
+    //      imageUrl : "/nfl/players/liveimages/d23224c6-c422-4deb-b542-1dbd1a6be5c0.jpg",
+    //      lastUpdated : "2016-08-31 03:08:32",
+    //      playerId : "11470",
+    //      teamId : "137"
+    //    }
+    //  }
+    //}
 
     if ( !data ) {
       throw new Error("Error! Data is null from Team Daily Update API");
@@ -253,47 +254,95 @@ export class DailyUpdateService {
   }
 
   private formatPlayerData(data: APIDailyUpdateData, playerId: number): DailyUpdateData {
-    // check if it report exists and it isn't just an error message string
-    if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) ) {
-      data['postgame-report'] = {
-        displayHeadline: "Perez's hot bat not enough for Royals win",
-        dateline: "Saturday, August 27, 2016 11:30 PM EDT",
-        article: [
-          "<a href=\"/player/kansas-city-royals/salvador-perez/93144\">Lorem Ipsum</a> delor sid ex communicae desporado conica <a href=\"#\">Flur de Li</a>, rey dunesty flex beamer contorte <a href=\"#\">Sore cacorde tagain</a>.",
-          "Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain."
-        ],
-      }
-    }
-
     if ( !data ) {
       throw new Error("Error! Data is null from Player Daily Update API");
     }
     //Setting up season stats
-    // TODO add cases for different positions
     var stats = [];
     if ( data.recentGames[0]["id"] != null ) {
       stats = [
         {
           name: data.recentGames[0]["stat1Type"] != null ? data.recentGames[0]["stat1Type"] : "N/A",
           value: data.recentGames[0]["stat1"] != null ? data.recentGames[0]["stat1"] : "N/A",
-          icon: "fa-trophy"
+          icon: getStatIcon( data.recentGames[0]["stat1Type"] != null ? data.recentGames[0]["stat1Type"] : "N/A"),
         },
         {
           name: data.recentGames[0]["stat2Type"] != null ? data.recentGames[0]["stat2Type"] : "N/A",
           value: data.recentGames[0]["stat2"] != null ? data.recentGames[0]["stat2"] : "N/A",
-          icon: "fa-trophy"
+          icon: getStatIcon( data.recentGames[0]["stat2Type"] != null ? data.recentGames[0]["stat2Type"] : "N/A"),
         },
         {
           name: data.recentGames[0]["stat3Type"] != null ? data.recentGames[0]["stat3Type"] : "N/A",
           value: data.recentGames[0]["stat3"] != null ? data.recentGames[0]["stat3"] : "N/A",
-          icon: "fa-trophy"
+          icon: getStatIcon( data.recentGames[0]["stat3Type"] != null ? data.recentGames[0]["stat3Type"] : "N/A"),
         },
         {
           name: data.recentGames[0]["stat4Type"] != null ? data.recentGames[0]["stat4Type"] : "N/A",
           value: data.recentGames[0]["stat4"] != null ? data.recentGames[0]["stat4"] : "N/A",
-          icon: "fa-trophy"
+          icon: getStatIcon( data.recentGames[0]["stat4Type"] != null ? data.recentGames[0]["stat4Type"] : "N/A"),
         }
       ]
+    }
+    // Add cases for different positions
+    function getStatIcon(statName){
+      switch(statName){
+        case "Total Tackles":
+          return "fa-total-tackles";
+        case "Total Sacks":
+          return "fa-total-sacks";
+        case "Interceptions":
+          return "fa-interceptions";
+        case "Forced Fumbles":
+          return "fa-games-started";
+        case "Receptions":
+          return "fa-receptions";
+        case "Receiving Yards":
+          return "fa-tdrecyards";
+        case "Average Yards Per Reception":
+          return "fa-tdrushing";
+        case "Touchdowns":
+          return "fa-tdpoints";
+        case "Games Played":
+          return "fa-total-tackles";
+        case "Games Started":
+          return "fa-games-started";
+        case "Years Experience":
+          return "fa-years-experience";
+        case "Age":
+          return "fa-age";
+        case "Passer Rating":
+          return "fa-passer-rating";
+        case "Passing Yards":
+          return "fa-tdball";
+        case "Rushing Attempts":
+          return "fa-rushing-attempts";
+        case "Rushing Yards":
+          return "fa-tdrecyards";
+        case "Yards Per Carry":
+          return "fa-tdrushing";
+        case "Field Goals Made":
+          return "fa-field-goals-made";
+        case "Field Goal Percentage Made":
+          return "fa-field-goal-pct-made";
+        case "Extra Points Made":
+          return "fa-tdrushing";
+        case "Total Points":
+          return "fa-tdpoints";
+        case "Total Punts":
+          return "fa-rushing-attempts";
+        case "Punts Within 20 YDL %":
+          return "fa-field-goal-pct-made";
+        case "Gross Punting Yards":
+          return "fa-gross-punting-yds";
+        case "Average Punt Distance":
+          return "fa-tdball";
+        case "Height":
+          return "fa-age";
+        case "Class":
+          return "fa-years-experience";
+        default :
+          return "fa-trophy";
+      }
     }
 
     var apiSeasonStats = {
