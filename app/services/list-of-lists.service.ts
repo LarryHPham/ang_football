@@ -90,9 +90,10 @@ export class ListOfListsService {
     //  console.log(data);
       //if data is coming through then run through the transforming function for the module
       data.forEach(function(val, index){
+        console.log('FUCK THIS VAL',val);
         if( val.listData[0] == null) return;
         let itemInfo          = val.listInfo;
-        let itemTargetData    = val.targetData;
+        let itemTargetData    = val.targetData[0];
         let itemProfile       = null;
         let itemImgUrl        = null;
         let itemRoute         = null;
