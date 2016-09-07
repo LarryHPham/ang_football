@@ -168,6 +168,7 @@ export class LeaguePage implements OnInit {
     selectedFilter1:string
     selectedFilter2:string;
     eventStatus: string;
+    isFirstRun:number = 0;
 
     limit: number;
     pageNum: number;
@@ -233,7 +234,7 @@ export class LeaguePage implements OnInit {
                 this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
                 this.getLeagueHeadlines();
                 /*** Keep Up With Everything TDL ***/
-                // this.getBoxScores(this.dateParam);
+                this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
@@ -286,28 +287,44 @@ export class LeaguePage implements OnInit {
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
+        this.isFirstRun = 0;
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
+          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
           this.eventStatus = 'postgame';
+          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     }
     private filterDropdown(filter){
+      let tabCheck = 0;
       if(filter.value == 'filter1'){
-        this.selectedFilter1 = filter.key;
+        if(this.eventStatus == 'postgame'){
+          tabCheck = 1;
+        }
       }
-      if(filter.value == 'filter2'){
-        this.selectedFilter2 = filter.key;
+      if(this.isFirstRun > tabCheck){
+        let filterChange = false;
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+          this.selectedFilter1 = filter.key;
+          filterChange = true;
+        }
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
+        }
+        if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+          this.selectedFilter1 = new Date().getFullYear().toString();
+        }
+
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
       }
-      if(this.selectedFilter2 != null && this.selectedFilter1 == null){
-        this.selectedFilter1 = new Date().getFullYear().toString();
-      }
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+      this.isFirstRun++;
     }
 
     //api for Schedules
@@ -319,6 +336,9 @@ export class LeaguePage implements OnInit {
       if(typeof year == 'undefined'){
         year == new Date().getFullYear();
       }
+      if(status == 'pregame'){
+        this.selectedFilter1 = null;
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
@@ -327,8 +347,12 @@ export class LeaguePage implements OnInit {
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
-        if(this.scheduleFilter2 == null){
-          this.scheduleFilter2 = schedulesData.weeks;
+        if(schedulesData.carData.length > 0){
+          if(this.scheduleFilter2 == null){
+            this.scheduleFilter2 = schedulesData.weeks;
+          }
+        }else{
+          this.scheduleFilter2 = null;
         }
         this.schedulesData = schedulesData;
       }, year, week) // isTeamProfilePage = true
@@ -486,6 +510,12 @@ export class LeaguePage implements OnInit {
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
+    }
+
+    private standingsFilterSelected(tabData: Array<any>) {
+      this.pageParams.scope = this.scope;
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      });
     }
 
     private positionDropdown(event) {
