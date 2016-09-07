@@ -382,6 +382,8 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         if( !item.team2Abbreviation ) {
           item.team2Abbreviation = "N/A";
         }
+        item.team1Score = item.team1Score != null ? item.team1Score: '-';
+        item.team2Score = item.team2Score != null ? item.team2Score: '-';
         //whomever wins the game then their text gets bolded as winner
         var home = item.team1Abbreviation + " " + item.team1Score;
         var away = item.team2Abbreviation + " " + item.team2Score;
