@@ -349,6 +349,7 @@ export class DeepDiveService {
       val["date"] = val.dateline;
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
+        //console.log(VerticalGlobalFunctions.formatNewsRoute(val.id),"News Route");
       //}
     })
     return data;
