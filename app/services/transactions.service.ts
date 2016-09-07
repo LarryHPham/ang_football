@@ -55,6 +55,7 @@ interface TransactionInfo {
     totalPages: number;
     transactionTimestamp: number;
     backgroundImage: string;
+    playerActive: string;
 }
 
 @Injectable()
@@ -222,9 +223,11 @@ export class TransactionsService {
         var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
 
-        //if ( ( !val.roleStatus && val.active == 'injured' ) || val.active == 'active' ) {
-          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);;
-        //}
+        console.log('carsouelArray - ', val);
+
+        if (val.playerActive) {
+          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+        }
         var teamLinkText = {
           route: teamId == val.teamId ? null : teamRoute,
           text: val.teamName
@@ -249,7 +252,7 @@ export class TransactionsService {
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {
-          backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
+          backgroundImage: VerticalGlobalFunctions.getBackroungImageUrlWithStockFallback(val.backgroundImage),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           subheader: [tab.tabDisplay + ' - ', teamLinkText],
           profileNameLink: playerLinkText,
@@ -264,7 +267,9 @@ export class TransactionsService {
           // subImageRoute: teamRoute
         });
       });
+
     }
+
     return carouselArray;
   }
 

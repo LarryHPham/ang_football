@@ -6,6 +6,8 @@ import {GlobalSettings} from "./global-settings";
 @Injectable()
 
 export class VerticalGlobalFunctions {
+  private static _proto = window.location.protocol;
+  private static _imageUrl:string = 'images.synapsys.us';
 
   constructor() {
 
@@ -501,4 +503,14 @@ export class VerticalGlobalFunctions {
         return statDesc;
       }
   } //static nonRankedDataPoints
+
+  //function to select a random stock photo
+
+
+  static getBackroungImageUrlWithStockFallback(relativePath: string) {
+    let stockPhotoArray = ["/app/public/tdl-stock-1.jpg","/app/public/tdl-stock-2.jpg","/app/public/tdl-stock-3.jpg","/app/public/tdl-stock-4.jpg","/app/public/tdl-stock-5.jpg","/app/public/tdl-stock-6.jpg","/app/public/tdl-stock-7.jpg"];
+    let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
+    var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: randomStockPhotoSelection;
+    return relPath;
+  }
 }
