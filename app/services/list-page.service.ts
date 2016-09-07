@@ -309,7 +309,7 @@ export class ListPageService {
             text: playerName
           };
 
-          description = ['<i class="fa fa-map-marker text-master"></i>', val.playerBirthplace, '<span class="separator">   |   </span> ', teamLinkText];
+          description = ['<i class="fa fa-map-marker text-master"></i>', val.playerBirthplace, '<span class="separator">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span> ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
