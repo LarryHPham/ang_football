@@ -168,7 +168,7 @@ export class LeaguePage implements OnInit {
     selectedFilter1:string
     selectedFilter2:string;
     eventStatus: string;
-    isFirstRun:number = 0;
+    isFirstNum:number = 0;
 
     limit: number;
     pageNum: number;
@@ -287,7 +287,7 @@ export class LeaguePage implements OnInit {
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
-        this.isFirstRun = 0;
+        this.isFirstNum = 0;
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus, null);
@@ -308,7 +308,7 @@ export class LeaguePage implements OnInit {
           tabCheck = 1;
         }
       }
-      if(this.isFirstRun > tabCheck){
+      if(this.isFirstNum > tabCheck){
         let filterChange = false;
         if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
           this.selectedFilter1 = filter.key;
@@ -324,7 +324,7 @@ export class LeaguePage implements OnInit {
 
         this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
       }
-      this.isFirstRun++;
+      this.isFirstNum++;
     }
 
     //api for Schedules
