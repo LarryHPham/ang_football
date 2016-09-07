@@ -72,17 +72,19 @@ export class SchedulesPage implements OnInit{
 
   //grab tab to make api calls for post of pre event table
   private scheduleTab(tab) {
-    var curPageNum = this.selectedTabKey == this.initialTabKey ? this.initialPage : 1;
     this.isFirstRun = 0;
-    this.initialPage = curPageNum;
+    this.initialPage = 1;
     if(tab == 'Upcoming Games'){
       this.eventStatus = 'pregame';
+      this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus,this.initialPage, this.selectedFilter1,this.selectedFilter2);
     }else if(tab == 'Previous Games'){
       this.eventStatus = 'postgame';
+      this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);
     }else{
       this.eventStatus = 'pregame';
+      this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
     }
     // Uncomment if we want to enable URL changing when switching tabs.
@@ -172,6 +174,9 @@ export class SchedulesPage implements OnInit{
           console.log('Error: Schedules Profile Header API: ', err);
         }
       );
+      if(status == 'pregame'){
+        this.scheduleFilter1=null;
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, this.initialPage, null, (schedulesData) => {
         this.schedulesData = schedulesData;
         if(this.schedulesData != null){
