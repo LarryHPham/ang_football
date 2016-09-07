@@ -184,7 +184,7 @@ export class SchedulesService {
   }
 
   setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function, year?, week?){
-    this.getSchedule(scope, 'league', eventStatus, limit, pageNum)
+    this.getSchedule(scope, 'league', eventStatus, limit, pageNum, null, year, week)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(data.data);
       callback(formattedData);
@@ -196,12 +196,12 @@ export class SchedulesService {
     var modifiedArray = [];
     var newData:scheduleBoxInput;
     //run through and convert data to what is needed for the component
-    data.forEach(function(val,index){
+    data['games'].forEach(function(val,index){
       let reportText = 'GAME REPORT';
       let partner = GlobalSettings.getHomeInfo();
       var reportLink;
-      let reportUrl = val.reportUrlMod.split('/')[2];
-      if(val.live == true){
+      let reportUrl = val.aiUrlMod.split('/')[2];
+      if(val.eventStatus == 'inprogress'){
           reportText = 'LIVE GAME REPORT';
       }else{
         if(val.eventStatus = 'pregame'){
@@ -213,25 +213,27 @@ export class SchedulesService {
         }
       }
       if(partner.isPartner){
-        reportLink = partner.partnerName + val.reportUrlMod;
+        reportLink = partner.partnerName + val.aiUrlMod;
       }else{
-        reportLink = val.reportUrlMod;
+        reportLink = val.aiUrlMod;
       }
 
-      let date = moment(val.startDateTimestamp).tz('America/New_York').format('MMMM D, YYYY');
-      let time = moment(val.startDateTimestamp).tz('America/New_York').format('h:mm A z');
+      let date = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('MMMM D, YYYY');
+      let time = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('h:mm A z');
+      let team1FullName = val.team1Market + ' ' + val.tame1Name;
+      let team2FullName = val.team2Market + ' ' + val.tame2Name;
       newData = {
         date: date + " &bull; " + time,
-        awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.awayTeamLogo), VerticalGlobalFunctions.formatTeamRoute(val.awayTeamName, val.awayTeamId)),
-        homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.homeTeamLogo), VerticalGlobalFunctions.formatTeamRoute(val.homeTeamName, val.homeTeamId)),
+        awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id)),
+        homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team1Logo), VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id)),
         awayTeamName: val.awayTeamLastName,
         homeTeamName: val.homeTeamLastName,
-        awayLink: VerticalGlobalFunctions.formatTeamRoute(val.awayTeamName, val.awayTeamId),
-        homeLink: VerticalGlobalFunctions.formatTeamRoute(val.homeTeamName, val.homeTeamId),
+        awayLink: VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id),
+        homeLink: VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id),
         reportDisplay: reportText,
         reportLink: reportLink,
-        isLive: val.live == true ? 'schedule-live' : '',
-        inning: val.inning != null ? " " + val.inning + "<sup>" + GlobalFunctions.Suffix(Number(val.inning)) + "</sup>": null
+        isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
+        inning: val.eventQuarter != null ? "Current " + val.inning + ":" + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
       }
       modifiedArray.push(newData);
     });
