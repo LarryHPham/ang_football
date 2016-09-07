@@ -201,7 +201,8 @@ export class TransactionsService {
       description: [tab.isLoaded ? tab.errorMessage : tab.errorMessage],
       lastUpdatedDate: null,
       circleImageUrl: "/app/public/no-image.svg",
-      circleImageRoute: null
+      circleImageRoute: null,
+      noData: true
     })];
   }
 
@@ -260,14 +261,14 @@ export class TransactionsService {
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
           circleImageUrl: GlobalSettings.getImageUrl(val.playerImage),
-          circleImageRoute: playerRoute
+          circleImageRoute: playerRoute,
+          noData: false
           // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
           // subImageRoute: teamRoute
         });
       });
 
     }
-
     return carouselArray;
   }
 

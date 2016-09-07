@@ -225,7 +225,7 @@ export class LeaguePage implements OnInit {
     private setupProfileData(partnerID, scope) {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
-
+              console.log(data)
             ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
@@ -237,7 +237,7 @@ export class LeaguePage implements OnInit {
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
 
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
+                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
 
                 //Initial position to display in MVP
                 this.globalMVPPosition = 'cb';
@@ -263,7 +263,7 @@ export class LeaguePage implements OnInit {
              },
             err => {
                 this.hasError = true;
-                console.log("Error getting team profile data for mlb", err);
+                console.log("Error getting team profile data for league", err);
             }
 
         );
