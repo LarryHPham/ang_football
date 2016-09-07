@@ -223,7 +223,6 @@ export class LeaguePage implements OnInit {
     ngOnInit() {}
 
     private setupProfileData(partnerID, scope) {
-
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
 
@@ -489,7 +488,6 @@ export class LeaguePage implements OnInit {
     }
 
     private positionDropdown(event) {
-
       this.positionData = this.checkToResetTabs(event);
 
       if(event.tab != null){
@@ -508,6 +506,7 @@ export class LeaguePage implements OnInit {
             perPageCount: this.listMax,
             pageNumber: 1
           }
+          this.getMVPService(matches, this.positionParams);
         }
       }
     }

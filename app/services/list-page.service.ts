@@ -41,7 +41,7 @@ interface PlayerItem {
     playerHeadshotUrl: string,
     teamNickname: string,
     seasonLong: string,
-    playerBirthplace: string
+    playerCity: string
 }
 
 interface ListData {
@@ -143,6 +143,7 @@ export class ListPageService {
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
   getMVPTabs(moduleType: string, profileType: string): Array<positionMVPTabData>{
+
     var tabArray: Array<positionMVPTabData> = [];
 
     switch(moduleType) {
@@ -211,7 +212,6 @@ export class ListPageService {
 
       default: null;
     }
-
     return tabArray;
   }
 
@@ -221,6 +221,7 @@ export class ListPageService {
     var headers = this.setToken();
 
     var callURL = this._apiUrl+'/list';
+
 
     for(var q in query) {
       if(q == 'scope'){
@@ -289,6 +290,7 @@ export class ListPageService {
         var profileLinkText: Link;
         var description: any;
         var playerName = val.playerFirstName + ' ' + val.playerLastName;
+        var playerCity = val.teamCity + " " + val.teamState;
         var position = val.playerPosition;
 
         if(data.query.target == 'team') {
@@ -309,7 +311,7 @@ export class ListPageService {
             text: playerName
           };
 
-          description = ['<i class="fa fa-map-marker text-master"></i>', val.playerBirthplace, '<span class="separator">   |   </span> ', teamLinkText];
+          description = ['<i class="fa fa-map-marker text-master"></i>' + playerCity + '<span class="separator">   |   </span> ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',

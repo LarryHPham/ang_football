@@ -76,7 +76,7 @@ export class VerticalGlobalFunctions {
    *
    *
    * @param {teamName} teamName - team name given from data that will be converted to lower kebab case
-   * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profile
+   * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profilege
    * @returns the teamName => 'boston-red-sox',  playerName => 'babe-ruth' playerId => ##, routeName => 'Player-page'
    */
   static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string):Array<any> {

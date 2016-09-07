@@ -43,6 +43,7 @@ export class MVPListPage implements OnInit{
   isError: boolean = false;
   selectedTabName: string;
   globalMVPPosition: string;
+  season: number;
 
   footerStyle: FooterStyle = {
     ctaBoxClass: " mvp-page-car-footer",
@@ -78,7 +79,8 @@ export class MVPListPage implements OnInit{
           statName: this.tab,
           ordering: 'asc',
           perPageCount: 50,
-          pageNumber: this.pageNum
+          pageNumber: this.pageNum,
+          season: '2015'
         };
         this.startUp();
     });
@@ -117,22 +119,22 @@ export class MVPListPage implements OnInit{
   //// BEGINNING OF INFINITE LOOP
   ///////////////
   loadTabs() {
-    // this.tabs = this._service.getMVPTabs(this.listType, 'page');
-    //
-    // if ( this.tabs != null && this.tabs.length > 0 ) {
-    //   var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
-    //
-    //   if ( this.queryParams.statName ) {
-    //     var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
-    //
-    //     if ( matchingTabs.length > 0 ) {
-    //       selectedTab = matchingTabs[0];
-    //     }
-    //   }
-    //   this.selectedTabName = selectedTab.tabDisplayTitle;
-    //
-    //   this.getStandardList(selectedTab);
-    // }
+    this.tabs = this._service.getMVPTabs(this.listType, 'page');
+
+    if ( this.tabs != null && this.tabs.length > 0 ) {
+      var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
+
+      if ( this.queryParams.statName ) {
+        var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
+
+        if ( matchingTabs.length > 0 ) {
+          selectedTab = matchingTabs[0];
+        }
+      }
+      this.selectedTabName = selectedTab.tabDisplayTitle;
+
+      this.getStandardList(selectedTab);
+    }
   }
 
   //PAGINATION
