@@ -71,6 +71,7 @@ export class NewsService {
           smalltext: 'READ STORY'
         }
       };
+      console.log('NEWS FOOTER DATA', News);
 
       newsArray.push(News);
     });

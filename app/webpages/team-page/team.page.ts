@@ -484,7 +484,7 @@ export class TeamPage implements OnInit {
           pageNum : 1,
           scope : this.scope
         }
-        console.log(this.pageParams.teamId);
+        console.log('SCOPE',this.scope);
         this._lolService.getListOfListsService(params, "team", "module")
             .subscribe(
                 listOfListsData => {
