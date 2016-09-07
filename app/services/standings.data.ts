@@ -30,6 +30,7 @@ export interface TeamStandingsData {
   seasonBase: string;
   totalLosses: string;
   totalWins: string;
+  teamPointsFor: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -336,6 +337,11 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
       case "div":
         display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
         sort = item.teamDivisionRecord;
+        break;
+
+      case "pf":
+        display = item.teamPointsFor != null ? item.teamPointsFor : null;
+        sort = item.teamPointsFor;
         break;
     }
     if ( display == null ) {
