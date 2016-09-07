@@ -46,6 +46,10 @@ export class MVPListPage implements OnInit{
   season: number;
   listMax:number = 10;
 
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+
   footerStyle: FooterStyle = {
     ctaBoxClass: " mvp-page-car-footer",
     ctaBtnClass:"",
@@ -92,6 +96,10 @@ export class MVPListPage implements OnInit{
   }
 
   startUp(){
+    if ( this.scope == this.collegeDivisionAbbrv.toLowerCase() ) {
+      this.scope = this.collegeDivisionFullAbbrv;
+    }
+
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["League-page"],

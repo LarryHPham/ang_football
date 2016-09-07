@@ -231,7 +231,6 @@ export class ListPageService {
         callURL += '&' + q +'='+ query[q];
       }
     }
-    console.log(callURL);
 
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
@@ -340,7 +339,6 @@ export class ListPageService {
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-      console.log(teamRoute);
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
@@ -358,7 +356,7 @@ export class ListPageService {
             ],
             statDescription,
             null),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, val.listRank),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, rank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -371,6 +369,7 @@ export class ListPageService {
         var position = val.playerPosition;
         var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var stat = GlobalFunctions.commaSeparateNumber(val.stat);
+        var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
@@ -384,7 +383,7 @@ export class ListPageService {
             ],
             statDescription,
             null),
-            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
+            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, rank, '', null),
 
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
