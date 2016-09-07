@@ -34,7 +34,7 @@
     <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace"></responsive-widget>
 
-    <mvp-module *ngIf="positionData && positionParams" [title]="'Position'" [mvpData]="positionData" [query]="positionParams" (tabSelectedListener)="positionDropdown($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+    <!-- <mvp-module *ngIf="positionData && positionParams" [title]="'Position'" [mvpData]="positionData" [query]="positionParams" (tabSelectedListener)="positionDropdown($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module> -->
 
     <responsive-widget *ngIf="pitcherData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName"></comparison-module>

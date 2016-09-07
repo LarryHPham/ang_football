@@ -293,9 +293,11 @@ export class LeaguePage implements OnInit {
           this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
+          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
           this.eventStatus = 'postgame';
+          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     }
@@ -317,9 +319,7 @@ export class LeaguePage implements OnInit {
         if(this.selectedFilter2 != null && this.selectedFilter1 == null){
           this.selectedFilter1 = new Date().getFullYear().toString();
         }
-        if(filterChange){
-          this.isFirstRun = 0;
-        }
+
         this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
       }
       this.isFirstRun++;
@@ -333,6 +333,9 @@ export class LeaguePage implements OnInit {
       }
       if(typeof year == 'undefined'){
         year == new Date().getFullYear();
+      }
+      if(status == 'pregame'){
+        this.selectedFilter1 = null;
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
