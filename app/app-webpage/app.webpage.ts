@@ -284,6 +284,15 @@ export class AppComponent implements OnInit{
   }
 
   setPageSize(){
+    function getPartnerHeaderHeight(){
+        var scrollTop = jQuery(window).scrollTop();
+        var partnerHeight = 0;
+        if( document.getElementById('partner') != null && scrollTop <=  (document.getElementById('partner').offsetHeight)){
+            partnerHeight = document.getElementById('partner').offsetHeight - scrollTop;
+        }
+        return partnerHeight;
+    }
+
     jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container');
     // Handle all the exceptions here
     jQuery("deep-dive-page").parent().addClass('deep-dive-container');
@@ -320,8 +329,15 @@ export class AppComponent implements OnInit{
             }
             isTakenOver = true;
             clearInterval(intvl);
+            jQuery('#ddto-left-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+            jQuery('#ddto-right-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
         }
     },100);
+    window.addEventListener("scroll",  function(){
+        jQuery('#ddto-left-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+        jQuery('#ddto-right-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+    });
+
   }
 
   ngOnInit(){
