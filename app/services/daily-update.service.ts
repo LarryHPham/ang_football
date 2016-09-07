@@ -484,7 +484,7 @@ export class DailyUpdateService {
     articleData['playerId'] = data.recentGames[0]["playerId"] != null ? data.recentGames[0]["playerId"] : null;
     articleData['playerPosition'] = data.recentGames[0]["playerPosition"] != null ? data.recentGames[0]["playerPosition"] : null;
     articleData['url'] = articleData['eventId'] != null ? ['Article-pages', {eventType: 'postgame-report', eventID: articleData['eventId']}] : ['Error-page'];
-    articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? data['postgame-report'].article.data[0].lastUpdated : null;
+    articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? GlobalFunctions.formatUpdatedDate(data['postgame-report'].article.data[0].lastUpdated, true, " " + moment().tz('America/New_York').format('z')) : null;
     articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
     articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;
     articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? GlobalSettings.getImageUrl(data['postgame-report'].article.data[0].imageUrl): null;
