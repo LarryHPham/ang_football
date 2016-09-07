@@ -231,8 +231,8 @@ export class LeaguePage implements OnInit {
             ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-                this.profileName = "TDL"; //leagueShortName
-                this.getLeagueHeadlines(this.headlineData);
+                this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
+                this.getLeagueHeadlines();
                 /*** Keep Up With Everything TDL ***/
                 // this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
@@ -368,6 +368,7 @@ export class LeaguePage implements OnInit {
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {
+
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = this._transactionsService.formatYearDropown();
               if(this.dropdownKey1 == null){
@@ -388,7 +389,6 @@ export class LeaguePage implements OnInit {
         this.partnerID = partnerID;
         this.isProfilePage = true;
         this.profileType = 'league';
-        this.profileName = "NFL";
 
         this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
             .subscribe(data => {
@@ -506,7 +506,7 @@ export class LeaguePage implements OnInit {
             target: 'player',
             position: event.position,
             statName: matches.tabDataKey,
-            ordering: 'asc',
+            ordering: 'desc',
             perPageCount: this.listMax,
             pageNumber: 1
           }

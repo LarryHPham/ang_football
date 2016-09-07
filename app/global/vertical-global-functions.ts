@@ -6,6 +6,7 @@ import {GlobalSettings} from "./global-settings";
 @Injectable()
 
 export class VerticalGlobalFunctions {
+  private static _proto = window.location.protocol;
 
   constructor() {
 
@@ -501,4 +502,14 @@ export class VerticalGlobalFunctions {
         return statDesc;
       }
   } //static nonRankedDataPoints
+
+  //function to select a random stock photo
+
+
+  static getBackroundImageUrlWithStockFallback(relativePath: string) {
+    let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
+    let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
+    var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
+    return relPath;
+  }
 }

@@ -78,7 +78,7 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
-          this.profileName = this.scope;
+          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/") {
             let relPath = this.getRelativePath(_router);
@@ -119,31 +119,31 @@ export class DeepDivePage implements OnInit{
     }
 
     //api for Schedules
-    // private getSideScroll(){
-    //   let self = this;
-    //
-    //   if(this.safeCall){
-    //     this.safeCall = false;
-    //     this._schedulesService.setupSlideScroll(this.sideScrollData, 'league', 'pre-event', this.callLimit, this.callCount, (sideScrollData) => {
-    //       if(this.sideScrollData == null){
-    //         this.sideScrollData = sideScrollData;
-    //       }
-    //       else{
-    //         sideScrollData.forEach(function(val,i){
-    //           self.sideScrollData.push(val);
-    //         })
-    //       }
-    //       this.safeCall = true;
-    //       this.callCount++;
-    //       this.scrollLength = this.sideScrollData.length;
-    //     })
-    //   }
-    // }
+    private getSideScroll(){
+      let self = this;
+
+      if(this.safeCall){
+        this.safeCall = false;
+        this._schedulesService.setupSlideScroll(this.sideScrollData, this.scope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+          if(this.sideScrollData == null){
+            this.sideScrollData = sideScrollData;
+          }
+          else{
+            sideScrollData.forEach(function(val,i){
+              self.sideScrollData.push(val);
+            })
+          }
+          this.safeCall = true;
+          this.callCount++;
+          this.scrollLength = this.sideScrollData.length;
+        }, null, null)
+      }
+    }
 
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
-      //  this.getSideScroll();
+       this.getSideScroll();
       }
     }
 
@@ -200,7 +200,7 @@ export class DeepDivePage implements OnInit{
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
-    //  this.getSideScroll();
+     this.getSideScroll();
     }
     private onScroll(event) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
