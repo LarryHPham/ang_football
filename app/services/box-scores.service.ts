@@ -33,7 +33,7 @@ export class BoxScoresService {
   if(profile == 'player'){
     profile = 'team'
   }else if (profile == 'league'){
-    // date += '/addAi'
+    date += '/addAi'
   }
 
   //date needs to be the date coming in AS EST and come back as UTC
@@ -94,22 +94,23 @@ export class BoxScoresService {
   */
   aiHeadline(data){
     var boxArray = [];
-    var sampleImage = "/app/public/placeholder_XL.png";
+    var sampleImage = "//images.synapsys.us/TDL/stock_images/TDL_Stock-5.png";
     if (data != null) {
       data.forEach(function(val, index){
-        for(var p in val.featuredReport){
-          var eventType = val.featuredReport[p];
+        let aiContent = val.featuredReport['article']['data'][0];
+        for(var p in aiContent['articleData']){
+          var eventType = aiContent['articleData'][p];
           var teaser = eventType.displayHeadline;
+          var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
         }
-      var date = GlobalFunctions.formatDate(val.timestamp*1000);
       var Box = {
         keyword: p,
-        date: date.month + " " + date.day + ", " + date.year,
+        date: date,
         url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
         teaser: teaser,
         imageConfig:{
           imageClass: "image-320x180-sm",
-          imageUrl: val.home.images[0] != null ? val.home.images[0] : sampleImage,
+          imageUrl: val.images[0].imageUrl != null ? GlobalSettings.getImageUrl(val.images[0].imageUrl) : sampleImage,
           hoverText: "View Article",
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
         }
@@ -129,7 +130,7 @@ export class BoxScoresService {
     var year = moment(date,"YYYY-MM-DD").tz('America/New_York').format("YYYY");
     var convertedDate = month + ' ' + day + ordinal + ', ' + year;
 
-    moduleTitle = "Box Scores <span class='mod-info'> - " + team + ': ' +convertedDate + '</span>';
+    moduleTitle = "Box Scores <span class='mod-info'> - " + team + ' : ' +convertedDate + '</span>';
     return {
       moduleTitle: moduleTitle,
       hasIcon: false,

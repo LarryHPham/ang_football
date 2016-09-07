@@ -23,13 +23,13 @@ export interface PlayerData {
   teamLogo: string;
   teamName: string;
   teamId: string;
-  teamColors: Array<string>;
+  teamColors: string;
   mainTeamColor: string;
-  jerseyNumber: number;
+  jerseyNumber: string;
   height: string;
-  weight: number;
-  age: number;
-  yearsExperience: number;
+  weight: string;
+  age: string;
+  yearExperience: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -172,7 +172,7 @@ export class ComparisonStatsService {
   private defenseFields = ["SOLO", "AST", "TOT", "SACK", "PD", "INT", "FF"];
   private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
   private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
-  private returningFields = ["K.ATT", "K.YDS", "K.AVG", "P.ATT", "P.YDS", "P.AVG", "TD"];//TODO
+  private returningFields = ["K.ATT", "K.YDS", "K.AVG", "P.ATT", "P.YDS", "P.AVG", "TD"];
   private scope: string;
   constructor(public http: Http) { }
 
@@ -181,7 +181,7 @@ export class ComparisonStatsService {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
 
-    return this.callPlayerComparisonAPI(teamId, playerId, data => {
+    return this.callPlayerComparisonAPI(this.scope, teamId, playerId, data => {
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
         return null;
@@ -221,7 +221,7 @@ export class ComparisonStatsService {
   }
 
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
-    return this.callPlayerComparisonAPI(teamId, playerId, apiData => {
+    return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
       apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
       if ( index == 0 ) {
         existingData.playerOne = apiData.playerOne;
@@ -244,7 +244,7 @@ export class ComparisonStatsService {
   }
 
   getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
-    let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;//TODO
+    let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;
     return this.http.get(teamsUrl)
       .map(res => res.json())
       .map(data => {
@@ -252,9 +252,8 @@ export class ComparisonStatsService {
     });
   }
 
-  callPlayerComparisonAPI(teamId: string, playerId: string, dataLoaded: Function) {
+  callPlayerComparisonAPI(scope: string = this.scope, teamId: string, playerId: string, dataLoaded: Function) {
     let url = this._apiUrl + "/comparison/";
-
     if ( playerId ) {
       //http://dev-homerunloyal-api.synapsys.us/player/comparison/player/95622
       url += "player/" + playerId;
@@ -265,7 +264,7 @@ export class ComparisonStatsService {
     }
     else {
       //http://dev-homerunloyal-api.synapsys.us/player/comparison/league
-      url += "league/nfl";//TODO
+      url += "league/" + scope;
     }
     // console.log("url", url);
     return this.http.get(url)
@@ -328,10 +327,10 @@ export class ComparisonStatsService {
         if ( key == "isCurrentSeason" ) {
           seasonStats.isCurrentSeason = value;
         }
-        else if ( value != null ) {//TODO
-          // if ( value["statHigh"] != null ) {//TODO
+        else if ( value != null ) {
+          if ( value["statHigh"] != null ) {
             isValidStats = true;
-          // }
+          }
           seasonStats[key] = value[playerId] != null ? Number(value[playerId]) : null;
         }
         else {
@@ -359,11 +358,11 @@ export class ComparisonStatsService {
     } else if(position == "KR" || position == "PR" || position == "RS"){
       fields = this.returningFields;
     }
-    // var colors = Gradient.getColorPair(data.playerOne.teamColors, data.playerTwo.teamColors);
-    var colors = Gradient.getColorPair(['#2D3E50'], ['#999']);//TODO
+    var teamColorsOne = data.playerOne.teamColors.split(", ");
+    var teamColorsTwo = data.playerTwo.teamColors.split(", ");
+    var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
-
     var bars: ComparisonBarList = {};
     for ( var seasonId in data.bestStatistics ) {
       var bestStats = data.bestStatistics[seasonId];
@@ -371,30 +370,24 @@ export class ComparisonStatsService {
       var playerOneStats = data.playerOne.statistics[seasonId];
       var playerTwoStats = data.playerTwo.statistics[seasonId];
       var seasonBarList = [];
-
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
-        // var title = ComparisonStatsService.getKeyDisplayTitle(key);
-        var title = key;
+        var title = ComparisonStatsService.getKeyDisplayTitle(key);
         seasonBarList.push({
           title: title,
           data: [{
-            // value: playerOneStats != null ? this.getNumericValue(key, playerOneStats[key]) : null,
-            value: 8,
+            value: playerOneStats != null ? playerOneStats[key] : null,
             // color: data.playerOne.mainTeamColor
-            color: '#BC1624'
+            color: '#2D3E50'
           },
           {
-            value: 10,
+            value: playerOneStats != null ? playerTwoStats[key] : null,
             // color: data.playerTwo.mainTeamColor,
-            color: '#444444'
+            color: '#999999'
           }],
-          //minValue: worstStats != null ? this.getNumericValue(key, worstStats[key]) : null,
-          //maxValue: bestStats != null ? this.getNumericValue(key, bestStats[key]) : null,
-          minValue: 5,
-          maxValue: 200,
-          // qualifierLabel: SeasonStatsService.getQualifierLabel(key)
-          qualifierLabel: key
+          minValue: worstStats != null ? worstStats[key] : null,
+          maxValue: bestStats != null ? bestStats[key] : null,
+          qualifierLabel: SeasonStatsService.getQualifierLabel(key)
         });
       }
 
@@ -440,15 +433,9 @@ export class ComparisonStatsService {
     }
   }
 
-  // private getNumericValue(key: string, value: string): number {
-  //   if ( value == null ) return null;
-  //
-  //   var num = Number(value);
-  //   switch (key) {
-  //     case "batAverage": return Number(num.toFixed(3));
-  //     case "batOnBasePercentage": return Number(num.toFixed(3));
-  //     case "pitchEra": return Number(num.toFixed(2));
-  //     default: return num;
-  //   }
-  // }
+   private getNumericValue(key: string, value: string): number {
+     if ( value == null ) return null;
+     var num = Number(value);
+     return num;
+   }
 }

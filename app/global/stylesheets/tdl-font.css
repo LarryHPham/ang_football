@@ -447,3 +447,18 @@
 .fa-search-icon-01:before {
   content: "\26";
 }
+.fa-tdball:before {
+  content: "\27";
+}
+.fa-tdrushing:before {
+  content: "\28";
+}
+.fa-tdpoints:before {
+  content: "\29";
+}
+.fa-tdrecyards:before {
+  content: "\2a";
+}
+.fa-tdrushat:before {
+  content: "\2b";
+}

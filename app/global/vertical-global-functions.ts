@@ -6,6 +6,7 @@ import {GlobalSettings} from "./global-settings";
 @Injectable()
 
 export class VerticalGlobalFunctions {
+  private static _proto = window.location.protocol;
 
   constructor() {
 
@@ -253,23 +254,38 @@ export class VerticalGlobalFunctions {
    * @param urlArr
    * @returns {any}
    */
-  //path: '/list/:profile/:listname/:sort/:conference/:division/:limit/:pageNum',
+  //path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
   static formatListRoute(urlArr: Array<any>): Array<any> {
     for(var arg in urlArr) {
       if (arg == null) return ['Error-page'];
     }
-    let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
+    // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
 
     let listRoute = ['List-page', {
-      profile     : kebabArr[0],
-      listname    : kebabArr[1],
-      sort        : kebabArr[2],
-      conference  : kebabArr[3],
-      division    : kebabArr[4],
-      limit       : kebabArr[5],
-      pageNum     : kebabArr[6]
+      target      : urlArr[0],
+      statName    : urlArr[1],
+      season      : urlArr[2],
+      ordering    : urlArr[3],
+      perPageCount: urlArr[4],
+      pageNumber  : urlArr[5]
+
     }];
     return listRoute;
+  }
+  static formatModuleListRoute(modUrlArr: Array<any>): Array<any> {
+    for(var arg in modUrlArr) {
+      if (arg == null) return ['Error-page'];
+    }
+    // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
+
+    let listModuleRoute = ['List-of-lists', {
+      target      : modUrlArr[0],
+      id          : modUrlArr[1],
+      perPageCount: modUrlArr[2],
+      pageNumber  : modUrlArr[3]
+
+    }];
+    return listModuleRoute;
   }
 
 
@@ -486,4 +502,14 @@ export class VerticalGlobalFunctions {
         return statDesc;
       }
   } //static nonRankedDataPoints
+
+  //function to select a random stock photo
+
+
+  static getBackroundImageUrlWithStockFallback(relativePath: string) {
+    let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
+    let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
+    var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
+    return relPath;
+  }
 }

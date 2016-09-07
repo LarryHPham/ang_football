@@ -322,7 +322,6 @@ export class ListPageService {
         return carouselItem;
       });
     }
-    // console.log('TRANSFORMED CAROUSEL', carouselArray);
     return carouselArray;
   }
 

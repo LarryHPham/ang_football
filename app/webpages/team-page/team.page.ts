@@ -201,7 +201,6 @@ export class TeamPage implements OnInit {
         GlobalSettings.getParentParams(_router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
-
             var currDate = new Date();
             var currentUnixDate = currDate.getTime();
             //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
@@ -240,9 +239,10 @@ export class TeamPage implements OnInit {
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
+
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-                // this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -253,7 +253,7 @@ export class TeamPage implements OnInit {
                 this.getImages(this.imageData);
                 this.getDykService();
                 this.getFaqService();
-                this.setupListOfListsModule();
+                // this.setupListOfListsModule();
                 this.getNewsService();
                 this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
 
@@ -339,7 +339,12 @@ export class TeamPage implements OnInit {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService(this.profileName)
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id : this.pageParams.teamId
+      }
+        this._newsService.getNewsService(this.scope,params, "team", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },
@@ -444,6 +449,7 @@ export class TeamPage implements OnInit {
 
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module
+        this.pageParams.scope = this.scope;
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
@@ -462,8 +468,8 @@ export class TeamPage implements OnInit {
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
-                    this.listOfListsData["type"] = "team";
-                    this.listOfListsData["id"] = this.pageParams.teamId;
+                    // this.listOfListsData["type"] = "team";
+                    // this.listOfListsData["id"] = this.pageParams.teamId;
                 },
                 err => {
                     console.log('Error: listOfListsData API: ', err);
