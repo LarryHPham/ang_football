@@ -303,8 +303,10 @@ export class LeaguePage implements OnInit {
     }
     private filterDropdown(filter){
       let tabCheck = 0;
-      if(this.eventStatus == 'postgame'){
-        tabCheck = 1;
+      if(filter.value == 'filter1'){
+        if(this.eventStatus == 'postgame'){
+          tabCheck = 1;
+        }
       }
       if(this.isFirstRun > tabCheck){
         let filterChange = false;
@@ -345,8 +347,12 @@ export class LeaguePage implements OnInit {
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
-        if(this.scheduleFilter2 == null){
-          this.scheduleFilter2 = schedulesData.weeks;
+        if(schedulesData.carData.length > 0){
+          if(this.scheduleFilter2 == null){
+            this.scheduleFilter2 = schedulesData.weeks;
+          }
+        }else{
+          this.scheduleFilter2 = null;
         }
         this.schedulesData = schedulesData;
       }, year, week) // isTeamProfilePage = true
