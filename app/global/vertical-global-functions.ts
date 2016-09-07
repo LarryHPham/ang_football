@@ -7,7 +7,6 @@ import {GlobalSettings} from "./global-settings";
 
 export class VerticalGlobalFunctions {
   private static _proto = window.location.protocol;
-  private static _imageUrl:string = 'images.synapsys.us';
 
   constructor() {
 
@@ -510,7 +509,7 @@ export class VerticalGlobalFunctions {
   static getBackroungImageUrlWithStockFallback(relativePath: string) {
     let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
     let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
-    var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: this._proto + "//" + this._imageUrl+randomStockPhotoSelection;
+    var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
     return relPath;
   }
 }
