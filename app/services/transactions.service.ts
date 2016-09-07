@@ -281,8 +281,11 @@ export class TransactionsService {
 
     listDataArray = data.map(function(val, index){
       var playerRoute = null;
+      var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
 
-      playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.playerName, val.playerName, val.playerId);
+      if (val.playerActive) {
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+      }
 
       var playerTextLink = {
         route: playerRoute,
