@@ -508,9 +508,9 @@ export class VerticalGlobalFunctions {
 
 
   static getBackroungImageUrlWithStockFallback(relativePath: string) {
-    let stockPhotoArray = ["/app/public/tdl-stock-1.jpg","/app/public/tdl-stock-2.jpg","/app/public/tdl-stock-3.jpg","/app/public/tdl-stock-4.jpg","/app/public/tdl-stock-5.jpg","/app/public/tdl-stock-6.jpg","/app/public/tdl-stock-7.jpg"];
+    let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
     let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
-    var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: randomStockPhotoSelection;
+    var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: this._proto + "//" + this._imageUrl+randomStockPhotoSelection;
     return relPath;
   }
 }
