@@ -6,14 +6,15 @@
     </div>
     <div class="spacer" id="deep-dive-blueBar">
       <section class="deep-dive-adWrap">
-        <iframe frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/bluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
+        <iframe *ngIf="scope == 'nfl'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
+        <iframe *ngIf="scope == 'fbs'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/ncaafbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
       </section>
     </div>
   </section>
   <section class="deep-dive-container2">
     <div class="deep-dive-container2a">
       <div class="deep-dive-module">
-        <side-scroll-schedules *ngIf="sideScrollData" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="scope"></side-scroll-schedules>
+        <side-scroll-schedules *ngIf="sideScrollData" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="profileName"></side-scroll-schedules>
       </div>
 
       <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>

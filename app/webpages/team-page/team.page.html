@@ -16,6 +16,7 @@
         [profHeader]="profileHeaderData"
         [data]="schedulesData"
         [filter1]="scheduleFilter1"
+        [dropdownKey1]="selectedFilter1"
         (tabSelected)="scheduleTab($event)"
         (selectedKeyFilter)="filterDropdown($event)"></schedules>
     <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" [scope]="scope"></standings-module>
