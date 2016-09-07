@@ -248,7 +248,7 @@ export class DeepDiveService {
           imageConfig: {
           imageClass: "image-100x56",
           /*hoverText: "View",*/
-          imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
+          imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
@@ -278,7 +278,7 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             /*hoverText: "View",*/
-            imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
+            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,//TODO
             urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }

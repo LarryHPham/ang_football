@@ -162,6 +162,7 @@ export class TeamPage implements OnInit {
     scheduleFilter1:Array<any>;
     selectedFilter1:string;
     eventStatus: any;
+    isFirstRun:number = 0;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -367,6 +368,7 @@ export class TeamPage implements OnInit {
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
+      this.isFirstRun = 0;
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus, null);
@@ -379,13 +381,23 @@ export class TeamPage implements OnInit {
         }
     }
     private filterDropdown(filter){
-      this.selectedFilter1 = filter.key;
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      let tabCheck = 0;
+      if(this.eventStatus == 'postgame'){
+        tabCheck = 1;
+      }
+      if(this.isFirstRun > tabCheck){
+        this.selectedFilter1 = filter.key;
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      }
+      this.isFirstRun++;
     }
 
     //api for Schedules
     private getSchedulesData(status, year?){
       var limit = 5;
+      if(status == 'pregame'){
+        this.selectedFilter1 = null;
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
