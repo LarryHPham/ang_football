@@ -49,6 +49,7 @@ export class DeepDivePage implements OnInit{
 
     //page variables
     scope: string;
+    sidescrollScope:string;
     partnerID: string;
     partnerData:any;
     profileName:string;

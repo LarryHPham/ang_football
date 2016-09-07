@@ -88,7 +88,7 @@ export class SeasonStatsService {
 
   getPlayerStats(playerId: number): Observable<SeasonStatsModuleData> {
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
-    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + playerId;
+    let url = GlobalSettings.getApiUrl() + "/seasonStats/module/player/" + playerId;
     return this.http.get(url)
       .map(res => res.json())
       .map(data => this.formatData(data.data));
@@ -286,7 +286,7 @@ export class SeasonStatsService {
     if (stats != null && stats.length > 0) {
     switch(position) {
       case "QB":
-          description = [playerRouteText, " has a total of ", Number(stats[4].stat).toFixed(0) , " " , "Passing Yards" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Completions" , " and " , Number(stats[3].stat).toFixed(0)  , " " ,"Passing Touchdowns" + "." ];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Passing Yards" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Completions" , " and " , Number(stats[2].stat).toFixed(0)  , " " ,"Passing Touchdowns" + "." ];
           break;
       case "CB":
       case "DB":

@@ -90,10 +90,9 @@ export class ListOfListsService {
     //  console.log(data);
       //if data is coming through then run through the transforming function for the module
       data.forEach(function(val, index){
-        console.log('FUCK THIS VAL',val);
         if( val.listData[0] == null) return;
         let itemInfo          = val.listInfo;
-        let itemTargetData    = val.targetData[0];
+        let itemTargetData    = val.targetData;
         let itemProfile       = null;
         let itemImgUrl        = null;
         let itemRoute         = null;
@@ -234,17 +233,17 @@ export class ListOfListsService {
         profileTypePlural = "teams";
       }
 
-      let id;
-      switch(itemTarget[0]['rankType']) {
-        case 'team':
-          id = itemTarget[0]['teamId'];
-          break;
-        case 'player':
-          id = itemTarget[0]['playerId'];
-          break
-        default:
-          id = 'player';
-      }
+      // let id;
+      // switch(itemTarget[0]['rankType']) {
+      //   case 'team':
+      //     id = itemTarget[0]['teamId'];
+      //     break;
+      //   case 'player':
+      //     id = itemTarget[0]['playerId'];
+      //     break
+      //   default:
+      //     id = 'player';
+      // }
 
       var listData = {
       // url           : itemListInfo.url           != null  ? itemListInfo.url          : dummyUrl,

@@ -16,10 +16,12 @@
         [data]="schedulesData"
         [filter1]="scheduleFilter1"
         [filter2]="scheduleFilter2"
+        [dropdownKey1]="selectedFilter1"
+        [dropdownKey2]="selectedFilter2"
         (tabSelected)="scheduleTab($event)"
         (selectedKeyFilter)="filterDropdown($event)"></schedules>
     <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-    <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" [scope]="scope"></standings-module>
+    <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
 
     <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
@@ -31,10 +33,8 @@
 
     <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace"></responsive-widget>
-    <!-- <mvp-module *ngIf="batterData" [title]="'Batter'" [mvpData]="batterData" [query]="batterParams" (tabSelected)="batterTab($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
-    <mvp-module *ngIf="pitcherData" [title]="'Pitcher'" [mvpData]="pitcherData" [query]="pitcherParams" (tabSelected)="pitcherTab($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module> -->
 
-    <mvp-module *ngIf="positionData && positionParams" [title]="'Position'" [mvpData]="positionData" [query]="positionParams" (tabSelectedListener)="positionDropdown($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+    <!-- <mvp-module *ngIf="positionData && positionParams" [title]="'Position'" [mvpData]="positionData" [query]="positionParams" (tabSelectedListener)="positionDropdown($event)" (dropdownPositionSelection)="positionDropdown($event)"></mvp-module> -->
 
     <responsive-widget *ngIf="pitcherData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName"></comparison-module>
