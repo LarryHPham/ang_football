@@ -8,23 +8,26 @@ import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
 export interface TeamStandingsData {
-  teamName: string,
-  imageUrl: string,
-  backgroundImage: string,
+  teamName: string;
+  imageUrl: string;
+  backgroundImage: string;
+  backgroundUrl: string;
+  teamLogo: string;
   teamId: string;
-  conferenceName: string,
-  divisionName: string,
-  lastUpdated: string,
-  divisionRank: string,
-  conferenceRank: string,
-  leagueRank: string,
-  streak: string,
-  teamConferenceRecord: string,
-  teamWinPercent: string,
-  teamDivisionRecord: string,
-  teamPointsAllowed: string,
-  teamOverallRecord: string,
-  seasonBase: string,
+  teamMarket: string;
+  conferenceName: string;
+  divisionName: string;
+  lastUpdated: string;
+  divisionRank: string;
+  conferenceRank: string;
+  leagueRank: string;
+  streak: string;
+  teamConferenceRecord: string;
+  teamWinPercent: string;
+  teamDivisionRecord: string;
+  teamPointsAllowed: string;
+  teamOverallRecord: string;
+  seasonBase: string;
   totalLosses: string;
   totalWins: string;
   /**

@@ -39,10 +39,11 @@ export class StandingsService {
   }
 
   getPageTitle(pageParams: SportPageParameters, teamName: string): string {
+    var scope = pageParams.scope == 'fbs' ? 'ncaaf' : 'nfl';
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = pageParams.scope.toUpperCase() + " Standings Breakdown";
+    let pageTitle = scope.toUpperCase() + " Standings Breakdown";
     if ( teamName ) {
-      pageTitle = pageParams.scope.toUpperCase() + " Standings - " + teamName;
+      pageTitle = scope.toUpperCase() + " Standings - " + teamName;
     }
     return pageTitle;
   }
