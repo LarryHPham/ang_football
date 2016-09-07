@@ -250,7 +250,7 @@ export class TransactionsService {
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {
-          backgroundImage: VerticalGlobalFunctions.getBackroungImageUrlWithStockFallback(val.backgroundImage),
+          backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundImage),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           subheader: [tab.tabDisplay + ' - ', teamLinkText],
           profileNameLink: playerLinkText,
