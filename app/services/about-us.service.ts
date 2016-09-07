@@ -40,10 +40,9 @@ export class AboutUsService {
   constructor(public http: Http){}
 
   getData(partnerID: string, scope: string): Observable<AboutUsModel> {
-    let url = GlobalSettings.getApiUrl() + '/landingPage/aboutUs';
-    let newUrl = "http://dev-touchdownloyal-api.synapsys.us/aboutUs/"+scope.toLowerCase(); //todo
+    let url = GlobalSettings.getApiUrl() + "/aboutUs/" + scope.toLowerCase();
 
-    return this.http.get(newUrl)
+    return this.http.get(url)
       .map( res => res.json() )
       .map( data => this.formatData(data.data, partnerID, scope) )
   }
