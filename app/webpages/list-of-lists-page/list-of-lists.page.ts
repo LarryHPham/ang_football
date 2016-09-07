@@ -52,8 +52,8 @@ export class ListOfListsPage implements OnInit{
         private _title: Title, private _router:Router) {
           GlobalSettings.getParentParams(this._router, parentParams => {
               _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
-              this._params['scope'] = parentParams.scope;
-              this.pageType = this._params.get("type");
+              this._params.params['scope'] = parentParams.scope;
+              this.pageType = this._params.get("target");
               if ( this.pageType == null ) {
                   this.pageType = "league";
                   this._profileService.getLeagueProfile()
@@ -74,6 +74,7 @@ export class ListOfListsPage implements OnInit{
         this.listService.getListOfListsService(urlParams, this.pageType, "page")
           .subscribe(
             list => {
+              console.log(this.pageType);
                 if(list.listData.length == 0){//makes sure it only runs once
                     this.detailedDataArray = null;
                 }else{

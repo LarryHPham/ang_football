@@ -242,7 +242,7 @@ export class TeamPage implements OnInit {
 
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.teamName);
+      //          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -253,7 +253,7 @@ export class TeamPage implements OnInit {
                 this.getImages(this.imageData);
                 this.getDykService();
                 this.getFaqService();
-                // this.setupListOfListsModule();
+                this.setupListOfListsModule();
                 this.getNewsService();
                 this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
 
@@ -460,14 +460,17 @@ export class TeamPage implements OnInit {
 
     setupListOfListsModule() {
         let params = {
-          id : this.pageParams.teamId,
+          targetId : this.pageParams.teamId,
           limit : 5,
-          pageNum : 1
+          pageNum : 1,
+          scope : this.scope
         }
+        console.log(this.pageParams.teamId);
         this._lolService.getListOfListsService(params, "team", "module")
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
+                    console.log('listData',this.listOfListsData);
                     // this.listOfListsData["type"] = "team";
                     // this.listOfListsData["id"] = this.pageParams.teamId;
                 },

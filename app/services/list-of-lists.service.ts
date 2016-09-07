@@ -33,10 +33,12 @@ export class ListOfListsService {
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
-    let id      = urlParams.id != null ? urlParams.id : "";
+    let id      = urlParams.targetId != null ? urlParams.targetId : "";
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
     var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
     var target =  profileType;
+    console.log("IDIDIIDID",id);
+    let scope = urlParams.scope;
 
     if (profileType == 'league' && pageType == 'module') {
       id = '';
@@ -44,16 +46,16 @@ export class ListOfListsService {
 
     }
 
-    var url_api = "scope=" + 'nfl' + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
+    var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
-
+    console.log('CALLURL',callURL);
     return this.http.get( callURL, {
         headers: headers
       })
       .map(res => res.json())
       .map(
         data => {
-
+          console.log('LIST OF LISTS DATA',data);
           if ( !data || !data.data ) {
             return null;
           }
@@ -197,9 +199,21 @@ export class ListOfListsService {
         pageNumber  : kebabArr[4],
 
       }];*/
+      let listype;
+      if (itemTarget[0]['rankType'] == "team") {
+        listype = itemTarget[0]['statType'].replace('team_','');
+      }
+      if (itemTarget[0]['rankType'] == "player") {
+        listype = itemTarget[0]['statType'].replace('player_','');
+      }
+      console.log('LISTYUPE',listype);
+
+
+
+      console.log('ITEM TARGET',itemTarget[0]);
       let ctaUrlArr = [
         itemTarget[0]['rankType'],
-        itemTarget[0]['statType'],
+        listype,
         itemInfo.seasons,
         itemInfo.ordering,
         10,
@@ -246,7 +260,7 @@ export class ListOfListsService {
         listRank      : itemListData.rank      != null  ? itemListData.rank     : dummyListRank,
     //    icon          : itemListInfo.icon          != null  ? itemListInfo.icon         : dummyIcon,
         dataPoints    : [],
-        id            : id,
+       id            : id,
         ctaBtn        : '',
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
