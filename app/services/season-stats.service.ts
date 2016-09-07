@@ -88,7 +88,7 @@ export class SeasonStatsService {
 
   getPlayerStats(playerId: number): Observable<SeasonStatsModuleData> {
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
-    let url = "http://dev-touchdownloyal-api.synapsys.us" + "/seasonStats/module/player/" + playerId;
+    let url = GlobalSettings.getApiUrl() + "/seasonStats/module/player/" + playerId;
     return this.http.get(url)
       .map(res => res.json())
       .map(data => this.formatData(data.data));
