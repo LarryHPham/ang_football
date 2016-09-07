@@ -17,7 +17,7 @@ export class GlobalSettings {
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
-    private static _imageUrl:string = 'images.synapsys.us';
+    public static _imageUrl:string = 'images.synapsys.us';
     private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
     private static _homepageUrl:string = '.touchdownloyal.com';
     private static _homepageLinkName:string = 'touchdownloyal';
@@ -125,7 +125,7 @@ export class GlobalSettings {
     }
 
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
-      var linkEnv = this._env != 'localhost' && this._env != "touchdownloyal" && this._env != "touchdownzone" && this._env != "football" ? this._env:'www';
+      var linkEnv = this._env != 'localhost' && this._env != "touchdownloyal" && this._env != "mytouchdownzone" && this._env != "football" ? this._env:'www';
         if ( partnerId ) {
             return this._proto + "//" + linkEnv + this._partnerHomepageUrl + (includePartnerId ? "/" + partnerId : "");
         }

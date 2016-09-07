@@ -102,9 +102,8 @@ export class PlayerStatsService implements OnDestroy{
             this.GlossaryData=standingsTab.glossary;
 
         }
-        let url = "http://dev-touchdownloyal-api.synapsys.us/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
-        //console.log("this is url: ", url);
-       
+        let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
+
         this.http.get(url)
             .map(res => res.json())
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
