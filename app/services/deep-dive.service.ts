@@ -2,20 +2,15 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {DomSanitizationService} from '@angular/platform-browser';
-
-
 declare var moment;
+
 @Injectable()
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleUrl();
-  private _recUrl: string = GlobalSettings.getRecUrl();
-  // private _apiToken: string = 'BApA7KEfj';
-  // private _headerName: string = 'X-SNT-TOKEN';
-
 
   constructor(
     public http: Http,
@@ -28,31 +23,10 @@ export class DeepDiveService {
       return headers;
   }
 
-  getDeepDiveService(batchId: number, limit: number){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-
-  var callURL = this._apiUrl + '/' + 'article/batch/';
-  if(typeof batchId == 'undefined'){
-    callURL += "1";
-  } else {
-    callURL += batchId;
-  }
-  if(typeof limit == 'undefined'){
-    callURL += "/25";
-  } else {
-    callURL += "/" + limit;
-  }
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
-  }
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
   var headers = this.setToken();
-  var callURL = this._apiUrl+'/'+ 'article/' + articleID;
+  var callURL = this._apiUrl + '/article/' + articleID;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -60,92 +34,108 @@ export class DeepDiveService {
     })
   }
 
-  getDeepDiveVideoService(articleID){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  var callURL = this._apiUrl+'/'+ 'article/video/'+ articleID;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
-  }
-
-  getDeepDiveVideoBatchService(limit, startNum, state?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-  if(startNum == null){
-    startNum = 1;
-  }
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
-  }
-  var callURL = this._apiUrl+'/'+ 'article/video/batch/division/' + state + '/' + startNum + '/' + limit ;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
-  }
-  getDeepDiveBatchService(limit, startNum, state?){
+  getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   if(startNum == null){
     startNum = 1;
   }
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
+
+  // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
+  var callURL = this._apiUrl + '/articleBatch/';
+  if(scope != null){
+    callURL += scope;
+  } else {
+    callURL += 'nfl';
   }
-  var callURL = this._apiUrl+'/article'+ '/batch/division/'+state+'/'+startNum+'/'+limit;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-
-      return data;
-    })
-  }
-  getDeepDiveAiBatchService(state?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-
-
-  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
-    state = 'null';
-  }
-  var callURL = this._articleUrl+'recent-games/'+state;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-
-      return data;
-    })
-  }
-  getDeepDiveAiHeavyBatchService(state?){
-  //Configure HTTP Headers
-    state = state.toUpperCase();
-  var headers = this.setToken();
-
-
   if(state == null){
     state = 'CA';
   }
-  var callURL = this._articleUrl+'player-comparisons/'+state;
+  callURL += '/' + limit + '/' + startNum + '/' + state;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
-
       return data;
     })
   }
-  getdeepDiveData(deepDiveData, callback:Function, dataParam) {
-  if(deepDiveData == null){
-    deepDiveData = {};
 
-  }else {
-    }
+
+  getDeepDiveVideoBatchService(scope, limit, startNum, state?){
+  //Configure HTTP Headers
+  var headers = this.setToken();
+  if(startNum == null){
+    startNum = 1;
+  }
+  if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
+    state = 'null';
+  }
+  var callURL = this._apiUrl + '/videoBatch/';
+  if(scope != null){
+    callURL += scope;
+  } else {
+    callURL += 'nfl';
+  }
+  callURL += '/' + limit + '/' + startNum;
+  if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
+    callURL += '/' + state;
+  }
+  return this.http.get(callURL, {headers: headers})
+    .map(res => res.json())
+    .map(data => {
+      return data;
+    })
   }
 
+  getDeepDiveAiBatchService(scope, key?, page?, count?, state?){
+    //Configure HTTP Headers
+    var headers = this.setToken();
+    if(scope == null){
+      scope = 'nfl';
+    }
+    if(key == null){
+      key == "postgame-report";
+    }
+    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+    if(page == null || count == null){
+      page = 1;
+      count = 1;
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
+  }
+
+  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?, state?){//TODO update api call
+    //Configure HTTP Headers
+    var headers = this.setToken();
+    if(scope == null){
+      scope = 'nfl';
+    }
+    if(key == null){
+      key == "player-comparisons";
+    }
+    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
+    if(page == null || count == null){
+      page = 1;
+      count = 1;
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    return this.http.get(callURL, {headers: headers})
+      .map(res => res.json())
+      .map(data => {
+        return data;
+      })
+  }
 
   getAiArticleData(state){
     var headers = this.setToken();
@@ -158,20 +148,32 @@ export class DeepDiveService {
       });
   }
 
-  getRecArticleData(region, pageNum, pageCount){
+  getRecArticleData(scope, state, batch, limit){
     var headers = this.setToken();
+    if(scope == null){
+      scope = 'NFL';
+    }
+    if(state == null){
+      state = 'CA';
+    }
+    if(batch == null || limit == null){
+      batch = 1;
+      limit = 1;
+    }
     //this is the sidkeick url
-    var callURL = this._recUrl + "/" + region + "/" + pageNum + "/" + pageCount;
-    return this.http.get(callURL, {headers: headers})
+    var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
+      //console.log("url and data",callURL);
+      return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
+
         return data;
       });
   }
 
-  getCarouselData(data, limit, batch, state, callback:Function) {
+  getCarouselData(scope, data, limit, batch, state, callback:Function) {
     //always returns the first batch of articles
-       this.getDeepDiveBatchService(limit, batch, state)
+       this.getDeepDiveBatchService(scope, limit, batch, state)
        .subscribe(data=>{
          var transformedData = this.carouselTransformData(data.data);
          callback(transformedData);
@@ -184,18 +186,18 @@ export class DeepDiveService {
       arrayData.forEach(function(val,index){
         var curdate = new Date();
         var curmonthdate = curdate.getDate();
-        var date = GlobalFunctions.formatDate(val.publishedDate);
+        var date = moment(Number(val.publishedDate));
+        date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + date.format('hh:mm A') + ' ET';
         let carData = {
           image_url: GlobalSettings.getImageUrl(val['imagePath']),
           title:  "<span> Today's News </span>" + val['title'],
           keyword: val['keyword'],
           teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
           id:val['id'],
-          articlelink: MLBGlobalFunctions.formatSynRoute('story', val.id),
-          date: date.day,
+          articlelink: VerticalGlobalFunctions.formatSynRoute('story', val.id),
+          date: date,
         };
         transformData.push(carData);
-
       });
 
       return transformData;
@@ -208,7 +210,7 @@ export class DeepDiveService {
     data.forEach(function(val, index){
       var date = GlobalFunctions.formatDate(val.publishedDate);
       var s = {
-          stackRowsRoute: MLBGlobalFunctions.formatSynRoute('story', val.id),
+          stackRowsRoute: VerticalGlobalFunctions.formatSynRoute('story', val.id),
           keyword: val.keyword,
           publishedDate: date.month + " " + date.day + ", " + date.year,
           provider1: val.author != null ? val.author : "",
@@ -218,67 +220,72 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
-            hoverText: "View",
-            urlRouteArray: MLBGlobalFunctions.formatSynRoute('story', val.id)
+            /*hoverText: "View",*/
+            urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', val.id)
           }
       }
       articleStackArray.push(s);
     });
     return articleStackArray;
   }
-  transformToAiArticleRow(data){
+  transformToAiArticleRow(data, key){
+    data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data.forEach(function(val, index){
-      if (val.length != 0) {
-      var date = GlobalFunctions.formatDate(val.timestamp*1000);
+      for(var p in val.article_data){
+        var dataLists = val.article_data[p];
+      }
+      var date = moment(Number(val.last_updated) * 1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
-          stackRowsRoute: MLBGlobalFunctions.formatAiArticleRoute('postgame-report', val.event),
-          keyword: 'POST GAME REPORT',
-          publishedDate: date.month + " " + date.day + ", " + date.year,
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
+          keyword: key.toUpperCase(),
+          publishedDate: date,
           provider1: '',
           provider2: '',
-          description: val.featuredReport['postgame-report'].displayHeadline,
+          description: dataLists.displayHeadline,
           imageConfig: {
           imageClass: "image-100x56",
-          hoverText: "View",
-          imageUrl: val.home.images[0] != null ? val.home.images[0] : sampleImage,
-          urlRouteArray: MLBGlobalFunctions.formatAiArticleRoute('postgame-report', val.event)
+          /*hoverText: "View",*/
+          imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
       articleStackArray.push(s);
-    }
     });
-    return articleStackArray;
-  }
-  transformToAiHeavyArticleRow(data){
-    var sampleImage = "/app/public/placeholder_XL.png";
-    var articleStackArray = [];
-    var date = GlobalFunctions.formatDate(data.timestamp*1000);
-    var i = 1;
-    for (var key in data) {
-      if (data.hasOwnProperty(key) && data[key].displayHeadline != null && i <= 8) {
-        var s = {
-            stackRowsRoute: MLBGlobalFunctions.formatAiArticleRoute(key, data.eventId),
-            keyword: 'PLAYER COMPARISON',
-            publishedDate: date.month + " " + date.day + ", " + date.year,
-            provider1: '',
-            provider2: '',
-            description: data[key].displayHeadline,
-            imageConfig: {
-              imageClass: "image-100x56",
-              imageUrl: data[key].image != null ? data[key].image : sampleImage,
-              hoverText: "View",
-              urlRouteArray: MLBGlobalFunctions.formatAiArticleRoute(key, data.eventId)
-            }
-        }
-        articleStackArray.push(s);
-        i = i + 1;
-      }
-    }
+
     return articleStackArray;
   }
 
+  transformToAiHeavyArticleRow(data, key){
+    data = data.data;
+    var sampleImage = "/app/public/placeholder_XL.png";
+    var articleStackArray = [];
+    data.forEach(function(val, index){
+      for(var p in val.article_data){
+        var eventType = val.article_data[p];
+      }
+      var date = moment(Number(val.last_updated) * 1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      var s = {
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
+          keyword: key.toUpperCase(),
+          publishedDate: date,
+          provider1: '',
+          provider2: '',
+          description: eventType.metaHeadline,
+          imageConfig: {
+            imageClass: "image-100x56",
+            /*hoverText: "View",*/
+            imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
+            urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
+          }
+      }
+      articleStackArray.push(s);
+    });
+    return articleStackArray;
+  }
 
   transformToArticleStack(data){
     var sampleImage = "/app/public/placeholder_XL.png";
@@ -286,7 +293,7 @@ export class DeepDiveService {
     var date = topData.publishedDate != null ? GlobalFunctions.formatDate(topData.publishedDate) : null;
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
     var articleStackData = {
-        articleStackRoute: MLBGlobalFunctions.formatSynRoute('story', topData.id),
+        articleStackRoute: VerticalGlobalFunctions.formatSynRoute('story', topData.id),
         keyword: topData.keyword,
         date: date != null ? date.month + " " + date.day + ", " + date.year: "",
         headline: topData.title,
@@ -296,81 +303,62 @@ export class DeepDiveService {
         imageConfig: {
           imageClass: "image-320x180",
           imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
-          hoverText: "View Article",
-          urlRouteArray: MLBGlobalFunctions.formatSynRoute('story', topData.id)
+          /*hoverText: "View Article",*/
+          urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', topData.id)
         }
     };
     return articleStackData;
   }
+
   transformToRecArticles(data){
-    var articleTypes = [];
+    data = data.data;
+    var sampleImage = "/app/public/placeholder_XL.png";
+    var articleStackArray = [];
     var articles = [];
-    var images = [];
-
-    var homeId = data['meta-data']['current']['homeTeamId'];
-    var awayId = data['meta-data']['current']['awayTeamId'];
-
+    var eventID = null;
     for(var obj in data){
-      if(obj == "meta-data")continue;
-      articleTypes.push(obj);
-      articles.push(data[obj]);
-    }
-
-    var eventID = data['meta-data']['current']['eventId'];
-
-    //set up the images array
-    for(var obj in data['meta-data']['images']){
-      // -1 on the length of images array to reserve one image for home/away specific article photo
-      for(var i = 0; i < data['meta-data']['images'][obj].length - 1; i++){
-        images.push(data['meta-data']['images'][obj][i]);
+      if(obj != "meta-data" && obj != "timestamp"){
+        var a = {
+          keyword: obj,
+          info: data[obj]
+        }
+        articles.push(a);
+      } else {
+        var eventID = data['meta-data']['current']['eventID'];
       }
     }
-
-    // to mix up the images
-    function shuffle(a) {
-      var j, x, i;
-      for (i = a.length; i; i--) {
-        j = Math.floor(Math.random() * i);
-        x = a[i - 1];
-        a[i - 1] = a[j];
-        a[j] = x;
-      }
-    }
-    shuffle(images);
-
-    var ret = [];
-    for(var i = 0; i < 6; i++){
-      ret[i] = articles[i];
-      ret[i]['type'] = articleTypes[i];
-      if(ret[i]['type'].split('-')[1] == 'home'){
-        ret[i]['image'] = data['meta-data']['images'][homeId][data['meta-data']['images'][homeId].length - 1];
-      }else if(ret[i]['type'].split('-')[1]  == 'away'){
-        ret[i]['image'] = data['meta-data']['images'][awayId][data['meta-data']['images'][awayId].length - 1];
-      }else{
-        ret[i]['image'] = images[i];
-      }
-      ret[i]['keyword'] = ret[i]['sidekickTitle'].toUpperCase();
-      ret[i]['bg_image_var'] = this._sanitizer.bypassSecurityTrustStyle("url(" + ret[i]['image'] + ")");
-      ret[i]['new_date'] = MLBGlobalFunctions.convertAiDate(ret[i]['dateline']);
-      ret[i]['event_id'] = eventID;
-    }
-    return ret;
+    articles.forEach(function(val, index){
+      var info = val.info;
+      var date = moment(Number(info.dateline)*1000);
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      var s = {
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
+          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
+          keyword: val.keyword.toUpperCase(),
+          new_date: date,
+          displayHeadline: info.displayHeadline,
+        }
+      articleStackArray.push(s);
+    });
+    return articleStackArray;
   }
 
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      let date = GlobalFunctions.formatDate(val.publishedDate);
-      val["date"] = date.month + " " + date.day + ", " + date.year + " " + date.time + " " + date.a + " EST";
-      val["image"] = GlobalSettings.getImageUrl(val.imagePath);
-      val["newsRoute"] = MLBGlobalFunctions.formatNewsRoute(val.id);
+      val["date"] = val.dateline;
+      val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
+      val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}
     })
     return data;
   }
-  transformTileStack(data) {
+  transformTileStack(data, scope) {
     data = data.data;
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the MLB'];
+    if(scope == null){
+      scope = 'NFL';
+    }
+    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope.toUpperCase()];
     let pickATeam = ['Pick-team-page'];
     let leaguePage = ['League-page'];
     var tileLink = [pickATeam, pickATeam, leaguePage];

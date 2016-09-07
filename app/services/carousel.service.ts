@@ -11,11 +11,10 @@ export class ImagesService {
     };
 
     getImages(profileType, profileId?) {
-        var fullUrl = GlobalSettings.getApiUrl() + "/" + profileType.toLowerCase() + "/imagesAndMedia";
+        var fullUrl = GlobalSettings.getApiUrl() + "/images/" + profileType.toLowerCase();
         if (profileId !== undefined) {
             fullUrl += "/" + profileId;
         }
-
         return this.http.get(fullUrl)
             .map(res => res.json())
             .map(data => this.getImageArray(data.data));
@@ -25,10 +24,29 @@ export class ImagesService {
         var imageArray = [];
         var copyArray = [];
         var titleArray = [];
-        imageData.images.forEach(function (val, index) {
-            val['images'] = GlobalSettings.getBackgroundImageUrl(val.image_url);
-            val['copyright'] = val.image_copyright;
-            val['title'] = val.image_title;
+        imageData.forEach(function (val, index) {
+            val['images'] = GlobalSettings.getBackgroundImageUrl(val.imageUrl);
+            val['copyright'] = val.imageCopyright;
+            val['title'] = val.imageDescription;
+            imageArray.push(val['images']);
+            copyArray.push(val['copyright']);
+            titleArray.push(val['title']);
+        });
+        return {
+            imageArray: imageArray,
+            copyArray: copyArray,
+            titleArray: titleArray
+        }
+    }
+
+    getImageArrayAI(imageData) {
+        var imageArray = [];
+        var copyArray = [];
+        var titleArray = [];
+        imageData.forEach(function (val, index) {
+            val['images'] = GlobalSettings.getBackgroundImageUrl(val['image_url']);
+            val['copyright'] = val['image_copyright'];
+            val['title'] = val['image_title'];
             imageArray.push(val['images']);
             copyArray.push(val['copyright']);
             titleArray.push(val['title']);

@@ -4,7 +4,7 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {RosterModuleData} from '../fe-core/modules/team-roster/team-roster.module';
 import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/roster.data';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
 
@@ -33,8 +33,7 @@ export class RosterService {
     rosterTab.isLoaded = false;
     rosterTab.hasError = false;
 
-    // var fullUrl = this._apiUrl + "/team/roster/" + teamId;
-    var fullUrl = "http://dev-touchdownloyal-api.synapsys.us" + "/roster/" + teamId;
+    var fullUrl = this._apiUrl + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
     return this.http.get(fullUrl, {headers: this.setToken()})
       .map(res => res.json())

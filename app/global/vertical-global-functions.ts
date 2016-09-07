@@ -5,7 +5,8 @@ import {GlobalSettings} from "./global-settings";
 
 @Injectable()
 
-export class MLBGlobalFunctions {
+export class VerticalGlobalFunctions {
+  private static _proto = window.location.protocol;
 
   constructor() {
 
@@ -61,7 +62,6 @@ export class MLBGlobalFunctions {
     }
     return articleRoute ? articleRoute : ['Error-page'];
   }
-
 
   /**
      * - Pass in datapoints to required parameters and formats
@@ -133,10 +133,26 @@ export class MLBGlobalFunctions {
   static formatHeight(heightStr: string) {
     return heightStr ? heightStr.replace(/(\d+)-(\d+)/, "$1'$2\"") : "N/A";
   }
+
   static formatHeightInches(heightStr: string) {
     var heightInFeet = (Number(heightStr) / 12)|0;
     var inches = Number(heightStr) % 12;
     return heightInFeet + "-" + inches;
+  }
+
+  static formatHeightInchesWithFoot(heightStr: string) {
+    var heightInFeet = (Number(heightStr) / 12)|0;
+    var inches = Number(heightStr) % 12;
+    if (inches == 0) {
+      return heightInFeet + " foot";
+    }
+    return heightInFeet + "-foot-" + inches;
+  }
+
+  static formatHeightDigits(height) {
+    var feet =  height.slice(0, 1) + "'";
+    var inches = height.slice(1, 2) + '"';
+    return feet+inches;
   }
 
   /**
@@ -183,47 +199,54 @@ export class MLBGlobalFunctions {
     }
   }
 
-  // static MLBPosition(position: string): string{
-  //     if( typeof position == 'undefined' || position === null){
-  //       return position;
-  //     }
-  //     var posFullName = {
-  //       1: 'Pitcher',
-  //       2: 'Catcher',
-  //       3: '1st Baseman',
-  //       4: '2nd Baseman',
-  //       5: '3rd Baseman',
-  //       6: 'Shortstop',
-  //       7: 'Left Field',
-  //       8: 'Center Field',
-  //       9: 'Right Field',
-  //       D: 'Designated Hitter'
-  //     };
-  //     let upperPosition = position.toUpperCase();
-  //     let displayPosition = posFullName[upperPosition];
-  //     return displayPosition !== undefined ? displayPosition: position;
-  //   }
-
-  // static MLBPositionToAB(position: string): string{
-  //     if( typeof position == 'undefined' || position === null ){
-  //       return 'DH';
-  //     }
-  //     var posAbbrName = {
-  //       1: 'P',
-  //       2: 'C',
-  //       3: '1B',
-  //       4: '2B',
-  //       5: '3B',
-  //       6: 'S',
-  //       7: 'LF',
-  //       8: 'CF',
-  //       9: 'RF',
-  //       D: 'DH',
-  //     };
-  //     let upperPosition = position.toUpperCase();
-  //     let displayAbbrPosition = posAbbrName[upperPosition];
-  //     return displayAbbrPosition !== undefined ? displayAbbrPosition: position;
-  //   }
+  static getWeekDropdown(scope){
+    let weekDropdown = []
+    if(scope == 'nfl'){
+      weekDropdown = [
+        {key:'1', value: 'Week1'},
+        {key:'2', value: 'Week2'},
+        {key:'3', value: 'Week3'},
+        {key:'4', value: 'Week4'},
+        {key:'5', value: 'Week5'},
+        {key:'6', value: 'Week6'},
+        {key:'7', value: 'Week7'},
+        {key:'8', value: 'Week8'},
+        {key:'9', value: 'Week9'},
+        {key:'10', value: 'Week10'},
+        {key:'11', value: 'Week11'},
+        {key:'12', value: 'Week12'},
+        {key:'13', value: 'Week13'},
+        {key:'14', value: 'Week14'},
+        {key:'15', value: 'Week15'},
+        {key:'16', value: 'Week16'},
+        {key:'17', value: 'Week17'},
+        {key:'18', value: 'Wild Card'},
+        {key:'19', value: 'Divisional Round'},
+        {key:'20', value: 'Pro Bowl'},
+        {key:'21', value: 'Super Bowl'},
+      ];
+    }else if (scope == 'ncaaf'){
+      weekDropdown = [
+        {key:'1', value: 'Week1'},
+        {key:'2', value: 'Week2'},
+        {key:'3', value: 'Week3'},
+        {key:'4', value: 'Week4'},
+        {key:'5', value: 'Week5'},
+        {key:'6', value: 'Week6'},
+        {key:'7', value: 'Week7'},
+        {key:'8', value: 'Week8'},
+        {key:'9', value: 'Week9'},
+        {key:'10', value: 'Week10'},
+        {key:'11', value: 'Week11'},
+        {key:'12', value: 'Week12'},
+        {key:'13', value: 'Week13'},
+        {key:'14', value: 'Week14'},
+        {key:'15', value: 'Week15'},
+        {key:'16', value: 'Bowls'}
+      ];
+    }
+    return weekDropdown;
+  }
 
 
   /**
@@ -231,23 +254,38 @@ export class MLBGlobalFunctions {
    * @param urlArr
    * @returns {any}
    */
-  //path: '/list/:profile/:listname/:sort/:conference/:division/:limit/:pageNum',
+  //path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
   static formatListRoute(urlArr: Array<any>): Array<any> {
     for(var arg in urlArr) {
       if (arg == null) return ['Error-page'];
     }
-    let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
+    // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
 
     let listRoute = ['List-page', {
-      profile     : kebabArr[0],
-      listname    : kebabArr[1],
-      sort        : kebabArr[2],
-      conference  : kebabArr[3],
-      division    : kebabArr[4],
-      limit       : kebabArr[5],
-      pageNum     : kebabArr[6]
+      target      : urlArr[0],
+      statName    : urlArr[1],
+      season      : urlArr[2],
+      ordering    : urlArr[3],
+      perPageCount: urlArr[4],
+      pageNumber  : urlArr[5]
+
     }];
     return listRoute;
+  }
+  static formatModuleListRoute(modUrlArr: Array<any>): Array<any> {
+    for(var arg in modUrlArr) {
+      if (arg == null) return ['Error-page'];
+    }
+    // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
+
+    let listModuleRoute = ['List-of-lists', {
+      target      : modUrlArr[0],
+      id          : modUrlArr[1],
+      perPageCount: modUrlArr[2],
+      pageNumber  : modUrlArr[3]
+
+    }];
+    return listModuleRoute;
   }
 
 
@@ -290,54 +328,140 @@ export class MLBGlobalFunctions {
   static formatStatName(stat: string) {
     //coming from backend as a stat in the list info
    switch (stat) {
-     //pitcher
-     case 'pitcher-wins-losses':
-      return "W/L";
-     case 'pitcher-innings-pitched':
-      return "Innings pitched";
-     case 'pitcher-strikeouts':
-      return "Strikeouts";
-     case 'pitcher-earned-run-average':
-      return "ERA";
-     case 'pitcher-hits-allowed':
-      return "Hits Allowed";
+    //CB, DE. DB, DL, DT, S, LB
+    case 'defense_total_tackles':
+      return "Total Tackles";
+    case 'defense_sacks':
+      return "Total Sacks";
+    case 'defense_interceptions':
+      return "Interceptions";
+    case 'defense_forced_fumbles':
+      return "Forced Fumbles";
+    case 'defense_passes_defended':
+      return "Passes Defended";
 
-     case 'pitcher-bases-on-balls':
-      return "Walks";
-     case 'pitcher-runs-allowed':
-      return "Runs allowed";
-     case 'pitcher-earned-runs':
-      return "Runs earned";
+    // K
+    case 'kicking_field_goals_made':
+      return "Field Goals Made";
+    case 'kicking_field_goal_percentage_made':
+      return "Field Goal Percentage Made";
+    case 'kicking_extra_points_made':
+      return "Extra Points Made";
+    case 'kicking_total_points_scored':
+      return "Total Points";
+    case 'kicking_total_points_per_game':
+      return "Average Points Per Game";
 
-     //batter
-     case 'batter-home-runs':
-      return "Home runs";
-     case 'batter-batting-average':
-      return "Batting average";
-     case 'batter-runs-batted-in':
-      return "RBIs";
-     case 'batter-hits':
-      return "Hits";
-     case 'batter-bases-on-balls':
-      return "Walks";
-     case 'batter-stolen-bases':
-      return "Stolen bases";
+    // P
+    case 'punting_gross_yards':
+      return "Gross Punting Yards";
+    case 'punting_punts':
+      return "Total Punts";
+    case 'punting_average':
+      return "Average Distance Punt";
+    case 'punting_inside_twenty':
+      return "Punt % Within 20";
+    case 'punting_longest_punt':
+      return "Longest Punt";
 
-     case 'batter-triples':
-      return "Triples ";
-     case 'batter-strikeouts':
-      return "Strikeouts";
-     case 'batter-singles':
-      return "Singles";
-     case 'batter-runs':
-      return "Runs";
-     case 'batter-on-base-percentage':
-      return "OBP";
-     case 'batter-doubles':
-      return "Doubles";
+    // QB
+    case 'passing_rating':
+      return "Passer Rating";
+    case 'passing_yards':
+      return "Passing Yards";
+    case 'passing_touchdowns':
+      return "Touchdowns";
+    case 'passing_interceptions':
+      return "Interceptions";
+    case 'passing_completions':
+      return "Completions";
 
-     default: return GlobalFunctions.toTitleCase(stat.replace(/-/g, ' '));
+    // RB
+    case 'rushing_yards':
+      return "Rushing Yards";
+    case 'rushing_attempts':
+      return "Ruhing Attempts";
+    case 'rushing_yards_per_carry':
+      return "Yards Per Carry";
+    case 'rushing_touchdowns':
+      return "Touchdowns";
+    case 'rushing_yards_per_carry':
+      return "Yards Per Game";
+
+    // RS
+    case 'returning_yards':
+      return "Rushing Yards";
+    case 'rushing_attempts':
+      return "Ruhing Attempts";
+    case 'rushing_yards_per_carry':
+      return "Yards Per Carry";
+    case 'rushing_touchdowns':
+      return "Touchdowns";
+    case 'rushing_yards_per_carry':
+      return "Yards Per Game";
+
+    // WR, TE
+    case 'receiving_yards':
+      return "Receiving Yards";
+    case 'receiving_receptions':
+      return "Receptions";
+    case 'receiving_average_per_reception':
+      return "Average Yards Per Reception";
+    case 'receiving_touchdowns':
+      return "Touchdowns";
+    case 'returning_touchdowns':
+      return "Yards Per Game";
+
+     default: return GlobalFunctions.toTitleCase(stat.replace(/_/g, ' '));
    }
+  }
+
+  static convertPositionAbbrv(position) {
+    switch (position) {
+      case 'cb' :
+      return 'Cornerback';
+
+      case 'db' :
+      return 'Defensive Back';
+
+      case 'de' :
+      return 'Defensive End';
+
+      case 'dl' :
+      return 'Defensive Lineman';
+
+      case 'dt' :
+      return 'Defensive Tackle';
+
+      case 'saf' :
+      return 'Safety';
+
+      case 'lb' :
+      return 'Linebaker';
+
+      case 'k' :
+      return 'Kicker';
+
+      case 'p' :
+      return 'Punter';
+
+      case 'qb' :
+      return 'Quarterback';
+
+      case 'rb' :
+      return 'Runningback';
+
+      case 'rs' :
+      return 'Return specialist';
+
+      case 'wr' :
+      return 'Wide Receiver';
+
+      case 'te' :
+      return 'Tight End';
+
+      default : return null;
+    }
   }
 
   static formatSynRoute(articleType: string, eventID: string): Array<any> {
@@ -378,4 +502,14 @@ export class MLBGlobalFunctions {
         return statDesc;
       }
   } //static nonRankedDataPoints
+
+  //function to select a random stock photo
+
+
+  static getBackroundImageUrlWithStockFallback(relativePath: string) {
+    let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
+    let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
+    var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
+    return relPath;
+  }
 }

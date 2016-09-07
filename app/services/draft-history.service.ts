@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
@@ -64,7 +64,7 @@ export class DraftHistoryService {
 
 @Injectable()
 export class MLBDraftHistoryService extends DraftHistoryService {
-  private _apiUrl: string = "http://dev-touchdownloyal-api.synapsys.us";
+  private _apiUrl: string = GlobalSettings.getApiUrl();
   constructor(public http: Http){
     super();
   }
@@ -189,7 +189,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
         var playerRoute = null;
         if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-          playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
+          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
         }
         var playerLinkText = {
           route: playerRoute,
@@ -233,6 +233,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
   private detailedData(data: Array<PlayerDraftData>, sortBy){
     var listDataArray = data.map(function(val, index){
       var playerFullName = val.playerFirstName + " " + val.playerLastName;
+      var playerFullNameUrl = val.playerFirstName + "-" + val.playerLastName;
       if (val.playerCity == null || val.playerState == null){
         location = "N/A";
       }
@@ -242,11 +243,8 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       var rank = (index+1);
 
       var playerRoute = null;
-      if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-        playerRoute = MLBGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
-        }
-      playerRoute = MLBGlobalFunctions.formatPlayerRoute("boston-red-sox", "david-price", "95151"); //todo
-      var teamRoute = MLBGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
+      playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullNameUrl, val.playerId);
+      var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
       var listData = {
         dataPoints: ListPageService.detailsData(
           [//main left text
@@ -254,10 +252,9 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           ],
           val.playerOverallPick+' Overall',
           [//sub left text
-            {text:'<span class="hometown">Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
+            {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
           ],
-          'Draft Round '+val.playerRound,
-          'fa fa-map-marker'),
+          'Draft Round '+val.playerRound),
         imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
         hasCTA:true,
         ctaDesc: playerRoute ? 'Want more info about this player?' : 'This player is currently not active.',

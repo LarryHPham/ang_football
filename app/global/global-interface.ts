@@ -1,8 +1,9 @@
-export enum Conference { american, national } //to get string value: Conference[myValue], where myValues is a Conference value
-export enum Division { east, west, central }  //to get string value: Year[myValue], where myValues is a Year value
 export enum Season { regularSeason, postSeason }//TODO - regularSeason, postSeason
+export enum Conference { AFC, NFC, ACC, AmericanAthletic, BigTen, ConferenceUSA, MidAmerican, MountainWest, Pac12, SEC, Big12, IAIndependents, SunBelt} //to get string value: Conference[myValue], where myValues is a Conference value
 
-export interface MLBPageParameters {
+export enum Division { AFCEast, AFCNorth, AFCSouth, AFCWest, NFCEast, NFCNorth, NFCSouth, NFCWest, ATLANTIC, COASTAL, EAST, WEST, East, West, MOUNTAIN, NORTH, SOUTH, Big12, IAIndependents, SunBelt }  //to get string value: Year[myValue], where myValues is a Year value
+
+export interface SportPageParameters {
   conference?: Conference;
   division?: Division;
   year?: number;
@@ -10,6 +11,7 @@ export interface MLBPageParameters {
   teamId?: number;
   playerId? :number;
   type?: string;
+  scope?: string;
 }
 
 export interface Link {
@@ -33,9 +35,9 @@ export interface NavigationData {
 }
 
 export interface Images {
-    image_url: string;
-    image_title: string;
-    image_copyright: string;
+    imageUrl: string;
+    imageDescription: string;
+    imageCopyright: string;
     image_date: string;
     image_height: string;
     image_width: string;
@@ -146,6 +148,20 @@ export interface HeadlineData {
     }
 }
 
+export interface Article {
+    data: {
+        affiliation?: string;
+        article_subtype_id?: string;
+        json_url?: string;
+        article_type_id?: string;
+        event_id?: string;
+        id?: string;
+        last_updated?: string;
+        season_id?: string;
+        teaser?: string;
+        title?: string;
+    }
+}
 
 export interface ArticleData {
     displayHeadline?: string;

@@ -36,29 +36,54 @@ export class SchedulesPage implements OnInit{
   errorData: any;
   paginationParameters:any;
   isError: boolean = false;
-  schedulesData:any;
   tabData: any;
+  limit:number = 10;
+  isFirstRun = true;
+
+  schedulesData:any;
+  scheduleFilter1:Array<any>;
+  scheduleFilter2:Array<any>;
+  selectedFilter1:string
+  selectedFilter2:string;
+  eventStatus: string;
 
   initialPage: number;
   initialTabKey: string;
   selectedTabKey: string;
+  scope:string;
 
   constructor(private _schedulesService:SchedulesService,
           private profHeadService:ProfileHeaderService,
           private params: RouteParams,
           private _title: Title, private _router: Router) {
       _title.setTitle(GlobalSettings.getPageTitle("Schedules"));
+      this.isFirstRun = true;
+      GlobalSettings.getParentParams(_router, parentParams => {
+          this.scope = parentParams.scope;
+          this.initialPage = Number(this.params.get("pageNum"));
+          this.selectedTabKey = this.params.get("tab");
+          this.selectedFilter1 = this.params.get("year");
+          if(this.selectedTabKey == null){
+            this.selectedTabKey = 'pregame';
+          }
+      });
 
-      this.initialPage = Number(this.params.get("pageNum"));
-      this.initialTabKey = this.params.get("tab");
     }
 
   //grab tab to make api calls for post of pre event table
   private scheduleTab(tab) {
-    if ( tab == 'Upcoming Games' ){
-        this.selectedTabKey = "pre-event";
-    } else {
-        this.selectedTabKey = "post-event";
+    var curPageNum = this.selectedTabKey == this.initialTabKey ? this.initialPage : 1;
+    this.isFirstRun = true;
+    this.initialPage = curPageNum;
+    if(tab == 'Upcoming Games'){
+      this.eventStatus = 'pregame';
+      this.getSchedulesData(this.eventStatus,this.initialPage, this.selectedFilter1,this.selectedFilter2);
+    }else if(tab == 'Previous Games'){
+      this.eventStatus = 'postgame';
+      this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);
+    }else{
+      this.eventStatus = 'pregame';
+      this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
     }
     // Uncomment if we want to enable URL changing when switching tabs.
     // However! with the way the scroll-to-top is set up, it will move the
@@ -81,14 +106,20 @@ export class SchedulesPage implements OnInit{
     //   var navigationPage = teamName ? 'Schedules-page-team-tab' : 'Schedules-page-league-tab';
     //   this._router.navigate([navigationPage, navigationParams]);
     // }
-    this.getSchedulesData(this.selectedTabKey, this.selectedTabKey == this.initialTabKey ? this.initialPage : 1);
   }
 
-  private getSchedulesData(status, pageNum){
-    var teamId = this.params.params['teamId']; //determines to call league page or team page for schedules-table
-    if(teamId){
-      this.profHeadService.getTeamProfile(Number(teamId))
-      .subscribe(
+  private getSchedulesData(status, pageNum, year?, week?){
+    if(this.isFirstRun){
+      var teamId = this.params.params['teamId']; //determines to call league page or team page for schedules-table
+
+      if(typeof year == 'undefined'){
+        year == new Date().getFullYear();
+        this.selectedFilter1 = year;
+      }
+      if(teamId){
+        this.isFirstRun = false;
+        this.profHeadService.getTeamProfile(Number(teamId))
+        .subscribe(
           data => {
             this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
             this.profileHeaderData = this.profHeadService.convertTeamPageHeader(data, "Current Season Schedule - " + data.teamName);
@@ -99,59 +130,100 @@ export class SchedulesPage implements OnInit{
           },
           err => {
             this.isError= true;
-              console.log('Error: Schedules Profile Header API: ', err);
-              // this.isError = true;
+            console.log('Error: Schedules Profile Header API: ', err);
+            // this.isError = true;
           }
-      );
-      this._schedulesService.getSchedulesService('team', status, 10, pageNum, false, teamId) // isTeamProfilePage = false
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-            if(typeof this.tabData == 'undefined'){
-                this.tabData = data.tabs;
+        );
+        this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, this.initialPage, teamId, (schedulesData) => {
+          this.schedulesData = schedulesData;
+          if(typeof this.tabData == 'undefined' && this.schedulesData != null){
+            if(status == 'pregame'){
+              this.scheduleFilter1=null;
+            }else{
+              if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+                this.scheduleFilter1 = schedulesData.seasons;
+                if(this.selectedFilter1 == null){
+                  this.schedulesData.seasons[0].key;
+                }
+              }
             }
-          this.setPaginationParams(data.pageInfo, status, pageNum);
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
-    }else{
-      this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "MLB"));
-      this.profHeadService.getLeagueProfile()
-      .subscribe(
+            this.tabData = schedulesData.tabs;
+            this.isFirstRun = true;
+          }else if(this.schedulesData == null){
+            this.isError = true;
+          }
+          this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
+        },year, week)
+      }else{
+        this.isFirstRun = false;
+        this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
+        this.profHeadService.getLeagueProfile(this.scope)
+        .subscribe(
           data => {
             var currentDate = new Date();// no stat for date so will grab current year client is on
             var display:string;
             if(currentDate.getFullYear() == currentDate.getFullYear()){// TODO must change once we have historic data
               display = "Current Season"
             }
-            var pageTitle = display + " Schedules - " + data.headerData.leagueAbbreviatedName;
+            var pageTitle = display + " Schedules - " + data.headerData.leagueFullName;
             this.profileHeaderData = this.profHeadService.convertLeagueHeader(data.headerData, pageTitle);
             this.errorData = {
-              data: data.headerData.leagueAbbreviatedName + " has no record of any more games for the current season.",
-              icon: "fa fa-remove"
+              data: data.headerData.leagueFullName + " has no record of any more games for the current season.",
+              icon: "fa fa-calendar-times-o"
             }
           },
           err => {
             this.isError = true;
             console.log('Error: Schedules Profile Header API: ', err);
           }
-      );
-      this._schedulesService.getSchedulesService('league', status, 10, pageNum)
-      .subscribe(
-        data => {
-          // console.log('got scheuldes data');
-          this.schedulesData = data;
-          if(typeof this.tabData == 'undefined'){
-              this.tabData = data.tabs;
+        );
+        this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, this.initialPage, null, (schedulesData) => {
+          this.schedulesData = schedulesData;
+          if(typeof this.tabData == 'undefined' && this.schedulesData != null){
+            if(status == 'pregame'){
+              this.scheduleFilter1=null;
+            }else{
+              if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+                this.scheduleFilter1 = schedulesData.seasons;
+                if(this.selectedFilter1 == null){
+                  this.selectedFilter1 = this.schedulesData.seasons[0].key;
+                }
+              }
+            }
+            if(this.scheduleFilter2 == null){
+              this.scheduleFilter2 = schedulesData.weeks;
+              if(this.selectedFilter2 == null){
+                this.selectedFilter2 = this.schedulesData.weeks[0].key;
+              }
+            }
+            this.tabData = schedulesData != null ?schedulesData.tabs:null;
+            this.isFirstRun = true;
+          }else if(this.schedulesData == null){
+            this.isError = true;
           }
-          this.setPaginationParams(data.pageInfo, status, pageNum);
-        },
-        err => {
-          console.log("Error getting Schedules Data");
-        }
-      )
+          this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
+        },year, week)
+      }
+    }
+  }
+
+  private filterDropdown(filter){
+    var teamId = this.params.params['teamId'];
+    let filterChange = false;
+
+    if(filter.value == 'filter1' && this.eventStatus == 'postgame' && this.selectedFilter1 != filter.key){
+      this.selectedFilter1 = filter.key;
+      filterChange = true;
+    }
+    if(!teamId){
+      if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+        this.selectedFilter2 = filter.key;
+        filterChange = true;
+      }
+    }
+    if(filterChange){
+      this.isFirstRun = true;
+      this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
     }
   }
 
@@ -159,8 +231,6 @@ export class SchedulesPage implements OnInit{
   //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
   setPaginationParams(input, tabKey: string, pageNum: number) {
       // var pageType;
-      // console.log(params)
-      //'/schedules/:teamName/:teamId/:pageNum'
       var navigationParams = {
         pageNum: pageNum,
         tab: tabKey
@@ -185,17 +255,20 @@ export class SchedulesPage implements OnInit{
 
   newIndex(newPage) {
     window.scrollTo(0,0);
-    this.getSchedulesData(this.selectedTabKey, newPage);
+    this.isFirstRun = true;
+    this.initialPage = newPage;
+
+    this.getSchedulesData(this.selectedTabKey, newPage, this.selectedFilter1,this.selectedFilter2);
   }
 
   ngOnInit() {
     if( !this.initialTabKey ){
-      this.initialTabKey = 'pre-event';
+      this.initialTabKey = 'pregame';
     }
     if ( this.initialPage <= 0 ) {
       this.initialPage = 1;
     }
-    this.getSchedulesData(this.initialTabKey, this.initialPage);
+    this.getSchedulesData(this.initialTabKey, this.initialPage, this.selectedFilter1,this.selectedFilter2);
   }
 
 }

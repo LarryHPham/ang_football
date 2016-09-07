@@ -3,7 +3,7 @@ import {CircleImageData} from '../fe-core/components/images/image-data';
 import {StandingsTableTabData, TableComponentData} from '../fe-core/components/standings/standings.component';
 import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import {Conference, Division} from '../global/global-interface';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
@@ -48,16 +48,16 @@ export interface TeamStandingsData {
   fullBackgroundImageUrl?: string;
 }
 
-export class MLBStandingsTableData implements TableComponentData<TeamStandingsData> {
+export class VerticalStandingsTableData implements TableComponentData<TeamStandingsData> {
   groupName: string;
 
-  tableData: MLBStandingsTableModel;
+  tableData: VerticalStandingsTableModel;
 
   conference: Conference;
 
   division: Division;
 
-  constructor(title: string, conference: Conference, division: Division, table: MLBStandingsTableModel) {
+  constructor(title: string, conference: Conference, division: Division, table: VerticalStandingsTableModel) {
     this.groupName = title;
     this.conference = conference;
     this.division = division;
@@ -66,7 +66,7 @@ export class MLBStandingsTableData implements TableComponentData<TeamStandingsDa
 
 }
 
-export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsData> {
+export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsData> {
 
   title: string;
 
@@ -76,15 +76,23 @@ export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsD
 
   hasError: boolean;
 
-  sections: Array<MLBStandingsTableData>;
+  sections: Array<VerticalStandingsTableData>;
 
   conference: Conference;
 
   division: Division;
 
+  season: any;
+
   selectedKey: string;
 
   currentTeamId: string;
+
+  conferences: Array<any>;
+
+  divisions: Array<any>;
+
+  seasons: Array<any>;
 
   constructor(title: string, conference: Conference, division: Division, isActive: boolean, teamId: string) {
     this.title = title;
@@ -126,7 +134,7 @@ export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsD
     var teamRoute = null;
     var yearEnd = Number(item.seasonBase)+1;
     if ( this.currentTeamId != item.teamId ) {
-      teamRoute = MLBGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+      teamRoute = VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
     }
     var teamNameLink = {
         route: teamRoute,
@@ -148,65 +156,105 @@ export class MLBStandingsTabData implements StandingsTableTabData<TeamStandingsD
   }
 }
 
-export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
+export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
   // title: string;
 
-  columns: Array<TableColumn> = [{
-      headerValue: "Team Name",
-      columnClass: "image-column",
-      key: "name"
-    },{
-      headerValue: "W/L/T",
-      columnClass: "data-column",
-      key: "wlt"
-    },{
-      headerValue: "CONF",
-      columnClass: "data-column",
-      sortDirection: -1, //descending
-      key: "conf"
-    },{
-      headerValue: "STRK",
-      columnClass: "data-column",
-      key: "strk"
-    },{
-      headerValue: "HM",
-      columnClass: "data-column",
-      key: "hm"
-    },{
-      headerValue: "RD",
-      columnClass: "data-column",
-      key: "rd"
-    },{
-      headerValue: "PF",
-      columnClass: "data-column",
-      key: "pf"
-    },{
-      headerValue: "PA",
-      columnClass: "data-column",
-      key: "pa"
-    },{
-      headerValue: "Rank:",
-      columnClass: "data-column",
-      key: "rank"
-    }];
-
+  columns: Array<TableColumn>;
   rows: Array<TeamStandingsData>;
 
   selectedKey: string = "";
-
+  scope: string;
   /**
    * The team id of the profile page displaying the Standings module. (Optional)
    */
   currentTeamId: string;
-
-  constructor(rows: Array<TeamStandingsData>, teamId: string) {
+  constructor(rows: Array<TeamStandingsData>, scope:string, teamId: string) {
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
       this.rows = [];
     }
     this.currentTeamId = teamId;
+    this.scope = scope;
+    this.setColumnDP();
   }
-
+  setColumnDP() : Array<TableColumn> {
+    if(this.scope == 'fbs'){
+      this.columns = [{//TODO
+          headerValue: "Team Name",
+          columnClass: "image-column",
+          key: "name"
+        },{
+          headerValue: "W/L/T",
+          columnClass: "data-column",
+          key: "wlt"
+        },{
+          headerValue: "CONF",
+          columnClass: "data-column",
+          sortDirection: -1, //descending
+          key: "conf"
+        },{
+          headerValue: "STRK",
+          columnClass: "data-column",
+          key: "strk"
+        },{
+          headerValue: "HM",
+          columnClass: "data-column",
+          key: "hm"
+        },{
+          headerValue: "RD",
+          columnClass: "data-column",
+          key: "rd"
+        },{
+          headerValue: "PF",
+          columnClass: "data-column",
+          key: "pf"
+        },{
+          headerValue: "PA",
+          columnClass: "data-column",
+          key: "pa"
+        },{
+          headerValue: "Rank:",
+          columnClass: "data-column",
+          key: "rank"
+        }];
+      } else {
+        this.columns = [{//TODO
+            headerValue: "Team Name",
+            columnClass: "image-column",
+            key: "name"
+          },{
+            headerValue: "W/L/T",
+            columnClass: "data-column",
+            key: "wlt"
+          },{
+            headerValue: "PCT",
+            columnClass: "data-column",
+            sortDirection: -1, //descending
+            key: "pct"
+          },{
+            headerValue: "DIV",
+            columnClass: "data-column",
+            key: "div"
+          },{
+            headerValue: "CONF",
+            columnClass: "data-column",
+            key: "conf"
+          },{
+            headerValue: "STRK",
+            columnClass: "data-column",
+            key: "strk"
+          },{
+            headerValue: "PF",
+            columnClass: "data-column",
+            key: "pf"
+          },{
+            headerValue: "PA",
+            columnClass: "data-column",
+            key: "pa"
+          }];
+      }
+      return this.columns;
+  }
   setSelectedKey(key: string) {
     this.selectedKey = key ? key : null;
   }
@@ -238,7 +286,7 @@ export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
         display = item.teamName;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
-          link = MLBGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
         }
         imageUrl = item.fullImageUrl;
         break;
@@ -273,9 +321,19 @@ export class MLBStandingsTableModel implements TableModel<TeamStandingsData> {
         sort = Number(item.teamPointsAllowed);
         break;
 
-      case "rank"://TODO
+      case "rank":
         display = item.leagueRank != null ? item.leagueRank : null;
         sort = Number(item.leagueRank);
+        break;
+
+      case "pct":
+        display = item.teamWinPercent != null ? item.teamWinPercent : null;
+        sort = item.teamWinPercent;
+        break;
+
+      case "div":
+        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
+        sort = item.teamDivisionRecord;
         break;
     }
     if ( display == null ) {

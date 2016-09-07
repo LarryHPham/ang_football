@@ -1,9 +1,11 @@
+///<reference path="../../../node_modules/rxjs/Observable.d.ts"/>
 import {Component, OnInit, Injectable} from '@angular/core';
 import {Router, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalFunctions} from "../../global/global-functions";
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from "../../global/global-settings";
 import {LoadingComponent} from '../../fe-core/components/loading/loading.component';
 import {ErrorComponent} from '../../fe-core/components/error/error.component';
@@ -29,7 +31,7 @@ import {ComparisonModule, ComparisonModuleData} from '../../fe-core/modules/comp
 import {ComparisonStatsService} from '../../services/comparison-stats.service';
 
 import {StandingsModule, StandingsModuleData} from '../../fe-core/modules/standings/standings.module';
-import {MLBStandingsTabData} from '../../services/standings.data';
+import {TDLStandingsTabdata} from '../../services/standings.data';
 import {StandingsService} from '../../services/standings.service';
 
 import {SchedulesService} from '../../services/schedules.service';
@@ -66,6 +68,10 @@ import {DailyUpdateService, DailyUpdateData} from "../../services/daily-update.s
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {VideoModule} from "../../fe-core/modules/video/video.module";
+import {VideoService} from "../../services/video.service";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {HeadlineData} from "../../global/global-interface";
 
 declare var moment;
 
@@ -74,6 +80,7 @@ declare var moment;
     templateUrl: './app/webpages/team-page/team.page.html',
     directives: [
         SidekickWrapper,
+        VideoModule,
         LoadingComponent,
         ErrorComponent,
         DailyUpdateModule,
@@ -98,6 +105,7 @@ declare var moment;
         ResponsiveWidget
     ],
     providers: [
+      VideoService,
       BoxScoresService,
       SchedulesService,
       StandingsService,
@@ -120,11 +128,11 @@ declare var moment;
 export class TeamPage implements OnInit {
     public widgetPlace: string = "widgetForModule";
     headerData:any;
-    pageParams:MLBPageParameters;
+    pageParams:SportPageParameters;
     partnerID:string = null;
-    scope:string = null;
     hasError: boolean = false;
-
+    headlineError:boolean = false;
+    headlineData:HeadlineData;
     profileHeaderData:ProfileHeaderData;
     profileData:IProfileData;
     comparisonModuleData: ComparisonModuleData;
@@ -132,8 +140,9 @@ export class TeamPage implements OnInit {
     playerStatsData: PlayerStatsModuleData;
     rosterData: RosterModuleData<TeamRosterData>;
     dailyUpdateData: DailyUpdateData;
-
-    imageData:any;
+    firstVideo:string;
+    videoData:any;
+    imageData:Array<any>;
     copyright:any;
     imageTitle: any;
     profileType:string = "team";
@@ -144,10 +153,15 @@ export class TeamPage implements OnInit {
     currentBoxScores:any;
     dateParam:any;
 
+    transactionsActiveTab: any;
     transactionsData:TransactionModuleData;
-    // currentYear: any;
+    transactionFilter1: Array<any>;
+    dropdownKey1: string;
 
     schedulesData:any;
+    scheduleFilter1:Array<any>;
+    selectedFilter1:string;
+    eventStatus: any;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -155,6 +169,10 @@ export class TeamPage implements OnInit {
     faqData: Array<faqModuleData>;
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
+
+    public scope: string;
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(private _params:RouteParams,
                 private _router:Router,
@@ -173,7 +191,9 @@ export class TeamPage implements OnInit {
                 private _dykService: DykService,
                 private _twitterService: TwitterService,
                 private _comparisonService: ComparisonStatsService,
-                private _dailyUpdateService: DailyUpdateService) {
+                private _dailyUpdateService: DailyUpdateService,
+                private _headlineDataService:HeadlineDataService,
+                private _videoBatchService: VideoService) {
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
         };
@@ -181,22 +201,20 @@ export class TeamPage implements OnInit {
         GlobalSettings.getParentParams(_router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
+            var currDate = new Date();
+            var currentUnixDate = currDate.getTime();
+            //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
+            this.dateParam ={
+              profile:'team',//current profile page
+              teamId:this.pageParams.teamId, // teamId if it exists
+              date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+              // date: '2016-09-11'
+            }
+            this.setupProfileData(this.partnerID,this.scope);
         });
     }
 
-    ngOnInit() {
-      var currDate = new Date();
-    //   this.currentYear = currDate.getFullYear();
-      var currentUnixDate = currDate.getTime();
-      //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
-      this.dateParam ={
-        profile:'team',//current profile page
-        teamId:this.pageParams.teamId, // teamId if it exists
-        date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-      }
-
-      this.setupProfileData();
-    }
+    ngOnInit() {}
 
     /**
      *
@@ -205,7 +223,8 @@ export class TeamPage implements OnInit {
      * calls from other modules.
      *
      **/
-    private setupProfileData() {
+    private setupProfileData(partnerID, scope) {
+
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
                 /*** About the [Team Name] ***/
@@ -216,11 +235,14 @@ export class TeamPage implements OnInit {
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
+                this.getHeadlines();
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
-                this.getSchedulesData('postgame');//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.pageParams.teamId, data.teamName);
+
+                this.eventStatus = 'pregame';
+                this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -231,8 +253,9 @@ export class TeamPage implements OnInit {
                 this.getImages(this.imageData);
                 this.getDykService();
                 this.getFaqService();
-                this.setupListOfListsModule();
+                // this.setupListOfListsModule();
                 this.getNewsService();
+                this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
 
                 /*** Interact With [League Name]’s Fans ***/
                 this.getTwitterService();
@@ -244,6 +267,20 @@ export class TeamPage implements OnInit {
         );
     }
 
+    //api for Headline Module
+    private getHeadlines(){
+        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        this._headlineDataService.getAiHeadlineData(scope, this.pageParams.teamId)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData.data;
+                },
+                err => {
+                    console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
+                }
+            )
+    }
+
     private dailyUpdateModule(teamId: number) {
         this._dailyUpdateService.getTeamDailyUpdate(teamId)
             .subscribe(data => {
@@ -253,6 +290,22 @@ export class TeamPage implements OnInit {
                 this.dailyUpdateData = this._dailyUpdateService.getErrorData();
                 console.log("Error getting daily update data", err);
             });
+    }
+
+    private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
+       // if(teamID)
+        this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+            .subscribe(data => {
+
+                this.firstVideo = data.data[first].videoLink;
+                this.videoData = data.data.slice(1);
+
+            },
+                err => {
+
+                    console.log("Error getting video data");
+                }
+        );
     }
 
     private getTwitterService() {
@@ -286,7 +339,12 @@ export class TeamPage implements OnInit {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService(this.profileName)
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id : this.pageParams.teamId
+      }
+        this._newsService.getNewsService(this.scope,params, "team", "module")
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },
@@ -309,27 +367,65 @@ export class TeamPage implements OnInit {
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         if(tab == 'Upcoming Games'){
-            this.getSchedulesData('pregame');
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
-            this.getSchedulesData('postgame');
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
         }else{
-            this.getSchedulesData('postgame');// fall back just in case no status event is present
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
         }
+    }
+    private filterDropdown(filter){
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
     }
 
     //api for Schedules
-    private getSchedulesData(status){
+    private getSchedulesData(status, year?){
       var limit = 5;
-      this._schedulesService.getSchedulesService(this.scope, 'team', status, limit, 1, true, this.pageParams.teamId) // isTeamProfilePage = true
-      .subscribe(
-        data => {
-          this.schedulesData = data;
-        },
-        err => {
-          console.log("Error getting Schedules Data");
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        if(status == 'pregame'){
+          this.scheduleFilter1=null;
+        }else{
+          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            this.scheduleFilter1 = schedulesData.seasons;
+          }
         }
-      )
+        this.schedulesData = schedulesData;
+      }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     }
+
+    private transactionsTab(tab) {
+        this.transactionsActiveTab = tab;
+        this.getTransactionsData();
+    }
+    private transactionsFilterDropdown(filter) {
+      if ( this.transactionsActiveTab == null ) {
+        this.transactionsActiveTab = this.transactionsData[0];
+      }
+      this.dropdownKey1 = filter;
+      this.getTransactionsData();
+    }
+    private getTransactionsData() {
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
+      .subscribe(
+          transactionsData => {
+            if ( this.transactionFilter1 == undefined ) {
+              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
+              }
+            }
+
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
+          },
+          err => {
+          console.log('Error: transactionsData API: ', err);
+          }
+      );
+    } //private getTransactionsData
 
     private getImages(imageData) {
         this._imagesService.getImages(this.profileType, this.pageParams.teamId)
@@ -342,7 +438,7 @@ export class TeamPage implements OnInit {
     }
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.pageParams).subscribe(
+        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
                 this.comparisonModuleData = data;
             },
@@ -353,24 +449,13 @@ export class TeamPage implements OnInit {
 
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module
+        this.pageParams.scope = this.scope;
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
-    }
-
-    private transactionsTab(tab) {
-        this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'module')
-        .subscribe(
-            transactionsData => {
-                //do nothing
-            },
-            err => {
-            console.log('Error: transactionsData API: ', err);
-            }
-        );
     }
 
     setupListOfListsModule() {
@@ -383,8 +468,8 @@ export class TeamPage implements OnInit {
             .subscribe(
                 listOfListsData => {
                     this.listOfListsData = listOfListsData.listData;
-                    this.listOfListsData["type"] = "team";
-                    this.listOfListsData["id"] = this.pageParams.teamId;
+                    // this.listOfListsData["type"] = "team";
+                    // this.listOfListsData["id"] = this.pageParams.teamId;
                 },
                 err => {
                     console.log('Error: listOfListsData API: ', err);

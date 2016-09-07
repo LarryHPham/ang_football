@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
-import {MLBGlobalFunctions} from '../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
 @Injectable()
@@ -10,13 +10,17 @@ export class HamburgerDeliveryService {
   static createMenu(division, partner?){
     var params;
     var partnerUrl;
+    var divisionUrl;
+    if (division != null) {
+      divisionUrl = division.toLowerCase();
+    }
     if (partner == null || partner == false){
       partnerUrl = "Default";
-      params = {scope: division};
+      params = {scope: divisionUrl};
     }
     else {
       partnerUrl = "Partner";
-      params = {scope: division, partner_id: partner};
+      params = {scope: divisionUrl, partner_id: partner};
     }
     var menuData = [{
         menuTitle: "Home",
@@ -36,7 +40,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Schedule",
-        url: [partnerUrl +'-home',params ,'Schedules-page-league', {pageNum:1}]//todo
+        url: [partnerUrl +'-home',params ,'Schedules-page-league', {pageNum:1, year: null}]//todo
       },
       {
         menuTitle: division + " Standings",
@@ -51,7 +55,7 @@ export class HamburgerDeliveryService {
         url: ['Contact-us-page']
       },
       {
-        menuTitle: "Disclamer",
+        menuTitle: "Disclaimer",
         url: ['Disclaimer-page']
     }];
 

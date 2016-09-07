@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {RouteParams} from "@angular/router-deprecated";
+import {RouteParams, Router} from "@angular/router-deprecated";
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from "../../fe-core/components/backtab/backtab.component";
@@ -13,12 +13,12 @@ import {ErrorComponent} from '../../fe-core/components/error/error.component';
 
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {StandingsService} from '../../services/standings.service';
-import {MLBStandingsTabData,MLBStandingsTableData} from '../../services/standings.data';
+import {TDLStandingsTabdata,VerticalStandingsTableData} from '../../services/standings.data';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
-import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
 @Component({
@@ -28,60 +28,109 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
     providers: [StandingsService, ProfileHeaderService, Title],
 })
 
-export class StandingsPage implements OnInit {
-  public tabs: Array<MLBStandingsTabData>;
-  public pageParams: MLBPageParameters = {}
+export class StandingsPage{
+  public tabs: Array<TDLStandingsTabdata>;
+  public pageParams: SportPageParameters = {}
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;
+  public scope: string;
   public glossary: Array<GlossaryData>;
+  public seasonsArray: Array<any>;
   constructor(private _params: RouteParams,
+              private _router:Router,
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
-              private _mlbFunctions: MLBGlobalFunctions) {
+              private _mlbFunctions: VerticalGlobalFunctions) {
     _title.setTitle(GlobalSettings.getPageTitle("Standings"));
-
-    var type = _params.get("type");
-    if ( type !== null && type !== undefined ) {
-      type = type.toLowerCase();
-      this.pageParams.conference = Conference[type];
-    }
-    var teamId = _params.get("teamId");
-    if ( type == "team" && teamId !== null && teamId !== undefined ) {
-      this.pageParams.teamId = Number(teamId);
-    }
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.scope = parentParams.scope;
+        var type = _params.get("type");
+        if ( type !== null && type !== undefined ) {
+          type = type.toLowerCase();
+          this.pageParams.conference = Conference[type];
+        }
+        var teamId = _params.get("teamId");
+        if ( type == "team" && teamId !== null && teamId !== undefined ) {
+          this.pageParams.teamId = Number(teamId);
+        }
+        this.pageParams.scope = this.scope;
+        this.getTabs();
+        this.getGlossaryValue();
+    });
   }
   getGlossaryValue():Array<GlossaryData>{
-    this.glossary = [
-        {
-          terms: "<span class='text-heavy'>W/L/T:</span> Total Wins",
-        },
-        {
-          terms: "<span class='text-heavy'>CONF:</span> Conference Record",
-        },
-        {
-          terms: "<span class='text-heavy'>STRK:</span> Streak",
-        },
-        {
-          terms: "<span class='text-heavy'>HM:</span> Home",
-        },
-        {
-          terms: "<span class='text-heavy'>RD:</span> Road",
-        },
-        {
-          terms: "<span class='text-heavy'>PF:</span> Value 6",
-        },
-        {
-          terms: "<span class='text-heavy'>PA:</span> Points Allowed",
-        },
-        {
-          terms: "<span class='text-heavy'>RANK</span> Team Rank",
-        }
-      ]
+    if(this.scope == 'fbs'){
+      this.glossary = [
+          {
+            key: "<span class='text-heavy'>W/L/T</span>",
+            value: "Total Wins"
+          },
+          {
+            key: "<span class='text-heavy'>CONF:</span>",
+            value: "Conference Record"
+          },
+          {
+            key: "<span class='text-heavy'>STRK:</span>",
+            value: "Current Streak"
+          },
+          {
+            key: "<span class='text-heavy'>HM:</span>",
+            value: "Home Record"
+          },
+          {
+            key: "<span class='text-heavy'>RD:</span>",
+            value: "Road Record"
+          },
+          {
+            key: "<span class='text-heavy'>PF:</span>",
+            value: "Total Points For"
+          },
+          {
+            key: "<span class='text-heavy'>PA:</span>",
+            value: "Total Points Against"
+          },
+          {
+            key: "<span class='text-heavy'>RANK:</span>",
+            value: "Team Rank"
+          }
+        ]
+    }else{
+      this.glossary = [
+          {
+            key: "<span class='text-heavy'>W/L/T</span>",
+            value: "Total Wins"
+          },
+          {
+            key: "<span class='text-heavy'>PCT:</span>",
+            value: "Winning Percentage"
+          },
+          {
+            key: "<span class='text-heavy'>DIV:</span>",
+            value: "Division Record"
+          },
+          {
+            key: "<span class='text-heavy'>CONF:</span>",
+            value: "Conference Record"
+          },
+          {
+            key: "<span class='text-heavy'>STRK:</span>",
+            value: "Current Streak"
+          },
+          {
+            key: "<span class='text-heavy'>PF:</span>",
+            value: "Total Points For"
+          },
+          {
+            key: "<span class='text-heavy'>PA:</span>",
+            value: "Total Points Against"
+          }
+        ]
+    }
     return this.glossary;
   }
-  ngOnInit() {
+  getTabs() {
     this.getGlossaryValue();
     if ( this.pageParams.teamId ) {
       this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
@@ -101,7 +150,7 @@ export class StandingsPage implements OnInit {
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", "NFL"));//TODO
+      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));//TODO
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
@@ -116,12 +165,21 @@ export class StandingsPage implements OnInit {
   }
 
   private standingsTabSelected(tabData: Array<any>) {
+    this.pageParams.scope = this.scope;
     this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
       this.getLastUpdatedDateForPage(data);
     });
   }
 
-  private getLastUpdatedDateForPage(data: MLBStandingsTableData[]) {
+  private standingsFilterSelected(tabData: Array<any>) {
+    this.pageParams.scope = this.scope;
+    this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      this.getLastUpdatedDateForPage(data);
+    });
+  }
+
+
+  private getLastUpdatedDateForPage(data: VerticalStandingsTableData[]) {
       //Getting the first 'lastUpdatedDate' listed in the StandingsData
       if ( data && data.length > 0 &&
         data[0].tableData && data[0].tableData.rows &&

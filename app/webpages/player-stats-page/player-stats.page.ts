@@ -14,24 +14,25 @@ import {PlayerStatsService} from '../../services/player-stats.service';
 import {ProfileHeaderService} from '../../services/profile-header.service';
 import {MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from '../../services/player-stats.data';
 
-import {Division, Conference, MLBPageParameters} from '../../global/global-interface';
+import {Division, Conference, SportPageParameters} from '../../global/global-interface';
 import {GlobalFunctions} from '../../global/global-functions';
 import {GlobalSettings} from "../../global/global-settings";
-import {MLBGlobalFunctions} from '../../global/mlb-global-functions';
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from "../../fe-core/components/responsive-widget/responsive-widget.component";
 
 @Component({
     selector: 'Player-stats-page',
     templateUrl: './app/webpages/player-stats-page/player-stats.page.html',
 
-    directives: [SidekickWrapper, BackTabComponent, TitleComponent, PlayerStatsComponent, LoadingComponent, ErrorComponent, DropdownComponent],
+    directives: [SidekickWrapper, BackTabComponent, TitleComponent, PlayerStatsComponent, LoadingComponent, ErrorComponent, DropdownComponent, ResponsiveWidget],
     providers: [ProfileHeaderService, PlayerStatsService],
 })
 
 export class PlayerStatsPage implements OnInit {
   public tabs: Array<MLBPlayerStatsTableData>;
 
-  public pageParams: MLBPageParameters = {}
+  public pageParams: SportPageParameters = {}
 
   public titleData: TitleInputData = {
     imageURL: "/app/public/profile_placeholder.png",
@@ -64,9 +65,9 @@ export class PlayerStatsPage implements OnInit {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
           this._title.setTitle(GlobalSettings.getPageTitle("Player Stats", data.teamName));
-          var teamRoute = MLBGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
+          var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
           this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
-          this.tabs = this._statsService.initializeAllTabs(data.teamName, false);
+          this.tabs = this._statsService.initializeAllTabs(data.teamName, 5, false);
         },
         err => {
           this.hasError = true;

@@ -35,7 +35,6 @@ import {HeadlineDataService} from "../global/global-ai-headline-module-service";
 
 import {ModulePage} from "../webpages/module-page/module.page";
 import {ImagesTestPage} from "../webpages/images-test-page/images-test.page";
-import {DesignPage} from "../webpages/design-page/design.page";
 
 import {SanitizeHtml} from "../fe-core/pipes/safe.pipe";
 import {SanitizeStyle} from "../fe-core/pipes/safe.pipe";
@@ -129,22 +128,22 @@ declare var jQuery: any;
         component: MVPListPage
     },
     {
-        path: '/schedules/mlb/:pageNum',
+        path: '/schedules/league/:year/:pageNum',
         name: 'Schedules-page-league',
         component: SchedulesPage
     },
     {
-        path: '/schedules/mlb/:tab/:pageNum',
+        path: '/schedules/league/:year/:tab/:pageNum',
         name: 'Schedules-page-league-tab',
         component: SchedulesPage
     },
     {
-        path: '/schedules/:teamName/:teamId/:pageNum',
+        path: '/schedules/:teamName/:teamId/:year/:pageNum',
         name: 'Schedules-page-team',
         component: SchedulesPage
     },
     {
-        path: '/schedules/:teamName/:tab/:teamId/:pageNum',
+        path: '/schedules/:teamName/:year/:tab/:teamId/:pageNum',
         name: 'Schedules-page-team-tab',
         component: SchedulesPage
     },
@@ -169,7 +168,7 @@ declare var jQuery: any;
         component: ListPage
     },
     {
-        path: '/list/:profile/:listname/:sort/:conference/:division/:limit/:pageNum',
+        path: '/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
         name: 'List-page',
         component: ListPage
     },
@@ -190,7 +189,7 @@ declare var jQuery: any;
     },
     {
         path: '/transactions/league/:limit/:pageNum',
-        name: 'Transactions-mlb-page',
+        name: 'Transactions-tdl-page',
         component: TransactionsPage
     },
     {
@@ -218,21 +217,21 @@ declare var jQuery: any;
         name: 'Syndicated-article-page',
         component: SyndicatedArticlePage
 	  },
-    {
-        path: '/list-of-lists/:scope/:type/:id/:limit/:pageNum',
+    { // listOfLists/scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
+        path: '/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         name: 'List-of-lists-page-scoped',
         component: ListOfListsPage
     },
-    {
-        path: '/list-of-lists/:type/:id/:limit/:pageNum',
-        name: 'List-of-lists-page',
-        component: ListOfListsPage
-    },
-    {
-        path: '/list-of-lists/league/:limit/:pageNum',
-        name: 'List-of-lists-league-page',
-        component: ListOfListsPage
-    },
+    // {
+    //     path: '/list-of-lists/:type/:id/:limit/:pageNum',
+    //     name: 'List-of-lists-page',
+    //     component: ListOfListsPage
+    // },
+    // {
+    //     path: '/list-of-lists/league/:limit/:pageNum',
+    //     name: 'List-of-lists-league-page',
+    //     component: ListOfListsPage
+    // },
     //Error pages and error handling
     {
         path: '/error',
@@ -253,11 +252,6 @@ declare var jQuery: any;
         path: '/fe-core/modules/:teamID',
         name: 'Module-page',
         component: ModulePage
-    },
-    {
-        path: '/design/:teamId',
-        name: 'Design-page',
-        component: DesignPage,
     },
     {
         path: '/images-test',
@@ -290,6 +284,15 @@ export class AppComponent implements OnInit{
   }
 
   setPageSize(){
+    function getPartnerHeaderHeight(){
+        var scrollTop = jQuery(window).scrollTop();
+        var partnerHeight = 0;
+        if( document.getElementById('partner') != null && scrollTop <=  (document.getElementById('partner').offsetHeight)){
+            partnerHeight = document.getElementById('partner').offsetHeight - scrollTop;
+        }
+        return partnerHeight;
+    }
+
     jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container');
     // Handle all the exceptions here
     jQuery("deep-dive-page").parent().addClass('deep-dive-container');
@@ -326,13 +329,20 @@ export class AppComponent implements OnInit{
             }
             isTakenOver = true;
             clearInterval(intvl);
+            jQuery('#ddto-left-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+            jQuery('#ddto-right-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
         }
     },100);
+    window.addEventListener("scroll",  function(){
+        jQuery('#ddto-left-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+        jQuery('#ddto-right-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+    });
+
   }
 
   ngOnInit(){
     var script = document.createElement("script");
-    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
+    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
     document.head.appendChild(script);
     this.shiftContainer = this.getHeaderHeight() + 'px';
     //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts

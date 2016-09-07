@@ -19,11 +19,12 @@ import {GlobalSettings} from "../../global/global-settings";
 import {DynamicWidgetCall} from "../../services/dynamic-list-page.service";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {DropdownComponent} from '../../fe-core/components/dropdown/dropdown.component';
 
 @Component({
     selector: 'list-page',
     templateUrl: './app/webpages/list-page/list.page.html',
-    directives: [SidekickWrapper, ErrorComponent, LoadingComponent,PaginationFooter, BackTabComponent, TitleComponent, SliderCarousel, DetailedListItem,  ModuleFooter, ResponsiveWidget],
+    directives: [SidekickWrapper, ErrorComponent, LoadingComponent,PaginationFooter, BackTabComponent, TitleComponent, SliderCarousel, DetailedListItem,  ModuleFooter, ResponsiveWidget, DropdownComponent],
     providers: [ListPageService, DynamicWidgetCall, Title, ProfileHeaderService],
     inputs:[]
 })
@@ -44,6 +45,7 @@ export class ListPage implements OnInit {
   sw: string;
   input: string;
   pageNumber: number;
+  sortSeason: Array<any>;
 
   constructor(private listService:ListPageService,
               private _profileService: ProfileHeaderService,
@@ -79,22 +81,22 @@ export class ListPage implements OnInit {
       var info = input.listInfo;
       var params = this.params.params;
       var navigationParams = {
-        profile: params['profile'],
-        listname: params['listname'],
-        sort: params['sort'],
-        conference: params['conference'],
-        division: params['division'],
-        limit: params['limit'],
+        pageNumber: params['pageNumber'],
+        statName: params['statName'],
+        season: params['season'],
+        ordering: params['ordering'],
+        perPageCount: params['perPageCount'],
+        target: params['target'],
       };
       var navigationPage = this.detailedDataArray ? "List-page" : "Error-page";
 
       this.paginationParameters = {
-        index: params['pageNum'] != null ? Number(params['pageNum']) : null,
+        index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
         max: Number(input.pageCount),
         paginationType: 'page',
         navigationPage: navigationPage,
         navigationParams: navigationParams,
-        indexKey: 'pageNum'
+        indexKey: 'pageNumber'
       };
   }
 
@@ -116,9 +118,9 @@ export class ListPage implements OnInit {
   }
 
 
-  getStandardList(urlParams){
+  getStandardList(urlParams, season?){
     var errorMessage = "Sorry, we do not currently have any data for this list";
-    this.listService.getListPageService(urlParams, errorMessage)
+    this.listService.getListPageService(urlParams, errorMessage, season)
       .subscribe(
         list => {
           this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
@@ -130,6 +132,7 @@ export class ListPage implements OnInit {
           }
           this.setPaginationParams(list.pagination);
           this.carouselDataArray = list.carData;
+          this.sortSeason = list.seasons;
         },
         err => {
           this.isError = true;
@@ -179,6 +182,13 @@ export class ListPage implements OnInit {
     }, err => {
         console.log("Error loading MLB profile");
     });
+    var date = new Date();
+    var dateStr = (Number(date.getFullYear()) - 1).toString() + " / " + date.getFullYear();
+    this.sortSeason = [
+      {key: (Number(date.getFullYear()) - 1).toString(), value: dateStr}
+    ];
   }
-
+  dropdownChanged(event) {
+    this.getStandardList(this.params.params, event);
+  }
 }

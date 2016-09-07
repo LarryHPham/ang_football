@@ -8,13 +8,17 @@ import {RecommendationsComponent} from "../../fe-core/components/articles/recomm
 import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
 import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
 import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
+import {Article} from "../../global/global-interface";
 import {ArticleData} from "../../global/global-interface";
 import {ArticleDataService} from "../../global/global-article-page-service";
 import {GlobalFunctions} from "../../global/global-functions";
-import {MLBGlobalFunctions} from "../../global/mlb-global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
+import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+
+declare var moment;
 
 @Component({
     selector: 'article-pages',
@@ -30,181 +34,144 @@ import {SidekickContainerComponent} from "../../fe-core/components/articles/side
         LoadingComponent,
         TrendingComponent,
         SidekickContainerComponent
-    ]
+    ],
 })
 
 export class ArticlePages implements OnInit {
+    article:Article;
     articleData:ArticleData;
-    randomHeadlines:any;
-    imageData:any;
+    copyright:Array<any>;
     images:Array<any>;
-    eventID:string;
-    eventType:string;
-    title:string;
-    date:string;
-    content:string;
-    comment:string;
-    pageIndex:string;
-    articleType:string;
-    articleSubType:string;
+    imageData:Array<any>;
     imageLinks:Array<any>;
-    recommendedImageData:any;
-    copyright:any;
-    imageTitle:any;
-    teamId:number;
+    imageTitle:Array<any>;
+    randomArticles:Array<any>;
+    randomHeadlines:Array<any>;
     trendingData:Array<any>;
     trendingImages:Array<any>;
+    aiSidekick:boolean = true;
     error:boolean = false;
     hasImages:boolean = false;
-    aiSidekick:boolean = true;
-    partnerId:string;
     isSmall:boolean = false;
+    teamId:number;
+    articleType:string;
+    articleSubType:string;
+    content:string;
+    comment:string;
+    eventID:string;
+    eventType:string;
+    date:string;
+    pageIndex:string;
+    partnerId:string;
     rawUrl:string;
+    title:string;
+    scope:string = null;
 
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location) {
         window.scrollTo(0, 0);
+        GlobalSettings.getParentParams(_router, parentParams => {
+            this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
+            if (parentParams.partnerID != null) {
+                this.partnerId = parentParams.partnerID;
+            }
+            this.getArticles();
+        });
         this.eventID = _params.get('eventID');
         this.eventType = _params.get('eventType');
         if (this.eventType == "upcoming-game") {
             this.eventType = "upcoming";
         }
-        GlobalSettings.getParentParams(_router, parentParams => {
-            if (parentParams.partnerID != null) {
-                this.partnerId = parentParams.partnerID.replace("-", ".");
-            }
-            this.getArticles();
-        });
     }
 
     getArticles() {
-        this.getArticleType();
-        this._articleDataService.getArticleData(this.eventID, this.eventType, this.partnerId)
+        this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope)
             .subscribe(
-                ArticleData => {
-                    this.isSmall = window.innerWidth <= 640;
-                    this.rawUrl = window.location.href;
-                    var pageIndex = Object.keys(ArticleData)[0];
-                    this.getCarouselImages(ArticleData[pageIndex]['images']);
-                    //this.parseLinks(ArticleData[pageIndex]);
-                    this.articleData = ArticleData[pageIndex];
-                    this.title = ArticleData[pageIndex].displayHeadline;
-                    this.date = ArticleData[pageIndex].dateline;
-                    this.comment = ArticleData[pageIndex].commentHeader;
-                    this.imageLinks = this.getImageLinks(ArticleData[pageIndex]);
-                    this.teamId = ArticleData[pageIndex].teamId;
-                    ArticlePages.setMetaTag(this.articleData.metaHeadline);
+                Article => {
+                    if (Article['data'].length > 0) {
+                        var articleType = [];
+                        if (Article['data'][0].article_type_id != null) {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                        } else {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                        }
+                        this.articleType = articleType[1];
+                        this.articleSubType = articleType[2];
+                        this.isSmall = window.innerWidth < 640;
+                        this.rawUrl = window.location.href;
+                        this.pageIndex = articleType[0];
+                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
+                        this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
+                        this.articleData = Article['data'][0]['article_data'][this.pageIndex];
+                        this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
+                        ArticlePages.setMetaTag(this.articleData.metaHeadline);
+                        if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
+                            this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
+                        } else {
+                            this.hasImages = false;
+                        }
+                        this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
+                    }
                 },
                 err => {
                     this.error = true;
                     var self = this;
+                    console.log('Error loading article data, ', err);
                     setTimeout(function () {
-                        //removes errored page from browser history
+                        //removes error page from browser history
                         self._location.replaceState('/');
                         //returns user to previous page
                         self._location.back();
                     }, 5000);
                 }
             );
-        this._articleDataService.getRecommendationsData(this.eventID)
-            .subscribe(
-                HeadlineData => {
-                    this.pageIndex = this.eventType;
-                    this.eventID = HeadlineData.event.toString();
-                    this.recommendedImageData = HeadlineData['home'].images.concat(HeadlineData['away'].images);
-                    this.getRandomArticles(HeadlineData, this.pageIndex, this.eventID, this.recommendedImageData);
-                }
-            );
-        this._articleDataService.getTrendingData()
-            .subscribe(
-                TrendingData => {
-                    this.getTrendingArticles(TrendingData);
-                }
-            );
-    }
-
-    //Possible fix for partner site link issues.
-    //parseLinks(data) {
-    //    try {
-    //        data['article'].map(function (val, index) {
-    //            var strToParse = val.match("<a href=" + "(.*?)" + "</a>");
-    //            if (strToParse != null) {
-    //                var urlInfo = strToParse[1].split("/");
-    //                if (urlInfo[1] == "player") {
-    //                    var url = MLBGlobalFunctions.formatPlayerRoute(urlInfo[2], urlInfo[3], urlInfo[4].slice(0, 5));
-    //                } else if (urlInfo[1] == "team") {
-    //                    var url = MLBGlobalFunctions.formatTeamRoute(urlInfo[2], urlInfo[3].slice(0, 4));
-    //                }
-    //                data['article'][index] = val.replace(strToParse[0], url);
-    //            }
-    //        });
-    //    } catch (err) {
-    //    }
-    //}
-
-    getTrendingArticles(data) {
-        var articles = [];
-        var images = [];
-        Object.keys(data).forEach(function (val, index) {
-            if (val != "meta-data") {
-                articles[index - 1] = {
-                    title: data[val].displayHeadline,
-                    date: data[val].dateline + " EST",
-                    content: data[val].article[0],
-                    eventId: data['meta-data']['current'].eventId,
-                    eventType: val,
-                    url: MLBGlobalFunctions.formatArticleRoute(val, data['meta-data']['current'].eventId),
-                    rawUrl: window.location.protocol + "//" + window.location.host + "/articles/" + val + "/" + data['meta-data']['current'].eventId
-                };
-            }
-        });
-        Object.keys(data['meta-data']['images']).forEach(function (val, index) {
-            images[index] = data['meta-data']['images'][val];
-        });
-        this.trendingImages = images[0].concat(images[1]);
-        this.trendingImages.sort(function () {
-            return 0.5 - Math.random()
-        });
-        articles.sort(function () {
-            return 0.5 - Math.random()
-        });
-        this.trendingData = articles;
+        this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
+        var random = [];
+        for (var i = 0; i < 3; i++) {
+            this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i], this.scope)
+                .subscribe(
+                    HeadlineData => {
+                        if (HeadlineData['data']) {
+                            if (HeadlineData['data'][0].article_type_id != null) {
+                                var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_type_id, true);
+                            } else {
+                                var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_subtype_id, false);
+                            }
+                            this.eventID = HeadlineData['data'][0].event_id.toString();
+                            random.push(ArticlePages.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
+                        }
+                    }
+                );
+        }
+        this.randomHeadlines = random;
     }
 
     getCarouselImages(data) {
         var images = [];
-        var copyData = [];
-        var description = [];
-        var imageCount = 10;
-        var image;
-        var copyright;
-        var title;
-        if (this.articleType == "gameModule") {
-            if (Object.keys(data).length == 4) {
-                imageCount = 5;
-            }
+        var imageArray = [];
+        var copyArray = [];
+        var titleArray = [];
+        if (this.articleType == "gameModule" || this.articleType == "teamRecord") {
+            images = data['home_images'].concat(data['away_images']);
         } else if (this.articleType == "playerRoster") {
-            imageCount = 2;
+            images = data['home_images'];
         }
+        images.sort(function () {
+            return 0.5 - Math.random()
+        });
         try {
-            if (Object.keys(data).length > 0) {
-                for (var id in data) {
-                    data[id].forEach(function (val, index) {
-                        if (index < imageCount) {
-                            image = val['image'];
-                            copyright = val['copyright'];
-                            title = val['title'];
-                            images.push(image);
-                            copyData.push(copyright);
-                            description.push(title);
-                        }
-                    });
-                }
-                this.imageData = images;
-                this.copyright = copyData;
-                this.imageTitle = description;
+            images.forEach(function (val) {
+                imageArray.push(GlobalSettings.getBackgroundImageUrl(val['image_url']));
+                copyArray.push(val['image_copyright']);
+                titleArray.push(val['image_title']);
+            });
+            if (imageArray) {
+                this.imageData = imageArray;
+                this.copyright = copyArray;
+                this.imageTitle = titleArray;
             } else {
                 this.imageData = null;
                 this.copyright = null;
@@ -221,7 +188,7 @@ export class ArticlePages implements OnInit {
         if (this.articleType == "playerRoster") {
             data['article'].forEach(function (val) {
                 if (val['playerRosterModule']) {
-                    let playerUrl = MLBGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
+                    let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
                     val['player'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -248,7 +215,7 @@ export class ArticlePages implements OnInit {
         if (this.articleType == 'playerComparison') {
             data['article'][2]['playerComparisonModule'].forEach(function (val, index) {
                 if (index == 0) {
-                    let urlPlayerLeft = MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
+                    let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -270,7 +237,7 @@ export class ArticlePages implements OnInit {
                     links.push(val['imageLeft'], val['imageLeftSmall']);
                 }
                 if (index == 1) {
-                    let urlPlayerRight = MLBGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
+                    let urlPlayerRight = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageRight'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -299,8 +266,8 @@ export class ArticlePages implements OnInit {
                 if (index == 1 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftTop = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
-                    let urlTeamRightTop = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
+                    let urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
+                    let urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
                     val['teamLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -339,11 +306,11 @@ export class ArticlePages implements OnInit {
                     };
                     links.push(val['teamLeft'], val['teamRight'], val['teamLeftSmall'], val['teamRightSmall'], shortDate);
                 }
-                if (index == 5 && val['gameModule']) {
+                if (index == 4 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftBottom = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
-                    let urlTeamRightBottom = MLBGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
+                    let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
+                    let urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
                     val['teamLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -389,7 +356,7 @@ export class ArticlePages implements OnInit {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
                 if (val['teamRecordModule'] && isFirstTeam) {
-                    let urlFirstTeam = MLBGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
+                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
                     val['imageTop'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -412,7 +379,7 @@ export class ArticlePages implements OnInit {
                     return isFirstTeam = false;
                 }
                 if (val['teamRecordModule'] && !isFirstTeam) {
-                    let urlSecondTeam = MLBGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
+                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
                     val['imageBottom'] = {
                         imageClass: "image-121",
                         mainImage: {
@@ -445,134 +412,16 @@ export class ArticlePages implements OnInit {
         return this.images = imageList;
     }
 
-    getRandomArticles(recommendations, pageIndex, eventID, recommendedImageData) {
-        this.getImages(recommendedImageData);
-        var articles;
-        var recommendArr = [];
-        var imageCount = 0;
-        var self = this;
-        Object.keys(recommendations.leftColumn).forEach(function (val) {
-            if (pageIndex != val) {
-                switch (val) {
-                    case'about-the-teams':
-                    case'historical-team-statistics':
-                    case'last-matchup':
-                    case'starting-lineup-home':
-                    case'starting-lineup-away':
-                    case'injuries-home':
-                    case'injuries-away':
-                    case'upcoming-game':
-                        let date = GlobalFunctions.formatDate(recommendations.timestamp * 1000);
-                        articles = {
-                            title: recommendations.leftColumn[val].displayHeadline,
-                            eventType: val,
-                            eventID: eventID,
-                            images: self.images[imageCount],
-                            date: date.month + " " + date.day + ", " + date.year,
-                            keyword: "BASEBALL"
-                        };
-                        recommendArr.push(articles);
-                        imageCount++;
-                        break;
-                }
-            }
-        });
-
-        articles = [];
-        Object.keys(recommendations.rightColumn).forEach(function (val) {
-            if (pageIndex != val) {
-                switch (val) {
-                    case'pitcher-player-comparison':
-                    case'catcher-player-comparison':
-                    case'first-base-player-comparison':
-                    case'second-base-player-comparison':
-                    case'third-base-player-comparison':
-                    case'shortstop-player-comparison':
-                    case'left-field-player-comparison':
-                    case'center-field-player-comparison':
-                    case'right-field-player-comparison':
-                    case'outfield-most-putouts':
-                    case'outfielder-most-hits':
-                    case'outfield-most-home-runs':
-                    case'infield-most-hits':
-                    case'infield-most-home-runs':
-                    case'infield-best-batting-average':
-                    case'infield-most-putouts':
-                        let date = GlobalFunctions.formatDate(recommendations.timestamp * 1000);
-                        articles = {
-                            title: recommendations.rightColumn[val].displayHeadline,
-                            eventType: val,
-                            eventID: eventID,
-                            images: self.images[imageCount],
-                            date: date.month + " " + date.day + ", " + date.year,
-                            keyword: "BASEBALL"
-                        };
-                        recommendArr.push(articles);
-                        imageCount++;
-                        break;
-                }
-            }
-        });
-        recommendArr.sort(function () {
-            return 0.5 - Math.random()
-        });
-        this.randomHeadlines = recommendArr;
-        this.images = recommendations['home'].images;
-    }
-
-    getArticleType() {
-        switch (this.eventType) {
-            case'about-the-teams':
-                this.articleType = 'teamRecord';
-                this.articleSubType = 'about';
-                break;
-            case'historical-team-statistics':
-                this.articleType = 'teamRecord';
-                this.articleSubType = 'history';
-                break;
-            case'last-matchup':
-                this.articleType = 'teamRecord';
-                this.articleSubType = 'last';
-                break;
-            case'starting-lineup-home':
-            case'starting-lineup-away':
-            case'injuries-home':
-            case'injuries-away':
-                this.articleType = 'playerRoster';
-                break;
-            case'pitcher-player-comparison':
-                this.articleType = 'playerComparison';
-                this.articleSubType = 'pitcher';
-                break;
-            case'catcher-player-comparison':
-            case'first-base-player-comparison':
-            case'second-base-player-comparison':
-            case'third-base-player-comparison':
-            case'shortstop-player-comparison':
-            case'left-field-player-comparison':
-            case'center-field-player-comparison':
-            case'right-field-player-comparison':
-            case'outfield-most-putouts':
-            case'outfielder-most-hits':
-            case'outfield-most-home-runs':
-            case'infield-most-hits':
-            case'infield-most-home-runs':
-            case'infield-best-batting-average':
-            case'infield-most-putouts':
-                this.articleType = 'playerComparison';
-                break;
-            case'pregame-report':
-            case'third-inning-report':
-            case'fifth-inning-report':
-            case'Seventh-inning-stretch-report':
-            case'postgame-report':
-                this.articleType = 'gameReport';
-                break;
-            case'upcoming':
-                this.articleType = 'gameModule';
-                break;
-        }
-        return this.articleType;
+    static getRandomArticles(recommendations, pageIndex, eventID) {
+        var articles = {
+            title: recommendations.title,
+            eventType: pageIndex,
+            eventID: eventID,
+            images: GlobalSettings.getBackgroundImageUrl(recommendations.image_url),
+            date: moment(recommendations.last_updated).format('MMMM DD, YYYY'),
+            keyword: "FOOTBALL"
+        };
+        return articles;
     }
 
     static setMetaTag(metaData) {
@@ -588,7 +437,7 @@ export class ArticlePages implements OnInit {
         //This has to be resize to trigger the takeover update
         try {
             window.dispatchEvent(new Event('resize'));
-        }catch(e){
+        } catch (e) {
             //to run resize event on IE
             var resizeEvent = document.createEvent('UIEvents');
             resizeEvent.initUIEvent('resize', true, false, window, 0);

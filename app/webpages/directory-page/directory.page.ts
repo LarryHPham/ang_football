@@ -10,16 +10,20 @@ import {PagingData, DirectoryProfileItem, DirectoryItems, DirectoryModuleData} f
 import {DirectoryModule} from '../../fe-core/modules/directory/directory.module';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {FooterService} from '../../services/footer.service';
+import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
 
 @Component({
     selector: 'Directory-page',
     templateUrl: './app/webpages/directory-page/directory.page.html',
-    directives: [SidekickWrapper, DirectoryModule],
+    directives: [PaginationFooter, SidekickWrapper, DirectoryModule],
     providers: [DirectoryService, Title, FooterService]
 })
 
 export class DirectoryPage {
   public data: DirectoryModuleData;
+
+  public partnerID:string;
+  public scope: string;
 
   public currentPage: number = 1;
 
@@ -29,45 +33,57 @@ export class DirectoryPage {
 
   public listingsLimit: number = 20;
 
+  public maxPages: number;
+
   public isError: boolean = false;
 
   public pageType: DirectoryType;
 
-  public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public _sportLeagueAbbrv: string;
+
+  paginationParameters:PaginationParameters;
 
   navLists: Array<Link>;
 
-  constructor(private _footerService: FooterService, private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title) {
-    _title.setTitle(GlobalSettings.getPageTitle("Directory"));
-    var page = _params.get("page");
-    this.currentPage = Number(page);
+  constructor(private _footerService: FooterService, private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title, private _router: Router) {
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.partnerID = parentParams.partnerID;
+        this.scope = parentParams.scope;
+        _title.setTitle(GlobalSettings.getPageTitle("Directory"));
+        var page = _params.get("page");
+        this.currentPage = Number(page);
+        var type = _params.get("type");
+        if(this.scope == 'fbs'){
+          this._sportLeagueAbbrv = GlobalSettings.getCollegeDivisionFullAbbrv();
+        } else {
+          this._sportLeagueAbbrv = GlobalSettings.getSportLeagueAbbrv();
+        }
+        switch ( type ) {
+          case "players":
+          this.pageType = DirectoryType.players;
+          this.getNav(this._sportLeagueAbbrv, "player");
+          break;
 
-    var type = _params.get("type");
-    switch ( type ) {
-      case "players":
-        this.pageType = DirectoryType.players;
-        this.getNav(this._sportLeagueAbbrv, "player");
-        break;
+          case "teams":
+          this.pageType = DirectoryType.teams;
+          this.getNav(this._sportLeagueAbbrv, "team");
+          break;
 
-      case "teams":
-        this.pageType = DirectoryType.teams;
-        this.getNav(this._sportLeagueAbbrv, "team");
-        break;
+          default:
+          this.pageType = DirectoryType.none;
+          break;
+        }
 
-      default:
-        this.pageType = DirectoryType.none;
-        break;
-    }
+        let startsWith = _params.get("startsWith");
+        if ( startsWith !== undefined && startsWith !== null ) {
+          this.newlyAdded = startsWith.toLowerCase() === "new";
+          this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;
+        }
 
-    let startsWith = _params.get("startsWith");
-    if ( startsWith !== undefined && startsWith !== null ) {
-       this.newlyAdded = startsWith.toLowerCase() === "new";
-       this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;
-    }
-
-    if ( this.currentPage === 0 ) {
-      this.currentPage = 1; //page index starts at one
-    }
+        if ( this.currentPage === 0 ) {
+          this.currentPage = 1; //page index starts at one
+        }
+    });
   }
 
   getDirectoryData() {
@@ -79,8 +95,7 @@ export class DirectoryPage {
       startsWith: this.startsWith,
       newlyAdded: this.newlyAdded
     }
-
-    this._directoryService.getData(this.pageType, params)
+    this._directoryService.getData(this.scope, this.pageType, params)
       .subscribe(
           data => this.setupData(data),
           err => {
@@ -90,10 +105,39 @@ export class DirectoryPage {
       );
   }
 
+  setPaginationParams(input) {
+      var info = input;
+      var params = this._params.params;
+      //path: '/directory/:type/:startsWith/page/:page',
+      var navigationParams = {
+        type: params['type'],
+        startsWith:this.startsWith,
+        page: this.currentPage,
+      };
+
+      var navigationPage = this.data ? "Directory-page-starts-with" : "Error-page";
+      let max = Math.ceil(info.totalItems/this.listingsLimit);
+      this.paginationParameters = {
+        index: params['page'] != null ? Number(params['page']) : null,
+        max: max,
+        paginationType: 'page',
+        navigationPage: navigationPage,
+        navigationParams: navigationParams,
+        indexKey: 'page'
+      };
+  }
+
+  newIndex(index){
+    this.currentPage = index;
+    window.scrollTo(0, 0);
+  }
+
+
   setupData(listings: DirectoryItems) {
     let pageParams = {
       type: DirectoryType[this.pageType]
     };
+
     let lowerCaseType = "";
     let titleCaseType = "";
 
@@ -123,7 +167,6 @@ export class DirectoryPage {
       pageParams["startsWith"] = this.startsWith;
       noResultsMessage = "Sorry, there are no results for " + titleCaseType + "s starting with the letter '" + this.startsWith + "'";
     }
-
     let data:DirectoryModuleData = {
       pageName: pageName,
       breadcrumbList: [{
@@ -153,6 +196,9 @@ export class DirectoryPage {
     }
 
     this.data = data;
+
+    //generate pagingation parameters for pagination footer
+    this.setPaginationParams(listings);
   }
 
   getNav(scope, profile) {
