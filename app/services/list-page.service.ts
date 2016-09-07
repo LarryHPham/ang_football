@@ -280,7 +280,7 @@ export class ListPageService {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
-          text: "Team: " + val.teamName,
+          text: val.teamName,
           class: 'text-heavy'
         };
 
@@ -310,7 +310,6 @@ export class ListPageService {
             route: primaryRoute,
             text: playerName
           };
-
           description = ['<i class="fa fa-map-marker text-master"></i>' + playerCity + '<span class="separator">   |   </span> ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
