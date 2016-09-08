@@ -310,7 +310,11 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "strk":
         display = item.streak != null ? item.streak : null;
-        sort = item.streak;
+        var compareValue = Number(item.streak.slice(1, item.streak.length));
+        if(item.streak.charAt(0) == "L"){
+          compareValue *= -1;
+        }
+        sort = compareValue;
         break;
 
       case "hm":
