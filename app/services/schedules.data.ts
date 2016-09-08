@@ -18,6 +18,7 @@ export interface SchedulesData {
   eventTimestamp: number,
   id: string,//id from API
   eventStatus: string,
+  leagueAbbreviation: string,
   team1Id: string,
   team2Id: string,
   team1Score: string,
