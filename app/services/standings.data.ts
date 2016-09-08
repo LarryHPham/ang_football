@@ -31,6 +31,7 @@ export interface TeamStandingsData {
   totalLosses: string;
   totalWins: string;
   teamPointsFor: string;
+  leagueAbbreviation: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -135,23 +136,26 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
   }
 
   convertToCarouselItem(item: TeamStandingsData, index:number): SliderCarouselInput {
-    var teamRoute = null;
     var yearEnd = Number(item.seasonBase)+1;
-    if ( this.currentTeamId != item.teamId ) {
-      teamRoute = VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
-    }
+    var teamFullName = item.teamMarket + ' ' + item.teamName;
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId);
     var teamNameLink = {
         route: teamRoute,
-        text: item.teamName
+        text: teamFullName
     };
+    var division = item.divisionName;
+    if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
+      var division = item.conferenceName + ": " + GlobalFunctions.capitalizeFirstLetter(item.divisionName.toLowerCase());
+    }//fbs divison sends back all uppercase and needs to be camel case
+    var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: GlobalSettings.getImageUrl(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonBase + "-" + yearEnd + " Season " + item.divisionName + " Standings"],
+      subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
-          " is currently <span class='text-heavy'>ranked " + Number(item.divisionRank) + "</span>" + " in the <span class='text-heavy'>" + item.divisionName + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
+          " are currently <span class='text-heavy'>ranked " + rank + "</span>" + " in the <span class='text-heavy'>" + division + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
       circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
