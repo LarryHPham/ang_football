@@ -311,7 +311,7 @@ export class ListPageService {
             route: primaryRoute,
             text: playerName
           };
-          description = ['<i class="fa fa-map-marker text-master"></i>' + playerBirthplace + '<span class="separator">   |   </span> ', teamLinkText];
+          description = ['<i class="fa fa-map-marker text-master"></i>' + playerBirthplace + '<span class="separator">   |   </span>  Team: ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
@@ -319,7 +319,7 @@ export class ListPageService {
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: profileLinkText,
           description: description,
-          dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
+          dataValue: GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) ),
           dataLabel: val.statDescription+' for '+ val.seasonLong,
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
@@ -342,13 +342,14 @@ export class ListPageService {
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
+      var stat = GlobalFunctions.roundToDecimal(val.stat).toString();
       if(data.query.target == 'team'){
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
               {route: teamRoute, text: val.teamName, class: "dataBox-mainLink"}
             ],
-            val.stat,
+            stat,
             [ //sub left text
               {text: "<i class='fa fa-map-marker'></i>" + teamLocation},
               {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
