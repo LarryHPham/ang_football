@@ -311,7 +311,7 @@ export class ListPageService {
             route: primaryRoute,
             text: playerName
           };
-          description = ['<i class="fa fa-map-marker text-master"></i>' + playerBirthplace + '<span class="separator">   |   </span>  Team: ', teamLinkText];
+          description = ['<i class="fa fa-map-marker text-master"></i>' + playerBirthplace + '<span class="separator">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>  Team: ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
@@ -379,8 +379,8 @@ export class ListPageService {
             stat,
             [ //sub left text
               {text: "<span class='not-mobile'><i class='fa fa-map-marker'></i>" + playerBirthplace + "</span>"},
-              {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
-              {route: teamRoute, text: "Team:<span class='text-heavy'> " + val.teamNickname + "</span>", class: "dataBox-subLink"}
+              {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>Team:", class: "separator"},
+              {route: teamRoute, text: "<span class='text-heavy'> " + val.teamNickname + "</span>", class: "dataBox-subLink"}
             ],
             statDescription,
             null),
