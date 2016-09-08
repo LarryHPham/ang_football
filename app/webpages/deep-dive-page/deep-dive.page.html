@@ -1,4 +1,4 @@
-<section *ngIf="!isHomeRunZone" class="deep-dive container-fluid" (window:scroll)="onScroll($event)">
+<section *ngIf="!isPartnerZone" class="deep-dive container-fluid" (window:scroll)="onScroll($event)">
   <section class="deep-dive-container1">
 	<div [ngStyle]="{'width':'100%', 'height': 'auto'}" class="carWrapper">
     <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" [carData]="carouselData" [videoData]="videoData">
@@ -31,4 +31,4 @@
     </div>
   </section>
 </section>
-<Partner-home-page *ngIf="isHomeRunZone"></Partner-home-page>
+<Partner-home-page *ngIf="isPartnerZone"></Partner-home-page>

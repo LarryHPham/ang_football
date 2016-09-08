@@ -46,6 +46,7 @@ export class ListOfListsService {
 
     }
 
+
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
     return this.http.get( callURL, {
@@ -85,14 +86,13 @@ export class ListOfListsService {
     if(data.length == 0){
       carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
     }else{
-    //  console.log(data);
 
       //if data is coming through then run through the transforming function for the module
       data.forEach(function(val, index){
         if( val.listData[0] == null) return;
         let itemInfo = val.listInfo;
         var itemTargetData;
-        if (target != 'league') {
+        if (target != 'league') {  // if page is league, reformat data [API changes]
           itemTargetData = val.targetData[0];
         }
         else {
@@ -139,7 +139,7 @@ export class ListOfListsService {
           itemTargetData.backgroundImage = "/app/public/Image-Placeholder-2.jpg";
         }
         else {
-          itemTargetData.backgroundImage = GlobalSettings.getBackgroundImageUrl(itemTargetData.backgroundImage);
+          itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(itemTargetData.backgroundImage);
         }
 
 
@@ -177,6 +177,18 @@ export class ListOfListsService {
     let dummyListRank     = 1;
     let dummyIcon         = "fa fa-mail-forward";
 
+
+    var leagueimgclass;
+    var leaguerank;
+
+    if (target != 'league' || version == 'page') {
+      leagueimgclass = 'image-38-rank image-round-upper-left image-round-sub-text'; // Show rank image of list of lists on page, but not module on league page.
+    }
+    else {
+      leagueimgclass = '';
+    }
+
+
     data.forEach(function(item, index){
 
 
@@ -185,13 +197,19 @@ export class ListOfListsService {
       let itemListData = item.listData;
       var itemTarget;
 
-
-      if (target != 'league') {
+      if (target != 'league') { // if page is league, reformat data
         itemTarget = item.targetData[0];
       }
       else {
         itemTarget = item.targetData;
+        leaguerank == null;
       }
+      if (leagueimgclass == 'image-38-rank image-round-upper-left image-round-sub-text') {
+        leaguerank = '#'+itemTarget.rank;
+      }
+
+
+
 
 
       if( itemListData.length<1 ) return;
@@ -307,8 +325,8 @@ export class ListOfListsService {
               //   imageClass    : itemTarget[0].rankType == "player" ? "image-round-sub image-40-sub image-round-lower-right" : null
               // },
               {
-              text: "#"+ itemTarget.rank,
-              imageClass: "image-38-rank image-round-upper-left image-round-sub-text"
+              text: leaguerank,
+              imageClass: leagueimgclass
             }]
           }
         )

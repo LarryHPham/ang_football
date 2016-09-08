@@ -155,7 +155,7 @@ export class PlayerStatsService implements OnDestroy{
             value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot);
             value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo);
             if ( value.backgroundImage ) {
-                value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
+                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
             }
 
 
