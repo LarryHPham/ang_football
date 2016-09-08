@@ -127,7 +127,6 @@ export class DeepDivePage implements OnInit{
       if(this.safeCall){
         this.safeCall = false;
         let changeScope = this.changeScopeVar.toLowerCase() == 'ncaaf'?'fbs':this.changeScopeVar.toLowerCase();
-        console.log(changeScope);
         this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
           if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
