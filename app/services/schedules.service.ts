@@ -171,14 +171,25 @@ export class SchedulesService {
 
   formatYearDropdown(data){
     let yearArray = [];
+    let YYArr = []
     data.forEach(function(val){
+      let YY = Number(val[2]+val[3]);
       let yearObj = {};
+      let YYObj = {};
       yearObj['key'] = val;
-      yearObj['value'] = val;
+      yearObj['value'] = Number(val) + '/' + (Number(val)+1);
+      YYObj['key'] = val;
+      YYObj['value'] = YY + '/' + (YY+1);
+      YYArr.push(YYObj);
       yearArray.push(yearObj);
     })
     yearArray.unshift({key:null,value:'Current'});
-    return {data:yearArray,type:'Year: '};
+    YYArr.unshift({key:null,value:'Current'});
+    return {
+      data:yearArray,
+      type:'Year: ',
+      dataSml:YYArr
+    };
   }
   formatWeekDropdown(data){
     let weekArray = [];
