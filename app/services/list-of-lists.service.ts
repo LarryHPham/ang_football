@@ -49,7 +49,6 @@ export class ListOfListsService {
 
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
-    console.log(callURL);
     return this.http.get( callURL, {
         headers: headers
       })
@@ -87,7 +86,6 @@ export class ListOfListsService {
     if(data.length == 0){
       carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
     }else{
-    //  console.log(data);
 
       //if data is coming through then run through the transforming function for the module
       data.forEach(function(val, index){
