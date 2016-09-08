@@ -76,10 +76,13 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
 
     tabActive: string;
 
+    tabN:string;
+
     isTeamProfilePage: boolean;
     subTabs:Array<any>;
 
     constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean) {
+
 
         this.tabActive = tabActive;
         this.tableName = "<span class='text-heavy'>" + getTabTitle(tabActive).title + "</span> " + " : Team Player Stats";
@@ -92,52 +95,91 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                 Passing:{
                     title: "Passing",
                     glossary:[
-                        {key: "ATT", value: "Attempts"},
+                        {key: "ATT", value: "Passing Attempts"},
                         {key: "COMP", value: "Completions"},
                         {key: "YDS", value: "Passing Yards"},
-                        {key: "AVG", value: "Average"},
-                        {key: "TD", value: "Touchdowns"},
-                        {key: "INT", value: "Saves"},
-                        {key: "RATE", value: "Run Average"}
+                        {key: "AVG", value: "Yards Per Pass Attempt"},
+                        {key: "TD", value: "Passing Touchdowns"},
+                        {key: "INT", value: "Interceptions"},
+                        {key: "RATE", value: "Passer Rating"}
                     ]
                 },
                 Rushing:{
                     title: "Rushing",
                     glossary:[
-                        {key: "ATT", value: "Attempts"},
-                        {key: "YDS", value: "Rushing Yards"},
+                        {key: "ATT", value: "Rushing Attempts"},
+                        {key: "YDS", value: "Yards Per Rush Attempt"},
                         {key: "AVG", value: "Average"},
-                        {key: "TD", value: "Touchdowns"},
+                        {key: "TD", value: "Rushing Touchdowns"},
                         {key: "YDS/G", value: "Yards per Game"},
-                        {key: "FUM", value: "Saves"},
-                        {key: "1DN", value: "Run Average"}
+                        {key: "FUM", value: "Rushing Fumbles"},
+                        {key: "1DN", value: ": Rushing First Downs"}
                     ]
                 },
                 Receiving:{
                     title: "Receiving",
                     glossary:[
                         {key: "REC", value: "Receptions"},
-                        {key: "TAR", value: "Target"},
-                        {key: "YDS", value: "Receiving Yards"},
+                        {key: "TAR", value: "Receiving Targets"},
+                        {key: "YDS", value: "Average Yards Per Reception"},
                         {key: "AVG", value: "Average"},
-                        {key: "TD", value: "Touchdowns"},
-                        {key: "YDS/G", value: "Yards per Game"},
-                        {key: "1DN", value: "Touchdown"}
+                        {key: "TD", value: "Receiving Touchdowns"},
+                        {key: "YDS/G", value: "Receiving Yards Per Game"},
+                        {key: "1DN", value: "Receiving First Downs"}
                     ]
                 },
                 Defense:{
                     title: "Defense",
                     glossary:[
                         {key: "SOLO", value: "Solo Tackles"},
-                        {key: "AST", value: "Assists"},
+                        {key: "AST", value: "Assisted Tackles"},
                         {key: "TOT", value: "Total Tackles"},
                         {key: "SACK", value: "Sacks"},
-                        {key: "PD", value: "Strikeouts"},
-                        {key: "INT", value: "Saves"},
-                        {key: "FF", value: "Run Average"}
+                        {key: "PD", value: "Passes Defended"},
+                        {key: "INT", value: "Interceptions"},
+                        {key: "FF", value: "Forced Fumbles"}
                     ]
                 },
                 Special:{
+                    title:"Special Teams",
+                    glossary:[
+                        {key: "FGM", value: "Field Goals Made"},
+                        {key: "FGA", value: "Field Goal Attempts"},
+                        {key: "FG%", value: "Percentage of Field Goals Made"},
+                        {key: "XPA", value: "Extra Point Attempts"},
+                        {key: "PNTS", value: "Total Points Scored From Field Goals + Extra Point Kicks"},
+                        {key: "XP%", value: "Percentage of Extra Points Made"},
+                        {key: "XPM", value: "Extra Points Made"}
+                    ],
+
+                },
+                returning:{
+                    title:"Special Teams",
+                    glossary:[
+                        {key: "K.ATT", value: "Kickoff Return Attempts"},
+                        {key: "K.YDS", value: "Total Kickoff Return Yards"},
+                        {key: "K.AVG", value: "Kickoff Return Average"},
+                        {key: "P.ATT", value: "Punt Return Attempts"},
+                        {key: "P.YDS", value: "Total Punt Return Yards"},
+                        {key: "P.AVG", value: "Punt Return Average"},
+                        {key: "TD", value: "Run Average"}
+                    ],
+
+                },
+                kicking:{
+                    title:"Special Teams",
+                    glossary:[
+                        {key: "FGM", value: "Field Goals Made"},
+                        {key: "FGA", value: "Field Goal Attempts"},
+                        {key: "FG%", value: "Percentage of Field Goals Made"},
+                        {key: "XPA", value: "Extra Point Attempts"},
+                        {key: "PNTS", value: "Total Points Scored From Field Goals + Extra Point Kicks"},
+                        {key: "XP%", value: "Percentage of Extra Points Made"},
+                        {key: "XPM", value: "Extra Points Made"}
+                    ],
+
+                },
+                punting:{
                     title:"Special Teams",
                     glossary:[
                         {key: "FGM", value: "Field Goals Made"},
@@ -179,6 +221,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             }];
 
     }
+
 
     convertToCarouselItem(item: PlayerStatsData, index:number): SliderCarouselInput {
        //console.log(item[istab],"this one");
@@ -264,6 +307,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
 
     istab: string;
 
+
     constructor(rows: Array<PlayerStatsData> ,tabActive: string) {
 
         this.rows = rows;
@@ -272,6 +316,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
             this.rows = [];
         }
         this.istab = tabActive;
+
 
         function getTabTableData(tabActive){
             return{
