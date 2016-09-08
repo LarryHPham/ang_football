@@ -188,9 +188,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
 
         var playerRoute = null;
-        if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
-        }
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
         var playerLinkText = {
           route: playerRoute,
           text: playerFullName
@@ -198,7 +196,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
         var rank = (index+1).toString();
         var location;
-        if (val.playerCity == null || val.playerState == null){
+        if (val.playerCity == null || val.playerState == null || val.playerCity == "" || val.playerState == "") {
           location = "N/A";
         }
         else {
@@ -234,7 +232,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
     var listDataArray = data.map(function(val, index){
       var playerFullName = val.playerFirstName + " " + val.playerLastName;
       var playerFullNameUrl = val.playerFirstName + "-" + val.playerLastName;
-      if (val.playerCity == null || val.playerState == null){
+      if (val.playerCity == null || val.playerState == null || val.playerCity == "" || val.playerState == ""){
         location = "N/A";
       }
       else {

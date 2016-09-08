@@ -625,7 +625,7 @@ export class GlobalFunctions {
      */
     static convertToPossessive(name:string) {
         if (!name || name.length == 0) return name;
-
+        name = name.trim();
         var lastChar = name.charAt(name.length - 1);
         return lastChar == 's' ? name + "'" : name + "'s";
     }
