@@ -65,6 +65,7 @@ export class DeepDivePage implements OnInit{
     carouselData: any;
     videoData:any;
     blockIndex: number = 1;
+    changeScopeVar: string = "";
 ​
     private isHomeRunZone: boolean = false;
 
@@ -120,25 +121,31 @@ export class DeepDivePage implements OnInit{
     }
 
     //api for Schedules
-    private getSideScroll(){
+    private getSideScroll(scope?){
       let self = this;
-
+      if (scope != null) {
+        this.changeScopeVar = scope;
+      }
+      else {
+        this.changeScopeVar = this.scope;
+        if (this.changeScopeVar == "fbs") {this.changeScopeVar = "ncaaf"}
+      }
+      let changeScopeVar = this.changeScopeVar;
+      if (changeScopeVar == "ncaaf") {
+        changeScopeVar = "fbs";
+      }
       if(this.safeCall){
         this.safeCall = false;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, this.scope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-          if(this.sideScrollData == null){
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScopeVar, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
             this.sideScrollData = sideScrollData;
-          }
-          else{
-            sideScrollData.forEach(function(val,i){
-              self.sideScrollData.push(val);
-            })
-          }
           this.safeCall = true;
           this.callCount++;
           this.scrollLength = this.sideScrollData.length;
         }, null, null)
       }
+    }
+    changeScope($event) {
+      this.getSideScroll($event);
     }
 
     private scrollCheck(event){

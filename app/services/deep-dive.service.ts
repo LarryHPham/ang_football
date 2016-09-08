@@ -332,7 +332,7 @@ export class DeepDiveService {
       var date = moment(Number(info.dateline)*1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
           keyword: val.keyword.toUpperCase(),
           new_date: date,
@@ -349,6 +349,7 @@ export class DeepDiveService {
       val["date"] = val.dateline;
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
+        //console.log(VerticalGlobalFunctions.formatNewsRoute(val.id),"News Route");
       //}
     })
     return data;

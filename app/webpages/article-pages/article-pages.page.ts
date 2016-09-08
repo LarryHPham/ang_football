@@ -93,12 +93,11 @@ export class ArticlePages implements OnInit {
                     if (Article['data'].length > 0) {
                         var articleType = [];
                         if (Article['data'][0].article_type_id != null) {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
-                        } else {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                            articleType = [Object.keys(Article.data[0]['article_data'])[0]];
+                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         }
-                        this.articleType = articleType[1];
-                        this.articleSubType = articleType[2];
+                        this.articleType = articleType[0];
+                        //this.articleSubType = articleType[2];
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
@@ -119,7 +118,6 @@ export class ArticlePages implements OnInit {
                 err => {
                     this.error = true;
                     var self = this;
-                    console.log('Error loading article data, ', err);
                     setTimeout(function () {
                         //removes error page from browser history
                         self._location.replaceState('/');
@@ -129,24 +127,26 @@ export class ArticlePages implements OnInit {
                 }
             );
         this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
-        var random = [];
-        for (var i = 0; i < 3; i++) {
-            this._articleDataService.getRecommendationsData(this.eventID, this.randomArticles[i], this.scope)
-                .subscribe(
-                    HeadlineData => {
-                        if (HeadlineData['data']) {
-                            if (HeadlineData['data'][0].article_type_id != null) {
-                                var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_type_id, true);
-                            } else {
-                                var index = GlobalFunctions.getArticleType(HeadlineData['data'][0].article_subtype_id, false);
-                            }
-                            this.eventID = HeadlineData['data'][0].event_id.toString();
-                            random.push(ArticlePages.getRandomArticles(HeadlineData['data'][0], index[0], this.eventID));
+        var result= [];
+        this._articleDataService.getRecommendationsData(this.eventID, this.scope)
+            .subscribe(
+                HeadlineData => {
+                    HeadlineData = HeadlineData.data;
+                    if (HeadlineData.length) {
+                        for( var i = 3; i > result.length && HeadlineData.length; ){
+                          let j = HeadlineData.length;
+                          let rand =  Math.floor(Math.random() * j);
+                          if (HeadlineData[rand].article_data != null) {
+                              var eventType = Object.keys(HeadlineData[rand].article_data)[0];
+                              this.eventID = HeadlineData[rand].event_id.toString();
+                              result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, this.eventID));
+                              HeadlineData.splice(rand,1);
+                          }
                         }
                     }
-                );
-        }
-        this.randomHeadlines = random;
+                    this.randomHeadlines = result;
+                }
+            );
     }
 
     getCarouselImages(data) {
@@ -154,10 +154,12 @@ export class ArticlePages implements OnInit {
         var imageArray = [];
         var copyArray = [];
         var titleArray = [];
-        if (this.articleType == "gameModule" || this.articleType == "teamRecord") {
+        if (this.articleType == "game-module" || this.articleType == "team-record") {
             images = data['home_images'].concat(data['away_images']);
-        } else if (this.articleType == "playerRoster") {
+        } else if (this.articleType == "player-roster") {
             images = data['home_images'];
+        }else {
+            images = data['away_images'];
         }
         images.sort(function () {
             return 0.5 - Math.random()
@@ -185,7 +187,7 @@ export class ArticlePages implements OnInit {
 
     getImageLinks(data) {
         var links = [];
-        if (this.articleType == "playerRoster") {
+        if (this.articleType == "player-roster") {
             data['article'].forEach(function (val) {
                 if (val['playerRosterModule']) {
                     let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
@@ -212,7 +214,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'playerComparison') {
+        if (this.articleType == 'player-comparison') {
             data['article'][2]['playerComparisonModule'].forEach(function (val, index) {
                 if (index == 0) {
                     let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
@@ -261,7 +263,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'gameModule') {
+        if (this.articleType == 'game-module') {
             data['article'].forEach(function (val, index) {
                 if (index == 1 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
@@ -352,7 +354,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'teamRecord') {
+        if (this.articleType == 'team-record') {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
                 if (val['teamRecordModule'] && isFirstTeam) {

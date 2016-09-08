@@ -43,6 +43,12 @@ export class MVPListPage implements OnInit{
   isError: boolean = false;
   selectedTabName: string;
   globalMVPPosition: string;
+  season: number;
+  listMax:number = 10;
+
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
 
   footerStyle: FooterStyle = {
     ctaBoxClass: " mvp-page-car-footer",
@@ -76,9 +82,10 @@ export class MVPListPage implements OnInit{
           target: 'player',
           position: this.listType,
           statName: this.tab,
-          ordering: 'asc',
+          ordering: 'desc',
           perPageCount: 50,
-          pageNumber: this.pageNum
+          pageNumber: this.pageNum,
+          season: '2015'
         };
         this.startUp();
     });
@@ -89,6 +96,10 @@ export class MVPListPage implements OnInit{
   }
 
   startUp(){
+    if ( this.scope == this.collegeDivisionAbbrv.toLowerCase() ) {
+      this.scope = this.collegeDivisionFullAbbrv;
+    }
+
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["League-page"],
@@ -113,26 +124,25 @@ export class MVPListPage implements OnInit{
         console.log("Error loading profile");
       });
   }
-  ////////////////
-  //// BEGINNING OF INFINITE LOOP
-  ///////////////
+
+
   loadTabs() {
-    // this.tabs = this._service.getMVPTabs(this.listType, 'page');
-    //
-    // if ( this.tabs != null && this.tabs.length > 0 ) {
-    //   var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
-    //
-    //   if ( this.queryParams.statName ) {
-    //     var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
-    //
-    //     if ( matchingTabs.length > 0 ) {
-    //       selectedTab = matchingTabs[0];
-    //     }
-    //   }
-    //   this.selectedTabName = selectedTab.tabDisplayTitle;
-    //
-    //   this.getStandardList(selectedTab);
-    // }
+    this.tabs = this._service.getMVPTabs(this.listType, 'page');
+
+    if ( this.tabs != null && this.tabs.length > 0 ) {
+      var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
+
+      if ( this.queryParams.statName ) {
+        var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
+
+        if ( matchingTabs.length > 0 ) {
+          selectedTab = matchingTabs[0];
+        }
+      }
+      this.selectedTabName = selectedTab.tabDisplayTitle;
+
+      this.getStandardList(selectedTab);
+    }
   }
 
   //PAGINATION
@@ -210,6 +220,36 @@ export class MVPListPage implements OnInit{
        }
      }
   } //tabSelected(tab: positionMVPTabData)
+
+  private positionDropdown(event) {
+
+    var pageRoute;
+    this.tabs = this.checkToResetTabs(event);
+
+    if(event.tab != null){
+
+      var matches = this.checkMatchingTabs(event);
+
+      this.globalMVPPosition = event.position;
+
+      if(matches != null){
+        this.queryParams = {
+          scope:  this.scope, //TODO change to active scope
+          target: 'player',
+          position: event.position,
+          statName: matches.tabDataKey,
+          ordering: 'asc',
+          perPageCount: this.listMax,
+          pageNumber: 1,
+          season: '2015'
+        }
+        this.getStandardList(matches);
+      }
+
+      pageRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: "1"}];
+      this._router.navigate(pageRoute);
+    }
+  }
 
   private checkToResetTabs(event) {
     let localPosition = event.position;
