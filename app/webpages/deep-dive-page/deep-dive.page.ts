@@ -67,7 +67,7 @@ export class DeepDivePage implements OnInit{
     blockIndex: number = 1;
     changeScopeVar: string = "";
 ​
-    private isHomeRunZone: boolean = false;
+    private isPartnerZone: boolean = false;
 
     constructor(
       private _router:Router,
@@ -93,7 +93,7 @@ export class DeepDivePage implements OnInit{
               window.location.pathname = "/nfl";
             }
           }
-          this.isHomeRunZone = partnerHome;
+          this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
           }else{
