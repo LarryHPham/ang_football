@@ -120,7 +120,6 @@ export class ListOfListsPage implements OnInit{
 
 
                 this.profileName = profileName
-                console.log("FUCK MAN",list);
 
                 this._title.setTitle(GlobalSettings.getPageTitle("List of Lists", this.profileName));
                 this.titleData = {
