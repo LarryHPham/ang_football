@@ -13,6 +13,7 @@ import {TransactionsListInput} from '../fe-core/components/transactions-list-ite
 declare var moment: any;
 
 interface TransactionInfo {
+    affiliation: string;
     transactionDate: string;
     transactionType?: string;
     playerPosition: string;
@@ -201,7 +202,8 @@ export class TransactionsService {
       description: [tab.isLoaded ? tab.errorMessage : tab.errorMessage],
       lastUpdatedDate: null,
       circleImageUrl: "/app/public/no-image.svg",
-      circleImageRoute: null
+      circleImageRoute: null,
+      noData: true
     })];
   }
 
@@ -222,6 +224,7 @@ export class TransactionsService {
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
+        var scope = val.affiliation.toUpperCase();
 
         if (val.playerActive) {
           playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
@@ -252,7 +255,7 @@ export class TransactionsService {
         return SliderCarousel.convertToCarouselItemType1(index, {
           backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundImage),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
-          subheader: [tab.tabDisplay + ' - ', teamLinkText],
+          subheader: [tab.tabDisplay + ' - ', scope],
           profileNameLink: playerLinkText,
           description: [
               description
@@ -260,14 +263,13 @@ export class TransactionsService {
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
           circleImageUrl: GlobalSettings.getImageUrl(val.playerImage),
-          circleImageRoute: playerRoute
+          circleImageRoute: playerRoute,
+          noData: false
           // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
           // subImageRoute: teamRoute
         });
       });
-
     }
-
     return carouselArray;
   }
 
@@ -282,6 +284,19 @@ export class TransactionsService {
     listDataArray = data.map(function(val, index){
       var playerRoute = null;
       var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
+
+      //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
+      var description;
+
+      if (val.transactionType == "suspension") {
+        description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " was " + val.contents;
+      }
+      else if (val.transactionType == "injuries") {
+        description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " is out with " + val.contents;
+      }
+      else {
+        description = playerFullName + " was " + val.contents;
+      }
 
       if (val.playerActive) {
         playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
@@ -298,7 +313,7 @@ export class TransactionsService {
           style   : 'transactions-small',
           data_shortFormDate :   moment(val.transactionDate).format("MM/DD/YY"),
           data_longFormDate : moment(val.transactionDate).format("MMM. DD, YYYY"),
-          value   : [playerTextLink, val.contents],
+          value   : [description],
           url     : null
         }],
         imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerImage), playerRoute)

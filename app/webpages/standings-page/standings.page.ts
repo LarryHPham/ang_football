@@ -68,31 +68,31 @@ export class StandingsPage{
             value: "Total Wins"
           },
           {
-            key: "<span class='text-heavy'>CONF:</span>",
+            key: "<span class='text-heavy'>CONF</span>",
             value: "Conference Record"
           },
           {
-            key: "<span class='text-heavy'>STRK:</span>",
+            key: "<span class='text-heavy'>STRK</span>",
             value: "Current Streak"
           },
           {
-            key: "<span class='text-heavy'>HM:</span>",
+            key: "<span class='text-heavy'>HM</span>",
             value: "Home Record"
           },
           {
-            key: "<span class='text-heavy'>RD:</span>",
+            key: "<span class='text-heavy'>RD</span>",
             value: "Road Record"
           },
           {
-            key: "<span class='text-heavy'>PF:</span>",
+            key: "<span class='text-heavy'>PF</span>",
             value: "Total Points For"
           },
           {
-            key: "<span class='text-heavy'>PA:</span>",
+            key: "<span class='text-heavy'>PA</span>",
             value: "Total Points Against"
           },
           {
-            key: "<span class='text-heavy'>RANK:</span>",
+            key: "<span class='text-heavy'>RANK</span>",
             value: "Team Rank"
           }
         ]
@@ -103,27 +103,27 @@ export class StandingsPage{
             value: "Total Wins"
           },
           {
-            key: "<span class='text-heavy'>PCT:</span>",
+            key: "<span class='text-heavy'>PCT</span>",
             value: "Winning Percentage"
           },
           {
-            key: "<span class='text-heavy'>DIV:</span>",
+            key: "<span class='text-heavy'>DIV</span>",
             value: "Division Record"
           },
           {
-            key: "<span class='text-heavy'>CONF:</span>",
+            key: "<span class='text-heavy'>CONF</span>",
             value: "Conference Record"
           },
           {
-            key: "<span class='text-heavy'>STRK:</span>",
+            key: "<span class='text-heavy'>STRK</span>",
             value: "Current Streak"
           },
           {
-            key: "<span class='text-heavy'>PF:</span>",
+            key: "<span class='text-heavy'>PF</span>",
             value: "Total Points For"
           },
           {
-            key: "<span class='text-heavy'>PA:</span>",
+            key: "<span class='text-heavy'>PA</span>",
             value: "Total Points Against"
           }
         ]
@@ -137,9 +137,10 @@ export class StandingsPage{
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          this._title.setTitle(GlobalSettings.getPageTitle("Standings", data.teamName));
-
-          var title = this._standingsService.getPageTitle(this.pageParams, data.teamName);
+          this.pageParams.scope = this.scope;
+          var teamFullName = data.headerData.teamMarket + ' ' + data.headerData.teamName;
+          this._title.setTitle(GlobalSettings.getPageTitle("Standings", teamFullName));
+          var title = this._standingsService.getPageTitle(this.pageParams, teamFullName);
           this.titleData = this._profileService.convertTeamPageHeader(data, title)
           this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
         },
@@ -150,7 +151,7 @@ export class StandingsPage{
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));//TODO
+      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
@@ -177,7 +178,6 @@ export class StandingsPage{
       this.getLastUpdatedDateForPage(data);
     });
   }
-
 
   private getLastUpdatedDateForPage(data: VerticalStandingsTableData[]) {
       //Getting the first 'lastUpdatedDate' listed in the StandingsData

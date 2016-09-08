@@ -8,25 +8,30 @@ import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
 export interface TeamStandingsData {
-  teamName: string,
-  imageUrl: string,
-  backgroundImage: string,
+  teamName: string;
+  imageUrl: string;
+  backgroundImage: string;
+  backgroundUrl: string;
+  teamLogo: string;
   teamId: string;
-  conferenceName: string,
-  divisionName: string,
-  lastUpdated: string,
-  divisionRank: string,
-  conferenceRank: string,
-  leagueRank: string,
-  streak: string,
-  teamConferenceRecord: string,
-  teamWinPercent: string,
-  teamDivisionRecord: string,
-  teamPointsAllowed: string,
-  teamOverallRecord: string,
-  seasonBase: string,
+  teamMarket: string;
+  conferenceName: string;
+  divisionName: string;
+  lastUpdated: string;
+  divisionRank: string;
+  conferenceRank: string;
+  leagueRank: string;
+  streak: string;
+  teamConferenceRecord: string;
+  teamWinPercent: string;
+  teamDivisionRecord: string;
+  teamPointsAllowed: string;
+  teamOverallRecord: string;
+  seasonBase: string;
   totalLosses: string;
   totalWins: string;
+  teamPointsFor: string;
+  leagueAbbreviation: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -131,34 +136,35 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
   }
 
   convertToCarouselItem(item: TeamStandingsData, index:number): SliderCarouselInput {
-    var teamRoute = null;
     var yearEnd = Number(item.seasonBase)+1;
-    if ( this.currentTeamId != item.teamId ) {
-      teamRoute = VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
-    }
+    var teamFullName = item.teamMarket + ' ' + item.teamName;
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId);
     var teamNameLink = {
         route: teamRoute,
-        text: item.teamName
+        text: teamFullName
     };
+    var division = item.divisionName;
+    if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
+      var division = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.toLowerCase());
+    }//fbs divison sends back all uppercase and needs to be camel case
+    var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: item.fullBackgroundImageUrl,
+      backgroundImage: GlobalSettings.getImageUrl(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonBase + "-" + yearEnd + " Season " + item.divisionName + " Standings"],
+      subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
-          " is currently <span class='text-heavy'>ranked " + Number(item.divisionRank) + "</span>" + " in the <span class='text-heavy'>" + item.divisionName + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
+          " are currently <span class='text-heavy'>ranked " + rank + "</span>" + " in the <span class='text-heavy'>" + division + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
-      circleImageUrl: item.fullImageUrl,
+      circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
       circleImageRoute: teamRoute
     });
   }
 }
 
 export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
-  // title: string;
-
   columns: Array<TableColumn>;
   rows: Array<TeamStandingsData>;
 
@@ -281,17 +287,18 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
+    var teamFullName = item.teamMarket + ' ' + item.teamName;
     switch (column.key) {
       case "name":
         display = item.teamName;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
-          link = VerticalGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
         }
-        imageUrl = item.fullImageUrl;
+        imageUrl = GlobalSettings.getImageUrl(item.teamLogo);
         break;
 
-      case "wlt"://TODO
+      case "wlt":
         display = item.teamOverallRecord != null ? item.teamOverallRecord : null;
         sort = item.teamOverallRecord;
         break;
@@ -306,12 +313,12 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         sort = item.streak;
         break;
 
-      case "hm"://TODO
+      case "hm":
         display = item.teamWinPercent != null ? item.teamWinPercent : null;
         sort = item.teamWinPercent;
         break;
 
-      case "rd"://TODO
+      case "rd":
         display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
         sort = item.teamDivisionRecord;
         break;
@@ -328,12 +335,17 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "pct":
         display = item.teamWinPercent != null ? item.teamWinPercent : null;
-        sort = item.teamWinPercent;
+        sort = Number(item.teamWinPercent);
         break;
 
       case "div":
         display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
         sort = item.teamDivisionRecord;
+        break;
+
+      case "pf":
+        display = item.teamPointsFor != null ? item.teamPointsFor : null;
+        sort = item.teamPointsFor;
         break;
     }
     if ( display == null ) {

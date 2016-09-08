@@ -76,7 +76,7 @@ export class VerticalGlobalFunctions {
    *
    *
    * @param {teamName} teamName - team name given from data that will be converted to lower kebab case
-   * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profile
+   * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profilege
    * @returns the teamName => 'boston-red-sox',  playerName => 'babe-ruth' playerId => ##, routeName => 'Player-page'
    */
   static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string):Array<any> {
@@ -437,7 +437,7 @@ export class VerticalGlobalFunctions {
       return 'Safety';
 
       case 'lb' :
-      return 'Linebaker';
+      return 'Linebacker';
 
       case 'k' :
       return 'Kicker';
@@ -459,6 +459,54 @@ export class VerticalGlobalFunctions {
 
       case 'te' :
       return 'Tight End';
+
+      default : return null;
+    }
+  }
+
+  static convertPositionAbbrvToPlural(position) {
+    switch (position) {
+      case 'cb' :
+      return 'Cornerbacks';
+
+      case 'db' :
+      return 'Defensive Backs';
+
+      case 'de' :
+      return 'Defensive Ends';
+
+      case 'dl' :
+      return 'Defensive Linemen';
+
+      case 'dt' :
+      return 'Defensive Tackles';
+
+      case 'saf' :
+      return 'Safeties';
+
+      case 'lb' :
+      return 'Linebackers';
+
+      case 'k' :
+      return 'Kickers';
+
+      case 'p' :
+      return 'Punters';
+
+      case 'qb' :
+      return 'Quarterbacks';
+
+      case 'rb' :
+      return 'Runningbacks';
+
+      case 'rs' :
+      return 'Return specialists';
+
+      case 'wr' :
+      return 'Wide Receivers';
+
+      case 'te' :
+      return 'Tight Ends';
 
       default : return null;
     }
@@ -506,7 +554,7 @@ export class VerticalGlobalFunctions {
   //function to select a random stock photo
 
 
-  static getBackroundImageUrlWithStockFallback(relativePath: string) {
+  static getBackroundImageUrlWithStockFallback(relativePath) {
     let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
     let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
     var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;

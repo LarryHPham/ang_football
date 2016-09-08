@@ -162,6 +162,7 @@ export class TeamPage implements OnInit {
     scheduleFilter1:Array<any>;
     selectedFilter1:string;
     eventStatus: any;
+    isFirstRun:number = 0;
 
     profileName:string;
     listOfListsData:Object; // paginated data to be displayed
@@ -242,7 +243,7 @@ export class TeamPage implements OnInit {
 
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.teamName);
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
@@ -253,7 +254,7 @@ export class TeamPage implements OnInit {
                 this.getImages(this.imageData);
                 this.getDykService();
                 this.getFaqService();
-                // this.setupListOfListsModule();
+                this.setupListOfListsModule();
                 this.getNewsService();
                 this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
 
@@ -274,6 +275,7 @@ export class TeamPage implements OnInit {
             .subscribe(
                 HeadlineData => {
                     this.headlineData = HeadlineData.data;
+                    this.headlineError = HeadlineData.data.status != "Success";
                 },
                 err => {
                     console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
@@ -366,6 +368,7 @@ export class TeamPage implements OnInit {
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
+      this.isFirstRun = 0;
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus, null);
@@ -378,13 +381,23 @@ export class TeamPage implements OnInit {
         }
     }
     private filterDropdown(filter){
-      this.selectedFilter1 = filter.key;
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      let tabCheck = 0;
+      if(this.eventStatus == 'postgame'){
+        tabCheck = 1;
+      }
+      if(this.isFirstRun > tabCheck){
+        this.selectedFilter1 = filter.key;
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      }
+      this.isFirstRun++;
     }
 
     //api for Schedules
     private getSchedulesData(status, year?){
       var limit = 5;
+      if(status == 'pregame'){
+        this.selectedFilter1 = null;
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
@@ -453,6 +466,12 @@ export class TeamPage implements OnInit {
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
+    private standingsFilterSelected(tabData: Array<any>) {
+      this.pageParams.scope = this.scope;
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      });
+    }
+
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
@@ -460,9 +479,10 @@ export class TeamPage implements OnInit {
 
     setupListOfListsModule() {
         let params = {
-          id : this.pageParams.teamId,
+          targetId : this.pageParams.teamId,
           limit : 5,
-          pageNum : 1
+          pageNum : 1,
+          scope : this.scope
         }
         this._lolService.getListOfListsService(params, "team", "module")
             .subscribe(

@@ -70,7 +70,7 @@ export class SyndicatedArticlePage{
       }
 
       GlobalSettings.getParentParams(_router, partnerID => {
-          this.partnerID = partnerID;
+          this.partnerID = partnerID.partnerID;
           this.getPartnerHeader();
       });
     }
@@ -132,7 +132,7 @@ export class SyndicatedArticlePage{
     }
 
     getPartnerHeader(){//Since it we are receiving
-      if(this.partnerID != null){
+      if(this.partnerID!= null){
         this._partnerData.getPartnerData(this.partnerID)
         .subscribe(
           partnerScript => {
@@ -153,11 +153,12 @@ export class SyndicatedArticlePage{
         this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation, 2, 3)
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
-            //this.recomendationData = [this.recomendationData[0], this.recomendationData[1], this.recomendationData[2]];
+             
           });
-        //console.log("recommended data", this.recomendationData);
+
     }
     ngOnInit(){
         this.getRecomendationData()
+
     }
 }

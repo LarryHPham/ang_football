@@ -22,7 +22,7 @@
             </div>
             <div class="arpt" *ngIf="articleType == 'story'">
                 <span class="arpt-author" ><p>Written By:</p> <b>{{articleData.publisher}}</b></span>
-                <span class="arpt-date"><p>Posted: on </p>{{articleData.publishedDate}}</span>
+                <span class="arpt-date"><p>Posted: on </p>  {{" "+ articleData.publishedDate}}</span>
             </div>
             <div class="content-exerpt" *ngIf="articleType == 'story'"  [innerHTML]="articleData.teaser | safeHtml">
             </div>
@@ -39,7 +39,7 @@
 
 
             <!-- <syndicated-trending-component *ngIf="geoLocation" [geoLocation]="KS" [currentArticleId]="articleData.id"></syndicated-trending-component>-->
-            <syndicated-trending-component [geoLocation]="tx" [currentArticleId]="articleData.id"></syndicated-trending-component>
+            <syndicated-trending-component [geoLocation]="tx" [currentArticleId]="articleData.id" [scope]="scope"></syndicated-trending-component>
         </sidekick-wrapper-ai>
     </span>
     </div>

@@ -133,6 +133,7 @@ export class PlayerPage implements OnInit {
   scheduleFilter1:Array<any>;
   selectedFilter1:string;
   eventStatus: string;
+  isFirstRun:number = 0;
 
   scope: string;
 
@@ -202,7 +203,7 @@ export class PlayerPage implements OnInit {
               this.getImages(this.imageData);
               this.getDykService();
               this.getFaqService();
-              // this.setupListOfListsModule();
+              this.setupListOfListsModule();
               this.getNewsService();
 
               /*** Interact With [League Name]’s Fans ***/
@@ -237,9 +238,9 @@ private dailyUpdateModule(playerId: number) {
           });
   }
 
-  //api for Schedules
   //grab tab to make api calls for post of pregame table
   private scheduleTab(tab) {
+    this.isFirstRun = 0;
       if(tab == 'Upcoming Games'){
         this.eventStatus = 'pregame';
         this.getSchedulesData(this.eventStatus, null);
@@ -252,8 +253,15 @@ private dailyUpdateModule(playerId: number) {
       }
   }
   private filterDropdown(filter){
-    this.selectedFilter1 = filter.key;
-    this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    let tabCheck = 0;
+    if(this.eventStatus == 'postgame'){
+      tabCheck = 1;
+    }
+    if(this.isFirstRun > tabCheck){
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    }
+    this.isFirstRun++;
   }
 
   //api for Schedules
@@ -342,7 +350,8 @@ private dailyUpdateModule(playerId: number) {
     private setupTeamProfileData() {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, data.teamName);
+                var teamFullName = data.headerData.teamMarket + ' ' + data.teamName;
+                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, teamFullName);
             },
             err => {
                 console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
@@ -367,9 +376,10 @@ private dailyUpdateModule(playerId: number) {
 
     setupListOfListsModule() {
       let params = {
-        id : this.pageParams.playerId,
+        targetId : this.pageParams.playerId,
         limit : 5,
-        pageNum : 1
+        pageNum : 1,
+        scope: this.scope
       }
       this._lolService.getListOfListsService(params, "player", "module")
         .subscribe(

@@ -160,12 +160,15 @@ export class LeaguePage implements OnInit {
     transactionFilter1: Array<any>;
     dropdownKey1: string;
 
+    isFirstRun: boolean = true;
+
     schedulesData:any;
     scheduleFilter1:Array<any>;
     scheduleFilter2:Array<any>;
     selectedFilter1:string
     selectedFilter2:string;
     eventStatus: string;
+    isFirstNum:number = 0;
 
     limit: number;
     pageNum: number;
@@ -223,22 +226,20 @@ export class LeaguePage implements OnInit {
     ngOnInit() {}
 
     private setupProfileData(partnerID, scope) {
-
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
-
             ///*** About TDL ***/
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
                 this.getLeagueHeadlines();
                 /*** Keep Up With Everything TDL ***/
-                // this.getBoxScores(this.dateParam);
+                this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
 
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(data.profileName);
+                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
 
                 //Initial position to display in MVP
                 this.globalMVPPosition = 'cb';
@@ -257,14 +258,14 @@ export class LeaguePage implements OnInit {
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
-                // this.setupListOfListsModule();
+                this.setupListOfListsModule();
                 this.getDykService(this.profileType);
                 this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
              },
             err => {
                 this.hasError = true;
-                console.log("Error getting team profile data for mlb", err);
+                console.log("Error getting team profile data for league", err);
             }
 
         );
@@ -286,28 +287,44 @@ export class LeaguePage implements OnInit {
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
+        this.isFirstNum = 0;
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
+          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
           this.eventStatus = 'postgame';
+          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     }
     private filterDropdown(filter){
+      let tabCheck = 0;
       if(filter.value == 'filter1'){
-        this.selectedFilter1 = filter.key;
+        if(this.eventStatus == 'postgame'){
+          tabCheck = 1;
+        }
       }
-      if(filter.value == 'filter2'){
-        this.selectedFilter2 = filter.key;
+      if(this.isFirstNum > tabCheck){
+        let filterChange = false;
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+          this.selectedFilter1 = filter.key;
+          filterChange = true;
+        }
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
+        }
+        if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+          this.selectedFilter1 = new Date().getFullYear().toString();
+        }
+
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
       }
-      if(this.selectedFilter2 != null && this.selectedFilter1 == null){
-        this.selectedFilter1 = new Date().getFullYear().toString();
-      }
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+      this.isFirstNum++;
     }
 
     //api for Schedules
@@ -319,6 +336,9 @@ export class LeaguePage implements OnInit {
       if(typeof year == 'undefined'){
         year == new Date().getFullYear();
       }
+      if(status == 'pregame'){
+        this.selectedFilter1 = null;
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
@@ -327,8 +347,12 @@ export class LeaguePage implements OnInit {
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
-        if(this.scheduleFilter2 == null){
-          this.scheduleFilter2 = schedulesData.weeks;
+        if(schedulesData.carData.length > 0){
+          if(this.scheduleFilter2 == null){
+            this.scheduleFilter2 = schedulesData.weeks;
+          }
+        }else{
+          this.scheduleFilter2 = null;
         }
         this.schedulesData = schedulesData;
       }, year, week) // isTeamProfilePage = true
@@ -420,9 +444,10 @@ export class LeaguePage implements OnInit {
 
     private setupListOfListsModule() {
         let params = {
-          targetId : 11621,
+        //  targetId : 11621,
           limit : 4,
-          pageNum : 1
+          pageNum : 1,
+          scope: this.scope
         }
         this._lolService.getListOfListsService(params, "league", "module")
             .subscribe(
@@ -488,8 +513,13 @@ export class LeaguePage implements OnInit {
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 
-    private positionDropdown(event) {
+    private standingsFilterSelected(tabData: Array<any>) {
+      this.pageParams.scope = this.scope;
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      });
+    }
 
+    private positionDropdown(event) {
       this.positionData = this.checkToResetTabs(event);
 
       if(event.tab != null){
@@ -504,10 +534,12 @@ export class LeaguePage implements OnInit {
             target: 'player',
             position: event.position,
             statName: matches.tabDataKey,
-            ordering: 'desc',
+            ordering: 'asc',
             perPageCount: this.listMax,
-            pageNumber: 1
+            pageNumber: 1,
+            season: '2015'
           }
+          this.getMVPService(matches, this.positionParams);
         }
       }
     }
@@ -518,7 +550,7 @@ export class LeaguePage implements OnInit {
       let localPosition = event.position;
       let listName = event.tab.tabDataKey;
 
-      if(event.position != this.globalMVPPosition){
+      if(event.position != this.globalMVPPosition && this.positionData != []){
         this.positionData[0].isLoaded = false;
         return this.positionData[0];
       }else{
@@ -539,14 +571,19 @@ export class LeaguePage implements OnInit {
     }
 
     getMVPService(tab, params){
-      this.listService.getListModuleService(tab, params)
-          .subscribe(updatedTab => {
-              //do nothing?
-              var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
-              matches[0] = updatedTab;
-          }, err => {
-              tab.isLoaded = true;
-              console.log('Error: Loading MVP Pitchers: ', err);
-          })
+      if(this.isFirstRun){
+        this.isFirstRun = false;
+        this.listService.getListModuleService(tab, params)
+            .subscribe(updatedTab => {
+                //do nothing?
+                var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+                matches[0] = updatedTab;
+                this.isFirstRun = true;
+            }, err => {
+                tab.isLoaded = true;
+                console.log('Error: Loading MVP Pitchers: ', err);
+            })
+      }
+
     }
 }
