@@ -170,7 +170,6 @@ export class ListOfListsPage implements OnInit{
         else if ( navigationParams['scope'] ) {
             navigationPage = 'List-of-lists-page-scoped';
         }
-        console.log('input',input);
         this.paginationParameters = {
             index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
             max: Number(input.listPageCount),
