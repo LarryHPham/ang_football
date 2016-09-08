@@ -343,7 +343,7 @@ export class GlobalFunctions {
     /**
      * - Capital the first letter of a string
      **/
-    capitalizeFirstLetter(str:string):string {
+    static capitalizeFirstLetter(str:string):string {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
