@@ -44,7 +44,9 @@ export class MVPListPage implements OnInit{
   selectedTabName: string;
   globalMVPPosition: string;
   season: number;
-  listMax:number = 10;
+  listMax:number = 20;
+
+  displayPosition: string;
 
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
@@ -73,17 +75,13 @@ export class MVPListPage implements OnInit{
         this.globalMVPPosition = this.listType;
         this.position = this.listType;
 
-        if ( !this.pageNum ) {
-          this.pageNum = 1;
-        }
-
         this.queryParams = { //Initial load for mvp Data
           scope: this.scope, //TODO change to active scope
           target: 'player',
           position: this.listType,
           statName: this.tab,
-          ordering: 'desc',
-          perPageCount: 50,
+          ordering: 'asc',
+          perPageCount: 20,
           pageNumber: this.pageNum,
           season: '2015'
         };
@@ -100,12 +98,14 @@ export class MVPListPage implements OnInit{
       this.scope = this.collegeDivisionFullAbbrv;
     }
 
+    this.displayPosition = this.listType != null ? VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.listType) : this.globalMVPPosition;
+
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.position+"s",
+      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.displayPosition,
       icon: 'fa fa-map-marker'
     };
 
@@ -116,7 +116,7 @@ export class MVPListPage implements OnInit{
           imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
-          text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + VerticalGlobalFunctions.convertPositionAbbrv(this.listType)+"s",
+          text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
           icon: 'fa fa-map-marker'
         };
         this.loadTabs();
@@ -149,23 +149,31 @@ export class MVPListPage implements OnInit{
   //sets the total pages for particular lists to allow client to
   //move from page to page without losing the sorting of the list
   setPaginationParams(input) {
-    if (!input) return;
+      var params = this._params.params;
 
-    var navigationParams = {
-      type: this.listType,
-      tab: input.stat,
-      pageNum: input.pageNum
-    };
+      //path: '/directory/:type/:startsWith/page/:page',
+      var navigationParams = {
+        type: this.listType,
+        tab: this.tab,
+        pageNum: this.pageNum
+      };
 
-    this.paginationParameters = {
-      index: input.pageNum,
-      max: Number(input.pageCount),
-      paginationType: 'page',
-      navigationPage: "MVP-list-tab-page",
-      navigationParams: navigationParams,
-      indexKey: 'pageNum'
-    };
-  }
+      if(params['scope'] != null) {
+         navigationParams['scope'] = params['scope'];
+      }
+
+      var navigationPage = 'MVP-list-tab-page';
+      let max = Math.ceil(input.listInfo.resultCount/this.listMax); //NEED Number of entries from API
+
+      this.paginationParameters = {
+        index: params['pageNum'] != null ? Number(params['pageNum']) : null,
+        max: max,
+        paginationType: 'page',
+        navigationPage: navigationPage,
+        navigationParams: navigationParams,
+        indexKey: 'pageNum'
+      };
+  } //setPaginationParams(input)
 
   getStandardList(tab: positionMVPTabData){
 
@@ -175,9 +183,9 @@ export class MVPListPage implements OnInit{
       .subscribe(
         tab => {
           if ( tab.data.listInfo ) {
-            tab.data.listInfo.pageNum = this.queryParams.pageNumber;
+            tab.data.listInfo.pageNum = this.pageNum;
           }
-          this.setPaginationParams(tab.data.listInfo);
+          this.setPaginationParams(tab.data);
         },
         err => {
           this.isError = true;
@@ -193,19 +201,19 @@ export class MVPListPage implements OnInit{
     var tabNameTo = event.tab.tabDisplayTitle;
 
     if ( this.selectedTabName != event.tab.tabDisplayTitle ) {
-      this.queryParams.pageNum = 1;
+      this.queryParams.pageNum = this.pageNum;
     }
     if (!event.tab.listData) { //let the page handle the service call if there's no data
       this.getStandardList(event.tab);
     }
     else {
-      this.setPaginationParams(event.tab.data.listInfo);
+
     }
     this.selectedTabName = event.tab.tabDisplayTitle;//line added to update the current tab variable when tabs are changed without reloading the page
 
     //actually redirect the page on tab change to update the URL for deep linking and to fix the pagination bug
     if (tabNameTo !== tabNameFrom) {
-      tabRoute = ["MVP-list-tab-page", { type: event.position, tab: event.tab.tabDataKey, pageNum: "1"}];
+      tabRoute = ["MVP-list-tab-page", { type: event.position, tab: event.tab.tabDataKey, pageNum: this.pageNum}];
       this._router.navigate(tabRoute);
      }
      this.tabs = this.checkToResetTabs(event);
@@ -215,7 +223,7 @@ export class MVPListPage implements OnInit{
        this.globalMVPPosition = event.position;
 
        if (matches != null) {
-         tabRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: "1"}];
+         tabRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: this.pageNum}];
          this._router.navigate(tabRoute);
        }
      }
@@ -240,13 +248,13 @@ export class MVPListPage implements OnInit{
           statName: matches.tabDataKey,
           ordering: 'asc',
           perPageCount: this.listMax,
-          pageNumber: 1,
+          pageNumber: this.pageNum,
           season: '2015'
         }
         this.getStandardList(matches);
       }
 
-      pageRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: "1"}];
+      pageRoute = ["MVP-list-tab-page", { type: event.position, tab: matches.tabDataKey, pageNum: this.pageNum}];
       this._router.navigate(pageRoute);
     }
   }
