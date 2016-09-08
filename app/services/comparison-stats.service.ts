@@ -168,7 +168,7 @@ export class ComparisonStatsService {
 
   private passingFields = ["ATT", "COMP", "YDS", "AVG", "TD", "INT", "RATE"];
   private rushingFields = ["ATT", "YDS", "AVG", "TD", "YDS/G", "FUM", "1DN"];
-  private receivingFields = ["REC", "TAR", "YDS", "TD", "YDS", "1DN"];
+  private receivingFields = ["REC", "TAR", "YDS","AVG", "TD", "YDS/G", "1DN"];
   private defenseFields = ["SOLO", "AST", "TOT", "SACK", "PD", "INT", "FF"];
   private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
   private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
@@ -413,7 +413,7 @@ export class ComparisonStatsService {
       case "TAR": return "TAR";
       case "YDS": return "YDS";
       case "TD": return "TD";
-      case "YDSG": return "YDS/G";
+      case "YDS/G": return "YDS/G";
       case "1DN": return "1DN";
       case "Jersey No.": return "Jersey No.";
       case "SOLO": return "SOLO";
@@ -437,6 +437,13 @@ export class ComparisonStatsService {
       case "IN20": return "IN20";
       case "BP": return "BP";
       case "LONG": return "LONG";
+      case "K.ATT": return "K.ATT";
+      case "K.YDS": return "K.YDS";
+      case "K.AVG": return "K.AVG";
+      case "P.ATT": return "P.ATT";
+      case "P.YDS": return "P.YDS";
+      case "P.AVG": return "P.AVG";
+
       default: return null;
     }
   }

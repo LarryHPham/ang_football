@@ -342,7 +342,8 @@ private dailyUpdateModule(playerId: number) {
     private setupTeamProfileData() {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, data.teamName);
+                var teamFullName = data.headerData.teamMarket + ' ' + data.teamName;
+                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, teamFullName);
             },
             err => {
                 console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
