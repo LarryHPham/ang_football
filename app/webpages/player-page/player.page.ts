@@ -133,6 +133,7 @@ export class PlayerPage implements OnInit {
   scheduleFilter1:Array<any>;
   selectedFilter1:string;
   eventStatus: string;
+  isFirstRun:number = 0;
 
   scope: string;
 
@@ -237,9 +238,9 @@ private dailyUpdateModule(playerId: number) {
           });
   }
 
-  //api for Schedules
   //grab tab to make api calls for post of pregame table
   private scheduleTab(tab) {
+    this.isFirstRun = 0;
       if(tab == 'Upcoming Games'){
         this.eventStatus = 'pregame';
         this.getSchedulesData(this.eventStatus, null);
@@ -252,8 +253,15 @@ private dailyUpdateModule(playerId: number) {
       }
   }
   private filterDropdown(filter){
-    this.selectedFilter1 = filter.key;
-    this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    let tabCheck = 0;
+    if(this.eventStatus == 'postgame'){
+      tabCheck = 1;
+    }
+    if(this.isFirstRun > tabCheck){
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    }
+    this.isFirstRun++;
   }
 
   //api for Schedules
