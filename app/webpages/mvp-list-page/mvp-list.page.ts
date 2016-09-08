@@ -46,6 +46,8 @@ export class MVPListPage implements OnInit{
   season: number;
   listMax:number = 20;
 
+  displayPosition: string;
+
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
@@ -96,12 +98,14 @@ export class MVPListPage implements OnInit{
       this.scope = this.collegeDivisionFullAbbrv;
     }
 
+    this.displayPosition = this.listType != null ? VerticalGlobalFunctions.convertPositionAbbrv(this.listType) : this.globalMVPPosition;
+
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.position+"s",
+      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.displayPosition+"s",
       icon: 'fa fa-map-marker'
     };
 
@@ -112,7 +116,7 @@ export class MVPListPage implements OnInit{
           imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
-          text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + VerticalGlobalFunctions.convertPositionAbbrv(this.listType)+"s",
+          text3: "Most Valuable Players",
           icon: 'fa fa-map-marker'
         };
         this.loadTabs();
