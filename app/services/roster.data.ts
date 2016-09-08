@@ -153,7 +153,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       class: 'text-heavy'
     }
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundUrl),
+      backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [curYear + ' TEAM ROSTER'],
       profileNameLink: playerLinkText,

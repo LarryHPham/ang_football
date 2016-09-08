@@ -171,7 +171,7 @@ export class ProfileHeaderService {
               playerId: headerData.playerId,
               playerName: headerData.playerFullName
             },
-            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
+            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
             headerData: headerData,
             profileName: headerData.playerFullName,
@@ -197,7 +197,7 @@ export class ProfileHeaderService {
               division: headerData.divisionName,
               conference: headerData.conferenceName,
             },
-            fullBackgroundImageUrl: GlobalSettings.getBackgroundImageUrl(headerData.backgroundUrl),
+            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
             headerData: headerData,
             teamName: headerData.teamName,
@@ -506,7 +506,7 @@ export class ProfileHeaderService {
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
-    data.backgroundUrl = GlobalSettings.getBackgroundImageUrl(data.backgroundUrl);
+    data.backgroundUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.backgroundUrl);
 
     var header: ProfileHeaderData = {
       profileName: leagueAbbreviatedName,
