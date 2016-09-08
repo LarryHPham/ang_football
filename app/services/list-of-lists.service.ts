@@ -258,26 +258,16 @@ export class ListOfListsService {
       // }
 
       var listData = {
-      // url           : itemListInfo.url           != null  ? itemListInfo.url          : dummyUrl,
         name          : itemInfo.listName           != null  ? itemInfo.listName         : dummyName,
         target        : itemTarget.rankType,
-    //   stat          : itemListInfo.stat          != null  ? itemListInfo.stat         : dummyStat,
-    //   ordering      : itemListInfo.ordering      != null  ? itemListInfo.ordering     : dummyOrdering,
-    //   scope         : itemListInfo.scope         != null  ? itemListInfo.scope        : dummyScope,
-    //   conference    : itemListInfo.conference    != null  ? itemListInfo.conference   : dummyConference,
-    //   division      : itemListInfo.division      != null  ? itemListInfo.division     : dummyDivision,
         topname       : itemTarget.teamName        != null  ? itemTarget.teamName : itemTarget.playerFirstName + itemTarget.playerLastname,
         listCount     : itemInfo.resultCount       != null  ? itemInfo.resultCount    : dummyListCount,
         pageCount     : itemInfo.pageCount         != null  ? itemInfo.pageCount    : dummyPageCount,
         listRank      : itemListData.rank      != null  ? itemListData.rank     : dummyListRank,
-    //    icon          : itemListInfo.icon          != null  ? itemListInfo.icon         : dummyIcon,
         dataPoints    : [],
-    //   id            : id,
         ctaBtn        : '',
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
-        // ctaUrl        : MLBGlobalFunctions.formatListRoute(ctaUrlArray)
-      //  ctaUrl        : null
         ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArr)  != null ? VerticalGlobalFunctions.formatListRoute(ctaUrlArr) : dummyUrl
       };
 
