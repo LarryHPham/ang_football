@@ -257,14 +257,15 @@ export class SchedulesService {
 
       let date = moment(Number(val.eventStartTime)).tz('America/New_York').format('MMMM D, YYYY');
       let time = moment(Number(val.eventStartTime)).tz('America/New_York').format('h:mm A z');
-      let team1FullName = val.team1Market + ' ' + val.tame1Name;
-      let team2FullName = val.team2Market + ' ' + val.tame2Name;
+      let team1FullName = val.team1FullName;
+      let team2FullName = val.team2FullName;
+
       newData = {
         date: date + " &bull; " + time,
         awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id)),
         homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team1Logo), VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id)),
-        awayTeamName: val.awayTeamLastName,
-        homeTeamName: val.homeTeamLastName,
+        awayTeamName: team2FullName.replace(val.team2Market+" ",''),
+        homeTeamName: team1FullName.replace(val.team1Market+" ",''),
         awayLink: VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id),
         homeLink: VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id),
         reportDisplay: reportText,

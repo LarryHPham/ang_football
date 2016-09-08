@@ -77,7 +77,7 @@ export class SchedulesPage implements OnInit{
     if(tab == 'Upcoming Games'){
       this.eventStatus = 'pregame';
       this.selectedTabKey = this.eventStatus;
-      this.getSchedulesData(this.eventStatus,this.initialPage, this.selectedFilter1,this.selectedFilter2);
+      this.getSchedulesData(this.eventStatus,this.initialPage, null, null);
     }else if(tab == 'Previous Games'){
       this.eventStatus = 'postgame';
       this.selectedTabKey = this.eventStatus;
