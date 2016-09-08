@@ -67,7 +67,7 @@ export class DeepDivePage implements OnInit{
     blockIndex: number = 1;
     changeScopeVar: string = "";
 ​
-    private isHomeRunZone: boolean = false;
+    private isPartnerZone: boolean = false;
 
     constructor(
       private _router:Router,
@@ -93,7 +93,7 @@ export class DeepDivePage implements OnInit{
               window.location.pathname = "/nfl";
             }
           }
-          this.isHomeRunZone = partnerHome;
+          this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
           }else{
@@ -122,7 +122,7 @@ export class DeepDivePage implements OnInit{
     }
 
     //api for Schedules
-    private getSideScroll(scope?){
+    private getSideScroll(){
       let self = this;
       if(this.safeCall){
         this.safeCall = false;
@@ -144,13 +144,13 @@ export class DeepDivePage implements OnInit{
     }
     changeScope($event) {
       if($event == this.changeScopeVar){
-        this.getSideScroll($event);
+        this.getSideScroll();
       }else{
+        this.changeScopeVar = $event;
         this.callCount = 1;
         this.sideScrollData = null;
-        this.getSideScroll($event);
+        this.getSideScroll();
       }
-      this.changeScopeVar = $event;
     }
 
     private scrollCheck(event){

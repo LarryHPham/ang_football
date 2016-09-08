@@ -170,7 +170,7 @@ export class DailyUpdateService {
         return {
           hasError: false,
           lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-          fullBackgroundImageUrl: data['postgame-report'].image != null ? GlobalSettings.getBackgroundImageUrl(data['postgame-report'].image.imageUrl) :  GlobalSettings.getBackgroundImageUrl(""),
+          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(""),
           type: "Team",
           wrapperStyle: {},
           seasonStats: stats,
@@ -336,7 +336,7 @@ export class DailyUpdateService {
       return {
         hasError: false,
         lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-        fullBackgroundImageUrl: data['postgame-report'].image != null ? GlobalSettings.getBackgroundImageUrl(data['postgame-report'].image.imageUrl) :  GlobalSettings.getBackgroundImageUrl(""),
+        fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(""),
         type: "Player",
         wrapperStyle: {},
         seasonStats: stats,

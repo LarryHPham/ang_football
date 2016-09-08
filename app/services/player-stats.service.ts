@@ -99,7 +99,7 @@ export class PlayerStatsService implements OnDestroy{
                 return;
             }
         }*/
-        standingsTab.tabN=this.tabName;
+
 
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
@@ -112,7 +112,7 @@ export class PlayerStatsService implements OnDestroy{
             .map(res => res.json())
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {
-                    standingsTab.tabN=this.tabName;
+
                     standingsTab.isLoaded = true;
                     standingsTab.hasError = false;
                     standingsTab.seasonTableData[columnTabType] = data;
@@ -141,7 +141,7 @@ export class PlayerStatsService implements OnDestroy{
     }
 
     private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
-        let table = new MLBPlayerStatsTableModel(data, standingsTab.tabN);
+        let table = new MLBPlayerStatsTableModel(data, standingsTab.tabActive);
         //Limit to maxRows, if necessary
         if ( maxRows !== undefined ) {
             table.rows = table.rows.slice(0, maxRows);
@@ -155,7 +155,7 @@ export class PlayerStatsService implements OnDestroy{
             value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot);
             value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo);
             if ( value.backgroundImage ) {
-                value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
+                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
             }
 
 

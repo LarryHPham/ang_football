@@ -145,7 +145,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     };
     var division = item.divisionName;
     if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
-      var division = item.conferenceName + ": " + GlobalFunctions.capitalizeFirstLetter(item.divisionName.toLowerCase());
+      var division = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.toLowerCase());
     }//fbs divison sends back all uppercase and needs to be camel case
     var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {

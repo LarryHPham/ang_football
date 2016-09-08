@@ -268,7 +268,7 @@ export class SeasonStatsService {
       description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText, playerInfo[0].statScope);
     }
     return SliderCarousel.convertToCarouselItemType1(1, {
-      backgroundImage: GlobalSettings.getBackgroundImageUrl(playerInfo[0].backgroundUrl),
+      backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(playerInfo[0].backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [longSeasonName + " Stats Report"],
       profileNameLink: playerRouteText,

@@ -68,7 +68,6 @@ export class GlobalSettings {
     }
 
     static getApiUrl():string {
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
 
     }
@@ -78,7 +77,6 @@ export class GlobalSettings {
     }
 
     static getGeoLocation():string {
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._widgetUrl;
     }
 
