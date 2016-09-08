@@ -77,7 +77,7 @@ export class SchedulesPage implements OnInit{
     if(tab == 'Upcoming Games'){
       this.eventStatus = 'pregame';
       this.selectedTabKey = this.eventStatus;
-      this.getSchedulesData(this.eventStatus,this.initialPage, this.selectedFilter1,this.selectedFilter2);
+      this.getSchedulesData(this.eventStatus,this.initialPage, null, null);
     }else if(tab == 'Previous Games'){
       this.eventStatus = 'postgame';
       this.selectedTabKey = this.eventStatus;
@@ -185,15 +185,15 @@ export class SchedulesPage implements OnInit{
           }else{
             if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
               this.scheduleFilter1 = schedulesData.seasons;
-              if(this.selectedFilter1 == null && this.selectedFilter1 != schedulesData.seasons[0].key){
-                this.selectedFilter1 = this.schedulesData.seasons[0].key;
+              if(this.selectedFilter1 == null && this.selectedFilter1 != schedulesData.seasons.data[0].key){
+                this.selectedFilter1 = this.schedulesData.seasons.data[0].key;
               }
             }
           }
           if(this.scheduleFilter2 == null){
             this.scheduleFilter2 = schedulesData.weeks;
             if(this.selectedFilter2 == null){
-              this.selectedFilter2 = this.schedulesData.weeks[0].key;
+              this.selectedFilter2 = this.schedulesData.weeks.data[0].key;
             }
           }
           this.tabData = schedulesData != null ? schedulesData.tabs:null;
