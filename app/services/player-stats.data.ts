@@ -316,7 +316,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
             this.rows = [];
         }
         this.istab = tabActive;
-        //console.log(tabActive,"hello");
+
 
         function getTabTableData(tabActive){
             return{
