@@ -80,6 +80,7 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
+          this.changeScopeVar = this.scope;
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/") {
@@ -123,21 +124,18 @@ export class DeepDivePage implements OnInit{
     //api for Schedules
     private getSideScroll(scope?){
       let self = this;
-      if (scope != null) {
-        this.changeScopeVar = scope;
-      }
-      else {
-        this.changeScopeVar = this.scope;
-        if (this.changeScopeVar == "fbs") {this.changeScopeVar = "ncaaf"}
-      }
-      let changeScopeVar = this.changeScopeVar;
-      if (changeScopeVar == "ncaaf") {
-        changeScopeVar = "fbs";
-      }
       if(this.safeCall){
         this.safeCall = false;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScopeVar, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+        let changeScope = this.changeScopeVar.toLowerCase() == 'ncaaf'?'fbs':this.changeScopeVar.toLowerCase();
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+          if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
+          }
+          else{
+            sideScrollData.forEach(function(val,i){
+              self.sideScrollData.push(val);
+            })
+          }
           this.safeCall = true;
           this.callCount++;
           this.scrollLength = this.sideScrollData.length;
@@ -145,7 +143,14 @@ export class DeepDivePage implements OnInit{
       }
     }
     changeScope($event) {
-      this.getSideScroll($event);
+      if($event == this.changeScopeVar){
+        this.getSideScroll($event);
+      }else{
+        this.callCount = 1;
+        this.sideScrollData = null;
+        this.getSideScroll($event);
+      }
+      this.changeScopeVar = $event;
     }
 
     private scrollCheck(event){

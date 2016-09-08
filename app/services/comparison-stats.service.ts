@@ -255,18 +255,14 @@ export class ComparisonStatsService {
   callPlayerComparisonAPI(scope: string = this.scope, teamId: string, playerId: string, dataLoaded: Function) {
     let url = this._apiUrl + "/comparison/";
     if ( playerId ) {
-      //http://dev-homerunloyal-api.synapsys.us/player/comparison/player/95622
       url += "player/" + playerId;
     }
     else if ( teamId ) {
-      //http://dev-homerunloyal-api.synapsys.us/player/comparison/team/2800
       url += "team/" + teamId;
     }
     else {
-      //http://dev-homerunloyal-api.synapsys.us/player/comparison/league
       url += "league/" + scope;
     }
-    // console.log("url", url);
     return this.http.get(url)
       .map(res => res.json())
       .map(data => {

@@ -4,6 +4,7 @@ import {Http} from '@angular/http';
 
 import {GlobalFunctions} from "../global/global-functions";
 import {GlobalSettings} from "../global/global-settings";
+import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
 
 export interface DailyUpdateData {
   hasError: boolean;
@@ -54,6 +55,8 @@ interface PostGameArticleData {
   img: string;
 }
 
+declare var moment: any;
+
 @Injectable()
 export class DailyUpdateService {
   postGameArticleData: PostGameArticleData;
@@ -83,49 +86,7 @@ export class DailyUpdateService {
         .map(data => this.formatTeamData(data.data, teamId));
   }
 
-  // API http://dev-touchdownloyal-api.synapsys.us/dailyUpdate/team/137 returns:
-  // {"success":true,"message":"","data":{"recentGames":[{"id":"377","teamId":"137","teamName":"New York","teamNick":"Jets","wins":"10","losses":"6","pointsPerGame":"24.2","passingYardsPerGame":"260.6","rushingYardsPerGame":"116.8","gameStat1Type":"Points For","gameStat2Type":"Points Against","game1EventId":"488","game1Stat1":"17","game1Stat2":"22","game1AgainstName":"Buffalo","game1AgainstNick":"Bills","game2Stat1":"26","game2Stat2":"20","game2AgainstName":"New England","game2AgainstNick":"Patriots","game3Stat1":"19","game3Stat2":"16","game3AgainstName":"Dallas","game3AgainstNick":"Cowboys","game4Stat1":"30","game4Stat2":"8","game4AgainstName":"Tennessee","game4AgainstNick":"Titans","seasonId":"2","seasonBase":"2015","leagueId":"1","aiArticleId":"1","aiReportTeaser":null,"aiReportTimestamp":null,"teamColorsHex":"#0C371D","teamLogo":"\/nfl\/teams\/logos\/NFL_New_York_Jets_Logo.jpg","backgroundUrl":null,"lastUpdated":"2016-08-31 13:55:10"}],"postgame-report":{"article":{"status":"Error","message":"Could not find any data for your request.","fix":"Please try your call again.","data":["No data found."],"page":0,"count":"1"},"image":{"id":"17765","imageUrl":"\/nfl\/players\/liveimages\/d23224c6-c422-4deb-b542-1dbd1a6be5c0.jpg","imageDescription":"NFL: Preseason-New York Jets at Washington Redskins","imageCopyright":"USA Today Sports Images","imageDate":"2016-08-20 00:00:00","imageType":"liveimage","imageId":"48267","playerId":"11470","teamId":"137","affiliation":"nfl","lastUpdated":"2016-08-31 03:08:32"}}}}
-
   private formatTeamData(data: APIDailyUpdateData, teamId: number): DailyUpdateData {
-    // check if it report exists and it isn't just an error message string
-    // DUMMY DATA \/\/\/
-    //if (data['postgame-report'] == null || typeof(data['postgame-report']) == "string" || /^Error/.test(data['postgame-report'].article) || data['postgame-report'].article.status == "Error" ) {
-    //  data['postgame-report'] = {
-    //    displayHeadline: "Perez's hot bat not enough for Royals win",
-    //    dateline: "Saturday, August 27, 2016 11:30 PM EDT",
-    //    article: {
-    //      data: [
-    //        {
-    //          teaser: "Lorem Ipsum delor sid ex communicae desporado conica Flur de Li, rey dunesty flex beamer contorte Sore cacorde tagain. Lorem Ipsum delor sid ex communicae desporado conica, rey dunesty flex beamer contorte cacorde tagain.",
-    //          id: "23309",
-    //          title: "Eric Weddle's most recent game",
-    //          jsonUrl: "2016/nfl/player/player-daily-update/11886.json",
-    //          imageUrl: "/TDL/stock_images/TDL_Stock-4.png",
-    //          articleTypeId: "10",
-    //          articleSubtypeId: null,
-    //          eventId: null,
-    //          affiliation: "nfl",
-    //          seasonId: "2016",
-    //          lastUpdated: "2016-09-05 14:03:07",
-    //          playerId: "11886"
-    //        }
-    //      ]
-    //    },
-    //    image: {
-    //      affiliation : "nfl",
-    //      id : "17765",
-    //      imageCopyright : "USA Today Sports Images",
-    //      imageDate : "2016-08-20 00:00:00",
-    //      imageDescription : "NFL: Preseason-New York Jets at Washington Redskins",
-    //      imageId : "48267",
-    //      imageType : "liveimage",
-    //      imageUrl : "/nfl/players/liveimages/d23224c6-c422-4deb-b542-1dbd1a6be5c0.jpg",
-    //      lastUpdated : "2016-08-31 03:08:32",
-    //      playerId : "11470",
-    //      teamId : "137"
-    //    }
-    //  }
-    //}
 
     if ( !data ) {
       throw new Error("Error! Data is null from Team Daily Update API");
@@ -146,28 +107,6 @@ export class DailyUpdateService {
       if ( data.recentGames[0]["wins"] != null && data.recentGames[0]["losses"] != null ) {
         record = data.recentGames[0]["wins"] + "-" + data.recentGames[0]["losses"];
       }
-      // stats = [
-      //   {
-      //     name: "Win Loss Record",
-      //     value: record,
-      //     icon: "fa-trophy"
-      //   },
-      //   {
-      //     name: "Hits",
-      //     value: apiSeasonStats.batHits != null ? apiSeasonStats.batHits : "N/A", //TODO: get hits from API
-      //     icon: "fa-batt-and-ball" //TODO: use 'baseball and bat' icon
-      //   },
-      //   {
-      //     name: "Earned Runs Average",
-      //     value: apiSeasonStats.pitchEra != null ? Number(apiSeasonStats.pitchEra).toFixed(2) : "N/A",
-      //     icon: "fa-batter" //TODO: use 'batter swinging' icon
-      //   },
-      //   {
-      //     name: "Runs Batted In",
-      //     value: apiSeasonStats.batRbi != null ? Number(apiSeasonStats.batRbi) : "N/A",
-      //     icon: "fa-batter-alt" //TODO: get 'batter standing' icon
-      //   }
-      // ]
       stats = [
         {
           name: "Win Loss Record",
@@ -487,7 +426,7 @@ export class DailyUpdateService {
     articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? GlobalFunctions.formatUpdatedDate(data['postgame-report'].article.data[0].lastUpdated, true, " " + moment().tz('America/New_York').format('z')) : null;
     articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
     articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;
-    articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? GlobalSettings.getImageUrl(data['postgame-report'].article.data[0].imageUrl): null;
+    articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].article.data[0].imageUrl): null;
 
     this.postGameArticleData = <PostGameArticleData>articleData;
   }
@@ -507,11 +446,12 @@ export class DailyUpdateService {
       };
 
       data['recentGamesChartData'].forEach((item, index) => {
-        chart.categories.push("vs " + item.opponentTeamName); //TODO: Should this link to the team?
+        chart.categories.unshift("vs " + item.opponentTeamName); //TODO: Should this link to the team?
 
-        chart.dataSeries[0].values.push(item[seriesOne.key] != null ? Number(item[seriesOne.key]) : null);
-        chart.dataSeries[1].values.push(item[seriesTwo.key] != null ? Number(item[seriesTwo.key]) : null);
+        chart.dataSeries[0].values.unshift(item[seriesOne.key] != null ? Number(item[seriesOne.key]) : null);
+        chart.dataSeries[1].values.unshift(item[seriesTwo.key] != null ? Number(item[seriesTwo.key]) : null);
       });
+
       return chart;
     }
     else {
