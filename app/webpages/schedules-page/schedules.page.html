@@ -4,7 +4,7 @@
       <title-component *ngIf="profileHeaderData" [titleData]="profileHeaderData"></title-component>
       <loading-component *ngIf="!schedulesData && !isError"></loading-component>
       <error-component *ngIf="isError"></error-component>
-      <schedules-component *ngIf="schedulesData"
+      <schedules-component *ngIf="schedulesData && tabData"
         [error]="error"
         [carouselData]="schedulesData.carData"
         [data]="schedulesData.data"

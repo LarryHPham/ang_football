@@ -24,7 +24,7 @@ export interface Link {
 export interface ParagraphItem {
     class?: string;
     style?: any;
-    textData: Array<Link | string>;
+    textData?: Array<Link | string>;
 }
 
 export interface NavigationData {

@@ -200,7 +200,6 @@ export class LeaguePage implements OnInit {
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
-            console.log('PARENTPARAMS',parentParams.scope);
             this.pageParams.scope = this.scope;
             //for boxscores
             var currentUnixDate = new Date().getTime();
