@@ -40,6 +40,8 @@ export class ListOfListsService {
     var target =  profileType;
     let scope = urlParams.scope;
 
+    console.log(profileType);
+
     if (profileType == 'league' && pageType == 'module') {
       id = '';
       targetbit = '';
@@ -184,13 +186,19 @@ export class ListOfListsService {
       let itemInfo = item.listInfo;
       let itemListData = item.listData;
       var itemTarget;
+      var leagueimgclass;
+      var leaguerank;
 
 
       if (target != 'league') {
         itemTarget = item.targetData[0];
+        leagueimgclass = 'image-38-rank image-round-upper-left image-round-sub-text';
+        leaguerank = '#'+itemTarget.rank;
       }
       else {
         itemTarget = item.targetData;
+        leagueimgclass = '';
+        leaguerank == null;
       }
 
 
@@ -307,8 +315,8 @@ export class ListOfListsService {
               //   imageClass    : itemTarget[0].rankType == "player" ? "image-round-sub image-40-sub image-round-lower-right" : null
               // },
               {
-              text: "#"+ itemTarget.rank,
-              imageClass: "image-38-rank image-round-upper-left image-round-sub-text"
+              text: leaguerank,
+              imageClass: leagueimgclass
             }]
           }
         )
