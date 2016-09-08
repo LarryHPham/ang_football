@@ -98,14 +98,14 @@ export class MVPListPage implements OnInit{
       this.scope = this.collegeDivisionFullAbbrv;
     }
 
-    this.displayPosition = this.listType != null ? VerticalGlobalFunctions.convertPositionAbbrv(this.listType) : this.globalMVPPosition;
+    this.displayPosition = this.listType != null ? VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.listType) : this.globalMVPPosition;
 
     this.profileHeaderData = {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["League-page"],
       text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.displayPosition+"s",
+      text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.displayPosition,
       icon: 'fa fa-map-marker'
     };
 
@@ -116,7 +116,7 @@ export class MVPListPage implements OnInit{
           imageRoute: ["League-page"],
           text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
           text2: 'United States',
-          text3: "Most Valuable Players",
+          text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
           icon: 'fa fa-map-marker'
         };
         this.loadTabs();
