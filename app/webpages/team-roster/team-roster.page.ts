@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, DoCheck, OnChanges} from '@angular/core';
-import {RouteParams} from "@angular/router-deprecated";
+import {Router, RouteParams, RouteConfig} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
@@ -26,6 +26,7 @@ export class TeamRosterPage implements OnInit {
   public titleData: TitleInputData;
   public profileLoaded: boolean = false;
   public hasError: boolean = false;
+  scope: string;
   public footerData = {
       infoDesc: 'Interested in discovering more about this player?',
       text: 'View Profile',
@@ -35,6 +36,7 @@ export class TeamRosterPage implements OnInit {
   private selectedTabTitle: string;
 
   constructor(private _params: RouteParams,
+              private _router:Router,
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _rosterService: RosterService) {
@@ -43,6 +45,10 @@ export class TeamRosterPage implements OnInit {
     if ( teamId !== null && teamId !== undefined ) {
       this.pageParams.teamId = Number(teamId);
     }
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.scope = parentParams.scope;
+        this.pageParams.scope = this.scope;
+    });
   }
 
   ngOnInit() {

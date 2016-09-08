@@ -437,7 +437,7 @@ export class VerticalGlobalFunctions {
       return 'Safety';
 
       case 'lb' :
-      return 'Linebaker';
+      return 'Linebacker';
 
       case 'k' :
       return 'Kicker';
@@ -459,6 +459,54 @@ export class VerticalGlobalFunctions {
 
       case 'te' :
       return 'Tight End';
+
+      default : return null;
+    }
+  }
+
+  static convertPositionAbbrvToPlural(position) {
+    switch (position) {
+      case 'cb' :
+      return 'Cornerbacks';
+
+      case 'db' :
+      return 'Defensive Backs';
+
+      case 'de' :
+      return 'Defensive Ends';
+
+      case 'dl' :
+      return 'Defensive Linemen';
+
+      case 'dt' :
+      return 'Defensive Tackles';
+
+      case 'saf' :
+      return 'Safeties';
+
+      case 'lb' :
+      return 'Linebackers';
+
+      case 'k' :
+      return 'Kickers';
+
+      case 'p' :
+      return 'Punters';
+
+      case 'qb' :
+      return 'Quarterbacks';
+
+      case 'rb' :
+      return 'Runningbacks';
+
+      case 'rs' :
+      return 'Return specialists';
+
+      case 'wr' :
+      return 'Wide Receivers';
+
+      case 'te' :
+      return 'Tight Ends';
 
       default : return null;
     }
