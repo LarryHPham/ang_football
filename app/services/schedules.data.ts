@@ -318,13 +318,15 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
     switch (hdrColumnKey) {
       case "date":
-        display = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
+      let date320 = moment(Number(item.eventTimestamp)*1000).format("DD/YY");
+      let date640 = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
+        display = "<span class='schedule-date-320'>" + date320 + "</span>" + "<span class='schedule-date-640'>" + date640 + "</span>";
         sort = Number(item.eventTimestamp)*1000;
         break;
 
       case "t":
         if(item.eventStatus != 'cancelled'){
-          display = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('h:mm') + " <sup> "+moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('A')+" </sup>";
+          display = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('h:mm') + " "+moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('A');
         }else{
           display = "Cancelled";
         }
@@ -394,13 +396,13 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         var away = item.team2Abbreviation + " " + item.team2Score;
         if(item.team1Outcome == 'W'){
           home = "<span class='text-heavy'>" + home + "</span>";
-          sort = Number(item.team1Score);
+          sort = (Number(item.team1Score) % Number(item.team2Score));
         } else if(item.team2Outcome == 'W'){
           away = "<span class='text-heavy'>" + away + "</span>";
-          sort = Number(item.team2Score);
+          sort = (Number(item.team2Score) % Number(item.team1Score));
         }
         else {
-          sort = Number(item.team2Score);
+          sort = (Number(item.team2Score) % Number(item.team1Score));
         }
         display = home + " - " + away;
         break;
@@ -413,12 +415,12 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         item.team1Outcome = item.team1Outcome != null ? item.team1Outcome: '';
         if (scoreHome > scoreAway) {
           display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
-          sort = (scoreHome/scoreHome+scoreAway);
+          sort = (scoreHome/(scoreHome+scoreAway));
         }
         else
         {
           display = item.team1Outcome + " " + scoreAway + " - " + scoreHome;
-            sort = (scoreHome/scoreHome+scoreAway);
+            sort = (scoreHome/(scoreHome+scoreAway));
         }
         break;
 
