@@ -166,7 +166,7 @@ export class ArticlePages implements OnInit {
         });
         try {
             images.forEach(function (val) {
-                imageArray.push(GlobalSettings.getBackgroundImageUrl(val['image_url']));
+                imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
                 copyArray.push(val['image_copyright']);
                 titleArray.push(val['image_title']);
             });
@@ -419,7 +419,7 @@ export class ArticlePages implements OnInit {
             title: recommendations.title,
             eventType: pageIndex,
             eventID: eventID,
-            images: GlobalSettings.getBackgroundImageUrl(recommendations.image_url),
+            images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
             date: moment(recommendations.last_updated).format('MMMM DD, YYYY'),
             keyword: "FOOTBALL"
         };
