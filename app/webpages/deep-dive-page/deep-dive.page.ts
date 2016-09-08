@@ -65,6 +65,7 @@ export class DeepDivePage implements OnInit{
     carouselData: any;
     videoData:any;
     blockIndex: number = 1;
+    changeScopeVar: string = "";
 ​
     private isHomeRunZone: boolean = false;
 
@@ -79,6 +80,7 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
+          this.changeScopeVar = this.scope;
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/") {
@@ -120,12 +122,12 @@ export class DeepDivePage implements OnInit{
     }
 
     //api for Schedules
-    private getSideScroll(){
+    private getSideScroll(scope?){
       let self = this;
-
       if(this.safeCall){
         this.safeCall = false;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, this.scope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+        let changeScope = this.changeScopeVar.toLowerCase() == 'ncaaf'?'fbs':this.changeScopeVar.toLowerCase();
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
           if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
           }
@@ -139,6 +141,16 @@ export class DeepDivePage implements OnInit{
           this.scrollLength = this.sideScrollData.length;
         }, null, null)
       }
+    }
+    changeScope($event) {
+      if($event == this.changeScopeVar){
+        this.getSideScroll($event);
+      }else{
+        this.callCount = 1;
+        this.sideScrollData = null;
+        this.getSideScroll($event);
+      }
+      this.changeScopeVar = $event;
     }
 
     private scrollCheck(event){

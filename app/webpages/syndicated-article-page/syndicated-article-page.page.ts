@@ -132,7 +132,7 @@ export class SyndicatedArticlePage{
     }
 
     getPartnerHeader(){//Since it we are receiving
-      if(this.partnerID != null){
+      if(this.partnerID.partnerID != null){
         this._partnerData.getPartnerData(this.partnerID)
         .subscribe(
           partnerScript => {

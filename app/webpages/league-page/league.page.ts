@@ -200,6 +200,7 @@ export class LeaguePage implements OnInit {
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
+            console.log('PARENTPARAMS',parentParams.scope);
             this.pageParams.scope = this.scope;
             //for boxscores
             var currentUnixDate = new Date().getTime();
@@ -258,7 +259,7 @@ export class LeaguePage implements OnInit {
                 this.getImages(this.imageData);
                 this.getNewsService();
                 this.getFaqService(this.profileType);
-                // this.setupListOfListsModule();
+                this.setupListOfListsModule();
                 this.getDykService(this.profileType);
                 this.getLeagueVideoBatch(7,1,1,0,scope);
                 this.getTwitterService(this.profileType, partnerID, scope);
@@ -444,9 +445,10 @@ export class LeaguePage implements OnInit {
 
     private setupListOfListsModule() {
         let params = {
-          targetId : 11621,
+        //  targetId : 11621,
           limit : 4,
-          pageNum : 1
+          pageNum : 1,
+          scope: this.scope
         }
         this._lolService.getListOfListsService(params, "league", "module")
             .subscribe(
