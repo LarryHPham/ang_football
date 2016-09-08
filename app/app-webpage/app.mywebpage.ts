@@ -266,7 +266,7 @@ export class MyAppComponent implements OnInit{
   public partnerScript:string;
   public shiftContainer:string;
   public hideHeader:boolean;
-  private isHomeRunZone:boolean = false;
+  private isPartnerZone:boolean = false;
   constructor(private _partnerData: PartnerHeader, private _params: RouteParams){
     var parentParams = _params.params;
 

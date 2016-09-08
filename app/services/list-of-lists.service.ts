@@ -141,7 +141,7 @@ export class ListOfListsService {
           itemTargetData.backgroundImage = "/app/public/Image-Placeholder-2.jpg";
         }
         else {
-          itemTargetData.backgroundImage = GlobalSettings.getBackgroundImageUrl(itemTargetData.backgroundImage);
+          itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(itemTargetData.backgroundImage);
         }
 
 
