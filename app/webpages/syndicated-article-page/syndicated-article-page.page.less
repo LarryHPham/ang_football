@@ -363,8 +363,13 @@
 .syndicated-articles-page .deep_recs-articles-item-content-dateline{
   display: block;
   line-height: 2em;
+  .globalDefaultFont(10px,800);
 }
-
+.syndicated-articles-page .deep_recs-articles-item-image{
+  @media @tablet{
+    height:120px;
+  }
+}
 /*.syndicated-articles-page {
   width: 100%;
   height: auto;
