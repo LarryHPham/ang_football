@@ -40,8 +40,6 @@ export class ListOfListsService {
     var target =  profileType;
     let scope = urlParams.scope;
 
-    console.log(profileType);
-
     if (profileType == 'league' && pageType == 'module') {
       id = '';
       targetbit = '';
