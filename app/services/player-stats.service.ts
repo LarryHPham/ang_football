@@ -54,22 +54,33 @@ export class PlayerStatsService implements OnDestroy{
 
         var standingsTab: MLBPlayerStatsTableData = tabData[0];
 
-        var columnTabType:string="passing"
+        var columnTabType;
 
         if(tabData[1]== "2015"||tabData[1]== "2014" ){
                this.seasonId = tabData[1];
-            if ( !this.seasonId && standingsTab.seasonIds.length > 0 ) {
 
-                //console.log(standingsTab.seasonIds,"seasonId");
-                this.seasonId = standingsTab.seasonIds[0].key;
+            if(standingsTab.tabActive=="Special"){
+                //console.log(this.tabName);
+                this.tabName=this.tabName;
 
+            }else {
+                this.tabName = standingsTab.tabTitle.toLowerCase();
+
+                this.GlossaryData=standingsTab.glossary;
 
             }
+
         }else{
              columnTabType = tabData[1];
-            //console.log(tabData ,"this one sort")
-            if ( !columnTabType && standingsTab.subTabs.length > 0 ) {
-                columnTabType = standingsTab.subTabs[0].key;
+
+            if(standingsTab.tabActive=="Special"){
+                //standingsTab.tabActive=columnTabType;
+                //this.GlossaryData=standingsTab.g;
+                this.tabName=columnTabType.toLowerCase();
+
+            }else {
+                this.tabName = standingsTab.tabTitle.toLowerCase();
+                this.GlossaryData=standingsTab.glossary;
 
             }
         }
@@ -88,26 +99,21 @@ export class PlayerStatsService implements OnDestroy{
                 return;
             }
         }*/
+        standingsTab.tabN=this.tabName;
 
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
         standingsTab.tableData = null;
         // standingsTab.tabActive="Passing";
 
-        if(standingsTab.tabActive=="Special"){
-            this.tabName=columnTabType.toLowerCase();
 
-        }else {
-            this.tabName = standingsTab.tabTitle.toLowerCase();
-            this.GlossaryData=standingsTab.glossary;
-
-        }
         let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
-
+        console.log(url);
         this.http.get(url)
             .map(res => res.json())
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {
+                    standingsTab.tabN=this.tabName;
                     standingsTab.isLoaded = true;
                     standingsTab.hasError = false;
                     standingsTab.seasonTableData[columnTabType] = data;
@@ -136,7 +142,7 @@ export class PlayerStatsService implements OnDestroy{
     }
 
     private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
-        let table = new MLBPlayerStatsTableModel(data, standingsTab.tabActive);
+        let table = new MLBPlayerStatsTableModel(data, standingsTab.tabN);
         //Limit to maxRows, if necessary
         if ( maxRows !== undefined ) {
             table.rows = table.rows.slice(0, maxRows);
