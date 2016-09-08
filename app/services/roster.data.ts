@@ -19,7 +19,7 @@ export interface TeamRosterData {
   roleStatus: string,
   active: string,
   playerJerseyNumber: string,
-  backgroundImage: string;
+  backgroundUrl: string;
   teamLogo: string,
   playerPosition:string,
   depth: string,
@@ -153,7 +153,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       class: 'text-heavy'
     }
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
+      backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [curYear + ' TEAM ROSTER'],
       profileNameLink: playerLinkText,
@@ -161,7 +161,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
           playerLinkText,
           ", ", "<span class='text-heavy'>" + val.playerPosition, "</span>",'for the ',
           teamLinkText,
-          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" and making a salary of "+ playerSalary
+          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +"<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>"
       ],
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),
@@ -196,12 +196,12 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       key: "wt"
     },{
       headerValue: "Age",
-      columnClass: "data-column",
+      columnClass: "data-column age",
       isNumericType: true,
       key: "age"
     },{
       headerValue: "Salary",
-      columnClass: "data-column",
+      columnClass: "data-column salary",
       isNumericType: true,
       key: "sal"
     }
