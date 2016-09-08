@@ -82,7 +82,6 @@ export class ListOfListsPage implements OnInit{
                     this.detailedDataArray = list.listData;
                 }
                 this.setPaginationParams(list.pagination);
-                console.log(list.pagination);
                 this.carouselDataArray = list.carData;
 
 
@@ -145,7 +144,6 @@ export class ListOfListsPage implements OnInit{
         var params = this._params.params;
 
 
-        console.log(params);
 
 
         var navigationParams = {
