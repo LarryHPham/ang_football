@@ -46,8 +46,10 @@ export class ListOfListsService {
 
     }
 
+
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
+    console.log(callURL);
     return this.http.get( callURL, {
         headers: headers
       })
@@ -92,7 +94,7 @@ export class ListOfListsService {
         if( val.listData[0] == null) return;
         let itemInfo = val.listInfo;
         var itemTargetData;
-        if (target != 'league') {
+        if (target != 'league') {  // if page is league, reformat data [API changes]
           itemTargetData = val.targetData[0];
         }
         else {
@@ -177,6 +179,18 @@ export class ListOfListsService {
     let dummyListRank     = 1;
     let dummyIcon         = "fa fa-mail-forward";
 
+
+    var leagueimgclass;
+    var leaguerank;
+
+    if (target != 'league' || version == 'page') {
+      leagueimgclass = 'image-38-rank image-round-upper-left image-round-sub-text'; // Show rank image of list of lists on page, but not module on league page.
+    }
+    else {
+      leagueimgclass = '';
+    }
+
+
     data.forEach(function(item, index){
 
 
@@ -184,20 +198,20 @@ export class ListOfListsService {
       let itemInfo = item.listInfo;
       let itemListData = item.listData;
       var itemTarget;
-      var leagueimgclass;
-      var leaguerank;
 
-
-      if (target != 'league') {
+      if (target != 'league') { // if page is league, reformat data
         itemTarget = item.targetData[0];
-        leagueimgclass = 'image-38-rank image-round-upper-left image-round-sub-text';
-        leaguerank = '#'+itemTarget.rank;
       }
       else {
         itemTarget = item.targetData;
-        leagueimgclass = '';
         leaguerank == null;
       }
+      if (leagueimgclass == 'image-38-rank image-round-upper-left image-round-sub-text') {
+        leaguerank = '#'+itemTarget.rank;
+      }
+
+
+
 
 
       if( itemListData.length<1 ) return;
