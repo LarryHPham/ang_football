@@ -223,7 +223,6 @@ export class ListPageService {
 
     var callURL = this._apiUrl+'/list';
 
-
     for(var q in query) {
       if(q == 'scope'){
         callURL += '/' + q +'='+ query[q];
@@ -369,7 +368,7 @@ export class ListPageService {
         var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
         var position = val.playerPosition;
         var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
-        var stat = GlobalFunctions.commaSeparateNumber(val.stat);
+        var stat = GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) );
         var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
         return {
           dataPoints: ListPageService.detailsData(
