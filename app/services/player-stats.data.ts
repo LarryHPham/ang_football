@@ -81,8 +81,8 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
     isTeamProfilePage: boolean;
     subTabs:Array<any>;
 
-    constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean, tabN:string) {
-        this.tabN=tabN;
+    constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean) {
+
 
         this.tabActive = tabActive;
         this.tableName = "<span class='text-heavy'>" + getTabTitle(tabActive).title + "</span> " + " : Team Player Stats";
@@ -219,7 +219,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             {
                 key:'Returning',value:'Returning'
             }];
-       
+
     }
 
 

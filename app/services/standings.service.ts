@@ -30,8 +30,7 @@ export class StandingsService {
   }
 
   private getModuleTitle(pageParams: SportPageParameters, teamName: string): string {
-    let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let moduletitle = groupName + " Standings";
+    let moduletitle = "Standings";
     if ( teamName ) {
       moduletitle += " - " + teamName;
     }
@@ -41,7 +40,7 @@ export class StandingsService {
   getPageTitle(pageParams: SportPageParameters, teamName: string): string {
     var scope = pageParams.scope == 'fbs' ? 'ncaaf' : 'nfl';
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = scope.toUpperCase() + " Standings Breakdown";
+    let pageTitle = scope.toUpperCase() + " Standings " + scope.toUpperCase();
     if ( teamName ) {
       pageTitle = scope.toUpperCase() + " Standings - " + teamName;
     }
@@ -62,8 +61,8 @@ export class StandingsService {
       //Is an stangings page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
       /*console.log('league conference tabs',Conference, Division);*/
-      tabs.push(this.createTab(true, currentTeamId, 'Division'));//TODO
-      tabs.push(this.createTab(false, currentTeamId, 'Conference'));//TODO
+      tabs.push(this.createTab(true, currentTeamId, 'Division'));
+      tabs.push(this.createTab(false, currentTeamId, 'Conference'));
       tabs.push(this.createTab(false, currentTeamId));
     }
     else if ( pageParams.division === undefined || pageParams.division === null ) {
@@ -116,8 +115,6 @@ export class StandingsService {
     //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl/2015
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
       let url = GlobalSettings.getApiUrl() + "/standings";
-      //TODO
-
       url += "/" + pageParams.scope + "/" + season;
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
@@ -285,15 +282,14 @@ export class StandingsService {
     if ( conference !== undefined && conference !== null ) {
       let leagueName = conference;
       if ( division !== undefined && division !== null ) {
-        var divisionName = division;
-        return (makeDivisionBold ? "<span class='text-heavy'>" + divisionName + "</span>" : divisionName);
+        return (makeDivisionBold ? "<span class='text-heavy'>" + division + "</span>" : division);
       }
       else {
         return leagueName;
       }
     }
     else {
-      return "NFL";//TODO
+      return "NFL";
     }
   }
 }

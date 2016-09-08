@@ -187,7 +187,8 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
           break;
       case "RB":
       if (stats.player_rushing_yards_per_game) {
-          description = [playerRouteText, " has a total of ", Number(stats.player_rushing_yards_per_game).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[4].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[0].stat).toFixed(0)  , " " , "Attempts." ];
+          description = [playerRouteText, " has a total of ", Number(stats.player_rushing_yards_per_game).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats.player_rushing_yards_per_carry
+).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats.player_rushing_attempts).toFixed(0)  , " " , "Attempts." ];
         }
         else {description = ["No Season Stats Data for this Season"]}
           break;
