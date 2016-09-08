@@ -353,6 +353,10 @@ export class ComparisonStatsService {
       fields = this.puntingFields;
     } else if(position == "KR" || position == "PR" || position == "RS"){
       fields = this.returningFields;
+    } else if(position == "TE" || position == "TEW" || position == "WR"){
+      fields = this.receivingFields;
+    } else {
+      fields = this.defenseFields;
     }
     var teamColorsOne = data.playerOne.teamColors.split(", ");
     var teamColorsTwo = data.playerTwo.teamColors.split(", ");
@@ -366,6 +370,14 @@ export class ComparisonStatsService {
       var playerOneStats = data.playerOne.statistics[seasonId];
       var playerTwoStats = data.playerTwo.statistics[seasonId];
       var seasonBarList = [];
+      var stats = null;
+      if(bestStats == null || bestStats === undefined){
+        if(playerOneStats >= playerTwoStats){
+          stats = playerOneStats;
+        } else {
+          stats = playerTwoStats;
+        }
+      }
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
         var title = ComparisonStatsService.getKeyDisplayTitle(key);
@@ -382,7 +394,7 @@ export class ComparisonStatsService {
             color: '#999999'
           }],
           minValue: worstStats != null ? worstStats[key] : null,
-          maxValue: bestStats != null ? bestStats[key] : null,
+          maxValue: bestStats != null ? bestStats[key] : stats,
           qualifierLabel: SeasonStatsService.getQualifierLabel(key)
         });
       }
