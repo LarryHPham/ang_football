@@ -62,6 +62,7 @@ export class ListOfListsService {
             lastUpdated = data.data[0].targetData;
 
           }
+          console.log('FUCK MAN',data.data[0].targetData);
           return {
             carData: this.carDataPage(data.data,target),
             listData: this.detailedData(data.data, pageType,target),

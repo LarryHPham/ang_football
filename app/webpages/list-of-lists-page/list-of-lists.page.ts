@@ -70,6 +70,8 @@ export class ListOfListsPage implements OnInit{
 
     }
 
+
+
     getListOfListsPage(urlParams, logoUrl?: string) {
         this.listService.getListOfListsService(urlParams, this.pageType, "page")
           .subscribe(
@@ -80,7 +82,7 @@ export class ListOfListsPage implements OnInit{
                     this.detailedDataArray = list.listData;
                 }
                 this.setPaginationParams(list.pagination);
-
+                console.log(list.pagination);
                 this.carouselDataArray = list.carData;
 
 
@@ -118,11 +120,13 @@ export class ListOfListsPage implements OnInit{
 
 
                 this.profileName = profileName
+                console.log("FUCK MAN",list);
+
                 this._title.setTitle(GlobalSettings.getPageTitle("List of Lists", this.profileName));
                 this.titleData = {
                     imageURL : profileImage,
                     imageRoute: profileRoute,
-                    text1 : 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(list.lastUpdated[0].lastUpdated),
+                    text1 : 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(list.lastUpdated['lastUpdated']),
                     text2 : ' United States',
                     text3 : 'Top lists - ' + this.profileName,
                     icon: 'fa fa-map-marker'
@@ -142,6 +146,9 @@ export class ListOfListsPage implements OnInit{
         var params = this._params.params;
 
 
+        console.log(params);
+
+
         var navigationParams = {
             perPageCount     : params['perPageCount'],
             pageNumber    : params['pageNumber'],
@@ -155,22 +162,21 @@ export class ListOfListsPage implements OnInit{
           navigationParams['targetId'] = 'null';
         }
 
-        if ( this.pageType != "league" ) {
-           navigationParams['target'] = this.pageType;
-        }
+        navigationParams['target'] = this.pageType;
 
 
-        var navigationPage = this.pageType == "league" ? 'List-of-lists-page-scoped' : 'List-of-lists-page-scoped';
+
+        var navigationPage = 'List-of-lists-page-scoped';
         if ( !this.detailedDataArray ) {
             navigationPage = "Error-page";
         }
         else if ( navigationParams['scope'] ) {
             navigationPage = 'List-of-lists-page-scoped';
         }
-
+        console.log('input',input);
         this.paginationParameters = {
             index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
-            max: Number(input.pageCount),
+            max: Number(input.listPageCount),
             paginationType: 'page',
             navigationPage: navigationPage,
             navigationParams: navigationParams,
