@@ -74,7 +74,7 @@ export class PickTeamPage{
          placeholderText: "Search for a player or team...",
          hasSuggestions: true
      };
-    private isHomeRunZone: boolean = false;
+    private isPartnerZone: boolean = false;
     public gridDivCol: string;
     public gridLMain: string;
     public gridFeaturesCol: string;
@@ -100,7 +100,7 @@ export class PickTeamPage{
 
       GlobalSettings.getParentParams(_router, parentParams => {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
-        this.isHomeRunZone = partnerHome;
+        this.isPartnerZone = partnerHome;
 
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;

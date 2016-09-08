@@ -69,6 +69,7 @@ export class BoxScoresService {
               aiContent: dateParam.profile == 'league' ? this.aiHeadline(data.aiArticle) : null,
             };
             currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
+            boxScoresData = currentBoxScores;
             callback(data, currentBoxScores);
           }
         })
@@ -84,6 +85,7 @@ export class BoxScoresService {
           aiContent: dateParam.profile == 'league' ? this.aiHeadline(boxScoresData.aiArticle) : null,
         };
         currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
+        boxScoresData = currentBoxScores;
         callback(boxScoresData, currentBoxScores);
       }
     }
@@ -102,6 +104,7 @@ export class BoxScoresService {
           var eventType = aiContent['articleData'][p];
           var teaser = eventType.displayHeadline;
           var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
+          var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
         }
       var Box = {
         keyword: p,
@@ -110,7 +113,7 @@ export class BoxScoresService {
         teaser: teaser,
         imageConfig:{
           imageClass: "image-320x180-sm",
-          imageUrl: val.images[0].imageUrl != null ? GlobalSettings.getImageUrl(val.images[0].imageUrl) : sampleImage,
+          imageUrl: homeImage != null ? GlobalSettings.getImageUrl(homeImage) : sampleImage,
           hoverText: "View Article",
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
         }
