@@ -122,11 +122,12 @@ export class DeepDivePage implements OnInit{
     }
 
     //api for Schedules
-    private getSideScroll(scope?){
+    private getSideScroll(){
       let self = this;
       if(this.safeCall){
         this.safeCall = false;
         let changeScope = this.changeScopeVar.toLowerCase() == 'ncaaf'?'fbs':this.changeScopeVar.toLowerCase();
+        console.log(changeScope);
         this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
           if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
@@ -144,13 +145,13 @@ export class DeepDivePage implements OnInit{
     }
     changeScope($event) {
       if($event == this.changeScopeVar){
-        this.getSideScroll($event);
+        this.getSideScroll();
       }else{
+        this.changeScopeVar = $event;
         this.callCount = 1;
         this.sideScrollData = null;
-        this.getSideScroll($event);
+        this.getSideScroll();
       }
-      this.changeScopeVar = $event;
     }
 
     private scrollCheck(event){

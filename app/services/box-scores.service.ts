@@ -102,6 +102,7 @@ export class BoxScoresService {
           var eventType = aiContent['articleData'][p];
           var teaser = eventType.displayHeadline;
           var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
+          var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
         }
       var Box = {
         keyword: p,
