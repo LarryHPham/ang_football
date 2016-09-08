@@ -153,8 +153,7 @@ export class SyndicatedArticlePage{
         this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation, 2, 3)
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
-             // console.log("recommended data", this.recomendationData);
-            //this.recomendationData = [this.recomendationData[0], this.recomendationData[1], this.recomendationData[2]];
+             
           });
 
     }
