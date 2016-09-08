@@ -342,7 +342,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           item.team2Abbreviation = 'N/A';
         }
         isLocation = true;
-        display = item.team2Name.length > 10 || item.leagueAbbreviation.toLowerCase() !='nfl' ? item.team2Abbreviation : item.team2Name;
+        display = item.team2Name.length > 10 ? item.team2Abbreviation : item.team2Name;
         sort = item.team2Name;
         imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
         let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
@@ -359,7 +359,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           item.team1Abbreviation = 'N/A';
         }
         isLocation = true;
-        display = item.team1Name.length > 10 || item.leagueAbbreviation.toLowerCase() !='nfl' ? item.team1Abbreviation : item.team1Name;
+        display = item.team1Name.length > 10 ? item.team1Abbreviation : item.team1Name;
         sort = item.team1Name;
         imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
         let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
