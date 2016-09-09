@@ -343,22 +343,29 @@ export class ComparisonStatsService {
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
     var fields = null;
     var position = data.playerOne.playerPosition;
-    if(position == "QB"){
-      fields = this.passingFields;
-    } else if(position == "RB" || position == "FB" || position == "HB"){
-      fields = this.rushingFields;
-    } else if(position == "K" || position == "LS"){
-      fields = this.kickingFields;
-    } else if(position == "P"){
-      fields = this.puntingFields;
-    } else if(position == "KR" || position == "PR" || position == "RS"){
-      fields = this.returningFields;
-    } else if(position == "TE" || position == "TEW" || position == "WR"){
-      fields = this.receivingFields;
-    } else {
-      fields = this.defenseFields;
+    switch(position){
+      case "QB":
+        fields = this.passingFields;
+        break;
+      case "RB" || "FB" || "HB":
+        fields = this.rushingFields;
+        break;
+      case "K" || "LS":
+        fields = this.kickingFields;
+        break;
+      case "P":
+        fields = this.puntingFields;
+        break;
+      case "KR" || "RS" || "PR":
+        fields = this.returningFields;
+        break;
+      case "TE" || "TEW" || "WR":
+        fields = this.receivingFields;
+        break;
+      default:
+        fields = this.defenseFields;
+        break;
     }
-    // console.log("fields", fields);
     var teamColorsOne = data.playerOne.teamColors.split(", ");
     var teamColorsTwo = data.playerTwo.teamColors.split(", ");
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
@@ -371,14 +378,6 @@ export class ComparisonStatsService {
       var playerOneStats = data.playerOne.statistics[seasonId];
       var playerTwoStats = data.playerTwo.statistics[seasonId];
       var seasonBarList = [];
-      var stats = null;
-      if(bestStats == null || bestStats === undefined){
-        if(playerOneStats >= playerTwoStats){
-          stats = playerOneStats;
-        } else {
-          stats = playerTwoStats;
-        }
-      }
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
         var title = key;
@@ -395,14 +394,12 @@ export class ComparisonStatsService {
             color: '#999999'
           }],
           minValue: worstStats != null ? worstStats[key] : null,
-          maxValue: bestStats != null ? bestStats[key] : stats,
+          maxValue: bestStats != null ? bestStats[key] : null,
           qualifierLabel: SeasonStatsService.getQualifierLabel(key)
         });
       }
-
       bars[seasonId] = seasonBarList;
     }
-    // console.log("bars", bars);
     return bars;
   }
 
