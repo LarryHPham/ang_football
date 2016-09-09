@@ -20,7 +20,7 @@ export class HeadlineDataService {
             count = 10;
         }
         var fullUrl = GlobalSettings.getHeadlineUrl();
-        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&affiliation=nfl&articleType=pregame-report" + "&affiliation=" + scope)
+        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&affiliation="+scope+"&articleType=pregame-report" + "&affiliation=" + scope)
             .map(res => res.json())
             .map(data => data);
     }
