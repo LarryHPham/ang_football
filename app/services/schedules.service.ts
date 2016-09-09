@@ -86,7 +86,7 @@ export class SchedulesService {
       callURL += '/'+id;
     }
     if(year == 'all'){
-      year == null;
+      year = null;
     }
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
     //optional week parameters
