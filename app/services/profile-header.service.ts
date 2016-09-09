@@ -233,7 +233,7 @@ export class ProfileHeaderService {
 
     var teamId = data.pageParams.teamId ? data.pageParams.teamId : null;
     return {
-      imageURL: data.fullProfileImageUrl, //TODO
+      imageURL: '', //TODO
       imageRoute: VerticalGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
@@ -307,7 +307,7 @@ export class ProfileHeaderService {
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
         profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
-        backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
+        backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
         profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
         profileTitleLastPart: '',
         lastUpdatedDate: headerData.lastUpdated,
@@ -375,7 +375,7 @@ export class ProfileHeaderService {
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
         profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
-        backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
+        backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
         profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
         profileTitleLastPart: '',
         lastUpdatedDate: headerData.lastUpdated,
@@ -444,7 +444,7 @@ export class ProfileHeaderService {
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
       profileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
-      backgroundImageUrl: GlobalSettings.getImageUrl(headerData.backgroundUrl),
+      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
       profileTitleFirstPart: headerData.teamMarket,
       profileTitleLastPart: headerData.teamName,
       lastUpdatedDate: headerData.lastUpdated,
@@ -511,7 +511,7 @@ export class ProfileHeaderService {
     var header: ProfileHeaderData = {
       profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
-      backgroundImageUrl: data.backgroundUrl,
+      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.backgroundUrl),
       profileTitleFirstPart: "",
       //profileTitleLastPart: data.leagueAbbreviatedName, //todo when correct API is set
       profileTitleLastPart: data.leagueFullName,

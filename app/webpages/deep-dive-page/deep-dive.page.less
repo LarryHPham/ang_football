@@ -42,6 +42,7 @@
   }
   .spacer {
     height:50px;
+    width:100%;
     position:relative;
     display: none;
   }
@@ -107,8 +108,8 @@
       background-color: @bulletGrey;
     }
     .spacer{
+      width: 100%;
       display: block;
-      width: 768px;
     }
     &-container2{
       min-height: 800px;
@@ -131,10 +132,6 @@
 @media @desktop-m{
   .deep-dive{
     min-width: 768px;
-    .spacer{
-      width: 100%;
-      max-width: 1024px;
-    }
     &-container2{
       width: 768px;
     }
@@ -162,6 +159,9 @@
         }
       }
     }
+    .box-scores{
+      max-width: 670px;
+    }
   }
 }
 
@@ -170,9 +170,6 @@
     min-width: 1024px;
     &-adMed{
       display: none;
-    }
-    .spacer{
-      width: 1024px;
     }
     &-container2{
       width: 1024px;
@@ -200,10 +197,6 @@
       max-width: 640px;
     }
     min-width: 1440px;
-    .spacer{
-      width: 1440px;
-      max-width: 1440px;
-    }
     &-container2{
       width: auto;
     }

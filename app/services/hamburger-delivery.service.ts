@@ -24,7 +24,7 @@ export class HamburgerDeliveryService {
     }
     var menuData = [{
         menuTitle: "Home",
-        url: ['Home-page']
+        url: [partnerUrl +'-home',params ,'Home-page']
       },
       {
         menuTitle: division + " Teams",

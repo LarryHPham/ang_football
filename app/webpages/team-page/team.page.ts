@@ -148,6 +148,7 @@ export class TeamPage implements OnInit {
     profileType:string = "team";
     isProfilePage:boolean = true;
     // draftHistoryData:any;
+    ptabName:string;
 
     boxScoresData:any;
     currentBoxScores:any;
@@ -215,7 +216,9 @@ export class TeamPage implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.ptabName="Passing";
+    }
 
     /**
      *
@@ -469,12 +472,22 @@ export class TeamPage implements OnInit {
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
       this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      });
+      }, 5);
     }
 
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
+        if (tabData[0].tabActive=="Special"){
+            this.ptabName="Kicking";
+            if(tabData[1]=="2015"||tabData[1]=="2014"){
+
+            }else{
+                this.ptabName=tabData[1];
+            }
+        }else{
+            this.ptabName=tabData[0].tabActive;
+        };
     }
 
     setupListOfListsModule() {

@@ -32,6 +32,8 @@ export interface TeamStandingsData {
   totalWins: string;
   teamPointsFor: string;
   leagueAbbreviation: string;
+  roadRecord: string;
+  homeRecord: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -149,7 +151,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     }//fbs divison sends back all uppercase and needs to be camel case
     var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: GlobalSettings.getImageUrl(item.backgroundUrl),
+      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
       profileNameLink: teamNameLink,
@@ -185,7 +187,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
   }
   setColumnDP() : Array<TableColumn> {
     if(this.scope == 'fbs'){
-      this.columns = [{//TODO
+      this.columns = [{
           headerValue: "Team Name",
           columnClass: "image-column",
           key: "name"
@@ -218,13 +220,9 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           headerValue: "PA",
           columnClass: "data-column",
           key: "pa"
-        },{
-          headerValue: "Rank:",
-          columnClass: "data-column",
-          key: "rank"
         }];
       } else {
-        this.columns = [{//TODO
+        this.columns = [{
             headerValue: "Team Name",
             columnClass: "image-column",
             key: "name"
@@ -282,6 +280,14 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     return this.selectedKey == item.teamId;
   }
 
+  calcWLT(str: string){
+    let win = Number(str.split("-")[0]);
+    let lose = Number(str.split("-")[1]);
+    let tight = Number(str.split("-")[2]);
+    let wlt = Math.pow(win, 2) - lose + tight;
+    return wlt;
+  }
+
   getCellData(item:TeamStandingsData, column:TableColumn):CellData {
     var display = null;
     var sort: any = null;
@@ -300,37 +306,36 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "wlt":
         display = item.teamOverallRecord != null ? item.teamOverallRecord : null;
-        sort = item.teamOverallRecord;
+        sort = this.calcWLT(item.teamOverallRecord);
         break;
 
       case "conf":
         display = item.teamConferenceRecord != null ? item.teamConferenceRecord : null;
-        sort = item.teamConferenceRecord;
+        sort = this.calcWLT(item.teamConferenceRecord);
         break;
 
       case "strk":
         display = item.streak != null ? item.streak : null;
-        sort = item.streak;
+        var compareValue = Number(item.streak.slice(1, item.streak.length));
+        if(item.streak.charAt(0) == "L"){
+          compareValue *= -1;
+        }
+        sort = compareValue;
         break;
 
       case "hm":
-        display = item.teamWinPercent != null ? item.teamWinPercent : null;
-        sort = item.teamWinPercent;
+        display = item.homeRecord != null ? item.homeRecord : null;
+        sort = this.calcWLT(item.homeRecord);
         break;
 
       case "rd":
-        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
-        sort = item.teamDivisionRecord;
+        display = item.roadRecord != null ? item.roadRecord : null;
+        sort = this.calcWLT(item.roadRecord);
         break;
 
       case "pa":
         display = item.teamPointsAllowed != null ? item.teamPointsAllowed : null;
         sort = Number(item.teamPointsAllowed);
-        break;
-
-      case "rank":
-        display = item.leagueRank != null ? item.leagueRank : null;
-        sort = Number(item.leagueRank);
         break;
 
       case "pct":
@@ -340,7 +345,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "div":
         display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
-        sort = item.teamDivisionRecord;
+        sort = this.calcWLT(item.teamDivisionRecord);
         break;
 
       case "pf":
