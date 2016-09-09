@@ -5,7 +5,7 @@
   <div *ngIf="profileHeaderData">
     <!-- <headline-component [title]="'About the MLB'"></headline-component> -->
     <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
-    <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="true"></articles-module>
+    <articles-module *ngIf="headlineData && headlineError != false" [headlineData]="headlineData" [isLeague]="true"></articles-module>
     <!-- <headline-component [title]="'Keep Up With Everything MLB'"></headline-component> -->
     <video-module *ngIf="videoData" [firstVideo]="firstVideo"  [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
 
