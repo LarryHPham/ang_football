@@ -149,8 +149,9 @@ export class SyndicatedArticlePage{
     }
 
     getRecomendationData(){
-      var state = 'KS'; //needed to uppoercase for ai to grab data correctly
-        this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation, 2, 3)
+      var startNum=Math.floor((Math.random() * 49) + 1);
+        var state = 'KS'; //needed to uppoercase for ai to grab data correctly
+        this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
              
