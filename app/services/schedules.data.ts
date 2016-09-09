@@ -217,7 +217,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
          key: "gs"
        }];
     }else{
-      if(typeof teamId == 'undefined' || teamId == null){//for league table model there should not be a teamId coming from page parameters for post game reports
+      if(typeof teamId == 'undefined'){//for league table model there should not be a teamId coming from page parameters for post game reports
         this.columns = [
         {
            headerValue: "AWAY",
@@ -342,16 +342,15 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           item.team2Abbreviation = 'N/A';
         }
         isLocation = true;
-        display = item.team2Name.length > 10 && item.team2Name != null? item.team2Abbreviation : item.team2Name;
+        display = item.team2Name.length > 10 ? item.team2Abbreviation : item.team2Name;
         sort = item.team2Name;
         imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
         let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
-        if ( !this.isTeamProfilePage || this.curTeam != item.team2Id) {
-          if(item.team1Id != null){
-            link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
-          }
+        if ( !this.isTeamProfilePage || this.curTeam != item.team2Id ) {
+          link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
         }
         break;
+
       case "home":
         if(item.team1Name == null){
           item.team1Market = 'N/A';
@@ -360,14 +359,12 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           item.team1Abbreviation = 'N/A';
         }
         isLocation = true;
-        display = item.team1Name.length > 10 && item.team1Name != null ? item.team1Abbreviation : item.team1Name;
+        display = item.team1Name.length > 10 ? item.team1Abbreviation : item.team1Name;
         sort = item.team1Name;
         imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
         let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
-          if(item.team1Id != null){
-            link = VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
-          }
+          link = VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
         }
         break;
 

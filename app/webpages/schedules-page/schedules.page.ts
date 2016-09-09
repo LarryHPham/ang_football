@@ -66,8 +66,6 @@ export class SchedulesPage implements OnInit{
           if(this.selectedTabKey == null){
             this.selectedTabKey = 'pregame';
           }
-          this.initialTabKey = this.selectedTabKey;
-          this.eventStatus = this.selectedTabKey;
       });
 
     }
@@ -144,7 +142,7 @@ export class SchedulesPage implements OnInit{
             if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
               this.scheduleFilter1 = schedulesData.seasons;
               if(this.selectedFilter1 == null){
-                this.schedulesData.seasons['data'][0].key;
+                this.schedulesData.seasons[0].key;
               }
             }
           }
@@ -195,9 +193,7 @@ export class SchedulesPage implements OnInit{
           if(this.scheduleFilter2 == null){
             this.scheduleFilter2 = schedulesData.weeks;
             if(this.selectedFilter2 == null){
-              if(this.schedulesData.weeks != null){
-                this.selectedFilter2 = this.schedulesData.weeks.data[0].key;
-              }
+              this.selectedFilter2 = this.schedulesData.weeks.data[0].key;
             }
           }
           this.tabData = schedulesData != null ? schedulesData.tabs:null;

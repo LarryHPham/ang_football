@@ -302,6 +302,13 @@ export class LeaguePage implements OnInit {
         }
     }
     private filterDropdown(filter){
+      let tabCheck = 0;
+      if(filter.value == 'filter1'){
+        if(this.eventStatus == 'postgame'){
+          tabCheck = 1;
+        }
+      }
+      if(this.isFirstNum > tabCheck){
         let filterChange = false;
         if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
           this.selectedFilter1 = filter.key;
@@ -316,6 +323,8 @@ export class LeaguePage implements OnInit {
         }
 
         this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+      }
+      this.isFirstNum++;
     }
 
     //api for Schedules

@@ -85,9 +85,7 @@ export class SchedulesService {
     if(typeof id != 'undefined' && profile != 'league'){//if team id is being sent through
       callURL += '/'+id;
     }
-    if(year == 'all'){
-      year = null;
-    }
+
     callURL += '/'+eventStatus+'/'+year+'/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
     //optional week parameters
     if( week != null){
