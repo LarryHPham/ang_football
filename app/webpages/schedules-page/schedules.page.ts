@@ -210,23 +210,30 @@ export class SchedulesPage implements OnInit{
   }
 
   private filterDropdown(filter){
-    var teamId = this.params.params['teamId'];
-    let filterChange = false;
-    if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
-      this.selectedFilter1 = filter.key;
-      filterChange = true;
+    let tabCheck = 0;
+    if(this.eventStatus == 'postgame'){
+      tabCheck = 1;
     }
-    if(!teamId){
-      if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
-        this.selectedFilter2 = filter.key;
+    if(this.isFirstRun > tabCheck){
+      var teamId = this.params.params['teamId'];
+      let filterChange = false;
+      if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+        this.selectedFilter1 = filter.key;
         filterChange = true;
       }
+      if(!teamId){
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
+        }
+      }
+      if(filterChange){
+        this.isFirstRun = 0;
+        this.initialPage = 1;
+        this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
+      }
     }
-    if(filterChange){
-      this.isFirstRun = 0;
-      this.initialPage = 1;
-      this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
-    }
+    this.isFirstRun++;
   }
 
   //PAGINATION
