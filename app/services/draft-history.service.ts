@@ -45,6 +45,7 @@ export interface PlayerDraftData {
   playerCollege: string;
   playerBackground: string;
   playerHeadshot: string;
+  playerCollegeAbbreviation: string;
 }
 
 @Injectable()
@@ -243,6 +244,13 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       var playerRoute = null;
       playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullNameUrl, val.playerId);
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
+      var college;
+      if (val.playerCollegeAbbreviation != null && val.playerCollegeAbbreviation != "") {
+        college = val.playerCollegeAbbreviation + " " + val.playerCollege;
+      }
+      else {
+        college = val.playerCollege;
+      }
       var listData = {
         dataPoints: ListPageService.detailsData(
           [//main left text
@@ -250,7 +258,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           ],
           val.playerOverallPick+' Overall',
           [//sub left text
-            {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
+            {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + college + '</span>'}
           ],
           'Draft Round '+val.playerRound),
         imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
