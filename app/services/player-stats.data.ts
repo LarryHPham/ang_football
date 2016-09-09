@@ -56,6 +56,7 @@ export interface PlayerStatsData {
 }
 
 export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsData> {
+
     tabTitle: string;
 
     tableName: string;
@@ -222,9 +223,8 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
 
     }
 
+    convertToCarouselItem(item: PlayerStatsData, index: number, tabName): SliderCarouselInput {
 
-    convertToCarouselItem(item: PlayerStatsData, index:number): SliderCarouselInput {
-       //console.log(item[istab],"this one");
         var description: Array<Link | string> = [];
         var tense = " has";
         var temporalInfo = "";
@@ -267,16 +267,16 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
-                kicking:{
+                Kicking:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
-                punting:{
+                Punting:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts "+ item.stat2 +" Yards " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
 
 
                 },
-                returning:{
+                Returning:{
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt "+ item.stat2 +" Yards " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
 
                 }
@@ -288,7 +288,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             copyrightInfo: GlobalSettings.getCopyrightInfo(),
             subheader: [" Player Stats - ", teamLinkText],
             profileNameLink: playerLinkText,
-            description: this.tabActive =="Special"? getTabDescription(this.tabActive).description: getTabDescription(this.tabActive).description,
+            description: this.tabActive =="Special"? getTabDescription(tabName).description : getTabDescription(this.tabActive).description,
             lastUpdatedDate: item.displayDate,
             circleImageUrl: item.fullPlayerImageUrl,
             circleImageRoute: playerRoute
@@ -296,6 +296,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             // subImageRoute: teamRoute
         });
     }
+
 }
 
 export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
@@ -316,6 +317,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
             this.rows = [];
         }
         this.istab = tabActive;
+
 
 
         function getTabTableData(tabActive){
@@ -406,8 +408,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
                     bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
                     bottomStat2:item.stat8 != null ? item.stat8: 'N/A',
-                    //bottomStat:'hi',
-                    //bottomStat2:'again',
+
                 },
                 "stat1-type":{
                     display:item.stat1 != null ? item.stat1: 'N/A',
