@@ -211,7 +211,7 @@ export class DeepDiveService {
       var date = GlobalFunctions.formatDate(val.publishedDate);
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatSynRoute('story', val.id),
-          keyword: val.keyword,
+          keyword: val.keyword.replace('-', ' '),
           publishedDate: date.month + " " + date.day + ", " + date.year,
           provider1: val.author != null ? val.author : "",
           provider2: val.publisher != null ? "Published By: " + val.publisher : "",
@@ -240,7 +240,7 @@ export class DeepDiveService {
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
-          keyword: key.toUpperCase(),
+          keyword: key.replace('-', ' ').toUpperCase(),
           publishedDate: date,
           provider1: '',
           provider2: '',
@@ -270,7 +270,7 @@ export class DeepDiveService {
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
-          keyword: key.toUpperCase(),
+          keyword: key.replace('-',' ').toUpperCase(),
           publishedDate: date,
           provider1: '',
           provider2: '',
@@ -294,7 +294,7 @@ export class DeepDiveService {
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
     var articleStackData = {
         articleStackRoute: VerticalGlobalFunctions.formatSynRoute('story', topData.id),
-        keyword: topData.keyword,
+        keyword: topData.keyword.replace('-', ' '),
         date: date != null ? date.month + " " + date.day + ", " + date.year: "",
         headline: topData.title,
         provider1: topData.author != null ? "<span style='font-weight: 400;'>By</span> " + topData.author : "",
@@ -334,7 +334,7 @@ export class DeepDiveService {
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
-          keyword: val.keyword.toUpperCase(),
+          keyword: val.keyword.replace('-', ' ').toUpperCase(),
           new_date: date,
           displayHeadline: info.displayHeadline,
         }
