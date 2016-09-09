@@ -103,7 +103,7 @@ export class PlayerStatsPage implements OnInit {
 
     this._statsService.getStatsTabData(tabData, this.pageParams, data => {
         this.getLastUpdatedDateForPage(data);
-        //console.log(tabData,"what is tab data");
+
         if (tabData[0].tabActive=="Special"){
             if(tabData[1]=="2015"||tabData[1]=="2014"){
 
