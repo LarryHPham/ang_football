@@ -25,7 +25,6 @@ export class ArticleDataService {
 
     getRecommendationsData(eventID, scope) {
         var fullUrl = GlobalSettings.getRecommendUrl();
-
         return this.http.get(fullUrl + "articles?&event=" + eventID + "&affiliation=" + scope + "&count=10")
             .map(res => res.json())
             .map(data => data);

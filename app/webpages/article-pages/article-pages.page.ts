@@ -117,6 +117,7 @@ export class ArticlePages implements OnInit {
                         } else {
                             this.hasImages = false;
                         }
+
                         this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
                     }
                 },
@@ -159,9 +160,10 @@ export class ArticlePages implements OnInit {
         var imageArray = [];
         var copyArray = [];
         var titleArray = [];
+
         if (this.articleType == "game-module" || this.articleType == "team-record") {
             images = data['home_images'].concat(data['away_images']);
-        } else if (this.articleType == "player-roster") {
+        } else if (this.articleType == "playerRoster") {
             images = data['home_images'];
         }else {
             images = data['away_images'];
@@ -192,23 +194,24 @@ export class ArticlePages implements OnInit {
 
     getImageLinks(data) {
         var links = [];
-        if (this.articleType == "player-roster") {
+        if (this.articleType == "playerRoster") {
             data['article'].forEach(function (val) {
                 if (val['playerRosterModule']) {
                     let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
                     val['player'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['playerRosterModule']['headshot'],
+                            imageUrl: GlobalSettings.getImageUrl(val['playerRosterModule']['headshot']),
                             urlRouteArray: playerUrl,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
                         }
+
                     };
                     val['playerSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['playerRosterModule']['headshot'],
+                            imageUrl: GlobalSettings.getImageUrl(val['playerRosterModule']['headshot']),
                             urlRouteArray: playerUrl,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -219,14 +222,14 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'player-comparison') {
+        if (this.articleType == 'playerComparison') {
             data['article'][2]['playerComparisonModule'].forEach(function (val, index) {
                 if (index == 0) {
                     let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['headshot'],
+                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
                             urlRouteArray: urlPlayerLeft,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -235,7 +238,7 @@ export class ArticlePages implements OnInit {
                     val['imageLeftSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['headshot'],
+                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
                             urlRouteArray: urlPlayerLeft,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -248,7 +251,7 @@ export class ArticlePages implements OnInit {
                     val['imageRight'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['headshot'],
+                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
                             urlRouteArray: urlPlayerRight,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -257,7 +260,7 @@ export class ArticlePages implements OnInit {
                     val['imageRightSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['headshot'],
+                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
                             urlRouteArray: urlPlayerRight,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -268,7 +271,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'game-module') {
+        if (this.articleType == 'gameModule') {
             data['article'].forEach(function (val, index) {
                 if (index == 1 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
@@ -278,7 +281,7 @@ export class ArticlePages implements OnInit {
                     val['teamLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['gameModule'].homeTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].homeTeamLogo),
                             urlRouteArray: urlTeamLeftTop,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -287,7 +290,7 @@ export class ArticlePages implements OnInit {
                     val['teamRight'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['gameModule'].awayTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].awayTeamLogo),
                             urlRouteArray: urlTeamRightTop,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -296,7 +299,7 @@ export class ArticlePages implements OnInit {
                     val['teamLeftSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['gameModule'].homeTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].homeTeamLogo),
                             urlRouteArray: urlTeamLeftTop,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -305,7 +308,7 @@ export class ArticlePages implements OnInit {
                     val['teamRightSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['gameModule'].awayTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].awayTeamLogo),
                             urlRouteArray: urlTeamRightTop,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -321,7 +324,7 @@ export class ArticlePages implements OnInit {
                     val['teamLeft'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['gameModule'].homeTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].homeTeamLogo),
                             urlRouteArray: urlTeamLeftBottom,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -330,7 +333,7 @@ export class ArticlePages implements OnInit {
                     val['teamRight'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['gameModule'].awayTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].awayTeamLogo),
                             urlRouteArray: urlTeamRightBottom,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -339,7 +342,7 @@ export class ArticlePages implements OnInit {
                     val['teamLeftSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['gameModule'].homeTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].homeTeamLogo),
                             urlRouteArray: urlTeamLeftBottom,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -348,7 +351,7 @@ export class ArticlePages implements OnInit {
                     val['teamRightSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['gameModule'].awayTeamLogo,
+                            imageUrl: GlobalSettings.getImageUrl(val['gameModule'].awayTeamLogo),
                             urlRouteArray: urlTeamRightBottom,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -359,7 +362,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'team-record') {
+        if (this.articleType == 'teamRecord') {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
                 if (val['teamRecordModule'] && isFirstTeam) {
@@ -367,7 +370,7 @@ export class ArticlePages implements OnInit {
                     val['imageTop'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['teamRecordModule'].logo,
+                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
                             urlRouteArray: urlFirstTeam,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -376,7 +379,7 @@ export class ArticlePages implements OnInit {
                     val['imageTopSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['teamRecordModule'].logo,
+                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
                             urlRouteArray: urlFirstTeam,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -390,7 +393,7 @@ export class ArticlePages implements OnInit {
                     val['imageBottom'] = {
                         imageClass: "image-121",
                         mainImage: {
-                            imageUrl: val['teamRecordModule'].logo,
+                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
                             urlRouteArray: urlSecondTeam,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -399,7 +402,7 @@ export class ArticlePages implements OnInit {
                     val['imageBottomSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: val['teamRecordModule'].logo,
+                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
                             urlRouteArray: urlSecondTeam,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
