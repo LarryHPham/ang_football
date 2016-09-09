@@ -69,7 +69,6 @@ export class BoxScoresService {
               aiContent: dateParam.profile == 'league' ? this.aiHeadline(data.aiArticle) : null,
             };
             currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
-            boxScoresData = currentBoxScores;
             callback(data, currentBoxScores);
           }
         })
@@ -85,7 +84,6 @@ export class BoxScoresService {
           aiContent: dateParam.profile == 'league' ? this.aiHeadline(boxScoresData.aiArticle) : null,
         };
         currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
-        boxScoresData = currentBoxScores;
         callback(boxScoresData, currentBoxScores);
       }
     }
@@ -97,7 +95,7 @@ export class BoxScoresService {
   aiHeadline(data){
     var boxArray = [];
     var sampleImage = "//images.synapsys.us/TDL/stock_images/TDL_Stock-5.png";
-    if (data != null) {
+    if (data[0].featuredReport['article'].status != "Error") {
       data.forEach(function(val, index){
         let aiContent = val.featuredReport['article']['data'][0];
         for(var p in aiContent['articleData']){
@@ -120,8 +118,10 @@ export class BoxScoresService {
       }
       boxArray.push(Box);
       });
+      return boxArray;
+    }else{
+      return null;
     }
-    return boxArray;
 
   }
   moduleHeader(date, team?){
@@ -201,7 +201,7 @@ export class BoxScoresService {
             live: boxScores[dates].liveStatus == 'Y'?true:false,
             startDateTime: boxScores[dates].eventDate,
             startDateTimestamp: boxScores[dates].eventStartTime,
-            dataPointCategories:['Score','Poss.','Yards']
+            dataPointCategories:['Yards','Poss.','Score']
           };
           //0 = home team 1 = away team.
           if(boxScores[dates].eventPossession == 0){
