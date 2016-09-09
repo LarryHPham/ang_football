@@ -28,6 +28,7 @@ export class BoxScoresService {
   getBoxScoresService(profile, date, teamId?){//DATE
   //Configure HTTP Headers
   var headers = this.setToken();
+  let chosenDate = date;
 
   //player profile are treated as teams
   if(profile == 'player'){
@@ -35,7 +36,6 @@ export class BoxScoresService {
   }else if (profile == 'league'){
     date += '/addAi'
   }
-
   //date needs to be the date coming in AS EST and come back as UTC
   var callURL = this._apiUrl+'/boxScores/'+profile+'/'+teamId+'/'+ date;
   return this.http.get(callURL, {headers: headers})
@@ -46,7 +46,7 @@ export class BoxScoresService {
       return {
         transformedDate:transformedDate,
         aiArticle: profile == 'league' && data.aiContent != null ? data.aiContent : null,
-        date: date
+        date: chosenDate
       };
     })
   }
@@ -61,7 +61,7 @@ export class BoxScoresService {
     if ( boxScoresData == null || boxScoresData.transformedDate[scopedDateParam.date] == null ) {
       this.getBoxScoresService(scopedDateParam.profile, scopedDateParam.date, scopedDateParam.teamId)
         .subscribe(data => {
-          if(data.transformedDate[data.date] != null){
+          if(data.transformedDate[data.date][0] != null){
             let currentBoxScores = {
               scoreBoard: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null ? this.formatScoreBoard(data.transformedDate[data.date][0]) : null,
               moduleTitle: this.moduleHeader(data.date, profileName),
