@@ -107,13 +107,13 @@ export class BoxScoresService {
           var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
         }
       var Box = {
-        keyword: p,
+        keyword: p.replace('-', ' '),
         date: date,
         url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
         teaser: teaser,
         imageConfig:{
           imageClass: "image-320x180-sm",
-          imageUrl: homeImage != null ? GlobalSettings.getImageUrl(homeImage) : sampleImage,
+          imageUrl: homeImage != null ? homeImage : sampleImage,
           hoverText: "View Article",
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
         }
