@@ -180,7 +180,6 @@ export class ComparisonStatsService {
     this.scope = scope;
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
-
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, data => {
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
@@ -222,13 +221,23 @@ export class ComparisonStatsService {
 
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
-      apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+      if(apiData.playerOne != null){
+        apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
+      }else{
+        apiData.playerOne = {};
+        apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
+      }
       if ( index == 0 ) {
         existingData.playerOne = apiData.playerOne;
       }
       else {
         existingData.playerTwo = apiData.playerOne;
       }
+      existingData.data = apiData.data;
+      existingData.bestStatistics = this.formatPlayerData("statHigh", apiData.data);
+      existingData.worstStatistics = this.formatPlayerData("statLow", apiData.data);
       return this.createComparisonBars(existingData);
     });
   }
@@ -343,22 +352,36 @@ export class ComparisonStatsService {
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
     var fields = null;
     var position = data.playerOne.playerPosition;
-    if(position == "QB"){
-      fields = this.passingFields;
-    } else if(position == "RB" || position == "FB" || position == "HB"){
-      fields = this.rushingFields;
-    } else if(position == "K" || position == "LS"){
-      fields = this.kickingFields;
-    } else if(position == "P"){
-      fields = this.puntingFields;
-    } else if(position == "KR" || position == "PR" || position == "RS"){
-      fields = this.returningFields;
-    } else if(position == "TE" || position == "TEW" || position == "WR"){
-      fields = this.receivingFields;
-    } else {
-      fields = this.defenseFields;
+    switch(position){
+      case "QB":
+        fields = this.passingFields;
+        break;
+      case "RB":
+      case "FB":
+      case "HB":
+        fields = this.rushingFields;
+        break;
+      case "K":
+      case "LS":
+        fields = this.kickingFields;
+        break;
+      case "P":
+        fields = this.puntingFields;
+        break;
+      case "KR":
+      case "RS":
+      case "PR":
+        fields = this.returningFields;
+        break;
+      case "TE":
+      case "TEW":
+      case "WR":
+        fields = this.receivingFields;
+        break;
+      default:
+        fields = this.defenseFields;
+        break;
     }
-    // console.log("fields", fields);
     var teamColorsOne = data.playerOne.teamColors.split(", ");
     var teamColorsTwo = data.playerTwo.teamColors.split(", ");
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
@@ -371,38 +394,35 @@ export class ComparisonStatsService {
       var playerOneStats = data.playerOne.statistics[seasonId];
       var playerTwoStats = data.playerTwo.statistics[seasonId];
       var seasonBarList = [];
-      var stats = null;
-      if(bestStats == null || bestStats === undefined){
-        if(playerOneStats >= playerTwoStats){
-          stats = playerOneStats;
-        } else {
-          stats = playerTwoStats;
-        }
-      }
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
         var title = key;
-        seasonBarList.push({
-          title: title,
-          data: [{
-            value: playerOneStats != null ? playerOneStats[key] : null,
-            // color: data.playerOne.mainTeamColor
-            color: '#2D3E50'
-          },
-          {
-            value: playerOneStats != null ? playerTwoStats[key] : null,
-            // color: data.playerTwo.mainTeamColor,
-            color: '#999999'
-          }],
-          minValue: worstStats != null ? worstStats[key] : null,
-          maxValue: bestStats != null ? bestStats[key] : stats,
-          qualifierLabel: SeasonStatsService.getQualifierLabel(key)
-        });
+        var bestStatFallback = null;
+        if (playerOneStats[key] != null) {
+          bestStatFallback = playerOneStats[key];
+        }
+        else if (playerTwoStats[key] != null) {
+          bestStatFallback = playerTwoStats[key];
+        }
+          seasonBarList.push({
+            title: title,
+            data: [{
+              value: playerOneStats != null ? playerOneStats[key] : null,
+              // color: data.playerOne.mainTeamColor
+              color: '#2D3E50'
+            },
+            {
+              value: playerTwoStats != null ? playerTwoStats[key] : null,
+              // color: data.playerTwo.mainTeamColor,
+              color: '#999999'
+            }],
+            minValue: worstStats != null ? worstStats[key] : null,
+            maxValue: bestStats[key] != null ? bestStats[key] : bestStatFallback,
+            qualifierLabel: SeasonStatsService.getQualifierLabel(key)
+          });
       }
-
       bars[seasonId] = seasonBarList;
     }
-    // console.log("bars", bars);
     return bars;
   }
 

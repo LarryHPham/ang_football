@@ -319,7 +319,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
     switch (hdrColumnKey) {
       case "date":
-      let date320 = moment(Number(item.eventTimestamp)*1000).format("DD/YY");
+      let date320 = moment(Number(item.eventTimestamp)*1000).format("MM/DD");
       let date640 = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
         display = "<span class='schedule-date-320'>" + date320 + "</span>" + "<span class='schedule-date-640'>" + date640 + "</span>";
         sort = Number(item.eventTimestamp)*1000;
@@ -397,7 +397,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         var away = item.team2Abbreviation + " " + item.team2Score;
         if(item.team1Outcome == 'W'){
           home = "<span class='text-heavy'>" + home + "</span>";
-          sort = (Number(item.team1Score) % Number(item.team2Score));
+          sort = Number(item.team1Score) / Number(item.team2Score);
         } else if(item.team2Outcome == 'W'){
           away = "<span class='text-heavy'>" + away + "</span>";
           sort = (Number(item.team2Score) % Number(item.team1Score));
@@ -414,15 +414,9 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         var scoreAway = Number(item.team2Score);
 
         item.team1Outcome = item.team1Outcome != null ? item.team1Outcome: '';
-        if (scoreHome > scoreAway) {
-          display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
-          sort = (scoreHome/(scoreHome+scoreAway));
-        }
-        else
-        {
-          display = item.team1Outcome + " " + scoreAway + " - " + scoreHome;
-            sort = (scoreHome/(scoreHome+scoreAway));
-        }
+        display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
+        sort = (scoreHome/(scoreAway));
+
         break;
 
       case "rec":
@@ -435,12 +429,8 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           var currentLosses = item.team2Record.split('-')[1];
         }
         display = currentWins + " - " + currentLosses;
-        if (Number(currentWins) > Number(currentLosses)) {
-          sort = (Number(currentWins)/(Number(currentLosses)+(Number(currentWins))));
-        }
-        else {
-          sort = (Number(currentLosses)/(Number(currentWins)+(Number(currentLosses))));
-        }
+        sort = Number(currentWins)/Number(currentLosses);
+
         break;
     }
     if ( isLocation ) {
