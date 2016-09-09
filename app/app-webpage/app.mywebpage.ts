@@ -216,24 +216,24 @@ declare var jQuery: any;
         path: '/news/:articleType/:eventID',
         name: 'Syndicated-article-page',
         component: SyndicatedArticlePage
-	  },
-    {
-        path: '/list-of-lists/:scope/:type/:id/:limit/:pageNum',
-        name: 'List-of-lists-page-scoped',
-        component: ListOfListsPage
-    },
-    {
-        path: '/list-of-lists/:type/:id/:limit/:pageNum',
-        name: 'List-of-lists-page',
-        component: ListOfListsPage
-    },
-    {
-        path: '/list-of-lists/league/:limit/:pageNum',
-        name: 'List-of-lists-league-page',
-        component: ListOfListsPage
-    },
-    //Error pages and error handling
-    {
+      },
+      { // listOfLists/scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
+          path: '/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+          name: 'List-of-lists-page-scoped',
+          component: ListOfListsPage
+      },
+      // {
+      //     path: '/list-of-lists/:type/:id/:limit/:pageNum',
+      //     name: 'List-of-lists-page',
+      //     component: ListOfListsPage
+      // },
+      // {
+      //     path: '/list-of-lists/league/:limit/:pageNum',
+      //     name: 'List-of-lists-league-page',
+      //     component: ListOfListsPage
+      // },
+      //Error pages and error handling
+      {
         path: '/error',
         name: 'Error-page',
         component: ErrorPage
