@@ -180,7 +180,6 @@ export class ComparisonStatsService {
     this.scope = scope;
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
-
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, data => {
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
@@ -222,13 +221,23 @@ export class ComparisonStatsService {
 
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
-      apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+      if(apiData.playerOne != null){
+        apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
+      }else{
+        apiData.playerOne = {};
+        apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
+      }
       if ( index == 0 ) {
         existingData.playerOne = apiData.playerOne;
       }
       else {
         existingData.playerTwo = apiData.playerOne;
       }
+      existingData.data = apiData.data;
+      existingData.bestStatistics = this.formatPlayerData("statHigh", apiData.data);
+      existingData.worstStatistics = this.formatPlayerData("statLow", apiData.data);
       return this.createComparisonBars(existingData);
     });
   }
@@ -347,19 +356,26 @@ export class ComparisonStatsService {
       case "QB":
         fields = this.passingFields;
         break;
-      case "RB" || "FB" || "HB":
+      case "RB":
+      case "FB":
+      case "HB":
         fields = this.rushingFields;
         break;
-      case "K" || "LS":
+      case "K":
+      case "LS":
         fields = this.kickingFields;
         break;
       case "P":
         fields = this.puntingFields;
         break;
-      case "KR" || "RS" || "PR":
+      case "KR":
+      case "RS":
+      case "PR":
         fields = this.returningFields;
         break;
-      case "TE" || "TEW" || "WR":
+      case "TE":
+      case "TEW":
+      case "WR":
         fields = this.receivingFields;
         break;
       default:
@@ -381,22 +397,29 @@ export class ComparisonStatsService {
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
         var title = key;
-        seasonBarList.push({
-          title: title,
-          data: [{
-            value: playerOneStats != null ? playerOneStats[key] : null,
-            // color: data.playerOne.mainTeamColor
-            color: '#2D3E50'
-          },
-          {
-            value: playerOneStats != null ? playerTwoStats[key] : null,
-            // color: data.playerTwo.mainTeamColor,
-            color: '#999999'
-          }],
-          minValue: worstStats != null ? worstStats[key] : null,
-          maxValue: bestStats != null ? bestStats[key] : null,
-          qualifierLabel: SeasonStatsService.getQualifierLabel(key)
-        });
+        var bestStatFallback = null;
+        if (playerOneStats[key] != null) {
+          bestStatFallback = playerOneStats[key];
+        }
+        else if (playerTwoStats[key] != null) {
+          bestStatFallback = playerTwoStats[key];
+        }
+          seasonBarList.push({
+            title: title,
+            data: [{
+              value: playerOneStats != null ? playerOneStats[key] : null,
+              // color: data.playerOne.mainTeamColor
+              color: '#2D3E50'
+            },
+            {
+              value: playerTwoStats != null ? playerTwoStats[key] : null,
+              // color: data.playerTwo.mainTeamColor,
+              color: '#999999'
+            }],
+            minValue: worstStats != null ? worstStats[key] : null,
+            maxValue: bestStats[key] != null ? bestStats[key] : bestStatFallback,
+            qualifierLabel: SeasonStatsService.getQualifierLabel(key)
+          });
       }
       bars[seasonId] = seasonBarList;
     }
