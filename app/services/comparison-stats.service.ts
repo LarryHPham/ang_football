@@ -388,6 +388,13 @@ export class ComparisonStatsService {
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
         var title = key;
+        var bestStatFallback = 100;
+        if (playerOneStats[key] != null) {
+          bestStatFallback = playerOneStats[key];
+        }
+        else if (playerTwoStats[key] != null) {
+          bestStatFallback = playerTwoStats[key];
+        }
         seasonBarList.push({
           title: title,
           data: [{
@@ -396,12 +403,12 @@ export class ComparisonStatsService {
             color: '#2D3E50'
           },
           {
-            value: playerOneStats != null ? playerTwoStats[key] : null,
+            value: playerTwoStats != null ? playerTwoStats[key] : null,
             // color: data.playerTwo.mainTeamColor,
             color: '#999999'
           }],
           minValue: worstStats != null ? worstStats[key] : null,
-          maxValue: bestStats != null ? bestStats[key] : null,
+          maxValue: bestStats[key] != null ? bestStats[key] : bestStatFallback,
           qualifierLabel: SeasonStatsService.getQualifierLabel(key)
         });
       }
