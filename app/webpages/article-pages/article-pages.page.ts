@@ -93,10 +93,15 @@ export class ArticlePages implements OnInit {
                     if (Article['data'].length > 0) {
                         var articleType = [];
                         if (Article['data'][0].article_type_id != null) {
-                            articleType = [Object.keys(Article.data[0]['article_data'])[0]];
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                        } else {
+                           articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
                             //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         }
-                        this.articleType = articleType[0];
+                        this.articleType = articleType[1];
+                        this.articleSubType = articleType[2];
+                        //this.articleType = articleType[0];
                         //this.articleSubType = articleType[2];
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
