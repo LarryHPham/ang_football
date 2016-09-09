@@ -61,7 +61,7 @@ export class BoxScoresService {
     if ( boxScoresData == null || boxScoresData.transformedDate[scopedDateParam.date] == null ) {
       this.getBoxScoresService(scopedDateParam.profile, scopedDateParam.date, scopedDateParam.teamId)
         .subscribe(data => {
-          if(data.transformedDate[data.date][0] != null){
+          if(data.transformedDate[data.date] != null && data.transformedDate[data.date][0] != null){
             let currentBoxScores = {
               scoreBoard: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null ? this.formatScoreBoard(data.transformedDate[data.date][0]) : null,
               moduleTitle: this.moduleHeader(data.date, profileName),
@@ -377,11 +377,13 @@ export class BoxScoresService {
       //determine if a game is live or not and display correct game time
       var currentTime = new Date().getTime();
       var inningTitle = '';
-
+      var verticalContentLive;
       if(gameInfo.live){
+        verticalContentLive = gameInfo.verticalContent;
         // let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : '';
         inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
       }else{
+        verticalContentLive = "";
         if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
           inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
         }else{
@@ -394,7 +396,7 @@ export class BoxScoresService {
         //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
         inning:inningTitle,
         dataPointCategories:gameInfo.dataPointCategories,
-        verticalContent:gameInfo.verticalContent,
+        verticalContent:verticalContentLive,
         homeData:{
           homeTeamName: homeData.lastName,
           homeImageConfig:link1,
