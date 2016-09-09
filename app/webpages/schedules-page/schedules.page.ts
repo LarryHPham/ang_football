@@ -66,6 +66,8 @@ export class SchedulesPage implements OnInit{
           if(this.selectedTabKey == null){
             this.selectedTabKey = 'pregame';
           }
+          this.initialTabKey = this.selectedTabKey;
+          this.eventStatus = this.selectedTabKey;
       });
 
     }
@@ -142,7 +144,7 @@ export class SchedulesPage implements OnInit{
             if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
               this.scheduleFilter1 = schedulesData.seasons;
               if(this.selectedFilter1 == null){
-                this.schedulesData.seasons[0].key;
+                this.schedulesData.seasons['data'][0].key;
               }
             }
           }
@@ -193,7 +195,9 @@ export class SchedulesPage implements OnInit{
           if(this.scheduleFilter2 == null){
             this.scheduleFilter2 = schedulesData.weeks;
             if(this.selectedFilter2 == null){
-              this.selectedFilter2 = this.schedulesData.weeks.data[0].key;
+              if(this.schedulesData.weeks != null){
+                this.selectedFilter2 = this.schedulesData.weeks.data[0].key;
+              }
             }
           }
           this.tabData = schedulesData != null ? schedulesData.tabs:null;
@@ -206,30 +210,23 @@ export class SchedulesPage implements OnInit{
   }
 
   private filterDropdown(filter){
-    let tabCheck = 0;
-    if(this.eventStatus == 'postgame'){
-      tabCheck = 1;
+    var teamId = this.params.params['teamId'];
+    let filterChange = false;
+    if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+      this.selectedFilter1 = filter.key;
+      filterChange = true;
     }
-    if(this.isFirstRun > tabCheck){
-      var teamId = this.params.params['teamId'];
-      let filterChange = false;
-      if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
-        this.selectedFilter1 = filter.key;
+    if(!teamId){
+      if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+        this.selectedFilter2 = filter.key;
         filterChange = true;
       }
-      if(!teamId){
-        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
-          this.selectedFilter2 = filter.key;
-          filterChange = true;
-        }
-      }
-      if(filterChange){
-        this.isFirstRun = 0;
-        this.initialPage = 1;
-        this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
-      }
     }
-    this.isFirstRun++;
+    if(filterChange){
+      this.isFirstRun = 0;
+      this.initialPage = 1;
+      this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
+    }
   }
 
   //PAGINATION
