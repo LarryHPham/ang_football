@@ -291,13 +291,14 @@ export class ListOfListsService {
 
 
       itemListData.forEach(function(val, index) {
+
         let itemUrlRouteArray = itemTarget['rankType'] == "player"  ?
 
 
-          VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.playerName, val.playerId) :
-          VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+          VerticalGlobalFunctions.formatPlayerRoute(itemTarget.teamName, itemTarget.playerFirstName, itemTarget.playerId) :
+          VerticalGlobalFunctions.formatTeamRoute(itemTarget.teamName, itemTarget.teamId);
 
-          // let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
+           //let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
           let firstItemHover = "<p>View</p><p>Profile</p>";
 
           if (itemTarget.teamLogo == null) {
@@ -306,7 +307,6 @@ export class ListOfListsService {
           if (itemTarget.playerHeadshotUrl == null) {
             itemTarget.playerHeadshotUrl = itemTarget.teamLogo;
           }
-
 
         listData.dataPoints.push(
           {
