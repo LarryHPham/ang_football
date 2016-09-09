@@ -151,7 +151,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     }//fbs divison sends back all uppercase and needs to be camel case
     var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: GlobalSettings.getImageUrl(item.backgroundUrl),
+      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
       profileNameLink: teamNameLink,
