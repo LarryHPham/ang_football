@@ -347,19 +347,26 @@ export class ComparisonStatsService {
       case "QB":
         fields = this.passingFields;
         break;
-      case "RB" || "FB" || "HB":
+      case "RB":
+      case "FB":
+      case "HB":
         fields = this.rushingFields;
         break;
-      case "K" || "LS":
+      case "K":
+      case "LS":
         fields = this.kickingFields;
         break;
       case "P":
         fields = this.puntingFields;
         break;
-      case "KR" || "RS" || "PR":
+      case "KR":
+      case "RS":
+      case "PR":
         fields = this.returningFields;
         break;
-      case "TE" || "TEW" || "WR":
+      case "TE":
+      case "TEW":
+      case "WR":
         fields = this.receivingFields;
         break;
       default:
