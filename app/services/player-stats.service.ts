@@ -13,7 +13,7 @@ import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from
 @Injectable()
 export class PlayerStatsService implements OnDestroy{
 
-    tabName:string="passing"
+    tabName:string;
     seasonId:string="2015";
     public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
@@ -74,8 +74,8 @@ export class PlayerStatsService implements OnDestroy{
              columnTabType = tabData[1];
 
             if(standingsTab.tabActive=="Special"){
-                //standingsTab.tabActive=columnTabType;
-                //this.GlossaryData=standingsTab.g;
+
+
                 this.tabName=columnTabType.toLowerCase();
 
             }else {
@@ -135,7 +135,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
     initializeAllTabs(teamName: string, isActive?:boolean, isTeamProfilePage?: boolean): Array<MLBPlayerStatsTableData> {
-        //return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, false, isTeamProfilePage));
+
         return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, tabActive=="Passing"?true:false , isTeamProfilePage));
 
     }
@@ -160,7 +160,8 @@ export class PlayerStatsService implements OnDestroy{
 
 
         });
-        //console.log(table, standingsTab.tabActive, this.tabName," now check");
+        
         return table;
+
     }
 }

@@ -31,7 +31,7 @@
       (tabSwitched)="transactionsTab($event)"
       (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
 
-    <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
+    <draft-history-module *ngIf="profileData && scope == sportLeagueAbbrv.toLowerCase()" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace"></responsive-widget>
     <mvp-module *ngIf="positionData && positionParams"
       [title]="'Position'"
