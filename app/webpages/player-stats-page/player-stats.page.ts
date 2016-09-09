@@ -73,7 +73,7 @@ export class PlayerStatsPage implements OnInit {
           this._title.setTitle(GlobalSettings.getPageTitle("Player Stats", data.teamName));
           var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
           this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
-          this.tabs = this._statsService.initializeAllTabs(data.teamName, 5, false);
+          this.tabs = this._statsService.initializeAllTabs(data.teamName, false);
         },
         err => {
           this.hasError = true;
