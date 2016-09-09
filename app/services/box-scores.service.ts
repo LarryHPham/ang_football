@@ -61,7 +61,7 @@ export class BoxScoresService {
     if ( boxScoresData == null || boxScoresData.transformedDate[scopedDateParam.date] == null ) {
       this.getBoxScoresService(scopedDateParam.profile, scopedDateParam.date, scopedDateParam.teamId)
         .subscribe(data => {
-          if(data.transformedDate[scopedDateParam.date] != null){
+          if(data.transformedDate[data.date] != null){
             let currentBoxScores = {
               scoreBoard: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null ? this.formatScoreBoard(data.transformedDate[data.date][0]) : null,
               moduleTitle: this.moduleHeader(data.date, profileName),
