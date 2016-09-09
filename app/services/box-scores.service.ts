@@ -45,28 +45,30 @@ export class BoxScoresService {
       var transformedDate = this.transformBoxScores(data);
       return {
         transformedDate:transformedDate,
-        aiArticle: profile == 'league' && data.aiContent != null ? data.aiContent : null
+        aiArticle: profile == 'league' && data.aiContent != null ? data.aiContent : null,
+        date: date
       };
     })
   }
 
   //function  for BoxScoresService to use on profile pages
   getBoxScores(boxScoresData, profileName: string, dateParam, callback: Function) {
+    let scopedDateParam = dateParam;
     if(boxScoresData == null){
       boxScoresData = {};
       boxScoresData['transformedDate']={};
     }
-    if ( boxScoresData == null || boxScoresData.transformedDate[dateParam.date] == null ) {
-      this.getBoxScoresService(dateParam.profile, dateParam.date, dateParam.teamId)
+    if ( boxScoresData == null || boxScoresData.transformedDate[scopedDateParam.date] == null ) {
+      this.getBoxScoresService(scopedDateParam.profile, scopedDateParam.date, scopedDateParam.teamId)
         .subscribe(data => {
-          if(data.transformedDate[dateParam.date] != null){
+          if(data.transformedDate[scopedDateParam.date] != null){
             let currentBoxScores = {
-              scoreBoard: dateParam.profile != 'league' && data.transformedDate[dateParam.date] != null ? this.formatScoreBoard(data.transformedDate[dateParam.date][0]) : null,
-              moduleTitle: this.moduleHeader(dateParam.date, profileName),
-              gameInfo: this.formatGameInfo(data.transformedDate[dateParam.date],dateParam.teamId, dateParam.profile),
-              gameInfoSmall: this.formatGameInfoSmall(data.transformedDate[dateParam.date],dateParam.teamId, dateParam.profile),
-              schedule: dateParam.profile != 'league' && data.transformedDate[dateParam.date] != null? this.formatSchedule(data.transformedDate[dateParam.date][0], dateParam.teamId, dateParam.profile) : null,
-              aiContent: dateParam.profile == 'league' ? this.aiHeadline(data.aiArticle) : null,
+              scoreBoard: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null ? this.formatScoreBoard(data.transformedDate[data.date][0]) : null,
+              moduleTitle: this.moduleHeader(data.date, profileName),
+              gameInfo: this.formatGameInfo(data.transformedDate[data.date],scopedDateParam.teamId, scopedDateParam.profile),
+              gameInfoSmall: this.formatGameInfoSmall(data.transformedDate[data.date],scopedDateParam.teamId, scopedDateParam.profile),
+              schedule: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null? this.formatSchedule(data.transformedDate[data.date][0], scopedDateParam.teamId, scopedDateParam.profile) : null,
+              aiContent: scopedDateParam.profile == 'league' ? this.aiHeadline(data.aiArticle) : null,
             };
             currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
             callback(data, currentBoxScores);
@@ -95,13 +97,14 @@ export class BoxScoresService {
   aiHeadline(data){
     var boxArray = [];
     var sampleImage = "//images.synapsys.us/TDL/stock_images/TDL_Stock-5.png";
-    if (data != null) {
+    if (data[0].featuredReport['article'].status != "Error") {
       data.forEach(function(val, index){
         let aiContent = val.featuredReport['article']['data'][0];
         for(var p in aiContent['articleData']){
           var eventType = aiContent['articleData'][p];
           var teaser = eventType.displayHeadline;
           var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
+          var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
         }
       var Box = {
         keyword: p,
@@ -110,15 +113,17 @@ export class BoxScoresService {
         teaser: teaser,
         imageConfig:{
           imageClass: "image-320x180-sm",
-          imageUrl: val.images[0].imageUrl != null ? GlobalSettings.getImageUrl(val.images[0].imageUrl) : sampleImage,
+          imageUrl: homeImage != null ? GlobalSettings.getImageUrl(homeImage) : sampleImage,
           hoverText: "View Article",
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
         }
       }
       boxArray.push(Box);
       });
+      return boxArray;
+    }else{
+      return null;
     }
-    return boxArray;
 
   }
   moduleHeader(date, team?){
@@ -198,7 +203,7 @@ export class BoxScoresService {
             live: boxScores[dates].liveStatus == 'Y'?true:false,
             startDateTime: boxScores[dates].eventDate,
             startDateTimestamp: boxScores[dates].eventStartTime,
-            dataPointCategories:['Score','Poss.','Yards']
+            dataPointCategories:['Yards','Poss.','Score']
           };
           //0 = home team 1 = away team.
           if(boxScores[dates].eventPossession == 0){

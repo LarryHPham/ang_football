@@ -263,7 +263,7 @@ declare var jQuery: any;
 export class AppComponent implements OnInit{
   public shiftContainer:string;
   public hideHeader: boolean;
-  private isHomeRunZone:boolean = false;
+  private isPartnerZone:boolean = false;
   constructor(private _params: RouteParams){
     this.hideHeader = GlobalSettings.getHomeInfo().hide;
   }

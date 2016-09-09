@@ -469,7 +469,7 @@ export class TeamPage implements OnInit {
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
       this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      });
+      }, 5);
     }
 
     private playerStatsTabSelected(tabData: Array<any>) {

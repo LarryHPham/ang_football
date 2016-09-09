@@ -166,13 +166,13 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
 export class ComparisonStatsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
-  private passingFields = ["ATT", "COMP", "YDS", "AVG", "TD", "INT", "RATE"];
-  private rushingFields = ["ATT", "YDS", "AVG", "TD", "YDS/G", "FUM", "1DN"];
-  private receivingFields = ["REC", "TAR", "YDS","AVG", "TD", "YDS/G", "1DN"];
-  private defenseFields = ["SOLO", "AST", "TOT", "SACK", "PD", "INT", "FF"];
-  private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
-  private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
-  private returningFields = ["K.ATT", "K.YDS", "K.AVG", "P.ATT", "P.YDS", "P.AVG", "TD"];
+  private passingFields = ["Attempts", "Completions", "Passing Yards", "Yards Per Attempt", "Passing Touchdowns", "Total Interceptions", "Passer Rating"];
+  private rushingFields = ["Rushing Attempts", "Rushing Yards", "Rushing Yards Per Carry", "Rushing Touchdowns", "Rushing Yards Per Game", "Rushing Fumbles", "Rushing First Downs"];
+  private receivingFields = ["Receptions", "Receiving Targets", "Receiving Yards", "Average Yards Per Reception", "Receiving Touchdowns", "Receiving Yards Per Game", "Receiving First Downs"];
+  private defenseFields = ["Solo Tackles", "Assisted Tackles", "Total Tackles", "Total Sacks", "Passes Defended", "Interceptions", "Forced Fumbles"];
+  private kickingFields = ["Field Goals Made", "Field Goal Attempts", "Percentage of Field Goals Made", "Extra Points Made", "Extra Points Attempted", "Percentage of Extra Points Made", "Total Points"];
+  private puntingFields = ["Total Punts", "Gross Punting Yards", "Gross Punting Average", "Net Punting Average", "Punts Inside the 20 Yard Line", "Longest Punt", "Blocked Punts"];
+  private returningFields = ["Return Attempts", "Return Yards", "Return Average", "Longest Return", "Touchdowns", "Fair Catches"];
   private scope: string;
   constructor(public http: Http) { }
 
@@ -341,7 +341,7 @@ export class ComparisonStatsService {
   }
 
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
-    var fields = this.defenseFields;
+    var fields = null;
     var position = data.playerOne.playerPosition;
     if(position == "QB"){
       fields = this.passingFields;
@@ -358,6 +358,7 @@ export class ComparisonStatsService {
     } else {
       fields = this.defenseFields;
     }
+    // console.log("fields", fields);
     var teamColorsOne = data.playerOne.teamColors.split(", ");
     var teamColorsTwo = data.playerTwo.teamColors.split(", ");
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
@@ -380,7 +381,7 @@ export class ComparisonStatsService {
       }
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
-        var title = ComparisonStatsService.getKeyDisplayTitle(key);
+        var title = key;
         seasonBarList.push({
           title: title,
           data: [{
@@ -401,51 +402,8 @@ export class ComparisonStatsService {
 
       bars[seasonId] = seasonBarList;
     }
+    // console.log("bars", bars);
     return bars;
-  }
-
-  static getKeyDisplayTitle(key: string): string {
-    switch (key) {
-      case "AST": return "AST";
-      case "AVG": return "AVG";
-      case "ATT": return "ATT";
-      case "REC": return "REC";
-      case "TAR": return "TAR";
-      case "YDS": return "YDS";
-      case "TD": return "TD";
-      case "YDS/G": return "YDS/G";
-      case "1DN": return "1DN";
-      case "Jersey No.": return "Jersey No.";
-      case "SOLO": return "SOLO";
-      case "TOT": return "TOT";
-      case "SACK": return "SACK";
-      case "PD": return "PD";
-      case "INT": return "INT";
-      case "FF": return "FF";
-      case "COMP": return "COMP";
-      case "RATE": return "RATE";
-      case "FGM": return "FGM";
-      case "FGA": return "FGA";
-      case "FG%": return "FG%";
-      case "XPM": return "XPM";
-      case "XPA": return "XPA";
-      case "XP%": return "XP%";
-      case "SOLO": return "SOLO";
-      case "PUNTS": return "PUNTS";
-      case "PNTS": return "PNTS";
-      case "NET": return "NET";
-      case "IN20": return "IN20";
-      case "BP": return "BP";
-      case "LONG": return "LONG";
-      case "K.ATT": return "K.ATT";
-      case "K.YDS": return "K.YDS";
-      case "K.AVG": return "K.AVG";
-      case "P.ATT": return "P.ATT";
-      case "P.YDS": return "P.YDS";
-      case "P.AVG": return "P.AVG";
-
-      default: return null;
-    }
   }
 
    private getNumericValue(key: string, value: string): number {

@@ -224,12 +224,12 @@ export class SchedulesService {
     //(scope, profile, eventStatus, limit, pageNum, id?)
     this.getBoxSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
-      var formattedData = this.transformSlideScroll(data.data);
+      var formattedData = this.transformSlideScroll(scope, data.data);
       callback(formattedData);
     })
   }
 
-  transformSlideScroll(data){
+  transformSlideScroll(scope,data){
     let self = this;
     var modifiedArray = [];
     var newData:scheduleBoxInput;
@@ -264,8 +264,8 @@ export class SchedulesService {
         date: date + " &bull; " + time,
         awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id)),
         homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team1Logo), VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id)),
-        awayTeamName: team2FullName.replace(val.team2Market+" ",''),
-        homeTeamName: team1FullName.replace(val.team1Market+" ",''),
+        awayTeamName: scope =='fbs' ? val.team2Abbreviation: team2FullName.replace(val.team2Market+" ",''),
+        homeTeamName: scope =='fbs' ? val.team1Abbreviation: team1FullName.replace(val.team1Market+" ",''),
         awayLink: VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id),
         homeLink: VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id),
         reportDisplay: reportText,
@@ -273,6 +273,7 @@ export class SchedulesService {
         isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
         inning: val.eventQuarter != null ? "Current " + val.inning + ":" + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
       }
+
       modifiedArray.push(newData);
     });
     return modifiedArray;
