@@ -13,7 +13,7 @@ import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from
 @Injectable()
 export class PlayerStatsService implements OnDestroy{
 
-    tabName:string="passing"
+    tabName:string;
     seasonId:string="2015";
     public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
