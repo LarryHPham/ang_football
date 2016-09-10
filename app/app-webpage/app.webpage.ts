@@ -341,13 +341,24 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-    var script = document.createElement("script");
-    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
-    document.head.appendChild(script);
-    this.shiftContainer = this.getHeaderHeight() + 'px';
-    //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts
-    window.addEventListener("load", this.setPageSize);
-    // Initialize the first time app.webpage.ts loads
-    this.setPageSize();
+    if(jQuery(".ddto-left-rail").length == 0) {
+      var script = document.createElement("script");
+      script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+      document.head.appendChild(script);
+    }
+    else {
+      jQuery(".ddto-left-rail").remove();
+      jQuery(".ddto-right-rail").remove();
+      var script = document.createElement("script");
+      script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+      document.head.appendChild(script);
+    }
+      this.shiftContainer = this.getHeaderHeight() + 'px';
+      //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts
+      window.addEventListener("load", this.setPageSize);
+      // Initialize the first time app.webpage.ts loads
+      this.setPageSize();
+
+
   }
 }
