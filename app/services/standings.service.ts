@@ -40,7 +40,7 @@ export class StandingsService {
   getPageTitle(pageParams: SportPageParameters, teamName: string): string {
     var scope = pageParams.scope == 'fbs' ? 'ncaaf' : 'nfl';
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = scope.toUpperCase() + " Standings " + scope.toUpperCase();
+    let pageTitle = scope.toUpperCase() + " Standings - " + scope.toUpperCase();
     if ( teamName ) {
       pageTitle = scope.toUpperCase() + " Standings - " + teamName;
     }
@@ -177,8 +177,8 @@ export class StandingsService {
 
   private createTab(selectTab: boolean, teamId: string, conference?, division?) {
     let title = this.formatGroupName(conference, division) + " Standings";
-    if (conference != null && (conference.includes("Division") || conference.includes("Conference"))) {
-      conference = null;
+    if (conference == "Division") {
+      division = "division";
     }
     /*console.log("createTab", conference, division);*/
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
@@ -190,27 +190,53 @@ export class StandingsService {
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
       standingsTab.division !== null && standingsTab.division !== undefined ) {
       //get only the single division
-      var conferenceKey = standingsTab.conference.toString();
-      var divisionKey = standingsTab.division.toString();
-      var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : null;
-      sections.push(this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, false));
+      if (standingsTab.division.toString() == "division") {
+        for ( var conferenceKey in apiData ) {
+          for ( var divisionKey in apiData[conferenceKey] ) {
+            var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
+            var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, true);
+            totalRows += table.tableData.rows.length;
+            if ( maxRows && totalRows > maxRows ) {
+              break; //don't add more divisions
+            }
+            sections.push(table);
+          }
+          if ( maxRows && totalRows > maxRows ) {
+            break; //don't add more conferences
+          }
+        }
+      }
+      else {
+        var conferenceKey = standingsTab.conference.toString();
+        var divisionKey = standingsTab.division.toString();
+        var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : null;
+        sections.push(this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, false));
+      }
     }
     else if ( standingsTab.conference !== null && standingsTab.conference !== undefined ) {
       //get only the single conference
-      var conferenceKey = standingsTab.conference.toString();
-      for ( var divisionKey in apiData[conferenceKey] ) {
-        var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
-        var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, true);
-        totalRows += table.tableData.rows.length;
-        if ( maxRows && totalRows > maxRows ) {
-          break; //don't add more divisions
+      if (standingsTab.conference.toString() == "Conference") {
+        for ( var conferenceKey in apiData ) {
+          var divData: any = [];
+          for ( var divisionKey in apiData[conferenceKey] ) {
+            for (var i = 0; i < apiData[conferenceKey][divisionKey].length && i < maxRows; i++) {
+              divData.push(apiData[conferenceKey][divisionKey][i]);
+              totalRows++;
+            }
+            // totalRows += table.tableData.rows.length;
+            if ( maxRows && totalRows > maxRows ) {
+              break; //don't add more divisions
+            }
+          }
+          var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, "Conference", divData, maxRows, true);
+          sections.push(table);
+          if ( maxRows && totalRows > maxRows ) {
+            break; //don't add more conferences
+          }
         }
-        sections.push(table);
       }
-    }
-    else {
-      //other load all provided divisions
-      for ( var conferenceKey in apiData ) {
+      else {
+        var conferenceKey = standingsTab.conference.toString();
         for ( var divisionKey in apiData[conferenceKey] ) {
           var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
           var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, true);
@@ -220,12 +246,29 @@ export class StandingsService {
           }
           sections.push(table);
         }
-        if ( maxRows && totalRows > maxRows ) {
-          break; //don't add more conferences
-        }
       }
     }
+    else {
+      //other load all provided divisions
+      var divData: any = [];
+        for ( var conferenceKey in apiData ) {
+          for ( var divisionKey in apiData[conferenceKey] ) {
+            for (var i = 0; i < apiData[conferenceKey][divisionKey].length; i++) {
+              divData.push(apiData[conferenceKey][divisionKey][i]);
+            }
+            // totalRows += table.tableData.rows.length;
+            // if ( maxRows && totalRows > maxRows ) {
+            //   break; //don't add more divisions
+            // }
+          }
 
+          if ( maxRows && totalRows > maxRows ) {
+            break; //don't add more conferences
+          }
+        }
+        var table = this.setupTableData(standingsTab.currentTeamId, scope, "League", " ", divData, maxRows, true);
+        sections.push(table);
+    }
     return sections;
   }
 
@@ -242,7 +285,7 @@ export class StandingsService {
       value.groupName = groupName;
       value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
       value.fullImageUrl = GlobalSettings.getImageUrl(value.imageUrl);
-      value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
+      value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
 
       //Make sure numbers are numbers.
       value.totalWins = value.totalWins;
@@ -289,7 +332,7 @@ export class StandingsService {
       }
     }
     else {
-      return "NFL";
+      return "League";
     }
   }
 }
