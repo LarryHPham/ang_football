@@ -415,13 +415,11 @@ export class DailyUpdateService {
   private getPostGameArticle(data: APIDailyUpdateData) {
     let articleData = {};
     let aiData;
-    console.log(data);
     for( var game in data){
       if(game != 'recentGames' && game != 'recentGamesChartData'){
         aiData = data[game];
       }
     }
-    console.log(aiData);
     articleData['eventId'] = aiData.article.status != 'Error' || aiData.article != null ? aiData.article.data[0].eventId : null;
     articleData['teamId'] = data.recentGames.teamId != null ? data.recentGames.teamId : null;
     articleData['playerId'] = data.recentGames["playerId"] != null ? data.recentGames["playerId"] : null;
