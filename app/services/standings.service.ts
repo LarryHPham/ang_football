@@ -86,6 +86,9 @@ export class StandingsService {
   getStandingsTabData(tabData: Array<any>, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number) {
     var newParams: any;
     var season: any = null;
+    if (maxRows == null) {
+      maxRows = 999999999999999;
+    }
     if (tabData[2] && tabData[2] != null) {
       newParams = tabData[2];
       season = tabData[2].season;
@@ -185,12 +188,12 @@ export class StandingsService {
   }
 
   private setupTabData(standingsTab: TDLStandingsTabdata, scope, apiData: any, maxRows: number): Array<VerticalStandingsTableData> {
+    console.log("incoming maxrows", maxRows);
     var sections: Array<VerticalStandingsTableData> = [];
     var totalRows = 0;
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
       standingsTab.division !== null && standingsTab.division !== undefined ) {
       //get only the single division
-      if (standingsTab.division.toString() == "division") {
         for ( var conferenceKey in apiData ) {
           for ( var divisionKey in apiData[conferenceKey] ) {
             var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
@@ -205,20 +208,13 @@ export class StandingsService {
             break; //don't add more conferences
           }
         }
-      }
-      else {
-        var conferenceKey = standingsTab.conference.toString();
-        var divisionKey = standingsTab.division.toString();
-        var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : null;
-        sections.push(this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, false));
-      }
     }
     else if ( standingsTab.conference !== null && standingsTab.conference !== undefined ) {
       //get only the single conference
-      if (standingsTab.conference.toString() == "Conference") {
         for ( var conferenceKey in apiData ) {
           var divData: any = [];
           for ( var divisionKey in apiData[conferenceKey] ) {
+            console.log("maxrows", maxRows);
             for (var i = 0; i < apiData[conferenceKey][divisionKey].length && i < maxRows; i++) {
               divData.push(apiData[conferenceKey][divisionKey][i]);
               totalRows++;
@@ -234,19 +230,6 @@ export class StandingsService {
             break; //don't add more conferences
           }
         }
-      }
-      else {
-        var conferenceKey = standingsTab.conference.toString();
-        for ( var divisionKey in apiData[conferenceKey] ) {
-          var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
-          var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, true);
-          totalRows += table.tableData.rows.length;
-          if ( maxRows && totalRows > maxRows ) {
-            break; //don't add more divisions
-          }
-          sections.push(table);
-        }
-      }
     }
     else {
       //other load all provided divisions
