@@ -30,6 +30,8 @@ export interface PlayerData {
   weight: string;
   age: string;
   yearExperience: string;
+  class: string;
+  teamAbbreviation: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{

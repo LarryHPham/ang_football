@@ -61,7 +61,7 @@ export class BoxScoresService {
     if ( boxScoresData == null || boxScoresData.transformedDate[scopedDateParam.date] == null ) {
       this.getBoxScoresService(scopedDateParam.profile, scopedDateParam.date, scopedDateParam.teamId)
         .subscribe(data => {
-          if(data.transformedDate[data.date][0] != null){
+          if(data.transformedDate[data.date] != null && data.transformedDate[data.date][0] != null){
             let currentBoxScores = {
               scoreBoard: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null ? this.formatScoreBoard(data.transformedDate[data.date][0]) : null,
               moduleTitle: this.moduleHeader(data.date, profileName),
@@ -96,7 +96,6 @@ export class BoxScoresService {
   */
   aiHeadline(data){
     var boxArray = [];
-    var sampleImage = "//images.synapsys.us/TDL/stock_images/TDL_Stock-5.png";
     if (data[0].featuredReport['article'].status != "Error") {
       data.forEach(function(val, index){
         let aiContent = val.featuredReport['article']['data'][0];
@@ -104,7 +103,11 @@ export class BoxScoresService {
           var eventType = aiContent['articleData'][p];
           var teaser = eventType.displayHeadline;
           var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
-          var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
+          if(aiContent['articleData'][p]['images']['home_images'] != null){
+            var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
+          }else{
+            var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+          }
         }
       var Box = {
         keyword: p.replace('-', ' '),
@@ -113,7 +116,7 @@ export class BoxScoresService {
         teaser: teaser,
         imageConfig:{
           imageClass: "image-320x180-sm",
-          imageUrl: homeImage != null ? homeImage : sampleImage,
+          imageUrl: homeImage,
           hoverText: "View Article",
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
         }
@@ -377,11 +380,13 @@ export class BoxScoresService {
       //determine if a game is live or not and display correct game time
       var currentTime = new Date().getTime();
       var inningTitle = '';
-
+      var verticalContentLive;
       if(gameInfo.live){
+        verticalContentLive = gameInfo.verticalContent;
         // let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : '';
         inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
       }else{
+        verticalContentLive = "";
         if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
           inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
         }else{
@@ -394,7 +399,7 @@ export class BoxScoresService {
         //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
         inning:inningTitle,
         dataPointCategories:gameInfo.dataPointCategories,
-        verticalContent:gameInfo.verticalContent,
+        verticalContent:verticalContentLive,
         homeData:{
           homeTeamName: homeData.lastName,
           homeImageConfig:link1,
@@ -533,15 +538,19 @@ export class BoxScoresService {
       gameArticle['headline'] = aiContent.featuredReport[report].displayHeadline;
       gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
       var i = aiContent.featuredReport[report]['images']['home_images'];
-      var random1 = Math.floor(Math.random() * i.length);
-      var random2 = Math.floor(Math.random() * i.length);
-      gameArticle['images'] = [];
-
-      if(random1 == random2){
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+      if(i != null){
+        var random1 = Math.floor(Math.random() * i.length);
+        var random2 = Math.floor(Math.random() * i.length);
+        gameArticle['images'] = [];
+        if(random1 == random2){
+          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        }else{
+          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
+        }
       }else{
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
+        gameArticle['images'] = [];
+        gameArticle['images'].push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null));
       }
     }
     return gameArticle;
