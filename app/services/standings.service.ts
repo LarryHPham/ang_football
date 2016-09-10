@@ -188,7 +188,6 @@ export class StandingsService {
   }
 
   private setupTabData(standingsTab: TDLStandingsTabdata, scope, apiData: any, maxRows: number): Array<VerticalStandingsTableData> {
-    console.log("incoming maxrows", maxRows);
     var sections: Array<VerticalStandingsTableData> = [];
     var totalRows = 0;
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
