@@ -213,7 +213,6 @@ export class StandingsService {
         for ( var conferenceKey in apiData ) {
           var divData: any = [];
           for ( var divisionKey in apiData[conferenceKey] ) {
-            console.log("maxrows", maxRows);
             for (var i = 0; i < apiData[conferenceKey][divisionKey].length && i < maxRows; i++) {
               divData.push(apiData[conferenceKey][divisionKey][i]);
               totalRows++;
