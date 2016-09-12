@@ -10,7 +10,6 @@ export class HeadlineDataService {
 
     getAiHeadlineData(scope, teamID) {
         var fullUrl = GlobalSettings.getHeadlineUrl();
-        console.log('getAiHeadlineData - ',fullUrl+ 'headlines/' + scope + '/' + teamID);
         return this.http.get(fullUrl + 'headlines/' + scope + '/' + teamID)
             .map(res => res.json())
             .map(data => data);
