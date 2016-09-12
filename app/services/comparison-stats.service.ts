@@ -291,7 +291,7 @@ export class ComparisonStatsService {
   */
   private formatTeamList(teamList) {
     return teamList.map(team => {
-      var teamName = team.name + " " + team.nickname;
+      var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
       return {key: team.id, value: teamName};
     });
   }
@@ -383,8 +383,8 @@ export class ComparisonStatsService {
         fields = this.defenseFields;
         break;
     }
-    var teamColorsOne = data.playerOne.teamColors.split(", ");
-    var teamColorsTwo = data.playerTwo.teamColors.split(", ");
+    var teamColorsOne = data.playerOne.teamColors.concat(",").split(", ", 1);
+    var teamColorsTwo = data.playerTwo.teamColors.concat(",").split(", ", 1);
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
