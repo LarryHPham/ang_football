@@ -200,7 +200,7 @@ export class ProfileHeaderService {
               division: headerData.divisionName,
               conference: headerData.conferenceName,
             },
-            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
+            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
             headerData: headerData,
             teamName: headerData.teamName,
@@ -447,7 +447,7 @@ export class ProfileHeaderService {
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
       profileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
-      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
+      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
       profileTitleFirstPart: headerData.teamMarket,
       profileTitleLastPart: headerData.teamName,
       lastUpdatedDate: headerData.lastUpdated,
