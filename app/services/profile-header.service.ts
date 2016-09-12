@@ -215,8 +215,6 @@ export class ProfileHeaderService {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/league/' + scope;
 
-    console.log('profile header url - ',url);
-
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
