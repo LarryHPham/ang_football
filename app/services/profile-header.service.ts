@@ -49,8 +49,9 @@ interface PlayerProfileHeaderData {
     dob: string;
     height: string;
     weight: number;
-    playerHeadshotUrl?: string; //todo - missing
-    backgroundUrl: string; //todo - missing
+    playerHeadshotUrl?: string;
+    backgroundUrl?: string;
+    profileHeaderUrl?: string;
     seasonId: string;
     lastUpdated: string;
     description: string;
@@ -109,7 +110,8 @@ interface TeamProfileHeaderData {
     passingYardsPerGameRank: number;
     rushingYardsPerGame: number;
     rushingYardsPerGameRank: number;
-    backgroundUrl: string;
+    backgroundUrl?: string;
+    profileHeaderUrl?: string;
     teamLogo: string;
     profileImage: string; //todo - missing
     seasonId: string;
@@ -132,6 +134,7 @@ interface LeagueProfileHeaderData {
   totalDivisions: number;
   totalConferences: number;
   backgroundUrl: string;
+  profileHeaderUrl?: string;
   leagueLogo: string;
   aiDescriptionId: string;
   seasonId: string;
@@ -171,7 +174,7 @@ export class ProfileHeaderService {
               playerId: headerData.playerId,
               playerName: headerData.playerFullName
             },
-            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
+            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
             headerData: headerData,
             profileName: headerData.playerFullName,
@@ -197,7 +200,7 @@ export class ProfileHeaderService {
               division: headerData.divisionName,
               conference: headerData.conferenceName,
             },
-            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
+            fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
             headerData: headerData,
             teamName: headerData.teamName,
@@ -307,7 +310,7 @@ export class ProfileHeaderService {
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
         profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
-        backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
+        backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
         profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
         profileTitleLastPart: '',
         lastUpdatedDate: headerData.lastUpdated,
@@ -375,7 +378,7 @@ export class ProfileHeaderService {
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
         profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
-        backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
+        backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
         profileTitleFirstPart: headerData.playerFullName, // not seperated by first and last so entire name is bold,
         profileTitleLastPart: '',
         lastUpdatedDate: headerData.lastUpdated,
@@ -444,7 +447,7 @@ export class ProfileHeaderService {
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
       profileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
-      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
+      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
       profileTitleFirstPart: headerData.teamMarket,
       profileTitleLastPart: headerData.teamName,
       lastUpdatedDate: headerData.lastUpdated,
@@ -506,12 +509,12 @@ export class ProfileHeaderService {
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
-    data.backgroundUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.backgroundUrl);
+    data.profileHeaderUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.profileHeaderUrl);
 
     var header: ProfileHeaderData = {
       profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
-      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.backgroundUrl),
+      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.profileHeaderUrl),
       profileTitleFirstPart: "",
       //profileTitleLastPart: data.leagueAbbreviatedName, //todo when correct API is set
       profileTitleLastPart: data.leagueFullName,
