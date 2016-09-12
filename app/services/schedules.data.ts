@@ -347,7 +347,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
         let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team2Id) {
-          if(item.team1Id != null){
+          if(item.team2Id != null){
             link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
           }
         }
@@ -373,7 +373,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
       case "gs":
       var partnerCheck = GlobalSettings.getHomeInfo();
-        if (item.eventStatus != 'cancelled'){
+        if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null){
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           if ( status ) {
             if(partnerCheck.isPartner){
@@ -442,6 +442,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
     else if ( display == null ) {
       display = "N/A";
     }
+
     return new CellData(display, sort, link, imageUrl);
   }
 }
