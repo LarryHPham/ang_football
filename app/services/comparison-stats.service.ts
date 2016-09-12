@@ -215,7 +215,6 @@ export class ComparisonStatsService {
         team1Data,
         team2Data
       ];
-      console.log("moduleData", moduleData);
       return moduleData;
     });
   }
