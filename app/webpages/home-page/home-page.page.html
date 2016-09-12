@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="row">
-        <div class="home-hero col-xs-12">
-          <img class="home-hero-img" src='{{imgHero1}}' />
+        <div class="home-hero col-xs-12" [ngStyle]="{ 'background-image': 'url(' + imgHero1 + ')'}">
+          <!-- <img class="home-hero-img" src='{{}}' /> -->
           <div class="home-hero-info">
             <h1>{{homeHeading1}}</h1>
             <h4>{{homeSubHeading1}}</h4>
