@@ -52,7 +52,7 @@ export class PickTeamPage{
     public activeDivision: string;
     public activeDivisionSegments: string;
 
-    public imgHero1: string = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+    public imgHero1: string = "http://images.synapsys.us/TDL/stock_images/TDL_Stock-2.png";
     public imgIcon1: string = "/app/public/homePage_icon1.png";
     public imageTile1: string = "/app/public/iphone.png";
     public imageTile2: string = "/app/public/ipad.png";
