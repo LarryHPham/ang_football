@@ -131,7 +131,7 @@ interface LeagueProfileHeaderData {
   totalPlayers: number;
   totalDivisions: number;
   totalConferences: number;
-  backgroundUrl: string;
+  profileHeaderUrl: string;
   leagueLogo: string;
   aiDescriptionId: string;
   seasonId: string;
@@ -211,6 +211,8 @@ export class ProfileHeaderService {
   getLeagueProfile(scope?): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/league/' + scope;
+
+    console.log('profile header url - ',url);
 
     return this.http.get(url)
         .map(res => res.json())
@@ -444,7 +446,7 @@ export class ProfileHeaderService {
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
       profileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
-      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.backgroundUrl),
+      backgroundImageUrl: headerData.backgroundUrl,
       profileTitleFirstPart: headerData.teamMarket,
       profileTitleLastPart: headerData.teamName,
       lastUpdatedDate: headerData.lastUpdated,
@@ -506,12 +508,10 @@ export class ProfileHeaderService {
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
-    data.backgroundUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.backgroundUrl);
-
     var header: ProfileHeaderData = {
       profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
-      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.backgroundUrl),
+      backgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.profileHeaderUrl),
       profileTitleFirstPart: "",
       //profileTitleLastPart: data.leagueAbbreviatedName, //todo when correct API is set
       profileTitleLastPart: data.leagueFullName,
