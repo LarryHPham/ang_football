@@ -86,15 +86,15 @@ export class SeasonStatsService {
     }];
   }
 
-  getPlayerStats(playerId: number): Observable<SeasonStatsModuleData> {
+  getPlayerStats(playerId: number, scope?: string): Observable<SeasonStatsModuleData> {
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
     let url = GlobalSettings.getApiUrl() + "/seasonStats/module/player/" + playerId;
     return this.http.get(url)
       .map(res => res.json())
-      .map(data => this.formatData(data.data));
+      .map(data => this.formatData(data.data, scope));
   }
 
-  private formatData(data: APISeasonStatsData): SeasonStatsModuleData {
+  private formatData(data: APISeasonStatsData, scope?: string): SeasonStatsModuleData {
     if ( !data ) {
       return null;
     }
@@ -112,10 +112,10 @@ export class SeasonStatsService {
     //Load 4 years worth of data, starting from current year
     for ( var year = curYear; year > curYear-4; year-- ) {
       var strYear = year.toString();
-      seasonStatTabs.push(this.getTabData(strYear, data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, year == curYear));
+      seasonStatTabs.push(this.getTabData(strYear, data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, year == curYear,scope));
     }
     //Load "Career Stats" data
-    seasonStatTabs.push(this.getTabData("Career", data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false));
+    seasonStatTabs.push(this.getTabData("Career", data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, null, scope));
     return {
       tabs: seasonStatTabs,
       profileName: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName,
@@ -201,13 +201,16 @@ export class SeasonStatsService {
   }
 
 
-  private getTabData(seasonId: string, data: APISeasonStatsData, playerName: string, isPitcher: boolean, isCurrYear?: boolean): SeasonStatsTabData {
+  private getTabData(seasonId: string, data: APISeasonStatsData, playerName: string, isPitcher: boolean, isCurrYear?: boolean, scopeName?: string): SeasonStatsTabData {
     var legendValues;
     var subTitle;
     var tabTitle;
     var longSeasonName; // for display in the carousel and module title
     var isCareer = seasonId == "career";
     var bars: Array<ComparisonBarInput> = this.getBarData(data.stats[seasonId], isCareer, isPitcher, data.playerInfo[0].statScope);
+
+    scopeName = scopeName != null ? scopeName.toUpperCase() : "League";
+    scopeName = scopeName == "FBS" ? "NCAAF" : scopeName;
 
     if ( isCareer ) {
       tabTitle = "Career Stats";
@@ -231,8 +234,8 @@ export class SeasonStatsService {
       }
       legendValues = [
           { title: playerName,    color: '#2d3e50' },
-          { title: 'NFL Average', color: '#999999' },
-          { title: "NFL Leader",  color: "#E1E1E1" }
+          { title: scopeName + ' Average', color: '#999999' },
+          { title: scopeName + " Leader",  color: "#E1E1E1" }
       ];
     }
     if(bars != null && bars.length == 0){ bars = undefined};
