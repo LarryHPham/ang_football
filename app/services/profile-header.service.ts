@@ -509,8 +509,6 @@ export class ProfileHeaderService {
                       "These teams and players are divided across " + GlobalFunctions.formatNumber(data.totalConferences) +
                       " conferences and " + GlobalFunctions.formatNumber(data.totalDivisions) + " divisions.";
 
-    data.profileHeaderUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data.profileHeaderUrl);
-
     var header: ProfileHeaderData = {
       profileName: leagueAbbreviatedName,
       profileImageUrl: GlobalSettings.getImageUrl(data.leagueLogo),
