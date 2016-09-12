@@ -143,14 +143,24 @@ export class DeepDivePage implements OnInit{
       }
     }
     changeScope($event) {
-      if($event == this.changeScopeVar){
-        this.getSideScroll();
+      var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
+      let relPath = this.getRelativePath(this._router);
+      if(partnerHome){
+        this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+        window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
       }else{
-        this.changeScopeVar = $event;
-        this.callCount = 1;
-        this.sideScrollData = null;
-        this.getSideScroll();
+        this._router.navigate([relPath+'Default-home',{scope:$event.toLowerCase()}]);
+        window.location.pathname = "/"+$event.toLowerCase();
       }
+
+      // if($event == this.changeScopeVar){
+      //   this.getSideScroll();
+      // }else{
+      //   this.changeScopeVar = $event;
+      //   this.callCount = 1;
+      //   this.sideScrollData = null;
+      //   this.getSideScroll();
+      // }
     }
 
     private scrollCheck(event){
