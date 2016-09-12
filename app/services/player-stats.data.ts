@@ -201,8 +201,8 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
 
 
         var currYear = new Date().getFullYear();
-        var year = currYear-1;
-        for ( var i = 0; i < 2; i++ ) {
+        var year = currYear;
+        for ( var i = 0; i < 4; i++ ) {
             this.seasonIds.push({
                 key: year.toString(),
                 //value: i == 0 ? "Current Season" : year.toString() + " Season"
