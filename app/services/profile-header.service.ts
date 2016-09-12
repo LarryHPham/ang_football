@@ -297,7 +297,7 @@ export class ProfileHeaderService {
 
                     if (formattedHeight != "N/A") {
                         description = description + " and stands at " +
-                        formattedHeight + " tall";
+                        formattedHeight + " ";
                     }
                     if ( formattedWeight != "N/A" ) {
                       description = description + " and weighs in at " + formattedWeight + " pounds";
@@ -341,7 +341,7 @@ export class ProfileHeaderService {
           {
             label: headerData.stat3Type,
             labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat3Desc),
-            value: headerData.stat3 ? VerticalGlobalFunctions.formatHeightDigits(headerData.stat3).toString() : null
+            value: headerData.stat3 ? VerticalGlobalFunctions.formatHeightInchesWithTicks(headerData.stat3).toString() : null
           },
           {
             label: headerData.stat4Type,
