@@ -228,7 +228,7 @@ private dailyUpdateModule(playerId: number) {
 }
 
   private setupSeasonstatsData() {
-      this._seasonStatsService.getPlayerStats(this.pageParams.playerId)
+      this._seasonStatsService.getPlayerStats(this.pageParams.playerId, this.scope)
       .subscribe(
           data => {
               this.seasonStatsData = data;
