@@ -5,7 +5,7 @@
   <div *ngIf="profileHeaderData && pageParams">
     <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
     <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
-    <daily-update-module [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
+    <daily-update-module *ngIf="dailyUpdateData" [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
     <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="false"></articles-module>
     <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
@@ -20,7 +20,7 @@
         (tabSelected)="scheduleTab($event)"
         (selectedKeyFilter)="filterDropdown($event)"></schedules>
 
-    <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
+    <!-- <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module> -->
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace"></responsive-widget>
     <team-roster-module *ngIf="rosterData" [data]="rosterData"></team-roster-module>
     <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage" [profileData]="profileData" (tabSelected)="playerStatsTabSelected($event)" [tabName]="ptabName"></player-stats-module>
@@ -36,7 +36,7 @@
     <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <draft-history-module *ngIf="profileData && scope == sportLeagueAbbrv.toLowerCase()" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-    <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'team'" [profileId]="pageParams.teamId"></comparison-module>
+    <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'team'" [profileId]="pageParams.teamId" [scope]="scope"></comparison-module>
     <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
     <div class="profile-carousel-container">
       <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel>

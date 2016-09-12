@@ -140,6 +140,12 @@ export class VerticalGlobalFunctions {
     return heightInFeet + "-" + inches;
   }
 
+  static formatHeightInchesWithTicks(heightStr: string) {
+    var heightInFeet = (Number(heightStr) / 12)|0;
+    var inches = Number(heightStr) % 12;
+    return heightInFeet + "'" + inches + '"';
+  }
+
   static formatHeightInchesWithFoot(heightStr: string) {
     var heightInFeet = (Number(heightStr) / 12)|0;
     var inches = Number(heightStr) % 12;

@@ -13,6 +13,8 @@ import {PartnerHomePage} from '../partner-home-page/partner-home-page';
 import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
 
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
+
 export interface homePageData {
   imageData: CircleImageData;
   location: string;
@@ -50,7 +52,7 @@ export class PickTeamPage{
     public activeDivision: string;
     public activeDivisionSegments: string;
 
-    public imgHero1: string = "/app/public/homePage_hero1.png";
+    public imgHero1: string = "http://images.synapsys.us/TDL/stock_images/TDL_Stock-2.png";
     public imgIcon1: string = "/app/public/homePage_icon1.png";
     public imageTile1: string = "/app/public/iphone.png";
     public imageTile2: string = "/app/public/ipad.png";
