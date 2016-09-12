@@ -215,8 +215,7 @@ export class ComparisonStatsService {
         team1Data,
         team2Data
       ];
-
-      // console.log("moduleData", moduleData);
+      console.log("moduleData", moduleData);
       return moduleData;
     });
   }
@@ -310,7 +309,6 @@ export class ComparisonStatsService {
 
   private formatPlayerPositionList(description:string, playerList: Array<any>) {
     var dropdownList = [];
-
     if ( playerList && playerList.length > 0 ) {
       dropdownList.push({ key: "", value: description, class: "dropdown-grp-lbl", preventSelection: true });
       Array.prototype.push.apply(dropdownList, playerList.map(player => {
@@ -383,8 +381,8 @@ export class ComparisonStatsService {
         fields = this.defenseFields;
         break;
     }
-    var teamColorsOne = data.playerOne.teamColors.concat(",").split(", ", 1);
-    var teamColorsTwo = data.playerTwo.teamColors.concat(",").split(", ", 1);
+    var teamColorsOne = data.playerOne.teamColors ? data.playerOne.teamColors.concat(",").split(", ", 1) : ['#000000'];
+    var teamColorsTwo = data.playerTwo.teamColors ? data.playerTwo.teamColors.concat(",").split(", ", 1) : ['#000000'];
     var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
