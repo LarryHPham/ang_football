@@ -30,6 +30,8 @@ export interface PlayerData {
   weight: string;
   age: string;
   yearExperience: string;
+  class: string;
+  teamAbbreviation: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -312,12 +314,11 @@ export class ComparisonStatsService {
     if ( playerList && playerList.length > 0 ) {
       dropdownList.push({ key: "", value: description, class: "dropdown-grp-lbl", preventSelection: true });
       Array.prototype.push.apply(dropdownList, playerList.map(player => {
-        if ( player.id ) return {key: player.id, value: player.firstLastName, class: "dropdown-grp-item", preventSelection: false};
-        else return {key: player.player_id, value: player.player_name, class: "dropdown-grp-item"};
+        if ( player.playerId ) return {key: player.playerId, value: player.playerFirstName + ' ' + player.playerLastName, class: "dropdown-grp-item", preventSelection: false};
+        else return {key: player.playerId, value: player.playerFirstName + ' ' + player.playerLastName, class: "dropdown-grp-item"};
       }));
     }
-
-    return dropdownList;
+    return dropdownList.sort();
   }
 
   private formatPlayerData(playerId: string, data: { [seasonId: string]: any }):{ [seasonId: string]: SeasonStats } {

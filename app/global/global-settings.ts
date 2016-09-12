@@ -13,7 +13,8 @@ export class GlobalSettings {
     private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
-    private static _widgetUrl: string = 'w1.synapsys.us';
+    private static _widgetUrl: string = 'devapi.synapsys.us';
+    private static _geoUrl: string = 'w1.synapsys.us';
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
@@ -77,6 +78,10 @@ export class GlobalSettings {
     }
 
     static getGeoLocation():string {
+        return this._proto + "//" + this._geoUrl;
+    }
+
+    static widgetUrl():string {
         return this._proto + "//" + this._widgetUrl;
     }
 
