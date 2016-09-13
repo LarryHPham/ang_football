@@ -32,6 +32,7 @@ export interface PlayerData {
   yearExperience: string;
   class: string;
   teamAbbreviation: string;
+  teamMarket: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{

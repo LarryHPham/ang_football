@@ -95,7 +95,7 @@ export class StandingsService {
     }
     if (season == null) {
       var date = new Date;
-      var compareDate = new Date('09 15 ' + date.getFullYear());
+      var compareDate = new Date('09 08 ' + date.getFullYear());
       if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
         season = date.getFullYear();
       }
