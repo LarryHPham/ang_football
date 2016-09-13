@@ -189,6 +189,7 @@ export class BoxScoresService {
   }
 
   transformBoxScores(data){
+
     let boxScores = data.data;
     var boxScoreObj = {};
     var newBoxScores = {};
@@ -260,7 +261,7 @@ export class BoxScoresService {
           };
           boxScoreObj[dates]['p4']={
             home:boxScores[dates].team1Q4Score,
-            away:boxScores[dates].team2Q5Score
+            away:boxScores[dates].team2Q4Score
           };
           boxScoreObj[dates]['p5']={
             home:boxScores[dates].team1OtScore,
