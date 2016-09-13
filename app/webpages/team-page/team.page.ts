@@ -478,9 +478,17 @@ export class TeamPage implements OnInit {
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
+        var seasonArray=tabData[0];
+        var seasonIds=seasonArray.seasonIds;
+        var seasonTab = seasonIds.find(function (e) {
+            if( e.value===tabData[1]){
+                return true;
+            }
+
+        });
         if (tabData[0].tabActive=="Special"){
             this.ptabName="Kicking";
-            if(tabData[1]=="2015"||tabData[1]=="2014"){
+            if(seasonTab){
 
             }else{
                 this.ptabName=tabData[1];
