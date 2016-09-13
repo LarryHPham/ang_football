@@ -361,6 +361,7 @@ private dailyUpdateModule(playerId: number) {
 
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module;
+        this.pageParams.scope = this.scope;
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 

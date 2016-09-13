@@ -145,19 +145,30 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
         route: teamRoute,
         text: teamFullName
     };
+    var rank = null;
+    var rankPoint = null;
     var division = item.divisionName;
     if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
       var division = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.replace(item.conferenceName, '').toLowerCase());
     }//fbs divison sends back all uppercase and needs to be camel case
-    var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
+    if(this.conference !== undefined && this.division !== undefined){
+      rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
+      rankPoint =  item.divisionName;
+    } else if(this.conference !== undefined && this.division === undefined){
+      rank = item.conferenceRank != null ? Number(item.conferenceRank) : 'N/A';
+      rankPoint = item.conferenceName;
+    } else {
+      rank = item.leagueRank != null ? Number(item.leagueRank) : 'N/A';
+      rankPoint = item.leagueAbbreviation.toUpperCase();
+    }
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
+      subheader: [item.seasonBase + "-" + yearEnd + " Season " + rankPoint + " Standings"],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
-          " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + division + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
+          " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + rankPoint + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
       circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
