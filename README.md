@@ -6,7 +6,7 @@ To start clone this repo, run: `git clone --recursive https://github.com/passit/
 
 This fork of Touchdown Loyal is an implementation modular SNT Media Core submodule git structure.
 
-Structure:
+Structure: 
 
               SNT Core Framework
       Global  |       |
