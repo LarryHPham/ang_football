@@ -4,6 +4,8 @@ import {HTTP_PROVIDERS, Http, Response, Headers} from "@angular/http";
 import {GlobalSettings} from "../global/global-settings";
 import {Observable} from "rxjs/Observable";
 
+import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
+
 @Injectable()
 
 export class ImagesService {
@@ -25,7 +27,7 @@ export class ImagesService {
         var copyArray = [];
         var titleArray = [];
         imageData.forEach(function (val, index) {
-            val['images'] = GlobalSettings.getBackgroundImageUrl(val.imageUrl);
+            val['images'] = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.imageUrl);
             val['copyright'] = val.imageCopyright;
             val['title'] = val.imageDescription;
             imageArray.push(val['images']);
@@ -44,7 +46,7 @@ export class ImagesService {
         var copyArray = [];
         var titleArray = [];
         imageData.forEach(function (val, index) {
-            val['images'] = GlobalSettings.getBackgroundImageUrl(val['image_url']);
+            val['images'] = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']);
             val['copyright'] = val['image_copyright'];
             val['title'] = val['image_title'];
             imageArray.push(val['images']);

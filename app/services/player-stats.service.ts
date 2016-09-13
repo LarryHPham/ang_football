@@ -13,9 +13,9 @@ import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from
 @Injectable()
 export class PlayerStatsService implements OnDestroy{
 
-    tabName:string="passing"
+    tabName:string;
     seasonId:string="2015";
-
+    public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
     public allStatistics: Array<PlayerStatsData>;
@@ -54,19 +54,33 @@ export class PlayerStatsService implements OnDestroy{
 
         var standingsTab: MLBPlayerStatsTableData = tabData[0];
 
-        var columnTabType:string="passing"
+        var columnTabType;
 
         if(tabData[1]== "2015"||tabData[1]== "2014" ){
                this.seasonId = tabData[1];
-            if ( !this.seasonId && standingsTab.seasonIds.length > 0 ) {
-                this.seasonId = standingsTab.seasonIds[0].key;
+
+            if(standingsTab.tabActive=="Special"){
+                //console.log(this.tabName);
+                this.tabName=this.tabName;
+
+            }else {
+                this.tabName = standingsTab.tabTitle.toLowerCase();
+
+                this.GlossaryData=standingsTab.glossary;
 
             }
+
         }else{
              columnTabType = tabData[1];
-            //console.log(tabData ,"this one sort")
-            if ( !columnTabType && standingsTab.subTabs.length > 0 ) {
-                columnTabType = standingsTab.subTabs[0].key;
+
+            if(standingsTab.tabActive=="Special"){
+
+
+                this.tabName=columnTabType.toLowerCase();
+
+            }else {
+                this.tabName = standingsTab.tabTitle.toLowerCase();
+                this.GlossaryData=standingsTab.glossary;
 
             }
         }
@@ -86,24 +100,19 @@ export class PlayerStatsService implements OnDestroy{
             }
         }*/
 
+
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
         standingsTab.tableData = null;
         // standingsTab.tabActive="Passing";
 
-        if(standingsTab.tabActive=="Special"){
-            this.tabName=columnTabType.toLowerCase();
 
-        }else {
-            this.tabName = standingsTab.tabTitle.toLowerCase();
-
-        }
-        let url = "http://dev-touchdownloyal-api.synapsys.us/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
-       
+        let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
         this.http.get(url)
             .map(res => res.json())
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {
+
                     standingsTab.isLoaded = true;
                     standingsTab.hasError = false;
                     standingsTab.seasonTableData[columnTabType] = data;
@@ -126,7 +135,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
     initializeAllTabs(teamName: string, isActive?:boolean, isTeamProfilePage?: boolean): Array<MLBPlayerStatsTableData> {
-        //return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, false, isTeamProfilePage));
+
         return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, tabActive=="Passing"?true:false , isTeamProfilePage));
 
     }
@@ -146,12 +155,13 @@ export class PlayerStatsService implements OnDestroy{
             value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot);
             value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo);
             if ( value.backgroundImage ) {
-                value.fullBackgroundImageUrl = GlobalSettings.getBackgroundImageUrl(value.backgroundImage);
+                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
             }
 
 
         });
-        //console.log(table, standingsTab.tabActive, this.tabName," now check");
+        
         return table;
+
     }
 }

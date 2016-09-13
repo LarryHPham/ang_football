@@ -6,6 +6,16 @@ declare var moment:any;
 @Injectable()
 
 export class GlobalFunctions {
+    /*convert from inches to ft-in format*/
+    static inchesToFeet(inch):string {
+      if(inch === undefined || inch === null){
+        return inch;
+      }
+      inch = Number(inch);
+      var feet = Math.floor(inch / 12);
+      inch %= 12;
+      return feet + "-" + inch;
+    }
     /**
      * Returns the approriate ordinal suffix for the given number
      *
@@ -426,7 +436,7 @@ export class GlobalFunctions {
         var date = moment(jsDate);
         var str = date.format("dddd, ") + GlobalFunctions.formatAPMonth(date.month()) + date.format(' D, YYYY');
         if (includeTimestamp) {
-            str += ' | ' + date.format('hh:mm A') + (timezone !== undefined && timezone !== null ? timezone : "");
+            str += ' | ' + date.format('h:mm A') + (timezone !== undefined && timezone !== null ? timezone : "");
         }
         return str;
     }
@@ -615,7 +625,7 @@ export class GlobalFunctions {
      */
     static convertToPossessive(name:string) {
         if (!name || name.length == 0) return name;
-
+        name = name.trim();
         var lastChar = name.charAt(name.length - 1);
         return lastChar == 's' ? name + "'" : name + "'s";
     }

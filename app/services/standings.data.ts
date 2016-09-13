@@ -8,25 +8,32 @@ import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
 export interface TeamStandingsData {
-  teamName: string,
-  imageUrl: string,
-  backgroundImage: string,
+  teamName: string;
+  imageUrl: string;
+  backgroundImage: string;
+  backgroundUrl: string;
+  teamLogo: string;
   teamId: string;
-  conferenceName: string,
-  divisionName: string,
-  lastUpdated: string,
-  divisionRank: string,
-  conferenceRank: string,
-  leagueRank: string,
-  streak: string,
-  teamConferenceRecord: string,
-  teamWinPercent: string,
-  teamDivisionRecord: string,
-  teamPointsAllowed: string,
-  teamOverallRecord: string,
-  seasonBase: string,
+  teamMarket: string;
+  conferenceName: string;
+  divisionName: string;
+  lastUpdated: string;
+  divisionRank: string;
+  conferenceRank: string;
+  leagueRank: string;
+  streak: string;
+  teamConferenceRecord: string;
+  teamWinPercent: string;
+  teamDivisionRecord: string;
+  teamPointsAllowed: string;
+  teamOverallRecord: string;
+  seasonBase: string;
   totalLosses: string;
   totalWins: string;
+  teamPointsFor: string;
+  leagueAbbreviation: string;
+  roadRecord: string;
+  homeRecord: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -131,90 +138,127 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
   }
 
   convertToCarouselItem(item: TeamStandingsData, index:number): SliderCarouselInput {
-    var teamRoute = null;
     var yearEnd = Number(item.seasonBase)+1;
-    if ( this.currentTeamId != item.teamId ) {
-      teamRoute = VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
-    }
+    var teamFullName = item.teamMarket + ' ' + item.teamName;
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId);
     var teamNameLink = {
         route: teamRoute,
-        text: item.teamName
+        text: teamFullName
     };
+    var division = item.divisionName;
+    if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
+      var division = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.replace(item.conferenceName, '').toLowerCase());
+    }//fbs divison sends back all uppercase and needs to be camel case
+    var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: item.fullBackgroundImageUrl,
+      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonBase + "-" + yearEnd + " Season " + item.divisionName + " Standings"],
+      subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
-          " is currently <span class='text-heavy'>ranked " + Number(item.divisionRank) + "</span>" + " in the <span class='text-heavy'>" + item.divisionName + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
+          " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + division + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
-      circleImageUrl: item.fullImageUrl,
+      circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
       circleImageRoute: teamRoute
     });
   }
 }
 
 export class VerticalStandingsTableModel implements TableModel<TeamStandingsData> {
-  // title: string;
-
-  columns: Array<TableColumn> = [{
-      headerValue: "Team Name",
-      columnClass: "image-column",
-      key: "name"
-    },{
-      headerValue: "W/L/T",
-      columnClass: "data-column",
-      key: "wlt"
-    },{
-      headerValue: "CONF",
-      columnClass: "data-column",
-      sortDirection: -1, //descending
-      key: "conf"
-    },{
-      headerValue: "STRK",
-      columnClass: "data-column",
-      key: "strk"
-    },{
-      headerValue: "HM",
-      columnClass: "data-column",
-      key: "hm"
-    },{
-      headerValue: "RD",
-      columnClass: "data-column",
-      key: "rd"
-    },{
-      headerValue: "PF",
-      columnClass: "data-column",
-      key: "pf"
-    },{
-      headerValue: "PA",
-      columnClass: "data-column",
-      key: "pa"
-    },{
-      headerValue: "Rank:",
-      columnClass: "data-column",
-      key: "rank"
-    }];
-
+  columns: Array<TableColumn>;
   rows: Array<TeamStandingsData>;
 
   selectedKey: string = "";
-
+  scope: string;
   /**
    * The team id of the profile page displaying the Standings module. (Optional)
    */
   currentTeamId: string;
-
-  constructor(rows: Array<TeamStandingsData>, teamId: string) {
+  constructor(rows: Array<TeamStandingsData>, scope:string, teamId: string) {
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
       this.rows = [];
     }
     this.currentTeamId = teamId;
+    this.scope = scope;
+    this.setColumnDP();
   }
-
+  setColumnDP() : Array<TableColumn> {
+    if(this.scope == 'fbs'){
+      this.columns = [{
+          headerValue: "Team Name",
+          columnClass: "image-column",
+          key: "name"
+        },{
+          headerValue: "W/L/T",
+          columnClass: "data-column",
+          key: "wlt"
+        },{
+          headerValue: "CONF",
+          columnClass: "data-column",
+          sortDirection: -1, //descending
+          key: "conf"
+        },{
+          headerValue: "STRK",
+          columnClass: "data-column",
+          key: "strk"
+        },{
+          headerValue: "HM",
+          columnClass: "data-column",
+          key: "hm"
+        },{
+          headerValue: "RD",
+          columnClass: "data-column",
+          key: "rd"
+        },{
+          headerValue: "PF",
+          columnClass: "data-column",
+          key: "pf"
+        },{
+          headerValue: "PA",
+          columnClass: "data-column",
+          key: "pa"
+        }];
+      } else {
+        this.columns = [{
+            headerValue: "Team Name",
+            columnClass: "image-column",
+            key: "name"
+          },{
+            headerValue: "W/L/T",
+            columnClass: "data-column",
+            key: "wlt"
+          },{
+            headerValue: "PCT",
+            columnClass: "data-column",
+            sortDirection: -1, //descending
+            key: "pct"
+          },{
+            headerValue: "DIV",
+            columnClass: "data-column",
+            key: "div"
+          },{
+            headerValue: "CONF",
+            columnClass: "data-column",
+            key: "conf"
+          },{
+            headerValue: "STRK",
+            columnClass: "data-column",
+            key: "strk"
+          },{
+            headerValue: "PF",
+            columnClass: "data-column",
+            key: "pf"
+          },{
+            headerValue: "PA",
+            columnClass: "data-column",
+            key: "pa"
+          }];
+      }
+      return this.columns;
+  }
   setSelectedKey(key: string) {
     this.selectedKey = key ? key : null;
   }
@@ -236,44 +280,57 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     return this.selectedKey == item.teamId;
   }
 
+  calcWLT(str: string){
+    let win = Number(str.split("-")[0]);
+    let lose = Number(str.split("-")[1]);
+    let tight = Number(str.split("-")[2]);
+    let wlt = Math.pow(win, 2) - lose + tight;
+    return wlt;
+  }
+
   getCellData(item:TeamStandingsData, column:TableColumn):CellData {
     var display = null;
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
+    var teamFullName = item.teamMarket + ' ' + item.teamName;
     switch (column.key) {
       case "name":
         display = item.teamName;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
-          link = VerticalGlobalFunctions.formatTeamRoute(item.teamName,item.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
         }
-        imageUrl = item.fullImageUrl;
+        imageUrl = GlobalSettings.getImageUrl(item.teamLogo);
         break;
 
-      case "wlt"://TODO
+      case "wlt":
         display = item.teamOverallRecord != null ? item.teamOverallRecord : null;
-        sort = item.teamOverallRecord;
+        sort = this.calcWLT(item.teamOverallRecord);
         break;
 
       case "conf":
         display = item.teamConferenceRecord != null ? item.teamConferenceRecord : null;
-        sort = item.teamConferenceRecord;
+        sort = this.calcWLT(item.teamConferenceRecord);
         break;
 
       case "strk":
         display = item.streak != null ? item.streak : null;
-        sort = item.streak;
+        var compareValue = Number(item.streak.slice(1, item.streak.length));
+        if(item.streak.charAt(0) == "L"){
+          compareValue *= -1;
+        }
+        sort = compareValue;
         break;
 
-      case "hm"://TODO
-        display = item.teamWinPercent != null ? item.teamWinPercent : null;
-        sort = item.teamWinPercent;
+      case "hm":
+        display = item.homeRecord != null ? item.homeRecord : null;
+        sort = this.calcWLT(item.homeRecord);
         break;
 
-      case "rd"://TODO
-        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
-        sort = item.teamDivisionRecord;
+      case "rd":
+        display = item.roadRecord != null ? item.roadRecord : null;
+        sort = this.calcWLT(item.roadRecord);
         break;
 
       case "pa":
@@ -281,9 +338,19 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         sort = Number(item.teamPointsAllowed);
         break;
 
-      case "rank"://TODO
-        display = item.leagueRank != null ? item.leagueRank : null;
-        sort = Number(item.leagueRank);
+      case "pct":
+        display = item.teamWinPercent != null ? item.teamWinPercent : null;
+        sort = Number(item.teamWinPercent);
+        break;
+
+      case "div":
+        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
+        sort = this.calcWLT(item.teamDivisionRecord);
+        break;
+
+      case "pf":
+        display = item.teamPointsFor != null ? item.teamPointsFor : null;
+        sort = item.teamPointsFor;
         break;
     }
     if ( display == null ) {

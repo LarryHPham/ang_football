@@ -162,9 +162,11 @@ export class DeepDiveService {
     }
     //this is the sidkeick url
     var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
-    return this.http.get(callURL, {headers: headers})
+      //console.log("url and data",callURL);
+      return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
+
         return data;
       });
   }
@@ -209,7 +211,7 @@ export class DeepDiveService {
       var date = GlobalFunctions.formatDate(val.publishedDate);
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatSynRoute('story', val.id),
-          keyword: val.keyword,
+          keyword: val.keyword.replace('-', ' '),
           publishedDate: date.month + " " + date.day + ", " + date.year,
           provider1: val.author != null ? val.author : "",
           provider2: val.publisher != null ? "Published By: " + val.publisher : "",
@@ -238,7 +240,7 @@ export class DeepDiveService {
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
-          keyword: key.toUpperCase(),
+          keyword: key.replace('-', ' ').toUpperCase(),
           publishedDate: date,
           provider1: '',
           provider2: '',
@@ -246,7 +248,7 @@ export class DeepDiveService {
           imageConfig: {
           imageClass: "image-100x56",
           /*hoverText: "View",*/
-          imageUrl: dataLists.images != null ? dataLists.images : sampleImage,
+          imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
@@ -268,7 +270,7 @@ export class DeepDiveService {
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
-          keyword: key.toUpperCase(),
+          keyword: key.replace('-',' ').toUpperCase(),
           publishedDate: date,
           provider1: '',
           provider2: '',
@@ -276,7 +278,7 @@ export class DeepDiveService {
           imageConfig: {
             imageClass: "image-100x56",
             /*hoverText: "View",*/
-            imageUrl: eventType.images != null ? GlobalSettings.getImageUrl(eventType.images) : sampleImage,//TODO
+            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,//TODO
             urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
       }
@@ -292,7 +294,7 @@ export class DeepDiveService {
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
     var articleStackData = {
         articleStackRoute: VerticalGlobalFunctions.formatSynRoute('story', topData.id),
-        keyword: topData.keyword,
+        keyword: topData.keyword.replace('-', ' '),
         date: date != null ? date.month + " " + date.day + ", " + date.year: "",
         headline: topData.title,
         provider1: topData.author != null ? "<span style='font-weight: 400;'>By</span> " + topData.author : "",
@@ -330,9 +332,9 @@ export class DeepDiveService {
       var date = moment(Number(info.dateline)*1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
       var s = {
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, val.eventID),
+          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
-          keyword: val.keyword.toUpperCase(),
+          keyword: val.keyword.replace('-', ' ').toUpperCase(),
           new_date: date,
           displayHeadline: info.displayHeadline,
         }
@@ -345,8 +347,9 @@ export class DeepDiveService {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
       val["date"] = val.dateline;
-      val["image"] = GlobalSettings.getImageUrl(val.image);
+      val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
+        //console.log(VerticalGlobalFunctions.formatNewsRoute(val.id),"News Route");
       //}
     })
     return data;

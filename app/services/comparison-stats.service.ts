@@ -23,13 +23,15 @@ export interface PlayerData {
   teamLogo: string;
   teamName: string;
   teamId: string;
-  teamColors: Array<string>;
+  teamColors: string;
   mainTeamColor: string;
-  jerseyNumber: number;
+  jerseyNumber: string;
   height: string;
-  weight: number;
-  age: number;
-  yearsExperience: number;
+  weight: string;
+  age: string;
+  yearExperience: string;
+  class: string;
+  teamAbbreviation: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -166,13 +168,13 @@ export class MLBComparisonModuleData implements ComparisonModuleData {
 export class ComparisonStatsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
-  private passingFields = ["ATT", "COMP", "YDS", "AVG", "TD", "INT", "RATE"];
-  private rushingFields = ["ATT", "YDS", "AVG", "TD", "YDS/G", "FUM", "1DN"];
-  private receivingFields = ["REC", "TAR", "YDS", "TD", "YDS", "1DN"];
-  private defenseFields = ["SOLO", "AST", "TOT", "SACK", "PD", "INT", "FF"];
-  private kickingFields = ["FGM", "FGA", "FG%", "XPM", "XPA", "XP%", "PNTS"];
-  private puntingFields = ["PUNTS", "YDS", "AVG", "NET", "IN20", "LONG", "BP"];
-  private returningFields = ["K.ATT", "K.YDS", "K.AVG", "P.ATT", "P.YDS", "P.AVG", "TD"];//TODO
+  private passingFields = ["Attempts", "Completions", "Passing Yards", "Yards Per Attempt", "Passing Touchdowns", "Total Interceptions", "Passer Rating"];
+  private rushingFields = ["Rushing Attempts", "Rushing Yards", "Rushing Yards Per Carry", "Rushing Touchdowns", "Rushing Yards Per Game", "Rushing Fumbles", "Rushing First Downs"];
+  private receivingFields = ["Receptions", "Receiving Targets", "Receiving Yards", "Average Yards Per Reception", "Receiving Touchdowns", "Receiving Yards Per Game", "Receiving First Downs"];
+  private defenseFields = ["Solo Tackles", "Assisted Tackles", "Total Tackles", "Total Sacks", "Passes Defended", "Interceptions", "Forced Fumbles"];
+  private kickingFields = ["Field Goals Made", "Field Goal Attempts", "Percentage of Field Goals Made", "Extra Points Made", "Extra Points Attempted", "Percentage of Extra Points Made", "Total Points"];
+  private puntingFields = ["Total Punts", "Gross Punting Yards", "Gross Punting Average", "Net Punting Average", "Punts Inside the 20 Yard Line", "Longest Punt", "Blocked Punts"];
+  private returningFields = ["Return Attempts", "Return Yards", "Return Average", "Longest Return", "Touchdowns", "Fair Catches"];
   private scope: string;
   constructor(public http: Http) { }
 
@@ -180,8 +182,7 @@ export class ComparisonStatsService {
     this.scope = scope;
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
-
-    return this.callPlayerComparisonAPI(teamId, playerId, data => {
+    return this.callPlayerComparisonAPI(this.scope, teamId, playerId, data => {
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
         return null;
@@ -214,21 +215,29 @@ export class ComparisonStatsService {
         team1Data,
         team2Data
       ];
-
-      // console.log("moduleData", moduleData);
       return moduleData;
     });
   }
 
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
-    return this.callPlayerComparisonAPI(teamId, playerId, apiData => {
-      apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+    return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
+      if(apiData.playerOne != null){
+        apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
+      }else{
+        apiData.playerOne = {};
+        apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
+      }
       if ( index == 0 ) {
         existingData.playerOne = apiData.playerOne;
       }
       else {
         existingData.playerTwo = apiData.playerOne;
       }
+      existingData.data = apiData.data;
+      existingData.bestStatistics = this.formatPlayerData("statHigh", apiData.data);
+      existingData.worstStatistics = this.formatPlayerData("statLow", apiData.data);
       return this.createComparisonBars(existingData);
     });
   }
@@ -244,7 +253,7 @@ export class ComparisonStatsService {
   }
 
   getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
-    let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;//TODO
+    let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;
     return this.http.get(teamsUrl)
       .map(res => res.json())
       .map(data => {
@@ -252,22 +261,17 @@ export class ComparisonStatsService {
     });
   }
 
-  callPlayerComparisonAPI(teamId: string, playerId: string, dataLoaded: Function) {
+  callPlayerComparisonAPI(scope: string = this.scope, teamId: string, playerId: string, dataLoaded: Function) {
     let url = this._apiUrl + "/comparison/";
-
     if ( playerId ) {
-      //http://dev-homerunloyal-api.synapsys.us/player/comparison/player/95622
       url += "player/" + playerId;
     }
     else if ( teamId ) {
-      //http://dev-homerunloyal-api.synapsys.us/player/comparison/team/2800
       url += "team/" + teamId;
     }
     else {
-      //http://dev-homerunloyal-api.synapsys.us/player/comparison/league
-      url += "league/nfl";//TODO
+      url += "league/" + scope;
     }
-    // console.log("url", url);
     return this.http.get(url)
       .map(res => res.json())
       .map(data => {
@@ -285,7 +289,7 @@ export class ComparisonStatsService {
   */
   private formatTeamList(teamList) {
     return teamList.map(team => {
-      var teamName = team.name + " " + team.nickname;
+      var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
       return {key: team.id, value: teamName};
     });
   }
@@ -304,16 +308,14 @@ export class ComparisonStatsService {
 
   private formatPlayerPositionList(description:string, playerList: Array<any>) {
     var dropdownList = [];
-
     if ( playerList && playerList.length > 0 ) {
       dropdownList.push({ key: "", value: description, class: "dropdown-grp-lbl", preventSelection: true });
       Array.prototype.push.apply(dropdownList, playerList.map(player => {
-        if ( player.id ) return {key: player.id, value: player.firstLastName, class: "dropdown-grp-item", preventSelection: false};
-        else return {key: player.player_id, value: player.player_name, class: "dropdown-grp-item"};
+        if ( player.playerId ) return {key: player.playerId, value: player.playerFirstName + ' ' + player.playerLastName, class: "dropdown-grp-item", preventSelection: false};
+        else return {key: player.playerId, value: player.playerFirstName + ' ' + player.playerLastName, class: "dropdown-grp-item"};
       }));
     }
-
-    return dropdownList;
+    return dropdownList.sort();
   }
 
   private formatPlayerData(playerId: string, data: { [seasonId: string]: any }):{ [seasonId: string]: SeasonStats } {
@@ -328,10 +330,10 @@ export class ComparisonStatsService {
         if ( key == "isCurrentSeason" ) {
           seasonStats.isCurrentSeason = value;
         }
-        else if ( value != null ) {//TODO
-          // if ( value["statHigh"] != null ) {//TODO
+        else if ( value != null ) {
+          if ( value["statHigh"] != null ) {
             isValidStats = true;
-          // }
+          }
           seasonStats[key] = value[playerId] != null ? Number(value[playerId]) : null;
         }
         else {
@@ -346,24 +348,43 @@ export class ComparisonStatsService {
   }
 
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
-    var fields = this.defenseFields;
+    var fields = null;
     var position = data.playerOne.playerPosition;
-    if(position == "QB"){
-      fields = this.passingFields;
-    } else if(position == "RB" || position == "FB" || position == "HB"){
-      fields = this.rushingFields;
-    } else if(position == "K" || position == "LS"){
-      fields = this.kickingFields;
-    } else if(position == "P"){
-      fields = this.puntingFields;
-    } else if(position == "KR" || position == "PR" || position == "RS"){
-      fields = this.returningFields;
+    switch(position){
+      case "QB":
+        fields = this.passingFields;
+        break;
+      case "RB":
+      case "FB":
+      case "HB":
+        fields = this.rushingFields;
+        break;
+      case "K":
+      case "LS":
+        fields = this.kickingFields;
+        break;
+      case "P":
+        fields = this.puntingFields;
+        break;
+      case "KR":
+      case "RS":
+      case "PR":
+        fields = this.returningFields;
+        break;
+      case "TE":
+      case "TEW":
+      case "WR":
+        fields = this.receivingFields;
+        break;
+      default:
+        fields = this.defenseFields;
+        break;
     }
-    // var colors = Gradient.getColorPair(data.playerOne.teamColors, data.playerTwo.teamColors);
-    var colors = Gradient.getColorPair(['#2D3E50'], ['#999']);//TODO
+    var teamColorsOne = data.playerOne.teamColors ? data.playerOne.teamColors.concat(",").split(", ", 1) : ['#000000'];
+    var teamColorsTwo = data.playerTwo.teamColors ? data.playerTwo.teamColors.concat(",").split(", ", 1) : ['#000000'];
+    var colors = Gradient.getColorPair(teamColorsOne, teamColorsTwo);
     data.playerOne.mainTeamColor = colors[0];
     data.playerTwo.mainTeamColor = colors[1];
-
     var bars: ComparisonBarList = {};
     for ( var seasonId in data.bestStatistics ) {
       var bestStats = data.bestStatistics[seasonId];
@@ -371,84 +392,41 @@ export class ComparisonStatsService {
       var playerOneStats = data.playerOne.statistics[seasonId];
       var playerTwoStats = data.playerTwo.statistics[seasonId];
       var seasonBarList = [];
-
       for ( var i = 0; i < fields.length; i++ ) {
         var key = fields[i];
-        // var title = ComparisonStatsService.getKeyDisplayTitle(key);
         var title = key;
-        seasonBarList.push({
-          title: title,
-          data: [{
-            // value: playerOneStats != null ? this.getNumericValue(key, playerOneStats[key]) : null,
-            value: 8,
-            // color: data.playerOne.mainTeamColor
-            color: '#BC1624'
-          },
-          {
-            value: 10,
-            // color: data.playerTwo.mainTeamColor,
-            color: '#444444'
-          }],
-          //minValue: worstStats != null ? this.getNumericValue(key, worstStats[key]) : null,
-          //maxValue: bestStats != null ? this.getNumericValue(key, bestStats[key]) : null,
-          minValue: 5,
-          maxValue: 200,
-          // qualifierLabel: SeasonStatsService.getQualifierLabel(key)
-          qualifierLabel: key
-        });
+        var bestStatFallback = null;
+        if (playerOneStats[key] != null) {
+          bestStatFallback = playerOneStats[key];
+        }
+        else if (playerTwoStats[key] != null) {
+          bestStatFallback = playerTwoStats[key];
+        }
+          seasonBarList.push({
+            title: title,
+            data: [{
+              value: playerOneStats != null ? playerOneStats[key] : null,
+              // color: data.playerOne.mainTeamColor
+              color: '#2D3E50'
+            },
+            {
+              value: playerTwoStats != null ? playerTwoStats[key] : null,
+              // color: data.playerTwo.mainTeamColor,
+              color: '#999999'
+            }],
+            minValue: worstStats != null ? worstStats[key] : null,
+            maxValue: bestStats[key] != null ? bestStats[key] : bestStatFallback,
+            qualifierLabel: SeasonStatsService.getQualifierLabel(key)
+          });
       }
-
       bars[seasonId] = seasonBarList;
     }
     return bars;
   }
 
-  static getKeyDisplayTitle(key: string): string {
-    switch (key) {
-      case "AST": return "AST";
-      case "AVG": return "AVG";
-      case "ATT": return "ATT";
-      case "REC": return "REC";
-      case "TAR": return "TAR";
-      case "YDS": return "YDS";
-      case "TD": return "TD";
-      case "YDSG": return "YDS/G";
-      case "1DN": return "1DN";
-      case "Jersey No.": return "Jersey No.";
-      case "SOLO": return "SOLO";
-      case "TOT": return "TOT";
-      case "SACK": return "SACK";
-      case "PD": return "PD";
-      case "INT": return "INT";
-      case "FF": return "FF";
-      case "COMP": return "COMP";
-      case "RATE": return "RATE";
-      case "FGM": return "FGM";
-      case "FGA": return "FGA";
-      case "FG%": return "FG%";
-      case "XPM": return "XPM";
-      case "XPA": return "XPA";
-      case "XP%": return "XP%";
-      case "SOLO": return "SOLO";
-      case "PUNTS": return "PUNTS";
-      case "PNTS": return "PNTS";
-      case "NET": return "NET";
-      case "IN20": return "IN20";
-      case "BP": return "BP";
-      case "LONG": return "LONG";
-      default: return null;
-    }
-  }
-
-  // private getNumericValue(key: string, value: string): number {
-  //   if ( value == null ) return null;
-  //
-  //   var num = Number(value);
-  //   switch (key) {
-  //     case "batAverage": return Number(num.toFixed(3));
-  //     case "batOnBasePercentage": return Number(num.toFixed(3));
-  //     case "pitchEra": return Number(num.toFixed(2));
-  //     default: return num;
-  //   }
-  // }
+   private getNumericValue(key: string, value: string): number {
+     if ( value == null ) return null;
+     var num = Number(value);
+     return num;
+   }
 }

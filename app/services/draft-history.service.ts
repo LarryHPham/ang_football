@@ -45,6 +45,7 @@ export interface PlayerDraftData {
   playerCollege: string;
   playerBackground: string;
   playerHeadshot: string;
+  playerCollegeAbbreviation: string;
 }
 
 @Injectable()
@@ -121,12 +122,15 @@ export class MLBDraftHistoryService extends DraftHistoryService {
     let itemsOnPage = 10;
 
     var callURL;
+    // if(year == null){
+    //   year = new Date().getFullYear().toString();
+    // }
     if ( profileData.profileType == "team" ) {
       callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
     else {
-      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
+      callURL = this._apiUrl + '/draftHistory/'+profileData.profileType+'/'+year+ "/5/1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
 
@@ -188,9 +192,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
 
         var playerRoute = null;
-        if ( val.active == "active" || (val.active == "injured" && !val.roleStatus) ) {
-          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
-        }
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
         var playerLinkText = {
           route: playerRoute,
           text: playerFullName
@@ -198,7 +200,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
 
         var rank = (index+1).toString();
         var location;
-        if (val.playerCity == null || val.playerState == null){
+        if (val.playerCity == null || val.playerState == null || val.playerCity == "" || val.playerState == "") {
           location = "N/A";
         }
         else {
@@ -206,7 +208,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
         }
         var carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: false,
-          backgroundImage: GlobalSettings.getBackgroundImageUrl(val.playerBackground),
+          backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.playerBackground),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
           description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', val.playerCollege],
@@ -234,7 +236,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
     var listDataArray = data.map(function(val, index){
       var playerFullName = val.playerFirstName + " " + val.playerLastName;
       var playerFullNameUrl = val.playerFirstName + "-" + val.playerLastName;
-      if (val.playerCity == null || val.playerState == null){
+      if (val.playerCity == null || val.playerState == null || val.playerCity == "" || val.playerState == ""){
         location = "N/A";
       }
       else {
@@ -245,6 +247,13 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       var playerRoute = null;
       playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullNameUrl, val.playerId);
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
+      var college;
+      if (val.playerCollegeAbbreviation != null && val.playerCollegeAbbreviation != "") {
+        college = val.playerCollegeAbbreviation + " " + val.playerCollege;
+      }
+      else {
+        college = val.playerCollege;
+      }
       var listData = {
         dataPoints: ListPageService.detailsData(
           [//main left text
@@ -252,7 +261,7 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           ],
           val.playerOverallPick+' Overall',
           [//sub left text
-            {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + val.playerCollege + '</span>'}
+            {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + college + '</span>'}
           ],
           'Draft Round '+val.playerRound),
         imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),

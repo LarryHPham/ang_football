@@ -49,6 +49,7 @@ export class DeepDivePage implements OnInit{
 
     //page variables
     scope: string;
+    sidescrollScope:string;
     partnerID: string;
     partnerData:any;
     profileName:string;
@@ -64,8 +65,9 @@ export class DeepDivePage implements OnInit{
     carouselData: any;
     videoData:any;
     blockIndex: number = 1;
+    changeScopeVar: string = "";
 ​
-    private isHomeRunZone: boolean = false;
+    private isPartnerZone: boolean = false;
 
     constructor(
       private _router:Router,
@@ -78,9 +80,20 @@ export class DeepDivePage implements OnInit{
       GlobalSettings.getParentParams(_router, parentParams => {
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
-          this.profileName = this.scope;
+          this.changeScopeVar = this.scope;
+          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
-          this.isHomeRunZone = partnerHome;
+          // if (window.location.pathname == "/") {
+          //   let relPath = this.getRelativePath(_router);
+          //   if(partnerHome){
+          //     //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+          //     window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
+          //   }else{
+          //     //_router.navigate([relPath+'Default-home',{scope:'nfl'}]);
+          //     window.location.pathname = "/nfl";
+          //   }
+          // }
+          this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
           }else{
@@ -89,13 +102,32 @@ export class DeepDivePage implements OnInit{
       });
     }
 
+    getRelativePath(router:Router){
+      let counter = 0;
+      let hasParent = true;
+      let route = router;
+      for (var i = 0; hasParent == true; i++){
+        if(route.parent != null){
+          counter++;
+          route = route.parent;
+        }else{
+          hasParent = false;
+          let relPath = '';
+          for(var c = 1 ; c <= counter; c++){
+            relPath += '../';
+          }
+          return relPath;
+        }
+      }
+    }
+
     //api for Schedules
     private getSideScroll(){
       let self = this;
-
       if(this.safeCall){
         this.safeCall = false;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, 'league', 'pre-event', this.callLimit, this.callCount, (sideScrollData) => {
+        let changeScope = this.changeScopeVar.toLowerCase() == 'ncaaf'?'fbs':this.changeScopeVar.toLowerCase();
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
           if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
           }
@@ -107,14 +139,34 @@ export class DeepDivePage implements OnInit{
           this.safeCall = true;
           this.callCount++;
           this.scrollLength = this.sideScrollData.length;
-        })
+        }, null, null)
       }
+    }
+    changeScope($event) {
+      var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
+      let relPath = this.getRelativePath(this._router);
+      if(partnerHome){
+        this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+        window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
+      }else{
+        this._router.navigate([relPath+'Default-home',{scope:$event.toLowerCase()}]);
+        window.location.pathname = "/"+$event.toLowerCase();
+      }
+
+      // if($event == this.changeScopeVar){
+      //   this.getSideScroll();
+      // }else{
+      //   this.changeScopeVar = $event;
+      //   this.callCount = 1;
+      //   this.sideScrollData = null;
+      //   this.getSideScroll();
+      // }
     }
 
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
-        this.getSideScroll();
+       this.getSideScroll();
       }
     }
 
@@ -170,8 +222,8 @@ export class DeepDivePage implements OnInit{
 
     callModules(){
       this.getDataCarousel();
-      this.getDeepDiveVideoBatch(this.geoLocation, 1, 1);
-      this.getSideScroll();
+      this.getDeepDiveVideoBatch();
+     this.getSideScroll();
     }
     private onScroll(event) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {

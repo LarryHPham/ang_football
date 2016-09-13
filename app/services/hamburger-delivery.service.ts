@@ -10,17 +10,21 @@ export class HamburgerDeliveryService {
   static createMenu(division, partner?){
     var params;
     var partnerUrl;
+    var divisionUrl;
+    if (division != null) {
+      divisionUrl = division.toLowerCase();
+    }
     if (partner == null || partner == false){
       partnerUrl = "Default";
-      params = {scope: division};
+      params = {scope: divisionUrl};
     }
     else {
       partnerUrl = "Partner";
-      params = {scope: division, partner_id: partner};
+      params = {scope: divisionUrl, partner_id: partner};
     }
     var menuData = [{
         menuTitle: "Home",
-        url: ['Home-page']
+        url: [partnerUrl +'-home',params ,'Home-page']
       },
       {
         menuTitle: division + " Teams",

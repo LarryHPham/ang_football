@@ -23,9 +23,9 @@ export class ArticleDataService {
             .map(data => data);
     }
 
-    getRecommendationsData(eventID, eventType, scope) {
+    getRecommendationsData(eventID, scope) {
         var fullUrl = GlobalSettings.getRecommendUrl();
-        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "&affiliation=" + scope)
+        return this.http.get(fullUrl + "articles?&event=" + eventID + "&affiliation=" + scope + "&count=10")
             .map(res => res.json())
             .map(data => data);
     }

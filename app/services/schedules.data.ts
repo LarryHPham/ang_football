@@ -18,6 +18,7 @@ export interface SchedulesData {
   eventTimestamp: number,
   id: string,//id from API
   eventStatus: string,
+  leagueAbbreviation: string,
   team1Id: string,
   team2Id: string,
   team1Score: string,
@@ -94,6 +95,11 @@ export class ScheduleTabData implements TableTabData<SchedulesData> {
   isActive: boolean;
 
   sections: Array<SchedulesTableData>;
+
+  errorData: any = {
+      data: "Sorry, we do not currently have any data for Schedule",
+      icon: "fa fa-remove"
+  };
 
   constructor(title: string, isActive: boolean) {
     this.title = title;
@@ -211,7 +217,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
          key: "gs"
        }];
     }else{
-      if(typeof teamId == 'undefined'){//for league table model there should not be a teamId coming from page parameters for post game reports
+      if(typeof teamId == 'undefined' || teamId == null){//for league table model there should not be a teamId coming from page parameters for post game reports
         this.columns = [
         {
            headerValue: "AWAY",
@@ -313,13 +319,15 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
     switch (hdrColumnKey) {
       case "date":
-        display = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
+      let date320 = moment(Number(item.eventTimestamp)*1000).format("MM/DD");
+      let date640 = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
+        display = "<span class='schedule-date-320'>" + date320 + "</span>" + "<span class='schedule-date-640'>" + date640 + "</span>";
         sort = Number(item.eventTimestamp)*1000;
         break;
 
       case "t":
         if(item.eventStatus != 'cancelled'){
-          display = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('h:mm') + " <sup> "+moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('A')+" </sup>";
+          display = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('h:mm') + " "+moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('A');
         }else{
           display = "Cancelled";
         }
@@ -327,30 +335,45 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         break;
 
       case "away":
-        let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
+        if(item.team2Name == null){
+          item.team2Name = 'N/A';
+        }
+        if(item.team2Abbreviation == null){
+          item.team2Abbreviation = 'N/A';
+        }
         isLocation = true;
-        display = item.team2Name.length > 10 ? item.team2Abbreviation : item.team2Name;
+        display = item.team2Name.length > 10 && item.team2Name != null? item.team2Abbreviation : item.team2Name;
         sort = item.team2Name;
         imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
-        if ( !this.isTeamProfilePage || this.curTeam != item.team2Id ) {
-          link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
+        let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
+        if ( !this.isTeamProfilePage || this.curTeam != item.team2Id) {
+          if(item.team2Id != null){
+            link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
+          }
         }
         break;
-
       case "home":
-      let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
+        if(item.team1Name == null){
+          item.team1Market = 'N/A';
+        }
+        if(item.team1Abbreviation == null){
+          item.team1Abbreviation = 'N/A';
+        }
         isLocation = true;
-        display = item.team1Name.length > 10 ? item.team1Abbreviation : item.team1Name;
+        display = item.team1Name.length > 10 && item.team1Name != null ? item.team1Abbreviation : item.team1Name;
         sort = item.team1Name;
         imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
+        let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
-          link = VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+          if(item.team1Id != null){
+            link = VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+          }
         }
         break;
 
       case "gs":
       var partnerCheck = GlobalSettings.getHomeInfo();
-        if (item.eventStatus != 'cancelled'){
+        if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null){
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           if ( status ) {
             if(partnerCheck.isPartner){
@@ -370,18 +393,20 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         if( !item.team2Abbreviation ) {
           item.team2Abbreviation = "N/A";
         }
+        item.team1Score = item.team1Score != null ? item.team1Score: 'N/A';
+        item.team2Score = item.team2Score != null ? item.team2Score: 'N/A';
         //whomever wins the game then their text gets bolded as winner
         var home = item.team1Abbreviation + " " + item.team1Score;
         var away = item.team2Abbreviation + " " + item.team2Score;
         if(item.team1Outcome == 'W'){
           home = "<span class='text-heavy'>" + home + "</span>";
-          sort = Number(item.team1Score);
+          sort = Number(item.team1Score) / Number(item.team2Score);
         } else if(item.team2Outcome == 'W'){
           away = "<span class='text-heavy'>" + away + "</span>";
-          sort = Number(item.team2Score);
+          sort = (Number(item.team2Score) % Number(item.team1Score));
         }
         else {
-          sort = Number(item.team2Score);
+          sort = (Number(item.team2Score) % Number(item.team1Score));
         }
         display = home + " - " + away;
         break;
@@ -392,15 +417,9 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         var scoreAway = Number(item.team2Score);
 
         item.team1Outcome = item.team1Outcome != null ? item.team1Outcome: '';
-        if (scoreHome > scoreAway) {
-          display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
-          sort = (scoreHome/scoreHome+scoreAway);
-        }
-        else
-        {
-          display = item.team1Outcome + " " + scoreAway + " - " + scoreHome;
-            sort = (scoreHome/scoreHome+scoreAway);
-        }
+        display = item.team1Outcome + " " + scoreHome + " - " + scoreAway;
+        sort = (scoreHome/(scoreAway));
+
         break;
 
       case "rec":
@@ -413,12 +432,8 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           var currentLosses = item.team2Record.split('-')[1];
         }
         display = currentWins + " - " + currentLosses;
-        if (Number(currentWins) > Number(currentLosses)) {
-          sort = (Number(currentWins)/(Number(currentLosses)+(Number(currentWins))));
-        }
-        else {
-          sort = (Number(currentLosses)/(Number(currentWins)+(Number(currentLosses))));
-        }
+        sort = Number(currentWins)/Number(currentLosses);
+
         break;
     }
     if ( isLocation ) {
@@ -427,6 +442,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
     else if ( display == null ) {
       display = "N/A";
     }
+
     return new CellData(display, sort, link, imageUrl);
   }
 }

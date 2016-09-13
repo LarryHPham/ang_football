@@ -133,6 +133,7 @@ export class PlayerPage implements OnInit {
   scheduleFilter1:Array<any>;
   selectedFilter1:string;
   eventStatus: string;
+  isFirstRun:number = 0;
 
   scope: string;
 
@@ -159,6 +160,7 @@ export class PlayerPage implements OnInit {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
+        this.pageParams.scope = this.scope;
     });
   }
 
@@ -187,8 +189,8 @@ export class PlayerPage implements OnInit {
               this.dateParam ={
                 profile:'player',
                 teamId:this.teamId, // teamId if it exists
-                // date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-                date: '2015-09-11'
+                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+                // date: '2015-09-11'
               }
               this.getBoxScores(this.dateParam);
 
@@ -226,7 +228,7 @@ private dailyUpdateModule(playerId: number) {
 }
 
   private setupSeasonstatsData() {
-      this._seasonStatsService.getPlayerStats(this.pageParams.playerId)
+      this._seasonStatsService.getPlayerStats(this.pageParams.playerId, this.scope)
       .subscribe(
           data => {
               this.seasonStatsData = data;
@@ -236,9 +238,9 @@ private dailyUpdateModule(playerId: number) {
           });
   }
 
-  //api for Schedules
   //grab tab to make api calls for post of pregame table
   private scheduleTab(tab) {
+    this.isFirstRun = 0;
       if(tab == 'Upcoming Games'){
         this.eventStatus = 'pregame';
         this.getSchedulesData(this.eventStatus, null);
@@ -251,8 +253,15 @@ private dailyUpdateModule(playerId: number) {
       }
   }
   private filterDropdown(filter){
-    this.selectedFilter1 = filter.key;
-    this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    let tabCheck = 0;
+    if(this.eventStatus == 'postgame'){
+      tabCheck = 1;
+    }
+    if(this.isFirstRun > tabCheck){
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    }
+    this.isFirstRun++;
   }
 
   //api for Schedules
@@ -301,7 +310,12 @@ private dailyUpdateModule(playerId: number) {
     }
 
     private getNewsService() {
-        this._newsService.getNewsService(this.profileName)
+      let params = {
+        limit:10,
+        pageNum:1,
+        id: this.pageParams.teamId
+      }
+        this._newsService.getNewsService(this.scope,params,'player','module')
             .subscribe(data => {
                 this.newsDataArray = data.news;
             },
@@ -309,7 +323,6 @@ private dailyUpdateModule(playerId: number) {
                 console.log("Error getting news data");
             });
     }
-
     //api for BOX SCORES
     //function for MLB/Team Profiles
     private getBoxScores(dateParams?) {
@@ -337,7 +350,8 @@ private dailyUpdateModule(playerId: number) {
     private setupTeamProfileData() {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, null, data.teamName);
+                var teamFullName = data.headerData.teamMarket + ' ' + data.teamName;
+                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, teamFullName);
             },
             err => {
                 console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
@@ -362,16 +376,17 @@ private dailyUpdateModule(playerId: number) {
 
     setupListOfListsModule() {
       let params = {
-        id : this.pageParams.playerId,
+        targetId : this.pageParams.playerId,
         limit : 5,
-        pageNum : 1
+        pageNum : 1,
+        scope: this.scope
       }
       this._lolService.getListOfListsService(params, "player", "module")
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData.listData;
-            this.listOfListsData["type"] = "player";
-            this.listOfListsData["id"] = this.pageParams.playerId;
+            // this.listOfListsData["type"] = "player";
+            // this.listOfListsData["id"] = this.pageParams.playerId;
           },
           err => {
             console.log('Error: listOfListsData API: ', err);

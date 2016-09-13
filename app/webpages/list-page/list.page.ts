@@ -183,8 +183,9 @@ export class ListPage implements OnInit {
         console.log("Error loading MLB profile");
     });
     var date = new Date();
+    var dateStr = (Number(date.getFullYear()) - 1).toString() + " / " + date.getFullYear();
     this.sortSeason = [
-      {key: "null", value: "All Seasons"}
+      {key: (Number(date.getFullYear()) - 1).toString(), value: dateStr}
     ];
   }
   dropdownChanged(event) {

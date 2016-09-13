@@ -17,6 +17,10 @@ declare var ga:any;
 
 @RouteConfig([
     {
+        path: '/',
+        redirectTo: ['Default-home', {scope:'nfl'}]
+    },
+    {
         path: '/:scope/...',
         name: 'Default-home',
         component: AppComponent,

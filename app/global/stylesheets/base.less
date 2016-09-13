@@ -10,9 +10,10 @@ ToC
 */
 
 //Media Queries for responsive
-@mobile:      ~"(max-width: 640px)";
+@mobile:      ~"(max-width: 639px)";
 @small-grid:  ~"(min-width: 576px) and (max-width: 640px)";
-@tablet:      ~"(min-width: 641px)";
+@tablet:      ~"(min-width: 640px)";
+@desktop:     ~"(min-width: 768px)";
 @desktop-m:   ~"(min-width: 1000px)";
 @desktop-l:   ~"(min-width: 1317px)";
 @desktop-xl:  ~"(min-width: 1760px)";
@@ -136,7 +137,8 @@ ToC
 @solarBgColor: #002B36;
 @solarCyan: #2aa198;
 @solarOrange: #cb4b16;
-@activeRed: @homeRunLoyalRed;//TODO need to verify
+@activeRed: @homeRunLoyalRed;
+@activeGreen: #44b224;
 @solarRed: #dc322f;
 @darkText:#2d3e50;
 
@@ -179,6 +181,9 @@ ToC
   border-right: 2px dashed @docTetraLeftAccentColor;
 }
 
+.capString{
+  text-transform: capitalize;
+}
 /****************/
 /* @Base Styles */
 /****************/
@@ -243,7 +248,11 @@ img{
 /*******************/
 /* @Global Classes */
 /*******************/
-
+.hide-320{
+  @media @mobile{
+    display: none;
+  }
+}
 .no-select{
   -webkit-touch-callout: none;
   -webkit-user-select: none;

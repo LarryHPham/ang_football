@@ -216,24 +216,24 @@ declare var jQuery: any;
         path: '/news/:articleType/:eventID',
         name: 'Syndicated-article-page',
         component: SyndicatedArticlePage
-	  },
-    {
-        path: '/list-of-lists/:scope/:type/:id/:limit/:pageNum',
-        name: 'List-of-lists-page-scoped',
-        component: ListOfListsPage
-    },
-    {
-        path: '/list-of-lists/:type/:id/:limit/:pageNum',
-        name: 'List-of-lists-page',
-        component: ListOfListsPage
-    },
-    {
-        path: '/list-of-lists/league/:limit/:pageNum',
-        name: 'List-of-lists-league-page',
-        component: ListOfListsPage
-    },
-    //Error pages and error handling
-    {
+      },
+      { // listOfLists/scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
+          path: '/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+          name: 'List-of-lists-page-scoped',
+          component: ListOfListsPage
+      },
+      // {
+      //     path: '/list-of-lists/:type/:id/:limit/:pageNum',
+      //     name: 'List-of-lists-page',
+      //     component: ListOfListsPage
+      // },
+      // {
+      //     path: '/list-of-lists/league/:limit/:pageNum',
+      //     name: 'List-of-lists-league-page',
+      //     component: ListOfListsPage
+      // },
+      //Error pages and error handling
+      {
         path: '/error',
         name: 'Error-page',
         component: ErrorPage
@@ -266,7 +266,7 @@ export class MyAppComponent implements OnInit{
   public partnerScript:string;
   public shiftContainer:string;
   public hideHeader:boolean;
-  private isHomeRunZone:boolean = false;
+  private isPartnerZone:boolean = false;
   constructor(private _partnerData: PartnerHeader, private _params: RouteParams){
     var parentParams = _params.params;
 
@@ -286,17 +286,8 @@ export class MyAppComponent implements OnInit{
       return pageHeader.offsetHeight;
     }
   }
-  getPartnerHeaderHeight(){
-    var scrollTop = jQuery(window).scrollTop();
-    var partnerHeight = 0;
-    if( document.getElementById('partner') != null && scrollTop <=  (document.getElementById('partner').offsetHeight)){
-        partnerHeight = document.getElementById('partner').offsetHeight - scrollTop;
-    }
-      return partnerHeight;
-  }
 
   getPartnerHeader(){//Since it we are receiving
-
     if(this.partnerID != null){
       this._partnerData.getPartnerData(this.partnerID)
       .subscribe(
@@ -317,6 +308,14 @@ export class MyAppComponent implements OnInit{
   }
 
   setPageSize(){
+    function getPartnerHeaderHeight(){
+        var scrollTop = jQuery(window).scrollTop();
+        var partnerHeight = 0;
+        if( document.getElementById('partner') != null && scrollTop <=  (document.getElementById('partner').offsetHeight)){
+            partnerHeight = document.getElementById('partner').offsetHeight - scrollTop;
+        }
+        return partnerHeight;
+    }
     jQuery("#webContainer").removeClass('deep-dive-container directory-rails pick-a-team-container profile-container');
     // Handle all the exceptions here
     jQuery("deep-dive-page").parent().addClass('deep-dive-container');
@@ -353,13 +352,19 @@ export class MyAppComponent implements OnInit{
             }
             isTakenOver = true;
             clearInterval(intvl);
+            jQuery('#ddto-left-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+            jQuery('#ddto-right-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
         }
     },100);
+    window.addEventListener("scroll",  function(){
+        jQuery('#ddto-left-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+        jQuery('#ddto-right-ad').css('top', (getPartnerHeaderHeight() + 100) + "px");
+    });
   }
 
   ngOnInit(){
     var script = document.createElement("script");
-    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
+    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
     document.head.appendChild(script);
     this.shiftContainer = this.getHeaderHeight() + 'px';
     //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts

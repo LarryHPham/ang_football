@@ -20,10 +20,10 @@ export class VideoService {
 
         if(state == null || state == undefined){
 
-            tdlURL = teamID == null || teamID == undefined ? "http://dev-touchdownloyal-api.synapsys.us/videoBatch/" + scope + '/' + limit + '/' + pageNum : "http://dev-touchdownloyal-api.synapsys.us/videoBatchTeam/" + scope + '/' + limit + '/' + pageNum + '/' + teamID;
+            tdlURL = teamID == null || teamID == undefined ? GlobalSettings.getApiUrl() + "/videoBatch/" + scope + '/' + limit + '/' + pageNum : GlobalSettings.getApiUrl() + "/videoBatchTeam/" + scope + '/' + limit + '/' + pageNum + '/' + teamID;
 
         } else {
-            tdlURL = "http://dev-touchdownloyal-api.synapsys.us/videoBatch/" + scope +'/'+ limit + '/' +pageNum+ '/'+ state;
+            tdlURL = GlobalSettings.getApiUrl() + "/videoBatch/" + scope +'/'+ limit + '/' +pageNum+ '/'+ state;
         }
         return this.http.get(tdlURL)
             .map(res => res.json())

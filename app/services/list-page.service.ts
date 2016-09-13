@@ -38,7 +38,10 @@ interface PlayerItem {
     teamLogo: string,
     lastUpdated: string,
     backgroundImage: string,
-    playerHeadshotUrl: string
+    playerHeadshotUrl: string,
+    teamNickname: string,
+    seasonLong: string,
+    playerBirthplace: string
 }
 
 interface ListData {
@@ -48,6 +51,7 @@ interface ListData {
 }
 
 export class positionMVPTabData implements MVPTabData {
+  scope?: string;
   tabDataKey: string;
   tabDisplayTitle: string;
   errorData: any = {
@@ -95,13 +99,15 @@ export class ListPageService {
     pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
+
   getListPageService(query, errorMessage: string, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   var callURL = this._apiUrl+'/list';
   if (season == null || season == undefined || season == "null") {
-    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber;
+    var date = new Date;
+    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
   }
   else {
     callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
@@ -129,15 +135,16 @@ export class ListPageService {
   }
 
   formatSeasons (data) {
-    var outputArray = [{key: "null", value: "All Seasons"}];
+    var outputArray = [];
     for (var i=0; i < data.length; i++) {
-      outputArray.push({key:  data[i] , value: (Number(data[i]) + 1) + ' / ' + data[i]});
+      outputArray.push({key:  data[i] , value: data[i] + ' / ' + (Number(data[i]) + 1)});
     }
     return outputArray;
   }
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
   getMVPTabs(moduleType: string, profileType: string): Array<positionMVPTabData>{
+
     var tabArray: Array<positionMVPTabData> = [];
 
     switch(moduleType) {
@@ -206,7 +213,6 @@ export class ListPageService {
 
       default: null;
     }
-
     return tabArray;
   }
 
@@ -253,7 +259,7 @@ export class ListPageService {
       imageRoute: ["Home-page"],
       text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
       text2: 'United States',
-      text3: profile.name,
+      text3: profile.listName,
       icon: 'fa fa-map-marker'
     };
   }
@@ -270,11 +276,12 @@ export class ListPageService {
       //if data is coming through then run through the transforming function for the module
       carouselArray = carData.map(function(val, index){
         var carouselItem;
-        var rank = val.listRank;
+        var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
-          text: val.teamName
+          text: val.teamName,
+          class: 'text-heavy'
         };
 
         var ctaDesc: string;
@@ -283,6 +290,7 @@ export class ListPageService {
         var profileLinkText: Link;
         var description: any;
         var playerName = val.playerFirstName + ' ' + val.playerLastName;
+        var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var position = val.playerPosition;
 
         if(data.query.target == 'team') {
@@ -302,31 +310,23 @@ export class ListPageService {
             route: primaryRoute,
             text: playerName
           };
-
-          description = [
-            'Team: ',
-            teamLinkText,
-            '<span class="separator">   |   </span> ',
-            'Jersey No: #'+val.playerJerseyNumber
-          ];
+          description = ['<i class="fa fa-map-marker text-master"></i>' + playerBirthplace + '<span class="separator">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>  Team: ', teamLinkText];
         }
         carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: profileType == 'page',
-          backgroundImage: GlobalSettings.getBackgroundImageUrl(val.backgroundImage),
+          backgroundImage: val.backgroundImage,
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: profileLinkText,
           description: description,
-          dataValue: GlobalFunctions.commaSeparateNumber(val.stat),
-          dataLabel: val.statDescription+' for '+ currentYear,
-          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
+          dataValue: GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) ),
+          dataLabel: val.statDescription+' for '+ val.seasonLong,
           circleImageUrl: primaryImage,
           circleImageRoute: primaryRoute,
-          rank: val.rank
+          rank: rank.toString()
         });
         return carouselItem;
       });
     }
-    // console.log('TRANSFORMED CAROUSEL', carouselArray);
     return carouselArray;
   }
 
@@ -338,27 +338,25 @@ export class ListPageService {
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
-      var teamLocation = val.teamMarket;
-      var statDescription = val.statDescription + ' for ' + currentYear;
+      var teamLocation = val.teamCity + ", " + val.teamState;
+      var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
-      val.listRank = rank;
+      var stat = GlobalFunctions.roundToDecimal(val.stat).toString();
       if(data.query.target == 'team'){
-        var divisionName = VerticalGlobalFunctions.formatShortNameDivison(val.conferenceName) + val.divisionName.charAt(0).toUpperCase();
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
               {route: teamRoute, text: val.teamName, class: "dataBox-mainLink"}
             ],
-            val.stat,
+            stat,
             [ //sub left text
               {text: "<i class='fa fa-map-marker'></i>" + teamLocation},
-              {text: "   |   ", class: "separator"},
-              {text: "Division: " + divisionName},
+              {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>", class: "separator"},
+              {text: "<span class='not-mobile'>Division: " + val.divisionName + "</span>"},
             ],
-            GlobalFunctions.commaSeparateNumber(val.stat),
             statDescription,
             null),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, val.listRank),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, rank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -369,22 +367,24 @@ export class ListPageService {
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
         var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
         var position = val.playerPosition;
+        var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
+        var stat = GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) );
+        var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
               {route: playerRoute, text: playerFullName, class: "dataBox-mainLink"}
             ],
-            val.stat,
+            stat,
             [ //sub left text
-              {route: teamRoute, text: val.teamName, class: "dataBox-subLink"},
-              {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.playerJerseyNumber},
-              {text: "   |   ", class: "separator"},
-              {text: "Jersey: #" + val.playerJerseyNumber}
+              {text: "<span class='not-mobile'><i class='fa fa-map-marker'></i>" + playerBirthplace + "</span>"},
+              {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>Team:", class: "separator"},
+              {route: teamRoute, text: "<span class='text-heavy'> " + val.teamNickname + "</span>", class: "dataBox-subLink"}
             ],
             statDescription,
             null),
-            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, val.listRank, '', null),
+            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, rank, '', null),
+
           hasCTA:true,
           ctaDesc:'Want more info about this player?',
           ctaBtn:'',

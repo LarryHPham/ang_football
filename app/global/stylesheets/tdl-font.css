@@ -213,6 +213,25 @@
   color: #fff
 }
 
+
+/* Begin Aliases DO NOT DELETE */
+.fa-sort-up:before {
+  content: "\77";
+}
+.fa-sort-down:before {
+  content: "\78";
+}
+.fa-mail-forward:before {
+  content: "\79";
+}
+.fa-area-chart:before {
+  content: "\44";
+}
+.fa-remove:before {
+  content: "\38";
+}
+/* END Aliases */
+
 .fa-tdl-football:before {
   content: "\61";
 }
@@ -285,15 +304,6 @@
 .fa-sort-desc:before {
   content: "\78";
 }
-.fa-sort-up:before {   
-  content: "\77";    
-}    
-.fa-sort-down:before {   
-  content: "\78";    
-}    
-.fa-mail-forward:before {    
-  content: "\79";    
-}
 .fa-arrows-alt:before {
   content: "\7a";
 }
@@ -305,9 +315,6 @@
 }
 .fa-map-marker:before {
   content: "\43";
-}
-.fa-area-chart:before {    
-  content: "\44";    
 }
 .fa-phone:before {
   content: "\45";
@@ -396,9 +403,6 @@
 .fa-heart-o:before {
   content: "\37";
 }
-.fa-remove:before {
-  content: "\38";
-}
 .fa-times:before {
   content: "\38";
 }
@@ -446,4 +450,43 @@
 }
 .fa-search-icon-01:before {
   content: "\26";
+}
+.fa-field-goal-pct-made:before {
+  content: "\2d";
+}
+.fa-field-goals-made:before {
+  content: "\2e";
+}
+.fa-games-started:before {
+  content: "\2f";
+}
+.fa-gross-punting-yds:before {
+  content: "\3a";
+}
+.fa-interceptions:before {
+  content: "\3b";
+}
+.fa-longest-return:before {
+  content: "\3c";
+}
+.fa-passer-rating:before {
+  content: "\3d";
+}
+.fa-receptions:before {
+  content: "\3e";
+}
+.fa-rushing-attempts:before {
+  content: "\3f";
+}
+.fa-years-experience:before {
+  content: "\40";
+}
+.fa-total-tackles:before {
+  content: "\5b";
+}
+.fa-total-sacks:before {
+  content: "\5d";
+}
+.fa-age:before {
+  content: "\2c";
 }

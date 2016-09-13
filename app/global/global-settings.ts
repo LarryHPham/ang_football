@@ -13,11 +13,12 @@ export class GlobalSettings {
     private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
-    private static _widgetUrl: string = 'w1.synapsys.us';
+    private static _widgetUrl: string = 'devapi.synapsys.us';
+    private static _geoUrl: string = 'w1.synapsys.us';
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
-    private static _imageUrl:string = 'images.synapsys.us';
+    public static _imageUrl:string = 'images.synapsys.us';
     private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
     private static _homepageUrl:string = '.touchdownloyal.com';
     private static _homepageLinkName:string = 'touchdownloyal';
@@ -68,7 +69,6 @@ export class GlobalSettings {
     }
 
     static getApiUrl():string {
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
 
     }
@@ -78,7 +78,10 @@ export class GlobalSettings {
     }
 
     static getGeoLocation():string {
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
+        return this._proto + "//" + this._geoUrl;
+    }
+
+    static widgetUrl():string {
         return this._proto + "//" + this._widgetUrl;
     }
 
@@ -125,7 +128,7 @@ export class GlobalSettings {
     }
 
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
-      var linkEnv = this._env != 'localhost' && this._env != "touchdownloyal" && this._env != "touchdownzone" && this._env != "football" ? this._env:'www';
+      var linkEnv = this._env != 'localhost' && this._env != "touchdownloyal" && this._env != "mytouchdownzone" && this._env != "football" ? this._env:'www';
         if ( partnerId ) {
             return this._proto + "//" + linkEnv + this._partnerHomepageUrl + (includePartnerId ? "/" + partnerId : "");
         }
