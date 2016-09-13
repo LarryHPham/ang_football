@@ -261,7 +261,6 @@ export class SchedulesService {
       let time = moment(Number(val.eventStartTime)).tz('America/New_York').format('h:mm A z');
       let team1FullName = val.team1FullName;
       let team2FullName = val.team2FullName;
-
       newData = {
         date: date + " &bull; " + time,
         awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id)),
@@ -273,7 +272,7 @@ export class SchedulesService {
         reportDisplay: reportText,
         reportLink: reportUrl,
         isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
-        inning: val.eventQuarter != null ? "Current " + val.inning + ":" + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
+        inning: val.eventQuarter != null ? "Current: Quarter " + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
       }
 
       modifiedArray.push(newData);
