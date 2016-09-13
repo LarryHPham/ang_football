@@ -319,7 +319,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
     switch (hdrColumnKey) {
       case "date":
-      let date320 = moment(Number(item.eventTimestamp)*1000).format("MM/DD");
+      let date320 = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format("MM/DD");
       let date640 = GlobalFunctions.formatDateWithAPMonth(Number(item.eventTimestamp)*1000, "", "D");
         display = "<span class='schedule-date-320'>" + date320 + "</span>" + "<span class='schedule-date-640'>" + date640 + "</span>";
         sort = Number(item.eventTimestamp)*1000;
