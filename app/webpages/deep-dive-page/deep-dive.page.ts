@@ -83,16 +83,11 @@ export class DeepDivePage implements OnInit{
           this.changeScopeVar = this.scope;
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
-          // if (window.location.pathname == "/") {
-          //   let relPath = this.getRelativePath(_router);
-          //   if(partnerHome){
-          //     //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
-          //     window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
-          //   }else{
-          //     //_router.navigate([relPath+'Default-home',{scope:'nfl'}]);
-          //     window.location.pathname = "/nfl";
-          //   }
-          // }
+          if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner) {
+            let relPath = this.getRelativePath(_router);
+              //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+              window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
+          }
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
