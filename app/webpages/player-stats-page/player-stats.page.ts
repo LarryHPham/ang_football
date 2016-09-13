@@ -104,9 +104,18 @@ export class PlayerStatsPage implements OnInit {
     this._statsService.getStatsTabData(tabData, this.pageParams, data => {
         this.getLastUpdatedDateForPage(data);
 
-        if (tabData[0].tabActive=="Special"){
-            if(tabData[1]=="2015"||tabData[1]=="2014"){
+        var seasonArray=tabData[0];
+        var seasonIds=seasonArray.seasonIds;
+        var seasonTab = seasonIds.find(function (e) {
+            if( e.value===tabData[1]){
+                return true;
+            }
 
+        });
+
+        if (tabData[0].tabActive=="Special"){
+            if(seasonTab){
+               //console.log("year clicked");
             }else{
                 this.tabName=tabData[1];
             }
