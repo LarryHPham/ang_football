@@ -143,7 +143,6 @@ export class StandingsService {
     else if (standingsTab && newParams != null) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       url += "/" + pageParams.scope + "/" + season;
-
       this.http.get(url)
         .map(res => res.json())
         .map(data => this.createData(standingsTab, pageParams.scope, data.data.standings, data.data.seasons, maxRows, newParams))
@@ -183,7 +182,6 @@ export class StandingsService {
     if (conference == "Division") {
       division = "division";
     }
-    /*console.log("createTab", conference, division);*/
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
 
