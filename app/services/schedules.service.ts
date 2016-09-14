@@ -273,7 +273,7 @@ export class SchedulesService {
         reportDisplay: reportText,
         reportLink: reportUrl,
         isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
-        inning: val.eventQuarter != null ? "Current " + val.inning + ":" + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
+        inning: val.eventQuarter != null ? "Current: Quarter " + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
       }
 
       modifiedArray.push(newData);
