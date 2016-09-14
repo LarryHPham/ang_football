@@ -38,8 +38,6 @@ export class BoxScoresService {
   }
   //date needs to be the date coming in AS EST and come back as UTC
   var callURL = this._apiUrl+'/boxScores/'+profile+'/'+teamId+'/'+ date;
-
-  console.log('boxscores = ',callURL);
   
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
