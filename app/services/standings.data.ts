@@ -154,6 +154,9 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     if(this.conference !== undefined && this.division !== undefined){
       rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
       rankPoint =  item.divisionName;
+      if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
+        rankPoint = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.replace(item.conferenceName, '').toLowerCase());
+      }
     } else if(this.conference !== undefined && this.division === undefined){
       rank = item.conferenceRank != null ? Number(item.conferenceRank) : 'N/A';
       rankPoint = item.conferenceName;
