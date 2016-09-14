@@ -145,19 +145,31 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
         route: teamRoute,
         text: teamFullName
     };
+    var rank = null;
+    var rankPoint = null;
     var division = item.divisionName;
     if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
       var division = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.replace(item.conferenceName, '').toLowerCase());
     }//fbs divison sends back all uppercase and needs to be camel case
-    var rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
+    if(this.conference !== undefined && this.division !== undefined){
+      rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
+      rankPoint =  item.divisionName;
+    } else if(this.conference !== undefined && this.division === undefined){
+      rank = item.conferenceRank != null ? Number(item.conferenceRank) : 'N/A';
+      rankPoint = item.conferenceName;
+    } else {
+      rank = item.leagueRank != null ? Number(item.leagueRank) : 'N/A';
+      rankPoint = item.leagueAbbreviation.toUpperCase();
+    }
+    var overallRecord = item.teamOverallRecord ? item.teamOverallRecord : 'N/A';
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonBase + "-" + yearEnd + " Season " + division + " Standings"],
+      subheader: [item.seasonBase + "-" + yearEnd + " Season " + rankPoint + " Standings"],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
-          " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + division + "</span>, with a record of " + "<span class='text-heavy'>" + item.teamOverallRecord + "</span>."
+          " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + rankPoint + "</span>, with a record of " + "<span class='text-heavy'>" + overallRecord + "</span>."
       ],
       lastUpdatedDate: item.displayDate,
       circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
@@ -301,56 +313,58 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
         }
-        imageUrl = GlobalSettings.getImageUrl(item.teamLogo);
+        imageUrl = item.teamLogo ? GlobalSettings.getImageUrl(item.teamLogo) : null;
         break;
 
       case "wlt":
-        display = item.teamOverallRecord != null ? item.teamOverallRecord : null;
-        sort = this.calcWLT(item.teamOverallRecord);
+        display = item.teamOverallRecord != null ? item.teamOverallRecord : 'N/A';
+        sort = item.teamOverallRecord ? this.calcWLT(item.teamOverallRecord) : null;
         break;
 
       case "conf":
-        display = item.teamConferenceRecord != null ? item.teamConferenceRecord : null;
-        sort = this.calcWLT(item.teamConferenceRecord);
+        display = item.teamConferenceRecord != null ? item.teamConferenceRecord : 'N/A';
+        sort = item.teamConferenceRecord ? this.calcWLT(item.teamConferenceRecord) : null;
         break;
 
       case "strk":
-        display = item.streak != null ? item.streak : null;
-        var compareValue = Number(item.streak.slice(1, item.streak.length));
-        if(item.streak.charAt(0) == "L"){
-          compareValue *= -1;
+        display = item.streak != null ? item.streak : 'N/A';
+        if(item.streak){
+          var compareValue = Number(item.streak.slice(1, item.streak.length));
+          if(item.streak.charAt(0) == "L"){
+            compareValue *= -1;
+          }
         }
         sort = compareValue;
         break;
 
       case "hm":
-        display = item.homeRecord != null ? item.homeRecord : null;
-        sort = this.calcWLT(item.homeRecord);
+        display = item.homeRecord != null ? item.homeRecord : 'N/A';
+        sort = item.homeRecord ? this.calcWLT(item.homeRecord) : null;
         break;
 
       case "rd":
-        display = item.roadRecord != null ? item.roadRecord : null;
-        sort = this.calcWLT(item.roadRecord);
+        display = item.roadRecord != null ? item.roadRecord : 'N/A';
+        sort = item.roadRecord ? this.calcWLT(item.roadRecord) : null;
         break;
 
       case "pa":
-        display = item.teamPointsAllowed != null ? item.teamPointsAllowed : null;
-        sort = Number(item.teamPointsAllowed);
+        display = item.teamPointsAllowed != null ? item.teamPointsAllowed : 'N/A';
+        sort = item.teamPointsAllowed ? Number(item.teamPointsAllowed) : null;
         break;
 
       case "pct":
-        display = item.teamWinPercent != null ? item.teamWinPercent : null;
-        sort = Number(item.teamWinPercent);
+        display = item.teamWinPercent != null ? item.teamWinPercent : 'N/A';
+        sort = item.teamWinPercent ? Number(item.teamWinPercent) : null;
         break;
 
       case "div":
-        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : null;
-        sort = this.calcWLT(item.teamDivisionRecord);
+        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : 'N/A';
+        sort = item.teamDivisionRecord ? this.calcWLT(item.teamDivisionRecord) : null;
         break;
 
       case "pf":
         display = item.teamPointsFor != null ? item.teamPointsFor : null;
-        sort = item.teamPointsFor;
+        sort = item.teamPointsFor ? item.teamPointsFor : null;
         break;
     }
     if ( display == null ) {
