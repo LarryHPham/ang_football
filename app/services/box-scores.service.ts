@@ -160,6 +160,7 @@ export class BoxScoresService {
     }
 
     var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
+
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
