@@ -228,7 +228,7 @@ private dailyUpdateModule(playerId: number) {
 }
 
   private setupSeasonstatsData() {
-      this._seasonStatsService.getPlayerStats(this.pageParams.playerId, this.scope)
+      this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope)
       .subscribe(
           data => {
               this.seasonStatsData = data;
@@ -361,6 +361,7 @@ private dailyUpdateModule(playerId: number) {
 
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module;
+        this.pageParams.scope = this.scope;
         this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     }
 

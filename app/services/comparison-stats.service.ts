@@ -32,6 +32,7 @@ export interface PlayerData {
   yearExperience: string;
   class: string;
   teamAbbreviation: string;
+  teamMarket: string;
   statistics: { [seasonId: string]: SeasonStats };
 }
 export interface ComparisonRoster{
@@ -315,7 +316,7 @@ export class ComparisonStatsService {
         else return {key: player.playerId, value: player.playerFirstName + ' ' + player.playerLastName, class: "dropdown-grp-item"};
       }));
     }
-    return dropdownList.sort();
+    return dropdownList;
   }
 
   private formatPlayerData(playerId: string, data: { [seasonId: string]: any }):{ [seasonId: string]: SeasonStats } {

@@ -95,7 +95,7 @@ export class StandingsService {
     }
     if (season == null) {
       var date = new Date;
-      var compareDate = new Date('09 15 ' + date.getFullYear());
+      var compareDate = new Date('09 08 ' + date.getFullYear());
       if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
         season = date.getFullYear();
       }
@@ -143,7 +143,6 @@ export class StandingsService {
     else if (standingsTab && newParams != null) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       url += "/" + pageParams.scope + "/" + season;
-
       this.http.get(url)
         .map(res => res.json())
         .map(data => this.createData(standingsTab, pageParams.scope, data.data.standings, data.data.seasons, maxRows, newParams))
@@ -183,7 +182,6 @@ export class StandingsService {
     if (conference == "Division") {
       division = "division";
     }
-    /*console.log("createTab", conference, division);*/
     return new TDLStandingsTabdata(title, conference, division, selectTab, teamId);
   }
 
@@ -193,6 +191,7 @@ export class StandingsService {
     if ( standingsTab.conference !== null && standingsTab.conference !== undefined &&
       standingsTab.division !== null && standingsTab.division !== undefined ) {
       //get only the single division
+      if (standingsTab.division.toString() == "division") {
         for ( var conferenceKey in apiData ) {
           for ( var divisionKey in apiData[conferenceKey] ) {
             var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : [];
@@ -207,25 +206,35 @@ export class StandingsService {
             break; //don't add more conferences
           }
         }
+        }
+        else {
+        var conferenceKey = standingsTab.conference.toString();
+        var divisionKey = standingsTab.division.toString();
+        var divData = conferenceKey && divisionKey ? apiData[conferenceKey][divisionKey] : null;
+        sections.push(this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, divisionKey, divData, maxRows, false));
+      }
     }
     else if ( standingsTab.conference !== null && standingsTab.conference !== undefined ) {
       //get only the single conference
         for ( var conferenceKey in apiData ) {
+          if ((maxRows < 999 && conferenceKey == standingsTab.conference.toString()) || (maxRows > 999) ) {
           var divData: any = [];
           for ( var divisionKey in apiData[conferenceKey] ) {
-            for (var i = 0; i < apiData[conferenceKey][divisionKey].length && i < maxRows; i++) {
+            for (var i = 0; i < apiData[conferenceKey][divisionKey].length; i++) {
               divData.push(apiData[conferenceKey][divisionKey][i]);
-              totalRows++;
-            }
-            // totalRows += table.tableData.rows.length;
-            if ( maxRows && totalRows > maxRows ) {
-              break; //don't add more divisions
             }
           }
-          var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, "Conference", divData, maxRows, true);
+          divData.sort(function(a,b) {return (a.teamWinPercent > b.teamWinPercent) ? 1 : ((b.teamWinPercent > a.teamWinPercent) ? -1 : 0);} );
+          divData.reverse();
+          var limitedDivData = [];;
+          for (var num = 0; num < divData.length && num < maxRows; num++) {
+            limitedDivData.push(divData[num]);
+          }
+          var table = this.setupTableData(standingsTab.currentTeamId, scope, conferenceKey, "Conference", limitedDivData, maxRows, true);
           sections.push(table);
           if ( maxRows && totalRows > maxRows ) {
             break; //don't add more conferences
+          }
           }
         }
     }
@@ -237,17 +246,19 @@ export class StandingsService {
             for (var i = 0; i < apiData[conferenceKey][divisionKey].length; i++) {
               divData.push(apiData[conferenceKey][divisionKey][i]);
             }
-            // totalRows += table.tableData.rows.length;
-            // if ( maxRows && totalRows > maxRows ) {
-            //   break; //don't add more divisions
-            // }
           }
 
           if ( maxRows && totalRows > maxRows ) {
             break; //don't add more conferences
           }
         }
-        var table = this.setupTableData(standingsTab.currentTeamId, scope, "League", " ", divData, maxRows, true);
+        divData.sort(function(a,b) {return (a.teamWinPercent > b.teamWinPercent) ? 1 : ((b.teamWinPercent > a.teamWinPercent) ? -1 : 0);} );
+        divData.reverse();
+        var limitedDivData = [];;
+        for (var num = 0; num < divData.length && num < maxRows; num++) {
+          limitedDivData.push(divData[num]);
+        }
+        var table = this.setupTableData(standingsTab.currentTeamId, scope, "League", " ", limitedDivData, maxRows, true);
         sections.push(table);
     }
     return sections;

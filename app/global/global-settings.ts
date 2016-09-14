@@ -13,7 +13,7 @@ export class GlobalSettings {
     private static _articleUrl:string = '-touchdownloyal-ai.synapsys.us/';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
-    private static _widgetUrl: string = 'devapi.synapsys.us';
+    private static _widgetUrl: string = 'w1.synapsys.us';
     private static _geoUrl: string = 'w1.synapsys.us';
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
@@ -192,7 +192,7 @@ export class GlobalSettings {
                 let scope = route.instruction.params["scope"];
                 if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
                   partnerID = route.instruction.params["partner_id"];
-                }else if(window.location.hostname.split(".")[0].toLowerCase() == "baseball"){
+                }else if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
                   partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
                 }
 

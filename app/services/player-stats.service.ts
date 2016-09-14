@@ -14,7 +14,7 @@ import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from
 export class PlayerStatsService implements OnDestroy{
 
     tabName:string;
-    seasonId:string="2015";
+    seasonId:string= new Date().getFullYear().toString();
     public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
@@ -53,11 +53,20 @@ export class PlayerStatsService implements OnDestroy{
 
 
         var standingsTab: MLBPlayerStatsTableData = tabData[0];
+        var seasonArray=standingsTab.seasonIds;
+        //console.log(seasonArray);
 
         var columnTabType;
+        var seasonTabClicked = seasonArray.find(function (e) {
+            if( e.value===tabData[1]){
+            return true;
+        }
 
-        if(tabData[1]== "2015"||tabData[1]== "2014" ){
+        });
+
+        if(seasonTabClicked){
                this.seasonId = tabData[1];
+
 
             if(standingsTab.tabActive=="Special"){
                 //console.log(this.tabName);
@@ -73,6 +82,7 @@ export class PlayerStatsService implements OnDestroy{
         }else{
              columnTabType = tabData[1];
 
+
             if(standingsTab.tabActive=="Special"){
 
 
@@ -80,6 +90,7 @@ export class PlayerStatsService implements OnDestroy{
 
             }else {
                 this.tabName = standingsTab.tabTitle.toLowerCase();
+
                 this.GlossaryData=standingsTab.glossary;
 
             }
@@ -108,6 +119,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
         let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
+        //console.log(url);
         this.http.get(url)
             .map(res => res.json())
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
