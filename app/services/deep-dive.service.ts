@@ -37,7 +37,6 @@ export class DeepDiveService {
         //Configure HTTP Headers
         var headers = this.setToken();
         var callURL = this._apiUrl + '/videoSingle/' + articleID;
-      console.log(callURL,"url called");
         return this.http.get(callURL, {headers: headers})
             .map(res => res.json())
             .map(data => {
