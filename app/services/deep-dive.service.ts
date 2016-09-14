@@ -33,6 +33,17 @@ export class DeepDiveService {
       return data;
     })
   }
+  getDeepDiveVideoService(articleID){
+        //Configure HTTP Headers
+        var headers = this.setToken();
+        var callURL = this._apiUrl + '/videoSingle/' + articleID;
+      console.log(callURL,"url called");
+        return this.http.get(callURL, {headers: headers})
+            .map(res => res.json())
+            .map(data => {
+                return data;
+            })
+    }
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers

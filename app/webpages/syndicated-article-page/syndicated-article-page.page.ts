@@ -66,7 +66,7 @@ export class SyndicatedArticlePage{
         this.getDeepDiveArticle(this.eventID);
       }
       else {
-        //this.getDeepDiveVideo(this.eventID);
+        this.getDeepDiveVideo(this.eventID);
       }
 
       GlobalSettings.getParentParams(_router, partnerID => {
@@ -106,14 +106,15 @@ export class SyndicatedArticlePage{
         }
       )
     }
-    /*private getDeepDiveVideo(articleID){
+    private getDeepDiveVideo(articleID){
       this._deepdiveservice.getDeepDiveVideoService(articleID).subscribe(
         data => {
           this.articleData = data.data;
-          this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
+
+            this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
         }
       )
-    }*/
+    }
 
     getGeoLocation() {
       var defaultState = 'ca';
@@ -162,4 +163,10 @@ export class SyndicatedArticlePage{
         this.getRecomendationData()
 
     }
+    formatDate(date) {
+
+        return moment(date).format("MMMM DD, YYYY | h:mm A ")
+
+    }
+
 }
