@@ -130,6 +130,7 @@ export class SyndicatedArticlePage{
                   this.getRecomendationData();
                 }
             );
+        console.log(this.geoLocation);
     }
 
     getPartnerHeader(){//Since it we are receiving
@@ -150,9 +151,11 @@ export class SyndicatedArticlePage{
     }
 
     getRecomendationData(){
+        console.log(this.geoLocation, "----------->");
       var startNum=Math.floor((Math.random() * 49) + 1);
         var state = 'KS'; //needed to uppoercase for ai to grab data correctly
         this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
+
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
              
