@@ -40,7 +40,7 @@ export class BoxScoresService {
   var callURL = this._apiUrl+'/boxScores/'+profile+'/'+teamId+'/'+ date;
 
   console.log('boxscores = ',callURL);
-  
+
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -163,6 +163,8 @@ export class BoxScoresService {
     }
 
     var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
+
+    console.log('weekCarousel - callURL -', callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -184,6 +186,7 @@ export class BoxScoresService {
     }
 
     var callURL = this._apiUrl+'/'+profile+'/gameDates/'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
+    console.log('validMonth - callURL -',callURL);
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
