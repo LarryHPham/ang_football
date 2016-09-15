@@ -257,27 +257,27 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " attempts with "+ item.stat2 +" Rushing Yards, " + item.stat3+ " Average and " + item.stat4 + " Touchdowns."],
                 },
                 Receiving:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Receptions "+  item.stat2+ " Targets " + item.stat3 + " Receiving Yards and " + item.stat4 + " Average."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Receptions, "+  item.stat2+ " Targets, " + item.stat3 + " Receiving Yards and " + item.stat4 + " Average."],
                 },
                 Defense:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Solo Tackles "+ item.stat2 +" Assists " + item.stat3+ " Total Tackles and " + item.stat5 + " Sacks."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Solo Tackles, "+ item.stat2 +" Assists, " + item.stat3+ " Total Tackles and " + item.stat5 + " Sacks."],
                 },
                 Special:{
 
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
                 Kicking:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
                 Punting:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts "+ item.stat2 +" Yards " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts, "+ item.stat2 +" Yards, " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
 
 
                 },
                 Returning:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt "+ item.stat2 +" Yards " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt, "+ item.stat2 +" Yards, " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
 
                 }
 
