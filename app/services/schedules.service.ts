@@ -242,8 +242,13 @@ export class SchedulesService {
       var reportLink;
       let reportUrl;
       if(val.eventStatus == 'inprogress'){
-        reportUrl = VerticalGlobalFunctions.formatArticleRoute('in-game-report',val.eventId);
+        if(Number(val.eventQuarter) > 1){// so that ai gets a chance to generate an article and no one really needs an article created for first quarter
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute('in-game-report',val.eventId);
           reportText = 'LIVE GAME REPORT';
+        }else{// link if game is inprogress and still 1st quarter
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute('pregame-report',val.eventId);
+          reportText = 'PRE GAME REPORT'
+        }
       }else{
         if(val.eventStatus = 'pregame'){
           reportUrl = VerticalGlobalFunctions.formatArticleRoute('pregame-report',val.eventId);
@@ -261,6 +266,7 @@ export class SchedulesService {
       let time = moment(Number(val.eventStartTime)).tz('America/New_York').format('h:mm A z');
       let team1FullName = val.team1FullName;
       let team2FullName = val.team2FullName;
+
       newData = {
         date: date + " &bull; " + time,
         awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id)),
