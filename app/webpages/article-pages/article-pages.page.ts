@@ -86,7 +86,6 @@ export class ArticlePages implements OnInit {
             this.eventType = "upcoming";
         }
         this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-        console.log('DING! ' + this.checkPartner);
     }
 
     getArticles() {

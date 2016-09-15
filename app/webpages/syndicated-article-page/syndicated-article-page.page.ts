@@ -75,7 +75,6 @@ export class SyndicatedArticlePage{
           this.getPartnerHeader();
       });
       this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-      console.log('DING! ' + this.checkPartner);
     }
 
     ngAfterViewInit(){
