@@ -153,7 +153,7 @@ export class GlobalSettings {
       var isSubdomainPartner = /^football\./.test(hostname);
       //PLEASE REVISIT and change
       if(partnerPage && (name == '' || name == 'deep-dive')){
-        hide = true;
+        hide = false;
         isHome = true;
       }else if(!partnerPage && (name == '' || name == 'deep-dive')){
         hide = false;
