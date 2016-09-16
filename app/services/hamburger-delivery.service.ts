@@ -14,7 +14,7 @@ export class HamburgerDeliveryService {
     if (division != null) {
       divisionUrl = division.toLowerCase();
     }
-    if (partner == null || partner == false){
+    if (partner == null || partner == false || GlobalSettings.getHomeInfo().isSubdomainPartner){
       partnerUrl = "Default";
       params = {scope: divisionUrl};
     }
