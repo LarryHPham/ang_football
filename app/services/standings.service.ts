@@ -57,20 +57,20 @@ export class StandingsService {
 
   initializeAllTabs(pageParams: SportPageParameters, currentTeamId?: string): Array<TDLStandingsTabdata> {
     let tabs: Array<TDLStandingsTabdata> = [];
-    if ( pageParams.conference === undefined || pageParams.conference === null ) {
+    if ( (pageParams.division === undefined || pageParams.division === null) && (pageParams.conference === undefined || pageParams.conference === null) ) {
+      //Is a League page: show All Divisions, then American, then National
+      /*console.log('league division tabs');*/
+      tabs.push(this.createTab(true, currentTeamId, 'Division'));
+      tabs.push(this.createTab(false, currentTeamId, 'Conference'));
+      tabs.push(this.createTab(false, currentTeamId));
+    }
+    else if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an stangings page: show DIVISION, then CONFERENCE, then NFL/NCAAF
       //TDL: show division, then conference, then league standings
       /*console.log('league conference tabs',Conference, Division);*/
       tabs.push(this.createTab(true, currentTeamId, 'Division'));
       tabs.push(this.createTab(false, currentTeamId, 'Conference'));
       tabs.push(this.createTab(false, currentTeamId));
-    }
-    else if ( pageParams.division === undefined || pageParams.division === null ) {
-      //Is a League page: show All Divisions, then American, then National
-      /*console.log('league division tabs');*/
-      tabs.push(this.createTab(false, currentTeamId));
-      tabs.push(this.createTab(pageParams.conference === Conference.AFC, currentTeamId, Conference.AFC));
-      tabs.push(this.createTab(pageParams.conference === Conference.NFC, currentTeamId, Conference.NFC));
     }
     else {
       //Is a Team page: show team's division, then team's league, then MLB
@@ -216,8 +216,9 @@ export class StandingsService {
     }
     else if ( standingsTab.conference !== null && standingsTab.conference !== undefined ) {
       //get only the single conference
+        var totalConferences = 0;
         for ( var conferenceKey in apiData ) {
-          if ((maxRows < 999 && conferenceKey == standingsTab.conference.toString()) || (maxRows > 999) ) {
+          if ((maxRows < 999 && conferenceKey == standingsTab.conference.toString()) || (maxRows > 999) || totalConferences < 1) {
           var divData: any = [];
           for ( var divisionKey in apiData[conferenceKey] ) {
             for (var i = 0; i < apiData[conferenceKey][divisionKey].length; i++) {
@@ -235,6 +236,7 @@ export class StandingsService {
           if ( maxRows && totalRows > maxRows ) {
             break; //don't add more conferences
           }
+          totalConferences++;
           }
         }
     }
