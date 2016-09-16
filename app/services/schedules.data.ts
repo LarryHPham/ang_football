@@ -376,7 +376,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null){
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           if ( status ) {
-            if(partnerCheck.isPartner){
+            if(partnerCheck.isPartner && !partnerCheck.isSubdomainPartner){
               display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
               display = "<a href='" + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";

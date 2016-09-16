@@ -176,7 +176,8 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
       ],
       lastUpdatedDate: item.displayDate,
       circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
-      circleImageRoute: teamRoute
+      circleImageRoute: teamRoute,
+      rank: rank
     });
   }
 }

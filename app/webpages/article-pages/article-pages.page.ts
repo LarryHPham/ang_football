@@ -66,6 +66,7 @@ export class ArticlePages implements OnInit {
     rawUrl:string;
     title:string;
     scope:string = null;
+    checkPartner:boolean;
 
     constructor(private _params:RouteParams,
                 private _router:Router,
@@ -84,6 +85,7 @@ export class ArticlePages implements OnInit {
         if (this.eventType == "upcoming-game") {
             this.eventType = "upcoming";
         }
+        this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
     }
 
     getArticles() {
