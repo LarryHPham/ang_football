@@ -46,6 +46,8 @@ export class ListPage implements OnInit {
   input: string;
   pageNumber: number;
   sortSeason: Array<any>;
+  sortSeasonSelected: string;
+  dropdownCounter: number = 0;
 
   constructor(private listService:ListPageService,
               private _profileService: ProfileHeaderService,
@@ -71,7 +73,7 @@ export class ListPage implements OnInit {
     if(urlParams.query != null){
       this.getDynamicList();
     }else {
-      this.getStandardList(urlParams);
+      this.getStandardList(urlParams, urlParams.season);
     }
   }
 
@@ -133,6 +135,7 @@ export class ListPage implements OnInit {
           this.setPaginationParams(list.pagination);
           this.carouselDataArray = list.carData;
           this.sortSeason = list.seasons;
+          this.sortSeasonSelected = season;
         },
         err => {
           this.isError = true;
@@ -189,6 +192,10 @@ export class ListPage implements OnInit {
     ];
   }
   dropdownChanged(event) {
-    this.getStandardList(this.params.params, event);
+    if (this.dropdownCounter > 0) {
+      alert("dropdown changed");
+      this.getStandardList(this.params.params, event);
+    }
+    this.dropdownCounter++;
   }
 }
