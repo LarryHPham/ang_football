@@ -193,7 +193,6 @@ export class ListPage implements OnInit {
   }
   dropdownChanged(event) {
     if (this.dropdownCounter > 0) {
-      alert("dropdown changed");
       this.getStandardList(this.params.params, event);
     }
     this.dropdownCounter++;
