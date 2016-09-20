@@ -51,7 +51,7 @@ interface ListData {
 }
 
 export class positionMVPTabData implements MVPTabData {
-  scope?: string;
+  scope: string;
   tabDataKey: string;
   tabDisplayTitle: string;
   errorData: any = {
@@ -100,17 +100,17 @@ export class ListPageService {
     }
   */
 
-  getListPageService(query, errorMessage: string, season?){
+  getListPageService(query, errorMessage: string, scope, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   var callURL = this._apiUrl+'/list';
   if (season == null || season == undefined || season == "null") {
     var date = new Date;
-    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
   }
   else {
-    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
   }
 
   return this.http.get( callURL, {headers: headers})

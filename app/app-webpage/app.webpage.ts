@@ -270,7 +270,7 @@ export class AppComponent implements OnInit{
   private isPartnerZone:boolean = false;
   constructor(private _params: RouteParams,private _partnerData: PartnerHeader){
     this.hideHeader = GlobalSettings.getHomeInfo().hide;
-    if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
+    if(window.location.hostname.split(".")[0].toLowerCase() == "football" && GlobalSettings.getHomeInfo().isSubdomainPartner){
         this.partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
         this.getPartnerHeader();
     }

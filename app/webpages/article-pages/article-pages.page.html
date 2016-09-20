@@ -29,7 +29,7 @@
                                        [partnerId]="partnerId"
                                        [scope]="scope"
             ></article-content-component>
-            <disqus-component [comment]="comment"></disqus-component>
+            <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
             <sidekick-container-component></sidekick-container-component>
             <recommendations-component [randomHeadlines]="randomHeadlines"
                                        [images]="images"></recommendations-component>
