@@ -370,7 +370,7 @@ export class ListPageService {
         var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var stat = GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) );
         var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
-        var teamNickname = val.teamNickname != null ? val.teamNickname : "N/A";
+        var teamNickname = val.teamNickname != null ? val.teamNickname : val.teamName;
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
