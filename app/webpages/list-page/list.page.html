@@ -12,7 +12,7 @@
       </span>
       <div class="sort-title">
         <span class="sort-title-text">Season: </span>
-        <dropdown *ngIf="sortSeason" [list]="sortSeason" [selectedKey]="" (selectionChanged)="dropdownChanged($event)"></dropdown>
+        <dropdown *ngIf="sortSeason" [list]="sortSeason" [selectedKey]="sortSeasonSelected" (selectionChanged)="dropdownChanged($event)"></dropdown>
       </div>
     </div>
     <detailed-list-item *ngIf="detailedDataArray" [detailedItemData] = 'pageNumber != null ? detailedDataArray[pageNumber-1] : detailedDataArray'></detailed-list-item>

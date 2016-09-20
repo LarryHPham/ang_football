@@ -20,6 +20,7 @@ import {DynamicWidgetCall} from "../../services/dynamic-list-page.service";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {DropdownComponent} from '../../fe-core/components/dropdown/dropdown.component';
+import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
 @Component({
     selector: 'list-page',
@@ -46,8 +47,12 @@ export class ListPage implements OnInit {
   input: string;
   pageNumber: number;
   sortSeason: Array<any>;
+  sortSeasonSelected: string;
+  dropdownCounter: number = 0;
+  scope: string;
 
-  constructor(private listService:ListPageService,
+  constructor(private _router:Router,
+              private listService:ListPageService,
               private _profileService: ProfileHeaderService,
               private params: RouteParams,
               private dynamicWidget: DynamicWidgetCall,
@@ -65,13 +70,16 @@ export class ListPage implements OnInit {
       this.input = inputArr != null &&  inputArr.length > 1 ? inputArr[1] : null;
       this.pageNumber = 1;
     }
+    GlobalSettings.getParentParams(_router, parentParams => {
+        this.scope = parentParams.scope;
+    });
   }
 
   getListPage(urlParams) {
     if(urlParams.query != null){
       this.getDynamicList();
     }else {
-      this.getStandardList(urlParams);
+      this.getStandardList(urlParams, urlParams.season);
     }
   }
 
@@ -120,7 +128,7 @@ export class ListPage implements OnInit {
 
   getStandardList(urlParams, season?){
     var errorMessage = "Sorry, we do not currently have any data for this list";
-    this.listService.getListPageService(urlParams, errorMessage, season)
+    this.listService.getListPageService(urlParams, errorMessage, this.scope, season)
       .subscribe(
         list => {
           this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
@@ -133,6 +141,7 @@ export class ListPage implements OnInit {
           this.setPaginationParams(list.pagination);
           this.carouselDataArray = list.carData;
           this.sortSeason = list.seasons;
+          this.sortSeasonSelected = season;
         },
         err => {
           this.isError = true;
@@ -189,6 +198,9 @@ export class ListPage implements OnInit {
     ];
   }
   dropdownChanged(event) {
-    this.getStandardList(this.params.params, event);
+    if (this.dropdownCounter > 0) {
+      this.getStandardList(this.params.params, event);
+    }
+    this.dropdownCounter++;
   }
 }

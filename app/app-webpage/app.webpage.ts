@@ -43,6 +43,7 @@ import {GlobalSettings} from "../global/global-settings";
 //FOR DEEP DIVE
 import {SyndicatedArticlePage} from "../webpages/syndicated-article-page/syndicated-article-page.page";
 import {DeepDivePage} from "../webpages/deep-dive-page/deep-dive.page";
+import {PartnerHeader} from "../global/global-service";
 declare var jQuery: any;
 
 @Component({
@@ -57,7 +58,7 @@ declare var jQuery: any;
         RouterOutlet,
         ROUTER_DIRECTIVES
     ],
-    providers: [ArticleDataService, HeadlineDataService],
+    providers: [PartnerHeader, ArticleDataService, HeadlineDataService],
     pipes:[SanitizeHtml, SanitizeStyle]
 })
 
@@ -261,11 +262,18 @@ declare var jQuery: any;
 ])
 
 export class AppComponent implements OnInit{
+  public partnerID: string;
+  public partnerData: Object;
+  public partnerScript:string;
   public shiftContainer:string;
   public hideHeader: boolean;
   private isPartnerZone:boolean = false;
-  constructor(private _params: RouteParams){
+  constructor(private _params: RouteParams,private _partnerData: PartnerHeader){
     this.hideHeader = GlobalSettings.getHomeInfo().hide;
+    if(window.location.hostname.split(".")[0].toLowerCase() == "football" && GlobalSettings.getHomeInfo().isSubdomainPartner){
+        this.partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
+        this.getPartnerHeader();
+    }
   }
 
   getHeaderHeight(){
@@ -275,6 +283,17 @@ export class AppComponent implements OnInit{
     }
   }
 
+  getPartnerHeader(){//Since it we are receiving
+    if(this.partnerID != null){
+      this._partnerData.getPartnerData(this.partnerID)
+        .subscribe(
+          partnerScript => {
+            this.partnerData = partnerScript;
+            this.partnerScript = this.partnerData['results'].header.script;
+          }
+        );
+    }
+  }
 
   ngDoCheck(){
     var checkHeight = this.getHeaderHeight();
