@@ -51,7 +51,7 @@ interface ListData {
 }
 
 export class positionMVPTabData implements MVPTabData {
-  scope?: string;
+  scope: string;
   tabDataKey: string;
   tabDisplayTitle: string;
   errorData: any = {
