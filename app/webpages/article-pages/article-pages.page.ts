@@ -154,8 +154,8 @@ export class ArticlePages implements OnInit {
                             let rand = Math.floor(Math.random() * j);
                             if (HeadlineData[rand].article_data != null) {
                                 var eventType = Object.keys(HeadlineData[rand].article_data)[0];
-                                this.eventID = HeadlineData[rand].event_id.toString();
-                                result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, this.eventID));
+                                var eventId = eventType != "player-fantasy" ? HeadlineData[rand].event_id.toString() : HeadlineData[rand].id.toString();
+                                result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, eventId));
                                 HeadlineData.splice(rand, 1);
                             }
                         }
