@@ -12,7 +12,9 @@
         <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
             <span *ngIf="imageData">
                 <div template="ngIf hasImages" class="carousel-container">
-                    <images-media-carousel [imageData]="imageData" [copyright]="copyright"
+                    <images-media-carousel [isProfilePage]="false"
+                                           [imageData]="imageData"
+                                           [copyright]="copyright"
                                            [imageTitle]="imageTitle"></images-media-carousel>
                 </div>
             </span>

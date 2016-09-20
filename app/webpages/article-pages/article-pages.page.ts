@@ -52,6 +52,7 @@ export class ArticlePages implements OnInit {
     aiSidekick:boolean = true;
     error:boolean = false;
     hasImages:boolean = false;
+    isFantasyReport:boolean = false;
     isSmall:boolean = false;
     teamId:number;
     articleType:string;
@@ -86,18 +87,24 @@ export class ArticlePages implements OnInit {
             this.eventType = "upcoming";
         }
         this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+        if (this.eventType == "player-fantasy") {
+            this.isFantasyReport = true;
+        }
     }
 
     getArticles() {
-        this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope)
+        this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport)
             .subscribe(
                 Article => {
                     if (Article['data'].length > 0) {
+                        if (this.isFantasyReport) {
+                            this.eventID = Article['data'][0].event_id;
+                        }
                         var articleType = [];
                         if (Article['data'][0].article_type_id != null) {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         } else {
-                           articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
                             //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
                             //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         }
@@ -119,8 +126,8 @@ export class ArticlePages implements OnInit {
                         } else {
                             this.hasImages = false;
                         }
-
                         this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
+                        this.getRecommendedArticles();
                     }
                 },
                 err => {
@@ -134,22 +141,25 @@ export class ArticlePages implements OnInit {
                     }, 5000);
                 }
             );
+    }
+
+    getRecommendedArticles() {
         this.randomArticles = GlobalFunctions.getRandomArticles(this.randomArticles, this.scope, this.eventType);
-        var result= [];
+        var result = [];
         this._articleDataService.getRecommendationsData(this.eventID, this.scope)
             .subscribe(
                 HeadlineData => {
                     HeadlineData = HeadlineData.data;
                     if (HeadlineData.length) {
-                        for( var i = 3; i > result.length && HeadlineData.length; ){
-                          let j = HeadlineData.length;
-                          let rand =  Math.floor(Math.random() * j);
-                          if (HeadlineData[rand].article_data != null) {
-                              var eventType = Object.keys(HeadlineData[rand].article_data)[0];
-                              this.eventID = HeadlineData[rand].event_id.toString();
-                              result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, this.eventID));
-                              HeadlineData.splice(rand,1);
-                          }
+                        for (var i = 3; i > result.length && HeadlineData.length;) {
+                            let j = HeadlineData.length;
+                            let rand = Math.floor(Math.random() * j);
+                            if (HeadlineData[rand].article_data != null) {
+                                var eventType = Object.keys(HeadlineData[rand].article_data)[0];
+                                var eventId = eventType != "player-fantasy" ? HeadlineData[rand].event_id.toString() : HeadlineData[rand].id.toString();
+                                result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, eventId));
+                                HeadlineData.splice(rand, 1);
+                            }
                         }
                     }
                     this.randomHeadlines = result;
@@ -167,7 +177,9 @@ export class ArticlePages implements OnInit {
             images = data['home_images'].concat(data['away_images']);
         } else if (this.articleType == "playerRoster") {
             images = data['home_images'];
-        }else {
+        } else if (this.isFantasyReport) {
+            images = data['home_images'].concat(data['player_images']);
+        } else {
             images = data['away_images'];
         }
         images.sort(function () {
