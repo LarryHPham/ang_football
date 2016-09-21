@@ -34,7 +34,9 @@ export class SearchPage implements OnInit {
             query: query
         }
         GlobalSettings.getParentParams(_router, parentParams => {
+          if(!GlobalSettings.getHomeInfo().isSubdomainPartner){
             this.partnerId = parentParams.partnerID;
+          }
             this.scope = parentParams.scope;
         });
     }

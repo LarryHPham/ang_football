@@ -9,12 +9,18 @@ export class ArticleDataService {
     constructor(public http:Http) {
     }
 
-    getArticle(eventID, eventType, partnerId, scope) {
+    getArticle(eventID, eventType, partnerId, scope, isFantasyReport) {
         var fullUrl = GlobalSettings.getArticleUrl();
         //having the query string is only temporary until the partner site link issue is figured out.
-        return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "?partnerId=" + partnerId + "&affiliation=" + scope)
-            .map(res => res.json())
-            .map(data => data);
+        if (!isFantasyReport) {
+            return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "?partnerId=" + partnerId + "&affiliation=" + scope)
+                .map(res => res.json())
+                .map(data => data);
+        } else {
+            return this.http.get(fullUrl + "articles?articleType=" + eventType + '&articleID=' + eventID + "?partnerId=" + partnerId + "&affiliation=" + scope)
+                .map(res => res.json())
+                .map(data => data);
+        }
     }
 
     getArticleData(url) {
