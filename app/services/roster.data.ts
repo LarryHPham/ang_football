@@ -41,6 +41,7 @@ export interface TeamRosterData {
    * - Formatted from the lastUpdatedDate
    */
   displayDate?: string;
+  class: string;
 }
 
 export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
@@ -151,7 +152,29 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       route: teamRoute,
       text: val.teamName,
       class: 'text-heavy'
+
     }
+    var classyear = val.class;
+    var a = 'a';
+    switch(classyear) {
+    case 'FR':
+        classyear = 'Freshman '
+        break;
+    case 'SO':
+        classyear = 'Sophomore '
+        break;
+    case 'JR':
+        classyear = 'Junior '
+        break;
+    case 'SR':
+        classyear = 'Senior '
+        break;
+    case null:
+        classyear = '';
+        a = '';
+}
+
+
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
@@ -159,7 +182,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       profileNameLink: playerLinkText,
       description: [
           playerLinkText,
-          ", ", "<span class='text-heavy'>" + val.playerPosition, "</span>",'for the ',
+          ", ",a,"<span class='text-heavy'>"+ classyear + val.playerPosition, "</span>",'for the ',
           teamLinkText,
           'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +"<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>"
       ],
