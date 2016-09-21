@@ -228,6 +228,7 @@ export class GlobalSettings {
     }
 
     static getPageTitle(subtitle?: string, profileName?: string) {
+      console.log('YOOOOO' + this.getHomeInfo().isPartner);
       if(this.getHomeInfo().isPartner){
         this._baseTitle = this._basePartnerTitle;
       }
