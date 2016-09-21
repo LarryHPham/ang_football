@@ -189,7 +189,7 @@ export class PlayerPage implements OnInit {
 
                 this.setupTeamProfileData();
                 this.dailyUpdateModule(this.pageParams.playerId);
-                if (this.scope == "nfl") {
+                if (this.scope.toLocaleLowerCase() == "nfl") {
                     this.getFantasyData(this.pageParams.playerId);
                 }
 
