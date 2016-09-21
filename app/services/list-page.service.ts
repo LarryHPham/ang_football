@@ -51,7 +51,7 @@ interface ListData {
 }
 
 export class positionMVPTabData implements MVPTabData {
-  scope?: string;
+  scope: string;
   tabDataKey: string;
   tabDisplayTitle: string;
   errorData: any = {
@@ -100,17 +100,17 @@ export class ListPageService {
     }
   */
 
-  getListPageService(query, errorMessage: string, season?){
+  getListPageService(query, errorMessage: string, scope, season?){
   //Configure HTTP Headers
   var headers = this.setToken();
 
   var callURL = this._apiUrl+'/list';
   if (season == null || season == undefined || season == "null") {
     var date = new Date;
-    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
   }
   else {
-    callURL += "/scope=" + "nfl" + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
   }
 
   return this.http.get( callURL, {headers: headers})
@@ -370,6 +370,7 @@ export class ListPageService {
         var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var stat = GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) );
         var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
+        var teamNickname = val.teamNickname != null ? val.teamNickname : val.teamName;
         return {
           dataPoints: ListPageService.detailsData(
             [ //main left text
@@ -379,7 +380,7 @@ export class ListPageService {
             [ //sub left text
               {text: "<span class='not-mobile'><i class='fa fa-map-marker'></i>" + playerBirthplace + "</span>"},
               {text: "<span class='not-mobile'>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>Team:", class: "separator"},
-              {route: teamRoute, text: "<span class='text-heavy'> " + val.teamNickname + "</span>", class: "dataBox-subLink"}
+              {route: teamRoute, text: "<span class='text-heavy'> " + teamNickname + "</span>", class: "dataBox-subLink"}
             ],
             statDescription,
             null),

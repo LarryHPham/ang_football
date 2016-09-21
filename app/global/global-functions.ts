@@ -674,22 +674,7 @@ export class GlobalFunctions {
             'wide-receiver-player-comparison',
             'tight-end-player-comparison',
             'defense-player-comparison',
-            //'fantasy-home-quarterback1', This is for when we have fantasy articles
-            //'fantasy-home-running-back1',
-            //'fantasy-home-running-back2',
-            //'fantasy-home-wide-receiver1',
-            //'fantasy-home-wide-receiver2',
-            //'fantasy-home-tight-end1',
-            //'fantasy-home-kicker1',
-            //'fantasy-home-defense1',
-            //'fantasy-away-quarterback1',
-            //'fantasy-away-running-back1',
-            //'fantasy-away-running-back2',
-            //'fantasy-away-wide-receiver1',
-            //'fantasy-away-wide-receiver2',
-            //'fantasy-away-tight-end1',
-            //'fantasy-away-kicker1',
-            //'fantasy-away-defense1'
+            'player-fantasy'
         ];
         if (scope == "nfl") {
             articles.push('injuries-home', 'injuries-away');
@@ -720,6 +705,8 @@ export class GlobalFunctions {
                     return articleInformation = ["historical-team-statistics", "teamRecord", "history"];
                 case 6:
                     return articleInformation = ["last-matchup", "teamRecord", "last"];
+                case 11:
+                    return articleInformation = ["player-fantasy", "gameReport", "null"];
             }
         } else {
             switch (parseInt(articleType)) {

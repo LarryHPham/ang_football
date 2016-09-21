@@ -114,6 +114,11 @@ export class GlobalSettings {
         return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
     }
 
+    static getFantasyUrl():string {
+        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl
+    }
+
+
     static getNewsUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;
