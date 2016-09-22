@@ -189,7 +189,9 @@ export class PlayerPage implements OnInit {
 
                 this.setupTeamProfileData();
                 this.dailyUpdateModule(this.pageParams.playerId);
-                this.getFantasyData(this.pageParams.playerId);
+                if (this.scope.toLocaleLowerCase() == "nfl") {
+                    this.getFantasyData(this.pageParams.playerId);
+                }
 
                 //get current date for box-scores
                 var currentUnixDate = new Date().getTime();
@@ -239,7 +241,7 @@ export class PlayerPage implements OnInit {
         this._fantasyService.getFantasyReport(playerId)
             .subscribe(data => {
                     this.fantasyData = data;
-                    this.fantasyDate = moment.tz(this.fantasyData['last_updated'],"America/New_York").fromNow();
+                    this.fantasyDate = moment.tz(this.fantasyData['last_updated'], "America/New_York").fromNow();
                 },
                 err => {
                     console.log("Error getting fantasy report data", err);
