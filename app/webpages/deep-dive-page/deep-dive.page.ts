@@ -1,4 +1,5 @@
 import {Component, OnInit, Input, NgZone} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {CarouselDiveModule} from '../../fe-core/modules/carousel-dive/carousel-dive.module';
 import {DeepDiveService} from '../../services/deep-dive.service';
 import {SidekickWrapper} from '../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component';
@@ -41,7 +42,7 @@ declare var jQuery: any;
       DeepDiveBlock4,
       SideScroll
     ],
-    providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader],
+    providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader, Title],
 })
 
 export class DeepDivePage implements OnInit{
@@ -71,6 +72,7 @@ export class DeepDivePage implements OnInit{
 
     constructor(
       private _router:Router,
+      private _title: Title,
       private _deepDiveData: DeepDiveService,
       private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
@@ -94,6 +96,7 @@ export class DeepDivePage implements OnInit{
           }else{
             this.getGeoLocation();
           }
+          this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
       });
     }
 
