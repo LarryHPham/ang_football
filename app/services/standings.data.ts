@@ -368,7 +368,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "pf":
         display = item.teamPointsFor != null ? item.teamPointsFor : null;
-        sort = item.teamPointsFor ? item.teamPointsFor : null;
+        sort = item.teamPointsFor ? Number(item.teamPointsFor) : null;
         break;
     }
     if ( display == null ) {
