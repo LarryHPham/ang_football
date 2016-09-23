@@ -357,14 +357,14 @@ export class ProfileHeaderService {
     //PRO
     else {
       description = headerData.playerFullName + " started his " +
-                    this.sportLeagueAbbrv + " careers on " +
+                    this.sportLeagueAbbrv + " career in " +
                     headerData.entryDate + " for the " +
-                    fullTeamName + " accumulating " +
+                    fullTeamName + ", accumulating " +
                     formattedExperience + " in the " +
                     this.sportLeagueAbbrv + ". " +
                     headerData.playerFirstName + " was born in " +
-                    formattedBirthlocation + " on " +
-                    formattedBirthDate + " and is " +
+                    formattedBirthlocation + ", on " +
+                    formattedBirthDate + ", and is " +
                     formattedAge;
 
                     if (formattedHeight != "N/A") {
