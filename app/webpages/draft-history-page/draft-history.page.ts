@@ -60,7 +60,7 @@ export class DraftHistoryPage implements OnInit{
       .subscribe(
           data => {
             this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
-            this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "MLB's " + this.whatProfile);
+            this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, data.headerData.leagueAbbreviatedName + ' ' + this.whatProfile);
             this.profileData = data;
           },
           err => {

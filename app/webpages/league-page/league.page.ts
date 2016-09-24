@@ -518,7 +518,18 @@ export class LeaguePage implements OnInit {
         var matches = this.checkMatchingTabs(event);
 
         this.globalMVPPosition = event.position;
-
+        var date = new Date;
+        var season;
+        var compareDate = new Date('09 15 ' + date.getFullYear());
+        if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
+          season = date.getFullYear();
+        }
+        else if (date.getMonth() > compareDate.getMonth()) {
+          season = date.getFullYear();
+        }
+        else {
+          season = (date.getFullYear() - 1);
+        }
         if(matches != null){
           this.positionParams = {
             scope:  this.scope, //TODO change to active scope
@@ -528,7 +539,7 @@ export class LeaguePage implements OnInit {
             ordering: 'asc',
             perPageCount: this.listMax,
             pageNumber: 1,
-            season: '2015'
+            season: season
           }
           this.getMVPService(matches, this.positionParams);
         }

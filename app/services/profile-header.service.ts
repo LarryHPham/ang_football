@@ -357,14 +357,14 @@ export class ProfileHeaderService {
     //PRO
     else {
       description = headerData.playerFullName + " started his " +
-                    this.sportLeagueAbbrv + " careers on " +
+                    this.sportLeagueAbbrv + " career in " +
                     headerData.entryDate + " for the " +
-                    fullTeamName + " accumulating " +
+                    fullTeamName + ", accumulating " +
                     formattedExperience + " in the " +
                     this.sportLeagueAbbrv + ". " +
                     headerData.playerFirstName + " was born in " +
-                    formattedBirthlocation + " on " +
-                    formattedBirthDate + " and is " +
+                    formattedBirthlocation + ", on " +
+                    formattedBirthDate + ", and is " +
                     formattedAge;
 
                     if (formattedHeight != "N/A") {
@@ -436,12 +436,12 @@ export class ProfileHeaderService {
     if ( headerData.teamCity && headerData.teamState ) {
       location = headerData.teamCity + ", " + headerData.teamState;
     }
-    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
+    var venueForDescription = headerData.venueName ? " who play in " + headerData.venueName : ' ';
 
     var description = "The " + fullTeamName + ", " +
                       venueForDescription +
                       " located in " + location + ", " +
-                      " are part of the " + headerData.divisionName +
+                      " are part of the " + headerData.conferenceName +
                        ".";
 
     var header: ProfileHeaderData = {
