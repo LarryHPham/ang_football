@@ -106,7 +106,6 @@ export class StandingsService {
         season = (date.getFullYear() - 1);
       }
     }
-    console.log(season)
     if ( !tabData || tabData.length < 2 ) {
       throw new Error("Invalid tabData for standings")
     }
@@ -120,7 +119,6 @@ export class StandingsService {
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       url += "/" + pageParams.scope + "/" + season;
-      console.log(url);
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
       this.http.get(url)
@@ -166,7 +164,6 @@ export class StandingsService {
   }
   createData(standingsTab, scope, standings, seasons, maxRows, params) {
     standingsTab.seasonsArray = seasons;
-    console.log(seasons);
     standingsTab.conferences = standings;
     standingsTab.divisions = standings[standingsTab.conference];
     if (params != null) {
