@@ -137,7 +137,9 @@ export class VerticalGlobalFunctions {
   static formatHeightInches(heightStr: string) {
     var heightInFeet = (Number(heightStr) / 12)|0;
     var inches = Number(heightStr) % 12;
-    return heightInFeet + "-" + inches;
+    var heightString = heightInFeet + "'";
+    heightString = inches > 0 ? heightString + inches + '"' : heightString;
+    return heightString;
   }
 
   static formatHeightInchesWithTicks(heightStr: string) {
