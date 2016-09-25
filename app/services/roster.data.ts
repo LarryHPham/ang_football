@@ -138,8 +138,8 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       formattedSalary = "$" + GlobalFunctions.nFormatter(Number(val.playerSalary));
     }
 
-    var playerNum = val.playerJerseyNumber != null ? "<span class='text-heavy'>No. " + val.playerJerseyNumber + "</span>," : "";
-    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + VerticalGlobalFunctions.formatHeightInches(val.playerHeight) + "</span>, " : "";
+    var playerNum = val.playerJerseyNumber != null ? "<span class='text-heavy'>No. " + val.playerJerseyNumber + "</span>" : "";
+    var playerHeight = val.playerHeight != null ? "<span class='text-heavy'>" + VerticalGlobalFunctions.formatHeightInches(val.playerHeight) + "</span> " : "";
     var playerWeight = val.playerWeight != null ? "<span class='text-heavy'>" + val.playerWeight + "</span> " : "N/A";
     var playerSalary = "<span class='text-heavy'>" + formattedSalary + "</span> per year.";
 
@@ -150,7 +150,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
     }
     var teamLinkText = {
       route: teamRoute,
-      text: val.teamName,
+      text: val.teamName + ",",
       class: 'text-heavy'
 
     }
@@ -184,7 +184,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
           playerLinkText,
           ", ",a,"<span class='text-heavy'>"+ classyear + val.playerPosition, "</span>",'for the ',
           teamLinkText,
-          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +"<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>"
+          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" lbs.<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>"
       ],
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),

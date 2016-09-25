@@ -309,10 +309,12 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
+    // var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
     switch (column.key) {
       case "name":
         display = item.teamName;
+        // display = item.teamName + divisionrank;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
@@ -368,7 +370,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "pf":
         display = item.teamPointsFor != null ? item.teamPointsFor : null;
-        sort = item.teamPointsFor ? item.teamPointsFor : null;
+        sort = item.teamPointsFor ? Number(item.teamPointsFor) : null;
         break;
     }
     if ( display == null ) {
