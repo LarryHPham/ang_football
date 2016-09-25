@@ -180,12 +180,6 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [curYear + ' TEAM ROSTER'],
       profileNameLink: playerLinkText,
-      // NFL //
-      // [Player Name], [Position] for the [Team Name], is No. [##] and stands at [#’#”] tall, weighing [###]lbs. and making a salary of $[##,###]
-
-      // NCAAF //
-      // [Player Name], a [Class Year] [Position] for the [Team Name], is No. [##] and stands at [#’#”] tall, weighing [###]lbs.
-
       description: [
           playerLinkText,
           ", ",a,"<span class='text-heavy'>"+ classyear + val.playerPosition, "</span>",'for the ',
