@@ -40,7 +40,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Schedule",
-        url: [partnerUrl +'-home',params ,'Schedules-page-league', {pageNum:1, year: null}]//todo
+        url: [partnerUrl +'-home',params ,'Schedules-page-league', {pageNum:1, year: 'all'}]//todo
       },
       {
         menuTitle: division + " Standings",
