@@ -373,6 +373,12 @@ export class PlayerPage implements OnInit {
         }, 5);
     }
 
+    private standingsFilterSelected(tabData: Array<any>) {
+      this.pageParams.scope = this.scope;
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      }, 5);
+    }
+
     private setupComparisonData() {
         this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
