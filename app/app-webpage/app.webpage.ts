@@ -361,14 +361,14 @@ export class AppComponent implements OnInit{
 
   ngOnInit(){
     if(window.innerWidth > 1345){
-      if(this._el.nativeElement.getElementByClassName("ddto-left-rail").length == 0) {
+      if(jQuery(".ddto-left-rail").length == 0) {
         var script = document.createElement("script");
         script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
         document.head.appendChild(script);
       }
       else {
-        this._el.nativeElement.getElementByClassName("ddto-left-rail").remove();
-        this._el.nativeElement.getElementByClassName("ddto-right-rail").remove();
+        jQuery(".ddto-left-rail").remove();
+        jQuery(".ddto-right-rail").remove();
         var script = document.createElement("script");
         script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
         document.head.appendChild(script);
