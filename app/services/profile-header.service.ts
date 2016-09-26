@@ -426,6 +426,7 @@ export class ProfileHeaderService {
   } //convertToPlayerProfileHeader
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
+    console.log(data.headerData);
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
@@ -433,14 +434,14 @@ export class ProfileHeaderService {
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
     if ( headerData.teamCity && headerData.teamState ) {
-      location = headerData.teamCity + ", " + headerData.teamState;
+      location = headerData.teamCity + ", " + GlobalFunctions.stateToAP(headerData.teamState);
     }
-    var venueForDescription = headerData.venueName ? " who play in " + headerData.venueName : ' ';
+    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
 
-    var description = "The " + fullTeamName + ", " +
+    var description = "The " + fullTeamName +
                       venueForDescription +
-                      " located in " + location + ", " +
-                      " are part of the " + headerData.conferenceName + " " + headerData.divisionName + ".";
+                      " located in " + location + ". " + headerData.teamName +
+                      " are part of the " + headerData.conferenceName + " " + headerData.divisionName.replace(headerData.conferenceName, '') + ".";
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,

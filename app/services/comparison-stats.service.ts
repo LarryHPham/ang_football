@@ -239,6 +239,7 @@ export class ComparisonStatsService {
       existingData.data = apiData.data;
       existingData.bestStatistics = this.formatPlayerData("statHigh", apiData.data);
       existingData.worstStatistics = this.formatPlayerData("statLow", apiData.data);
+      console.log(this.createComparisonBars(existingData));
       return this.createComparisonBars(existingData);
     });
   }
@@ -246,6 +247,7 @@ export class ComparisonStatsService {
   getPlayerList(teamId: string): Observable<Array<{key: string, value: string, class: string}>> {
     //http://dev-touchdownloyal-api.synapsys.us/comparisonRoster/team/135
     let playersUrl = this._apiUrl + "/comparisonRoster/team/" + teamId;
+    console.log(playersUrl);
     return this.http.get(playersUrl)
       .map(res => res.json())
       .map(data => {
@@ -255,6 +257,7 @@ export class ComparisonStatsService {
 
   getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
     let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;
+    console.log(teamsUrl);
     return this.http.get(teamsUrl)
       .map(res => res.json())
       .map(data => {
@@ -273,6 +276,7 @@ export class ComparisonStatsService {
     else {
       url += "league/" + scope;
     }
+    console.log(url);
     return this.http.get(url)
       .map(res => res.json())
       .map(data => {
@@ -349,6 +353,7 @@ export class ComparisonStatsService {
   }
 
   private createComparisonBars(data: ComparisonStatsData): ComparisonBarList {
+    console.log("data", data);
     var fields = null;
     var position = data.playerOne.playerPosition;
     switch(position){
@@ -403,25 +408,26 @@ export class ComparisonStatsService {
         else if (playerTwoStats[key] != null) {
           bestStatFallback = playerTwoStats[key];
         }
-          seasonBarList.push({
-            title: title,
-            data: [{
-              value: playerOneStats != null ? playerOneStats[key] : null,
-              // color: data.playerOne.mainTeamColor
-              color: '#2D3E50'
-            },
-            {
-              value: playerTwoStats != null ? playerTwoStats[key] : null,
-              // color: data.playerTwo.mainTeamColor,
-              color: '#999999'
-            }],
-            minValue: worstStats != null ? worstStats[key] : null,
-            maxValue: bestStats[key] != null ? bestStats[key] : bestStatFallback,
-            qualifierLabel: SeasonStatsService.getQualifierLabel(key)
-          });
+        seasonBarList.push({
+          title: title,
+          data: [{
+            value: playerOneStats != null ? playerOneStats[key] : null,
+            // color: data.playerOne.mainTeamColor
+            color: '#2D3E50'
+          },
+          {
+            value: playerTwoStats != null ? playerTwoStats[key] : null,
+            // color: data.playerTwo.mainTeamColor,
+            color: '#999999'
+          }],
+          minValue: worstStats != null ? worstStats[key] : null,
+          maxValue: bestStats[key] != null ? bestStats[key] : bestStatFallback,
+          qualifierLabel: SeasonStatsService.getQualifierLabel(key)
+        });
       }
       bars[seasonId] = seasonBarList;
     }
+    console.log("bars", bars);
     return bars;
   }
 
