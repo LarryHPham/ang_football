@@ -53,6 +53,7 @@ export class GlobalSettings {
       if (env != "dev" && env !="qa"){
           env = "prod";
       }
+      // env = 'prod';
       return env;
     }
 
@@ -148,7 +149,8 @@ export class GlobalSettings {
       var isHome = false;
       var hide = false;
       var hostname = window.location.hostname;
-      var partnerPage = /mytouchdownzone/.test(hostname) || /^football\./.test(hostname);
+      // var partnerPage = /mytouchdownzone/.test(hostname) || /^football\./.test(hostname);
+      var partnerPage = /localhost/.test(hostname) || /^football\./.test(hostname);
       var name = window.location.pathname.split('/')[1];
       var isSubdomainPartner = /^football\./.test(hostname);
       //PLEASE REVISIT and change
