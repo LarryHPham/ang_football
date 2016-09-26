@@ -426,7 +426,6 @@ export class ProfileHeaderService {
   } //convertToPlayerProfileHeader
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
-    console.log(data.headerData);
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
