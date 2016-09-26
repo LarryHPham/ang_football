@@ -441,7 +441,8 @@ export class ProfileHeaderService {
     var description = "The " + fullTeamName + ", " +
                       venueForDescription +
                       " located in " + location + ", " +
-                      " are part of the " + headerData.conferenceName + " " + headerData.divisionName + ".";
+                      " are part of the " + headerData.conferenceName +
+                       ".";
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,

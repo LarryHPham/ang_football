@@ -300,11 +300,9 @@ export class LeaguePage implements OnInit {
         this.resetDropdown2();
         if(tab == 'Upcoming Games'){
           this.eventStatus = 'pregame';
-          this.resetDropdown1();
           this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
-          this.resetDropdown1();
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
           this.eventStatus = 'postgame';
@@ -313,27 +311,18 @@ export class LeaguePage implements OnInit {
     }
     private filterDropdown(filter){
         let filterChange = false;
-        let isFirstRun = 0;
-        if(this.eventStatus == 'postgame'){
-          isFirstRun = -1;
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+          this.selectedFilter1 = filter.key;
+          filterChange = true;
         }
-        if(this.isFirstNum > isFirstRun){
-          if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key && this.scheduleFilter1 != null){
-            this.selectedFilter1 = filter.key;
-            filterChange = true;
-          }
-          if(filter.value == 'filter2' && this.selectedFilter2 != filter.key && this.scheduleFilter2 != null){
-            this.selectedFilter2 = filter.key;
-            filterChange = true;
-          }
-          if(this.selectedFilter2 != null && this.selectedFilter1 == null && this.scheduleFilter1 != null){
-            this.selectedFilter1 = new Date().getFullYear().toString();
-          }
-          if(filterChange){
-            this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
-          }
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
         }
-        this.isFirstNum++;
+        if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+          this.selectedFilter1 = new Date().getFullYear().toString();
+        }
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     }
 
     //api for Schedules
@@ -345,13 +334,14 @@ export class LeaguePage implements OnInit {
       if(typeof year == 'undefined'){
         year == new Date().getFullYear();
       }
+      if(status == 'pregame'){
+        this.selectedFilter1 = null;
+      }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
         }else{
-          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
             this.scheduleFilter1 = schedulesData.seasons;
-          }
         }
         if(schedulesData.carData.length > 0){
           if(this.scheduleFilter2 == null){
@@ -566,7 +556,7 @@ export class LeaguePage implements OnInit {
 
       let localPosition = event.position;
       let listName = event.tab.tabDataKey;
-      console.log(event);
+
       if(event.position != this.globalMVPPosition && this.positionData != []){
         this.positionData[0].isLoaded = false;
         return this.positionData[0];
