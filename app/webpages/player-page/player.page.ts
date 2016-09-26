@@ -289,7 +289,7 @@ export class PlayerPage implements OnInit {
     //api for Schedules
     private getSchedulesData(status, year?) {
         var limit = 5;
-        this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.teamId, (schedulesData) => {
+        this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'player', status, limit, 1, this.teamId, (schedulesData) => {
             if (status == 'pregame') {
                 this.scheduleFilter1 = null;
             } else {
@@ -407,7 +407,10 @@ export class PlayerPage implements OnInit {
         this._lolService.getListOfListsService(params, "player", "module")
             .subscribe(
                 listOfListsData => {
+                  console.log(listOfListsData);
+                  if(listOfListsData != null){
                     this.listOfListsData = listOfListsData.listData;
+                  }
                     // this.listOfListsData["type"] = "player";
                     // this.listOfListsData["id"] = this.pageParams.playerId;
                 },
