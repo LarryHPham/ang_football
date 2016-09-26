@@ -126,11 +126,11 @@ export class MLBDraftHistoryService extends DraftHistoryService {
     //   year = new Date().getFullYear().toString();
     // }
     if ( profileData.profileType == "team" ) {
-      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/5/1";
+      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/999/1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
     else {
-      callURL = this._apiUrl + '/draftHistory/'+profileData.profileType+'/'+year+ "/5/1";
+      callURL = this._apiUrl + '/draftHistory/'+profileData.profileType+'/'+year+ "/999/1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
 
