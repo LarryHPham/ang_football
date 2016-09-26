@@ -358,20 +358,19 @@ export class ProfileHeaderService {
     else {
       description = headerData.playerFullName + " started his " +
                     this.sportLeagueAbbrv + " career in " +
-                    headerData.entryDate + " for the " +
-                    fullTeamName + ", accumulating " +
+                    headerData.entryDate + ", accumulating " +
                     formattedExperience + " in the " +
-                    this.sportLeagueAbbrv + ". " +
+                    this.sportLeagueAbbrv + ". He currently plays for the " + fullTeamName + ". " +
                     headerData.playerFirstName + " was born in " +
                     formattedBirthlocation + ", on " +
                     formattedBirthDate + ", and is " +
-                    formattedAge;
+                    formattedAge + " years old";
 
                     if (formattedHeight != "N/A") {
-                      description = description + ", with a height of " + formattedHeight;
+                      description = description + ". With a height of " + formattedHeight;
                     }
                     if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighing in at " + formattedWeight + " pounds";
+                      description = description + ", " + headerData.playerFirstName + " weighs in at " + formattedWeight + " pounds";
                     }
                     description = description + ".";
 
