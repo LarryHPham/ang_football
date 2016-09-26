@@ -7,6 +7,9 @@
     <div class="page-standings">
       <standings-component *ngIf="tabs" [tabs]="tabs" [scope]="scope" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)"></standings-component>
       <glossary-component *ngIf="glossary" [glossaryData]="glossary"></glossary-component>
+      <div class="list-widget">
+        <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+      </div>
     </div>
 </section>
 </sidekick-wrapper>
