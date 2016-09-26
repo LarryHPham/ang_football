@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ElementRef} from '@angular/core';
 import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
 import {FooterComponent} from "../fe-core/components/footer/footer.component";
@@ -128,22 +128,22 @@ declare var jQuery: any;
         component: MVPListPage
     },
     {
-        path: '/schedules/mlb/:pageNum',
+        path: '/schedules/league/:year/:pageNum',
         name: 'Schedules-page-league',
         component: SchedulesPage
     },
     {
-        path: '/schedules/mlb/:tab/:pageNum',
+        path: '/schedules/league/:year/:tab/:pageNum',
         name: 'Schedules-page-league-tab',
         component: SchedulesPage
     },
     {
-        path: '/schedules/:teamName/:teamId/:pageNum',
+        path: '/schedules/:teamName/:teamId/:year/:pageNum',
         name: 'Schedules-page-team',
         component: SchedulesPage
     },
     {
-        path: '/schedules/:teamName/:tab/:teamId/:pageNum',
+        path: '/schedules/:teamName/:year/:tab/:teamId/:pageNum',
         name: 'Schedules-page-team-tab',
         component: SchedulesPage
     },
@@ -267,7 +267,7 @@ export class MyAppComponent implements OnInit{
   public shiftContainer:string;
   public hideHeader:boolean;
   private isPartnerZone:boolean = false;
-  constructor(private _partnerData: PartnerHeader, private _params: RouteParams){
+  constructor(private _partnerData: PartnerHeader, private _params: RouteParams, private _el:ElementRef){
     var parentParams = _params.params;
 
     if( parentParams['partner_id'] !== null){
@@ -363,13 +363,24 @@ export class MyAppComponent implements OnInit{
   }
 
   ngOnInit(){
-    var script = document.createElement("script");
-    script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
-    document.head.appendChild(script);
-    this.shiftContainer = this.getHeaderHeight() + 'px';
-    //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts
-    window.addEventListener("load", this.setPageSize);
-    // Initialize the first time app.webpage.ts loads
-    this.setPageSize();
+    if(window.innerWidth > 1345){
+      if(jQuery(".ddto-left-rail").length == 0) {
+        var script = document.createElement("script");
+        script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+        document.head.appendChild(script);
+      }
+      else {
+        jQuery(".ddto-left-rail").remove();
+        jQuery(".ddto-right-rail").remove();
+        var script = document.createElement("script");
+        script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+        document.head.appendChild(script);
+      }
+      this.shiftContainer = this.getHeaderHeight() + 'px';
+      //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts
+      window.addEventListener("load", this.setPageSize);
+      // Initialize the first time app.webpage.ts loads
+      this.setPageSize();
+    }
   }
 }

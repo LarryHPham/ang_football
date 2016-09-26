@@ -375,6 +375,25 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
       var partnerCheck = GlobalSettings.getHomeInfo();
         if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null){
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
+          let scope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : 'nfl';
+          if(item.eventStatus == 'inprogress'){
+            status = 'Live Game';
+          }
+          if(scope == 'ncaaf'){
+            item.aiUrlMod = item.aiUrlMod != null ? item.aiUrlMod.replace('ncaa', scope):null;
+          }
+          if(item.eventStatus == 'created'){
+            status = 'Pregame';
+            let eventStatus;
+            if(item.eventStatus == 'inprogress'){
+              eventStatus = 'in-game';
+            }else if(item.eventStatus == 'created'){
+              eventStatus = 'pregame';
+            }else{
+              eventStatus = item.eventStatus;
+            }
+            item.aiUrlMod = '/'+scope+'/articles/'+eventStatus+'-report/'+item.id;
+          }
           if ( status ) {
             if(partnerCheck.isPartner && !partnerCheck.isSubdomainPartner){
               display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";

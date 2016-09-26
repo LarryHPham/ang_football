@@ -20,7 +20,7 @@
             (tabSelected)="scheduleTab($event)"
             (selectedKeyFilter)="filterDropdown($event)"></schedules>
         <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        <!-- <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" [scope]="scope"></standings-module> -->
+        <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
         <season-stats-module *ngIf="seasonStatsData" [pageParams]="pageParams" [data]="seasonStatsData"></season-stats-module>
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
         <!-- <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId" [scope]="scope"></comparison-module> -->
