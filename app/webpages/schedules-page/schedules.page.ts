@@ -72,10 +72,20 @@ export class SchedulesPage implements OnInit{
 
     }
 
+    resetDropdown1(){
+      this.scheduleFilter1 = null;
+      this.selectedFilter1 = null;
+    }
+    resetDropdown2(){
+      this.scheduleFilter2 = null;
+      this.selectedFilter2 = null;
+    }
   //grab tab to make api calls for post of pre event table
   private scheduleTab(tab) {
     this.isFirstRun = 0;
     this.initialPage = 1;
+    // this.resetDropdown1();
+    this.resetDropdown2();
     if(tab == 'Upcoming Games'){
       this.eventStatus = 'pregame';
       this.selectedTabKey = this.eventStatus;
@@ -89,27 +99,6 @@ export class SchedulesPage implements OnInit{
       this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
     }
-    // Uncomment if we want to enable URL changing when switching tabs.
-    // However! with the way the scroll-to-top is set up, it will move the
-    // page to the top each time the tab is changed, which QA doesn't want.
-    // if ( this.initialTabKey != this.selectedTabKey ) {
-    //   var navigationParams = {
-    //     pageNum: 1,
-    //     tab: this.selectedTabKey
-    //   };
-
-    //   var teamName = this.params.get('teamName');
-    //   var teamId = this.params.get('teamId');
-
-    //   if(teamName){
-    //     navigationParams['teamName'] = teamName;
-    //   }
-    //   if(teamId){
-    //     navigationParams['teamId'] = teamId;
-    //   }
-    //   var navigationPage = teamName ? 'Schedules-page-team-tab' : 'Schedules-page-league-tab';
-    //   this._router.navigate([navigationPage, navigationParams]);
-    // }
   }
 
   private getSchedulesData(status, pageNum, year?, week?){
@@ -141,12 +130,12 @@ export class SchedulesPage implements OnInit{
           if(status == 'pregame'){
             this.scheduleFilter1=null;
           }else{
-            if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-              this.scheduleFilter1 = schedulesData.seasons;
-              if(this.selectedFilter1 == null){
-                this.schedulesData.seasons['data'][0].key;
-              }
+            this.scheduleFilter1 = schedulesData.seasons;
+            if(this.selectedFilter1 == null){
+              this.selectedFilter1 = this.schedulesData.seasons['data'][0].key;
             }
+            // if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            // }
           }
           this.tabData = schedulesData.tabs;
         }else if(this.schedulesData == null){
@@ -185,12 +174,12 @@ export class SchedulesPage implements OnInit{
           if(status == 'pregame'){
             this.scheduleFilter1=null;
           }else{
-            if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-              this.scheduleFilter1 = schedulesData.seasons;
-              if(this.selectedFilter1 == null && this.selectedFilter1 != schedulesData.seasons.data[0].key){
-                this.selectedFilter1 = this.schedulesData.seasons.data[0].key;
-              }
+            this.scheduleFilter1 = schedulesData.seasons;
+            if(this.selectedFilter1 == null && this.selectedFilter1 != schedulesData.seasons.data[0].key){
+              this.selectedFilter1 = this.schedulesData.seasons.data[0].key;
             }
+            // if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            // }
           }
           if(this.scheduleFilter2 == null){
             this.scheduleFilter2 = schedulesData.weeks;
@@ -212,12 +201,13 @@ export class SchedulesPage implements OnInit{
   private filterDropdown(filter){
     let tabCheck = 0;
     if(this.eventStatus == 'postgame'){
-      tabCheck = 1;
+      tabCheck = 0;
     }
     if(this.isFirstRun > tabCheck){
       var teamId = this.params.params['teamId'];
       let filterChange = false;
       if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+        this.resetDropdown2();
         this.selectedFilter1 = filter.key;
         filterChange = true;
       }

@@ -141,14 +141,14 @@ export class DeepDivePage implements OnInit{
       }
     }
     changeScope($event) {
-      var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
+      var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
       let relPath = this.getRelativePath(this._router);
       if(partnerHome){
-        this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partnerId:GlobalSettings.getHomeInfo().partnerName}]);
-        window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
+        this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partner_id:GlobalSettings.getHomeInfo().partnerName}]);
+        // window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
       }else{
         this._router.navigate([relPath+'Default-home',{scope:$event.toLowerCase()}]);
-        window.location.pathname = "/"+$event.toLowerCase();
+        // window.location.pathname = "/"+$event.toLowerCase();
       }
 
       // if($event == this.changeScopeVar){
