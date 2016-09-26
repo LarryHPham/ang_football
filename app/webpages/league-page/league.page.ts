@@ -325,7 +325,7 @@ export class LeaguePage implements OnInit {
         limit = 3;
       }
       if(typeof year == 'undefined'){
-        year == new Date().getFullYear();
+        year = new Date().getFullYear();
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame' || status == 'created'){
