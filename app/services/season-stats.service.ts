@@ -114,7 +114,6 @@ export class SeasonStatsService {
       var strYear = year.toString();
       seasonStatTabs.push(this.getTabData(strYear, data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, year == curYear,scope));
     }
-    console.log("strYear",strYear);
     //Load "Career Stats" data
     seasonStatTabs.push(this.getTabData("Career", data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, null, scope));
     return {
