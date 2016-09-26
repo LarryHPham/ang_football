@@ -277,7 +277,7 @@ export class PlayerPage implements OnInit {
     private filterDropdown(filter) {
         let tabCheck = 0;
         if (this.eventStatus == 'postgame') {
-            tabCheck = 1;
+            tabCheck = -1;
         }
         if (this.isFirstRun > tabCheck) {
             this.selectedFilter1 = filter.key;
@@ -293,9 +293,7 @@ export class PlayerPage implements OnInit {
             if (status == 'pregame') {
                 this.scheduleFilter1 = null;
             } else {
-                if (this.scheduleFilter1 == null) {// only replaces if the current filter is not empty
-                    this.scheduleFilter1 = schedulesData.seasons;
-                }
+              this.scheduleFilter1 = schedulesData.seasons;
             }
             this.schedulesData = schedulesData;
         }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
