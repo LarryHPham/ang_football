@@ -356,25 +356,30 @@ export class ProfileHeaderService {
     }
     //PRO
     else {
-      description = headerData.playerFullName + " started his " +
-                    this.sportLeagueAbbrv + " career in " +
-                    headerData.entryDate + " for the " +
-                    fullTeamName + ", accumulating " +
-                    formattedExperience + " in the " +
-                    this.sportLeagueAbbrv + ". " +
-                    headerData.playerFirstName + " was born in " +
-                    formattedBirthlocation + ", on " +
-                    formattedBirthDate + ", and is " +
-                    formattedAge;
-
-                    if (formattedHeight != "N/A") {
-                      description = description + ", with a height of " + formattedHeight;
-                    }
-                    if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighing in at " + formattedWeight + " pounds";
-                    }
-                    description = description + ".";
-
+      description = headerData.playerFullName + " started his ";
+        if(this.sportLeagueAbbrv != "N/A"){
+          description += this.sportLeagueAbbrv + " career ";
+        }
+        if(headerData.entryDate != "N/A"){
+          description += 'in ' + headerData.entryDate
+        }
+        if(fullTeamName != "N/A"){
+          description += " for the " + fullTeamName;
+        }
+        if(formattedExperience != "N/A"){
+          description += ", accumulating " + formattedExperience + " in the " + this.sportLeagueAbbrv + ". ";
+        }
+        description += headerData.playerFirstName
+        if(formattedBirthDate != "N/A"){
+          description += " was born in " + formattedBirthlocation + ", on " + formattedBirthDate + ", and is " + formattedAge;
+        }
+        if (formattedHeight != "N/A") {
+          description = description + ", with a height of " + formattedHeight;
+        }
+        if ( formattedWeight != "N/A" ) {
+          description = description + " and weighing in at " + formattedWeight + " pounds";
+        }
+        description = description + ".";
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
         profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),

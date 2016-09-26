@@ -187,7 +187,6 @@ export class PlayerPage implements OnInit {
                 this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
                 this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
 
-                this.setupTeamProfileData();
                 this.dailyUpdateModule(this.pageParams.playerId);
                 if (this.scope.toLocaleLowerCase() == "nfl") {
                     this.getFantasyData(this.pageParams.playerId);
@@ -207,6 +206,7 @@ export class PlayerPage implements OnInit {
                 /*** Keep Up With Everything [Player Name] ***/
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
                 this.setupSeasonstatsData();
                 this.setupComparisonData();
                 /*** Other [League Name] Content You May Love ***/
@@ -364,20 +364,6 @@ export class PlayerPage implements OnInit {
                 err => {
                     console.log("Error getting image data" + err);
                 });
-    }
-
-    //This gets team-specific data such as
-    // conference and division
-    private setupTeamProfileData() {
-        this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
-            data => {
-                var teamFullName = data.headerData.teamMarket + ' ' + data.teamName;
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, teamFullName);
-            },
-            err => {
-                console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
-            }
-        );
     }
 
     private standingsTabSelected(tabData:Array<any>) {
