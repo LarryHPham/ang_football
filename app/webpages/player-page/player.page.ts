@@ -399,7 +399,6 @@ export class PlayerPage implements OnInit {
         this._lolService.getListOfListsService(params, "player", "module")
             .subscribe(
                 listOfListsData => {
-                  console.log(listOfListsData);
                   if(listOfListsData != null){
                     this.listOfListsData = listOfListsData.listData;
                   }
