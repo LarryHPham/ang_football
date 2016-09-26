@@ -1,4 +1,4 @@
-import {Component, AfterViewChecked, OnInit} from '@angular/core';
+import {Component, AfterViewChecked, OnInit, ElementRef} from '@angular/core';
 import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES, Router} from '@angular/router-deprecated';
 
 import {GlobalFunctions} from "../global/global-functions";
@@ -268,7 +268,7 @@ export class AppComponent implements OnInit{
   public shiftContainer:string;
   public hideHeader: boolean;
   private isPartnerZone:boolean = false;
-  constructor(private _params: RouteParams,private _partnerData: PartnerHeader){
+  constructor(private _params: RouteParams,private _partnerData: PartnerHeader, private _el:ElementRef){
     this.hideHeader = GlobalSettings.getHomeInfo().hide;
     if(window.location.hostname.split(".")[0].toLowerCase() == "football" && GlobalSettings.getHomeInfo().isSubdomainPartner){
         this.partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
@@ -360,24 +360,24 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-    if(jQuery(".ddto-left-rail").length == 0) {
-      var script = document.createElement("script");
-      script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
-      document.head.appendChild(script);
-    }
-    else {
-      jQuery(".ddto-left-rail").remove();
-      jQuery(".ddto-right-rail").remove();
-      var script = document.createElement("script");
-      script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
-      document.head.appendChild(script);
-    }
+    if(window.innerWidth > 1345){
+      if(this._el.nativeElement.getElementByClassName("ddto-left-rail").length == 0) {
+        var script = document.createElement("script");
+        script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+        document.head.appendChild(script);
+      }
+      else {
+        this._el.nativeElement.getElementByClassName("ddto-left-rail").remove();
+        this._el.nativeElement.getElementByClassName("ddto-right-rail").remove();
+        var script = document.createElement("script");
+        script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+        document.head.appendChild(script);
+      }
       this.shiftContainer = this.getHeaderHeight() + 'px';
       //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts
       window.addEventListener("load", this.setPageSize);
       // Initialize the first time app.webpage.ts loads
       this.setPageSize();
-
-
+    }
   }
 }
