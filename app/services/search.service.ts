@@ -108,8 +108,9 @@ export class SearchService{
 
             //generate route for team
             let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            console.log(partnerScope);
             if(partnerScope.isPartner && item.scope != null && !partnerScope.isSubdomainPartner){
-              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
+              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partner_id:partnerScope.partnerName});
             }else{
               route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
