@@ -137,7 +137,6 @@ export class SearchService{
             }
             count++;
             let item = playerResults[i];
-            console.log(item);
             let playerName = item.playerName;
             let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
