@@ -473,8 +473,6 @@ export class LeaguePage implements OnInit {
             this.currentBoxScores = currentBoxScores;
 
         })
-
-
     }
 
     private getImages(imageData) {
