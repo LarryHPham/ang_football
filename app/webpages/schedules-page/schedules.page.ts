@@ -90,7 +90,9 @@ export class SchedulesPage implements OnInit{
       this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus,this.initialPage, null, null);
     }else if(tab == 'Previous Games'){
-      this.resetDropdown1();
+      if(this.selectedFilter1 == null || this.selectedFilter1 == 'all'){
+        this.resetDropdown1();
+      }
       this.eventStatus = 'postgame';
       this.selectedTabKey = this.eventStatus;
       this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1,this.selectedFilter2);
