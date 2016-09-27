@@ -109,11 +109,10 @@ export class SearchService{
             //generate route for team
             let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null && !partnerScope.isSubdomainPartner){
-              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
+              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partner_id:partnerScope.partnerName});
             }else{
               route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
             }
-
             count++;
             searchArray.push({
                 title: teamName,
@@ -151,7 +150,7 @@ export class SearchService{
                 imageUrl: {
                     imageClass: "image-43",
                     mainImage: {
-                      imageUrl: GlobalSettings.getImageUrl(item.imageUrl),
+                      imageUrl: item.imageUrl != "No Image" ?GlobalSettings.getImageUrl(item.imageUrl): "/app/public/no-image.svg",
                       urlRouteArray: route,
                       hoverText: "<i class='fa fa-mail-forward search-text'></i>",
                       imageClass: "border-1"
