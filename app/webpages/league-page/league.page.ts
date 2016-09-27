@@ -237,7 +237,7 @@ export class LeaguePage implements OnInit {
                 this.getBoxScores(this.dateParam);
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope);
+                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
 
                 this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
 
@@ -496,13 +496,13 @@ export class LeaguePage implements OnInit {
 
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module
-        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
+        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile);
     }
 
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
       this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      }, 5);
+      }, 5 , this.dateParam.profile);
     }
 
     private positionDropdown(event) {
