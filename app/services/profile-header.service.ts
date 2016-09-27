@@ -427,7 +427,6 @@ export class ProfileHeaderService {
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
-
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
@@ -441,7 +440,7 @@ export class ProfileHeaderService {
       division = headerData.divisionName.toString();
     }
     else {
-      division = headerData.conferenceName + " " + headerData.divisionName.toString().replace(headerData.conferenceName.toString(), "");
+      division = headerData.conferenceName + " " + GlobalFunctions.toTitleCase(headerData.divisionName.toString().replace(headerData.conferenceName.toString(), ""));
     }
     var description = "The " + fullTeamName +
                       venueForDescription +
