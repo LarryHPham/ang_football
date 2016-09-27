@@ -436,11 +436,17 @@ export class ProfileHeaderService {
       location = headerData.teamCity + ", " + GlobalFunctions.stateToAP(headerData.teamState);
     }
     var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
-
+    var division = "";
+    if (headerData.divisionName.toString() == headerData.conferenceName.toString()) {
+      division = headerData.divisionName.toString();
+    }
+    else {
+      division = headerData.conferenceName + " " + headerData.divisionName.toString().replace(headerData.conferenceName.toString(), "");
+    }
     var description = "The " + fullTeamName +
                       venueForDescription +
                       " located in " + location + ". " + headerData.teamName +
-                      " are part of the " + headerData.conferenceName + " " + headerData.divisionName + ".";
+                      " are part of the " + division + ".";
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
@@ -453,7 +459,7 @@ export class ProfileHeaderService {
       topDataPoints: [
         {
           label: "Division",
-          value: headerData.divisionName ? headerData.divisionName.toString() : null
+          value: division ? division : null
         },
         {
           label: "Rank",
