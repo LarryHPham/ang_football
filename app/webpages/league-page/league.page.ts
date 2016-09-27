@@ -471,7 +471,10 @@ export class LeaguePage implements OnInit {
         this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
             this.boxScoresData = boxScoresData;
             this.currentBoxScores = currentBoxScores;
+
         })
+
+
     }
 
     private getImages(imageData) {
