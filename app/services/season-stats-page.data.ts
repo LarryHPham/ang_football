@@ -143,7 +143,8 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
   }
 
   getDescription(stats, position, playerRouteText, scope) {
-    var description;
+    var description = ["No Data Availible for this Season"];
+    if (stats != null && stats.length > 0) {
     switch(position) {
       case "QB":
       if (stats.player_passing_yards) {
@@ -208,6 +209,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
       default:
           description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , stats[0].statType , " with " , Number(stats[1].stat).toFixed(0)  , " " , stats[1].statType, " and " , Number(stats[2].stat).toFixed(0)  , " " , stats[2].statType+"." ];
       }
+    }
     return description;
   }
 

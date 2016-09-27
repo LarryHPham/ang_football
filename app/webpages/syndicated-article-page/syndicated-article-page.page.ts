@@ -41,6 +41,7 @@ declare var moment;
 
 export class SyndicatedArticlePage{
   public partnerID: string;
+  checkPartner: boolean;
   public geoLocation:string;
 
   public widgetPlace: string = "widgetForPage";
@@ -73,6 +74,7 @@ export class SyndicatedArticlePage{
           this.partnerID = partnerID.partnerID;
           this.getPartnerHeader();
       });
+      this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
     }
 
     ngAfterViewInit(){
@@ -156,7 +158,7 @@ export class SyndicatedArticlePage{
 
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
-             
+
           });
 
     }

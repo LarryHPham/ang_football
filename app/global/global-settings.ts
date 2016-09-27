@@ -114,6 +114,11 @@ export class GlobalSettings {
         return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
     }
 
+    static getFantasyUrl():string {
+        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl
+    }
+
+
     static getNewsUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;
@@ -148,7 +153,7 @@ export class GlobalSettings {
       var isSubdomainPartner = /^football\./.test(hostname);
       //PLEASE REVISIT and change
       if(partnerPage && (name == '' || name == 'deep-dive')){
-        hide = true;
+        hide = false;
         isHome = true;
       }else if(!partnerPage && (name == '' || name == 'deep-dive')){
         hide = false;

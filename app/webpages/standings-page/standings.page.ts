@@ -20,11 +20,12 @@ import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
 @Component({
     selector: 'Standings-page',
     templateUrl: './app/webpages/standings-page/standings.page.html',
-    directives: [GlossaryComponent, SidekickWrapper, BackTabComponent, TitleComponent, StandingsComponent, LoadingComponent, ErrorComponent],
+    directives: [ResponsiveWidget, GlossaryComponent, SidekickWrapper, BackTabComponent, TitleComponent, StandingsComponent, LoadingComponent, ErrorComponent],
     providers: [StandingsService, ProfileHeaderService, Title],
 })
 

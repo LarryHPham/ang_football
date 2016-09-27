@@ -36,7 +36,10 @@
   &-adWrap{
     height: 50px;
     min-width: 320px;
-    max-width: 1440px;
+    max-width: 1024px;
+    @media @desktop-xl{
+      max-width: 1440px;
+    }
   }
   &-container1{
     height: auto;
@@ -202,7 +205,7 @@
 @media @desktop-xl{
   .deep-dive{
     .deep-dive-boxScore{
-      max-width: 640px;
+      //max-width: 640px;
     }
     min-width: 1440px;
     &-container2{

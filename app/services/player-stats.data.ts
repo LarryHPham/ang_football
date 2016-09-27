@@ -234,17 +234,19 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             tense = " had";
             temporalInfo = " in " + item.seasonId;
         }
-        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
+        let teamFullName = item.teamMarket + ' ' + item.teamName;
+        let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(teamFullName, playerFullName, item.playerId.toString());
         var playerLinkText = {
             route: playerRoute,
             text: item.playerFirstName+" "+item.playerLastName,
             class: 'text-heavy'
 
         }
-        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId.toString());
         var teamLinkText = {
             route: teamRoute,
-            text: item.teamName
+            text: teamFullName
         }
 
         function getTabDescription(tabActive){
@@ -257,27 +259,27 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                     description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " attempts with "+ item.stat2 +" Rushing Yards, " + item.stat3+ " Average and " + item.stat4 + " Touchdowns."],
                 },
                 Receiving:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Receptions "+  item.stat2+ " Targets " + item.stat3 + " Receiving Yards and " + item.stat4 + " Average."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Receptions, "+  item.stat2+ " Targets, " + item.stat3 + " Receiving Yards and " + item.stat4 + " Average."],
                 },
                 Defense:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Solo Tackles "+ item.stat2 +" Assists " + item.stat3+ " Total Tackles and " + item.stat5 + " Sacks."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Solo Tackles, "+ item.stat2 +" Assists, " + item.stat3+ " Total Tackles and " + item.stat5 + " Sacks."],
                 },
                 Special:{
 
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
                 Kicking:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made "+ item.stat2 +" Field Goal Average Distance " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
 
                 },
                 Punting:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts "+ item.stat2 +" Yards " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Punts, "+ item.stat2 +" Yards, " + item.stat3+ " Average and " + item.stat4 + " Net Punting Yards."],
 
 
                 },
                 Returning:{
-                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt "+ item.stat2 +" Yards " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
+                    description:[item.playerFirstName + " "+ item.playerLastName + " has a total of " + item.stat1 + " Kicking Attempt, "+ item.stat2 +" Yards, " + item.stat3+ " Kicking Average and " + item.stat5 + " Punting Returns."],
 
                 }
 
@@ -399,12 +401,14 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
         var link: Array<any> = null;
         var imageUrl: string = null;
         var presentColumn;
+        let teamFullName = item.teamMarket + ' ' + item.teamName;
+        let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
         function tabCellData(columnType) {
             return{
                 "name":{
                     display : item.playerFirstName + " " + item.playerLastName,
                     sort : item.playerLastName + ', ' + item.playerFirstName,
-                    link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                    link : VerticalGlobalFunctions.formatPlayerRoute(teamFullName, playerFullName, item.playerId),
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
                     bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
                     bottomStat2:item.stat8 != null ? item.stat8: 'N/A',

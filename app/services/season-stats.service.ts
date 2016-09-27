@@ -119,7 +119,7 @@ export class SeasonStatsService {
     return {
       tabs: seasonStatTabs,
       profileName: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName,
-      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), strYear),
+      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), curYear.toString()),
       pageRouterLink: this.getLinkToPage(Number(playerInfo[0].playerId), playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName),
       playerInfo: playerInfo,
       stats: stats
@@ -254,6 +254,10 @@ export class SeasonStatsService {
   }
 
   static getCarouselData(playerInfo: SeasonStatsPlayerData, stats, longSeasonName: string, currentTab): SliderCarouselInput {
+    var date = new Date();
+    if (currentTab == "Current Season") {
+      currentTab = date.getFullYear();
+    }
     if ( !playerInfo[0] ) {
       return null;
     }
@@ -314,7 +318,7 @@ export class SeasonStatsService {
           description = [playerRouteText, " has ", Number(stats[0].stat).toFixed(0) , " " , "Total Punts" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Gross Punting Yards." , " His Longest Punt was " , Number(stats[2].stat).toFixed(0)  , " Yards. "];
           break;
       case "RB":
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[3].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[4].stat).toFixed(0)  , " " , "Attempts." ];
+          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Average Yards Per Carry" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Attempts." ];
           break;
       case "RS":
           description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , SeasonStatsService.getKeyDisplayTitle(stats[0].statType, scope) , " with " , Number(stats[1].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[1].statType, scope) , " and " , Number(stats[2].stat).toFixed(0)  , " " , SeasonStatsService.getKeyDisplayTitle(stats[2].statType, scope)+"." ];

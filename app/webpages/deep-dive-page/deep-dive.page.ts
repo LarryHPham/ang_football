@@ -1,4 +1,5 @@
 import {Component, OnInit, Input, NgZone} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {CarouselDiveModule} from '../../fe-core/modules/carousel-dive/carousel-dive.module';
 import {DeepDiveService} from '../../services/deep-dive.service';
 import {SidekickWrapper} from '../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component';
@@ -41,7 +42,7 @@ declare var jQuery: any;
       DeepDiveBlock4,
       SideScroll
     ],
-    providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader],
+    providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader, Title],
 })
 
 export class DeepDivePage implements OnInit{
@@ -71,6 +72,7 @@ export class DeepDivePage implements OnInit{
 
     constructor(
       private _router:Router,
+      private _title: Title,
       private _deepDiveData: DeepDiveService,
       private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
@@ -83,7 +85,7 @@ export class DeepDivePage implements OnInit{
           this.changeScopeVar = this.scope;
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
-          if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner) {
+          if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
             let relPath = this.getRelativePath(_router);
               //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
               window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
@@ -94,6 +96,7 @@ export class DeepDivePage implements OnInit{
           }else{
             this.getGeoLocation();
           }
+          this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
       });
     }
 
@@ -138,14 +141,14 @@ export class DeepDivePage implements OnInit{
       }
     }
     changeScope($event) {
-      var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
+      var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
       let relPath = this.getRelativePath(this._router);
       if(partnerHome){
-        this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partnerId:GlobalSettings.getHomeInfo().partnerName}]);
-        window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
+        this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partner_id:GlobalSettings.getHomeInfo().partnerName}]);
+        // window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
       }else{
         this._router.navigate([relPath+'Default-home',{scope:$event.toLowerCase()}]);
-        window.location.pathname = "/"+$event.toLowerCase();
+        // window.location.pathname = "/"+$event.toLowerCase();
       }
 
       // if($event == this.changeScopeVar){

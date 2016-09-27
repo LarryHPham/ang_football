@@ -293,29 +293,29 @@ export class LeaguePage implements OnInit {
           this.getSchedulesData(this.eventStatus, null);
         }else if(tab == 'Previous Games'){
           this.eventStatus = 'postgame';
-          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
         }else{
           this.eventStatus = 'postgame';
-          this.selectedFilter2 = '1';
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     }
     private filterDropdown(filter){
         let filterChange = false;
-        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key){
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key && this.scheduleFilter1 != null){
           this.selectedFilter1 = filter.key;
+          this.selectedFilter2 = this.scheduleFilter2['data'][0].key;//reset weeks to first in dropdown
           filterChange = true;
         }
-        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key){
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key && this.scheduleFilter2 != null){
           this.selectedFilter2 = filter.key;
           filterChange = true;
         }
         if(this.selectedFilter2 != null && this.selectedFilter1 == null){
           this.selectedFilter1 = new Date().getFullYear().toString();
         }
-
-        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+        if(filterChange){
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+        }
     }
 
     //api for Schedules
@@ -325,23 +325,18 @@ export class LeaguePage implements OnInit {
         limit = 3;
       }
       if(typeof year == 'undefined'){
-        year == new Date().getFullYear();
-      }
-      if(status == 'pregame'){
-        this.selectedFilter1 = null;
+        year = new Date().getFullYear();
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-        if(status == 'pregame'){
-          this.scheduleFilter1=null;
+        if(status == 'pregame' || status == 'created'){
+          this.scheduleFilter1 = null;
         }else{
           if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
         if(schedulesData.carData.length > 0){
-          if(this.scheduleFilter2 == null){
-            this.scheduleFilter2 = schedulesData.weeks;
-          }
+          this.scheduleFilter2 = schedulesData.weeks;
         }else{
           this.scheduleFilter2 = null;
         }
@@ -522,7 +517,18 @@ export class LeaguePage implements OnInit {
         var matches = this.checkMatchingTabs(event);
 
         this.globalMVPPosition = event.position;
-
+        var date = new Date;
+        var season;
+        var compareDate = new Date('09 15 ' + date.getFullYear());
+        if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
+          season = date.getFullYear();
+        }
+        else if (date.getMonth() > compareDate.getMonth()) {
+          season = date.getFullYear();
+        }
+        else {
+          season = (date.getFullYear() - 1);
+        }
         if(matches != null){
           this.positionParams = {
             scope:  this.scope, //TODO change to active scope
@@ -532,7 +538,7 @@ export class LeaguePage implements OnInit {
             ordering: 'asc',
             perPageCount: this.listMax,
             pageNumber: 1,
-            season: '2015'
+            season: season
           }
           this.getMVPService(matches, this.positionParams);
         }
@@ -544,7 +550,6 @@ export class LeaguePage implements OnInit {
 
       let localPosition = event.position;
       let listName = event.tab.tabDataKey;
-
       if(event.position != this.globalMVPPosition && this.positionData != []){
         this.positionData[0].isLoaded = false;
         return this.positionData[0];

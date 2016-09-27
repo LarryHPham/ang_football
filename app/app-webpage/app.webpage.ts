@@ -1,4 +1,4 @@
-import {Component, AfterViewChecked, OnInit} from '@angular/core';
+import {Component, AfterViewChecked, OnInit, ElementRef} from '@angular/core';
 import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES, Router} from '@angular/router-deprecated';
 
 import {GlobalFunctions} from "../global/global-functions";
@@ -43,6 +43,7 @@ import {GlobalSettings} from "../global/global-settings";
 //FOR DEEP DIVE
 import {SyndicatedArticlePage} from "../webpages/syndicated-article-page/syndicated-article-page.page";
 import {DeepDivePage} from "../webpages/deep-dive-page/deep-dive.page";
+import {PartnerHeader} from "../global/global-service";
 declare var jQuery: any;
 
 @Component({
@@ -57,7 +58,7 @@ declare var jQuery: any;
         RouterOutlet,
         ROUTER_DIRECTIVES
     ],
-    providers: [ArticleDataService, HeadlineDataService],
+    providers: [PartnerHeader, ArticleDataService, HeadlineDataService],
     pipes:[SanitizeHtml, SanitizeStyle]
 })
 
@@ -261,11 +262,18 @@ declare var jQuery: any;
 ])
 
 export class AppComponent implements OnInit{
+  public partnerID: string;
+  public partnerData: Object;
+  public partnerScript:string;
   public shiftContainer:string;
   public hideHeader: boolean;
   private isPartnerZone:boolean = false;
-  constructor(private _params: RouteParams){
+  constructor(private _params: RouteParams,private _partnerData: PartnerHeader, private _el:ElementRef){
     this.hideHeader = GlobalSettings.getHomeInfo().hide;
+    if(window.location.hostname.split(".")[0].toLowerCase() == "football" && GlobalSettings.getHomeInfo().isSubdomainPartner){
+        this.partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
+        this.getPartnerHeader();
+    }
   }
 
   getHeaderHeight(){
@@ -275,6 +283,17 @@ export class AppComponent implements OnInit{
     }
   }
 
+  getPartnerHeader(){//Since it we are receiving
+    if(this.partnerID != null){
+      this._partnerData.getPartnerData(this.partnerID)
+        .subscribe(
+          partnerScript => {
+            this.partnerData = partnerScript;
+            this.partnerScript = this.partnerData['results'].header.script;
+          }
+        );
+    }
+  }
 
   ngDoCheck(){
     var checkHeight = this.getHeaderHeight();
@@ -341,24 +360,24 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-    if(jQuery(".ddto-left-rail").length == 0) {
-      var script = document.createElement("script");
-      script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
-      document.head.appendChild(script);
-    }
-    else {
-      jQuery(".ddto-left-rail").remove();
-      jQuery(".ddto-right-rail").remove();
-      var script = document.createElement("script");
-      script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
-      document.head.appendChild(script);
-    }
+    if(window.innerWidth > 1345){
+      if(jQuery(".ddto-left-rail").length == 0) {
+        var script = document.createElement("script");
+        script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+        document.head.appendChild(script);
+      }
+      else {
+        jQuery(".ddto-left-rail").remove();
+        jQuery(".ddto-right-rail").remove();
+        var script = document.createElement("script");
+        script.src = '//w1.synapsys.us/widgets/deepdive/rails/rails_2-0.js?selector=.web-container&adMarginTop=65&vertical=nfl';
+        document.head.appendChild(script);
+      }
       this.shiftContainer = this.getHeaderHeight() + 'px';
       //  Need this for when you navigate to new page.  Load event is triggered from app.domain.ts
       window.addEventListener("load", this.setPageSize);
       // Initialize the first time app.webpage.ts loads
       this.setPageSize();
-
-
+    }
   }
 }
