@@ -465,7 +465,6 @@ export class LeaguePage implements OnInit {
 
     //api for BOX SCORES
     private getBoxScores(dateParams?) {
-      console.log('1. league-page, getBoxScores - dateParams - ',dateParams);
         if ( dateParams != null ) {
             this.dateParam = dateParams;
         }
