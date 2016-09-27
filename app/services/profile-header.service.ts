@@ -288,22 +288,21 @@ export class ProfileHeaderService {
     else {
       formattedExperience = headerData.experience + " years"
     }
-
+    var playerClass = headerData.class ? " " + headerData.class : "";
     var description;
     //NCAA - specific data points for NCAA
     if ( this.scope != this.sportLeagueAbbrv.toLowerCase() ) {
-      description = headerData.playerFullName + " a " +
-                    headerData.class + " " +
+      description = headerData.playerFullName + ", No. " + headerData.jerseyNumber + ", is a" +
+                    playerClass + " " +
                     headerData.position + " for the " +
-                    fullTeamName + " is No. " +
-                    headerData.jerseyNumber;
+                    fullTeamName;
 
                     if (formattedHeight != "N/A") {
-                        description = description + " and stands at " +
+                        description = description + ". He stands at " +
                         formattedHeight + " ";
                     }
                     if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighs in at " + formattedWeight + " pounds";
+                      description = description + " and weighs " + formattedWeight + " pounds";
                     }
                     description = description + ".";
 
@@ -358,20 +357,19 @@ export class ProfileHeaderService {
     else {
       description = headerData.playerFullName + " started his " +
                     this.sportLeagueAbbrv + " career in " +
-                    headerData.entryDate + " for the " +
-                    fullTeamName + ", accumulating " +
+                    headerData.entryDate + ", accumulating " +
                     formattedExperience + " in the " +
-                    this.sportLeagueAbbrv + ". " +
+                    this.sportLeagueAbbrv + ". He currently plays for the " + fullTeamName + ". " +
                     headerData.playerFirstName + " was born in " +
                     formattedBirthlocation + ", on " +
                     formattedBirthDate + ", and is " +
-                    formattedAge;
+                    formattedAge + " years old";
 
                     if (formattedHeight != "N/A") {
-                      description = description + ", with a height of " + formattedHeight;
+                      description = description + ". With a height of " + formattedHeight;
                     }
                     if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighing in at " + formattedWeight + " pounds";
+                      description = description + ", " + headerData.playerFirstName + " weighs in at " + formattedWeight + " pounds";
                     }
                     description = description + ".";
 
@@ -428,20 +426,25 @@ export class ProfileHeaderService {
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
-
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
     if ( headerData.teamCity && headerData.teamState ) {
-      location = headerData.teamCity + ", " + headerData.teamState;
+      location = headerData.teamCity + ", " + GlobalFunctions.stateToAP(headerData.teamState);
     }
-    var venueForDescription = headerData.venueName ? " who play in " + headerData.venueName : ' ';
-
-    var description = "The " + fullTeamName + ", " +
+    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
+    var division = "";
+    if (headerData.divisionName.toString() == headerData.conferenceName.toString()) {
+      division = headerData.divisionName.toString();
+    }
+    else {
+      division = headerData.conferenceName + " " + GlobalFunctions.toTitleCase(headerData.divisionName.toString().replace(headerData.conferenceName.toString(), ""));
+    }
+    var description = "The " + fullTeamName +
                       venueForDescription +
-                      " located in " + location + ", " +
-                      " are part of the " + headerData.conferenceName + " " + headerData.divisionName + ".";
+                      " located in " + location + ". " + headerData.teamName +
+                      " are part of the " + division + ".";
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
@@ -454,7 +457,7 @@ export class ProfileHeaderService {
       topDataPoints: [
         {
           label: "Division",
-          value: headerData.divisionName ? headerData.divisionName.toString() : null
+          value: division ? division : null
         },
         {
           label: "Rank",

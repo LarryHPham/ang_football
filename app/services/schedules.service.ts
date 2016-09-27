@@ -72,7 +72,7 @@ export class SchedulesService {
   getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?, week?){
     //Configure HTTP Headers
     var headers = this.setToken();
-
+    profile = profile == 'league'? 'league':'team';// since player profile is the same call as team
     var callURL = this._apiUrl+'/schedule/'+profile;
     if(typeof year == 'undefined'){
       year = null;
@@ -149,7 +149,7 @@ export class SchedulesService {
     .subscribe( data => {
       var gamesData = data.data != null? data.data.games:null;
       var scheduleData;
-        let isTeamProfilePage = profile == 'league' ? false :true;
+        let isTeamProfilePage = profile == 'league' || profile == 'player'? false :true;
         var tableData = this.setupTableData(eventStatus, year, gamesData, teamId, limit, isTeamProfilePage);
         var tabData = [
           {display: 'Upcoming Games', data:'pregame', disclaimer:'Times are displayed in ET and are subject to change', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'pregame'), eventTab)},
@@ -293,7 +293,7 @@ export class SchedulesService {
     if ( maxRows !== undefined && rows.length > maxRows) {
       rows = rows.slice(0, maxRows);
     }
-    var currentTeamProfile = teamId != null ? teamId : null;
+    var currentTeamProfile = teamId != null && isTeamProfilePage? teamId : null;
     //TWO tables are to be made depending on what type of tabs the use is click on in the table
     if(eventStatus == 'pregame'){
       let tableName = this.formatGroupName(year,eventStatus);
@@ -305,6 +305,7 @@ export class SchedulesService {
       var dateObject = {};
 
       let tableName = this.formatGroupName(year,eventStatus);
+
       if(typeof teamId == 'undefined'){
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         if(rows.length > 0){
