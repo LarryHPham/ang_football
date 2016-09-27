@@ -173,6 +173,13 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
         classyear = '';
         a = '';
 }
+var salary; // if college => do not show salary
+  if ( val.class ) {
+    salary = '';
+  }
+  else {
+    salary = "<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>";
+  }
 
 
     return SliderCarousel.convertToCarouselItemType1(index, {
@@ -184,7 +191,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
           playerLinkText,
           ", ",a,"<span class='text-heavy'>"+ classyear + val.playerPosition, "</span>",'for the ',
           teamLinkText,
-          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" lbs.<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>"
+          'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" lbs. " + salary
       ],
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),
