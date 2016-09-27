@@ -288,22 +288,21 @@ export class ProfileHeaderService {
     else {
       formattedExperience = headerData.experience + " years"
     }
-
+    var playerClass = headerData.class ? " " + headerData.class : "";
     var description;
     //NCAA - specific data points for NCAA
     if ( this.scope != this.sportLeagueAbbrv.toLowerCase() ) {
-      description = headerData.playerFullName + " a " +
-                    headerData.class + " " +
+      description = headerData.playerFullName + ", No. " + headerData.jerseyNumber + ", is a" +
+                    playerClass + " " +
                     headerData.position + " for the " +
-                    fullTeamName + " is No. " +
-                    headerData.jerseyNumber;
+                    fullTeamName;
 
                     if (formattedHeight != "N/A") {
-                        description = description + " and stands at " +
+                        description = description + ". He stands at " +
                         formattedHeight + " ";
                     }
                     if ( formattedWeight != "N/A" ) {
-                      description = description + " and weighs in at " + formattedWeight + " pounds";
+                      description = description + " and weighs " + formattedWeight + " pounds";
                     }
                     description = description + ".";
 
@@ -427,7 +426,6 @@ export class ProfileHeaderService {
 
   convertToTeamProfileHeader(data: TeamProfileData): ProfileHeaderData {
     var headerData = data.headerData;
-
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
 
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
@@ -441,7 +439,7 @@ export class ProfileHeaderService {
       division = headerData.divisionName.toString();
     }
     else {
-      division = headerData.conferenceName + " " + headerData.divisionName.toString().replace(headerData.conferenceName.toString(), "");
+      division = headerData.conferenceName + " " + GlobalFunctions.toTitleCase(headerData.divisionName.toString().replace(headerData.conferenceName.toString(), ""));
     }
     var description = "The " + fullTeamName +
                       venueForDescription +
