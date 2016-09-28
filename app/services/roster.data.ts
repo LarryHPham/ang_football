@@ -178,7 +178,7 @@ var salary; // if college => do not show salary
     salary = '';
   }
   else {
-    salary = "<span class='nfl-only'> and making a salary of "+ playerSalary + "</span>";
+    salary = "<span class='nfl-only'> and is making a salary of "+ playerSalary + "</span>";
   }
 
 
