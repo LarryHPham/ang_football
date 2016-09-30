@@ -225,6 +225,11 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       isNumericType: true,
       key: "wt"
     },{
+      headerValue: "Class",
+      columnClass: "data-column",
+      isNumericType: true,
+      key: "class"
+    },{
       headerValue: "Age",
       columnClass: "data-column age",
       isNumericType: true,
@@ -297,6 +302,11 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       case "wt":
         display = item.playerWeight != null ? item.playerWeight + " lbs." : null;
         sort = item.playerWeight != null ? Number(item.playerWeight) : null;
+        break;
+
+      case "class":
+        display = item.class != null ? item.class : null;
+        sort = item.class != null ? item.class : null;
         break;
 
       case "age":
