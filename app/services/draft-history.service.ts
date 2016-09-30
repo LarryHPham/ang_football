@@ -206,12 +206,19 @@ export class MLBDraftHistoryService extends DraftHistoryService {
         else {
         location = GlobalFunctions.toTitleCase(val.playerCity) + ', ' + GlobalFunctions.stateToAP(val.playerState);
         }
+        var college;
+        if (val.playerCollegeAbbreviation != null && val.playerCollegeAbbreviation != "") {
+          college = val.playerCollegeAbbreviation + " " + val.playerCollege;
+        }
+        else {
+          college = val.playerCollege;
+        }
         var carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: false,
           backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.playerBackground),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
-          description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', val.playerCollege],
+          description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', college],
           dataValue: val.playerOverallPick + " Overall",
           dataLabel: "Draft Round " + val.playerRound,
           circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
