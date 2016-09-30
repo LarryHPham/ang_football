@@ -316,7 +316,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
     if ( column.key == "opp" ) {
         hdrColumnKey = this.curTeam == item.team1Id ? "away" : "home";
     }
-
+    let isNCAA = item.leagueAbbreviation.toLowerCase() == 'nfl' ? false : true;
     switch (hdrColumnKey) {
       case "date":
       let date320 = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format("MM/DD");
