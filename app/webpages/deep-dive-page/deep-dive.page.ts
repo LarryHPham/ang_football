@@ -55,6 +55,7 @@ export class DeepDivePage implements OnInit{
     partnerData:any;
     profileName:string;
     geoLocation:string;
+    isPartner: string = "";
 
     sideScrollData: any;
     scrollLength: number;
@@ -93,6 +94,7 @@ export class DeepDivePage implements OnInit{
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
+            this.isPartner = "partner";
           }else{
             this.getGeoLocation();
           }
