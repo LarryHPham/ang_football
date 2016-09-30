@@ -144,7 +144,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
 
   getDescription(stats, position, playerRouteText, scope) {
     var description = ["No Data Availible for this Season"];
-    if (stats != null && stats.length > 0) {
+    if (stats != null) {
     switch(position) {
       case "QB":
       if (stats.player_passing_yards) {
@@ -158,6 +158,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
       case "DL":
       case "DT":
       case "LB":
+      case "OLB":
       case "S":
       if (stats.player_defense_assists) {
           description = [playerRouteText, " has a total of ", Number(stats.player_defense_assists).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats.player_defense_total_tackles).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats.player_defense_sacks).toFixed(0)  , " " , "Total Sacks." ];
@@ -265,6 +266,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
       case "DL":
       case "DT":
       case "LB":
+      case "OLB":
       case "S":
     this.columns = [{
       headerValue: "Year",

@@ -301,6 +301,7 @@ export class SeasonStatsService {
       case "DL":
       case "DT":
       case "LB":
+      case "OLB":
       case "S":
           description = [playerRouteText, " has a total of ", Number(stats[2].stat).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats[0].stat).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Total Sacks." ];
           break;
