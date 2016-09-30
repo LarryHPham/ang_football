@@ -48,11 +48,11 @@ export class TeamRosterPage implements OnInit {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.scope = parentParams.scope;
         this.pageParams.scope = this.scope;
+        this.getData();
     });
   }
 
   ngOnInit() {
-    this.getData();
   }
 
   getData(){
@@ -77,6 +77,6 @@ export class TeamRosterPage implements OnInit {
   }
 
   private setupRosterData() {
-    this.tabs = this._rosterService.initializeAllTabs(this.pageParams.teamId.toString(), this.pageParams.conference);
+    this.tabs = this._rosterService.initializeAllTabs(this.scope, this.pageParams.teamId.toString(), this.pageParams.conference);
   }
 }
