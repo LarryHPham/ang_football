@@ -253,4 +253,7 @@ export class PickTeamPage{
         })
       var sampleImage = "./app/public/placeholder-location.jpg";
     } //getData
+    ngOnInit(){
+        console.log(this.geoLocationState,"state");
+    }
 }

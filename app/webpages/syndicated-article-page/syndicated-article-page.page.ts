@@ -52,7 +52,8 @@ export class SyndicatedArticlePage{
   public imageData: Array<string>;
   public imageTitle: Array<string>;
   public copyright: Array<string>;
-    @Input() scope: string;
+  public scope: string;
+  private subRec;
   iframeUrl: any;
   constructor(
     private _params:RouteParams,
@@ -63,6 +64,8 @@ export class SyndicatedArticlePage{
     ){
       this.eventID = _params.get('eventID');
       this.articleType = _params.get('articleType');
+
+
       if (this.articleType == "story") {
         this.getDeepDiveArticle(this.eventID);
       }
@@ -70,11 +73,22 @@ export class SyndicatedArticlePage{
         this.getDeepDiveVideo(this.eventID);
       }
 
-      GlobalSettings.getParentParams(_router, partnerID => {
+      /*GlobalSettings.getParentParams(_router, partnerID => {
           this.partnerID = partnerID.partnerID;
           this.getPartnerHeader();
-      });
+      });*/
       this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+
+      GlobalSettings.getParentParams(_router, parentParams => {
+          this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
+          if (parentParams.partnerID != null) {
+              this.partnerID = parentParams.partnerID;
+              this.getPartnerHeader();
+          }else{
+              this.getGeoLocation();
+          }
+          //this.getArticles();
+      });
     }
 
     ngAfterViewInit(){
@@ -119,19 +133,24 @@ export class SyndicatedArticlePage{
     }
 
     getGeoLocation() {
-      var defaultState = 'ca';
+
+        var defaultState = 'ca';
         this._geoLocation.getGeoLocation()
             .subscribe(
                 geoLocationData => {
-                  this.geoLocation = geoLocationData[0].state;
-                  this.geoLocation = this.geoLocation.toLowerCase();
-                  this.getRecomendationData();
+                    this.geoLocation = geoLocationData[0].state;
+                    this.geoLocation = this.geoLocation.toLowerCase();
+                    this.callModules();
+
                 },
                 err => {
-                  this.geoLocation = defaultState;
-                  this.getRecomendationData();
+                    this.geoLocation = defaultState;
+                    this.callModules();
                 }
             );
+    }
+    callModules(){
+        this.getRecomendationData();
     }
 
     getPartnerHeader(){//Since it we are receiving
@@ -143,6 +162,7 @@ export class SyndicatedArticlePage{
             var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
             state = state.toLowerCase();
             this.geoLocation = state;
+
             this.getRecomendationData()
           }
         );
@@ -153,8 +173,8 @@ export class SyndicatedArticlePage{
 
     getRecomendationData(){
       var startNum=Math.floor((Math.random() * 49) + 1);
-        var state = 'KS'; //needed to uppoercase for ai to grab data correctly
-        this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
+       //needed to uppoercase for ai to grab data correctly
+        this.subRec= this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
 
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
@@ -162,10 +182,10 @@ export class SyndicatedArticlePage{
           });
 
     }
-    ngOnInit(){
-        this.getRecomendationData()
-
+    ngOnDestroy(){
+        this.subRec.unsubscribe();
     }
+
     formatDate(date) {
 
         return moment(date).format("MMMM DD, YYYY | h:mm A ")
