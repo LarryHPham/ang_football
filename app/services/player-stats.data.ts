@@ -114,7 +114,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "TD", value: "Rushing Touchdowns"},
                         {key: "YDS/G", value: "Yards per Game"},
                         {key: "FUM", value: "Rushing Fumbles"},
-                        {key: "1DN", value: ": Rushing First Downs"}
+                        {key: "1DN", value: "Rushing First Downs"}
                     ]
                 },
                 Receiving:{
