@@ -54,6 +54,7 @@ export class DeepDiveService {
 
   // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
   var callURL = this._apiUrl + '/articleBatch/';
+
   if(scope != null){
     callURL += scope;
   } else {
@@ -172,11 +173,9 @@ export class DeepDiveService {
     }
     //this is the sidkeick url
     var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
-      //console.log("url and data",callURL);
       return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
-
         return data;
       });
   }
@@ -323,6 +322,7 @@ export class DeepDiveService {
   transformToRecArticles(data){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
+
     var articleStackArray = [];
     var articles = [];
     var eventID = null;
@@ -337,6 +337,7 @@ export class DeepDiveService {
         var eventID = data['meta-data']['current']['eventID'];
       }
     }
+
     articles.forEach(function(val, index){
       var info = val.info;
       var date = moment(Number(info.dateline)*1000);
@@ -348,8 +349,10 @@ export class DeepDiveService {
           new_date: date,
           displayHeadline: info.displayHeadline,
         }
+
       articleStackArray.push(s);
     });
+
     return articleStackArray;
   }
 
