@@ -37,6 +37,7 @@
       [title]="'Position'"
       [mvpData]="positionData"
       [query]="positionParams"
+      [filter1]="filter1"
       (tabSelectedListener)="positionDropdown($event)"
       (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
     <responsive-widget *ngIf="pitcherData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>

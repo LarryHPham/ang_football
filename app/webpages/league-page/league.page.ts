@@ -141,6 +141,7 @@ export class LeaguePage implements OnInit {
     positionParams: any;
     positionData: Array<positionMVPTabData>;
     globalMVPPosition:any;
+    filter1:any;
 
     imageData:Array<any>;
     copyright:any;
@@ -243,6 +244,7 @@ export class LeaguePage implements OnInit {
 
                 //Initial position to display in MVP
                 this.globalMVPPosition = 'cb';
+                this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
                 this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
                 if ( this.positionData && this.positionData.length > 0 ) {
                   //default params
