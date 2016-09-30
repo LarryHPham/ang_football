@@ -256,6 +256,32 @@ export class VerticalGlobalFunctions {
     return weekDropdown;
   }
 
+  static getMVPdropdown(scope){
+    var sortOptions: Array<any> = [
+      {key: 'cb', value: 'CB'},
+      {key: 'db', value: 'DB'},
+      {key: 'de', value: 'DE'},
+      // {key: 'dl', value: 'DL'}, //only appears on ncaaf
+      {key: 'dt', value: 'DT'},
+      {key: 'k', value: 'K'},
+      {key: 'lb', value: 'LB'}, //only appears on ncaaf
+      {key: 'p', value: 'P'},
+      {key: 'qb', value: 'QB'},
+      {key: 'rb', value: 'RB'},
+      {key: 'rs', value: 'RS'},
+      // {key: 'saf', value: 'S'}, //only appears on ncaaf
+      {key: 'te', value: 'TE'},
+      {key: 'wr', value: 'WR'},
+    ];
+    if(scope == 'fbs' || scope == 'ncaaf'){
+      sortOptions.push({key: 'dl', value: 'DL'},{key: 'saf', value: 'S'});
+    }
+    sortOptions = sortOptions.sort(function(a, b) {
+      return a.value - b.value;
+    });
+    return sortOptions;
+  }
+
 
   /**
    * TODO-JVW

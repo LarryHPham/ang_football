@@ -45,6 +45,7 @@ export class MVPListPage implements OnInit{
   globalMVPPosition: string;
   season: number;
   listMax:number = 20;
+  filter1:any;
 
   displayPosition: string;
 
@@ -72,6 +73,7 @@ export class MVPListPage implements OnInit{
         this.pageNum = _params.get("pageNum");
 
         //Initial set for global MVP position
+        this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
         this.globalMVPPosition = this.listType;
         this.position = this.listType;
         var date = new Date;
