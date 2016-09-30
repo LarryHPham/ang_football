@@ -74,7 +74,18 @@ export class MVPListPage implements OnInit{
         //Initial set for global MVP position
         this.globalMVPPosition = this.listType;
         this.position = this.listType;
-
+        var date = new Date;
+        var season;
+        var compareDate = new Date('09 15 ' + date.getFullYear());
+        if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
+          season = date.getFullYear();
+        }
+        else if (date.getMonth() > compareDate.getMonth()) {
+          season = date.getFullYear();
+        }
+        else {
+          season = (date.getFullYear() - 1);
+        }
         this.queryParams = { //Initial load for mvp Data
           scope: this.scope, //TODO change to active scope
           target: 'player',
@@ -83,7 +94,7 @@ export class MVPListPage implements OnInit{
           ordering: 'asc',
           perPageCount: 20,
           pageNumber: this.pageNum,
-          season: '2015'
+          season: season
         };
         this.startUp();
     });
