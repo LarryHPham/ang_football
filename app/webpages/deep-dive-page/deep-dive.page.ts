@@ -230,6 +230,7 @@ export class DeepDivePage implements OnInit{
       }
     }
     ngOnInit(){
+
       // var script = document.createElement("script");
       // script.src = 'http://content.synapsys.us/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
       // document.head.appendChild(script);
