@@ -22,8 +22,8 @@ export class RosterService {
     return headers;
   }
 
-  initializeAllTabs(teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
-    return this._tabTypes.map(type => new NFLRosterTabData(this, teamId, type, conference, maxRows, isTeamProfilePage));
+  initializeAllTabs(scope:string, teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
+    return this._tabTypes.map(type => new NFLRosterTabData(this, scope, teamId, type, conference, maxRows, isTeamProfilePage));
   }
 
   getRosterTabData(rosterTab: NFLRosterTabData): Observable<Array<TeamRosterData>> {
@@ -43,12 +43,12 @@ export class RosterService {
       });
   }//getRosterService ends
 
-  loadAllTabsForModule(teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
+  loadAllTabsForModule(scope:string, teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
     return {
         moduleTitle: "Team Roster",
         moduleIdentifier: " - " + fullTeam + " " + teamName,
         pageRouterLink: this.getLinkToPage(teamId, teamName),
-        tabs: this.initializeAllTabs(teamId.toString(), conference, 5, isTeamProfilePage)
+        tabs: this.initializeAllTabs(scope, teamId.toString(), conference, 5, isTeamProfilePage)
     };
   }
 

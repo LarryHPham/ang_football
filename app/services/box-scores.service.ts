@@ -198,8 +198,10 @@ export class BoxScoresService {
       let aiContent = boxScores[dates].aiContent;
       //Converts data to what is neccessary for each of the formatting functions for each component of box scores
         if(boxScores[dates]){
+          let isNCAA = boxScores[dates].leagueAbbreviation.toLowerCase() == 'nfl' ? false:true;
           boxScoreObj[dates] = {};
           boxScoreObj[dates]['gameInfo']= {
+            isNCAA:isNCAA,
             eventId: boxScores[dates].eventId,
             seasonId: boxScores[dates].seasonId,
             inningsPlayed: boxScores[dates].eventQuarter,
@@ -358,6 +360,7 @@ export class BoxScoresService {
       let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
       let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
       var aiContent = data.aiContent != null ? self.formatArticle(data):null;
+
       if(teamId != null && profile == 'team'){//if league then both items will link
         if(homeData.id == teamId){//if not league then check current team they are one
           homeLink = null;
@@ -406,7 +409,7 @@ export class BoxScoresService {
         dataPointCategories:gameInfo.dataPointCategories,
         verticalContent:verticalContentLive,
         homeData:{
-          homeTeamName: homeData.lastName,
+          homeTeamName: gameInfo.isNCAA ? homeData.abbreviation + ' ' + homeData.lastName : homeData.lastName,
           homeImageConfig:link1,
           homeLink: homeLink,
           homeRecord: homeWin +'-'+ homeLoss,
@@ -415,7 +418,7 @@ export class BoxScoresService {
           DP3:homeData.dataP3
         },
         awayData:{
-          awayTeamName:awayData.lastName,
+          awayTeamName:  gameInfo.isNCAA ? awayData.abbreviation + ' ' + awayData.lastName : awayData.lastName,
           awayImageConfig:link2,
           awayLink: awayLink,
           awayRecord: awayWin +'-'+ awayLoss,
@@ -424,6 +427,7 @@ export class BoxScoresService {
           DP3:awayData.dataP3
         }
       };
+
       if(teamId != null){
         twoBoxes.push({game:info,aiContent:aiContent});
       }else{
