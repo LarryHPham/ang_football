@@ -4,7 +4,7 @@
   <error-component *ngIf="hasError"></error-component>
   <div *ngIf="profileHeaderData && pageParams">
     <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
-    <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
+    <profile-header [profileHeaderData]="profileHeaderData" [profileType]="'team'"></profile-header>
     <daily-update-module *ngIf="dailyUpdateData" [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
     <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="false"></articles-module>
@@ -36,7 +36,7 @@
     <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <draft-history-module *ngIf="profileData && scope == sportLeagueAbbrv.toLowerCase()" [profileData]="profileData"></draft-history-module>
     <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-    <!-- <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'team'" [profileId]="pageParams.teamId" [scope]="scope"></comparison-module> -->
+    <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'team'" [profileId]="pageParams.teamId" [scope]="scope"></comparison-module>
     <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
     <div class="profile-carousel-container">
       <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel>

@@ -4,7 +4,7 @@
     <error-component *ngIf="hasError"></error-component>
     <div *ngIf="profileHeaderData && pageParams">
         <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
-        <profile-header *ngIf="profileHeaderData" [profileHeaderData]="profileHeaderData"></profile-header>
+        <profile-header *ngIf="profileHeaderData" [profileHeaderData]="profileHeaderData" [profileType]="'player'"></profile-header>
         <daily-update-module [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
         <fantasy-module *ngIf="scope == 'nfl'" [fantasyData]="fantasyData" [fantasyDate]="fantasyDate" [profHeader]="profileHeaderData"></fantasy-module>
         <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
@@ -20,10 +20,10 @@
             (tabSelected)="scheduleTab($event)"
             (selectedKeyFilter)="filterDropdown($event)"></schedules>
         <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        <!-- <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" [scope]="scope"></standings-module> -->
+        <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
         <season-stats-module *ngIf="seasonStatsData" [pageParams]="pageParams" [data]="seasonStatsData"></season-stats-module>
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
-        <!-- <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId" [scope]="scope"></comparison-module> -->
+        <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId" [scope]="scope"></comparison-module>
         <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
         <div class="profile-carousel-container">
             <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>

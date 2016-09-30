@@ -114,7 +114,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
                         {key: "TD", value: "Rushing Touchdowns"},
                         {key: "YDS/G", value: "Yards per Game"},
                         {key: "FUM", value: "Rushing Fumbles"},
-                        {key: "1DN", value: ": Rushing First Downs"}
+                        {key: "1DN", value: "Rushing First Downs"}
                     ]
                 },
                 Receiving:{
@@ -234,17 +234,19 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
             tense = " had";
             temporalInfo = " in " + item.seasonId;
         }
-        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerName, item.playerId.toString());
+        let teamFullName = item.teamMarket + ' ' + item.teamName;
+        let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(teamFullName, playerFullName, item.playerId.toString());
         var playerLinkText = {
             route: playerRoute,
             text: item.playerFirstName+" "+item.playerLastName,
             class: 'text-heavy'
 
         }
-        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(item.teamName, item.teamId.toString());
+        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId.toString());
         var teamLinkText = {
             route: teamRoute,
-            text: item.teamName
+            text: teamFullName
         }
 
         function getTabDescription(tabActive){
@@ -399,12 +401,14 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
         var link: Array<any> = null;
         var imageUrl: string = null;
         var presentColumn;
+        let teamFullName = item.teamMarket + ' ' + item.teamName;
+        let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
         function tabCellData(columnType) {
             return{
                 "name":{
                     display : item.playerFirstName + " " + item.playerLastName,
                     sort : item.playerLastName + ', ' + item.playerFirstName,
-                    link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                    link : VerticalGlobalFunctions.formatPlayerRoute(teamFullName, playerFullName, item.playerId),
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
                     bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
                     bottomStat2:item.stat8 != null ? item.stat8: 'N/A',

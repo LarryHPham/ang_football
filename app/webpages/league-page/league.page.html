@@ -4,7 +4,7 @@
   <error-component *ngIf="hasError"></error-component>
   <div *ngIf="profileHeaderData">
     <!-- <headline-component [title]="'About the MLB'"></headline-component> -->
-    <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
+    <profile-header [profileHeaderData]="profileHeaderData" [profileType]="profileType"></profile-header>
     <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="true"></articles-module>
     <!-- <headline-component [title]="'Keep Up With Everything MLB'"></headline-component> -->
     <video-module *ngIf="videoData" [firstVideo]="firstVideo"  [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
@@ -21,7 +21,7 @@
         (tabSelected)="scheduleTab($event)"
         (selectedKeyFilter)="filterDropdown($event)"></schedules>
     <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-    <!-- <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module> -->
+    <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
 
     <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"

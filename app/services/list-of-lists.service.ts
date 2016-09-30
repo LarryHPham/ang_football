@@ -243,7 +243,7 @@ export class ListOfListsService {
       let ctaUrlArr = [
         itemTarget['rankType'],
         listype,
-        itemInfo.seasons,
+        itemTarget['seasonBase'],
         itemInfo.ordering,
         10,
         1

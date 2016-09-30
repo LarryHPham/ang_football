@@ -34,6 +34,7 @@ export interface TeamStandingsData {
   leagueAbbreviation: string;
   roadRecord: string;
   homeRecord: string;
+  pageType: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -86,6 +87,7 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
   sections: Array<VerticalStandingsTableData>;
 
   conference: Conference;
+
 
   division: Division;
 
@@ -148,9 +150,20 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     var rank = null;
     var rankPoint = null;
     var division = item.divisionName;
+    var pagetype = item.pageType;
+    var subheadercond;
     if(item.leagueAbbreviation.toLowerCase() == 'fbs'){
       var division = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.replace(item.conferenceName, '').toLowerCase());
-    }//fbs divison sends back all uppercase and needs to be camel case
+      subheadercond = 'NCAA STANDINGS: ' + item.leagueAbbreviation;
+    }
+    if(item.leagueAbbreviation.toLowerCase() == 'nfl' && item.pageType != 'league'){
+      subheadercond = item.conferenceName + ' ' + item.divisionName + ' STANDINGS - ' + item.teamName;
+    }
+    if(item.pageType == 'league' && item.leagueAbbreviation.toLowerCase() == 'nfl'){
+      subheadercond = item.leagueAbbreviation + ' ' + 'STANDINGS'
+    }
+
+    //fbs divison sends back all uppercase and needs to be camel case
     if(this.conference !== undefined && this.division !== undefined){
       rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
       rankPoint =  item.divisionName;
@@ -165,10 +178,12 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
       rankPoint = item.leagueAbbreviation.toUpperCase();
     }
     var overallRecord = item.teamOverallRecord ? item.teamOverallRecord : 'N/A';
+
+
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
-      subheader: [item.seasonBase + "-" + yearEnd + " Season " + rankPoint + " Standings"],
+      subheader: [subheadercond],
       profileNameLink: teamNameLink,
       description:[
           "The ", teamNameLink,
@@ -309,10 +324,12 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
+    // var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
     switch (column.key) {
       case "name":
         display = item.teamName;
+        // display = item.teamName + divisionrank;
         sort = item.teamName;
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
@@ -368,7 +385,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
 
       case "pf":
         display = item.teamPointsFor != null ? item.teamPointsFor : null;
-        sort = item.teamPointsFor ? item.teamPointsFor : null;
+        sort = item.teamPointsFor ? Number(item.teamPointsFor) : null;
         break;
     }
     if ( display == null ) {

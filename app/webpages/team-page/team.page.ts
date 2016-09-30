@@ -386,7 +386,7 @@ export class TeamPage implements OnInit {
     private filterDropdown(filter){
       let tabCheck = 0;
       if(this.eventStatus == 'postgame'){
-        tabCheck = 1;
+        tabCheck = -1;
       }
       if(this.isFirstRun > tabCheck){
         this.selectedFilter1 = filter.key;

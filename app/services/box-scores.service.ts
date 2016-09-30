@@ -160,7 +160,6 @@ export class BoxScoresService {
     }
 
     var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
-
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -270,10 +269,14 @@ export class BoxScoresService {
           };
           if(aiContent != null){
             let aiData = aiContent.featuredReport.article.data[0];
-            boxScoreObj[dates]['aiContent'] = {//TODO DUMMY DATA
-              event: aiData.eventId,
-              featuredReport: aiData.articleData,
-            };
+            if(aiContent.featuredReport.article.status != 'Error'){
+              boxScoreObj[dates]['aiContent'] = {
+                event: aiData.eventId,
+                featuredReport: aiData.articleData,
+              };
+            }else{
+              boxScoreObj[dates]['aiContent'] = null;
+            }
           }
         }else{
           boxScoreObj[dates] = null;
