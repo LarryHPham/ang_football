@@ -179,8 +179,8 @@ export class ListPage implements OnInit {
   }
 
   newIndex(index){
-    this.pageNumber = index;
-    window.scrollTo(0, 0);
+    // this.pageNumber = index;
+    // window.scrollTo(0, 0);
   }
 
 
