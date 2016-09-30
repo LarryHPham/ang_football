@@ -315,11 +315,6 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
         sort = item.playerWeight != null ? Number(item.playerWeight) : null;
         break;
 
-      case "class":
-        display = item.class != null ? item.class : null;
-        sort = item.class != null ? item.class : null;
-        break;
-
       case "age":
         display = item.playerAge != null ? item.playerAge.toString() : null;
         sort = item.playerAge != null ? Number(item.playerAge) : null;
