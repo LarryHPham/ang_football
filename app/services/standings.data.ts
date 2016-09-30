@@ -35,6 +35,7 @@ export interface TeamStandingsData {
   roadRecord: string;
   homeRecord: string;
   pageType: string;
+  teamAbbreviation: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -331,11 +332,12 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var imageUrl: string = null;
     // var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
+    var teamAbbr = item.teamAbbreviation && item.leagueAbbreviation.toUpperCase() == "FBS" ? item.teamAbbreviation.toUpperCase() + ' ' + item.teamName : item.teamName;
     switch (column.key) {
       case "name":
-        display = item.teamName;
+        display = teamAbbr;
         // display = item.teamName + divisionrank;
-        sort = item.teamName;
+        sort = teamAbbr;
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
         }

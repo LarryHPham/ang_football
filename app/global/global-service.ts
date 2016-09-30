@@ -77,9 +77,12 @@ export class GeoLocation {
       data => {
         //console.log("state "+data[0].state);
         data[0].state = data[0].state == null ? "us" : data[0].state;
+      
         return data;
       }
     )
+
   }
+
 
 }
