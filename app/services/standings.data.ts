@@ -251,6 +251,11 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           headerValue: "PA",
           columnClass: "data-column",
           key: "pa"
+        },
+        {
+          headerValue: "RANK",
+          columnClass: "data-column",
+          key: "rank"
         }];
       } else {
         this.columns = [{
@@ -371,6 +376,11 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
       case "pa":
         display = item.teamPointsAllowed != null ? item.teamPointsAllowed : 'N/A';
         sort = item.teamPointsAllowed ? Number(item.teamPointsAllowed) : null;
+        break;
+
+      case "rank":
+        display = item.divisionRank != null ? item.divisionRank : 'N/A';
+        sort = item.divisionRank ? Number(item.divisionRank) : null;
         break;
 
       case "pct":
