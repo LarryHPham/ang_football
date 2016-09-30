@@ -47,23 +47,24 @@ export class DeepDiveService {
   getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
   var headers = this.setToken();
+      // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
+      var callURL = this._apiUrl + '/articleBatch/';
+      if(scope == 'nfl' || scope == null){
+          scope='nfl';
+          callURL +=  scope + '/' + limit + '/' + startNum + '/' + state;
+      }else{
+          scope = 'fbs';
+          callURL += scope + '/' + limit + '/' + startNum ;
+
+      }
 
   if(startNum == null){
     startNum = 1;
   }
 
-  // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
-  var callURL = this._apiUrl + '/articleBatch/';
-
-  if(scope != null){
-    callURL += scope;
-  } else {
-    callURL += 'nfl';
-  }
   if(state == null){
     state = 'CA';
   }
-  callURL += '/' + limit + '/' + startNum + '/' + state;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -104,6 +105,7 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'nfl';
     }
+
     if(key == null){
       key == "postgame-report";
     }
