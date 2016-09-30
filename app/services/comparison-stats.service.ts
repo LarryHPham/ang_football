@@ -184,6 +184,9 @@ export class ComparisonStatsService {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, data => {
+      if (typeof data.career == 'undefined') {
+        return null;
+      }
       if ( data == null ) {
         console.log("Error: No valid comparison data for " + (pageParams.playerId != null ? " player " + playerId + " in " : "") + " team " + teamId);
         return null;
