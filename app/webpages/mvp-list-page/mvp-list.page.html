@@ -7,6 +7,7 @@
     <mvp-list *ngIf="tabs"
       [selectedKey]="position"
       [tabs]="tabs"
+      [sortOptions]="filter1"
       [selectedTabTitle]="selectedTabName"
       (tabSelectedListener)="tabSelected($event)"
       (dropdownPositionSelection)="positionDropdown($event)"></mvp-list>
