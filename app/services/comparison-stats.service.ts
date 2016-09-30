@@ -184,7 +184,7 @@ export class ComparisonStatsService {
     var teamId = pageParams.teamId != null ? pageParams.teamId.toString() : null;
     var playerId = pageParams.playerId != null ? pageParams.playerId.toString() : null;
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, data => {
-      if (typeof data.career == 'undefined') {
+      if (data.success == false) {
         return null;
       }
       if ( data == null ) {
