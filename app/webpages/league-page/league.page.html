@@ -24,7 +24,7 @@
     <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
 
-    <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
+    <transactions-module *ngIf="transactionsData" *ngIf="scope == sportLeagueAbbrv && transactionsData"
       [data]="transactionsData"
       [transactionFilter1]="transactionFilter1"
       [dropdownKey1]="dropdownKey1"
