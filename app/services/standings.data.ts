@@ -339,11 +339,10 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var imageUrl: string = null;
     var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
-    var teamAbbr = item.teamAbbreviation && item.leagueAbbreviation.toUpperCase() == "FBS" ? item.teamAbbreviation.toUpperCase() + ' ' + item.teamName : item.teamName;
+    var teamAbbr = item.teamAbbreviation && item.leagueAbbreviation == "FBS" ? item.teamAbbreviation + ' ' + item.teamName : item.teamName;
     switch (column.key) {
       case "name":
-        //display = teamAbbr;
-        display = item.teamName + divisionRank;
+        display = teamAbbr + divisionRank;
         sort = teamAbbr;
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
