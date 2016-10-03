@@ -252,12 +252,12 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
         columnClass: "data-column salary",
         isNumericType: false,
         key: "class"
-      },{
+      }/*,{
         headerValue: "Jersey#",
         columnClass: "data-column age",
         isNumericType: true,
         key: "jer"
-      });
+      }*/);
     }
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
@@ -292,12 +292,15 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
     var link: Array<any> = null;
     var imageUrl: string = null;
     var displayAsRawText = false;
-    switch (column.key) {
+    var pColumn;
+    /*switch (column.key) {
       case "name":
         display = item.playerFirstName + " " + item.playerLastName;
         sort = item.playerLastName + ', ' + item.playerFirstName;
         link = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
         imageUrl = GlobalSettings.getImageUrl(item.playerHeadshotUrl);
+          bottomStat= item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A';
+
         break;
 
       case "pos":
@@ -337,26 +340,77 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
     if ( display == null ) {
       display = "N/A";
     }
-    return new CellData(display, sort, link, imageUrl, displayAsRawText);
+    return new CellData(display,bottomStat, sort, link, imageUrl, displayAsRawText);*/
+      function getFullClassName(classyear){
+          switch(classyear) {
+           case 'FR':
+           classyear = 'Freshman '
+           break;
+           case 'SO':
+           classyear = 'Sophomore '
+           break;
+           case 'JR':
+           classyear = 'Junior '
+           break;
+           case 'SR':
+           classyear = 'Senior '
+           break;
+           case null:
+           classyear = '';
+           }
+           return classyear;
+
+      }
+      function tabCellDataroster(columnType) {
+          return{
+              "name":{
+                  display : item.playerFirstName + " " + item.playerLastName,
+                  sort : item.playerLastName + ', ' + item.playerFirstName,
+                  link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                  imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl),
+                  bottomStat: "Jersey No.",
+                  bottomStat2:item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A',
+
+              },
+              "pos":{
+                  display:typeof item.playerPosition[0] != null ? item.playerPosition : null,
+                  sort : item.playerPosition != null ? item.playerPosition.toString() : null,
+              },
+              "ht":{
+                  display: item.playerHeight != null ? VerticalGlobalFunctions.formatHeight(VerticalGlobalFunctions.formatHeightInches(item.playerHeight)) : null,
+                  sort: item.playerHeight != null ? Number(item.playerHeight) : null,
+              },
+
+              "wt":{
+
+                  display:item.playerWeight != null ? item.playerWeight + " lbs." : null,
+                  sort : item.playerWeight != null ? Number(item.playerWeight) : null,
+
+              },
+              "age":{
+                  display:item.playerAge != null ? item.playerAge.toString() : null,
+                  sort : item.playerAge != null ? Number(item.playerAge) : null,
+              },
+
+              "sal":{
+                  display:item.playerSalary != null ? "$" + GlobalFunctions.nFormatter(Number(item.playerSalary)) : null,
+                  sort: item.playerSalary != null ? Number(item.playerSalary) : null,
+              },
+              "class":{
+                  display:item.class != null ? getFullClassName(item.class) : null,
+                  sort : item.class != null ? item.class : null,
+              }
+
+
+
+          }[columnType];
+      }
+      pColumn = tabCellDataroster(column.key);
+
+
+
+      return new CellData(pColumn.display,pColumn.sort,pColumn.link,pColumn.imageUrl, pColumn.bottomStat, pColumn.bottomStat2);
   }
 
-  getFullClassName(classyear){
-    switch(classyear) {
-      case 'FR':
-          classyear = 'Freshman '
-          break;
-      case 'SO':
-          classyear = 'Sophomore '
-          break;
-      case 'JR':
-          classyear = 'Junior '
-          break;
-      case 'SR':
-          classyear = 'Senior '
-          break;
-      case null:
-          classyear = '';
-      }
-      return classyear;
-  }
+
 }
