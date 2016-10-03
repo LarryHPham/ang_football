@@ -359,7 +359,11 @@ export class PlayerPage implements OnInit {
     private getImages(imageData) {
         this._imagesService.getImages(this.profileType, this.pageParams.playerId)
             .subscribe(data => {
-                    return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
+                if (data.imageArray.length <= 0) {
+                  return this.imageData = null;
+                }else {
+                  return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
+                }
                 },
                 err => {
                     console.log("Error getting image data" + err);
