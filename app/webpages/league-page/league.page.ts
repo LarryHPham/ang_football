@@ -386,7 +386,6 @@ export class LeaguePage implements OnInit {
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
-
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
