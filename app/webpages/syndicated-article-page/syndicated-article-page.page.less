@@ -1,10 +1,20 @@
 .syndicated-articles-page {
-  @media (min-width: 1023px){
+  @media @desktop-m{
+    .widget-page-wrapper {
+      > .col-xs-4 {
+        display: none;
+      }
+    }
+  }
+  @media (min-width: 1024px){
     .deep_recs-articles-item {
       width: 190px;
     }
     .widget-page-wrapper > .col-xs-8{
       margin-left: 0px;
+    }
+    .widget-page-wrapper > .col-xs-4 {
+      display: block;
     }
     .arpt{
 
