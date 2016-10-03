@@ -35,6 +35,7 @@ export interface TeamStandingsData {
   roadRecord: string;
   homeRecord: string;
   pageType: string;
+  teamAbbreviation: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -157,7 +158,9 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
       subheadercond = 'NCAA STANDINGS: ' + item.leagueAbbreviation;
     }
     if(item.leagueAbbreviation.toLowerCase() == 'nfl' && item.pageType != 'league'){
-      subheadercond = item.conferenceName + ' ' + item.divisionName + ' STANDINGS - ' + item.teamName;
+      var divisionName = item.divisionName;
+      if (divisionName != null) {divisionName = divisionName.replace(item.conferenceName, "");} else {divisionName = "";}
+      subheadercond = item.conferenceName + ' ' + divisionName + ' STANDINGS - ' + item.teamName;
     }
     if(item.pageType == 'league' && item.leagueAbbreviation.toLowerCase() == 'nfl'){
       subheadercond = item.leagueAbbreviation + ' ' + 'STANDINGS'
@@ -251,6 +254,11 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           headerValue: "PA",
           columnClass: "data-column",
           key: "pa"
+        },
+        {
+          headerValue: "RANK",
+          columnClass: "data-column",
+          key: "rank"
         }];
       } else {
         this.columns = [{
@@ -324,13 +332,14 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
-    // var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
+    var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
+    var teamAbbr = item.teamAbbreviation && item.leagueAbbreviation.toUpperCase() == "FBS" ? item.teamAbbreviation.toUpperCase() + ' ' + item.teamName : item.teamName;
     switch (column.key) {
       case "name":
-        display = item.teamName;
-        // display = item.teamName + divisionrank;
-        sort = item.teamName;
+        //display = teamAbbr;
+        display = item.teamName + divisionRank;
+        sort = teamAbbr;
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
         }
@@ -371,6 +380,11 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
       case "pa":
         display = item.teamPointsAllowed != null ? item.teamPointsAllowed : 'N/A';
         sort = item.teamPointsAllowed ? Number(item.teamPointsAllowed) : null;
+        break;
+
+      case "rank":
+        display = item.divisionRank != null ? item.divisionRank : 'N/A';
+        sort = item.divisionRank ? Number(item.divisionRank) : null;
         break;
 
       case "pct":
