@@ -221,10 +221,15 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
   }
   setColumnDP() : Array<TableColumn> {
     if(this.scope == 'fbs'){
-      this.columns = [{
+      this.columns = [
+        {
           headerValue: "Team Name",
           columnClass: "image-column",
           key: "name"
+        },{
+          headerValue: "RANK",
+          columnClass: "data-column rank",
+          key: "rank"
         },{
           headerValue: "W/L/T",
           columnClass: "data-column",
@@ -254,17 +259,17 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           headerValue: "PA",
           columnClass: "data-column",
           key: "pa"
-        },
-        {
-          headerValue: "RANK",
-          columnClass: "data-column",
-          key: "rank"
         }];
       } else {
-        this.columns = [{
+        this.columns = [
+          {
             headerValue: "Team Name",
             columnClass: "image-column",
             key: "name"
+          },{
+            headerValue: "RANK",
+            columnClass: "data-column rank",
+            key: "rank"
           },{
             headerValue: "W/L/T",
             columnClass: "data-column",
