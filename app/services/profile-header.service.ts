@@ -211,8 +211,11 @@ export class ProfileHeaderService {
         });
   } //getTeamProfile
 
-  getLeagueProfile(scope?): Observable<LeagueProfileData> {
+  getLeagueProfile(scope?: string): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl();
+    if(scope){
+      scope = scope.toUpperCase() == "NCAAF" ? "fbs" : "nfl";
+    }
     url = url + '/profileHeader/league/' + scope;
 
     return this.http.get(url)
@@ -247,7 +250,7 @@ export class ProfileHeaderService {
 
   convertLeagueHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
-      imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
+      imageURL: GlobalSettings.getImageUrl(data.leagueLogo),
       imageRoute: ["League-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
