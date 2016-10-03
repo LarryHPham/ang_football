@@ -74,15 +74,15 @@ export class AboutUsService {
     let activeDivisionSegments;
     let activeDivisionChampionship;
 
-    if (divisionScope == this.collegeDivisionAbbrv) {
-      activeDivision = this.collegeDivisionFullAbbrv.toUpperCase();
-      activeDivisionSegments = this.collegeDivisionSegments;
-      activeDivisionChampionship = "National";
-    }
-    else {
+    if (divisionScope == this.sportLeagueAbbrv) {
       activeDivision = this.sportLeagueAbbrv.toUpperCase();
       activeDivisionSegments = this.sportLeagueSegments;
       activeDivisionChampionship = this.sportLeagueChampionship;
+    }
+    else {
+      activeDivision = this.collegeDivisionFullAbbrv.toUpperCase();
+      activeDivisionSegments = this.collegeDivisionSegments;
+      activeDivisionChampionship = "National";
     }
 
     let model: AboutUsModel = {
