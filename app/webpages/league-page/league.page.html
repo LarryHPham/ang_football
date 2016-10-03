@@ -24,15 +24,15 @@
     <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
     <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
 
-    <transactions-module *ngIf="transactionsData" *ngIf="scope == sportLeagueAbbrv && transactionsData"
+    <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
       [data]="transactionsData"
       [transactionFilter1]="transactionFilter1"
       [dropdownKey1]="dropdownKey1"
       (tabSwitched)="transactionsTab($event)"
       (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
 
-    <draft-history-module *ngIf="profileData && scope == sportLeagueAbbrv.toLowerCase()" [profileData]="profileData"></draft-history-module>
-    <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace"></responsive-widget>
+    <draft-history-module *ngIf="scope == sportLeagueAbbrv.toLowerCase() && profileData" [profileData]="profileData"></draft-history-module>
+    <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace"></responsive-widget>
     <mvp-module *ngIf="positionData && positionParams"
       [title]="'Position'"
       [mvpData]="positionData"
@@ -40,7 +40,7 @@
       [filter1]="filter1"
       (tabSelectedListener)="positionDropdown($event)"
       (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
-    <responsive-widget *ngIf="pitcherData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+    <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     <!-- <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [scope]="scope"></comparison-module> -->
     <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
