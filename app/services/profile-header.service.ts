@@ -211,8 +211,11 @@ export class ProfileHeaderService {
         });
   } //getTeamProfile
 
-  getLeagueProfile(scope?): Observable<LeagueProfileData> {
+  getLeagueProfile(scope?: string): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl();
+    if(scope){
+      scope = scope.toUpperCase() == "NCAAF" ? "fbs" : "nfl";
+    }
     url = url + '/profileHeader/league/' + scope;
 
     return this.http.get(url)
@@ -247,7 +250,7 @@ export class ProfileHeaderService {
 
   convertLeagueHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
-      imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
+      imageURL: GlobalSettings.getImageUrl(data.leagueLogo),
       imageRoute: ["League-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
@@ -431,9 +434,9 @@ export class ProfileHeaderService {
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
     if ( headerData.teamCity && headerData.teamState ) {
-      location = headerData.teamCity + ", " + GlobalFunctions.stateToAP(headerData.teamState);
+      location = headerData.teamCity.trim() + ", " + GlobalFunctions.stateToAP(headerData.teamState);
     }
-    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
+    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName.replace(/ *\([^)]*\) */g, "") : ' ';
     var division = "";
     if (headerData.divisionName.toString() == headerData.conferenceName.toString()) {
       division = headerData.divisionName.toString();
@@ -443,8 +446,8 @@ export class ProfileHeaderService {
     }
     var description = "The " + fullTeamName +
                       venueForDescription +
-                      " located in " + location + ". " + headerData.teamName +
-                      " are part of the " + division + ".";
+                      " located in " + location + ". The " + headerData.teamName +
+                      " are a part of the " + division + ".";
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
