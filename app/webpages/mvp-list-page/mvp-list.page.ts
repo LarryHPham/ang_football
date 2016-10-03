@@ -122,7 +122,7 @@ export class MVPListPage implements OnInit{
       icon: 'fa fa-map-marker'
     };
 
-    this._profileService.getLeagueProfile()
+    this._profileService.getLeagueProfile(this.scope)
       .subscribe(data => {
         this.profileHeaderData = {
           imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),

@@ -158,7 +158,9 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
       subheadercond = 'NCAA STANDINGS: ' + item.leagueAbbreviation;
     }
     if(item.leagueAbbreviation.toLowerCase() == 'nfl' && item.pageType != 'league'){
-      subheadercond = item.divisionName + ' STANDINGS - ' + item.teamName;
+      var divisionName = item.divisionName;
+      if (divisionName != null) {divisionName = divisionName.replace(item.conferenceName, "");} else {divisionName = "";}
+      subheadercond = item.conferenceName + ' ' + divisionName + ' STANDINGS - ' + item.teamName;
     }
     if(item.pageType == 'league' && item.leagueAbbreviation.toLowerCase() == 'nfl'){
       subheadercond = item.leagueAbbreviation + ' ' + 'STANDINGS'
@@ -219,10 +221,15 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
   }
   setColumnDP() : Array<TableColumn> {
     if(this.scope == 'fbs'){
-      this.columns = [{
+      this.columns = [
+        {
           headerValue: "Team Name",
           columnClass: "image-column",
           key: "name"
+        },{
+          headerValue: "RANK",
+          columnClass: "data-column rank",
+          key: "rank"
         },{
           headerValue: "W/L/T",
           columnClass: "data-column",
@@ -252,17 +259,17 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           headerValue: "PA",
           columnClass: "data-column",
           key: "pa"
-        },
-        {
-          headerValue: "RANK",
-          columnClass: "data-column",
-          key: "rank"
         }];
       } else {
-        this.columns = [{
+        this.columns = [
+          {
             headerValue: "Team Name",
             columnClass: "image-column",
             key: "name"
+          },{
+            headerValue: "RANK",
+            columnClass: "data-column rank",
+            key: "rank"
           },{
             headerValue: "W/L/T",
             columnClass: "data-column",
