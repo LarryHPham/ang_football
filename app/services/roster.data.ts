@@ -247,15 +247,16 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       });
     }else{
       this.columns.push({
-        headerValue: "Jersey#",
-        columnClass: "data-column age",
-        isNumericType: true,
-        key: "jer"
-      },{
+
         headerValue: "Class",
         columnClass: "data-column salary",
         isNumericType: false,
         key: "class"
+      },{
+        headerValue: "Jersey#",
+        columnClass: "data-column age",
+        isNumericType: true,
+        key: "jer"
       });
     }
     this.rows = rows;
