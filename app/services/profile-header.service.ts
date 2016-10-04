@@ -158,6 +158,7 @@ export class ProfileHeaderService {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
 
+
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
@@ -214,7 +215,9 @@ export class ProfileHeaderService {
   getLeagueProfile(scope?: string): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl();
     if(scope){
-      scope = scope.toUpperCase() == "NCAAF" ? "fbs" : "nfl";
+
+      scope = scope.toLowerCase() == "nfl" ? "nfl" : "fbs";
+
     }
     url = url + '/profileHeader/league/' + scope;
 
@@ -263,6 +266,7 @@ export class ProfileHeaderService {
     if (!data.headerData) {
       return null;
     }
+
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
@@ -351,7 +355,7 @@ export class ProfileHeaderService {
           {
             label: headerData.stat4Type,
             labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-            value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
+            value: headerData.class ? headerData.class : null
           }
         ]
       } //var header: ProfileHeaderData = {
