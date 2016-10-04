@@ -157,8 +157,6 @@ export class ProfileHeaderService {
   getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
-
-
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
@@ -215,9 +213,7 @@ export class ProfileHeaderService {
   getLeagueProfile(scope?: string): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl();
     if(scope){
-
       scope = scope.toLowerCase() == "nfl" ? "nfl" : "fbs";
-
     }
     url = url + '/profileHeader/league/' + scope;
 
@@ -266,7 +262,6 @@ export class ProfileHeaderService {
     if (!data.headerData) {
       return null;
     }
-
     var headerData = data.headerData;
 
     var fullTeamName = headerData.teamMarket+' '+headerData.teamName;
@@ -312,6 +307,13 @@ export class ProfileHeaderService {
                       description = description + " and weighs " + formattedWeight + " pounds";
                     }
                     description = description + ".";
+        function checkClass(headerData) {
+            if(!headerData.class && !headerData.stat4){
+                return "N/A";
+            } else if(headerData.class){
+                return headerData.class;
+            } else return headerData.stat4;
+        }
 
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
@@ -355,8 +357,8 @@ export class ProfileHeaderService {
           {
             label: headerData.stat4Type,
             labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-            value: headerData.class ? headerData.class : null
-          }
+            value: checkClass(headerData),
+          },
         ]
       } //var header: ProfileHeaderData = {
     }
