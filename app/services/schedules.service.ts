@@ -185,8 +185,6 @@ export class SchedulesService {
       YYArr.push(YYObj);
       yearArray.push(yearObj);
     })
-    yearArray.unshift({key:null,value:'Current'});
-    YYArr.unshift({key:null,value:'Current'});
     return {
       data:yearArray,
       type:'Year: ',
