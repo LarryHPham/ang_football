@@ -72,7 +72,11 @@ export interface TeamSeasonStatsData {
   player_receiving_targets: string,
   player_receiving_touchdowns: string,
   player_rushing_yards_per_carry: string,
-
+  player_rushing_yards: string,
+  player_rushing_attempts: string,
+  player_rushing_fumbles: string,
+  player_rushing_touchdowns:string,
+  
   seasonId: string,
   /**
    * - Formatted from league and year values that generated the associated table
@@ -772,6 +776,22 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
       case "player_rushing_yards_per_carry":
         display = item.player_rushing_yards_per_carry != null ? Number(item.player_rushing_yards_per_carry).toFixed(2) : null;
         sort = Number(item.player_rushing_yards_per_carry);
+        break;
+      case "player_rushing_yards":
+        display = item.player_rushing_yards != null ? Number(item.player_rushing_yards).toFixed(2) : null;
+        sort = Number(item.player_rushing_yards);
+      break;
+      case "player_rushing_attempts":
+        display = item.player_rushing_attempts != null ? Number(item.player_rushing_attempts).toFixed(2) : null;
+        sort = Number(item.player_rushing_attempts);
+        break;
+      case "player_rushing_fumbles":
+        display = item.player_rushing_fumbles != null ? Number(item.player_rushing_fumbles).toFixed(2) : null;
+        sort = Number(item.player_rushing_fumbles);
+        break;
+      case "player_rushing_touchdowns":
+        display = item.player_rushing_touchdowns != null ? Number(item.player_rushing_touchdowns).toFixed(2) : null;
+        sort = Number(item.player_rushing_touchdowns);
         break;
     }
     display = display != null ? display : "N/A";
