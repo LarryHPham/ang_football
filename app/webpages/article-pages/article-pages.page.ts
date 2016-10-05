@@ -97,50 +97,58 @@ export class ArticlePages implements OnInit {
             .subscribe(
                 Article => {
                     if (Article['data'].length > 0) {
-                        if (this.isFantasyReport) {
-                            this.eventID = Article['data'][0].event_id;
+                        try {
+                            if (this.isFantasyReport) {
+                                this.eventID = Article['data'][0].event_id;
+                            }
+                            var articleType = [];
+                            if (Article['data'][0].article_type_id != null) {
+                                articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                            } else {
+                                articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                                //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
+                                //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                            }
+                            this.articleType = articleType[1];
+                            this.articleSubType = articleType[2];
+                            //this.articleType = articleType[0];
+                            //this.articleSubType = articleType[2];
+                            this.isSmall = window.innerWidth < 640;
+                            this.rawUrl = window.location.href;
+                            this.pageIndex = articleType[0];
+                            this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
+                            this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                            this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
+                            this.articleData = Article['data'][0]['article_data'][this.pageIndex];
+                            this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
+                            ArticlePages.setMetaTag(this.articleData.metaHeadline);
+                            if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
+                                this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
+                            } else {
+                                this.hasImages = false;
+                            }
+                            this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
+                            this.getRecommendedArticles();
+                        } catch (e) {
+                            this.pageError();
                         }
-                        var articleType = [];
-                        if (Article['data'][0].article_type_id != null) {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
-                        } else {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
-                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
-                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
-                        }
-                        this.articleType = articleType[1];
-                        this.articleSubType = articleType[2];
-                        //this.articleType = articleType[0];
-                        //this.articleSubType = articleType[2];
-                        this.isSmall = window.innerWidth < 640;
-                        this.rawUrl = window.location.href;
-                        this.pageIndex = articleType[0];
-                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                        this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
-                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
-                        this.articleData = Article['data'][0]['article_data'][this.pageIndex];
-                        this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
-                        ArticlePages.setMetaTag(this.articleData.metaHeadline);
-                        if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
-                            this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
-                        } else {
-                            this.hasImages = false;
-                        }
-                        this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
-                        this.getRecommendedArticles();
                     }
                 },
                 err => {
-                    this.error = true;
-                    var self = this;
-                    setTimeout(function () {
-                        //removes error page from browser history
-                        self._location.replaceState('/');
-                        //returns user to previous page
-                        self._location.back();
-                    }, 5000);
+                    this.pageError();
                 }
             );
+    }
+
+    pageError() {
+        this.error = true;
+        var self = this;
+        setTimeout(function () {
+            //removes error page from browser history
+            self._location.replaceState('/');
+            //returns user to previous page
+            self._location.back();
+        }, 5000);
     }
 
     getRecommendedArticles() {
