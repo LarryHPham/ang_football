@@ -386,7 +386,9 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
             status = 'Live Game';
           }
           if(scope == 'ncaaf'){
-            item.aiUrlMod = item.aiUrlMod != null ? item.aiUrlMod.replace('ncaa', scope):null;
+            let fixUrl = item.aiUrlMod.split('/');
+            fixUrl[1] = scope;
+            item.aiUrlMod = fixUrl.join('/');
           }
           if(item.eventStatus == 'created'){
             status = 'Pregame';
