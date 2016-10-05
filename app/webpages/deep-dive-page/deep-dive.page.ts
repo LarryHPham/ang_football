@@ -55,6 +55,7 @@ export class DeepDivePage implements OnInit{
     partnerData:any;
     profileName:string;
     geoLocation:string;
+    isPartner: string = "";
 
     sideScrollData: any;
     scrollLength: number;
@@ -93,6 +94,7 @@ export class DeepDivePage implements OnInit{
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
             this.getPartnerHeader();
+            this.isPartner = "partner";
           }else{
             this.getGeoLocation();
           }
@@ -189,10 +191,17 @@ export class DeepDivePage implements OnInit{
           partnerScript => {
             this.partnerData = partnerScript;
             //super long way from partner script to get location using geo location api
-            var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-            state = state.toLowerCase();
-            this.geoLocation = state;
-            this.callModules();
+            var state;
+            if (partnerScript['results']['location']['realestate']['location']['city'][0]) {
+               state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
+               state = state.toLowerCase();
+               this.geoLocation = state;
+               this.callModules();
+            }
+            else {
+              this.getGeoLocation();
+            }
+
           }
         );
       }else{
@@ -230,6 +239,7 @@ export class DeepDivePage implements OnInit{
       }
     }
     ngOnInit(){
+
       // var script = document.createElement("script");
       // script.src = 'http://content.synapsys.us/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
       // document.head.appendChild(script);

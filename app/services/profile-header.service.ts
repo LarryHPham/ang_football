@@ -157,7 +157,6 @@ export class ProfileHeaderService {
   getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
-
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
@@ -211,8 +210,11 @@ export class ProfileHeaderService {
         });
   } //getTeamProfile
 
-  getLeagueProfile(scope?): Observable<LeagueProfileData> {
+  getLeagueProfile(scope?: string): Observable<LeagueProfileData> {
     let url = GlobalSettings.getApiUrl();
+    if(scope){
+      scope = scope.toLowerCase() == "nfl" ? "nfl" : "fbs";
+    }
     url = url + '/profileHeader/league/' + scope;
 
     return this.http.get(url)
@@ -247,7 +249,7 @@ export class ProfileHeaderService {
 
   convertLeagueHeader(data: LeagueProfileHeaderData, pageName:string): TitleInputData {
     return {
-      imageURL: GlobalSettings.getImageUrl(data.leagueLogo), //TODO
+      imageURL: GlobalSettings.getImageUrl(data.leagueLogo),
       imageRoute: ["League-page"],
       text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
@@ -305,6 +307,13 @@ export class ProfileHeaderService {
                       description = description + " and weighs " + formattedWeight + " pounds";
                     }
                     description = description + ".";
+        function checkClass(headerData) {
+            if(!headerData.class && !headerData.stat4){
+                return "N/A";
+            } else if(headerData.class){
+                return headerData.class;
+            } else return headerData.stat4;
+        }
 
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
@@ -348,8 +357,8 @@ export class ProfileHeaderService {
           {
             label: headerData.stat4Type,
             labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-            value: headerData.stat4 ? GlobalFunctions.commaSeparateNumber(headerData.stat4).toString() : null
-          }
+            value: checkClass(headerData),
+          },
         ]
       } //var header: ProfileHeaderData = {
     }
@@ -431,9 +440,9 @@ export class ProfileHeaderService {
     //The [Atlanta Braves] play in [Turner Field] located in [Atlanta, GA]. The [Atlanta Braves] are part of the [NL East].
     var location = "N/A";
     if ( headerData.teamCity && headerData.teamState ) {
-      location = headerData.teamCity + ", " + GlobalFunctions.stateToAP(headerData.teamState);
+      location = headerData.teamCity.trim() + ", " + GlobalFunctions.stateToAP(headerData.teamState);
     }
-    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName : ' ';
+    var venueForDescription = headerData.venueName ? " play in " + headerData.venueName.replace(/ *\([^)]*\) */g, "") : ' ';
     var division = "";
     if (headerData.divisionName.toString() == headerData.conferenceName.toString()) {
       division = headerData.divisionName.toString();
@@ -443,8 +452,8 @@ export class ProfileHeaderService {
     }
     var description = "The " + fullTeamName +
                       venueForDescription +
-                      " located in " + location + ". " + headerData.teamName +
-                      " are part of the " + division + ".";
+                      " located in " + location + ". The " + headerData.teamName +
+                      " are a part of the " + division + ".";
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
