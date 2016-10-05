@@ -98,7 +98,6 @@ export class SeasonStatsService {
     if ( !data ) {
       return null;
     }
-
     //var fields = data.playerInfo.position[0].charAt(0) == "P" ? this.pitchingFields : this.battingFields;
     let playerInfo = data.playerInfo;
     let stats = data.stats;
@@ -431,7 +430,6 @@ export class SeasonStatsPageService {
       let url = GlobalSettings.getApiUrl() + "/seasonStats/page/player/" + playerId;
       seasonStatsTab.isLoaded = false;
       seasonStatsTab.hasError = false;
-
       this.http.get(url)
           .map(res => res.json())
           .map(data => this.setupTabData(seasonStatsTab, data.data, pageParams.teamId, maxRows))
@@ -556,30 +554,4 @@ export class SeasonStatsPageService {
     return new MLBSeasonStatsTableData(tableName, season, year, table);
   }
 
-  private getKeyValue(key: string, data): string {
-    if(data[key] == null){
-      data[key] = {};
-    }
-    switch (key) {
-      case "batHomeRuns": return data[key];
-      case "batAverage": return data[key];
-      case "batRbi": return data[key];
-      case "batHits": return data[key];
-      case "batBasesOnBalls": return data[key];
-      case "batOnBasePercentage": return data[key];
-      case "batRunsScored": return data[key];
-      case "batSluggingPercentage": return data[key];
-
-      case "pitchWins": return data[key];
-      case "pitchInningsPitched": return data[key];
-      case "pitchStrikeouts": return data[key];
-      case "pitchEra": return data[key];
-      case "pitchHits": return data[key];
-      case "pitchLosses": return data[key];
-      case "pitchEarnedRuns": return data[key];
-      case "pitchBasesOnBalls": return data[key];
-      case "pitchWhip": return data[key];
-      default: return '0';
-    }
-  }
 }

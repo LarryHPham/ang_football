@@ -66,7 +66,17 @@ export interface TeamSeasonStatsData {
   player_punting_punts: string,
   player_rushing_yards_per_game: string,
   player_receiving_yards_per_game: string,
-
+  player_receiving_yards: string,
+  player_receiving_average_per_reception: string,
+  player_receiving_receptions: string,
+  player_receiving_targets: string,
+  player_receiving_touchdowns: string,
+  player_rushing_yards_per_carry: string,
+  player_rushing_yards: string,
+  player_rushing_attempts: string,
+  player_rushing_fumbles: string,
+  player_rushing_touchdowns:string,
+  
   seasonId: string,
   /**
    * - Formatted from league and year values that generated the associated table
@@ -171,7 +181,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
       case "OL":
       case "OT":
       if (stats.player_passing_yards) {
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , "Games Played" , " with " , Number(stats[1].stat).toFixed(0)  , " " , "Games Started."];
+          description = [playerRouteText, " has a total of ", Number(stats.player_offensive_line_games_played).toFixed(0) , " " , "Games Played" , " with " , Number(stats.player_offensive_line_games_started).toFixed(0)  , " " , "Games Started."];
         }
         else {description = ["No Season Stats Data for this Season"]}
           break;
@@ -202,13 +212,17 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
           break;
       case "TE":
       case "WR":
+
       if (stats.player_receiving_yards_per_game) {
-          description = [playerRouteText, " has a total of ", Number(stats.player_receiving_yards_per_game).toFixed(0) , " " , "Recieving Yards", " with " , Number(stats[1].stat).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats[2].stat).toFixed(0)  , " " , "Receptions." ];
+          description = [playerRouteText, " has a total of ", Number(stats.player_receiving_yards_per_game).toFixed(0) , " " , "Recieving Yards", " with " , Number(stats.player_receiving_average_per_reception).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats.player_receiving_receptions).toFixed(0)  , " " , "Receptions." ];
         }
         else {description = ["No Season Stats Data for this Season"]}
           break;
       default:
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , stats[0].statType , " with " , Number(stats[1].stat).toFixed(0)  , " " , stats[1].statType, " and " , Number(stats[2].stat).toFixed(0)  , " " , stats[2].statType+"." ];
+      if (stats.player_defense_assists) {
+          description = [playerRouteText, " has a total of ", Number(stats.player_defense_assists).toFixed(0) , " " , "Assisted Tackles" , ", " , Number(stats.player_defense_total_tackles).toFixed(0)  , " " , "Total Tackles" , " and " , Number(stats.player_defense_sacks).toFixed(0)  , " " , "Total Sacks." ];
+        }
+        else {description = ["No Season Stats Data for this Season"]}
       }
     }
     return description;
@@ -268,306 +282,306 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
       case "LB":
       case "OLB":
       case "S":
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "AST",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_assists"
-    },{
-      headerValue: "SACK",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_sacks"
-    },{
-      headerValue: "FF",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_forced_fumbles"
-    },{
-      headerValue: "TOTAL",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_total_tackles"
-    },{
-      headerValue: "INT",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_interceptions"
-    },{
-      headerValue: "PD",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_passes_defended"
-    }]
-        break;
-    case "K":
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "FGM",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_kicking_field_goals_made"
-    },{
-      headerValue: "FGA",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_kicking_field_goal_attempts"
-    },{
-      headerValue: "XPM",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_kicking_extra_points_made"
-    },{
-      headerValue: "FG%",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_kicking_field_goal_percentage_made"
-    },{
-      headerValue: "PTS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_kicking_total_points_scored"
-    },{
-      headerValue: "PTS/G",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_kicking_total_points_per_game"
-    }]
-        break;
-    case "P":
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "PUNTS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_punting_punts"
-    },{
-      headerValue: "YDS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_punting_gross_yards"
-    },{
-      headerValue: "LNG",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_punting_longest_punt"
-    },{
-      headerValue: "AVG",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_punting_average"
-    },{
-      headerValue: "NET",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_punting_net_average"
-    },{
-      headerValue: "IN20",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_punting_inside_twenty"
-    }]
-        break;
-    case "RB":
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "YDS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_rushing_yards_per_game"
-    },{
-      headerValue: "AVG",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_sacks"
-    },{
-      headerValue: "ATT",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_forced_fumbles"
-    },{
-      headerValue: "TD",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_total_tackles"
-    },{
-      headerValue: "YDS/G",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_interceptions"
-    },{
-      headerValue: "FUM",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_passes_defended"
-    }]
-        break;
-    case "QB":
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "YDS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_passing_yards"
-    },{
-      headerValue: "COMP",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_passing_completions"
-    },{
-      headerValue: "ATT",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_passing_attempts"
-    },{
-      headerValue: "TD",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_passing_touchdowns"
-    },{
-      headerValue: "INT",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_passing_interceptions"
-    },{
-      headerValue: "RATE",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_passing_rating"
-    }]
-        break;
-    case "TE":
-    case "WR":
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "YDS",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_assists"
-    },{
-      headerValue: "AVG",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_sacks"
-    },{
-      headerValue: "REC",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_forced_fumbles"
-    },{
-      headerValue: "TAR",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_total_tackles"
-    },{
-      headerValue: "TD",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_interceptions"
-    },{
-      headerValue: "YDS/G",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_receiving_yards_per_game"
-    }]
-        break;
-    default:
-    this.columns = [{
-      headerValue: "Year",
-      columnClass: "date-column",
-      isNumericType: true,
-      key: "year"
-    },{
-      headerValue: "Team",
-      columnClass: "image-column",
-      isNumericType: false,
-      key: "team"
-    },{
-      headerValue: "AST",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_assists"
-    },{
-      headerValue: "SACK",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_sacks"
-    },{
-      headerValue: "FF",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_forced_fumbles"
-    },{
-      headerValue: "TOTAL",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_total_tackles"
-    },{
-      headerValue: "INT",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_interceptions"
-    },{
-      headerValue: "PD",
-      columnClass: "data-column",
-      isNumericType: true,
-      key: "player_defense_passes_defended"
-    }]
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "AST",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_assists"
+        },{
+          headerValue: "SACK",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_sacks"
+        },{
+          headerValue: "FF",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_forced_fumbles"
+        },{
+          headerValue: "TOTAL",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_total_tackles"
+        },{
+          headerValue: "INT",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_interceptions"
+        },{
+          headerValue: "PD",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_passes_defended"
+        }]
+          break;
+      case "K":
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "FGM",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_kicking_field_goals_made"
+        },{
+          headerValue: "FGA",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_kicking_field_goal_attempts"
+        },{
+          headerValue: "XPM",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_kicking_extra_points_made"
+        },{
+          headerValue: "FG%",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_kicking_field_goal_percentage_made"
+        },{
+          headerValue: "PTS",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_kicking_total_points_scored"
+        },{
+          headerValue: "PTS/G",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_kicking_total_points_per_game"
+        }]
+          break;
+      case "P":
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "PUNTS",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_punting_punts"
+        },{
+          headerValue: "YDS",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_punting_gross_yards"
+        },{
+          headerValue: "LNG",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_punting_longest_punt"
+        },{
+          headerValue: "AVG",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_punting_average"
+        },{
+          headerValue: "NET",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_punting_net_average"
+        },{
+          headerValue: "IN20",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_punting_inside_twenty"
+        }]
+          break;
+      case "RB":
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "YDS",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_rushing_yards"
+        },{
+          headerValue: "YDS/C",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_rushing_yards_per_carry"
+        },{
+          headerValue: "ATT",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_rushing_attempts"
+        },{
+          headerValue: "TD",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_rushing_touchdowns"
+        },{
+          headerValue: "YDS/G",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_rushing_yards_per_game"
+        },{
+          headerValue: "FUM",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_rushing_fumbles"
+        }]
+          break;
+      case "QB":
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "YDS",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_passing_yards"
+        },{
+          headerValue: "COMP",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_passing_completions"
+        },{
+          headerValue: "ATT",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_passing_attempts"
+        },{
+          headerValue: "TD",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_passing_touchdowns"
+        },{
+          headerValue: "INT",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_passing_interceptions"
+        },{
+          headerValue: "RATE",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_passing_rating"
+        }]
+          break;
+      case "TE":
+      case "WR":
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "YDS",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_receiving_yards"
+        },{
+          headerValue: "AVG",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_receiving_average_per_reception"
+        },{
+          headerValue: "REC",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_receiving_receptions"
+        },{
+          headerValue: "TAR",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_receiving_targets"
+        },{
+          headerValue: "TD",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_receiving_touchdowns"
+        },{
+          headerValue: "YDS/G",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_receiving_yards_per_game"
+        }]
+          break;
+      default:
+        this.columns = [{
+          headerValue: "Year",
+          columnClass: "date-column",
+          isNumericType: true,
+          key: "year"
+        },{
+          headerValue: "Team",
+          columnClass: "image-column",
+          isNumericType: false,
+          key: "team"
+        },{
+          headerValue: "AST",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_assists"
+        },{
+          headerValue: "SACK",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_sacks"
+        },{
+          headerValue: "FF",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_forced_fumbles"
+        },{
+          headerValue: "TOTAL",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_total_tackles"
+        },{
+          headerValue: "INT",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_interceptions"
+        },{
+          headerValue: "PD",
+          columnClass: "data-column",
+          isNumericType: true,
+          key: "player_defense_passes_defended"
+        }]
 }
 
   }
@@ -738,6 +752,46 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
       case "player_receiving_yards_per_game":
         display = item.player_receiving_yards_per_game != null ? Number(item.player_receiving_yards_per_game).toFixed(2) : null;
         sort = Number(item.player_receiving_yards_per_game);
+        break;
+      case "player_receiving_yards":
+        display = item.player_receiving_yards != null ? Number(item.player_receiving_yards).toFixed(2) : null;
+        sort = Number(item.player_receiving_yards);
+        break;
+      case "player_receiving_touchdowns":
+        display = item.player_receiving_touchdowns != null ? Number(item.player_receiving_touchdowns).toFixed(2) : null;
+        sort = Number(item.player_receiving_touchdowns);
+        break;
+      case "player_receiving_targets":
+        display = item.player_receiving_targets != null ? Number(item.player_receiving_targets).toFixed(2) : null;
+        sort = Number(item.player_receiving_targets);
+        break;
+      case "player_receiving_receptions":
+        display = item.player_receiving_receptions != null ? Number(item.player_receiving_receptions).toFixed(2) : null;
+        sort = Number(item.player_receiving_receptions);
+        break;
+      case "player_receiving_average_per_reception":
+        display = item.player_receiving_average_per_reception != null ? Number(item.player_receiving_average_per_reception).toFixed(2) : null;
+        sort = Number(item.player_receiving_average_per_reception);
+        break;
+      case "player_rushing_yards_per_carry":
+        display = item.player_rushing_yards_per_carry != null ? Number(item.player_rushing_yards_per_carry).toFixed(2) : null;
+        sort = Number(item.player_rushing_yards_per_carry);
+        break;
+      case "player_rushing_yards":
+        display = item.player_rushing_yards != null ? Number(item.player_rushing_yards).toFixed(2) : null;
+        sort = Number(item.player_rushing_yards);
+      break;
+      case "player_rushing_attempts":
+        display = item.player_rushing_attempts != null ? Number(item.player_rushing_attempts).toFixed(2) : null;
+        sort = Number(item.player_rushing_attempts);
+        break;
+      case "player_rushing_fumbles":
+        display = item.player_rushing_fumbles != null ? Number(item.player_rushing_fumbles).toFixed(2) : null;
+        sort = Number(item.player_rushing_fumbles);
+        break;
+      case "player_rushing_touchdowns":
+        display = item.player_rushing_touchdowns != null ? Number(item.player_rushing_touchdowns).toFixed(2) : null;
+        sort = Number(item.player_rushing_touchdowns);
         break;
     }
     display = display != null ? display : "N/A";
