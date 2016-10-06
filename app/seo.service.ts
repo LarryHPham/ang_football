@@ -143,17 +143,7 @@ export class SeoService {
     public setCanonicalLink(RouteParams, router): HTMLElement {
       let el: HTMLElement;
       el = this.DOM.query("link[rel='canonical']");
-      //given the route by params find the hostComponent page to keep it synchronous
-      let pageName = router.parent.currentInstruction.component.routeName;
-      let scope = router.root.currentInstruction.component.urlPath;
-      //router deprecated get the route name of the first child in root router outlet
-      let route = [];
-      if(scope != null){
-        route = ['Default-home',{scope: scope}, pageName, RouteParams];
-      }else{
-        route = ['Default-home',pageName, RouteParams];
-      }
-      let canonicalLink = GlobalSettings.getHomePage(null) + '/' + router.root.generate(route).urlPath + '/' + router.root.generate(route).child.urlPath;
+      let canonicalLink = window.location.href;
       if (el === null) {
         el = this.DOM.createElement('link');
         el.setAttribute('rel', 'canonical');
