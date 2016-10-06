@@ -64,6 +64,7 @@ import {VideoService} from "../../services/video.service";
 import {ArticlesModule} from "../../fe-core/modules/articles/articles.module";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {HeadlineData} from "../../global/global-interface";
+import {SeoService} from "../../seo.service";
 
 declare var moment;
 
@@ -109,7 +110,7 @@ declare var moment;
         TwitterService,
         TransactionsService,
         ListOfListsService,
-        Title
+        Title,
       ]
 })
 
@@ -195,6 +196,7 @@ export class LeaguePage implements OnInit {
                 private listService:ListPageService,
                 private videoBatchService:VideoService,
                 private _headlineDataService:HeadlineDataService,
+                private _seoService: SeoService,
                 private _params: RouteParams) {
         _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
@@ -230,6 +232,7 @@ export class LeaguePage implements OnInit {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
             ///*** About TDL ***/
+                this.metaTags(data);
                 this.profileData = data;
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
@@ -271,6 +274,24 @@ export class LeaguePage implements OnInit {
             }
 
         );
+    }
+
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let header = data.headerData;
+      let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
+      let link = window.location.href;
+      let title = header.leagueFullName;
+      let image = header.leagueLogo;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
     }
 
     //api for League Headline Module

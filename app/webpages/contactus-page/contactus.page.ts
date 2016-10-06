@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Http} from '@angular/http';
-import {Router} from '@angular/router-deprecated';
+import {Router, RouteParams} from '@angular/router-deprecated';
 import {Observable} from 'rxjs/Rx';
 import {Title} from '@angular/platform-browser';
 
@@ -9,6 +9,7 @@ import {ContactUsModule} from '../../fe-core/components/contactus/contactus.comp
 import {GlobalSettings} from '../../global/global-settings';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {SeoService} from "../../seo.service";
 
 declare var moment;
 @Component({
@@ -23,7 +24,13 @@ export class ContactUsPage{
     public mailManUrl: string;
     public contactusInput: Object;
 
-    constructor(private http:Http, private _title: Title, private _router:Router) {
+    constructor(
+      private http:Http,
+      private _title: Title,
+      private _router: Router,
+      private _params: RouteParams,
+      private _seoService: SeoService
+    ) {
         _title.setTitle(GlobalSettings.getPageTitle("Contact Us"));
         GlobalSettings.getParentParams(_router, parentParams => {
           var domainTitle;
@@ -94,5 +101,21 @@ export class ContactUsPage{
         this.mailManUrl += '/'+stringOptions
         //send to backend the full mail url of all options
         this.http.get(this.mailManUrl,{})
+    }
+
+    ngAfterViewInit(){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
+      let link = window.location.href;
+
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle('Contact Us');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('Contact Us');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('NOINDEX, FOLLOW');
     }
 }
