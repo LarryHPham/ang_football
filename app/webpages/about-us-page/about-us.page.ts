@@ -1,5 +1,5 @@
 import {Component, Injector} from '@angular/core';
-import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {BackTabComponent} from '../../fe-core/components/backtab/backtab.component';
@@ -14,6 +14,7 @@ import {CircleImage} from "../../fe-core/components/images/circle-image";
 import {CircleImageData} from "../../fe-core/components/images/image-data";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {SeoService} from "../../seo.service";
 
 export interface AuBlockData {
   iconClass?: string;
@@ -66,15 +67,29 @@ export class AboutUsPage {
     constructor(
       private _router:Router,
       private _service: AboutUsService,
-      private _title: Title
+      private _seoService: SeoService,
+      private _params: RouteParams
     ) {
-        _title.setTitle(GlobalSettings.getPageTitle("About Us"));
 
-        GlobalSettings.getParentParams(_router, parentParams =>
+        GlobalSettings.getParentParams(_router, parentParams =>{
           this.loadData(parentParams.partnerID, parentParams.scope)
-        );
+        });
     }
 
+    ngAfterViewInit(){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
+      let link = window.location.href;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle('About Us');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('About Us');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    }
     loadData(partnerID?:string, scope?:string) {
         this._service.getData(partnerID, scope).subscribe(
           data => this.setupAboutUsData(data),

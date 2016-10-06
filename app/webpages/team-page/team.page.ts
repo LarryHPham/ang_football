@@ -73,6 +73,8 @@ import {VideoService} from "../../services/video.service";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {HeadlineData} from "../../global/global-interface";
 
+import {SeoService} from "../../seo.service";
+
 declare var moment;
 
 @Component({
@@ -195,6 +197,7 @@ export class TeamPage implements OnInit {
                 private _comparisonService: ComparisonStatsService,
                 private _dailyUpdateService: DailyUpdateService,
                 private _headlineDataService:HeadlineDataService,
+                private _seoService: SeoService,
                 private _videoBatchService: VideoService) {
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
@@ -232,10 +235,10 @@ export class TeamPage implements OnInit {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
                 /*** About the [Team Name] ***/
+                this.metaTags(data);
                 this.pageParams = data.pageParams;
                 this.profileData = data;
                 this.profileName = data.teamName;
-                this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
@@ -269,6 +272,24 @@ export class TeamPage implements OnInit {
                 console.log("Error getting team profile data for " + this.pageParams.teamId, err);
             }
         );
+    }
+
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let header = data.headerData;
+      let metaDesc =  header.description;
+      let link = window.location.href;
+      let title = header.teamMarket + ' ' + header.teamName;
+      let image = header.teamLogo;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
     }
 
     //api for Headline Module

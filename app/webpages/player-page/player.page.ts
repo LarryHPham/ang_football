@@ -57,6 +57,8 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
 import {FantasyModule} from "../../fe-core/modules/fantasy/fantasy.module";
 import {FantasyService} from "../../services/fantasy.service";
 
+import {SeoService} from "../../seo.service";
+
 declare var moment;
 
 @Component({
@@ -159,6 +161,7 @@ export class PlayerPage implements OnInit {
                 private _seasonStatsService:SeasonStatsService,
                 private _comparisonService:ComparisonStatsService,
                 private _fantasyService:FantasyService,
+                private _seoService: SeoService,
                 private _dailyUpdateService:DailyUpdateService) {
         this.pageParams = {
             playerId: Number(_params.get("playerId"))
@@ -179,6 +182,7 @@ export class PlayerPage implements OnInit {
         this._profileService.getPlayerProfile(this.pageParams.playerId).subscribe(
             data => {
                 /*** About [Player Name] ***/
+                this.metaTags(data);
                 this.pageParams = data.pageParams;
                 this.profileName = data.headerData.playerFullName;
                 this.teamName = data.headerData.teamFullName;
@@ -224,6 +228,24 @@ export class PlayerPage implements OnInit {
                 console.log("Error getting player profile data for " + this.pageParams.playerId + ": " + err);
             }
         );
+    }
+
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let header = data.headerData;
+      let metaDesc =  header.description;
+      let link = window.location.href;
+      let title = header.playerFullName;
+      let image = header.playerHeadshotUrl;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
     }
 
     private dailyUpdateModule(playerId:number) {

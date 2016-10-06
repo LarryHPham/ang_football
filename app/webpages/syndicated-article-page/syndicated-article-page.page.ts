@@ -16,6 +16,7 @@ import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/respo
 import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
+import {SeoService} from "../../seo.service";
 
 
 declare var jQuery:any;
@@ -60,7 +61,8 @@ export class SyndicatedArticlePage{
     private _router:Router,
     private _deepdiveservice:DeepDiveService,
     private _geoLocation:GeoLocation,
-    private _partnerData: PartnerHeader
+    private _partnerData: PartnerHeader,
+    private _seoService: SeoService
     ){
       this.eventID = _params.get('eventID');
       this.articleType = _params.get('articleType');
@@ -117,6 +119,7 @@ export class SyndicatedArticlePage{
             this.copyright = ["USA Today Sports Images"];
             this.imageTitle = [""];
           }
+          this.metaTags(data);
           this.articleData = data.data;
           this.articleData.publishedDate = moment.unix(this.articleData.publishedDate/1000).format("MMMM Do, YYYY h:mm A") + " EST";
         }
@@ -130,6 +133,21 @@ export class SyndicatedArticlePage{
             this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
         }
       )
+    }
+
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc = data.data.teaser;
+      let link = window.location.href;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(data.data.title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(this.imageData[0]);
+      this._seoService.setTitle(data.data.title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, NOFOLLOW');
     }
 
     getGeoLocation() {
