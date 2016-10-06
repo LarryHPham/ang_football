@@ -64,32 +64,26 @@ export class SyndicatedArticlePage{
     private _partnerData: PartnerHeader,
     private _seoService: SeoService
     ){
-      this.eventID = _params.get('eventID');
-      this.articleType = _params.get('articleType');
-
-
-      if (this.articleType == "story") {
-        this.getDeepDiveArticle(this.eventID);
-      }
-      else {
-        this.getDeepDiveVideo(this.eventID);
-      }
-
-      /*GlobalSettings.getParentParams(_router, partnerID => {
-          this.partnerID = partnerID.partnerID;
-          this.getPartnerHeader();
-      });*/
-      this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-
       GlobalSettings.getParentParams(_router, parentParams => {
-          this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
-          if (parentParams.partnerID != null) {
-              this.partnerID = parentParams.partnerID;
-              this.getPartnerHeader();
-          }else{
-              this.getGeoLocation();
-          }
-          //this.getArticles();
+        this.eventID = this._params.get('eventID');
+        this.articleType = this._params.get('articleType');
+        this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+
+        if (this.articleType == "story") {
+          this.getDeepDiveArticle(this.eventID);
+        }
+        else {
+          this.getDeepDiveVideo(this.eventID);
+        }
+
+        this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
+        if (parentParams.partnerID != null) {
+            this.partnerID = parentParams.partnerID;
+            this.getPartnerHeader();
+        }else{
+            this.getGeoLocation();
+        }
+
       });
     }
 
