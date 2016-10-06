@@ -228,11 +228,11 @@ declare var jQuery: any;
     //     name: 'List-of-lists-page',
     //     component: ListOfListsPage
     // },
-    {
-        path: '/list-of-lists/league/:limit/:pageNum',
-        name: 'List-of-lists-league-page',
-        component: ListOfListsPage
-    },
+    // {
+    //     path: '/list-of-lists/league/:limit/:pageNum',
+    //     name: 'List-of-lists-league-page',
+    //     component: ListOfListsPage
+    // },
     //Error pages and error handling
     {
         path: '/error',
