@@ -51,7 +51,6 @@ export class ListOfListsPage implements OnInit{
         private _params: RouteParams,
         private _title: Title, private _router:Router) {
           GlobalSettings.getParentParams(this._router, parentParams => {
-              _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
               this._params.params['scope'] = parentParams.scope;
               this.pageType = this._params.get("target");
               if ( this.pageType == null ) {

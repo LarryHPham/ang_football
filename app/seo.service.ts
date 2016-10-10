@@ -66,9 +66,9 @@ export class SeoService {
       shortTitle = splitTitle.join(' ');
     }
     if(GlobalSettings.getHomeInfo().isPartner){
-      shortTitle = GlobalSettings.getBasePartnerTitle() + ' - ' + shortTitle;
+      shortTitle = shortTitle + ' - ' + GlobalSettings.getBasePartnerTitle();
     }else{
-      shortTitle = GlobalSettings.getBaseTitle() + ' - ' + shortTitle;
+      shortTitle = shortTitle + ' - ' + GlobalSettings.getBaseTitle();
     }
     this.titleService.setTitle(shortTitle);
   }
