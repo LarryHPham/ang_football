@@ -57,7 +57,6 @@ export class ListPage implements OnInit {
               private params: RouteParams,
               private dynamicWidget: DynamicWidgetCall,
               private _title: Title) {
-    _title.setTitle(GlobalSettings.getPageTitle("Lists"));
     if(params.params['query'] != null){
       let query = params.params['query'];
       // Setup this way in case we want to switch out null with some default values
