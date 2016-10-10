@@ -35,6 +35,9 @@ export class ListOfListsService {
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
     let id      = urlParams.targetId != null ? urlParams.targetId : "";
+    if(id == 'all'){
+      id = '';
+    }
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
     var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
     var target =  profileType;

@@ -17,6 +17,7 @@ import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/si
 import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {SeoService} from '../../seo.service';
 
 declare var moment;
 
@@ -72,7 +73,8 @@ export class ArticlePages implements OnInit {
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
-                private _location:Location) {
+                private _location:Location,
+                private _seoService:SeoService) {
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
             this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
@@ -120,7 +122,21 @@ export class ArticlePages implements OnInit {
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
-                        ArticlePages.setMetaTag(this.articleData.metaHeadline);
+
+                        //create meta description that is below 160 characters otherwise will be truncated
+                        let metaDesc = Article['data'][0].teaser;
+                        let link = window.location.href;
+                        let image = GlobalSettings.getImageUrl(Article['data'][0]['article_data'][this.pageIndex]['images']['home_images'][0].image_url)
+                        this._seoService.setCanonicalLink(this._params.params, this._router);
+                        this._seoService.setOgTitle(this.title);
+                        this._seoService.setOgDesc(metaDesc);
+                        this._seoService.setOgType('image');
+                        this._seoService.setOgUrl(link);
+                        this._seoService.setOgImage(image);
+                        this._seoService.setTitle(this.title);
+                        this._seoService.setMetaDescription(metaDesc);
+                        this._seoService.setMetaRobots('INDEX, FOLLOW');
+
                         if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
                             this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
                         } else {
@@ -446,15 +462,6 @@ export class ArticlePages implements OnInit {
             keyword: "FOOTBALL"
         };
         return articles;
-    }
-
-    static setMetaTag(metaData) {
-        if (metaData !== null) {
-            var metaTag = document.createElement('meta');
-            metaTag.name = 'description';
-            metaTag.content = metaData;
-            document.head.appendChild(metaTag);
-        }
     }
 
     ngOnInit() {
