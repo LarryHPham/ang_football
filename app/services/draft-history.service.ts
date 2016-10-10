@@ -199,8 +199,9 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           route: playerRoute,
           text: playerFullName
         };
+        var collegeNickname = "N/A";
           if (val.playerCollegeAbbreviation != null && val.playerCollegeAbbreviation != "") {
-              var collegeNickname = val.playerCollegeAbbreviation + " " + val.playerCollegeNickname;
+              collegeNickname = val.playerCollegeAbbreviation + " " + val.playerCollegeNickname;
           }
         var rank = (index+1).toString();
         var location;
@@ -256,8 +257,9 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       var location = GlobalFunctions.toTitleCase(val.playerCity) + ', ' + GlobalFunctions.stateToAP(val.playerState);
       }
       var rank = (index+1);
+      var collegeNickname = "N/A";
         if (val.playerCollegeAbbreviation != null && val.playerCollegeAbbreviation != "") {
-            var collegeNickname = val.playerCollegeAbbreviation + " " + val.playerCollegeNickname;
+            collegeNickname = val.playerCollegeAbbreviation + " " + val.playerCollegeNickname;
         }
       var playerRoute = null;
       playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullNameUrl, val.playerId);
