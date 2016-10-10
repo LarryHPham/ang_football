@@ -61,16 +61,21 @@ export class SeoService {
     let shortTitle;
     if(splitTitle.length > 3){
       splitTitle = splitTitle.splice(0,3);
-      shortTitle = splitTitle.join(' ') + '...';
+      shortTitle = splitTitle.join(' ');
     }else{
       shortTitle = splitTitle.join(' ');
     }
     if(GlobalSettings.getHomeInfo().isPartner){
-      shortTitle = GlobalSettings.getBasePartnerTitle() + ' - ' + shortTitle;
+      shortTitle = shortTitle + ' | ' + GlobalSettings.getBasePartnerTitle();
     }else{
-      shortTitle = GlobalSettings.getBaseTitle() + ' - ' + shortTitle;
+      shortTitle = shortTitle + ' | ' + GlobalSettings.getBaseTitle();
     }
     this.titleService.setTitle(shortTitle);
+  }
+
+  //incase we dont want the base title to be in head title tag
+  public setTitleNoBase(newTitle: string) {
+    this.titleService.setTitle(newTitle);
   }
 
   public getMetaDescription(): string {
@@ -155,4 +160,24 @@ export class SeoService {
       return el;
     }
 
+    public setApplicationJSON(json, id): HTMLElement {
+      let el: HTMLElement;
+      el = this.DOM.query("script[id='"+id+"']");
+      if (el === null) {
+        el = this.DOM.createElement('script');
+        el.setAttribute('type', 'application/ld+json');
+        el.id = id;
+        el.innerHTML = json;
+        this.headElement.appendChild(el);
+      }else{
+        el.textContent = json;
+      }
+      return el;
+    }
+
+    public removeApplicationJSON(id) {
+      let el: HTMLElement;
+      el = document.getElementById(id);
+      el.remove();
+  }
 }

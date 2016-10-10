@@ -198,7 +198,6 @@ export class LeaguePage implements OnInit {
                 private _headlineDataService:HeadlineDataService,
                 private _seoService: SeoService,
                 private _params: RouteParams) {
-        _title.setTitle(GlobalSettings.getPageTitle("TDL"));
 
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;

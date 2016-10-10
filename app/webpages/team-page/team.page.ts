@@ -290,8 +290,59 @@ export class TeamPage implements OnInit {
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('Index, Follow');
+
+      //grab domain for json schema
+      let domainSite;
+      if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+        domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+      }else{
+        domainSite = "https://"+window.location.hostname;
+      }
+
+      //manually generate team schema for team page until global funcation can be created
+      let teamSchema = `
+      {
+       "@context": "http://schema.org",
+       "@type": "SportsTeam",
+       "name": "`+header.teamMarket + ' ' + header.teamName+`",
+      }`;
+
+      //manually generate json schema for BreadcrumbList
+      let jsonSchema = `
+      {
+       "@context": "http://schema.org",
+       "@type": "BreadcrumbList",
+       "itemListElement": [{
+         "@type": "ListItem",
+         "position": 1,
+         "item": {
+           "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+           "name": "`+this.scope.toUpperCase()+`"
+         }
+       },{
+         "@type": "ListItem",
+         "position": 2,
+         "item": {
+           "@id": "`+window.location.href+"?league="+header.divisionName+`",
+           "name": "`+header.divisionName+`"
+         }
+       },{
+         "@type": "ListItem",
+         "position": 3,
+         "item": {
+           "@id": "`+window.location.href+`",
+           "name": "`+header.teamMarket + ' ' + header.teamName+`"
+         }
+       }]
+      }`;
+      this._seoService.setApplicationJSON(teamSchema, 'page');
+      this._seoService.setApplicationJSON(jsonSchema, 'json');
     }
 
+    ngOnDestroy(){
+      this._seoService.removeApplicationJSON('page');
+      this._seoService.removeApplicationJSON('json');
+    }
     //api for Headline Module
     private getHeadlines(){
         var scope = this.scope == "fbs" ? "ncaa" : "nfl";
