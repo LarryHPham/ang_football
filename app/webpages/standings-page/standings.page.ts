@@ -170,7 +170,6 @@ export class StandingsPage{
         text3: title,
         icon: "fa fa-map-marker"
       };
-      console.log();
       //for Seo purposes
       this.profileData = {
         headerData:{
