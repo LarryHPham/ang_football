@@ -16,7 +16,6 @@ export class ErrorPage {
   public pageLink: string;
 
   constructor(private _router:Router, private _title: Title) {
-      _title.setTitle(GlobalSettings.getPageTitle("Page Not Found"));
       GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
   }
 

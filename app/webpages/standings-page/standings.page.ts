@@ -44,7 +44,6 @@ export class StandingsPage{
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
               private _mlbFunctions: VerticalGlobalFunctions) {
-    _title.setTitle(GlobalSettings.getPageTitle("Standings"));
     GlobalSettings.getParentParams(_router, parentParams => {
         this.scope = parentParams.scope;
         var type = _params.get("type");

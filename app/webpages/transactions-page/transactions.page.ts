@@ -59,7 +59,6 @@ export class TransactionsPage implements OnInit{
               private _params: RouteParams,
               private _title: Title) {
 
-    _title.setTitle(GlobalSettings.getPageTitle("Transactions"));
 
     this.pageParams = {
       teamId: _params.get("teamId") ? Number(_params.get("teamId")) : null
