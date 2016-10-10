@@ -22,6 +22,10 @@ import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
+//import seo service here to overwrite the one done in title.component
+import {SeoService} from "../../seo.service";
+
+declare var moment;
 @Component({
     selector: 'Standings-page',
     templateUrl: './app/webpages/standings-page/standings.page.html',
@@ -38,12 +42,14 @@ export class StandingsPage{
   public scope: string;
   public glossary: Array<GlossaryData>;
   public seasonsArray: Array<any>;
+  public profileData:any;
   constructor(private _params: RouteParams,
               private _router:Router,
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
-              private _mlbFunctions: VerticalGlobalFunctions) {
+              private _mlbFunctions: VerticalGlobalFunctions,
+              private _seoService: SeoService) {
     GlobalSettings.getParentParams(_router, parentParams => {
         this.scope = parentParams.scope;
         var type = _params.get("type");
@@ -55,11 +61,13 @@ export class StandingsPage{
         if ( type == "team" && teamId !== null && teamId !== undefined ) {
           this.pageParams.teamId = Number(teamId);
         }
+
         this.pageParams.scope = this.scope;
         this.getTabs();
         this.getGlossaryValue();
     });
   }
+
   getGlossaryValue():Array<GlossaryData>{
     if(this.scope == 'fbs'){
       this.glossary = [
@@ -139,10 +147,11 @@ export class StandingsPage{
           this.pageParams = data.pageParams;
           this.pageParams.scope = this.scope;
           var teamFullName = data.headerData.teamMarket + ' ' + data.headerData.teamName;
-          this._title.setTitle(GlobalSettings.getPageTitle("Standings", teamFullName));
           var title = this._standingsService.getPageTitle(this.pageParams, teamFullName);
           this.titleData = this._profileService.convertTeamPageHeader(data, title)
+          this.profileData = data;
           this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
+
         },
         err => {
           this.hasError = true;
@@ -153,16 +162,47 @@ export class StandingsPage{
     else {
       this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));
       var title = this._standingsService.getPageTitle(this.pageParams, null);
-      this.titleData = this.titleData = {
+      this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
         imageRoute: ["League-page"],
         text1: "",
         text2: "United States",
         text3: title,
         icon: "fa fa-map-marker"
+      };
+      console.log();
+      //for Seo purposes
+      this.profileData = {
+        headerData:{
+          teamMarket: 'League',
+          teamName: null,
+          backgroundUrl:GlobalSettings.getSiteLogoUrl(),
+          lastUpdated:GlobalFunctions.formatUpdatedDate(new Date(), false),
+        }
       }
       this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
     }
+  }
+
+  private metaTags(data){
+    let header, metaDesc, link, title, ogTitle, image, titleName;
+    //create meta description that is below 160 characters otherwise will be truncated
+    header = data.headerData;
+    titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName:header.teamMarket;
+    title = titleName + ' Standings';
+    ogTitle = titleName;
+    metaDesc =  this.scope.toUpperCase() + ' Standings for ' + header.teamMarket + ' ' + header.teamName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
+    link = window.location.href;
+    image = GlobalSettings.getImageUrl(header.backgroundUrl);
+    this._seoService.setCanonicalLink(this._params.params, this._router);
+    this._seoService.setOgTitle(ogTitle);
+    this._seoService.setOgDesc(metaDesc);
+    this._seoService.setOgType('image');
+    this._seoService.setOgUrl(link);
+    this._seoService.setOgImage(image);
+    this._seoService.setTitleNoBase(title);
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setMetaRobots('Index, Follow');
   }
 
   private standingsTabSelected(tabData: Array<any>) {
