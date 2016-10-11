@@ -182,6 +182,8 @@ export class SeoService {
     public removeApplicationJSON(id) {
       let el: HTMLElement;
       el = document.getElementById(id);
-      el.remove();
+      if(el != null){
+        el.remove();
+      }
   }
 }
