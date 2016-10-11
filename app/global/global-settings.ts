@@ -40,6 +40,7 @@ export class GlobalSettings {
 
     private static _collegeDivisionAbbrv: string="FBS";
     private static _collegeDivisionFullAbbrv: string="NCAAF";
+    private static _collegeLeagueFull: string ="National Collegiate Athletic Association Football";
     private static _collegeDivisionChampionship: string = "National Championships";
     private static _collegeDivisionSegments: string = "Conferences";
 
@@ -256,6 +257,9 @@ export class GlobalSettings {
     }
     static getSportLeagueFull() {
       return this._sportLeagueFull;
+    }
+    static getCollegeLeagueFull() {
+      return this._collegeLeagueFull;
     }
     static getSportLeagueChampionship() {
       return this._sportLeagueChampionship;

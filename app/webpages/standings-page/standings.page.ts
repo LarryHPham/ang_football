@@ -177,7 +177,7 @@ export class StandingsPage{
       //for Seo purposes
       this.profileData = {
         headerData:{
-          teamMarket: 'League',
+          teamMarket: this.scope.toUpperCase() + ' League',
           teamName: null,
           backgroundUrl:GlobalSettings.getSiteLogoUrl(),
           lastUpdated:GlobalFunctions.formatUpdatedDate(new Date(), false),
@@ -197,7 +197,7 @@ export class StandingsPage{
     titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName:header.teamMarket;
     title = titleName + ' Standings';
     ogTitle = titleName;
-    metaDesc =  this.scope.toUpperCase() + ' Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
+    metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
     link = window.location.href;
     image = GlobalSettings.getImageUrl(header.backgroundUrl);
 
