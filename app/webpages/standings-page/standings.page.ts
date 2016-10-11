@@ -177,7 +177,7 @@ export class StandingsPage{
       //for Seo purposes
       this.profileData = {
         headerData:{
-          teamMarket: 'League',
+          teamMarket: this.scope.toUpperCase() + ' League',
           teamName: null,
           backgroundUrl:GlobalSettings.getSiteLogoUrl(),
           lastUpdated:GlobalFunctions.formatUpdatedDate(new Date(), false),
@@ -197,7 +197,7 @@ export class StandingsPage{
     titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName:header.teamMarket;
     title = titleName + ' Standings';
     ogTitle = titleName;
-    metaDesc =  this.scope.toUpperCase() + ' Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
+    metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
     link = window.location.href;
     image = GlobalSettings.getImageUrl(header.backgroundUrl);
 
@@ -211,45 +211,47 @@ export class StandingsPage{
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaRobots('Index, Follow');
 
-    //grab domain for json schema
-    let domainSite;
-    if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
-      domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
-    }else{
-      domainSite = "https://"+window.location.hostname;
+    if(header.teamId != null){
+      //grab domain for json schema
+      let domainSite;
+      if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+        domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+      }else{
+        domainSite = "https://"+window.location.hostname;
+      }
+
+      //manually generate team schema for team page until global funcation can be created
+      let teamSchema = `
+      {
+        "@context": "http://schema.org",
+        "@type": "SportsTeam",
+        "name": "`+titleName+`",
+      }`;
+
+      //manually generate json schema for BreadcrumbList
+      let jsonSchema = `
+      {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+            "name": "`+this.scope.toUpperCase()+`"
+          }
+        },{
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@id": "`+window.location.href+`",
+            "name": "`+titleName+ 'Standings' +`"
+          }
+        }]
+      }`;
+      this._seoService.setApplicationJSON(teamSchema, 'page');
+      this._seoService.setApplicationJSON(jsonSchema, 'json');
     }
-
-    //manually generate team schema for team page until global funcation can be created
-    let teamSchema = `
-    {
-     "@context": "http://schema.org",
-     "@type": "SportsTeam",
-     "name": "`+titleName+`",
-    }`;
-
-    //manually generate json schema for BreadcrumbList
-    let jsonSchema = `
-    {
-     "@context": "http://schema.org",
-     "@type": "BreadcrumbList",
-     "itemListElement": [{
-       "@type": "ListItem",
-       "position": 1,
-       "item": {
-         "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
-         "name": "`+this.scope.toUpperCase()+`"
-       }
-     },{
-       "@type": "ListItem",
-       "position": 2,
-       "item": {
-         "@id": "`+window.location.href+`",
-         "name": "`+titleName+ 'Standings' +`"
-       }
-     }]
-    }`;
-    this._seoService.setApplicationJSON(teamSchema, 'page');
-    this._seoService.setApplicationJSON(jsonSchema, 'json');
   }
 
   ngOnDestroy(){
