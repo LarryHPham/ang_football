@@ -98,19 +98,17 @@ export class ListOfListsPage implements OnInit{
                   listTargetData = list.targetData;
                 }
 
-
                 switch ( urlParams.target ) {
                     case "player":
                         profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
                         profileRoute = VerticalGlobalFunctions.formatPlayerRoute(listTargetData.teamName, profileName, listTargetData.playerId);
-                        profileImage = GlobalSettings.getImageUrl(listTargetData.imageUrl);
+                        profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl);
                         break;
 
                     case "team":
                         profileName = listTargetData.teamName;
                         profileRoute = VerticalGlobalFunctions.formatTeamRoute(listTargetData.teamName, listTargetData.teamId);
                         profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo);
-
                         break;
 
                     default: break;
