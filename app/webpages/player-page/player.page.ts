@@ -279,7 +279,6 @@ export class PlayerPage implements OnInit {
 
       //manually generate json schema for BreadcrumbList
       //TODO i need to generate team schema
-      console.log(header);
       let jsonSchema = `
       {
        "@context": "http://schema.org",
