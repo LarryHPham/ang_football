@@ -156,7 +156,7 @@ export class StandingsPage{
           this.titleData = this._profileService.convertTeamPageHeader(data, title)
           this.profileData = data;
           this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
-
+          this.metaTags(this.profileData);
         },
         err => {
           this.hasError = true;
@@ -183,9 +183,10 @@ export class StandingsPage{
           lastUpdated:GlobalFunctions.formatUpdatedDate(new Date(), false),
         }
       }
+      this.metaTags(this.profileData);
       this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
     }
-    this.metaTags(this.profileData);
+
   }
 
   private metaTags(data){
@@ -196,7 +197,7 @@ export class StandingsPage{
     titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName:header.teamMarket;
     title = titleName + ' Standings';
     ogTitle = titleName;
-    metaDesc =  this.scope.toUpperCase() + ' Standings for ' + header.teamMarket + ' ' + header.teamName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
+    metaDesc =  this.scope.toUpperCase() + ' Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
     link = window.location.href;
     image = GlobalSettings.getImageUrl(header.backgroundUrl);
 
@@ -206,7 +207,7 @@ export class StandingsPage{
     this._seoService.setOgType('image');
     this._seoService.setOgUrl(link);
     this._seoService.setOgImage(image);
-    this._seoService.setTitleNoBase(title, 'standings');
+    this._seoService.setTitleNoBase(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaRobots('Index, Follow');
 

@@ -56,20 +56,24 @@ export class SeoService {
     return this.titleService.getTitle();
   }
 
+  //sets title to atleast less than 50 characters and will choose the  first 3 words and append site name at end
   public setTitle(newTitle: string) {
     let splitTitle = newTitle.split(' ');
     let shortTitle;
-    if(splitTitle.length > 3){
+
+    if(newTitle.length > 50){
       splitTitle = splitTitle.splice(0,3);
       shortTitle = splitTitle.join(' ');
     }else{
       shortTitle = splitTitle.join(' ');
     }
+
     if(GlobalSettings.getHomeInfo().isPartner){
       shortTitle = shortTitle + ' | ' + GlobalSettings.getBasePartnerTitle();
     }else{
       shortTitle = shortTitle + ' | ' + GlobalSettings.getBaseTitle();
     }
+
     this.titleService.setTitle(shortTitle);
   }
 
