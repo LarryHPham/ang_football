@@ -70,12 +70,14 @@ export class SeoService {
     }else{
       shortTitle = shortTitle + ' | ' + GlobalSettings.getBaseTitle();
     }
+    console.log('Run Base', shortTitle);
     this.titleService.setTitle(shortTitle);
   }
 
   //incase we dont want the base title to be in head title tag
-  public setTitleNoBase(newTitle: string) {
-    this.titleService.setTitle(newTitle);
+  public setTitleNoBase(title: string) {
+    console.log('Run noBase', title);
+    this.titleService.setTitle(title);
   }
 
   public getMetaDescription(): string {

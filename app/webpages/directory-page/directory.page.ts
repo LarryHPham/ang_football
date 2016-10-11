@@ -46,6 +46,8 @@ export class DirectoryPage {
 
   navLists: Array<Link>;
 
+  constructorControl:boolean = true;
+
   constructor(
     private _footerService: FooterService,
     private _params: RouteParams,
@@ -55,9 +57,9 @@ export class DirectoryPage {
     private _seoService: SeoService
   ) {
     GlobalSettings.getParentParams(_router, parentParams => {
+      if(this.constructorControl){
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
-        _title.setTitle(GlobalSettings.getPageTitle("Directory"));
         var page = _params.get("page");
         this.currentPage = Number(page);
         var type = _params.get("type");
@@ -105,6 +107,9 @@ export class DirectoryPage {
         this._seoService.setTitle('Directory');
         this._seoService.setMetaDescription(metaDesc);
         this._seoService.setMetaRobots('INDEX, FOLLOW');
+        
+        this.constructorControl = false;
+      }
     });
   }
 

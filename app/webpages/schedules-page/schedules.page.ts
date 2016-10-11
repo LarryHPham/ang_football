@@ -56,7 +56,7 @@ export class SchedulesPage implements OnInit{
           private profHeadService:ProfileHeaderService,
           private params: RouteParams,
           private _title: Title, private _router: Router) {
-      _title.setTitle(GlobalSettings.getPageTitle("Schedules"));
+      // _title.setTitle(GlobalSettings.getPageTitle("Schedules"));
       this.isFirstRun = 0;
       GlobalSettings.getParentParams(_router, parentParams => {
           this.scope = parentParams.scope;
@@ -113,7 +113,7 @@ export class SchedulesPage implements OnInit{
       this.profHeadService.getTeamProfile(Number(teamId))
       .subscribe(
         data => {
-          this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
+          // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
           this.profileHeaderData = this.profHeadService.convertTeamPageHeader(data, "Current Season Schedule - " + data.teamName);
           this.errorData = {
             data: data.teamName + " has no record of any more games for the current season.",
@@ -146,7 +146,7 @@ export class SchedulesPage implements OnInit{
         this.setPaginationParams(schedulesData.pageInfo, status, pageNum);
       },year, week)
     }else{
-      this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
+      // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
       this.profHeadService.getLeagueProfile(this.scope)
       .subscribe(
         data => {
