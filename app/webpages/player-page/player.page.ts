@@ -279,6 +279,7 @@ export class PlayerPage implements OnInit {
 
       //manually generate json schema for BreadcrumbList
       //TODO i need to generate team schema
+      console.log(header);
       let jsonSchema = `
       {
        "@context": "http://schema.org",
@@ -293,13 +294,6 @@ export class PlayerPage implements OnInit {
        },{
          "@type": "ListItem",
          "position": 2,
-         "item": {
-           "@id": "`+window.location.href+"?league="+header.divisionName+`",
-           "name": "`+header.divisionName+`"
-         }
-       },{
-         "@type": "ListItem",
-         "position": 3,
          "item": {
            "@id": "`+window.location.href+`",
            "name": "`+header.playerFirstName + ' ' + header.playerLastName+`"
