@@ -69,7 +69,7 @@ export class ArticlePages implements OnInit {
     title:string;
     scope:string = null;
     checkPartner:boolean;
-
+    constructorControl: boolean = true;
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
@@ -77,11 +77,14 @@ export class ArticlePages implements OnInit {
                 private _seoService:SeoService) {
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
+          if(this.constructorControl){
             this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
             if (parentParams.partnerID != null) {
-                this.partnerId = parentParams.partnerID;
+              this.partnerId = parentParams.partnerID;
             }
             this.getArticles();
+            this.constructorControl = false;
+          }
         });
         this.eventID = _params.get('eventID');
         this.eventType = _params.get('eventType');
