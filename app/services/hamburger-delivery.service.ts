@@ -44,7 +44,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Standings",
-        url: [partnerUrl +'-home',params ,'Standings-page-league', {type: division}]
+        url: [partnerUrl +'-home',params ,'Standings-page']
     }];
     var menuInfo = [{
         menuTitle: "About Us",
