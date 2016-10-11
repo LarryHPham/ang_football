@@ -112,7 +112,7 @@ export class ContactUsPage{
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('image');
       this._seoService.setOgUrl(link);
-      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setOgImage(GlobalSettings.getmainLogoUrl());
       this._seoService.setTitle('Contact Us');
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('INDEX, FOLLOW');
