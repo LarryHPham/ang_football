@@ -54,6 +54,7 @@ export class SyndicatedArticlePage{
   public imageTitle: Array<string>;
   public copyright: Array<string>;
   public scope: string;
+  public constructorControl: boolean = true;
   private subRec;
   iframeUrl: any;
   constructor(
@@ -65,23 +66,26 @@ export class SyndicatedArticlePage{
     private _seoService: SeoService
     ){
       GlobalSettings.getParentParams(_router, parentParams => {
-        this.eventID = this._params.get('eventID');
-        this.articleType = this._params.get('articleType');
-        this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+        if(this.constructorControl){
+          this.eventID = this._params.get('eventID');
+          this.articleType = this._params.get('articleType');
+          this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
 
-        if (this.articleType == "story") {
-          this.getDeepDiveArticle(this.eventID);
-        }
-        else {
-          this.getDeepDiveVideo(this.eventID);
-        }
+          if (this.articleType == "story") {
+            this.getDeepDiveArticle(this.eventID);
+          }
+          else {
+            this.getDeepDiveVideo(this.eventID);
+          }
 
-        this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
-        if (parentParams.partnerID != null) {
+          this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
+          if (parentParams.partnerID != null) {
             this.partnerID = parentParams.partnerID;
             this.getPartnerHeader();
-        }else{
+          }else{
             this.getGeoLocation();
+          }
+            this.constructorControl = false;
         }
 
       });
