@@ -53,7 +53,6 @@ export class PlayerStatsPage implements OnInit {
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _statsService: PlayerStatsService) {
-    // this._title.setTitle(GlobalSettings.getPageTitle("Player Stats"));
     var teamId = _params.get("teamId");
     if ( teamId !== null && teamId !== undefined ) {
       this.pageParams.teamId = Number(teamId);
@@ -70,7 +69,6 @@ export class PlayerStatsPage implements OnInit {
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          // this._title.setTitle(GlobalSettings.getPageTitle("Player Stats", data.teamName));
           var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
           this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
           this.tabs = this._statsService.initializeAllTabs(data.teamName, false);
@@ -82,7 +80,6 @@ export class PlayerStatsPage implements OnInit {
       );
     }
     else {
-      // this._title.setTitle(GlobalSettings.getPageTitle("Player Stats", "MLB"));
       this.setupTitleData(["League-page"]);
     }
   }
