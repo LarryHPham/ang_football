@@ -31,7 +31,7 @@ export class DraftHistoryPage implements OnInit{
   constructor(private _profileService:ProfileHeaderService,
               private params: RouteParams,
               private _title: Title) {
-    _title.setTitle(GlobalSettings.getPageTitle(this.whatProfile));
+    // _title.setTitle(GlobalSettings.getPageTitle(this.whatProfile));
   }
 
   ngOnInit() {
@@ -44,7 +44,7 @@ export class DraftHistoryPage implements OnInit{
       this._profileService.getTeamProfile(teamId)
       .subscribe(
           data => {
-            this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
+            // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
             var pageNameForTitle = data.profileName + " - " + this.whatProfile;
             this.profileHeaderData = this._profileService.convertTeamPageHeader(data, pageNameForTitle);
             this.profileData = data;
@@ -59,7 +59,7 @@ export class DraftHistoryPage implements OnInit{
       this._profileService.getLeagueProfile()
       .subscribe(
           data => {
-            this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
+            // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
             this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, data.headerData.leagueAbbreviatedName + ' ' + this.whatProfile);
             this.profileData = data;
           },

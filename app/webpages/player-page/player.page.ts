@@ -146,6 +146,8 @@ export class PlayerPage implements OnInit {
 
     scope:string;
 
+    constructorControl:boolean = true;
+
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _title:Title,
@@ -169,9 +171,12 @@ export class PlayerPage implements OnInit {
         };
 
         GlobalSettings.getParentParams(_router, parentParams => {
+          if(this.constructorControl){
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             this.pageParams.scope = this.scope;
+            this.constructorControl = false;
+          }
         });
     }
 
@@ -189,7 +194,6 @@ export class PlayerPage implements OnInit {
                 this.teamName = data.headerData.teamFullName;
                 this.teamId = data.headerData.teamId;
 
-                this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
                 this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.playerId);
@@ -289,13 +293,6 @@ export class PlayerPage implements OnInit {
        },{
          "@type": "ListItem",
          "position": 2,
-         "item": {
-           "@id": "`+window.location.href+"?league="+header.divisionName+`",
-           "name": "`+header.divisionName+`"
-         }
-       },{
-         "@type": "ListItem",
-         "position": 3,
          "item": {
            "@id": "`+window.location.href+`",
            "name": "`+header.playerFirstName + ' ' + header.playerLastName+`"

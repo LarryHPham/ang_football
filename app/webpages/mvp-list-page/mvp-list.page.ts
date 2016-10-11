@@ -63,7 +63,7 @@ export class MVPListPage implements OnInit{
               private _params: RouteParams,
               private _profileService: ProfileHeaderService,
               private _title: Title, private _router: Router) {
-    _title.setTitle(GlobalSettings.getPageTitle("Most Valuable Players"));
+    // _title.setTitle(GlobalSettings.getPageTitle("Most Valuable Players"));
 
     GlobalSettings.getParentParams(this._router, parentParams => {
         this.scope = parentParams.scope;

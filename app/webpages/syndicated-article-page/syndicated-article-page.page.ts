@@ -123,7 +123,7 @@ export class SyndicatedArticlePage{
       this._deepdiveservice.getDeepDiveVideoService(articleID).subscribe(
         data => {
           this.articleData = data.data;
-
+          this.metaTags(data);
             this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
         }
       )
@@ -131,14 +131,27 @@ export class SyndicatedArticlePage{
 
     private metaTags(data){
       //create meta description that is below 160 characters otherwise will be truncated
-      let metaDesc = data.data.teaser;
+      let metaDesc;
+      if(data.data.teaser != null){
+        metaDesc = data.data.teaser;
+      }else{
+        metaDesc = data.data.description;
+      }
+
       let link = window.location.href;
+      let image;
+      if(this.imageData != null){
+        image = this.imageData[0];
+      }else{
+        image = data.data.thumbnail;
+      }
+
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle(data.data.title);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('image');
       this._seoService.setOgUrl(link);
-      this._seoService.setOgImage(this.imageData[0]);
+      this._seoService.setOgImage(image);
       this._seoService.setTitle(data.data.title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('INDEX, NOFOLLOW');

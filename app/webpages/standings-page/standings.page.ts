@@ -43,14 +43,17 @@ export class StandingsPage{
   public glossary: Array<GlossaryData>;
   public seasonsArray: Array<any>;
   public profileData:any;
+  private runMeta:boolean = false;
+  private constructorControl: boolean = true;
+
   constructor(private _params: RouteParams,
               private _router:Router,
-              private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
               private _mlbFunctions: VerticalGlobalFunctions,
               private _seoService: SeoService) {
     GlobalSettings.getParentParams(_router, parentParams => {
+      if(this.constructorControl){
         this.scope = parentParams.scope;
         var type = _params.get("type");
         if ( type !== null && type !== undefined ) {
@@ -65,6 +68,8 @@ export class StandingsPage{
         this.pageParams.scope = this.scope;
         this.getTabs();
         this.getGlossaryValue();
+        this.constructorControl = false;
+      }
     });
   }
 
@@ -151,7 +156,7 @@ export class StandingsPage{
           this.titleData = this._profileService.convertTeamPageHeader(data, title)
           this.profileData = data;
           this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
-
+          this.metaTags(this.profileData);
         },
         err => {
           this.hasError = true;
@@ -160,7 +165,6 @@ export class StandingsPage{
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));
       var title = this._standingsService.getPageTitle(this.pageParams, null);
       this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
@@ -173,26 +177,30 @@ export class StandingsPage{
       //for Seo purposes
       this.profileData = {
         headerData:{
-          teamMarket: 'League',
+          teamMarket: this.scope.toUpperCase() + ' League',
           teamName: null,
           backgroundUrl:GlobalSettings.getSiteLogoUrl(),
           lastUpdated:GlobalFunctions.formatUpdatedDate(new Date(), false),
         }
       }
+      this.metaTags(this.profileData);
       this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
     }
+
   }
 
   private metaTags(data){
     let header, metaDesc, link, title, ogTitle, image, titleName;
+
     //create meta description that is below 160 characters otherwise will be truncated
     header = data.headerData;
     titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName:header.teamMarket;
     title = titleName + ' Standings';
     ogTitle = titleName;
-    metaDesc =  this.scope.toUpperCase() + ' Standings for ' + header.teamMarket + ' ' + header.teamName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
+    metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
     link = window.location.href;
     image = GlobalSettings.getImageUrl(header.backgroundUrl);
+
     this._seoService.setCanonicalLink(this._params.params, this._router);
     this._seoService.setOgTitle(ogTitle);
     this._seoService.setOgDesc(metaDesc);
@@ -203,45 +211,47 @@ export class StandingsPage{
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaRobots('Index, Follow');
 
-    //grab domain for json schema
-    let domainSite;
-    if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
-      domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
-    }else{
-      domainSite = "https://"+window.location.hostname;
+    if(header.teamId != null){
+      //grab domain for json schema
+      let domainSite;
+      if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+        domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+      }else{
+        domainSite = "https://"+window.location.hostname;
+      }
+
+      //manually generate team schema for team page until global funcation can be created
+      let teamSchema = `
+      {
+        "@context": "http://schema.org",
+        "@type": "SportsTeam",
+        "name": "`+titleName+`",
+      }`;
+
+      //manually generate json schema for BreadcrumbList
+      let jsonSchema = `
+      {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+            "name": "`+this.scope.toUpperCase()+`"
+          }
+        },{
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@id": "`+window.location.href+`",
+            "name": "`+titleName+ 'Standings' +`"
+          }
+        }]
+      }`;
+      this._seoService.setApplicationJSON(teamSchema, 'page');
+      this._seoService.setApplicationJSON(jsonSchema, 'json');
     }
-
-    //manually generate team schema for team page until global funcation can be created
-    let teamSchema = `
-    {
-     "@context": "http://schema.org",
-     "@type": "SportsTeam",
-     "name": "`+titleName+`",
-    }`;
-
-    //manually generate json schema for BreadcrumbList
-    let jsonSchema = `
-    {
-     "@context": "http://schema.org",
-     "@type": "BreadcrumbList",
-     "itemListElement": [{
-       "@type": "ListItem",
-       "position": 1,
-       "item": {
-         "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
-         "name": "`+this.scope.toUpperCase()+`"
-       }
-     },{
-       "@type": "ListItem",
-       "position": 2,
-       "item": {
-         "@id": "`+window.location.href+`",
-         "name": "`+titleName+ 'Standings' +`"
-       }
-     }]
-    }`;
-    this._seoService.setApplicationJSON(teamSchema, 'page');
-    this._seoService.setApplicationJSON(jsonSchema, 'json');
   }
 
   ngOnDestroy(){

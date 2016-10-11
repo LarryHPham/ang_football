@@ -99,7 +99,6 @@ export class PickTeamPage{
       private _seoService: SeoService,
       private _params: RouteParams
     ) {
-      _title.setTitle(GlobalSettings.getPageTitle(""));
 
       this.getListData();
 
