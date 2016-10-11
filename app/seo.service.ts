@@ -74,8 +74,8 @@ export class SeoService {
   }
 
   //incase we dont want the base title to be in head title tag
-  public setTitleNoBase(newTitle: string) {
-    this.titleService.setTitle(newTitle);
+  public setTitleNoBase(title: string) {
+    this.titleService.setTitle(title);
   }
 
   public getMetaDescription(): string {

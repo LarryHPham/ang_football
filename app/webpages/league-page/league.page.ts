@@ -178,6 +178,7 @@ export class LeaguePage implements OnInit {
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+    private constructorControl: boolean = true;
 
     constructor(private _router:Router,
                 private _title: Title,
@@ -200,6 +201,7 @@ export class LeaguePage implements OnInit {
                 private _params: RouteParams) {
 
         GlobalSettings.getParentParams(this._router, parentParams => {
+          if(this.constructorControl){
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             this.pageParams.scope = this.scope;
@@ -215,6 +217,8 @@ export class LeaguePage implements OnInit {
             }
 
             this.setupProfileData(this.partnerID, this.scope);
+            this.constructorControl = false;
+          }
         }); //GlobalSettings.getParentParams
 
         this.limit = Number(this._params.params['limit']);

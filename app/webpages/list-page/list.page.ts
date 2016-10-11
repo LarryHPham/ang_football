@@ -130,7 +130,7 @@ export class ListPage implements OnInit {
     this.listService.getListPageService(urlParams, errorMessage, this.scope, season)
       .subscribe(
         list => {
-          this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
+          // this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
           this.profileHeaderData = list.profHeader;
           if (list.listData.length == 0) {//makes sure it only runs once
             this.detailedDataArray = null;
@@ -159,7 +159,7 @@ export class ListPage implements OnInit {
     this.dynamicWidget.getWidgetData(this.tw, this.sw, this.input)
       .subscribe(
         list => {
-          this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayTitle, "Lists"));
+          // this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayTitle, "Lists"));
           this.profileHeaderData = list.profHeader;
           if (list.listData.length == 0) {//makes sure it only runs once
             this.detailedDataArray = null;

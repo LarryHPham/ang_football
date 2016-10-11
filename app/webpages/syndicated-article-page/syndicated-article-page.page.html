@@ -12,7 +12,7 @@
 
 
 
-      <div class="articles-page-title" [innerHTML]="articleData.title | safeHtml"></div>
+      <h1 class="articles-page-title" [innerHTML]="articleData.title | safeHtml"></h1>
         <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [syndicated]="true">
             <span>
                 <div class="carousel-container" *ngIf="articleType == 'story'">

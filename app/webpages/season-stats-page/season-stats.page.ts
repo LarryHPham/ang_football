@@ -43,7 +43,7 @@ export class SeasonStatsPage implements OnInit {
               private _seasonStatsPageService: SeasonStatsPageService,
               private _mlbFunctions: VerticalGlobalFunctions,
               private _title: Title) {
-    _title.setTitle(GlobalSettings.getPageTitle("Season Stats"));
+    // _title.setTitle(GlobalSettings.getPageTitle("Season Stats"));
     var playerId = _params.get("playerId");
     this.pageParams.playerId = Number(playerId);
   }
@@ -70,7 +70,7 @@ export class SeasonStatsPage implements OnInit {
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
+          // this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
           this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
           this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams);
         },
