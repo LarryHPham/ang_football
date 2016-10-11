@@ -46,6 +46,9 @@ export class GlobalSettings {
     private static _estYear: string = " 2016";
     private static _copyrightInfo: string = "USA Today Sports Images";
 
+    private static _mainLogo: string = "/app/public/mainLogo.jpg";
+    private static _mainPageUrl: string = "touchdownloyal.com";
+
     static getEnv(env:string):string {
       if (env == "localhost"){
           env = "dev";
@@ -83,6 +86,10 @@ export class GlobalSettings {
 
     static widgetUrl():string {
         return this._proto + "//" + this._widgetUrl;
+    }
+
+    static getmainLogoUrl(): string{
+        return this._proto + "//" + this._mainPageUrl + this._mainLogo;
     }
 
     static getImageUrl(relativePath):string {
