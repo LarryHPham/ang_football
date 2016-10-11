@@ -31,7 +31,6 @@ export class ContactUsPage{
       private _params: RouteParams,
       private _seoService: SeoService
     ) {
-        _title.setTitle(GlobalSettings.getPageTitle("Contact Us"));
         GlobalSettings.getParentParams(_router, parentParams => {
           var domainTitle;
           if(parentParams.partnerID != null){
@@ -116,6 +115,6 @@ export class ContactUsPage{
       this._seoService.setOgImage('./app/public/mainLogo.png');
       this._seoService.setTitle('Contact Us');
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
     }
 }

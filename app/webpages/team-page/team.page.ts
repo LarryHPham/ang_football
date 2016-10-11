@@ -174,6 +174,8 @@ export class TeamPage implements OnInit {
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
 
+    constructorControl:boolean = true;
+
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
@@ -204,6 +206,7 @@ export class TeamPage implements OnInit {
         };
 
         GlobalSettings.getParentParams(_router, parentParams => {
+          if (this.constructorControl) {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             var currDate = new Date();
@@ -216,6 +219,8 @@ export class TeamPage implements OnInit {
               // date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID,this.scope);
+            this.constructorControl = false;
+          }
         });
     }
 
@@ -287,7 +292,7 @@ export class TeamPage implements OnInit {
       this._seoService.setOgType('image');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
-      this._seoService.setTitle(title);
+      this._seoService.setTitle(title, 'teampage');
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('Index, Follow');
 
