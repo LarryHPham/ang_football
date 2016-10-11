@@ -155,7 +155,7 @@ export class ListOfListsService {
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData.lastUpdated),
       //    lastUpdatedDate: 'last-updated',
           circleImageUrl: itemImgUrl,
-          circleImageRoute: VerticalGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId), //replacement for
+          circleImageRoute: itemRoute, //replacement for
           rank: itemTargetData.rank,
           rankClass: "image-48-rank"
         });
