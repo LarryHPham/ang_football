@@ -450,6 +450,9 @@ export class ProfileHeaderService {
     else {
       division = headerData.conferenceName + " " + GlobalFunctions.toTitleCase(headerData.divisionName.toString().replace(headerData.conferenceName.toString(), ""));
     }
+    if(location[location.length-1] === "."){//Check if period is at the end of string then remove it
+      location = location.slice(0, -1);
+    }
     var description = "The " + fullTeamName +
                       venueForDescription +
                       " located in " + location + ". The " + headerData.teamName +
