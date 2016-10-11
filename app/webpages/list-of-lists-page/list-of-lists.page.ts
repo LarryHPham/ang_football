@@ -117,7 +117,6 @@ export class ListOfListsPage implements OnInit{
 
                 this.profileName = profileName
 
-                this._title.setTitle(GlobalSettings.getPageTitle("List of Lists", this.profileName));
                 this.titleData = {
                     imageURL : profileImage,
                     imageRoute: profileRoute,
