@@ -218,14 +218,26 @@ export class MLBDraftHistoryService extends DraftHistoryService {
         else {
           college = val.playerCollege;
         }
+        var ovPick;
+        if (val.playerOverallPick == null || typeof val.playerOverallPick == 'undefined') {
+          ovPick = 'N/A';
+        } else {
+          ovPick = val.playerOverallPick;
+        }
+        var dRound;
+        if (val.playerRound == null || typeof val.playerRound == 'undefined') {
+          dRound = 'N/A';
+        } else {
+          dRound = val.playerRound;
+        }
         var carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: false,
           backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.playerBackground),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
           description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', collegeNickname],
-          dataValue: val.playerOverallPick + " Overall",
-          dataLabel: "Draft Round " + val.playerRound,
+          dataValue: ovPick + " Overall",
+          dataLabel: "Draft Round " + dRound,
           circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
           circleImageRoute: playerRoute,
           rank: rank
@@ -272,16 +284,28 @@ export class MLBDraftHistoryService extends DraftHistoryService {
       else {
         college = val.playerCollege;
       }
+      var ovPick;
+      if (val.playerOverallPick == null || typeof val.playerOverallPick == 'undefined') {
+        ovPick = 'N/A';
+      } else {
+        ovPick = val.playerOverallPick;
+      }
+      var dRound;
+      if (val.playerRound == null || typeof val.playerRound == 'undefined') {
+        dRound = 'N/A';
+      } else {
+        dRound = val.playerRound;
+      }
       var listData = {
         dataPoints: ListPageService.detailsData(
           [//main left text
             { route: playerRoute, text: playerFullName, class: "dataBox-mainLink" }
           ],
-          val.playerOverallPick+' Overall',
+          ovPick+' Overall',
           [//sub left text
             {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + collegeNickname + '</span>'}
           ],
-          'Draft Round '+val.playerRound),
+          'Draft Round '+dRound),
         imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
         hasCTA:true,
         ctaDesc: playerRoute ? 'Want more info about this player?' : 'This player is currently not active.',
