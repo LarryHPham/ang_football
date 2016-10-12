@@ -312,7 +312,6 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
     var link: Array<any> = null;
     var imageUrl: string = null;
     var isLocation = false;
-
     var hdrColumnKey = column.key;
     if ( column.key == "opp" ) {
         hdrColumnKey = this.curTeam == item.team1Id ? "away" : "home";
@@ -453,30 +452,15 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
       case "rec":
         //shows the record of the current teams game at that time
 
-
-        if(item.targetTeam == item.team1Id){
+        if(this.curTeam == item.team1Id){
           var currentWins = item.team1Record.split('-')[0];
           var currentLosses = item.team1Record.split('-')[1];
         }else{
           var currentWins = item.team2Record.split('-')[0];
           var currentLosses = item.team2Record.split('-')[1];
         }
-        // display = currentWins + " - " + currentLosses;
-        // sort = Number(currentWins)/Number(currentLosses);
-
-        var indexofCol = this.rows.length - Number(item.seasonWeek); // SeasonWeek Will not work. Should be the order of that game. [1/2/3/]
-        // var curwins = this.rows['winloss'][indexofCol].split('-')[0];
-        // var curlosses = this.rows['winloss'][indexofCol].split('-')[1];
-        var curwins = '1';
-        var curlosses = '1';
-
-
-        // display = this.rows['winloss'][indexofCol].replace('-',' - ');
-        display = 'something';
+        display = currentWins + " - " + currentLosses;
         sort = Number(currentWins)/Number(currentLosses);
-        console.log('yayayaya',display);
-
-
 
         break;
     }
