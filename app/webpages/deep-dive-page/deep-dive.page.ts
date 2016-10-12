@@ -71,7 +71,7 @@ export class DeepDivePage implements OnInit{
     videoData:any;
     blockIndex: number = 1;
     changeScopeVar: string = "";
-​
+​   constructorControl: boolean = true;
     private isPartnerZone: boolean = false;
 
     constructor(
@@ -87,6 +87,7 @@ export class DeepDivePage implements OnInit{
     ){
         // needs to get Geolocation first
       GlobalSettings.getParentParams(_router, parentParams => {
+        if(this.constructorControl){
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
           this.changeScopeVar = this.scope;
@@ -94,8 +95,8 @@ export class DeepDivePage implements OnInit{
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
             let relPath = this.getRelativePath(_router);
-              //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
-              window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
+            //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+            window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
@@ -104,7 +105,7 @@ export class DeepDivePage implements OnInit{
           }else{
             this.getGeoLocation();
           }
-
+          
           //create meta description that is below 160 characters otherwise will be truncated
           let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
           let link = window.location.href;
@@ -118,6 +119,8 @@ export class DeepDivePage implements OnInit{
           _seoService.setTitle('Deep Dive');
           _seoService.setMetaDescription(metaDesc);
           _seoService.setMetaRobots('Index, Follow');
+          this.constructorControl = false;
+        }
       });
     }
 

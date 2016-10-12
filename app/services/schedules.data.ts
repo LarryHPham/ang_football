@@ -379,7 +379,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
       case "gs":
       var partnerCheck = GlobalSettings.getHomeInfo();
-        if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null){
+        if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null && item.aiUrlMod != null){
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           let scope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : 'nfl';
           if(item.eventStatus == 'inprogress'){
