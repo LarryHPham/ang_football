@@ -70,8 +70,6 @@ export class StandingsService {
       tabs.push(this.createTab(true, currentTeamId, 'Division'));
       tabs.push(this.createTab(false, currentTeamId, 'Conference'));
       tabs.push(this.createTab(false, currentTeamId));
-
-
     }
     else if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an stangings page: show DIVISION, then CONFERENCE, then NFL/NCAAF
