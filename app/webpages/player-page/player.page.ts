@@ -195,7 +195,6 @@ export class PlayerPage implements OnInit {
                 this.teamId = data.headerData.teamId;
 
                 this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
-
                 this.dailyUpdateModule(this.pageParams.playerId);
                 if (this.scope.toLocaleLowerCase() == "nfl") {
                     this.getFantasyData(this.pageParams.playerId);
