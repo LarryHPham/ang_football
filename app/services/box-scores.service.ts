@@ -99,29 +99,31 @@ export class BoxScoresService {
     if (data[0].featuredReport['article'].status != "Error") {
       data.forEach(function(val, index){
         let aiContent = val.featuredReport['article']['data'][0];
-        for(var p in aiContent['articleData']){
-          var eventType = aiContent['articleData'][p];
-          var teaser = eventType.displayHeadline;
-          var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
-          if(aiContent['articleData'][p]['images']['home_images'] != null){
-            var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
-          }else{
-            var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+        if(aiContent['articleData'] != null){
+          for(var p in aiContent['articleData']){
+            var eventType = aiContent['articleData'][p];
+            var teaser = eventType.displayHeadline;
+            var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
+            if(aiContent['articleData'][p]['images']['home_images'] != null){
+              var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
+            }else{
+              var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+            }
           }
+          var Box = {
+            keyword: p.replace('-', ' '),
+            date: date,
+            url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
+            teaser: teaser,
+            imageConfig:{
+              imageClass: "image-320x180-sm",
+              imageUrl: homeImage,
+              hoverText: "View Article",
+              urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
+            }
+          }
+          boxArray.push(Box);
         }
-      var Box = {
-        keyword: p.replace('-', ' '),
-        date: date,
-        url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
-        teaser: teaser,
-        imageConfig:{
-          imageClass: "image-320x180-sm",
-          imageUrl: homeImage,
-          hoverText: "View Article",
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
-        }
-      }
-      boxArray.push(Box);
       });
       return boxArray;
     }else{

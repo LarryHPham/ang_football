@@ -306,6 +306,21 @@ export class SchedulesService {
 
       let tableName = this.formatGroupName(year,eventStatus);
 
+      var losses = 0;
+      var wins = 0;
+      var winloss = [];
+      for(var i = rows.length - 1; i >= 0; i--) {
+        var team = currentTeamProfile == rows[i].team1Id ? 'team1Outcome' : 'team2Outcome';
+        if(rows[i][team] == 'L') {
+          losses++;
+        } else {
+          wins++;
+        }
+        winloss[i]= wins + '-' +losses;
+      }
+      rows['winloss'] = winloss;
+
+
       if(typeof teamId == 'undefined'){
         var table = new SchedulesTableModel(rows, eventStatus, teamId, isTeamProfilePage);// there are two types of tables for Post game (team/league) tables
         if(rows.length > 0){
