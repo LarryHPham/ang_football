@@ -97,34 +97,38 @@ export class BoxScoresService {
   aiHeadline(data){
     var boxArray = [];
     if (data[0].featuredReport['article'].status != "Error") {
-      data.forEach(function(val, index){
-        let aiContent = val.featuredReport['article']['data'][0];
-        if(aiContent['articleData'] != null){
-          for(var p in aiContent['articleData']){
-            var eventType = aiContent['articleData'][p];
-            var teaser = eventType.displayHeadline;
-            var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
-            if(aiContent['articleData'][p]['images']['home_images'] != null){
-              var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
-            }else{
-              var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+      if (data[0].featuredReport['article'].data[0].articleData != null) {
+        data.forEach(function(val, index){
+          let aiContent = val.featuredReport['article']['data'][0];
+          if(aiContent['articleData'] != null){
+            for(var p in aiContent['articleData']){
+              var eventType = aiContent['articleData'][p];
+              var teaser = eventType.displayHeadline;
+              var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMMM D, YYYY');
+              if(aiContent['articleData'][p]['images']['home_images'] != null){
+                var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
+              }else{
+                var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+              }
             }
-          }
-          var Box = {
-            keyword: p.replace('-', ' '),
-            date: date,
-            url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
-            teaser: teaser,
-            imageConfig:{
-              imageClass: "image-320x180-sm",
-              imageUrl: homeImage,
-              hoverText: "View Article",
-              urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
+            var Box = {
+              keyword: p.replace('-', ' '),
+              date: date,
+              url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
+              teaser: teaser,
+              imageConfig:{
+                imageClass: "image-320x180-sm",
+                imageUrl: homeImage,
+                hoverText: "View Article",
+                urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
+              }
             }
+            boxArray.push(Box);
           }
-          boxArray.push(Box);
-        }
-      });
+        });
+      } else {
+        return null;
+      }
       return boxArray;
     }else{
       return null;
@@ -191,7 +195,6 @@ export class BoxScoresService {
   }
 
   transformBoxScores(data){
-
     let boxScores = data.data;
     var boxScoreObj = {};
     var newBoxScores = {};
@@ -267,6 +270,10 @@ export class BoxScoresService {
             home:boxScores[dates].team1Q4Score,
             away:boxScores[dates].team2Q4Score
           };
+          if (boxScores[dates].overtimeStatus == "N") {
+            boxScores[dates].team1OtScore = null;
+            boxScores[dates].team2OtScore = null;
+          }
           boxScoreObj[dates]['p5']={
             home:boxScores[dates].team1OtScore,
             away:boxScores[dates].team2OtScore
@@ -352,16 +359,14 @@ export class BoxScoresService {
     let sortedGames = game.sort(function(a, b) {
       return Number(a.gameInfo.startDateTimestamp) - Number(b.gameInfo.startDateTimestamp);
     });
-
     sortedGames.forEach(function(data,i){
-
       var info:GameInfoInput;
       let awayData = data.awayTeamInfo;
       let homeData = data.homeTeamInfo;
       let gameInfo = data.gameInfo;
       let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
       let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-      var aiContent = data.aiContent != null ? self.formatArticle(data):null;
+      var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
       if(teamId != null && profile == 'team'){//if league then both items will link
         if(homeData.id == teamId){//if not league then check current team they are one
@@ -465,7 +470,7 @@ export class BoxScoresService {
       let gameInfo = data.gameInfo;
       let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
       let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-      var aiContent = data.aiContent != null ? self.formatArticle(data):null;
+      var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
       if(teamId != null && profile == 'team'){//if league then both items will link
         if(homeData.id == teamId){//if not league then check current team they are one
@@ -478,7 +483,7 @@ export class BoxScoresService {
           var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
         }
       }else{
-        var aiContent = data.aiContent != null ? self.formatArticle(data):null;
+        var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
         var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
         var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
       }
@@ -573,7 +578,6 @@ export class BoxScoresService {
     let gameInfo = data.gameInfo;
 
     var arrayScores = [];
-
     //for live games show the total scored added up for each inning
     var homeLiveScore = 0;
     var awayLiveScore = 0;
