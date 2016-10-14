@@ -127,7 +127,6 @@ export class BoxScoresService {
           }
         });
       } else {
-        console.log('BORKED');
         return null;
       }
       return boxArray;
@@ -484,7 +483,7 @@ export class BoxScoresService {
           var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
         }
       }else{
-        var aiContent = data.aiConten.tfeaturedReport != null ? self.formatArticle(data):null;
+        var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
         var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
         var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
       }
