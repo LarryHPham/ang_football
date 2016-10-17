@@ -40,7 +40,6 @@ export class TeamRosterPage implements OnInit {
               private _title: Title,
               private _profileService: ProfileHeaderService,
               private _rosterService: RosterService) {
-    _title.setTitle(GlobalSettings.getPageTitle("Team Roster"));
     let teamId = _params.get("teamId");
     if ( teamId !== null && teamId !== undefined ) {
       this.pageParams.teamId = Number(teamId);
@@ -61,7 +60,6 @@ export class TeamRosterPage implements OnInit {
         data => {
           this.profileLoaded = true;
           this.pageParams = data.pageParams;
-          this._title.setTitle(GlobalSettings.getPageTitle("Team Roster", data.teamName));
           this.titleData = this._profileService.convertTeamPageHeader(data, this._rosterService.getPageTitle(data.teamName));
           this.setupRosterData();
         },

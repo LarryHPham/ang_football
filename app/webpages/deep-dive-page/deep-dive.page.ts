@@ -10,7 +10,7 @@ import {SideScrollSchedule} from '../../fe-core/modules/side-scroll-schedules/si
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
 import {GeoLocation} from "../../global/global-service";
-import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {PartnerHomePage} from '../partner-home-page/partner-home-page';
 
@@ -19,7 +19,10 @@ import {DeepDiveBlock2} from '../../fe-core/modules/deep-dive-blocks/deep-dive-b
 import {DeepDiveBlock3} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
 import {DeepDiveBlock4} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
 
-import {SideScroll} from '../../fe-core/components/side-scroll/side-scroll.component'
+import {SideScroll} from '../../fe-core/components/side-scroll/side-scroll.component';
+
+import {SeoService} from '../../seo.service';
+
 //window declarions of global functions from library scripts
 declare var moment;
 declare var jQuery: any;
@@ -68,7 +71,7 @@ export class DeepDivePage implements OnInit{
     videoData:any;
     blockIndex: number = 1;
     changeScopeVar: string = "";
-​
+​   constructorControl: boolean = true;
     private isPartnerZone: boolean = false;
 
     constructor(
@@ -78,9 +81,13 @@ export class DeepDivePage implements OnInit{
       private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
       private _partnerData: PartnerHeader,
-      public ngZone:NgZone){
+      private _seoService: SeoService,
+      public ngZone:NgZone,
+      private _params:RouteParams
+    ){
         // needs to get Geolocation first
       GlobalSettings.getParentParams(_router, parentParams => {
+        if(this.constructorControl){
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
           this.changeScopeVar = this.scope;
@@ -88,8 +95,8 @@ export class DeepDivePage implements OnInit{
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
             let relPath = this.getRelativePath(_router);
-              //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
-              window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
+            //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
+            window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null){
@@ -98,7 +105,22 @@ export class DeepDivePage implements OnInit{
           }else{
             this.getGeoLocation();
           }
-          this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
+          
+          //create meta description that is below 160 characters otherwise will be truncated
+          let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
+          let link = window.location.href;
+
+          _seoService.setCanonicalLink(this._params.params, this._router);
+          _seoService.setOgTitle('Deep Dive');
+          _seoService.setOgDesc(metaDesc);
+          _seoService.setOgType('image');
+          _seoService.setOgUrl(link);
+          _seoService.setOgImage('./app/public/mainLogo.png');
+          _seoService.setTitle('Deep Dive');
+          _seoService.setMetaDescription(metaDesc);
+          _seoService.setMetaRobots('Index, Follow');
+          this.constructorControl = false;
+        }
       });
     }
 

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Injector} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
@@ -11,6 +11,7 @@ import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {SeoService} from "../../seo.service";
 
 @Component({
     selector: 'Disclaimer-page',
@@ -27,9 +28,30 @@ export class DisclaimerPage {
     public contactUsLinkName: string;
     public titleData: TitleInputData;
 
-    constructor(private _router:Router, private _title: Title) {
-      _title.setTitle(GlobalSettings.getPageTitle("Disclaimer"));
+    constructor(
+      private _router:Router,
+      private _title: Title,
+      private _params: RouteParams,
+      private _seoService: SeoService
+    ) {
+
       GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
+    }
+
+    ngAfterViewInit(){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc = 'Disclaimer page to disclose any information';
+      let link = window.location.href;
+
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle('Disclaimer');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('Disclaimer');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('NOINDEX, FOLLOW');
     }
 
     loadData(partnerID:string) {

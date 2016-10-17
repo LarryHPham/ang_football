@@ -11,6 +11,7 @@ import {DirectoryModule} from '../../fe-core/modules/directory/directory.module'
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {FooterService} from '../../services/footer.service';
 import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
+import {SeoService} from "../../seo.service";
 
 @Component({
     selector: 'Directory-page',
@@ -45,11 +46,20 @@ export class DirectoryPage {
 
   navLists: Array<Link>;
 
-  constructor(private _footerService: FooterService, private _params: RouteParams, private _directoryService: DirectoryService, private _title: Title, private _router: Router) {
+  constructorControl:boolean = true;
+
+  constructor(
+    private _footerService: FooterService,
+    private _params: RouteParams,
+    private _directoryService: DirectoryService,
+    private _title: Title,
+    private _router: Router,
+    private _seoService: SeoService
+  ) {
     GlobalSettings.getParentParams(_router, parentParams => {
+      if(this.constructorControl){
         this.partnerID = parentParams.partnerID;
         this.scope = parentParams.scope;
-        _title.setTitle(GlobalSettings.getPageTitle("Directory"));
         var page = _params.get("page");
         this.currentPage = Number(page);
         var type = _params.get("type");
@@ -83,6 +93,24 @@ export class DirectoryPage {
         if ( this.currentPage === 0 ) {
           this.currentPage = 1; //page index starts at one
         }
+
+        //create meta description that is below 160 characters otherwise will be truncated
+        let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
+        let link = window.location.href;
+        let title = type.charAt(0).toUpperCase() + type.slice(1) + ' Directory';
+
+        this._seoService.setCanonicalLink(this._params.params, this._router);
+        this._seoService.setOgTitle(title + ' - ' + startsWith);
+        this._seoService.setOgDesc(metaDesc);
+        this._seoService.setOgType('image');
+        this._seoService.setOgUrl(link);
+        this._seoService.setOgImage('https://touchdownloyal.com/app/public/mainLogo.jpg');
+        this._seoService.setTitle(title);
+        this._seoService.setMetaDescription(metaDesc);
+        this._seoService.setMetaRobots('INDEX, FOLLOW');
+
+        this.constructorControl = false;
+      }
     });
   }
 

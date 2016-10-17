@@ -51,7 +51,6 @@ export class ListOfListsPage implements OnInit{
         private _params: RouteParams,
         private _title: Title, private _router:Router) {
           GlobalSettings.getParentParams(this._router, parentParams => {
-              _title.setTitle(GlobalSettings.getPageTitle("List of Lists"));
               this._params.params['scope'] = parentParams.scope;
               this.pageType = this._params.get("target");
               if ( this.pageType == null ) {
@@ -99,19 +98,17 @@ export class ListOfListsPage implements OnInit{
                   listTargetData = list.targetData;
                 }
 
-
                 switch ( urlParams.target ) {
                     case "player":
                         profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
                         profileRoute = VerticalGlobalFunctions.formatPlayerRoute(listTargetData.teamName, profileName, listTargetData.playerId);
-                        profileImage = GlobalSettings.getImageUrl(listTargetData.imageUrl);
+                        profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl);
                         break;
 
                     case "team":
                         profileName = listTargetData.teamName;
                         profileRoute = VerticalGlobalFunctions.formatTeamRoute(listTargetData.teamName, listTargetData.teamId);
                         profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo);
-
                         break;
 
                     default: break;
@@ -120,7 +117,6 @@ export class ListOfListsPage implements OnInit{
 
                 this.profileName = profileName
 
-                this._title.setTitle(GlobalSettings.getPageTitle("List of Lists", this.profileName));
                 this.titleData = {
                     imageURL : profileImage,
                     imageRoute: profileRoute,

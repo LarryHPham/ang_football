@@ -17,6 +17,7 @@ import {SidekickWrapperAI} from "../../fe-core/components/sidekick-wrapper-ai/si
 import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
+import {SeoService} from '../../seo.service';
 
 declare var moment;
 
@@ -68,18 +69,22 @@ export class ArticlePages implements OnInit {
     title:string;
     scope:string = null;
     checkPartner:boolean;
-
+    constructorControl: boolean = true;
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
-                private _location:Location) {
+                private _location:Location,
+                private _seoService:SeoService) {
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
+          if(this.constructorControl){
             this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
             if (parentParams.partnerID != null) {
-                this.partnerId = parentParams.partnerID;
+              this.partnerId = parentParams.partnerID;
             }
             this.getArticles();
+            this.constructorControl = false;
+          }
         });
         this.eventID = _params.get('eventID');
         this.eventType = _params.get('eventType');
@@ -97,58 +102,64 @@ export class ArticlePages implements OnInit {
             .subscribe(
                 Article => {
                     if (Article['data'].length > 0) {
-                        try {
-                            if (this.isFantasyReport) {
-                                this.eventID = Article['data'][0].event_id;
-                            }
-                            var articleType = [];
-                            if (Article['data'][0].article_type_id != null) {
-                                articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
-                            } else {
-                                articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
-                                //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
-                                //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
-                            }
-                            this.articleType = articleType[1];
-                            this.articleSubType = articleType[2];
-                            //this.articleType = articleType[0];
-                            //this.articleSubType = articleType[2];
-                            this.isSmall = window.innerWidth < 640;
-                            this.rawUrl = window.location.href;
-                            this.pageIndex = articleType[0];
-                            this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                            this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
-                            this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
-                            this.articleData = Article['data'][0]['article_data'][this.pageIndex];
-                            this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
-                            ArticlePages.setMetaTag(this.articleData.metaHeadline);
-                            if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
-                                this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
-                            } else {
-                                this.hasImages = false;
-                            }
-                            this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
-                            this.getRecommendedArticles();
-                        } catch (e) {
-                            this.pageError();
+                        if (this.isFantasyReport) {
+                            this.eventID = Article['data'][0].event_id;
                         }
+                        var articleType = [];
+                        if (Article['data'][0].article_type_id != null) {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                        } else {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
+                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                        }
+                        this.articleType = articleType[1];
+                        this.articleSubType = articleType[2];
+                        //this.articleType = articleType[0];
+                        //this.articleSubType = articleType[2];
+                        this.isSmall = window.innerWidth < 640;
+                        this.rawUrl = window.location.href;
+                        this.pageIndex = articleType[0];
+                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
+                        this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
+                        this.articleData = Article['data'][0]['article_data'][this.pageIndex];
+                        this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
+
+                        //create meta description that is below 160 characters otherwise will be truncated
+                        let metaDesc = Article['data'][0].teaser;
+                        let link = window.location.href;
+                        let image = GlobalSettings.getImageUrl(Article['data'][0]['article_data'][this.pageIndex]['images']['home_images'][0].image_url)
+                        this._seoService.setCanonicalLink(this._params.params, this._router);
+                        this._seoService.setOgTitle(this.title);
+                        this._seoService.setOgDesc(metaDesc);
+                        this._seoService.setOgType('image');
+                        this._seoService.setOgUrl(link);
+                        this._seoService.setOgImage(image);
+                        this._seoService.setTitle(this.title);
+                        this._seoService.setMetaDescription(metaDesc);
+                        this._seoService.setMetaRobots('INDEX, FOLLOW');
+
+                        if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
+                            this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
+                        } else {
+                            this.hasImages = false;
+                        }
+                        this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
+                        this.getRecommendedArticles();
                     }
                 },
                 err => {
-                    this.pageError();
+                    this.error = true;
+                    var self = this;
+                    setTimeout(function () {
+                        //removes error page from browser history
+                        self._location.replaceState('/');
+                        //returns user to previous page
+                        self._location.back();
+                    }, 5000);
                 }
             );
-    }
-
-    pageError() {
-        this.error = true;
-        var self = this;
-        setTimeout(function () {
-            //removes error page from browser history
-            self._location.replaceState('/');
-            //returns user to previous page
-            self._location.back();
-        }, 5000);
     }
 
     getRecommendedArticles() {
@@ -454,15 +465,6 @@ export class ArticlePages implements OnInit {
             keyword: "FOOTBALL"
         };
         return articles;
-    }
-
-    static setMetaTag(metaData) {
-        if (metaData !== null) {
-            var metaTag = document.createElement('meta');
-            metaTag.name = 'description';
-            metaTag.content = metaData;
-            document.head.appendChild(metaTag);
-        }
     }
 
     ngOnInit() {

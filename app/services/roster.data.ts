@@ -361,6 +361,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
            return classyear;
 
       }
+
       function tabCellDataroster(columnType) {
           return{
               "name":{
@@ -388,12 +389,12 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
 
               },
               "age":{
-                  display:item.playerAge != null ? item.playerAge.toString() : null,
+                  display:item.playerAge != null ? item.playerAge.toString() : 'N/A',
                   sort : item.playerAge != null ? Number(item.playerAge) : null,
               },
 
               "sal":{
-                  display:item.playerSalary != null ? "$" + GlobalFunctions.nFormatter(Number(item.playerSalary)) : null,
+                  display:item.playerSalary != null ? "$" + GlobalFunctions.nFormatter(Number(item.playerSalary)) : 'N/A',
                   sort: item.playerSalary != null ? Number(item.playerSalary) : null,
               },
               "class":{

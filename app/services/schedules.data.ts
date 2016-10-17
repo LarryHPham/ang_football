@@ -51,6 +51,7 @@ export interface SchedulesData {
   aiUrlMod: string, //TODO missing
   results:string, //TODO missing
   targetTeam: string; //TODO missing
+  seasonWeek: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -311,7 +312,6 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
     var link: Array<any> = null;
     var imageUrl: string = null;
     var isLocation = false;
-
     var hdrColumnKey = column.key;
     if ( column.key == "opp" ) {
         hdrColumnKey = this.curTeam == item.team1Id ? "away" : "home";
@@ -379,7 +379,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
       case "gs":
       var partnerCheck = GlobalSettings.getHomeInfo();
-        if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null){
+        if (item.eventStatus != 'cancelled' && item.team1Id != null && item.team2Id != null && item.aiUrlMod != null){
           var status = item.eventStatus === 'pregame' ? "Pregame" : (item.eventStatus === 'postgame' ? "Postgame" : null);
           let scope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : 'nfl';
           if(item.eventStatus == 'inprogress'){
@@ -451,7 +451,8 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
 
       case "rec":
         //shows the record of the current teams game at that time
-        if(item.targetTeam == item.team1Id){
+
+        if(this.curTeam == item.team1Id){
           var currentWins = item.team1Record.split('-')[0];
           var currentLosses = item.team1Record.split('-')[1];
         }else{

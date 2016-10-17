@@ -22,6 +22,10 @@ import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 
+//import seo service here to overwrite the one done in title.component
+import {SeoService} from "../../seo.service";
+
+declare var moment;
 @Component({
     selector: 'Standings-page',
     templateUrl: './app/webpages/standings-page/standings.page.html',
@@ -38,14 +42,18 @@ export class StandingsPage{
   public scope: string;
   public glossary: Array<GlossaryData>;
   public seasonsArray: Array<any>;
+  public profileData:any;
+  private runMeta:boolean = false;
+  private constructorControl: boolean = true;
+
   constructor(private _params: RouteParams,
               private _router:Router,
-              private _title: Title,
               private _profileService: ProfileHeaderService,
               private _standingsService: StandingsService,
-              private _mlbFunctions: VerticalGlobalFunctions) {
-    _title.setTitle(GlobalSettings.getPageTitle("Standings"));
+              private _mlbFunctions: VerticalGlobalFunctions,
+              private _seoService: SeoService) {
     GlobalSettings.getParentParams(_router, parentParams => {
+      if(this.constructorControl){
         this.scope = parentParams.scope;
         var type = _params.get("type");
         if ( type !== null && type !== undefined ) {
@@ -56,11 +64,15 @@ export class StandingsPage{
         if ( type == "team" && teamId !== null && teamId !== undefined ) {
           this.pageParams.teamId = Number(teamId);
         }
+
         this.pageParams.scope = this.scope;
         this.getTabs();
         this.getGlossaryValue();
+        this.constructorControl = false;
+      }
     });
   }
+
   getGlossaryValue():Array<GlossaryData>{
     if(this.scope == 'fbs'){
       this.glossary = [
@@ -140,10 +152,11 @@ export class StandingsPage{
           this.pageParams = data.pageParams;
           this.pageParams.scope = this.scope;
           var teamFullName = data.headerData.teamMarket + ' ' + data.headerData.teamName;
-          this._title.setTitle(GlobalSettings.getPageTitle("Standings", teamFullName));
           var title = this._standingsService.getPageTitle(this.pageParams, teamFullName);
           this.titleData = this._profileService.convertTeamPageHeader(data, title)
+          this.profileData = data;
           this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
+          this.metaTags(this.profileData);
         },
         err => {
           this.hasError = true;
@@ -152,18 +165,98 @@ export class StandingsPage{
       );
     }
     else {
-      this._title.setTitle(GlobalSettings.getPageTitle("Standings", this.pageParams.scope));
       var title = this._standingsService.getPageTitle(this.pageParams, null);
-      this.titleData = this.titleData = {
+      this.titleData = {
         imageURL: GlobalSettings.getSiteLogoUrl(),
         imageRoute: ["League-page"],
         text1: "",
         text2: "United States",
         text3: title,
         icon: "fa fa-map-marker"
+      };
+      //for Seo purposes
+      this.profileData = {
+        headerData:{
+          teamMarket: this.scope.toUpperCase() + ' League',
+          teamName: null,
+          backgroundUrl:GlobalSettings.getSiteLogoUrl(),
+          lastUpdated:GlobalFunctions.formatUpdatedDate(new Date(), false),
+        }
       }
+      this.metaTags(this.profileData);
       this.tabs = this._standingsService.initializeAllTabs(this.pageParams);
     }
+
+  }
+
+  private metaTags(data){
+    let header, metaDesc, link, title, ogTitle, image, titleName;
+
+    //create meta description that is below 160 characters otherwise will be truncated
+    header = data.headerData;
+    titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName:header.teamMarket;
+    title = titleName + ' Standings';
+    ogTitle = titleName;
+    metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated ,false);
+    link = window.location.href;
+    image = GlobalSettings.getImageUrl(header.backgroundUrl);
+
+    this._seoService.setCanonicalLink(this._params.params, this._router);
+    this._seoService.setOgTitle(ogTitle);
+    this._seoService.setOgDesc(metaDesc);
+    this._seoService.setOgType('image');
+    this._seoService.setOgUrl(link);
+    this._seoService.setOgImage(image);
+    this._seoService.setTitleNoBase(title);
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setMetaRobots('Index, Follow');
+
+    if(header.teamId != null){
+      //grab domain for json schema
+      let domainSite;
+      if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+        domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+      }else{
+        domainSite = "https://"+window.location.hostname;
+      }
+
+      //manually generate team schema for team page until global funcation can be created
+      let teamSchema = `
+      {
+        "@context": "http://schema.org",
+        "@type": "SportsTeam",
+        "name": "`+titleName+`",
+      }`;
+
+      //manually generate json schema for BreadcrumbList
+      let jsonSchema = `
+      {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+            "name": "`+this.scope.toUpperCase()+`"
+          }
+        },{
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@id": "`+window.location.href+`",
+            "name": "`+titleName+ 'Standings' +`"
+          }
+        }]
+      }`;
+      this._seoService.setApplicationJSON(teamSchema, 'page');
+      this._seoService.setApplicationJSON(jsonSchema, 'json');
+    }
+  }
+
+  ngOnDestroy(){
+    this._seoService.removeApplicationJSON('page');
+    this._seoService.removeApplicationJSON('json');
   }
 
   private standingsTabSelected(tabData: Array<any>) {

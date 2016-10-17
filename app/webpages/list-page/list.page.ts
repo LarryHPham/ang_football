@@ -57,7 +57,6 @@ export class ListPage implements OnInit {
               private params: RouteParams,
               private dynamicWidget: DynamicWidgetCall,
               private _title: Title) {
-    _title.setTitle(GlobalSettings.getPageTitle("Lists"));
     if(params.params['query'] != null){
       let query = params.params['query'];
       // Setup this way in case we want to switch out null with some default values
@@ -131,7 +130,7 @@ export class ListPage implements OnInit {
     this.listService.getListPageService(urlParams, errorMessage, this.scope, season)
       .subscribe(
         list => {
-          this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
+          // this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
           this.profileHeaderData = list.profHeader;
           if (list.listData.length == 0) {//makes sure it only runs once
             this.detailedDataArray = null;
@@ -160,7 +159,7 @@ export class ListPage implements OnInit {
     this.dynamicWidget.getWidgetData(this.tw, this.sw, this.input)
       .subscribe(
         list => {
-          this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayTitle, "Lists"));
+          // this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayTitle, "Lists"));
           this.profileHeaderData = list.profHeader;
           if (list.listData.length == 0) {//makes sure it only runs once
             this.detailedDataArray = null;

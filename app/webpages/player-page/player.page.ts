@@ -45,6 +45,7 @@ import {GlobalSettings} from "../../global/global-settings";
 import {ImagesService} from "../../services/carousel.service";
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import {GlobalFunctions} from "../../global/global-functions";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {ListOfListsService} from "../../services/list-of-lists.service";
 import {ListOfListsModule} from "../../fe-core/modules/list-of-lists/list-of-lists.module";
 
@@ -56,6 +57,8 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {FantasyModule} from "../../fe-core/modules/fantasy/fantasy.module";
 import {FantasyService} from "../../services/fantasy.service";
+
+import {SeoService} from "../../seo.service";
 
 declare var moment;
 
@@ -143,6 +146,8 @@ export class PlayerPage implements OnInit {
 
     scope:string;
 
+    constructorControl:boolean = true;
+
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _title:Title,
@@ -159,15 +164,19 @@ export class PlayerPage implements OnInit {
                 private _seasonStatsService:SeasonStatsService,
                 private _comparisonService:ComparisonStatsService,
                 private _fantasyService:FantasyService,
+                private _seoService: SeoService,
                 private _dailyUpdateService:DailyUpdateService) {
         this.pageParams = {
             playerId: Number(_params.get("playerId"))
         };
 
         GlobalSettings.getParentParams(_router, parentParams => {
+          if(this.constructorControl){
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             this.pageParams.scope = this.scope;
+            this.constructorControl = false;
+          }
         });
     }
 
@@ -179,14 +188,13 @@ export class PlayerPage implements OnInit {
         this._profileService.getPlayerProfile(this.pageParams.playerId).subscribe(
             data => {
                 /*** About [Player Name] ***/
+                this.metaTags(data);
                 this.pageParams = data.pageParams;
                 this.profileName = data.headerData.playerFullName;
                 this.teamName = data.headerData.teamFullName;
                 this.teamId = data.headerData.teamId;
 
-                this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
                 this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
-
                 this.dailyUpdateModule(this.pageParams.playerId);
                 if (this.scope.toLocaleLowerCase() == "nfl") {
                     this.getFantasyData(this.pageParams.playerId);
@@ -225,6 +233,79 @@ export class PlayerPage implements OnInit {
             }
         );
     }
+
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let header = data.headerData;
+      let metaDesc =  header.description;
+      let link = window.location.href;
+      let title = header.playerFullName;
+      let image = header.playerHeadshotUrl;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
+
+      //grab domain for json schema
+      let domainSite;
+      if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+        domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+      }else{
+        domainSite = "https://"+window.location.hostname;
+      }
+
+      //manually generate team schema for team page until global funcation can be created
+      let playerSchema = `
+      {
+       "@context": "http://schema.org",
+       "@type": "SportsTeam",
+       "name": "`+header.teamMarket + ' ' + header.teamName+`",
+       "member": {
+         "@type": "OrganizationRole",
+         "member": {
+           "@type": "Person",
+           "name": "`+header.playerFirstName + ' ' + header.playerLastName+`"
+         },
+         "startDate": "`+header.entryDate+`",
+         "roleName": "`+VerticalGlobalFunctions.convertPositionAbbrv(header.position[0].toLowerCase())+`"
+       }
+      }`;
+
+      //manually generate json schema for BreadcrumbList
+      //TODO i need to generate team schema
+      let jsonSchema = `
+      {
+       "@context": "http://schema.org",
+       "@type": "BreadcrumbList",
+       "itemListElement": [{
+         "@type": "ListItem",
+         "position": 1,
+         "item": {
+           "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+           "name": "`+this.scope.toUpperCase()+`"
+         }
+       },{
+         "@type": "ListItem",
+         "position": 2,
+         "item": {
+           "@id": "`+window.location.href+`",
+           "name": "`+header.playerFirstName + ' ' + header.playerLastName+`"
+         }
+       }]
+      }`;
+      this._seoService.setApplicationJSON(playerSchema, 'page');
+      this._seoService.setApplicationJSON(jsonSchema, 'json');
+      }
+
+      ngOnDestroy(){
+      this._seoService.removeApplicationJSON('page');
+      this._seoService.removeApplicationJSON('json');
+      }
 
     private dailyUpdateModule(playerId:number) {
         this._dailyUpdateService.getPlayerDailyUpdate(playerId)

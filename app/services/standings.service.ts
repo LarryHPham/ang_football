@@ -39,8 +39,14 @@ export class StandingsService {
 
   getPageTitle(pageParams: SportPageParameters, teamName: string): string {
     var scope = pageParams.scope == 'fbs' ? 'ncaaf' : 'nfl';
+    let title;
+    if(scope == 'nfl'){
+      title = GlobalSettings.getSportLeagueFull();
+    }else{
+      title = GlobalSettings.getCollegeLeagueFull();
+    }
     let groupName = this.formatGroupName(pageParams.conference, pageParams.division);
-    let pageTitle = scope.toUpperCase() + " Standings - " + scope.toUpperCase();
+    let pageTitle = scope.toUpperCase() + " Standings - " + title;
     if ( teamName ) {
       pageTitle = scope.toUpperCase() + " Standings - " + teamName;
     }
@@ -64,8 +70,6 @@ export class StandingsService {
       tabs.push(this.createTab(true, currentTeamId, 'Division'));
       tabs.push(this.createTab(false, currentTeamId, 'Conference'));
       tabs.push(this.createTab(false, currentTeamId));
-
-
     }
     else if ( pageParams.conference === undefined || pageParams.conference === null ) {
       //Is an stangings page: show DIVISION, then CONFERENCE, then NFL/NCAAF

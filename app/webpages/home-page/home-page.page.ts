@@ -12,6 +12,7 @@ import {PartnerHomePage} from '../partner-home-page/partner-home-page';
 
 import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
+import {SeoService} from "../../seo.service";
 
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
@@ -94,9 +95,10 @@ export class PickTeamPage{
       private _landingPageService: LandingPageService,
       private _title: Title,
       private _geoLocation:GeoLocation,
-      private _partnerData: PartnerHeader
+      private _partnerData: PartnerHeader,
+      private _seoService: SeoService,
+      private _params: RouteParams
     ) {
-      _title.setTitle(GlobalSettings.getPageTitle(""));
 
       this.getListData();
 
@@ -133,6 +135,20 @@ export class PickTeamPage{
         this.homeFeaturesButton1 = "View " + this.activeDivision + " Standings";
         this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
         this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
+
+        //create meta description that is below 160 characters otherwise will be truncated
+        let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
+        let link = window.location.href;
+
+        _seoService.setCanonicalLink(this._params.params, this._router);
+        _seoService.setOgTitle('Pick A Team');
+        _seoService.setOgDesc(metaDesc);
+        _seoService.setOgType('image');
+        _seoService.setOgUrl(link);
+        _seoService.setOgImage('./app/public/mainLogo.png');
+        _seoService.setTitle('Pick A Team');
+        _seoService.setMetaDescription(metaDesc);
+        _seoService.setMetaRobots('Index, Follow');
 
       }); //GlobalSettings.getParentParams
 

@@ -39,6 +39,10 @@ interface PlayerProfileHeaderData {
     teamMarket: string;
     teamName: string;
     teamFullName: string;
+    divisionName: Division;
+    conferenceName: Conference;
+    division: string;
+    conference: string;
     jerseyNumber: number;
     position: Array<string>;
     gamesPlayed: number;
@@ -171,7 +175,9 @@ export class ProfileHeaderService {
               teamId: headerData.teamId,
               teamName: headerData.teamFullName,
               playerId: headerData.playerId,
-              playerName: headerData.playerFullName
+              playerName: headerData.playerFullName,
+              division: headerData.divisionName,
+              conference: headerData.conferenceName
             },
             fullBackgroundImageUrl: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(headerData.profileHeaderUrl),
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),
@@ -449,6 +455,9 @@ export class ProfileHeaderService {
     }
     else {
       division = headerData.conferenceName + " " + GlobalFunctions.toTitleCase(headerData.divisionName.toString().replace(headerData.conferenceName.toString(), ""));
+    }
+    if(location[location.length-1] === "."){//Check if period is at the end of string then remove it
+      location = location.slice(0, -1);
     }
     var description = "The " + fullTeamName +
                       venueForDescription +

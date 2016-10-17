@@ -73,6 +73,8 @@ import {VideoService} from "../../services/video.service";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {HeadlineData} from "../../global/global-interface";
 
+import {SeoService} from "../../seo.service";
+
 declare var moment;
 
 @Component({
@@ -172,6 +174,8 @@ export class TeamPage implements OnInit {
     dykData: Array<dykModuleData>;
     twitterData: Array<twitterModuleData>;
 
+    constructorControl:boolean = true;
+
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
@@ -195,12 +199,14 @@ export class TeamPage implements OnInit {
                 private _comparisonService: ComparisonStatsService,
                 private _dailyUpdateService: DailyUpdateService,
                 private _headlineDataService:HeadlineDataService,
+                private _seoService: SeoService,
                 private _videoBatchService: VideoService) {
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
         };
 
         GlobalSettings.getParentParams(_router, parentParams => {
+          if (this.constructorControl) {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             var currDate = new Date();
@@ -213,6 +219,8 @@ export class TeamPage implements OnInit {
               // date: '2016-09-11'
             }
             this.setupProfileData(this.partnerID,this.scope);
+            this.constructorControl = false;
+          }
         });
     }
 
@@ -232,10 +240,10 @@ export class TeamPage implements OnInit {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
             data => {
                 /*** About the [Team Name] ***/
+                this.metaTags(data);
                 this.pageParams = data.pageParams;
                 this.profileData = data;
                 this.profileName = data.teamName;
-                this._title.setTitle(GlobalSettings.getPageTitle(this.profileName));
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
@@ -271,6 +279,75 @@ export class TeamPage implements OnInit {
         );
     }
 
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let header = data.headerData;
+      let metaDesc =  header.description;
+      let link = window.location.href;
+      let title = header.teamMarket + ' ' + header.teamName;
+      let image = header.teamLogo;
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('image');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      this._seoService.setTitle(title, 'teampage');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
+
+      //grab domain for json schema
+      let domainSite;
+      if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+        domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+      }else{
+        domainSite = "https://"+window.location.hostname;
+      }
+
+      //manually generate team schema for team page until global funcation can be created
+      let teamSchema = `
+      {
+       "@context": "http://schema.org",
+       "@type": "SportsTeam",
+       "name": "`+header.teamMarket + ' ' + header.teamName+`",
+      }`;
+
+      //manually generate json schema for BreadcrumbList
+      let jsonSchema = `
+      {
+       "@context": "http://schema.org",
+       "@type": "BreadcrumbList",
+       "itemListElement": [{
+         "@type": "ListItem",
+         "position": 1,
+         "item": {
+           "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+           "name": "`+this.scope.toUpperCase()+`"
+         }
+       },{
+         "@type": "ListItem",
+         "position": 2,
+         "item": {
+           "@id": "`+window.location.href+"?league="+header.divisionName+`",
+           "name": "`+header.divisionName+`"
+         }
+       },{
+         "@type": "ListItem",
+         "position": 3,
+         "item": {
+           "@id": "`+window.location.href+`",
+           "name": "`+header.teamMarket + ' ' + header.teamName+`"
+         }
+       }]
+      }`;
+      this._seoService.setApplicationJSON(teamSchema, 'page');
+      this._seoService.setApplicationJSON(jsonSchema, 'json');
+    }
+
+    ngOnDestroy(){
+      this._seoService.removeApplicationJSON('page');
+      this._seoService.removeApplicationJSON('json');
+    }
     //api for Headline Module
     private getHeadlines(){
         var scope = this.scope == "fbs" ? "ncaa" : "nfl";
