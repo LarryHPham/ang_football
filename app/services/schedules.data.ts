@@ -142,7 +142,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd MMMM Do, YYYY | h:mm A z'), //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd MMM Do, YYYY | h:mm A z'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.team1Stadium,
       detail2Value:item.team1City + ', ' + item.team1State,
