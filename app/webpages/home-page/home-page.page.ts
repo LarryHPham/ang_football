@@ -99,6 +99,8 @@ export class PickTeamPage{
       private _seoService: SeoService,
       private _params: RouteParams
     ) {
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
 
       this.getListData();
 

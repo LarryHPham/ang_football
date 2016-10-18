@@ -202,6 +202,8 @@ export class LeaguePage implements OnInit {
 
         GlobalSettings.getParentParams(this._router, parentParams => {
           if(this.constructorControl){
+            //check to see if scope is correct and redirect
+            VerticalGlobalFunctions.scopeRedirect(_router, _params);
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             this.pageParams.scope = this.scope;

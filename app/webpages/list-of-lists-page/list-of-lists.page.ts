@@ -50,6 +50,8 @@ export class ListOfListsPage implements OnInit{
         private _profileService: ProfileHeaderService,
         private _params: RouteParams,
         private _title: Title, private _router:Router) {
+          //check to see if scope is correct and redirect
+          VerticalGlobalFunctions.scopeRedirect(_router, _params);
           GlobalSettings.getParentParams(this._router, parentParams => {
               this._params.params['scope'] = parentParams.scope;
               this.pageType = this._params.get("target");

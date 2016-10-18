@@ -12,6 +12,7 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {FooterService} from '../../services/footer.service';
 import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
 import {SeoService} from "../../seo.service";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'Directory-page',
@@ -56,6 +57,8 @@ export class DirectoryPage {
     private _router: Router,
     private _seoService: SeoService
   ) {
+    //check to see if scope is correct and redirect
+    VerticalGlobalFunctions.scopeRedirect(_router, _params);
     GlobalSettings.getParentParams(_router, parentParams => {
       if(this.constructorControl){
         this.partnerID = parentParams.partnerID;

@@ -15,6 +15,7 @@ import {CircleImageData} from "../../fe-core/components/images/image-data";
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {SeoService} from "../../seo.service";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 export interface AuBlockData {
   iconClass?: string;
@@ -70,7 +71,8 @@ export class AboutUsPage {
       private _seoService: SeoService,
       private _params: RouteParams
     ) {
-
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
         GlobalSettings.getParentParams(_router, parentParams =>{
           this.loadData(parentParams.partnerID, parentParams.scope)
         });

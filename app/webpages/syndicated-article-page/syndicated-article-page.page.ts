@@ -65,6 +65,8 @@ export class SyndicatedArticlePage{
     private _partnerData: PartnerHeader,
     private _seoService: SeoService
     ){
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
       GlobalSettings.getParentParams(_router, parentParams => {
         if(this.constructorControl){
           this.eventID = this._params.get('eventID');

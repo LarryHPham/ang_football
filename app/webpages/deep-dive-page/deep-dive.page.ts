@@ -22,6 +22,7 @@ import {DeepDiveBlock4} from '../../fe-core/modules/deep-dive-blocks/deep-dive-b
 import {SideScroll} from '../../fe-core/components/side-scroll/side-scroll.component';
 
 import {SeoService} from '../../seo.service';
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
 declare var moment;
@@ -85,6 +86,8 @@ export class DeepDivePage implements OnInit{
       public ngZone:NgZone,
       private _params:RouteParams
     ){
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
         // needs to get Geolocation first
       GlobalSettings.getParentParams(_router, parentParams => {
         if(this.constructorControl){
@@ -105,7 +108,7 @@ export class DeepDivePage implements OnInit{
           }else{
             this.getGeoLocation();
           }
-          
+
           //create meta description that is below 160 characters otherwise will be truncated
           let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
           let link = window.location.href;
