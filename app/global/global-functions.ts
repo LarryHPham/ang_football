@@ -434,7 +434,7 @@ export class GlobalFunctions {
      */
     static formatUpdatedDate(jsDate:any, includeTimestamp?:boolean, timezone?:string):string {
         var date = moment(jsDate);
-        var str = date.format("dddd, ") + GlobalFunctions.formatAPMonth(date.month()) + date.format(' D, YYYY');
+        var str = date.format("dddd ") + GlobalFunctions.formatAPMonth(date.month()) + date.format(' D, YYYY');
         if (includeTimestamp) {
             str += ' | ' + date.format('h:mm A') + (timezone !== undefined && timezone !== null ? timezone : "");
         }
