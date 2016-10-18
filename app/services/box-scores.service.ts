@@ -96,6 +96,9 @@ export class BoxScoresService {
   */
   aiHeadline(data){
     var boxArray = [];
+    if (data == null || typeof data == 'undefined') {
+      return null;
+    }
     if (data[0].featuredReport['article'].status != "Error") {
       if (data[0].featuredReport['article'].data[0].articleData != null) {
         data.forEach(function(val, index){
@@ -366,7 +369,7 @@ export class BoxScoresService {
       let gameInfo = data.gameInfo;
       let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
       let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-      var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+      var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
       if(teamId != null && profile == 'team'){//if league then both items will link
         if(homeData.id == teamId){//if not league then check current team they are one
@@ -379,7 +382,7 @@ export class BoxScoresService {
           var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
         }
       }else{
-        var aiContent = data.aiContent != null ? self.formatArticle(data):null;
+        var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
         var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
         var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
       }
@@ -456,12 +459,10 @@ export class BoxScoresService {
     var gameArray:Array<any> = [];
     let self = this;
     var twoBoxes = [];// used to put two games into boxes
-
     // Sort games by time
     let sortedGames = game.sort(function(a, b) {
       return new Date(a.gameInfo.startDateTime).getTime() - new Date(b.gameInfo.startDateTime).getTime();
     });
-
     sortedGames.forEach(function(data,i){
 
       var info:GameInfoInput;
@@ -470,7 +471,7 @@ export class BoxScoresService {
       let gameInfo = data.gameInfo;
       let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
       let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-      var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+      var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
       if(teamId != null && profile == 'team'){//if league then both items will link
         if(homeData.id == teamId){//if not league then check current team they are one
@@ -483,7 +484,7 @@ export class BoxScoresService {
           var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
         }
       }else{
-        var aiContent = data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+        var aiContent = data.aiContent != null ? self.formatArticle(data):null;
         var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
         var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
       }
