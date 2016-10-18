@@ -48,7 +48,7 @@ export class AboutUsService {
   }
 
   formatDate(date) {
-    var newDate = moment(Number(date)*1000).tz('America/New_York').format("MMMM D YYYY");
+    var newDate = moment(Number(date)*1000).tz('America/New_York').format("MMM D YYYY");
     return newDate;
   }
 
