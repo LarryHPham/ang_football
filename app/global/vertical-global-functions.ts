@@ -154,11 +154,8 @@ export class VerticalGlobalFunctions {
           }
         }
       }
-
-      if(domainParams.scope != 'nfl' || domainParams.scope != 'ncaaf'){// if scope does not match nfl or ncaaf then redirect to homepage
-        domainParams.scope = 'nfl';
-        router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
-      }else{
+      
+      if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){// if scope does not match nfl or ncaaf then redirect to homepage
         let routeArray = [(relPath+domainHostName), domainParams];
         if(pageHostName && pageParams){
           routeArray.push(pageHostName, pageParams);
@@ -166,6 +163,9 @@ export class VerticalGlobalFunctions {
           routeArray.push('Home-page');
         }
         router.navigate(routeArray);
+      }else{
+        domainParams.scope = 'nfl';
+        router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
       }
 
     }
