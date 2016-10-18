@@ -118,7 +118,6 @@ export class VerticalGlobalFunctions {
   }
 
   static scopeRedirect(router, params?) {
-    console.log(router, params);
     var domainHostName, domainParams, pageHostName, pageParams;
     if(router.parent.parent != null){//if there are more parameters past home page
       domainHostName = router.parent.parent.currentInstruction.component.routeName;
