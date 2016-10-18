@@ -119,7 +119,7 @@ export class SyndicatedArticlePage{
           }
           this.metaTags(data);
           this.articleData = data.data;
-          this.articleData.publishedDate = moment.unix(this.articleData.publishedDate/1000).format("MMMM Do, YYYY h:mm A") + " EST";
+          this.articleData.publishedDate = moment.unix(this.articleData.publishedDate/1000).format("MMM Do, YYYY h:mm A") + " EST";
         }
       )
     }
@@ -217,7 +217,7 @@ export class SyndicatedArticlePage{
 
     formatDate(date) {
 
-        return moment(date).format("MMMM DD, YYYY | h:mm A ")
+        return moment(date).format("MMM DD, YYYY | h:mm A ")
 
     }
 
