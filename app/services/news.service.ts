@@ -60,7 +60,7 @@ export class NewsService {
         description: val.teaser.replace(/<\/?[^>]+(>|$)/g, ""),
         newsUrl: val.articleUrl,
         author: _getHostName(val.articleUrl) != null ? _getHostName(val.articleUrl) : 'Anonymous',
-        published: moment(+val.publishedDate).format("dddd MMM do, YYYY"),
+        published: moment(+val.publishedDate).format("dddd MMM. do, YYYY"),
         backgroundImage: GlobalSettings.getImageUrl('/TDL/stock_images/TDL_Stock-3.png'),
         footerData: {
           infoDesc: 'Want to check out the full story?',

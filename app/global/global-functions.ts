@@ -631,7 +631,7 @@ export class GlobalFunctions {
     }
 
     static formatDate(date) {
-        var month = moment.unix(date / 1000).format("MMM");
+        var month = moment.unix(date / 1000).format("MMM.");
         var day = moment.unix(date / 1000).format("DD");
         var year = moment.unix(date / 1000).format("YYYY");
         var time = moment.unix(date / 1000).format("h:mm");

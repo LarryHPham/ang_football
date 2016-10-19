@@ -55,7 +55,7 @@ export class DynamicWidgetCall {
           var profHeader= {
             imageURL : GlobalSettings.getSiteLogoUrl(),
             imageRoute: ["League-page"],
-            text1 : 'Last Updated: ' + moment(data.date).format('dddd MMM Do, YYYY'),
+            text1 : 'Last Updated: ' + moment(data.date).format('dddd MMM. Do, YYYY'),
             text2 : ' United States',
             text3 : data.title,
             text4 : '',
