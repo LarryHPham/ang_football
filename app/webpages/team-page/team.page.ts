@@ -207,6 +207,8 @@ export class TeamPage implements OnInit {
 
         GlobalSettings.getParentParams(_router, parentParams => {
           if (this.constructorControl) {
+            //check to see if scope is correct and redirect
+            VerticalGlobalFunctions.scopeRedirect(_router, _params);
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
             var currDate = new Date();
@@ -292,7 +294,7 @@ export class TeamPage implements OnInit {
       this._seoService.setOgType('image');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
-      this._seoService.setTitle(title, 'teampage');
+      this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('Index, Follow');
 

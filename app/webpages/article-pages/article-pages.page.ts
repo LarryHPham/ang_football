@@ -75,6 +75,8 @@ export class ArticlePages implements OnInit {
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
                 private _seoService:SeoService) {
+        //check to see if scope is correct and redirect
+        VerticalGlobalFunctions.scopeRedirect(_router, _params);
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
           if(this.constructorControl){

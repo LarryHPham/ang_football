@@ -12,6 +12,7 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {SeoService} from "../../seo.service";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'Disclaimer-page',
@@ -34,7 +35,8 @@ export class DisclaimerPage {
       private _params: RouteParams,
       private _seoService: SeoService
     ) {
-
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
       GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
     }
 
