@@ -65,6 +65,8 @@ export class SyndicatedArticlePage{
     private _partnerData: PartnerHeader,
     private _seoService: SeoService
     ){
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
       GlobalSettings.getParentParams(_router, parentParams => {
         if(this.constructorControl){
           this.eventID = this._params.get('eventID');
@@ -153,7 +155,7 @@ export class SyndicatedArticlePage{
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle(data.data.title);
       this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('image');
+      this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(image);
       this._seoService.setTitle(data.data.title);

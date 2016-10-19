@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteParams} from '@angular/router-deprecated';
+import {RouteParams, Router} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from "../../global/global-settings";
@@ -11,6 +11,7 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {DraftHistoryComponent} from "../../fe-core/components/draft-history/draft-history.component";
 import {IProfileData, ProfileHeaderService} from '../../services/profile-header.service';
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'draft-history-page',
@@ -30,7 +31,10 @@ export class DraftHistoryPage implements OnInit{
 
   constructor(private _profileService:ProfileHeaderService,
               private params: RouteParams,
+              private _router: Router,
               private _title: Title) {
+            //check to see if scope is correct and redirect
+            VerticalGlobalFunctions.scopeRedirect(_router, params);
     // _title.setTitle(GlobalSettings.getPageTitle(this.whatProfile));
   }
 

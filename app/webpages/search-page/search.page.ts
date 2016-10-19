@@ -7,6 +7,7 @@ import {SearchPageModule} from '../../fe-core/modules/search-page/search-page.mo
 import {SearchService} from '../../services/search.service';
 import {SearchPageInput} from '../../fe-core/modules/search-page/search-page.module';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
 interface SearchPageParams {
     query: string;
@@ -28,40 +29,42 @@ export class SearchPage implements OnInit {
     public scope: string;
 
     constructor(_params: RouteParams, private _searchService: SearchService, private _title: Title, private _router: Router) {
+        //check to see if scope is correct and redirect
+        VerticalGlobalFunctions.scopeRedirect(_router, _params);
         _title.setTitle(GlobalSettings.getPageTitle("Search"));
         let query = decodeURIComponent(_params.get('query'));
         this.pageParams = {
             query: query
         }
         GlobalSettings.getParentParams(_router, parentParams => {
-          if(!GlobalSettings.getHomeInfo().isSubdomainPartner){
-            this.partnerId = parentParams.partnerID;
-          }
+            if (!GlobalSettings.getHomeInfo().isSubdomainPartner) {
+                this.partnerId = parentParams.partnerID;
+            }
             this.scope = parentParams.scope;
         });
     }
 
-    configureSearchPageData(filter?){
+    configureSearchPageData(filter?) {
         let self = this;
         let query = self.pageParams.query;
 
-        if(typeof filter == 'undefined'){
-          filter = null;
+        if (typeof filter == 'undefined') {
+            filter = null;
         }
         self._searchService.getSearch()
             .subscribe(
-                data => {
-                  let searchData = self._searchService.getSearchPageData(this._router, this.partnerId, query, filter, data);
-                    self.searchPageInput = searchData.results;
-                    if(self.searchPageFilters == null){
-                      self.searchPageFilters = searchData.filters;
-                    }
+            data => {
+                let searchData = self._searchService.getSearchPageData(this._router, this.partnerId, query, filter, data);
+                self.searchPageInput = searchData.results;
+                if (self.searchPageFilters == null) {
+                    self.searchPageFilters = searchData.filters;
                 }
+            }
             );
     }
 
-    filterSwitch(event){
-      this.configureSearchPageData(event.key);
+    filterSwitch(event) {
+        this.configureSearchPageData(event.key);
     }
     ngOnInit() {
         this.configureSearchPageData();
