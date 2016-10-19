@@ -75,6 +75,8 @@ export class ArticlePages implements OnInit {
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
                 private _seoService:SeoService) {
+        //check to see if scope is correct and redirect
+        VerticalGlobalFunctions.scopeRedirect(_router, _params);
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
           if(this.constructorControl){
@@ -133,7 +135,7 @@ export class ArticlePages implements OnInit {
                         this._seoService.setCanonicalLink(this._params.params, this._router);
                         this._seoService.setOgTitle(this.title);
                         this._seoService.setOgDesc(metaDesc);
-                        this._seoService.setOgType('image');
+                        this._seoService.setOgType('Website');
                         this._seoService.setOgUrl(link);
                         this._seoService.setOgImage(image);
                         this._seoService.setTitle(this.title);
@@ -461,7 +463,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: moment(recommendations.last_updated).format('MMMM DD, YYYY'),
+            date: moment(recommendations.last_updated).format('MMM DD, YYYY'),
             keyword: "FOOTBALL"
         };
         return articles;

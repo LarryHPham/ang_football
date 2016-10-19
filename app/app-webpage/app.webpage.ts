@@ -6,6 +6,7 @@ import {FooterComponent} from "../fe-core/components/footer/footer.component";
 
 import {HeaderComponent} from "../fe-core/components/header/header.component";
 
+import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
 import {PickTeamPage} from "../webpages/home-page/home-page.page";
 import {AboutUsPage} from "../webpages/about-us-page/about-us.page";
 import {DirectoryPage} from "../webpages/directory-page/directory.page";
@@ -268,7 +269,7 @@ export class AppComponent implements OnInit{
   public shiftContainer:string;
   public hideHeader: boolean;
   private isPartnerZone:boolean = false;
-  constructor(private _params: RouteParams,private _partnerData: PartnerHeader, private _el:ElementRef){
+  constructor(private _router:Router, private _params: RouteParams,private _partnerData: PartnerHeader, private _el:ElementRef){
     this.hideHeader = GlobalSettings.getHomeInfo().hide;
     if(window.location.hostname.split(".")[0].toLowerCase() == "football" && GlobalSettings.getHomeInfo().isSubdomainPartner){
         this.partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];

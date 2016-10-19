@@ -12,6 +12,7 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {SeoService} from "../../seo.service";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'Disclaimer-page',
@@ -34,7 +35,8 @@ export class DisclaimerPage {
       private _params: RouteParams,
       private _seoService: SeoService
     ) {
-
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
       GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
     }
 
@@ -46,7 +48,7 @@ export class DisclaimerPage {
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle('Disclaimer');
       this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('image');
+      this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage('./app/public/mainLogo.png');
       this._seoService.setTitle('Disclaimer');
