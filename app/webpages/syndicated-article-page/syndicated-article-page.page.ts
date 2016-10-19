@@ -155,7 +155,7 @@ export class SyndicatedArticlePage{
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle(data.data.title);
       this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('image');
+      this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(image);
       this._seoService.setTitle(data.data.title);

@@ -145,7 +145,7 @@ export class PickTeamPage{
         _seoService.setCanonicalLink(this._params.params, this._router);
         _seoService.setOgTitle('Pick A Team');
         _seoService.setOgDesc(metaDesc);
-        _seoService.setOgType('image');
+        _seoService.setOgType('Website');
         _seoService.setOgUrl(link);
         _seoService.setOgImage('./app/public/mainLogo.png');
         _seoService.setTitle('Pick A Team');

@@ -105,7 +105,7 @@ export class DirectoryPage {
         this._seoService.setCanonicalLink(this._params.params, this._router);
         this._seoService.setOgTitle(title + ' - ' + startsWith);
         this._seoService.setOgDesc(metaDesc);
-        this._seoService.setOgType('image');
+        this._seoService.setOgType('Website');
         this._seoService.setOgUrl(link);
         this._seoService.setOgImage('https://touchdownloyal.com/app/public/mainLogo.jpg');
         this._seoService.setTitle(title);
