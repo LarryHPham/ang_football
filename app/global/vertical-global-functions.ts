@@ -129,46 +129,36 @@ export class VerticalGlobalFunctions {
       domainParams = router.parent.currentInstruction.component.params;
     }
 
-    if(domainParams.scope !== 'nfl' && domainParams.scope !== 'ncaaf'){
-
-      if(/ncaaf/.test(domainParams.scope) && domainParams.scope !== 'ncaaf'){// check incase ncaaf has more characters than needed
-        domainParams.scope = 'ncaaf';
-      }
-
-      if(/nfl/.test(domainParams.scope) && domainParams.scope !== 'nfl'){// check incase nfl has more characters than needed
-        domainParams.scope = 'nfl';
-      }
-      //create relative path for the redirect
-      let counter = 0;
-      let hasParent = true;
-      let route = router;
-      for (var i = 0; hasParent == true; i++){
-        if(route.parent != null){
-          counter++;
-          route = route.parent;
-        }else{
-          hasParent = false;
-          var relPath = '';
-          for(var c = 1 ; c <= counter; c++){
-            relPath += '../';
-          }
-        }
-      }
-      
-      if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){// if scope does not match nfl or ncaaf then redirect to homepage
-        let routeArray = [(relPath+domainHostName), domainParams];
-        if(pageHostName && pageParams){
-          routeArray.push(pageHostName, pageParams);
-        }else{
-          routeArray.push('Home-page');
-        }
-        router.navigate(routeArray);
+    //create relative path for the redirect
+    let counter = 0;
+    let hasParent = true;
+    let route = router;
+    for (var i = 0; hasParent == true; i++){
+      if(route.parent != null){
+        counter++;
+        route = route.parent;
       }else{
-        domainParams.scope = 'nfl';
-        router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
+        hasParent = false;
+        var relPath = '';
+        for(var c = 1 ; c <= counter; c++){
+          relPath += '../';
+        }
       }
-
     }
+
+    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){// if scope does not match nfl or ncaaf then redirect to homepage
+      let routeArray = [(relPath+domainHostName), domainParams];
+      if(pageHostName && pageParams){
+        routeArray.push(pageHostName, pageParams);
+      }else{
+        routeArray.push('Home-page');
+      }
+      router.navigate(routeArray);
+    }else{
+      domainParams.scope = 'nfl';
+      router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
+    }
+
     return;//do nothing if scope is returning correctly
   }
 
