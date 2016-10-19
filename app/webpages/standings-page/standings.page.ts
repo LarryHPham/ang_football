@@ -206,7 +206,7 @@ export class StandingsPage {
         this._seoService.setCanonicalLink(this._params.params, this._router);
         this._seoService.setOgTitle(ogTitle);
         this._seoService.setOgDesc(metaDesc);
-        this._seoService.setOgType('image');
+        this._seoService.setOgType('Website');
         this._seoService.setOgUrl(link);
         this._seoService.setOgImage(image);
         this._seoService.setTitleNoBase(title);

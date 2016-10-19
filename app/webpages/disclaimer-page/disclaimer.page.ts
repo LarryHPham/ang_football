@@ -48,7 +48,7 @@ export class DisclaimerPage {
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle('Disclaimer');
       this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('image');
+      this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage('./app/public/mainLogo.png');
       this._seoService.setTitle('Disclaimer');
