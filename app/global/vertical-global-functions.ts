@@ -12,6 +12,11 @@ export class VerticalGlobalFunctions {
 
   }
 
+  static RegExpSpecialCharacters(text){
+    let replacedText = text.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+    return replacedText
+  }
+
   /**
    * - Pass in datapoints to required parameters and formats
    * them into a single route that is in lowerCase Kebab.
@@ -30,6 +35,7 @@ export class VerticalGlobalFunctions {
   static formatTeamRoute(teamName: string, teamId: string): Array<any> {
     var teamRoute: Array<any>;
     if(typeof teamName != 'undefined' && teamName != null){
+      teamName = this.RegExpSpecialCharacters(teamName);
       teamName = GlobalFunctions.toLowerKebab(teamName);
       teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
     } else{
@@ -81,8 +87,8 @@ export class VerticalGlobalFunctions {
    */
   static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string):Array<any> {
     var playerRoute: Array<any>;
-
     if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
+      teamName = this.RegExpSpecialCharacters(teamName);
       teamName = GlobalFunctions.toLowerKebab(teamName);
       playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
       playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
