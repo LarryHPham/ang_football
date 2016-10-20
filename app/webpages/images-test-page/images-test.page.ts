@@ -37,7 +37,7 @@ export class ImagesTestPage {
       //About us title
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
-          text1: 'Last Updated: Monday Feb. 26, 2016',
+          text1: 'Last Updated: Monday, Feb. 26, 2016',
           text2: ' United States of America',
           text3: 'Test Page',
           text4: 'A test page for designing and viewing CSS styles',
