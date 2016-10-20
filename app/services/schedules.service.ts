@@ -329,7 +329,7 @@ export class SchedulesService {
             if(typeof dateObject[splitToDate] == 'undefined'){
               dateObject[splitToDate] = {};
               dateObject[splitToDate]['tableData'] = [];
-              dateObject[splitToDate]['display'] = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('dddd MMM. Do, YYYY') + " Games";
+              dateObject[splitToDate]['display'] = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. Do, YYYY') + " Games";
               dateObject[splitToDate]['tableData'].push(val);
             }else{
               dateObject[splitToDate]['tableData'].push(val);
@@ -339,7 +339,7 @@ export class SchedulesService {
           var splitToDate = moment().tz('America/New_York').format('YYYY-MM-DD');
           dateObject[splitToDate] = {};
           dateObject[splitToDate]['tableData'] = [];
-          dateObject[splitToDate]['display'] = moment().tz('America/New_York').format('dddd MMM. Do, YYYY') + " Games";
+          dateObject[splitToDate]['display'] = moment().tz('America/New_York').format('dddd, MMM. Do, YYYY') + " Games";
         }
         for(var date in dateObject){
           var newPostModel = new SchedulesTableModel(dateObject[date]['tableData'], eventStatus, teamId, isTeamProfilePage);
