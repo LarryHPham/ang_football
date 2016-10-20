@@ -63,7 +63,7 @@ export class ContactUsPage{
               ],
               titleData: {
                   imageURL: GlobalSettings.getSiteLogoUrl(),
-                  text1: 'Last Updated: Thursday Aug. 4, 2016',
+                  text1: 'Last Updated: Thursday, Aug. 4, 2016',
                   text2: ' United States',
                   text3: 'Have a question about '+domainTitle+'? Write us a message.',
                   text4: '',
