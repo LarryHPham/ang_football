@@ -27,25 +27,26 @@ export class HamburgerDeliveryService {
         url: [partnerUrl +'-home',params ,'Home-page']
       },
       {
-        menuTitle: division + " Teams",
-        url: [partnerUrl +'-home',params ,'Pick-team-page']//todo
-      },
-      {
-        menuTitle: division + " Players",
-        url: [partnerUrl +'-home',params ,'Directory-page-starts-with', {type: "players", startsWith: "a", page: "1"}]//todo
-      },
-      {
-        menuTitle: division + " League",
-        url: [partnerUrl +'-home',params ,'League-page']//todo
+        menuTitle: division + " Standings",
+        url: [partnerUrl +'-home',params ,'Standings-page']
       },
       {
         menuTitle: division + " Schedule",
         url: [partnerUrl +'-home',params ,'Schedules-page-league', {pageNum:1, year: "all"}]//todo
       },
       {
-        menuTitle: division + " Standings",
-        url: [partnerUrl +'-home',params ,'Standings-page']
-    }];
+        menuTitle: division + " League",
+        url: [partnerUrl +'-home',params ,'League-page']//todo
+      },
+      {
+        menuTitle: division + " Teams",
+        url: [partnerUrl +'-home',params ,'Pick-team-page']//todo
+      },
+      {
+        menuTitle: division + " Player Directory",
+        url: [partnerUrl +'-home',params ,'Directory-page-starts-with', {type: "players", startsWith: "a", page: "1"}]//todo
+      }
+      ];
     var menuInfo = [{
         menuTitle: "About Us",
         url: ['About-us-page']
