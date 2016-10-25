@@ -46,6 +46,13 @@ export class DeepDiveService {
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
+      if(startNum == null){
+          startNum = 1;
+      }
+
+      if(state == null){
+          state = 'CA';
+      }
   var headers = this.setToken();
       // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
       var callURL = this._apiUrl + '/articleBatch/';
@@ -58,13 +65,7 @@ export class DeepDiveService {
 
       }
 
-  if(startNum == null){
-    startNum = 1;
-  }
 
-  if(state == null){
-    state = 'CA';
-  }
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
