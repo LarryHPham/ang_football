@@ -41,7 +41,7 @@
       (tabSelectedListener)="positionDropdown($event)"
       (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
     <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-    <!-- <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [scope]="scope"></comparison-module> -->
+    <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [scope]="scope"></comparison-module>
     <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
     <div class="profile-carousel-container">
