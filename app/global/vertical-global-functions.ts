@@ -12,6 +12,11 @@ export class VerticalGlobalFunctions {
 
   }
 
+  static RegExpSpecialCharacters(text){
+    let replacedText = text.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+    return replacedText
+  }
+
   /**
    * - Pass in datapoints to required parameters and formats
    * them into a single route that is in lowerCase Kebab.
@@ -30,6 +35,7 @@ export class VerticalGlobalFunctions {
   static formatTeamRoute(teamName: string, teamId: string): Array<any> {
     var teamRoute: Array<any>;
     if(typeof teamName != 'undefined' && teamName != null){
+      teamName = this.RegExpSpecialCharacters(teamName);
       teamName = GlobalFunctions.toLowerKebab(teamName);
       teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
     } else{
@@ -81,8 +87,8 @@ export class VerticalGlobalFunctions {
    */
   static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string):Array<any> {
     var playerRoute: Array<any>;
-
     if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
+      teamName = this.RegExpSpecialCharacters(teamName);
       teamName = GlobalFunctions.toLowerKebab(teamName);
       playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
       playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
@@ -115,6 +121,51 @@ export class VerticalGlobalFunctions {
       articleRoute = null;
     }
     return articleRoute ? articleRoute : ['Error-page'];
+  }
+
+  static scopeRedirect(router, params?) {
+    // var domainHostName, domainParams, pageHostName, pageParams;
+    // if(router.parent.parent != null){//if there are more parameters past home page
+    //   domainHostName = router.parent.parent.currentInstruction.component.routeName;
+    //   domainParams = router.parent.parent.currentInstruction.component.params;
+    //   pageHostName = router.parent.currentInstruction.component.routeName;
+    //   pageParams = router.parent.currentInstruction.component.params;
+    // }else{// if there are no more parameters then set domain routeName and param
+    //   domainHostName = router.parent.currentInstruction.component.routeName;
+    //   domainParams = router.parent.currentInstruction.component.params;
+    // }
+    //
+    // //create relative path for the redirect
+    // let counter = 0;
+    // let hasParent = true;
+    // let route = router;
+    // for (var i = 0; hasParent == true; i++){
+    //   if(route.parent != null){
+    //     counter++;
+    //     route = route.parent;
+    //   }else{
+    //     hasParent = false;
+    //     var relPath = '';
+    //     for(var c = 1 ; c <= counter; c++){
+    //       relPath += '../';
+    //     }
+    //   }
+    // }
+    //
+    // if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){// if scope does not match nfl or ncaaf then redirect to homepage
+    //   let routeArray = [(relPath+domainHostName), domainParams];
+    //   if(pageHostName && pageParams){
+    //     routeArray.push(pageHostName, pageParams);
+    //   }else{
+    //     routeArray.push('Home-page');
+    //   }
+    //   router.navigate(routeArray);
+    // }else{
+    //   domainParams.scope = 'nfl';
+    //   router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
+    // }
+    //
+    // return;//do nothing if scope is returning correctly
   }
 
   /**

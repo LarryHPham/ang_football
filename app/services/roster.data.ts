@@ -249,7 +249,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       this.columns.push({
 
         headerValue: "Class",
-        columnClass: "data-column salary",
+        columnClass: "data-column classes",
         isNumericType: false,
         key: "class"
       }/*,{

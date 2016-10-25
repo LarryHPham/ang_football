@@ -10,6 +10,7 @@ import {GlobalSettings} from '../../global/global-settings';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import {SeoService} from "../../seo.service";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 declare var moment;
 @Component({
@@ -31,6 +32,8 @@ export class ContactUsPage{
       private _params: RouteParams,
       private _seoService: SeoService
     ) {
+      //check to see if scope is correct and redirect
+      VerticalGlobalFunctions.scopeRedirect(_router, _params);
         GlobalSettings.getParentParams(_router, parentParams => {
           var domainTitle;
           if(parentParams.partnerID != null){
@@ -60,7 +63,7 @@ export class ContactUsPage{
               ],
               titleData: {
                   imageURL: GlobalSettings.getSiteLogoUrl(),
-                  text1: 'Last Updated: Thursday, August 4, 2016',
+                  text1: 'Last Updated: Thursday, Aug. 4, 2016',
                   text2: ' United States',
                   text3: 'Have a question about '+domainTitle+'? Write us a message.',
                   text4: '',
@@ -110,7 +113,7 @@ export class ContactUsPage{
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle('Contact Us');
       this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('image');
+      this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(GlobalSettings.getmainLogoUrl());
       this._seoService.setTitle('Contact Us');

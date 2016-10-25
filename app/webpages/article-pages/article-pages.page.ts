@@ -75,6 +75,8 @@ export class ArticlePages implements OnInit {
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
                 private _seoService:SeoService) {
+        //check to see if scope is correct and redirect
+        VerticalGlobalFunctions.scopeRedirect(_router, _params);
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
           if(this.constructorControl){
@@ -121,7 +123,9 @@ export class ArticlePages implements OnInit {
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                        this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        var date  = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        var date1 = moment(date).format();
+                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
@@ -133,7 +137,7 @@ export class ArticlePages implements OnInit {
                         this._seoService.setCanonicalLink(this._params.params, this._router);
                         this._seoService.setOgTitle(this.title);
                         this._seoService.setOgDesc(metaDesc);
-                        this._seoService.setOgType('image');
+                        this._seoService.setOgType('Website');
                         this._seoService.setOgUrl(link);
                         this._seoService.setOgImage(image);
                         this._seoService.setTitle(this.title);
@@ -461,7 +465,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: moment(recommendations.last_updated).format('MMMM DD, YYYY'),
+            date: moment(recommendations.last_updated).format('MMM. DD, YYYY'),
             keyword: "FOOTBALL"
         };
         return articles;

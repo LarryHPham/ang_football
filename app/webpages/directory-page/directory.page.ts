@@ -12,6 +12,7 @@ import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekic
 import {FooterService} from '../../services/footer.service';
 import {PaginationFooter, PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
 import {SeoService} from "../../seo.service";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'Directory-page',
@@ -56,6 +57,8 @@ export class DirectoryPage {
     private _router: Router,
     private _seoService: SeoService
   ) {
+    //check to see if scope is correct and redirect
+    VerticalGlobalFunctions.scopeRedirect(_router, _params);
     GlobalSettings.getParentParams(_router, parentParams => {
       if(this.constructorControl){
         this.partnerID = parentParams.partnerID;
@@ -102,7 +105,7 @@ export class DirectoryPage {
         this._seoService.setCanonicalLink(this._params.params, this._router);
         this._seoService.setOgTitle(title + ' - ' + startsWith);
         this._seoService.setOgDesc(metaDesc);
-        this._seoService.setOgType('image');
+        this._seoService.setOgType('Website');
         this._seoService.setOgUrl(link);
         this._seoService.setOgImage('https://touchdownloyal.com/app/public/mainLogo.jpg');
         this._seoService.setTitle(title);
