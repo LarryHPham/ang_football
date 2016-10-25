@@ -1,6 +1,7 @@
 import {Component, Injector} from '@angular/core';
 import {Router,ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
+import {SeoService} from "../../seo.service";
 
 import {GlobalSettings} from '../../global/global-settings';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
@@ -15,7 +16,9 @@ export class ErrorPage {
   public errorMessage: string;
   public pageLink: string;
 
-  constructor(private _router:Router, private _title: Title) {
+  constructor(private _router:Router, private _title: Title, private _seoService: SeoService,) {
+      this._seoService.setTitle('Error Page');
+      this._seoService.setMetaRobots('NOINDEX, NOFOLLOW');
       GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
   }
 

@@ -1,5 +1,5 @@
 import {Component, OnInit, ElementRef} from '@angular/core';
-import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {RouteParams, RouteConfig, RouterOutlet, ROUTER_DIRECTIVES, Router} from '@angular/router-deprecated';
 
 import {FooterComponent} from "../fe-core/components/footer/footer.component";
 import {HeaderComponent} from "../fe-core/components/header/header.component";
@@ -267,7 +267,7 @@ export class MyAppComponent implements OnInit{
   public shiftContainer:string;
   public hideHeader:boolean;
   private isPartnerZone:boolean = false;
-  constructor(private _partnerData: PartnerHeader, private _params: RouteParams, private _el:ElementRef){
+  constructor(private _partnerData: PartnerHeader, private _params: RouteParams, private _el:ElementRef, private _router: Router){
     var parentParams = _params.params;
 
     if( parentParams['partner_id'] !== null){
@@ -292,8 +292,10 @@ export class MyAppComponent implements OnInit{
       this._partnerData.getPartnerData(this.partnerID)
       .subscribe(
         partnerScript => {
-          this.partnerData = partnerScript;
-          this.partnerScript = this.partnerData['results'].header.script;
+          if(partnerScript['results'] != null){
+            this.partnerData = partnerScript;
+            this.partnerScript = this.partnerData['results'].header.script;
+          }
         }
       );
     }else{
