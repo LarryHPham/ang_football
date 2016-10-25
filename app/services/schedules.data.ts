@@ -13,7 +13,7 @@ declare var moment: any;
 export interface SchedulesData {
   //TEAM1 => HOME
   //TEAM2 => AWAY
-  index:any;
+  index: any;
   backgroundImage: string,
   eventTimestamp: number,
   id: string,//id from API
@@ -30,7 +30,6 @@ export interface SchedulesData {
   team1ColorHex: string,
   team1City: string,
   team1State: string,
-  team1Stadium: string,
   team1Market: string, //first name
   team1Name: string, //last name
   team1Abbreviation: string,
@@ -41,7 +40,6 @@ export interface SchedulesData {
   team2ColorHex: string,
   team2City: string,
   team2State: string,
-  team2Stadium: string,
   team2Market: string, //first name
   team2Name: string, //last name
   team2Abbreviation: string,
@@ -49,9 +47,13 @@ export interface SchedulesData {
   team2Wins: string,
   team2Losses: string,
   aiUrlMod: string, //TODO missing
-  results:string, //TODO missing
+  results: string, //TODO missing
   targetTeam: string; //TODO missing
   seasonWeek: string;
+  venueCity: string;
+  venueState: string;
+  venueStadium: string;
+  venueCountry: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -137,15 +139,24 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
     item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
     var colors = Gradient.getColorPair(item.team2ColorHex.split(','), item.team1ColorHex.split(','));
+    let stadiumLocation = item.venueCity;
 
-    return {//placeholder data
+    if(item.venueState != null){
+      stadiumLocation = item.venueCity + ', ' + item.venueState;
+    }else{
+      if(item.venueCountry != null){
+        stadiumLocation = item.venueCity + ', ' + item.venueCountry;
+      }
+    }
+
+    let displayedCarousel = {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
       displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. Do, YYYY | h:mm A (z)'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
-      detail1Value:item.team1Stadium,
-      detail2Value:item.team1City + ', ' + item.team1State,
+      detail1Value:item.venueStadium,
+      detail2Value:stadiumLocation,
       imageConfig1:{//AWAY
         imageClass: "image-125",
         mainImage: {
@@ -173,6 +184,8 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       teamRecord1:item.awayRecord,
       teamRecord2:item.homeRecord,
     };
+
+    return displayedCarousel;
   }
 }
 
