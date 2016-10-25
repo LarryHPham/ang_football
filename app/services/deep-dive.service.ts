@@ -248,7 +248,7 @@ export class DeepDiveService {
         var dataLists = val.article_data[p];
       }
       var date = moment(Number(val.last_updated) * 1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
           keyword: key.replace('-', ' ').toUpperCase(),
@@ -278,7 +278,7 @@ export class DeepDiveService {
         var eventType = val.article_data[p];
       }
       var date = moment(Number(val.last_updated) * 1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
           keyword: key.replace('-',' ').toUpperCase(),
@@ -343,7 +343,7 @@ export class DeepDiveService {
     articles.forEach(function(val, index){
       var info = val.info;
       var date = moment(Number(info.dateline)*1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO

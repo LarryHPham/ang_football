@@ -31,8 +31,12 @@ export class StandingsService {
 
   private getModuleTitle(pageParams: SportPageParameters, teamName: string): string {
     let moduletitle = "Standings";
+    console.log("pageParams", pageParams);
     if ( teamName ) {
       moduletitle += " - " + teamName;
+    } else {
+      let scope = pageParams.scope == 'nfl' ? 'nfl' : 'ncaaf';
+      moduletitle += " - " + scope.toUpperCase();
     }
     return moduletitle;
   }
