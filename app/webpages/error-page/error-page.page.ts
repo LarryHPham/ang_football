@@ -16,7 +16,7 @@ export class ErrorPage {
   public errorMessage: string;
   public pageLink: string;
 
-  constructor(private _router:Router, private _title: Title, private _seoService: SeoService,) {
+  constructor(private _router:Router, private _title: Title, private _seoService: SeoService) {
       this._seoService.setTitle('Error Page');
       this._seoService.setMetaRobots('NOINDEX, NOFOLLOW');
       GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
