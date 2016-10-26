@@ -285,7 +285,7 @@ export class AppComponent implements OnInit{
   }
 
   getPartnerHeader(){//Since it we are receiving
-    if(this.partnerID != null){
+    if(this.partnerID != null && this.partnerID != 'football'){
       this._partnerData.getPartnerData(this.partnerID)
         .subscribe(
           partnerScript => {
