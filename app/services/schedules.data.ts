@@ -133,6 +133,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     }
     let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
     let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
+
     var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
     var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
     //TEST colors
@@ -161,7 +162,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
         imageClass: "image-125",
         mainImage: {
           imageUrl: GlobalSettings.getImageUrl(item.team2Logo),
-          urlRouteArray: teamRouteAway,
+          urlRouteArray: item.team2Id == null ? null : teamRouteAway,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
         }
@@ -170,17 +171,17 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
         imageClass: "image-125",
         mainImage: {
           imageUrl: GlobalSettings.getImageUrl(item.team1Logo),
-          urlRouteArray: teamRouteHome,
+          urlRouteArray: item.team1Id == null ? null : teamRouteHome,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
         }
       },
-      teamUrl1: teamRouteAway,
-      teamUrl2: teamRouteHome,
+      teamUrl1: item.team2Id == null ? null : teamRouteAway,
+      teamUrl2: item.team1Id == null ? null : teamRouteHome,
       teamName1: awayFullTeamName,
       teamName2: homeFullTeamName,
-      teamLocation1:item.team2City + ', ' + item.team2State,
-      teamLocation2:item.team1City + ', ' + item.team1State,
+      teamLocation1: item.team2City != null ? item.team2City + ', ' + item.team2State: 'N/A',
+      teamLocation2: item.team1City != null ? item.team1City + ', ' + item.team1State: 'N/A',
       teamRecord1:item.awayRecord,
       teamRecord2:item.homeRecord,
     };
