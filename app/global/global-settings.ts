@@ -187,6 +187,21 @@ export class GlobalSettings {
         return "/app/public/mainLogo.jpg";
     }
 
+    static getScopeNow() {
+      var url = window.top.location.pathname;
+      var scope = this._sportLeagueAbbrv;
+      var majorLeague = this._sportLeagueAbbrv.toLowerCase();
+      var minorLeagueFull = this._collegeDivisionFullAbbrv.toLowerCase();
+      var minorLeague = this._collegeDivisionAbbrv.toLowerCase();
+      if (url.includes(majorLeague)) {
+        scope = majorLeague;
+      }
+      else if (url.includes(minorLeagueFull) || url.includes(minorLeague)) {
+        scope = minorLeagueFull;
+      }
+      return scope;
+    }
+
     /**
      * This should be called by classes in their constructor function, so that the
      * 'subscribe' function actually gets called and the partnerID and scope can be located from the route
@@ -197,9 +212,8 @@ export class GlobalSettings {
 
     //static getPartnerID(router: Router, subscribeListener: Function)
     static getParentParams(router: Router, subscribeListener: Function) {
-        if ( !subscribeListener ) return;
-
-        router.root.subscribe (
+        // if ( !subscribeListener ) return;
+        return router.root.subscribe (
             route => {
                 let partnerID = null;
                 let scope = route.instruction.params["scope"];
@@ -212,13 +226,12 @@ export class GlobalSettings {
                 if ( scope == null ) {
                   scope = this.getSportLeagueAbbrv();
                 }
-
                 subscribeListener({
                   partnerID: partnerID == '' ? null : partnerID,
                   scope: this.getScope(scope)
                 });
             }
-        )
+        );
     }
 
     //converts URL route scope from NCAAF to FBS
