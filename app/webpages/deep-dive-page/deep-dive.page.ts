@@ -102,7 +102,7 @@ export class DeepDivePage implements OnInit{
             window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
           this.isPartnerZone = partnerHome;
-          if(this.partnerID != null){
+          if(this.partnerID != null && this.partnerID != 'football'){
             this.getPartnerHeader();
             this.isPartner = "partner";
           }else{
@@ -214,19 +214,27 @@ export class DeepDivePage implements OnInit{
         this._partnerData.getPartnerData(this.partnerID)
         .subscribe(
           partnerScript => {
-            this.partnerData = partnerScript;
-            //super long way from partner script to get location using geo location api
-            var state;
-            if (partnerScript['results']['location']['realestate']['location']['city'][0]) {
-               state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-               state = state.toLowerCase();
-               this.geoLocation = state;
-               this.callModules();
+            if(partnerScript['results'] != null){
+              this.partnerData = partnerScript;
+              //super long way from partner script to get location using geo location api
+              var state;
+              if (partnerScript['results']['location']['realestate']['location']['city'][0]) {
+                state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
+                state = state.toLowerCase();
+                this.geoLocation = state;
+                this.callModules();
+              }
+              else {
+                this.getGeoLocation();
+              }
+            }else{//IF BAD PARTNER ID IS INPUTED AN NO RESULTS COME BACK FROM SUBSCRIBE THEN REDIRECT TO DEFAULT 'football' partner id which will just run geo location and not grab partnerID
+              let relpath = GlobalFunctions.routerRelPath(this._router);
+              let badLinkRedirect = {
+                partner_id: 'football',
+                scope: 'nfl'
+              };
+              this._router.navigate([relpath+'Partner-home',badLinkRedirect, 'Home-page']);
             }
-            else {
-              this.getGeoLocation();
-            }
-
           }
         );
       }else{

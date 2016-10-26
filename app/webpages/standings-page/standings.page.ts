@@ -197,6 +197,7 @@ export class StandingsPage {
         //create meta description that is below 160 characters otherwise will be truncated
         header = data.headerData;
         titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName : header.teamMarket;
+        titleName = titleName.replace(/FBS/g, "NCAAF");
         title = titleName + ' Standings';
         ogTitle = titleName;
         metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);

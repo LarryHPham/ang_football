@@ -2,7 +2,7 @@
   @media @desktop-m{
     .widget-page-wrapper {
       > .col-xs-4 {
-        display: none;
+        display: block;
       }
     }
   }
@@ -36,6 +36,9 @@
   text-align: left;
   position: relative;
   overflow: hidden;
+  @media @desktop-l{
+    //width:105%;
+  }
   ul.share-buttons{
     display: inline-flex;
   }
@@ -49,7 +52,7 @@
 
   }
    .widget-page-wrapper{
-     width: 105%;
+     //width: 105%;
    }
   .widget-page-wrapper > .col-xs-4{
     margin-left:30px;
@@ -86,7 +89,7 @@
   }
   .carousel, .container{
     @media @mobile{
-      width:101%;
+      width:103%;
     }
 
     @media @tablet{
@@ -199,15 +202,18 @@
   &-content {
     position: relative;
     background-color: @white;
-    width: 980px;
+    padding:0 15px;
 
-    @media (max-width: 1023px) {
-      width: 640px;
+    @media @tablet {
+      min-width: 640px;
       padding: 15px;
     }
     @media @mobile {
       width: 100%;
       padding: 0 10px;
+    }
+    @media @desktop-m{
+      width:980px;
     }
     //padding: 0 20px;
     margin: 0 auto;
@@ -333,7 +339,7 @@
         }
       }
       &:last-of-type .deep_recs-articles-item {
-        margin-right: 0;
+        margin-right: -18px;
       }
     }
   }
@@ -370,11 +376,20 @@
       padding-right:5px;
     }
   }
+  @media @tablet{
+    .deep_recs-articles{
+      max-width: 320px;
+      padding-right: 18px;
+    }
+    .deep_recs-articles-item{
+      width:auto;
+    }
+  }
   .artcom {
     width: 100%;
     margin-top: 20px;
 
-      width: 95.5%;
+      //width: 95.5%;
 
 
 
@@ -387,7 +402,7 @@
 }
 .syndicated-articles-page .deep_recs-articles-item-image{
   @media @tablet{
-    height:120px;
+    min-height:120px;
   }
 }
 
@@ -405,5 +420,39 @@
 .syndicated-articles-page .videoFrame iframe{
   @media @mobile{
     height:96%;
+  }
+}
+.syndicated-articles-page .carousel-container{
+  @media (max-width: 1023px){
+    width:100%;
+  }
+  @media @desktop-m{
+    width: 100%;
+  }
+}
+.syndicated-articles-page .carousel, .syndicated-articles-page .container{
+  @media @desktop-m{
+    margin-left: 0;
+  }
+}
+
+.syndicated-articles-page {
+  @media (min-width:1000px){
+    .deep_recs-articles-item-image{
+    max-height: 120px;
+    }
+  }
+  @media @mobile{
+    .deep_recs-articles{
+      width:103%;
+    }
+    .syndicated-trending{
+      width: 100%;
+    }
+  }
+}
+.syndicated-articles-page .videoFrame{
+  @media @mobile {
+    width: 106%;
   }
 }

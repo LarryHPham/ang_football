@@ -62,7 +62,7 @@ export class DisclaimerPage {
       this.pageName = partnerID ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
-          text1: 'Last Updated: Thursday, August 4, 2016.',
+          text1: 'Last Updated: Thursday, Aug. 4, 2016.',
           text2 : ' United States',
           text3 : GlobalFunctions.convertToPossessive(this.pageName) + " Disclaimer",
           text4 : '',

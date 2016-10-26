@@ -46,6 +46,13 @@ export class DeepDiveService {
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
+      if(startNum == null){
+          startNum = 1;
+      }
+
+      if(state == null|| state == undefined){
+          state = 'CA';
+      }
   var headers = this.setToken();
       // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
       var callURL = this._apiUrl + '/articleBatch/';
@@ -58,13 +65,7 @@ export class DeepDiveService {
 
       }
 
-  if(startNum == null){
-    startNum = 1;
-  }
 
-  if(state == null){
-    state = 'CA';
-  }
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -166,7 +167,7 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
-    if(state == null){
+    if(state == null || state == undefined){
       state = 'CA';
     }
     if(batch == null || limit == null){
@@ -248,7 +249,7 @@ export class DeepDiveService {
         var dataLists = val.article_data[p];
       }
       var date = moment(Number(val.last_updated) * 1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
           keyword: key.replace('-', ' ').toUpperCase(),
@@ -278,7 +279,7 @@ export class DeepDiveService {
         var eventType = val.article_data[p];
       }
       var date = moment(Number(val.last_updated) * 1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
           keyword: key.replace('-',' ').toUpperCase(),
@@ -343,10 +344,10 @@ export class DeepDiveService {
     articles.forEach(function(val, index){
       var info = val.info;
       var date = moment(Number(info.dateline)*1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
+      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
-          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
+          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
           keyword: val.keyword.replace('-', ' ').toUpperCase(),
           new_date: date,
           displayHeadline: info.displayHeadline,

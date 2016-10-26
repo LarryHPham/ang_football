@@ -123,7 +123,9 @@ export class ArticlePages implements OnInit {
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                        this.date = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        var date  = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        var date1 = moment(date).format();
+                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
@@ -234,7 +236,7 @@ export class ArticlePages implements OnInit {
                 if (val['playerRosterModule']) {
                     let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
                     val['player'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['playerRosterModule']['headshot']),
                             urlRouteArray: playerUrl,
@@ -262,7 +264,7 @@ export class ArticlePages implements OnInit {
                 if (index == 0) {
                     let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageLeft'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['headshot']),
                             urlRouteArray: urlPlayerLeft,
@@ -284,7 +286,7 @@ export class ArticlePages implements OnInit {
                 if (index == 1) {
                     let urlPlayerRight = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
                     val['imageRight'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['headshot']),
                             urlRouteArray: urlPlayerRight,
@@ -314,7 +316,7 @@ export class ArticlePages implements OnInit {
                     let urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
                     let urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
                     val['teamLeft'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['gameModule'].homeTeamLogo),
                             urlRouteArray: urlTeamLeftTop,
@@ -323,7 +325,7 @@ export class ArticlePages implements OnInit {
                         }
                     };
                     val['teamRight'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['gameModule'].awayTeamLogo),
                             urlRouteArray: urlTeamRightTop,
@@ -357,7 +359,7 @@ export class ArticlePages implements OnInit {
                     let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].homeTeamName, val['gameModule'].homeTeamId);
                     let urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(val['gameModule'].awayTeamName, val['gameModule'].awayTeamId);
                     val['teamLeft'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['gameModule'].homeTeamLogo),
                             urlRouteArray: urlTeamLeftBottom,
@@ -366,7 +368,7 @@ export class ArticlePages implements OnInit {
                         }
                     };
                     val['teamRight'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['gameModule'].awayTeamLogo),
                             urlRouteArray: urlTeamRightBottom,
@@ -403,7 +405,7 @@ export class ArticlePages implements OnInit {
                 if (val['teamRecordModule'] && isFirstTeam) {
                     let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
                     val['imageTop'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
                             urlRouteArray: urlFirstTeam,
@@ -426,7 +428,7 @@ export class ArticlePages implements OnInit {
                 if (val['teamRecordModule'] && !isFirstTeam) {
                     let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
                     val['imageBottom'] = {
-                        imageClass: "image-121",
+                        imageClass: "image-122",
                         mainImage: {
                             imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
                             urlRouteArray: urlSecondTeam,
@@ -463,7 +465,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: moment(recommendations.last_updated).format('MMM DD, YYYY'),
+            date: moment(recommendations.last_updated).format('MMM. DD, YYYY'),
             keyword: "FOOTBALL"
         };
         return articles;
