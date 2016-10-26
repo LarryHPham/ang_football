@@ -159,6 +159,7 @@ export class VerticalGlobalFunctions {
       }else{
         routeArray.push('Home-page');
       }
+      console.log("route array", routeArray);
       router.navigate(routeArray);
     }else{
       domainParams.scope = 'nfl';

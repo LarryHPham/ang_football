@@ -42,7 +42,7 @@ export class TeamRosterPage implements OnInit {
               private _rosterService: RosterService) {
 
     //check to see if scope is correct and redirect
-    VerticalGlobalFunctions.scopeRedirect(_router, _params);
+    // VerticalGlobalFunctions.scopeRedirect(_router, _params);
     let teamId = _params.get("teamId");
     if ( teamId !== null && teamId !== undefined ) {
       this.pageParams.teamId = Number(teamId);
