@@ -470,11 +470,11 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         //shows the record of the current teams game at that time
 
         if(this.curTeam == item.team1Id){
-          var currentWins = item.team1Record.split('-')[0];
-          var currentLosses = item.team1Record.split('-')[1];
-        }else{
           var currentWins = item.team2Record.split('-')[0];
           var currentLosses = item.team2Record.split('-')[1];
+        }else{
+          var currentWins = item.team1Record.split('-')[0];
+          var currentLosses = item.team1Record.split('-')[1];
         }
         display = currentWins + " - " + currentLosses;
         sort = Number(currentWins)/Number(currentLosses);
