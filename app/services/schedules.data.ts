@@ -150,11 +150,13 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       }
     }
 
+    item.venueStadium = item.venueStadium.split("(")[0];
+
     let displayedCarousel = {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. Do, YYYY | h:mm A (z)'), //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. DD, YYYY | h:mm A (z)'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.venueStadium,
       detail2Value:stadiumLocation,
