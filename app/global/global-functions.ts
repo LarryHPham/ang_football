@@ -6,6 +6,27 @@ declare var moment:any;
 @Injectable()
 
 export class GlobalFunctions {
+
+  //return rel path position
+  static routerRelPath(router){
+    //create relative path for the redirect
+    let counter = 0;
+    let hasParent = true;
+    let route = router;
+    for (var i = 0; hasParent == true; i++){
+      if(route.parent != null){
+        counter++;
+        route = route.parent;
+      }else{
+        hasParent = false;
+        var relPath = '';
+        for(var c = 1 ; c <= counter; c++){
+          relPath += '../';
+        }
+      }
+    }
+    return relPath;
+  }
     /*convert from inches to ft-in format*/
     static inchesToFeet(inch):string {
       if(inch === undefined || inch === null){

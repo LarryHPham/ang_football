@@ -54,6 +54,7 @@ export interface SchedulesData {
   venueState: string;
   venueStadium: string;
   venueCountry: string;
+  seasonBase: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -416,7 +417,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
             }
             item.aiUrlMod = '/'+scope+'/articles/'+eventStatus+'-report/'+item.id;
           }
-          if ( status ) {
+          if ( status && Number(item.seasonBase) >= 2016) {
             if(partnerCheck.isPartner && !partnerCheck.isSubdomainPartner){
               display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
