@@ -76,7 +76,7 @@ export interface TeamSeasonStatsData {
   player_rushing_attempts: string,
   player_rushing_fumbles: string,
   player_rushing_touchdowns:string,
-  
+
   seasonId: string,
   /**
    * - Formatted from league and year values that generated the associated table
@@ -242,7 +242,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
       class: 'text-heavy'
     }
     var description: any = ["No Information for this season"];
-      description = this.getDescription(item, playerData.position, playerRouteText, playerData.statScope);
+    description = this.getDescription(item, playerData.position, playerRouteText, playerData.statScope);
 
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(playerData.backgroundUrl),
@@ -616,7 +616,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
     switch (column.key) {
       case "year":
       if(item.seasonId != null && item.seasonId != "") {
-        display = (Number(item.seasonId.slice(-2)) + 1).toString() + " / " + item.seasonId.slice(-2);
+        display =  item.seasonId.slice(-2) + " / " + (Number(item.seasonId.slice(-2)) + 1).toString();
       }
       else {
         display = "N/A";
