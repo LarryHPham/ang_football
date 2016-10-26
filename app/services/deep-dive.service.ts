@@ -50,7 +50,7 @@ export class DeepDiveService {
           startNum = 1;
       }
 
-      if(state == null){
+      if(state == null|| state == undefined){
           state = 'CA';
       }
   var headers = this.setToken();
@@ -167,7 +167,7 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
-    if(state == null){
+    if(state == null || state == undefined){
       state = 'CA';
     }
     if(batch == null || limit == null){
@@ -347,7 +347,7 @@ export class DeepDiveService {
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
-          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
+          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
           keyword: val.keyword.replace('-', ' ').toUpperCase(),
           new_date: date,
           displayHeadline: info.displayHeadline,
