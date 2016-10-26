@@ -102,7 +102,7 @@ export class DeepDivePage implements OnInit{
             window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
           this.isPartnerZone = partnerHome;
-          if(this.partnerID != null){
+          if(this.partnerID != null && this.partnerID != 'football'){
             this.getPartnerHeader();
             this.isPartner = "partner";
           }else{
@@ -227,8 +227,13 @@ export class DeepDivePage implements OnInit{
               else {
                 this.getGeoLocation();
               }
-            }else{
-              this._router.navigate(['NotFound-page']);
+            }else{//IF BAD PARTNER ID IS INPUTED AN NO RESULTS COME BACK FROM SUBSCRIBE THEN REDIRECT TO DEFAULT 'football' partner id which will just run geo location and not grab partnerID
+              let relpath = GlobalFunctions.routerRelPath(this._router);
+              let badLinkRedirect = {
+                partner_id: 'football',
+                scope: 'nfl'
+              };
+              this._router.navigate([relpath+'Partner-home',badLinkRedirect, 'Home-page']);
             }
           }
         );
