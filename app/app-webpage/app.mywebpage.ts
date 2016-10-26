@@ -292,8 +292,10 @@ export class MyAppComponent implements OnInit{
       this._partnerData.getPartnerData(this.partnerID)
       .subscribe(
         partnerScript => {
-          this.partnerData = partnerScript;
-          this.partnerScript = this.partnerData['results'].header.script;
+          if(partnerScript['results'] != null){
+            this.partnerData = partnerScript;
+            this.partnerScript = this.partnerData['results'].header.script;
+          }
         }
       );
     }else{
