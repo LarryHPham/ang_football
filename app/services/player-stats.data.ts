@@ -396,6 +396,12 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
         var presentColumn;
         let teamFullName = item.teamMarket + ' ' + item.teamName;
         let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
+        function removeDecimal(type,number){
+            if(type=="AVG"|| type=='RATE' || type=="YDS/G"|| type=="SACK"){
+                return number;
+            }
+            return parseInt(number);
+        }
         function tabCellData(columnType) {
             return{
                 "name":{
@@ -408,35 +414,35 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
 
                 },
                 "stat1-type":{
-                    display:item.stat1 != null ? item.stat1: 'N/A',
+                    display:item.stat1 != null ? removeDecimal(item.stat1Type, item.stat1): 'N/A',
                     sort : item.stat1 != null ? Number(item.stat1) : null,
                 },
                 "stat2-type":{
-                    display:item.stat2 != null ? item.stat2: 'N/A',
+                    display:item.stat2 != null ? removeDecimal(item.stat2Type, item.stat2): 'N/A',
                     sort : item.stat2 != null ? Number(item.stat2) : null,
                 },
 
                 "stat3-type":{
 
-                    display:item.stat3 != null ? item.stat3: 'N/A',
+                    display:item.stat3 != null ? removeDecimal(item.stat3Type, item.stat3): 'N/A',
                     sort : item.stat3 != null ? Number(item.stat3) : null,
 
                 },
                 "stat4-type":{
-                    display:item.stat4 != null ? item.stat4: 'N/A',
+                    display:item.stat4 != null ? removeDecimal(item.stat4Type, item.stat4): 'N/A',
                     sort : item.stat4 != null ? Number(item.stat4) : null,
                 },
 
                 "stat5-type":{
-                    display:item.stat5 != null ? item.stat5: 'N/A',
+                    display:item.stat5 != null ? removeDecimal(item.stat5Type, item.stat5): 'N/A',
                     sort : item.stat5 != null ? Number(item.stat5) : null,
                 },
                 "stat6-type":{
-                    display:item.stat6 != null ? item.stat6: 'N/A',
+                    display:item.stat6 != null ? removeDecimal(item.stat6Type, item.stat6): 'N/A',
                     sort : item.stat6 != null ? Number(item.stat6) : null,
                 },
                 "stat7-type":{
-                    display:item.stat7 != null ? item.stat7: 'N/A',
+                    display:item.stat7 != null ? removeDecimal(item.stat7Type, item.stat7): 'N/A',
                     sort : item.stat7 != null ? Number(item.stat7) : null,
                 }
 
