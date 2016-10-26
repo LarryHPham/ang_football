@@ -189,7 +189,7 @@ export class SchedulesService {
     YYArr.unshift({key:null,value:'Current'});
     return {
       data:yearArray,
-      type:'Year: ',
+      type:'Season: ',
       dataSml:YYArr
     };
   }
