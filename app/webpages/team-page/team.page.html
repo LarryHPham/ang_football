@@ -21,7 +21,7 @@
         (selectedKeyFilter)="filterDropdown($event)"></schedules>
 
     <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope" ></standings-module>
-    <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace"></responsive-widget>
+    <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <team-roster-module *ngIf="rosterData" [data]="rosterData"></team-roster-module>
     <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage" [profileData]="profileData" (tabSelected)="playerStatsTabSelected($event)" [tabName]="ptabName"></player-stats-module>
     <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
@@ -42,7 +42,7 @@
       <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel>
     </div>
     <video-module *ngIf="videoData" [firstVideo]="firstVideo"  [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
     <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
     <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
