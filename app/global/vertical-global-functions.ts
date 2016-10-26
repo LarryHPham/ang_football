@@ -151,16 +151,16 @@ export class VerticalGlobalFunctions {
         }
       }
     }
-
-    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){// if scope does not match nfl or ncaaf then redirect to homepage
-      let routeArray = [(relPath+domainHostName), domainParams];
-      if(pageHostName && pageParams){
-        routeArray.push(pageHostName, pageParams);
-      }else{
-        routeArray.push('Home-page');
-      }
-      router.navigate(routeArray);
-    }else{
+    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
+      // let routeArray = [(relPath+domainHostName), domainParams];
+      // if(pageHostName && pageParams){
+      //   routeArray.push(pageHostName, pageParams);
+      // }else{
+      //   routeArray.push('Home-page');
+      // }
+      // console.log(routeArray);
+      // router.navigate(routeArray);
+    }else{// else scope does not match nfl or ncaaf then redirect to homepage
       domainParams.scope = 'nfl';
       router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
     }
