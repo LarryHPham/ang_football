@@ -293,54 +293,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
     var imageUrl: string = null;
     var displayAsRawText = false;
     var pColumn;
-    /*switch (column.key) {
-      case "name":
-        display = item.playerFirstName + " " + item.playerLastName;
-        sort = item.playerLastName + ', ' + item.playerFirstName;
-        link = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId);
-        imageUrl = GlobalSettings.getImageUrl(item.playerHeadshotUrl);
-          bottomStat= item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A';
 
-        break;
-
-      case "pos":
-        display = typeof item.playerPosition[0] != null ? item.playerPosition : null;
-        sort = item.playerPosition != null ? item.playerPosition.toString() : null;
-        break;
-
-      case "ht":
-        display = item.playerHeight != null ? VerticalGlobalFunctions.formatHeight(VerticalGlobalFunctions.formatHeightInches(item.playerHeight)) : null;
-        displayAsRawText = true;
-        sort = item.playerHeight != null ? Number(item.playerHeight) : null;
-        break;
-
-      case "wt":
-        display = item.playerWeight != null ? item.playerWeight + " lbs." : null;
-        sort = item.playerWeight != null ? Number(item.playerWeight) : null;
-        break;
-
-      case "age":
-        display = item.playerAge != null ? item.playerAge.toString() : null;
-        sort = item.playerAge != null ? Number(item.playerAge) : null;
-        break;
-
-      case "sal":
-        display = item.playerSalary != null ? "$" + GlobalFunctions.nFormatter(Number(item.playerSalary)) : null;
-        sort = item.playerSalary != null ? Number(item.playerSalary) : null;
-        break;
-      case "jer":
-        display = item.playerJerseyNumber != null ? "#" + item.playerJerseyNumber : null;
-        sort = item.playerJerseyNumber != null ? Number(item.playerJerseyNumber) : null;
-        break;
-      case "class":
-        display = item.class != null ? this.getFullClassName(item.class) : null;
-        sort = item.class != null ? item.class : null;
-        break;
-    }
-    if ( display == null ) {
-      display = "N/A";
-    }
-    return new CellData(display,bottomStat, sort, link, imageUrl, displayAsRawText);*/
       function getFullClassName(classyear){
           switch(classyear) {
            case 'FR':

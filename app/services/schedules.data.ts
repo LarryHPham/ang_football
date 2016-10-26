@@ -54,6 +54,7 @@ export interface SchedulesData {
   venueState: string;
   venueStadium: string;
   venueCountry: string;
+  seasonBase: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -150,11 +151,13 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       }
     }
 
+    item.venueStadium = item.venueStadium.split("(")[0];
+
     let displayedCarousel = {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. Do, YYYY | h:mm A (z)'), //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. DD, YYYY | h:mm A (z)'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.venueStadium,
       detail2Value:stadiumLocation,
@@ -416,7 +419,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
             }
             item.aiUrlMod = '/'+scope+'/articles/'+eventStatus+'-report/'+item.id;
           }
-          if ( status ) {
+          if ( status && Number(item.seasonBase) >= 2016) {
             if(partnerCheck.isPartner && !partnerCheck.isSubdomainPartner){
               display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
