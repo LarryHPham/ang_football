@@ -114,14 +114,14 @@ export class MVPListPage implements OnInit {
 
         this.displayPosition = this.listType != null ? VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.listType) : this.globalMVPPosition;
 
-        this.profileHeaderData = {
-            imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
-            imageRoute: ["League-page"],
-            text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
-            text2: 'United States',
-            text3: "Most Valuable Players - " + this.scope.toUpperCase() + this.displayPosition,
-            icon: 'fa fa-map-marker'
-        };
+        // this.profileHeaderData = {
+        //     imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
+        //     imageRoute: ["League-page"],
+        //     text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
+        //     text2: 'United States',
+        //     text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
+        //     icon: 'fa fa-map-marker'
+        // };
 
         this._profileService.getLeagueProfile(this.scope)
             .subscribe(data => {
