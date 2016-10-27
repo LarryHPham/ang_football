@@ -49,7 +49,8 @@ export class DraftHistoryPage implements OnInit{
       .subscribe(
           data => {
             // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
-            var pageNameForTitle = data.profileName + " - " + this.whatProfile;
+            var pageNameForTitle = this.whatProfile + " - " + data.profileName;
+            console.log(pageNameForTitle);
             this.profileHeaderData = this._profileService.convertTeamPageHeader(data, pageNameForTitle);
             this.profileData = data;
           },
