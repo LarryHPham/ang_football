@@ -245,21 +245,24 @@ export class TeamPage implements OnInit {
                 this.metaTags(data);
                 this.pageParams = data.pageParams;
                 this.profileData = data;
+                let headerData = data.headerData != null ? data.headerData : null;
                 this.profileName = data.teamName;
+                if(headerData.teamMarket != null){
+                  this.profileName = headerData.teamMarket;
+                  this.profileName = headerData.teamName != null ? this.profileName + ' ' + headerData.teamName : this.profileName;
+                }
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
-
                 this.dailyUpdateModule(this.pageParams.teamId);
                 this.getHeadlines();
 
                 /*** Keep Up With Everything [Team Name] ***/
                 this.getBoxScores(this.dateParam);
-
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
-                this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
-                this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
+                this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+                this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, this.profileName, true);
+                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.pageParams.teamId);
                 //this.loadMVP
                 this.setupComparisonData();
 
