@@ -12,7 +12,7 @@ const cleanCSS = require('gulp-clean-css');
 const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
-//const htmlMinify=require('html-minifier').minify;
+
 
 
 // clean the contents of the distribution directory
