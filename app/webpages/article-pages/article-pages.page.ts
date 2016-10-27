@@ -110,32 +110,28 @@ export class ArticlePages implements OnInit {
                             this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                         }
                         var articleType = [];
-                        if (Article['data'][0].article_type_id != null) {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                        if (Article['data'][0].article_type != null) {
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type, true);
                         } else {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
-                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
-                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_sub_type, false);
                         }
                         this.articleType = articleType[1];
                         this.articleSubType = articleType[2];
-                        //this.articleType = articleType[0];
-                        //this.articleSubType = articleType[2];
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
-                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                        var date  = Article['data'][0]['article_data'][this.pageIndex].dateline;
+                        this.title = Article['data'][0]['article_data'].title;
+                        var date  = Article['data'][0]['article_data'].publication_date;
                         var date1 = moment(date).format();
                         this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
-                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
-                        this.articleData = Article['data'][0]['article_data'][this.pageIndex];
-                        this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
+                        this.comment = Article['data'][0]['article_data'].comment_header;
+                        this.articleData = Article['data'][0]['article_data'];
+                        this.teamId = Article['data'][0]['article_data'].teamId;
 
                         //create meta description that is below 160 characters otherwise will be truncated
-                        let metaDesc = Article['data'][0].teaser;
+                        let metaDesc = Article['data'][0].meta_headline;
                         let link = window.location.href;
-                        let image = GlobalSettings.getImageUrl(Article['data'][0]['article_data'][this.pageIndex]['images']['home_images'][0].image_url)
+                        let image = GlobalSettings.getImageUrl(Article['data'][0]['article_data']['images'][0].image_url);
                         this._seoService.setCanonicalLink(this._params.params, this._router);
                         this._seoService.setOgTitle(this.title);
                         this._seoService.setOgDesc(metaDesc);
@@ -146,12 +142,12 @@ export class ArticlePages implements OnInit {
                         this._seoService.setMetaDescription(metaDesc);
                         this._seoService.setMetaRobots('INDEX, FOLLOW');
 
-                        if (Article['data'][0]['article_data'][this.pageIndex]['images'] != null) {
-                            this.getCarouselImages(Article['data'][0]['article_data'][this.pageIndex]['images']);
+                        if (Article['data'][0]['article_data']['images'] != null) {
+                            this.getCarouselImages(Article['data'][0]['article_data']['images']);
                         } else {
                             this.hasImages = false;
                         }
-                        this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
+                        this.imageLinks = this.getImageLinks(Article['data'][0]['article_data']);
                         if (this.hasEventId) {
                             this.getRecommendedArticles();
                         }
@@ -195,25 +191,14 @@ export class ArticlePages implements OnInit {
     }
 
     getCarouselImages(data) {
-        var images = [];
         var imageArray = [];
         var copyArray = [];
         var titleArray = [];
-
-        if (this.articleType == "game-module" || this.articleType == "team-record") {
-            images = data['home_images'].concat(data['away_images']);
-        } else if (this.articleType == "playerRoster") {
-            images = data['home_images'];
-        } else if (this.isFantasyReport) {
-            images = data['home_images'].concat(data['player_images']);
-        } else {
-            images = data['away_images'];
-        }
-        images.sort(function () {
+        data.sort(function () {
             return 0.5 - Math.random()
         });
         try {
-            images.forEach(function (val) {
+            data.forEach(function (val) {
                 imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
                 copyArray.push(val['image_copyright']);
                 titleArray.push(val['image_title']);

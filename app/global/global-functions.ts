@@ -711,87 +711,87 @@ export class GlobalFunctions {
     static getArticleType(articleType, isMain) {
         var articleInformation = [];
         if (isMain) {
-            switch (parseInt(articleType)) {
-                case 0:
+            switch (articleType) {
+                case "pregame-report":
                     return articleInformation = ["pregame-report", "gameReport", "null"];
-                case 1:
+                case "in-game-report":
                     return articleInformation = ["in-game-report", "gameReport", "null"];
-                case 2:
+                case "postgame-report":
                     return articleInformation = ["postgame-report", "gameReport", "null"];
-                case 3:
+                case "upcoming-games":
                     return articleInformation = ["upcoming-games", "gameModule", "null"];
-                case 4:
+                case "about-the-teams":
                     return articleInformation = ["about-the-teams", "teamRecord", "about"];
-                case 5:
+                case "historical-team-statistics":
                     return articleInformation = ["historical-team-statistics", "teamRecord", "history"];
-                case 6:
+                case "last-matchup":
                     return articleInformation = ["last-matchup", "teamRecord", "last"];
-                case 11:
+                case "player-fantasy":
                     return articleInformation = ["player-fantasy", "gameReport", "null"];
             }
         } else {
             switch (parseInt(articleType)) {
-                case 0:
+                case "starting-roster-home-offense":
                     return articleInformation = ["starting-roster-home-offense", "playerRoster", "null"];
-                case 1:
+                case "starting-roster-home-defense":
                     return articleInformation = ["starting-roster-home-defense", "playerRoster", "null"];
-                case 2:
+                case "starting-roster-home-special-teams":
                     return articleInformation = ["starting-roster-home-special-teams", "playerRoster", "null"];
-                case 3:
+                case "starting-roster-away-offense":
                     return articleInformation = ["starting-roster-away-offense", "playerRoster", "null"];
-                case 4:
+                case "starting-roster-away-defense":
                     return articleInformation = ["starting-roster-away-defense", "playerRoster", "null"];
-                case 5:
+                case "starting-roster-away-special-teams":
                     return articleInformation = ["starting-roster-away-special-teams", "playerRoster", "null"];
-                case 6:
+                case "injuries-home":
                     return articleInformation = ["injuries-home", "playerRoster", "null"];
-                case 7:
+                case "injuries-away":
                     return articleInformation = ["injuries-away", "playerRoster", "null"];
-                case 8:
+                case "quarterback-player-comparison":
                     return articleInformation = ["quarterback-player-comparison", "playerComparison", "null"];
-                case 9:
+                case "running-back-player-comparison":
                     return articleInformation = ["running-back-player-comparison", "playerComparison", "null"];
-                case 10:
+                case "wide-receiver-player-comparison":
                     return articleInformation = ["wide-receiver-player-comparison", "playerComparison", "null"];
-                case 11:
+                case "tight-end-player-comparison":
                     return articleInformation = ["tight-end-player-comparison", "playerComparison", "null"];
-                case 12:
+                case "defense-player-comparison":
                     return articleInformation = ["defense-player-comparison", "playerComparison", "null"];
-                case 13:
+                case "fantasy-home-quarterback1":
                     return articleInformation = ["fantasy-home-quarterback1", "fantasy", "null"];
-                case 14:
+                case "fantasy-home-running-back1":
                     return articleInformation = ["fantasy-home-running-back1", "fantasy", "null"];
-                case 15:
+                case "fantasy-home-running-back2":
                     return articleInformation = ["fantasy-home-running-back2", "fantasy", "null"];
-                case 16:
+                case "fantasy-home-wide-receiver1":
                     return articleInformation = ["fantasy-home-wide-receiver1", "fantasy", "null"];
-                case 17:
+                case "fantasy-home-wide-receiver2":
                     return articleInformation = ["fantasy-home-wide-receiver2", "fantasy", "null"];
-                case 18:
+                case "fantasy-home-tight-end1":
                     return articleInformation = ["fantasy-home-tight-end1", "fantasy", "null"];
-                case 19:
+                case "fantasy-home-tight-end2":
                     return articleInformation = ["fantasy-home-tight-end2", "fantasy", "null"];
-                case 20:
+                case "fantasy-home-defense1":
                     return articleInformation = ["fantasy-home-defense1", "fantasy", "null"];
-                case 21:
+                case "fantasy-away-quarterback1":
                     return articleInformation = ["fantasy-away-quarterback1", "fantasy", "null"];
-                case 22:
+                case "fantasy-away-running-back1":
                     return articleInformation = ["fantasy-away-running-back1", "fantasy", "null"];
-                case 23:
+                case "fantasy-away-running-back2":
                     return articleInformation = ["fantasy-away-running-back2", "fantasy", "null"];
-                case 24:
+                case "fantasy-away-wide-receiver1":
                     return articleInformation = ["fantasy-away-wide-receiver1", "fantasy", "null"];
-                case 25:
+                case "fantasy-away-wide-receiver2":
                     return articleInformation = ["fantasy-away-wide-receiver2", "fantasy", "null"];
-                case 26:
+                case "fantasy-away-tight-end1":
                     return articleInformation = ["fantasy-away-tight-end1", "fantasy", "null"];
-                case 27:
+                case "fantasy-away-tight-end2":
                     return articleInformation = ["fantasy-away-tight-end2", "fantasy", "null"];
-                case 28:
+                case "fantasy-away-defense1":
                     return articleInformation = ["fantasy-away-defense1", "fantasy", "null"];
-                case 29:
+                case "fantasy-home-kicker1":
                     return articleInformation = ["fantasy-home-kicker1", "fantasy", "null"];
-                case 30:
+                case "fantasy-away-kicker1":
                     return articleInformation = ["fantasy-away-kicker1", "fantasy", "null"];
             }
         }
