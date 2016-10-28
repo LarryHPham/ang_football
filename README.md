@@ -6,7 +6,7 @@ To start clone this repo, run: `git clone --recursive https://github.com/passit/
 
 This fork of Touchdown Loyal is an implementation modular SNT Media Core submodule git structure.
 
-Structure: 
+Structure:
 
               SNT Core Framework
       Global  |       |
@@ -59,6 +59,10 @@ install each one individually
       l.`fuse.js` (Lightweight JSON search library for client side)
 
       m. `hammer.js` (used for touch events for mobile)
+
+      n. `gulp-uglify` (minify js files)
+
+      o. `gulp-angular-embed-templates` (to include the contents of angular templates inside directive's code)
 
 3. `gulp serve`
 
