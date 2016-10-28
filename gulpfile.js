@@ -12,7 +12,6 @@ const cleanCSS = require('gulp-clean-css');
 const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
-const htmlmin = require('gulp-htmlmin');
 
 
 
@@ -20,19 +19,6 @@ const htmlmin = require('gulp-htmlmin');
 gulp.task('clean', function () {
   return del('dist/**/*');
 });
-//minify html
-
-gulp.task('minifyHTML', ['clean'],function(){
-    return gulp
-        .src(['app/**/*.*.html'])
-        .pipe(htmlmin(
-            {
-                collapseWhitespace:true,
-                removeComments:true,
-
-        }))
-        .pipe(gulp.dest('dist/app'));
-})
 
 //minify the css
 gulp.task('minify-css',['less'], function() {
@@ -121,7 +107,7 @@ gulp.task('bundle', ['clean', 'copy:libs'], function() {
 
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean'], function() {
-  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.*.html','!app/**/*.ts', '!app/**/*.less'], { base : './' })
+  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
 
@@ -145,7 +131,7 @@ gulp.task('serve', ['build'], function() {
 });
 
 // gulp.task('build', ['compile', 'less', 'copy:libs', 'copy:assets', 'minify-css', 'compress']);
-gulp.task('build', ['compile', 'less', 'minify-css','minifyHTML','copy:libs', 'copy:assets','bundle']);
+gulp.task('build', ['compile', 'less', 'minify-css','copy:libs', 'copy:assets','bundle']);
 gulp.task('buildAndReload', ['build'], reload);
 
 gulp.task('build-tests', ['compile-tests', 'build']);
