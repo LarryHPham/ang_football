@@ -132,7 +132,7 @@ gulp.task('serve', ['build'], function() {
 });
 
 // gulp.task('build', ['compile', 'less', 'copy:libs', 'copy:assets', 'minify-css', 'compress']);
-gulp.task('build', ['compile', 'less', 'copy:libs', 'copy:assets', 'minify-css','bundle']);
+gulp.task('build', ['compile', 'less', 'minify-css','copy:libs', 'copy:assets','bundle']);
 gulp.task('buildAndReload', ['build'], reload);
 
 gulp.task('build-tests', ['compile-tests', 'build']);
