@@ -224,16 +224,6 @@ declare var jQuery: any;
         name: 'List-of-lists-page-scoped',
         component: ListOfListsPage
     },
-    // {
-    //     path: '/list-of-lists/:type/:id/:limit/:pageNum',
-    //     name: 'List-of-lists-page',
-    //     component: ListOfListsPage
-    // },
-    // {
-    //     path: '/list-of-lists/league/:limit/:pageNum',
-    //     name: 'List-of-lists-league-page',
-    //     component: ListOfListsPage
-    // },
     //Error pages and error handling
     {
         path: '/error',
@@ -262,7 +252,7 @@ declare var jQuery: any;
     }
 ])
 
-export class AppComponent implements OnInit{
+export class AppComponent {
   public partnerID: string;
   public partnerData: Object;
   public partnerScript:string;
@@ -305,17 +295,4 @@ export class AppComponent implements OnInit{
     }
   }
 
-  setPageSize(){
-    function getPartnerHeaderHeight(){
-        var scrollTop = jQuery(window).scrollTop();
-        var partnerHeight = 0;
-        if( document.getElementById('partner') != null && scrollTop <=  (document.getElementById('partner').offsetHeight)){
-            partnerHeight = document.getElementById('partner').offsetHeight - scrollTop;
-        }
-        return partnerHeight;
-    }
-  }
-
-  ngOnInit(){
-  }
 }

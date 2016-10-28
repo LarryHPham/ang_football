@@ -202,32 +202,34 @@ export class PlayerPage implements OnInit {
                     this.getFantasyData(this.pageParams.playerId);
                 }
 
-                //get current date for box-scores
-                var currentUnixDate = new Date().getTime();
-                this.dateParam = {
-                    profile: 'player',
-                    teamId: this.teamId, // teamId if it exists
-                    date: moment.tz(currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
-                    // date: '2015-09-11'
-                };
-                this.getBoxScores(this.dateParam);
+                setTimeout(() => {  // defer loading everything below the fold
+                  //get current date for box-scores
+                  var currentUnixDate = new Date().getTime();
+                  this.dateParam = {
+                      profile: 'player',
+                      teamId: this.teamId, // teamId if it exists
+                      date: moment.tz(currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
+                      // date: '2015-09-11'
+                  };
+                  this.getBoxScores(this.dateParam);
 
 
-                /*** Keep Up With Everything [Player Name] ***/
-                this.eventStatus = 'pregame';
-                this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
-                this.setupSeasonstatsData();
-                this.setupComparisonData();
-                /*** Other [League Name] Content You May Love ***/
-                this.getImages(this.imageData);
-                this.getDykService();
-                this.getFaqService();
-                this.setupListOfListsModule();
-                this.getNewsService();
+                  /*** Keep Up With Everything [Player Name] ***/
+                  this.eventStatus = 'pregame';
+                  this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+                  this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
+                  this.setupSeasonstatsData();
+                  this.setupComparisonData();
+                  /*** Other [League Name] Content You May Love ***/
+                  this.getImages(this.imageData);
+                  this.getDykService();
+                  this.getFaqService();
+                  this.setupListOfListsModule();
+                  this.getNewsService();
 
-                /*** Interact With [League Name]’s Fans ***/
-                this.getTwitterService();
+                  /*** Interact With [League Name]’s Fans ***/
+                  this.getTwitterService();
+                }, 2000);
             },
             err => {
                 this.hasError = true;
