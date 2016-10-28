@@ -12,7 +12,7 @@ const cleanCSS = require('gulp-clean-css');
 const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
-
+const embedTemp = require('gulp-angular-embed-templates');
 
 
 // clean the contents of the distribution directory
@@ -30,6 +30,11 @@ gulp.task('minify-css',['less'], function() {
     .pipe(gulp.dest('dist/app/global/stylesheets'));
 });
 
+gulp.task('minify-js',['compile'], function() {
+    return gulp.src('dist/app/**.*.js')
+        .pipe(embedTemp()).pipe(uglify()).pipe(gulp.dest('dist/app'))
+});
+
 //minify javascript
 // gulp.task('compress', ['copy:dev-assets'], function() {
 //   gulp.src('dist/app/**/*.js')
@@ -42,13 +47,24 @@ gulp.task('minify-css',['less'], function() {
 //     }))
 //     .pipe(gulp.dest('dist/app'))
 // });
+// Minify HTML
+/*gulp.task('html-min', ['clean'], function () {
+    return gulp
+        .src('app/!**!/!*.html')
+        .pipe(htmlmin({
+            collapseBooleanAttributes:true,z
+
+        }))
+        .pipe(gulp.dest('dist/app'));
+});*/
 
 // TypeScript compile
 gulp.task('compile', ['clean'], function () {
   return gulp
     .src(['app/**/*.ts', '!app/**/*spec.ts'])
-    .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
-    .pipe(gulp.dest('dist/app'));
+    .pipe(typescript(tscConfig.compilerOptions))
+    .pipe(gulp.dest('dist/app'))
+
 });
 
 // copy dependencies
@@ -116,6 +132,7 @@ gulp.task('less', ['clean'], function() {
         .pipe(concat('master.css'))
         .pipe(less())
         .pipe(gulp.dest('dist/app/global/stylesheets'));
+
 });
 
 // Run browsersync for development
@@ -131,7 +148,7 @@ gulp.task('serve', ['build'], function() {
 });
 
 // gulp.task('build', ['compile', 'less', 'copy:libs', 'copy:assets', 'minify-css', 'compress']);
-gulp.task('build', ['compile', 'less', 'minify-css','copy:libs', 'copy:assets','bundle']);
+gulp.task('build', ['compile', 'less', 'minify-css','minify-js','copy:libs', 'copy:assets','bundle']);
 gulp.task('buildAndReload', ['build'], reload);
 
 gulp.task('build-tests', ['compile-tests', 'build']);
@@ -151,7 +168,7 @@ gulp.task('dev', ['dev-build'], function() {
     }
   });
 
-  gulp.watch(['app/**/*', 'dev-index.html', 'master.css'], ['dev-buildAndReload']);
+  gulp.watch(['app/**/*', 'dev-index.html', 'master.css','minify-js'], ['dev-buildAndReload']);
 });
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:dev-assets', ['clean'], function() {
@@ -159,10 +176,10 @@ gulp.task('copy:dev-assets', ['clean'], function() {
     .pipe(rename('index.html'))
     .pipe(gulp.dest('dist'));
 
-  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
+  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less','!app/**/*.js'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
-gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
+gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css','minify-js']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
 gulp.task('default', ['build']);
