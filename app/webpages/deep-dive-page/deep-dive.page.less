@@ -5,6 +5,7 @@
   background-color: @white;
   height: auto;
   min-width: 320px;
+  width: 100%;
   display: block;
   @media @mobile{
     .carWrapper{
@@ -39,10 +40,6 @@
   &-adWrap{
     height: 50px;
     min-width: 320px;
-    max-width: 1024px;
-    @media @desktop-xl{
-      max-width: 1440px;
-    }
   }
   &-container1{
     height: auto;
@@ -116,7 +113,6 @@
 
 @media @tablet {
   .deep-dive{
-    max-width: 1024px;
     min-width: 640px;
     &-container1{
       background-color: @bulletGrey;
@@ -207,15 +203,12 @@
 
 @media @desktop-xl{
   .deep-dive{
-    .deep-dive-boxScore{
-      //max-width: 640px;
-    }
     min-width: 1440px;
     &-container2{
       width: auto;
     }
     &-container2a{
-      margin-left: 15px;
+      margin-right: 15px;
       width: 1086px;
       .container-boxScores{
         width:100%;
