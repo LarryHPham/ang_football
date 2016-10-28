@@ -107,7 +107,7 @@ export class ArticlePages implements OnInit {
                     if (Article['data'].length > 0) {
                         if (this.isFantasyReport) {
                             this.eventID = Article['data'][0].event_id;
-                            this.eventID = this.eventID ? this.hasEventId = true : this.eventID = false;
+                            this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                         }
                         var articleType = [];
                         if (Article['data'][0].article_type_id != null) {
@@ -131,7 +131,9 @@ export class ArticlePages implements OnInit {
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
-
+                        if (this.teamId == null) {
+                            this.teamId = Article['data'][0]['article_data'][this.pageIndex]['metadata'].homeTeamId;
+                        }
                         //create meta description that is below 160 characters otherwise will be truncated
                         let metaDesc = Article['data'][0].teaser;
                         let link = window.location.href;
@@ -152,7 +154,7 @@ export class ArticlePages implements OnInit {
                             this.hasImages = false;
                         }
                         this.imageLinks = this.getImageLinks(Article['data'][0]['article_data'][this.pageIndex]);
-                        if (this.eventID) {
+                        if (this.hasEventId) {
                             this.getRecommendedArticles();
                         }
                     }
