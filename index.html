@@ -25,13 +25,13 @@
     <script src="lib/core.min.js"></script>
     <script src="lib/Reflect.js"></script>
     <script src="lib/system.src.js"></script>
-    <script async src="lib/moment.js"></script>
-    <script async src="lib/moment-timezone-with-data-2010-2020.js"></script>
+    <script src="lib/moment.js"></script>
+    <script src="lib/moment-timezone-with-data-2010-2020.js"></script>
     <script src="lib/zone.js"></script>
-    <script async src="lib/fuse.min.js"></script>
-    <script async src="lib/hammer.min.js"></script>
+    <script src="lib/fuse.min.js"></script>
+    <script src="lib/hammer.min.js"></script>
     <script src="lib/jquery.min.js"></script>
-    <script async src="lib/highcharts.js"></script>
+    <script src="lib/highcharts.js"></script>
 
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <!-- social share button on home page -->
@@ -56,8 +56,7 @@
         };
       }
       </script>
-    <!-- 2. Configure SystemJS -->
-    <script src="lib/bundle.js"></script>
+
   </head>
 
   <!-- 3. Display the application -->
@@ -67,6 +66,8 @@
         <img src="/app/public/page_loading.gif" alt=""/>
       </div>
     </app-domain>
+    <!-- 2. Configure SystemJS -->
+    <script src="lib/bundle.js"></script>
   </body>
 
 </html>

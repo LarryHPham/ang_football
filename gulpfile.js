@@ -33,18 +33,9 @@ gulp.task('minify-css',['less'], function() {
 
 
 // TypeScript compile
-gulp.task('compiledev', function () {
-  return gulp
-    .src(['app/**/*.ts','!app/**/*spec.ts']).pipe(embedTemp({sourceType:'ts',basePath:'./'}))
-    .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
-    .pipe(gulp.dest('dist/app'))
-
-});
-
-//for gulp serve
 gulp.task('compile', function () {
     return gulp
-        .src(['app/**/*.ts','!app/**/*spec.ts'])
+        .src(['app/**/*.ts','!app/**/*spec.ts']).pipe(embedTemp({sourceType:'ts',basePath:'./'}))
         .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
         .pipe(gulp.dest('dist/app'))
 
@@ -108,7 +99,7 @@ gulp.task('bundle', ['clean', 'copy:libs'], function() {
 
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean'], function() {
-  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
+  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less',  '!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
 
@@ -164,7 +155,7 @@ gulp.task('copy:dev-assets', ['clean'], function() {
   return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
-gulp.task('dev-build', ['compiledev', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
+gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
 gulp.task('default', ['build']);
