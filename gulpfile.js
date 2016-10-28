@@ -12,7 +12,7 @@ const cleanCSS = require('gulp-clean-css');
 const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
-const embedTemplates = require('gulp-angular-embed-templates');
+const embedTemp = require('gulp-angular-embed-templates');
 
 
 // clean the contents of the distribution directory
@@ -30,29 +30,15 @@ gulp.task('minify-css',['less'], function() {
     .pipe(gulp.dest('dist/app/global/stylesheets'));
 });
 
-//minify javascript
-// gulp.task('compress', ['copy:dev-assets'], function() {
-//   gulp.src('dist/app/**/*.js')
-//     .pipe(minify({
-//         ext:{
-//             src:'-debug.js',
-//             min:'.js'
-//         },
-//         exclude: ['dist/lib'],
-//     }))
-//     .pipe(gulp.dest('dist/app'))
-// });
-gulp.task('embed-templates', ['clean'],  function() {
-  return gulp.src('dist/app/**/*.js')
-    .pipe(embedTemplates()).pipe(uglify())
-    .pipe(gulp.dest('dist/app'));
-});
+
+
 // TypeScript compile
-gulp.task('compile', ['clean'], function () {
+gulp.task('compile', function () {
   return gulp
-    .src(['app/**/*.ts', '!app/**/*spec.ts'])
-    .pipe(typescript(tscConfig.compilerOptions))
-    .pipe(gulp.dest('dist/app'));
+    .src(['app/**/*.ts','!app/**/*spec.ts']).pipe(embedTemp({sourceType:'ts',basePath:'./'}))
+    .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
+    .pipe(gulp.dest('dist/app'))
+
 });
 
 // copy dependencies
@@ -112,7 +98,7 @@ gulp.task('bundle', ['clean', 'copy:libs'], function() {
 
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean'], function() {
-  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
+  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
 
@@ -121,6 +107,7 @@ gulp.task('less', ['clean'], function() {
         .pipe(concat('master.css'))
         .pipe(less())
         .pipe(gulp.dest('dist/app/global/stylesheets'));
+
 });
 
 // Run browsersync for development
@@ -164,10 +151,10 @@ gulp.task('copy:dev-assets', ['clean'], function() {
     .pipe(rename('index.html'))
     .pipe(gulp.dest('dist'));
 
-  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
+  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
-gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css', 'embed-templates']);
+gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
 gulp.task('default', ['build']);
