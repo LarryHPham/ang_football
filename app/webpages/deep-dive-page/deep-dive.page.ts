@@ -251,7 +251,6 @@ export class DeepDivePage implements OnInit{
                   this.geoLocation = geoLocationData[0].state;
                   this.geoLocation = this.geoLocation.toLowerCase();
                   this.callModules();
-
                 },
                 err => {
                   this.geoLocation = defaultState;
@@ -259,11 +258,10 @@ export class DeepDivePage implements OnInit{
                 }
             );
     }
-
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
-     this.getSideScroll();
+      this.getSideScroll();
     }
     private onScroll(event) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
@@ -272,7 +270,6 @@ export class DeepDivePage implements OnInit{
       }
     }
     ngOnInit(){
-
       // var script = document.createElement("script");
       // script.src = 'http://content.synapsys.us/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
       // document.head.appendChild(script);
