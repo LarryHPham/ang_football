@@ -98,7 +98,7 @@ gulp.task('bundle', ['clean', 'copy:libs'], function() {
 
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean'], function() {
-  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/**/*.html'], { base : './' })
+  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less','!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
 
@@ -151,7 +151,7 @@ gulp.task('copy:dev-assets', ['clean'], function() {
     .pipe(rename('index.html'))
     .pipe(gulp.dest('dist'));
 
-  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/**/*.html'], { base : './' })
+  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
 gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
