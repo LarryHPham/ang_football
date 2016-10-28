@@ -15,7 +15,6 @@
     "@angular/platform-browser-dynamic": "2.0.0-rc.3",
     "@angular/router-deprecated": "2.0.0-rc.2",
     "@angular/upgrade": "2.0.0-rc.3",
-    "angular2-cache": "0.0.46",
     "browser-sync": "^2.11.1",
     "connect-history-api-fallback": "^1.1.0",
     "core-js": "^2.4.0",
