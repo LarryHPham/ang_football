@@ -78,6 +78,7 @@ gulp.task('copy:libs', ['clean'], function() {
       'node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
       'node_modules/fuse.js/src/fuse.min.js',
       'node_modules/zone.js/dist/zone.js',
+      'node_modules/jquery/dist/jquery.min.js',
       'system.config.js'
     ])
     .pipe(gulp.dest('dist/lib'));

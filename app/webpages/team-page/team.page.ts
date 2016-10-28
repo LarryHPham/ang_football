@@ -249,30 +249,33 @@ export class TeamPage implements OnInit {
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
 
                 this.dailyUpdateModule(this.pageParams.teamId);
-                this.getHeadlines();
 
-                /*** Keep Up With Everything [Team Name] ***/
-                this.getBoxScores(this.dateParam);
+                setTimeout(() => { // defer loading everything below the fold
+                  this.getHeadlines();
 
-                this.eventStatus = 'pregame';
-                this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
-                this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
-                this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
-                //this.loadMVP
-                this.setupComparisonData();
+                  /*** Keep Up With Everything [Team Name] ***/
+                  this.getBoxScores(this.dateParam);
 
-                /*** Other [League Name] Content You May Love ***/
-                this.getImages(this.imageData);
-                this.getDykService();
-                this.getFaqService();
-                this.setupListOfListsModule();
-                this.getNewsService();
-                this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
+                  this.eventStatus = 'pregame';
+                  this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+                  this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
+                  this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, data.teamName, this.pageParams.conference, true, data.headerData.teamMarket);
+                  this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, data.teamName, true);
+                  this.transactionsData = this._transactionsService.loadAllTabsForModule(data.teamName, this.pageParams.teamId);
+                  //this.loadMVP
+                  this.setupComparisonData();
 
-                /*** Interact With [League Name]’s Fans ***/
-                this.getTwitterService();
+                  /*** Other [League Name] Content You May Love ***/
+                  this.getImages(this.imageData);
+                  this.getDykService();
+                  this.getFaqService();
+                  this.setupListOfListsModule();
+                  this.getNewsService();
+                  this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
+
+                  /*** Interact With [League Name]’s Fans ***/
+                  this.getTwitterService();
+                }, 2000);
             },
             err => {
                 this.hasError = true;
