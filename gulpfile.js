@@ -12,7 +12,7 @@ const cleanCSS = require('gulp-clean-css');
 const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
-
+const embedTemplates = require('gulp-angular-embed-templates');
 
 
 // clean the contents of the distribution directory
@@ -42,12 +42,16 @@ gulp.task('minify-css',['less'], function() {
 //     }))
 //     .pipe(gulp.dest('dist/app'))
 // });
-
+gulp.task('embed-templates', ['clean'],  function() {
+  return gulp.src('dist/app/**/*.js')
+    .pipe(embedTemplates()).pipe(uglify())
+    .pipe(gulp.dest('dist/app'));
+});
 // TypeScript compile
 gulp.task('compile', ['clean'], function () {
   return gulp
     .src(['app/**/*.ts', '!app/**/*spec.ts'])
-    .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
+    .pipe(typescript(tscConfig.compilerOptions))
     .pipe(gulp.dest('dist/app'));
 });
 
@@ -163,7 +167,7 @@ gulp.task('copy:dev-assets', ['clean'], function() {
   return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
-gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
+gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css', 'embed-templates']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
 gulp.task('default', ['build']);
