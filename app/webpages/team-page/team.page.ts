@@ -383,15 +383,12 @@ export class TeamPage implements OnInit {
        // if(teamID)
         this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
             .subscribe(data => {
-
                 this.firstVideo = data.data[first].videoLink;
                 this.videoData = data.data.slice(1);
-
             },
-                err => {
-
-                    console.log("Error getting video data");
-                }
+            err => {
+                console.log("Error getting video data");
+            }
         );
     }
 
@@ -446,8 +443,8 @@ export class TeamPage implements OnInit {
             this.dateParam = dateParams;
         }
         this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-            this.boxScoresData = boxScoresData;
-            this.currentBoxScores = currentBoxScores;
+          this.boxScoresData = boxScoresData;
+          this.currentBoxScores = currentBoxScores;
         })
     }
 
