@@ -574,32 +574,38 @@ export class BoxScoresService {
   }
 
   formatScoreBoard(data){
-    let awayData = data.awayTeamInfo;
-    let homeData = data.homeTeamInfo;
-    let gameInfo = data.gameInfo;
+    if(data != null){
+      let awayData = data.awayTeamInfo;
+      let homeData = data.homeTeamInfo;
+      let gameInfo = data.gameInfo;
 
-    var arrayScores = [];
-    //for live games show the total scored added up for each inning
-    var homeLiveScore = 0;
-    var awayLiveScore = 0;
-    for(var score in data){
-      if(score != 'aiContent' && score != 'awayTeamInfo' && score != 'homeTeamInfo' && score != 'gameInfo'){
-        let inningCategory = Number(score.replace('p',''));
-        arrayScores.push({
-          inning:inningCategory < 5 ? inningCategory: 'OT',//replace the letter 'p' in each inning
-          scores:data[score]
-        });
+      var arrayScores = [];
+      //for live games show the total scored added up for each inning
+      var homeLiveScore = 0;
+      var awayLiveScore = 0;
+      for(var score in data){
+        if(score != 'aiContent' && score != 'awayTeamInfo' && score != 'homeTeamInfo' && score != 'gameInfo'){
+          let inningCategory = Number(score.replace('p',''));
+          arrayScores.push({
+            inning:inningCategory < 5 ? inningCategory: 'OT',//replace the letter 'p' in each inning
+            scores:data[score]
+          });
+        }
       }
+
+      var scoreBoard={
+        homeLastName: homeData.lastName,
+        awayLastName: awayData.lastName,
+        homeScore:homeData.score,
+        awayScore:awayData.score,
+        scoreArray:arrayScores,
+      };
+      return scoreBoard;
+    }
+    else{
+      return null;
     }
 
-    var scoreBoard={
-      homeLastName: homeData.lastName,
-      awayLastName: awayData.lastName,
-      homeScore:homeData.score,
-      awayScore:awayData.score,
-      scoreArray:arrayScores,
-    };
-    return scoreBoard;
   }
 
   /**
