@@ -41,7 +41,15 @@ gulp.task('compile', function () {
 
 });
 
+//special compile function for dev not to minify js
+// TypeScript compile
+gulp.task('dev-compile', function () {
+    return gulp
+        .src(['app/**/*.ts','!app/**/*spec.ts']).pipe(embedTemp({sourceType:'ts',basePath:'./'}))
+        .pipe(typescript(tscConfig.compilerOptions))
+        .pipe(gulp.dest('dist/app'))
 
+});
 // copy dependencies
 gulp.task('copy:libs', ['clean'], function() {
   return gulp.src([
@@ -155,7 +163,7 @@ gulp.task('copy:dev-assets', ['clean'], function() {
   return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
-gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
+gulp.task('dev-build', ['dev-compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
 gulp.task('default', ['build']);
