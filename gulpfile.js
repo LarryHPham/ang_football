@@ -35,13 +35,21 @@ gulp.task('minify-css',['less'], function() {
 // TypeScript compile
 gulp.task('compile', function () {
     return gulp
-        .src(['app/**/*.ts','!app/**/*spec.ts']).pipe(embedTemp({sourceType:'ts',basePath:'./'}))
-        .pipe(typescript(tscConfig.compilerOptions))
+        .src(['app/**/*.ts','!app/**/*spec.ts'])
+        .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
         .pipe(gulp.dest('dist/app'))
 
 });
 
+//special compile function for dev not to minify js
+// TypeScript compile
+gulp.task('dev-compile', function () {
+    return gulp
+        .src(['app/**/*.ts','!app/**/*spec.ts'])
+        .pipe(typescript(tscConfig.compilerOptions))
+        .pipe(gulp.dest('dist/app'))
 
+});
 // copy dependencies
 gulp.task('copy:libs', ['clean'], function() {
   return gulp.src([
@@ -99,7 +107,7 @@ gulp.task('bundle', ['clean', 'copy:libs'], function() {
 
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean'], function() {
-  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less',  '!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
+  return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
 
@@ -152,10 +160,10 @@ gulp.task('copy:dev-assets', ['clean'], function() {
     .pipe(rename('index.html'))
     .pipe(gulp.dest('dist'));
 
-  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html','!app/fe-core/modules/**/*.html','!app/fe-core/webpages/**/*.html'], { base : './' })
+  return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less'], { base : './' })
     .pipe(gulp.dest('dist'));
 });
-gulp.task('dev-build', ['compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
+gulp.task('dev-build', ['dev-compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
 gulp.task('default', ['build']);

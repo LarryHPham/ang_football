@@ -46,7 +46,7 @@ export class RosterService {
   loadAllTabsForModule(scope:string, teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
     return {
         moduleTitle: "Team Roster",
-        moduleIdentifier: " - " + fullTeam + " " + teamName,
+        moduleIdentifier: " - " + teamName,
         pageRouterLink: this.getLinkToPage(teamId, teamName),
         tabs: this.initializeAllTabs(scope, teamId.toString(), conference, 5, isTeamProfilePage)
     };
