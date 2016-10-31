@@ -131,7 +131,9 @@ export class ArticlePages implements OnInit {
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
-
+                        if (this.teamId == null) {
+                            this.teamId = Article['data'][0]['article_data'][this.pageIndex]['metadata'].homeTeamId;
+                        }
                         //create meta description that is below 160 characters otherwise will be truncated
                         let metaDesc = Article['data'][0].teaser;
                         let link = window.location.href;

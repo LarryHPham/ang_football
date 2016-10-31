@@ -252,11 +252,15 @@ export class TeamPage implements OnInit {
                   this.profileName = headerData.teamName != null ? this.profileName + ' ' + headerData.teamName : this.profileName;
                 }
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
-                this.dailyUpdateModule(this.pageParams.teamId);
-                this.getHeadlines();
 
-                /*** Keep Up With Everything [Team Name] ***/
-                this.getBoxScores(this.dateParam);
+                this.dailyUpdateModule(this.pageParams.teamId);
+
+                setTimeout(() => { // defer loading everything below the fold
+                  this.getHeadlines();
+
+                  /*** Keep Up With Everything [Team Name] ***/
+                  this.getBoxScores(this.dateParam);
+
                 this.eventStatus = 'pregame';
                 this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
@@ -266,16 +270,17 @@ export class TeamPage implements OnInit {
                 //this.loadMVP
                 this.setupComparisonData();
 
-                /*** Other [League Name] Content You May Love ***/
-                this.getImages(this.imageData);
-                this.getDykService();
-                this.getFaqService();
-                this.setupListOfListsModule();
-                this.getNewsService();
-                this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
+                  /*** Other [League Name] Content You May Love ***/
+                  this.getImages(this.imageData);
+                  this.getDykService();
+                  this.getFaqService();
+                  this.setupListOfListsModule();
+                  this.getNewsService();
+                  this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
 
-                /*** Interact With [League Name]’s Fans ***/
-                this.getTwitterService();
+                  /*** Interact With [League Name]’s Fans ***/
+                  this.getTwitterService();
+                }, 2000);
             },
             err => {
                 this.hasError = true;
@@ -383,15 +388,12 @@ export class TeamPage implements OnInit {
        // if(teamID)
         this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
             .subscribe(data => {
-
                 this.firstVideo = data.data[first].videoLink;
                 this.videoData = data.data.slice(1);
-
             },
-                err => {
-
-                    console.log("Error getting video data");
-                }
+            err => {
+                console.log("Error getting video data");
+            }
         );
     }
 
@@ -446,8 +448,8 @@ export class TeamPage implements OnInit {
             this.dateParam = dateParams;
         }
         this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-            this.boxScoresData = boxScoresData;
-            this.currentBoxScores = currentBoxScores;
+          this.boxScoresData = boxScoresData;
+          this.currentBoxScores = currentBoxScores;
         })
     }
 
