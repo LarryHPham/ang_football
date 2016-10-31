@@ -117,6 +117,7 @@ export class SchedulesPage implements OnInit {
                 .subscribe(
                 data => {
                     // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
+                    data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
                     this.profileHeaderData = this.profHeadService.convertTeamPageHeader(data, "Current Season Schedule - " + data.teamName);
                     this.errorData = {
                         data: data.teamName + " has no record of any more games for the current season.",
