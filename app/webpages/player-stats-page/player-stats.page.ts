@@ -72,7 +72,7 @@ export class PlayerStatsPage implements OnInit {
                 data => {
                     this.profileLoaded = true;
                     this.pageParams = data.pageParams;
-                    data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+data.teamName:data.teamName;
+                    data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
                     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
                     this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
                     this.tabs = this._statsService.initializeAllTabs(data.teamName, false);
