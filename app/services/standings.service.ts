@@ -33,6 +33,9 @@ export class StandingsService {
     let moduletitle = "Standings";
     if ( teamName ) {
       moduletitle += " - " + teamName;
+    } else {
+      let scope = pageParams.scope == 'nfl' ? 'nfl' : 'ncaaf';
+      moduletitle += " - " + scope.toUpperCase();
     }
     return moduletitle;
   }

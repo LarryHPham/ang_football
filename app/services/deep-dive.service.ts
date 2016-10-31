@@ -46,6 +46,13 @@ export class DeepDiveService {
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
   //Configure HTTP Headers
+      if(startNum == null){
+          startNum = 1;
+      }
+
+      if(state == null|| state == undefined){
+          state = 'CA';
+      }
   var headers = this.setToken();
       // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
       var callURL = this._apiUrl + '/articleBatch/';
@@ -58,13 +65,7 @@ export class DeepDiveService {
 
       }
 
-  if(startNum == null){
-    startNum = 1;
-  }
 
-  if(state == null){
-    state = 'CA';
-  }
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -105,7 +106,6 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'nfl';
     }
-
     if(key == null){
       key == "postgame-report";
     }
@@ -117,32 +117,7 @@ export class DeepDiveService {
     if(state == null){
       state = 'CA';
     }
-    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
-      .map(data => {
-        return data;
-      })
-  }
-
-  getDeepDiveAiHeavyBatchService(scope, key?, page?, count?, state?){//TODO update api call
-    //Configure HTTP Headers
-    var headers = this.setToken();
-    if(scope == null){
-      scope = 'nfl';
-    }
-    if(key == null){
-      key == "player-comparisons";
-    }
-    var callURL = this._articleUrl+'articles?articleType='+key+'&affiliation='+scope;
-    if(page == null || count == null){
-      page = 1;
-      count = 1;
-    }
-    if(state == null){
-      state = 'CA';
-    }
-    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1';
+    callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&isUnix=1&noJson=1';
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -166,7 +141,7 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
-    if(state == null){
+    if(state == null || state == undefined){
       state = 'CA';
     }
     if(batch == null || limit == null){
@@ -249,15 +224,14 @@ export class DeepDiveService {
       //var date = moment(Number(val.last_updated) * 1000);
       var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.last_updated),"defaultDate");
       var s = {
-          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),//TODO
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),
           keyword: key.replace('-', ' ').toUpperCase(),
           publishedDate: date,
           provider1: '',
           provider2: '',
-          description: dataLists.displayHeadline,
+          description: val.title,
           imageConfig: {
           imageClass: "image-100x56",
-          /*hoverText: "View",*/
           imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
           }
@@ -312,7 +286,6 @@ export class DeepDiveService {
         imageConfig: {
           imageClass: "image-320x180",
           imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
-          /*hoverText: "View Article",*/
           urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', topData.id)
         }
     };
@@ -343,7 +316,7 @@ export class DeepDiveService {
       var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline,"defaultDate");
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
-          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,//TODO
+          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
           keyword: val.keyword.replace('-', ' ').toUpperCase(),
           new_date: date,
           displayHeadline: info.displayHeadline,

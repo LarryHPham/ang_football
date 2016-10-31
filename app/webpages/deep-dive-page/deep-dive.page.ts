@@ -102,7 +102,7 @@ export class DeepDivePage implements OnInit{
             window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
           this.isPartnerZone = partnerHome;
-          if(this.partnerID != null){
+          if(this.partnerID != null && this.partnerID != 'football'){
             this.getPartnerHeader();
             this.isPartner = "partner";
           }else{
@@ -214,19 +214,27 @@ export class DeepDivePage implements OnInit{
         this._partnerData.getPartnerData(this.partnerID)
         .subscribe(
           partnerScript => {
-            this.partnerData = partnerScript;
-            //super long way from partner script to get location using geo location api
-            var state;
-            if (partnerScript['results']['location']['realestate']['location']['city'][0]) {
-               state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-               state = state.toLowerCase();
-               this.geoLocation = state;
-               this.callModules();
+            if(partnerScript['results'] != null){
+              this.partnerData = partnerScript;
+              //super long way from partner script to get location using geo location api
+              var state;
+              if (partnerScript['results']['location']['realestate']['location']['city'][0]) {
+                state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
+                state = state.toLowerCase();
+                this.geoLocation = state;
+                this.callModules();
+              }
+              else {
+                this.getGeoLocation();
+              }
+            }else{//IF BAD PARTNER ID IS INPUTED AN NO RESULTS COME BACK FROM SUBSCRIBE THEN REDIRECT TO DEFAULT 'football' partner id which will just run geo location and not grab partnerID
+              let relpath = GlobalFunctions.routerRelPath(this._router);
+              let badLinkRedirect = {
+                partner_id: 'football',
+                scope: 'nfl'
+              };
+              this._router.navigate([relpath+'Partner-home',badLinkRedirect, 'Home-page']);
             }
-            else {
-              this.getGeoLocation();
-            }
-
           }
         );
       }else{
@@ -243,7 +251,6 @@ export class DeepDivePage implements OnInit{
                   this.geoLocation = geoLocationData[0].state;
                   this.geoLocation = this.geoLocation.toLowerCase();
                   this.callModules();
-
                 },
                 err => {
                   this.geoLocation = defaultState;
@@ -251,11 +258,10 @@ export class DeepDivePage implements OnInit{
                 }
             );
     }
-
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
-     this.getSideScroll();
+      this.getSideScroll();
     }
     private onScroll(event) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
@@ -264,7 +270,6 @@ export class DeepDivePage implements OnInit{
       }
     }
     ngOnInit(){
-
       // var script = document.createElement("script");
       // script.src = 'http://content.synapsys.us/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
       // document.head.appendChild(script);

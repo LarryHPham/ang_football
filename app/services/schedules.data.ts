@@ -13,7 +13,7 @@ declare var moment: any;
 export interface SchedulesData {
   //TEAM1 => HOME
   //TEAM2 => AWAY
-  index:any;
+  index: any;
   backgroundImage: string,
   eventTimestamp: number,
   id: string,//id from API
@@ -30,7 +30,6 @@ export interface SchedulesData {
   team1ColorHex: string,
   team1City: string,
   team1State: string,
-  team1Stadium: string,
   team1Market: string, //first name
   team1Name: string, //last name
   team1Abbreviation: string,
@@ -41,7 +40,6 @@ export interface SchedulesData {
   team2ColorHex: string,
   team2City: string,
   team2State: string,
-  team2Stadium: string,
   team2Market: string, //first name
   team2Name: string, //last name
   team2Abbreviation: string,
@@ -49,9 +47,14 @@ export interface SchedulesData {
   team2Wins: string,
   team2Losses: string,
   aiUrlMod: string, //TODO missing
-  results:string, //TODO missing
+  results: string, //TODO missing
   targetTeam: string; //TODO missing
   seasonWeek: string;
+  venueCity: string;
+  venueState: string;
+  venueStadium: string;
+  venueCountry: string;
+  seasonBase: string;
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -131,25 +134,38 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     }
     let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
     let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
+
     var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
     var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
     //TEST colors
     item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
     item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
     var colors = Gradient.getColorPair(item.team2ColorHex.split(','), item.team1ColorHex.split(','));
-    return {//placeholder data
+    let stadiumLocation = item.venueCity;
+
+    if(item.venueState != null){
+      stadiumLocation = item.venueCity + ', ' + item.venueState;
+    }else{
+      if(item.venueCountry != null){
+        stadiumLocation = item.venueCity + ', ' + item.venueCountry;
+      }
+    }
+
+    item.venueStadium = item.venueStadium.split("(")[0];
+
+    let displayedCarousel = {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: GlobalFunctions.sntGlobalDateFormatting(Number(item.eventTimestamp *1000),"timeZone"), //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: GlobalFunctions.sntGlobalDateFormatting(item.eventTimestamp), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
-      detail1Value:item.team1Stadium,
-      detail2Value:item.team1City + ', ' + item.team1State,
+      detail1Value:item.venueStadium,
+      detail2Value:stadiumLocation,
       imageConfig1:{//AWAY
         imageClass: "image-125",
         mainImage: {
           imageUrl: GlobalSettings.getImageUrl(item.team2Logo),
-          urlRouteArray: teamRouteAway,
+          urlRouteArray: item.team2Id == null ? null : teamRouteAway,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
         }
@@ -158,20 +174,22 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
         imageClass: "image-125",
         mainImage: {
           imageUrl: GlobalSettings.getImageUrl(item.team1Logo),
-          urlRouteArray: teamRouteHome,
+          urlRouteArray: item.team1Id == null ? null : teamRouteHome,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
         }
       },
-      teamUrl1: teamRouteAway,
-      teamUrl2: teamRouteHome,
+      teamUrl1: item.team2Id == null ? null : teamRouteAway,
+      teamUrl2: item.team1Id == null ? null : teamRouteHome,
       teamName1: awayFullTeamName,
       teamName2: homeFullTeamName,
-      teamLocation1:item.team2City + ', ' + item.team2State,
-      teamLocation2:item.team1City + ', ' + item.team1State,
+      teamLocation1: item.team2City != null ? item.team2City + ', ' + item.team2State: 'N/A',
+      teamLocation2: item.team1City != null ? item.team1City + ', ' + item.team1State: 'N/A',
       teamRecord1:item.awayRecord,
       teamRecord2:item.homeRecord,
     };
+
+    return displayedCarousel;
   }
 }
 
@@ -401,7 +419,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
             }
             item.aiUrlMod = '/'+scope+'/articles/'+eventStatus+'-report/'+item.id;
           }
-          if ( status ) {
+          if ( status && Number(item.seasonBase) >= 2016) {
             if(partnerCheck.isPartner && !partnerCheck.isSubdomainPartner){
               display = "<a href='" + '/' + partnerCheck.partnerName + item.aiUrlMod + "'>" + status + " Report <i class='fa fa-angle-right'><i></a>";
             }else{
@@ -452,11 +470,11 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         //shows the record of the current teams game at that time
 
         if(this.curTeam == item.team1Id){
-          var currentWins = item.team1Record.split('-')[0];
-          var currentLosses = item.team1Record.split('-')[1];
-        }else{
           var currentWins = item.team2Record.split('-')[0];
           var currentLosses = item.team2Record.split('-')[1];
+        }else{
+          var currentWins = item.team1Record.split('-')[0];
+          var currentLosses = item.team1Record.split('-')[1];
         }
         display = currentWins + " - " + currentLosses;
         sort = Number(currentWins)/Number(currentLosses);
