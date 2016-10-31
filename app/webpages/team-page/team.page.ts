@@ -443,12 +443,8 @@ export class TeamPage implements OnInit {
             this.dateParam = dateParams;
         }
         this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-          if(this.boxScoresData){
-            this.boxScoresData = boxScoresData;
-          }
-          if(this.currentBoxScores){
-            this.currentBoxScores = currentBoxScores;
-          }
+          this.boxScoresData = boxScoresData;
+          this.currentBoxScores = currentBoxScores;
         })
     }
 
