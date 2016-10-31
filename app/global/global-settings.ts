@@ -244,7 +244,7 @@ export class GlobalSettings {
         return this.getCollegeDivisionAbbrv().toLowerCase();
 
         default:
-        return this.getSportLeagueAbbrv().toLowerCase();
+        return scope.toLowerCase();
       }
     }
 

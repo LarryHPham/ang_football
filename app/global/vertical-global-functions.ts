@@ -136,22 +136,8 @@ export class VerticalGlobalFunctions {
     }
 
     //create relative path for the redirect
-    let counter = 0;
-    let hasParent = true;
-    let route = router;
-    for (var i = 0; hasParent == true; i++){
-      if(route.parent != null){
-        counter++;
-        route = route.parent;
-      }else{
-        hasParent = false;
-        var relPath = '';
-        for(var c = 1 ; c <= counter; c++){
-          relPath += '../';
-        }
-      }
-    }
-    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
+    var relPath = GlobalFunctions.routerRelPath(router);
+    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf' || domainParams.scope === 'home'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
       // let routeArray = [(relPath+domainHostName), domainParams];
       // if(pageHostName && pageParams){
       //   routeArray.push(pageHostName, pageParams);
@@ -161,7 +147,7 @@ export class VerticalGlobalFunctions {
       // console.log(routeArray);
       // router.navigate(routeArray);
     }else{// else scope does not match nfl or ncaaf then redirect to homepage
-      domainParams.scope = 'nfl';
+      domainParams.scope = 'home';
       router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
     }
 

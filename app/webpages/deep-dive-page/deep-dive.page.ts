@@ -70,6 +70,7 @@ export class DeepDivePage implements OnInit{
     //for carousel
     carouselData: any;
     videoData:any;
+    toggleData:any;
     blockIndex: number = 1;
     changeScopeVar: string = "";
 ​   constructorControl: boolean = true;
@@ -101,6 +102,9 @@ export class DeepDivePage implements OnInit{
             //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
             window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
+
+          this.toggleData = this.scope == 'home' ? [this.getToggleInfo(_router)] : null;
+
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null && this.partnerID != 'football'){
             this.getPartnerHeader();
@@ -127,6 +131,42 @@ export class DeepDivePage implements OnInit{
       });
     }
 
+    getToggleInfo(router){
+      var domainHostName, domainParams, pageHostName;
+      if(router.parent.parent != null){//if there are more parameters past home page
+        domainHostName = router.parent.parent.currentInstruction.component.routeName;
+        domainParams = router.parent.parent.currentInstruction.component.params;
+        pageHostName = router.parent.currentInstruction.component.routeName;
+      }else{// if there are no more parameters then set domain routeName and param
+        domainHostName = router.parent.currentInstruction.component.routeName;
+        domainParams = router.parent.currentInstruction.component.params;
+      }
+      var relPath = GlobalFunctions.routerRelPath(router);
+
+      let nflParams = domainParams;
+      nflParams.scope = 'nfl';
+      let ncaafParams = domainParams;
+      ncaafParams.scope = 'ncaaf';
+      let toggleData = {
+        'nfl':{
+          title: 'Loyal to th NFL?',
+          image: './app/public/mainLogo.png',
+          buttonClass:'orange_btn',
+          buttonText: 'Visit the NFL Section',
+          buttonRoute: [relPath + domainHostName, nflParams, pageHostName]
+        },
+        'ncaaf':{
+          title: 'Loyal to th NCAA?',
+          image: './app/public/mainLogo.png',
+          buttonClass:'orange_btn',
+          buttonText: 'Visit the College Section',
+          buttonRoute: [relPath + domainHostName, nflParams, pageHostName]
+        },
+        'mid-image': './app/public/mainLogo.png',
+      }
+      return toggleData;
+    }
+
     getRelativePath(router:Router){
       let counter = 0;
       let hasParent = true;
@@ -151,7 +191,8 @@ export class DeepDivePage implements OnInit{
       let self = this;
       if(this.safeCall){
         this.safeCall = false;
-        let changeScope = this.changeScopeVar.toLowerCase() == 'ncaaf'?'fbs':this.changeScopeVar.toLowerCase();
+        this.changeScopeVar = this.changeScopeVar.toLowerCase() == 'home' ? 'nfl' : this.changeScopeVar.toLowerCase();
+        let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
         this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
           if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
@@ -231,7 +272,7 @@ export class DeepDivePage implements OnInit{
               let relpath = GlobalFunctions.routerRelPath(this._router);
               let badLinkRedirect = {
                 partner_id: 'football',
-                scope: 'nfl'
+                scope: 'home'
               };
               this._router.navigate([relpath+'Partner-home',badLinkRedirect, 'Home-page']);
             }

@@ -36,7 +36,7 @@ gulp.task('minify-css',['less'], function() {
 gulp.task('compile', function () {
     return gulp
         .src(['app/**/*.ts','!app/**/*spec.ts']).pipe(embedTemp({sourceType:'ts',basePath:'./'}))
-        .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
+        .pipe(typescript(tscConfig.compilerOptions))
         .pipe(gulp.dest('dist/app'))
 
 });
