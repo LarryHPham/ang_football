@@ -100,10 +100,10 @@ export class DirectoryPage {
         //create meta description that is below 160 characters otherwise will be truncated
         let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
         let link = window.location.href;
-        let title = type.charAt(0).toUpperCase() + type.slice(1) + ' Directory: ' + startsWith;
+        let title = type.charAt(0).toUpperCase() + type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
 
         this._seoService.setCanonicalLink(this._params.params, this._router);
-        this._seoService.setOgTitle(title + ' - ' + startsWith);
+        this._seoService.setOgTitle(title);
         this._seoService.setOgDesc(metaDesc);
         this._seoService.setOgType('Website');
         this._seoService.setOgUrl(link);
