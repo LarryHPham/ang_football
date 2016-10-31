@@ -363,93 +363,95 @@ export class BoxScoresService {
       return Number(a.gameInfo.startDateTimestamp) - Number(b.gameInfo.startDateTimestamp);
     });
     sortedGames.forEach(function(data,i){
-      var info:GameInfoInput;
-      let awayData = data.awayTeamInfo;
-      let homeData = data.homeTeamInfo;
-      let gameInfo = data.gameInfo;
-      let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-      let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-      var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
-
-      if(teamId != null && profile == 'team'){//if league then both items will link
-        if(homeData.id == teamId){//if not league then check current team they are one
-          homeLink = null;
-          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo))
-          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
-        }else{
-          awayLink = null;
-          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
-        }
-      }else{
+      if(data != null){
+        var info:GameInfoInput;
+        let awayData = data.awayTeamInfo;
+        let homeData = data.homeTeamInfo;
+        let gameInfo = data.gameInfo;
+        let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
+        let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
         var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
-        var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-        var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
-      }
 
-      let gameDate = data.gameInfo;
-
-      let homeWin = homeData.winRecord != null ? homeData.winRecord : '#';
-      let homeLoss = homeData.lossRecord != null ? homeData.lossRecord : '#';
-
-      let awayWin = awayData.winRecord != null ? awayData.winRecord : '#';
-      let awayLoss = awayData.lossRecord != null ? awayData.lossRecord : '#';
-
-      //determine if a game is live or not and display correct game time
-      var currentTime = new Date().getTime();
-      var inningTitle = '';
-      var verticalContentLive;
-      if(gameInfo.live){
-        verticalContentLive = gameInfo.verticalContent;
-        // let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : '';
-        inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
-      }else{
-        verticalContentLive = "";
-        if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
-          inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
+        if(teamId != null && profile == 'team'){//if league then both items will link
+          if(homeData.id == teamId){//if not league then check current team they are one
+            homeLink = null;
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo))
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+          }else{
+            awayLink = null;
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
+          }
         }else{
-          inningTitle = 'Final';
+          var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
+          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
         }
-      }
 
-      info = {
-        gameHappened:gameInfo.inningsPlayed != null ?  true : false,
-        //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
-        inning:inningTitle,
-        dataPointCategories:gameInfo.dataPointCategories,
-        verticalContent:verticalContentLive,
-        homeData:{
-          homeTeamName: gameInfo.isNCAA ? homeData.abbreviation + ' ' + homeData.lastName : homeData.lastName,
-          homeImageConfig:link1,
-          homeLink: homeLink,
-          homeRecord: homeWin +'-'+ homeLoss,
-          DP1:homeData.dataP1,
-          DP2:homeData.dataP2,
-          DP3:homeData.dataP3
-        },
-        awayData:{
-          awayTeamName:  gameInfo.isNCAA ? awayData.abbreviation + ' ' + awayData.lastName : awayData.lastName,
-          awayImageConfig:link2,
-          awayLink: awayLink,
-          awayRecord: awayWin +'-'+ awayLoss,
-          DP1:awayData.dataP1,
-          DP2:awayData.dataP2,
-          DP3:awayData.dataP3
+        let gameDate = data.gameInfo;
+
+        let homeWin = homeData.winRecord != null ? homeData.winRecord : '#';
+        let homeLoss = homeData.lossRecord != null ? homeData.lossRecord : '#';
+
+        let awayWin = awayData.winRecord != null ? awayData.winRecord : '#';
+        let awayLoss = awayData.lossRecord != null ? awayData.lossRecord : '#';
+
+        //determine if a game is live or not and display correct game time
+        var currentTime = new Date().getTime();
+        var inningTitle = '';
+        var verticalContentLive;
+        if(gameInfo.live){
+          verticalContentLive = gameInfo.verticalContent;
+          // let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : '';
+          inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
+        }else{
+          verticalContentLive = "";
+          if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
+            inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
+          }else{
+            inningTitle = 'Final';
+          }
         }
-      };
 
-      if(teamId != null){
-        twoBoxes.push({game:info,aiContent:aiContent});
-      }else{
-        twoBoxes.push({game:info});
-        if(twoBoxes.length > 1 || (i+1) == game.length){// will push into main array once 2 pieces of info has been put into twoBoxes variable
+        info = {
+          gameHappened:gameInfo.inningsPlayed != null ?  true : false,
+          //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
+          inning:inningTitle,
+          dataPointCategories:gameInfo.dataPointCategories,
+          verticalContent:verticalContentLive,
+          homeData:{
+            homeTeamName: gameInfo.isNCAA ? homeData.abbreviation + ' ' + homeData.lastName : homeData.lastName,
+            homeImageConfig:link1,
+            homeLink: homeLink,
+            homeRecord: homeWin +'-'+ homeLoss,
+            DP1:homeData.dataP1,
+            DP2:homeData.dataP2,
+            DP3:homeData.dataP3
+          },
+          awayData:{
+            awayTeamName:  gameInfo.isNCAA ? awayData.abbreviation + ' ' + awayData.lastName : awayData.lastName,
+            awayImageConfig:link2,
+            awayLink: awayLink,
+            awayRecord: awayWin +'-'+ awayLoss,
+            DP1:awayData.dataP1,
+            DP2:awayData.dataP2,
+            DP3:awayData.dataP3
+          }
+        };
+
+        if(teamId != null){
+          twoBoxes.push({game:info,aiContent:aiContent});
+        }else{
+          twoBoxes.push({game:info});
+          if(twoBoxes.length > 1 || (i+1) == game.length){// will push into main array once 2 pieces of info has been put into twoBoxes variable
+            gameArray.push(twoBoxes);
+            twoBoxes = [];
+          }
+        }
+        //incase it runs through entire loops and only 2 or less returns then push whatever is left
+        if(game.length == (i+1)  && gameArray.length == 0){
           gameArray.push(twoBoxes);
-          twoBoxes = [];
         }
-      }
-      //incase it runs through entire loops and only 2 or less returns then push whatever is left
-      if(game.length == (i+1)  && gameArray.length == 0){
-        gameArray.push(twoBoxes);
       }
     })
     return gameArray;
@@ -574,32 +576,38 @@ export class BoxScoresService {
   }
 
   formatScoreBoard(data){
-    let awayData = data.awayTeamInfo;
-    let homeData = data.homeTeamInfo;
-    let gameInfo = data.gameInfo;
+    if(data != null){
+      let awayData = data.awayTeamInfo;
+      let homeData = data.homeTeamInfo;
+      let gameInfo = data.gameInfo;
 
-    var arrayScores = [];
-    //for live games show the total scored added up for each inning
-    var homeLiveScore = 0;
-    var awayLiveScore = 0;
-    for(var score in data){
-      if(score != 'aiContent' && score != 'awayTeamInfo' && score != 'homeTeamInfo' && score != 'gameInfo'){
-        let inningCategory = Number(score.replace('p',''));
-        arrayScores.push({
-          inning:inningCategory < 5 ? inningCategory: 'OT',//replace the letter 'p' in each inning
-          scores:data[score]
-        });
+      var arrayScores = [];
+      //for live games show the total scored added up for each inning
+      var homeLiveScore = 0;
+      var awayLiveScore = 0;
+      for(var score in data){
+        if(score != 'aiContent' && score != 'awayTeamInfo' && score != 'homeTeamInfo' && score != 'gameInfo'){
+          let inningCategory = Number(score.replace('p',''));
+          arrayScores.push({
+            inning:inningCategory < 5 ? inningCategory: 'OT',//replace the letter 'p' in each inning
+            scores:data[score]
+          });
+        }
       }
+
+      var scoreBoard={
+        homeLastName: homeData.lastName,
+        awayLastName: awayData.lastName,
+        homeScore:homeData.score,
+        awayScore:awayData.score,
+        scoreArray:arrayScores,
+      };
+      return scoreBoard;
+    }
+    else{
+      return null;
     }
 
-    var scoreBoard={
-      homeLastName: homeData.lastName,
-      awayLastName: awayData.lastName,
-      homeScore:homeData.score,
-      awayScore:awayData.score,
-      scoreArray:arrayScores,
-    };
-    return scoreBoard;
   }
 
   /**
