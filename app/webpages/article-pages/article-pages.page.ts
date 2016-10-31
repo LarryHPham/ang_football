@@ -123,9 +123,7 @@ export class ArticlePages implements OnInit {
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                        var date  = Article['data'][0]['article_data'][this.pageIndex].dateline;
-                        var date1 = moment(date).format();
-                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
+                        this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'][this.pageIndex].dateline,"timeZone");
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
@@ -465,7 +463,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: moment(recommendations.last_updated).format('MMM. DD, YYYY'),
+            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated,"defaultDate"),
             keyword: "FOOTBALL"
         };
         return articles;

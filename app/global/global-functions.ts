@@ -119,6 +119,8 @@ export class GlobalFunctions {
         return val;
     }
 
+
+
     /**
      * - Returns a comma-delimited string for the given value.
      * - If the value is undefined or null, then the def string is returned instead.
@@ -162,6 +164,7 @@ export class GlobalFunctions {
         }
         return parts.join(".");
     }
+
 
     /**
      * - Returns a comma-delimited currency string for the given value.
@@ -434,7 +437,7 @@ export class GlobalFunctions {
      */
     static formatUpdatedDate(jsDate:any, includeTimestamp?:boolean, timezone?:string):string {
         var date = moment(jsDate);
-        var str = date.format("dddd ") + GlobalFunctions.formatAPMonth(date.month()) + date.format(' D, YYYY');
+        var str = date.format("dddd, ") + GlobalFunctions.formatAPMonth(date.month()) + date.format(' D, YYYY');
         if (includeTimestamp) {
             str += ' | ' + date.format('h:mm A') + (timezone !== undefined && timezone !== null ? timezone : "");
         }
@@ -456,6 +459,95 @@ export class GlobalFunctions {
             GlobalFunctions.formatAPMonth(date.month()) + " " +
             (afterMonthFormat ? date.format(afterMonthFormat) : "");
         return str;
+    }
+
+
+    /*
+    Checks to see if the input is unix or not. Assumes that a series of number is unix.
+    */
+
+    static isXUnix(value:any) {
+      if(typeof value == 'string') { // if string return false;
+        if(value.match(/^[0-9]+$/) == null) {
+          return false;
+        } else
+        if(value.match(/^[0-9]+$/) != null) { // string number return true
+          return true;
+        }
+      } else
+      if(typeof value == 'number') { // assumes that if it is a number, it is unix
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
+
+    static convertToUnix(value:any){
+      if(GlobalFunctions.isXUnix(value) == false){
+        if(moment(value,'YYYY-MM-DD',true).isValid()){
+          value = moment(value,"YYYY-MM-DD").tz("America/New_York").unix() * 1000;
+          return value;
+        } else
+        if(moment(value.toString(),'h:mm:ss',true).isValid()) {
+          value = moment(value).tz("America/New_York").unix() * 1000;
+          return value;
+        } else
+        if(moment(value.toString(),'dddd, MMM. DD, YYYY',true).isValid()) {
+          value = moment(value).tz("America/New_York").unix() * 1000;
+          return value;
+        } else
+          if(moment(value.toString(),'hh:mm:ss',true).isValid()) {
+            value = moment(value).tz("America/New_York").unix() * 1000;
+          }
+      }
+      else if(GlobalFunctions.isXUnix(value) == true) {
+        value = value.toString();
+        if(value.length < 11) {
+          value = Number(value) * 1000;
+          console.log('globfunc',moment(value).format("MMM. dddd YYYY"));
+          return value;
+        } else {
+          value = Number(value);
+          return value;
+        }
+      }
+      return value; // if original input is Unix to begin with
+    }
+
+
+
+
+    static sntGlobalDateFormatting(unixTimestamp:any, identifier?:string, customDate?:string) {
+      unixTimestamp = GlobalFunctions.convertToUnix(unixTimestamp);
+      console.log('globfunc-2',unixTimestamp);
+      let newDate;
+      let monthnum = Number(moment(unixTimestamp).tz('America/New_York').format("MM")) - 1;
+      let month = GlobalFunctions.formatAPMonth(Number(monthnum));
+      let longmonth = moment(unixTimestamp).tz('America/New_York').format('MMMM');
+      let day = moment(unixTimestamp).tz('America/New_York').format('dddd');
+      let dd = moment(unixTimestamp).tz('America/New_York').format("DD");
+      let year = moment(unixTimestamp).tz('America/New_York').format("YYYY");
+      let shortDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY");
+      let timeZone = moment(unixTimestamp).tz('America/New_York').format('h:mmA (z)');
+      let defaultDate = month + ' ' + dd + ', ' + year;
+      //let dayDate = day + ', ' + defaultDate;
+      let dateFormat = defaultDate;
+
+      switch(identifier){
+        case 'defaultDate': newDate = defaultDate; console.log("this is the default date -- > ", defaultDate) // Oct. O6, 2016
+          return newDate;
+        case 'shortDate': newDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY"); console.log("shortDate", shortDate); // mm/dd/yy
+          return newDate;
+        case 'dayOfWeek': newDate = day + ', ' + defaultDate; console.log("dayOfWeek",newDate);  // Tuesday, Jan. 14, 2016
+          return newDate;
+        case 'timeZone': newDate = day + ', ' + defaultDate + ' ' + timeZone; console.log("timeZone",newDate);  // Tuesday, Jan. 14, 2016 12:00 (EST)
+          return newDate;
+        case 'custom': break;
+        default: console.log("failure",identifier);
+          return defaultDate;
+      }
     }
 
 
@@ -631,7 +723,8 @@ export class GlobalFunctions {
     }
 
     static formatDate(date) {
-        var month = moment.unix(date / 1000).format("MMM.");
+        var monthnum = moment.unix(date / 1000).format("MM");
+        var month = GlobalFunctions.formatAPMonth(Number(monthnum));
         var day = moment.unix(date / 1000).format("DD");
         var year = moment.unix(date / 1000).format("YYYY");
         var time = moment.unix(date / 1000).format("h:mm");

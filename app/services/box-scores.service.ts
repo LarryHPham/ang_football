@@ -107,7 +107,7 @@ export class BoxScoresService {
             for(var p in aiContent['articleData']){
               var eventType = aiContent['articleData'][p];
               var teaser = eventType.displayHeadline;
-              var date = moment(aiContent.lastUpdated, 'YYYY-MM-DD').format('MMM. D, YYYY');
+              var date = GlobalFunctions.sntGlobalDateFormatting(aiContent.lastUpdated,"defaultDate");
               if(aiContent['articleData'][p]['images']['home_images'] != null){
                 var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
               }else{
@@ -140,13 +140,7 @@ export class BoxScoresService {
   }
   moduleHeader(date, team?){
     var moduleTitle;
-    var month = moment(date,"YYYY-MM-DD").tz('America/New_York').format("MMM.");
-    var day = moment(date,"YYYY-MM-DD").tz('America/New_York').format("D");
-    var ordinal = moment(date,"YYYY-MM-DD").tz('America/New_York').format("D");
-    ordinal = '<sup>' + GlobalFunctions.Suffix(ordinal) + '</sup>';
-    var year = moment(date,"YYYY-MM-DD").tz('America/New_York').format("YYYY");
-    var convertedDate = month + ' ' + day + ordinal + ', ' + year;
-
+    var convertedDate = GlobalFunctions.sntGlobalDateFormatting(date,"defaultDate");
     moduleTitle = "Box Scores <span class='mod-info'> - " + team + ' : ' +convertedDate + '</span>';
     return {
       moduleTitle: moduleTitle,

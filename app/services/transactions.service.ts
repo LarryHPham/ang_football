@@ -312,7 +312,7 @@ export class TransactionsService {
         dataPoints: [{
           style   : 'transactions-small',
           data_shortFormDate :   moment(val.transactionDate).format("MM/DD/YY"),
-          data_longFormDate : moment(val.transactionDate).format("MMM. DD, YYYY"),
+          data_longFormDate : GlobalFunctions.sntGlobalDateFormatting(val.transactionDate,"defaultDate"),
           value   : [description],
           url     : null
         }],

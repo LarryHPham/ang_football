@@ -121,7 +121,9 @@ export class SyndicatedArticlePage{
           }
           this.metaTags(data);
           this.articleData = data.data;
-          this.articleData.publishedDate = moment.unix(this.articleData.publishedDate/1000).format("MMM. Do, YYYY h:mm A") + " EST";
+          console.log('syndicated',this.articleData.publishedDate);
+          this.articleData.publishedDate = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate/1000),"timeZone");
+          console.log('after formatting',this.articleData.publishedDate);
         }
       )
     }
@@ -218,9 +220,7 @@ export class SyndicatedArticlePage{
     }
 
     formatDate(date) {
-
-        return moment(date).format("MMM. DD, YYYY | h:mm A ")
-
+        return GlobalFunctions.sntGlobalDateFormatting(date,"timeZone");
     }
 
 }

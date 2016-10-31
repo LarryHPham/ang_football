@@ -137,12 +137,11 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
     item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
     var colors = Gradient.getColorPair(item.team2ColorHex.split(','), item.team1ColorHex.split(','));
-
     return {//placeholder data
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. Do, YYYY | h:mm A (z)'), //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: GlobalFunctions.sntGlobalDateFormatting(Number(item.eventTimestamp *1000),"timeZone"), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.team1Stadium,
       detail2Value:item.team1City + ', ' + item.team1State,

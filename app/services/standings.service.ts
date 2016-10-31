@@ -307,7 +307,7 @@ export class StandingsService {
     //Set display values
     rows.forEach((value, index) => {
       value.groupName = groupName;
-      value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
+      value.displayDate = GlobalFunctions.sntGlobalDateFormatting(value.lastUpdated, 'defaultDate');
       value.fullImageUrl = GlobalSettings.getImageUrl(value.imageUrl);
       value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
       //Make sure numbers are numbers.
