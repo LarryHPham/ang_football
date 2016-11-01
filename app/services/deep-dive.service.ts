@@ -221,8 +221,7 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var dataLists = val.article_data[p];
       }
-      //var date = moment(Number(val.last_updated) * 1000);
-      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.last_updated),"defaultDate");
+      var date = GlobalFunctions.sntGlobalDateFormatting(val.last_updated,"defaultDate");
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),
           keyword: key.replace('-', ' ').toUpperCase(),

@@ -157,7 +157,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       index:index,
       displayNext: displayNext,
       backgroundGradient: Gradient.getGradientStyles(colors),
-      displayTime: GlobalFunctions.sntGlobalDateFormatting(item.eventTimestamp,'timeZone'), //hard coded TIMEZOME since it is coming back from api this way
+      displayTime: GlobalFunctions.sntGlobalDateFormatting(item.eventTimestamp*1000,'timeZone'), //hard coded TIMEZOME since it is coming back from api this way
       detail1Data:'Home Stadium:',
       detail1Value:item.venueStadium,
       detail2Value:stadiumLocation,
