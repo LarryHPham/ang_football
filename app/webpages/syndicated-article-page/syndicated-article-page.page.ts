@@ -121,7 +121,6 @@ export class SyndicatedArticlePage{
           }
           this.metaTags(data);
           this.articleData = data.data;
-          console.log('syndicated',this.articleData.publishedDate);
           this.articleData.publishedDate = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate/1000),"timeZone");
         }
       )

@@ -321,7 +321,6 @@ export class DeepDiveService {
           new_date: date,
           displayHeadline: info.displayHeadline,
         }
-      console.log(s)
       articleStackArray.push(s);
     });
 
@@ -332,10 +331,8 @@ export class DeepDiveService {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
       val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"defaultDate");
-      console.log('testereerer',val["date"]);
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
-        //console.log(VerticalGlobalFunctions.formatNewsRoute(val.id),"News Route");
       //}
     })
     return data;
