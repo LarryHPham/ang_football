@@ -90,6 +90,8 @@ export class PickTeamPage{
 
     public scope: string;
 
+    private _routeSubscription: any;
+
     constructor(
       private _router: Router,
       private _landingPageService: LandingPageService,
@@ -104,7 +106,7 @@ export class PickTeamPage{
 
       this.getListData();
 
-      GlobalSettings.getParentParams(_router, parentParams => {
+      this._routeSubscription = GlobalSettings.getParentParams(_router, parentParams => {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
         this.isPartnerZone = partnerHome;
 
@@ -154,7 +156,10 @@ export class PickTeamPage{
 
       }); //GlobalSettings.getParentParams
 
+    }
 
+    ngOnDestroy(){
+      this._routeSubscription.unsubscribe();
     }
 
     getListData(){
