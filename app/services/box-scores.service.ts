@@ -67,7 +67,7 @@ export class BoxScoresService {
               moduleTitle: this.moduleHeader(data.date, profileName),
               gameInfo: this.formatGameInfo(data.transformedDate[data.date],scopedDateParam.teamId, scopedDateParam.profile),
               gameInfoSmall: this.formatGameInfoSmall(data.transformedDate[data.date],scopedDateParam.teamId, scopedDateParam.profile),
-              schedule: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null? this.formatSchedule(data.transformedDate[data.date][0], scopedDateParam.teamId, scopedDateParam.profile) : null,
+              schedule: scopedDateParam.profile != 'league' && data.transformedDate[data.date] != null? this.formatSchedule(data.transformedDate[data.date], scopedDateParam.teamId, scopedDateParam.profile) : null,
               aiContent: scopedDateParam.profile == 'league' ? this.aiHeadline(data.aiArticle) : null,
             };
             currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
@@ -76,13 +76,13 @@ export class BoxScoresService {
         })
     }
     else {
-      if(boxScoresData.transformedDate[dateParam.date] != null){
+      if(boxScoresData.transformedDate[dateParam.date] != null && boxScoresData.transformedDate[dateParam.date][0] != null){
         let currentBoxScores = {
           scoreBoard: dateParam.profile != 'league' && boxScoresData.transformedDate[dateParam.date] != null ? this.formatScoreBoard(boxScoresData.transformedDate[dateParam.date][0]) : null,
           moduleTitle: this.moduleHeader(dateParam.date, profileName),
           gameInfo: this.formatGameInfo(boxScoresData.transformedDate[dateParam.date],dateParam.teamId, dateParam.profile),
           gameInfoSmall: this.formatGameInfoSmall(boxScoresData.transformedDate[dateParam.date],dateParam.teamId, dateParam.profile),
-          schedule: dateParam.profile != 'league' && boxScoresData.transformedDate[dateParam.date] != null? this.formatSchedule(boxScoresData.transformedDate[dateParam.date][0], dateParam.teamId, dateParam.profile) : null,
+          schedule: dateParam.profile != 'league' && boxScoresData.transformedDate[dateParam.date] != null? this.formatSchedule(boxScoresData.transformedDate[dateParam.date], dateParam.teamId, dateParam.profile) : null,
           aiContent: dateParam.profile == 'league' ? this.aiHeadline(boxScoresData.aiArticle) : null,
         };
         currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
@@ -308,18 +308,20 @@ export class BoxScoresService {
 
     //TO MATCH HTML the profile client is on will be detected by teamID and a left and right format will be made with the home and away team data
   formatSchedule(data, teamId?, profile?){
-    let awayData = data.awayTeamInfo;
-    let homeData = data.homeTeamInfo;
-    var left, right;
-    var homeRoute = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-    var awayRoute = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-    if(profile == 'team'){
-      if(teamId == homeData.id){
-        homeRoute = null;
-      }else{
-        awayRoute = null;
+    if(data != null){
+      data = data[0];
+      let awayData = data.awayTeamInfo;
+      let homeData = data.homeTeamInfo;
+      var left, right;
+      var homeRoute = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
+      var awayRoute = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+      if(profile == 'team'){
+        if(teamId == homeData.id){
+          homeRoute = null;
+        }else{
+          awayRoute = null;
+        }
       }
-    }
       var homeLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(homeData.logo), homeRoute);
       var awayLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(awayData.logo), awayRoute);
       right = {
@@ -342,11 +344,14 @@ export class BoxScoresService {
         awayName:awayData.lastName,
         awayWins:awayData.winRecord
       };
-    // convert data given into format needed for the schedule banner on module
-    return {
-      home:[right],
-      away:[left]
-    };
+      // convert data given into format needed for the schedule banner on module
+      return {
+        home:[right],
+        away:[left]
+      };
+    }else{
+      return null
+    }
   }
 
 
@@ -452,6 +457,8 @@ export class BoxScoresService {
         if(game.length == (i+1)  && gameArray.length == 0){
           gameArray.push(twoBoxes);
         }
+      }else{
+        gameArray.push([]);
       }
     })
     return gameArray;
@@ -466,83 +473,86 @@ export class BoxScoresService {
       return new Date(a.gameInfo.startDateTime).getTime() - new Date(b.gameInfo.startDateTime).getTime();
     });
     sortedGames.forEach(function(data,i){
+      if(data != null){
+        var info:GameInfoInput;
+        let awayData = data.awayTeamInfo;
+        let homeData = data.homeTeamInfo;
+        let gameInfo = data.gameInfo;
+        let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
+        let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+        var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
-      var info:GameInfoInput;
-      let awayData = data.awayTeamInfo;
-      let homeData = data.homeTeamInfo;
-      let gameInfo = data.gameInfo;
-      let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-      let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
-      var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
-
-      if(teamId != null && profile == 'team'){//if league then both items will link
-        if(homeData.id == teamId){//if not league then check current team they are one
-          homeLink = null;
-          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo))
-          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+        if(teamId != null && profile == 'team'){//if league then both items will link
+          if(homeData.id == teamId){//if not league then check current team they are one
+            homeLink = null;
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo))
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+          }else{
+            awayLink = null;
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
+          }
         }else{
-          awayLink = null;
+          var aiContent = data.aiContent != null ? self.formatArticle(data):null;
           var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
+          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
         }
-      }else{
-        var aiContent = data.aiContent != null ? self.formatArticle(data):null;
-        var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-        var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
-      }
 
-      let gameDate = data.gameInfo;
+        let gameDate = data.gameInfo;
 
-      let homeWin = homeData.winRecord != null ? homeData.winRecord : '#';
-      let homeLoss = homeData.lossRecord != null ? homeData.lossRecord : '#';
+        let homeWin = homeData.winRecord != null ? homeData.winRecord : '#';
+        let homeLoss = homeData.lossRecord != null ? homeData.lossRecord : '#';
 
-      let awayWin = awayData.winRecord != null ? awayData.winRecord : '#';
-      let awayLoss = awayData.lossRecord != null ? awayData.lossRecord : '#';
+        let awayWin = awayData.winRecord != null ? awayData.winRecord : '#';
+        let awayLoss = awayData.lossRecord != null ? awayData.lossRecord : '#';
 
-      //determine if a game is live or not and display correct game time
-      var currentTime = new Date().getTime();
-      var inningTitle = '';
+        //determine if a game is live or not and display correct game time
+        var currentTime = new Date().getTime();
+        var inningTitle = '';
 
-      if(gameInfo.live){
-        inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
+        if(gameInfo.live){
+          inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
 
-      }else{
-        if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
-          inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
         }else{
-          inningTitle = 'Final';
+          if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
+            inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
+          }else{
+            inningTitle = 'Final';
+          }
         }
-      }
 
-      info = {
-        gameHappened:gameInfo.inningsPlayed != null ?  true : false,
-        //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
-        inning:inningTitle,
-        dataPointCategories:gameInfo.dataPointCategories,
-        verticalContent:gameInfo.verticalContent,
-        homeData:{
-          homeTeamName: homeData.lastName,
-          homeImageConfig:link1,
-          homeLink: homeLink,
-          homeRecord: homeWin +'-'+ homeLoss,
-          DP1:homeData.dataP1,
-          DP2:homeData.dataP2,
-          DP3:homeData.dataP3
-        },
-        awayData:{
-          awayTeamName:awayData.lastName,
-          awayImageConfig:link2,
-          awayLink: awayLink,
-          awayRecord: awayWin +'-'+ awayLoss,
-          DP1:awayData.dataP1,
-          DP2:awayData.dataP2,
-          DP3:awayData.dataP3
+        info = {
+          gameHappened:gameInfo.inningsPlayed != null ?  true : false,
+          //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
+          inning:inningTitle,
+          dataPointCategories:gameInfo.dataPointCategories,
+          verticalContent:gameInfo.verticalContent,
+          homeData:{
+            homeTeamName: homeData.lastName,
+            homeImageConfig:link1,
+            homeLink: homeLink,
+            homeRecord: homeWin +'-'+ homeLoss,
+            DP1:homeData.dataP1,
+            DP2:homeData.dataP2,
+            DP3:homeData.dataP3
+          },
+          awayData:{
+            awayTeamName:awayData.lastName,
+            awayImageConfig:link2,
+            awayLink: awayLink,
+            awayRecord: awayWin +'-'+ awayLoss,
+            DP1:awayData.dataP1,
+            DP2:awayData.dataP2,
+            DP3:awayData.dataP3
+          }
+        };
+        if(teamId != null){
+          gameArray.push({game:info,aiContent:aiContent});
+        }else{
+          gameArray.push({game:info});
         }
-      };
-      if(teamId != null){
-        gameArray.push({game:info,aiContent:aiContent});
       }else{
-        gameArray.push({game:info});
+        gameArray.push([]);
       }
     })
     return gameArray;
