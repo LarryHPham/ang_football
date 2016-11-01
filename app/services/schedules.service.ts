@@ -339,7 +339,6 @@ export class SchedulesService {
           dateObject[splitToDate] = {};
           dateObject[splitToDate]['tableData'] = [];
           dateObject[splitToDate]['display'] = GlobalFunctions.sntGlobalDateFormatting(splitToDate,"dayOfWeek") + " Games";
-          console.log('schedules service and things',dateObject[splitToDate]['display']);
         }
         for(var date in dateObject){
           var newPostModel = new SchedulesTableModel(dateObject[date]['tableData'], eventStatus, teamId, isTeamProfilePage);

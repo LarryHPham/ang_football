@@ -566,13 +566,13 @@ export class GlobalFunctions {
       let defaultDate = month + ' ' + dd + ', ' + year;
 
       switch(identifier){
-        case 'defaultDate': newDate = defaultDate; console.log("this is the default date -- > ", defaultDate) // Oct. O6, 2016
+        case 'defaultDate': newDate = defaultDate; // Oct. O6, 2016
           return newDate;
-        case 'shortDate': newDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY"); console.log("shortDate", shortDate); // mm/dd/yy
+        case 'shortDate': newDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY"); // mm/dd/yy
           return newDate;
-        case 'dayOfWeek': newDate = day + ', ' + defaultDate; console.log("dayOfWeek",newDate);  // Tuesday, Jan. 14, 2016
+        case 'dayOfWeek': newDate = day + ', ' + defaultDate; // Tuesday, Jan. 14, 2016
           return newDate;
-        case 'timeZone': newDate = day + ', ' + defaultDate + ' ' + timeZone; console.log("timeZone",newDate);  // Tuesday, Jan. 14, 2016 12:00 (EST)
+        case 'timeZone': newDate = day + ', ' + defaultDate + ' ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
           return newDate;
         case 'custom': break;
         default:
