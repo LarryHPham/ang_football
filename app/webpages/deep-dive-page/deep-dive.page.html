@@ -1,7 +1,7 @@
 <section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
   <section class="deep-dive-container1">
   	<div [ngStyle]="{'width':'100%', 'height': 'auto'}" class="carWrapper">
-      <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" auto-play="true">
+      <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" (changeScope)="changeScope($event)" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" auto-play="true">
       </side-scroll-test>
     </div>
     <div class="spacer" id="deep-dive-blueBar">

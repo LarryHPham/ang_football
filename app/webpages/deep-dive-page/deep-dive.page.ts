@@ -49,7 +49,7 @@ declare var jQuery: any;
     providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader, Title],
 })
 
-export class DeepDivePage implements OnInit{
+export class DeepDivePage{
     public widgetPlace: string = "widgetForPage";
 
     //page variables
@@ -73,8 +73,9 @@ export class DeepDivePage implements OnInit{
     toggleData:any;
     blockIndex: number = 1;
     changeScopeVar: string = "";
-​   constructorControl: boolean = true;
+​    constructorControl: boolean = true;
     private isPartnerZone: boolean = false;
+    private _routeSubscription: any;
 
     constructor(
       private _router:Router,
@@ -89,18 +90,8 @@ export class DeepDivePage implements OnInit{
     ){
       //check to see if scope is correct and redirect
       VerticalGlobalFunctions.scopeRedirect(_router, _params);
-      this.getPageData();
-    }
-
-    ngOnInit(){
-    }
-    ngOnChanges(){
-      this.getPageData();
-    }
-
-    getPageData(){
       // needs to get Geolocation first
-      GlobalSettings.getParentParams(this._router, parentParams => {
+      this._routeSubscription = GlobalSettings.getParentParams(this._router, parentParams => {
         if(this.constructorControl){
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
@@ -129,6 +120,10 @@ export class DeepDivePage implements OnInit{
       });
     }
 
+    ngOnDestroy(){
+      this._routeSubscription.unsubscribe();
+    }
+
     setMetaTags(){
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
@@ -146,22 +141,6 @@ export class DeepDivePage implements OnInit{
     }
 
     getToggleInfo(router){
-      var domainHostName, domainParams, pageHostName;
-      if(router.parent.parent != null){//if there are more parameters past home page
-        domainHostName = router.parent.parent.currentInstruction.component.routeName;
-        domainParams = router.parent.parent.currentInstruction.component.params;
-        pageHostName = router.parent.currentInstruction.component.routeName;
-      }else{// if there are no more parameters then set domain routeName and param
-        domainHostName = router.parent.currentInstruction.component.routeName;
-        domainParams = router.parent.currentInstruction.component.params;
-      }
-      var relPath = GlobalFunctions.routerRelPath(router);
-
-      let nflParams = domainParams;
-      nflParams.scope = 'nfl';
-      let ncaafParams = domainParams;
-      ncaafParams.scope = 'ncaaf';
-      console.log(VerticalGlobalFunctions.getRandomToggleCarouselImage())
       let toggleData = {
         'nfl':{
           title: 'Loyal to th NFL?',
@@ -170,7 +149,7 @@ export class DeepDivePage implements OnInit{
           image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl,
           buttonClass:'carousel_toggle-button',
           buttonText: 'Visit the NFL Section',
-          buttonRoute: [relPath + domainHostName, nflParams, pageHostName]
+          buttonScope: 'nfl'
         },
         'ncaaf':{
           title: 'Loyal to th NCAA?',
@@ -179,7 +158,7 @@ export class DeepDivePage implements OnInit{
           image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf,
           buttonClass:'carousel_toggle-button',
           buttonText: 'Visit the College Section',
-          buttonRoute: [relPath + domainHostName, nflParams, pageHostName]
+          buttonScope: 'ncaaf'
         },
         'midImage': './app/public/icon-t-d-l.svg',
       }
@@ -210,7 +189,7 @@ export class DeepDivePage implements OnInit{
       let self = this;
       if(this.safeCall){
         this.safeCall = false;
-        this.changeScopeVar = this.changeScopeVar.toLowerCase() == 'home' ? 'nfl' : this.changeScopeVar.toLowerCase();
+        this.changeScopeVar = this.changeScopeVar.toLowerCase();
         let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
         this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
           if(this.sideScrollData == null){
