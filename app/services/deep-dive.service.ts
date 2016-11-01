@@ -313,7 +313,7 @@ export class DeepDiveService {
 
     articles.forEach(function(val, index){
       var info = val.info;
-      var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline,"defaultDate");
+      var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline*1000,"defaultDate");
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
@@ -321,7 +321,7 @@ export class DeepDiveService {
           new_date: date,
           displayHeadline: info.displayHeadline,
         }
-
+      console.log(s)
       articleStackArray.push(s);
     });
 
@@ -331,8 +331,8 @@ export class DeepDiveService {
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      val["date"] = GlobalFunctions.sntGlobalDateFormatting(val.dateline,"defaultDate");
-      console.log(val["date"]);
+      val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"defaultDate");
+      console.log('testereerer',val["date"]);
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
         //console.log(VerticalGlobalFunctions.formatNewsRoute(val.id),"News Route");

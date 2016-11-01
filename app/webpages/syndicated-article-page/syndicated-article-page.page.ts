@@ -123,7 +123,6 @@ export class SyndicatedArticlePage{
           this.articleData = data.data;
           console.log('syndicated',this.articleData.publishedDate);
           this.articleData.publishedDate = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate/1000),"timeZone");
-          console.log('after formatting',this.articleData.publishedDate);
         }
       )
     }
