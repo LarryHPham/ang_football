@@ -244,13 +244,13 @@ export class TransactionsService {
         var description;
 
         if (val.transactionType == "suspension") {
-          description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " was " + val.contents;
+          description = val.contents;
         }
         else if (val.transactionType == "injuries") {
-          description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " is out with " + val.contents;
+          description = val.contents;
         }
         else {
-          description = playerFullName + " was " + val.contents;
+          description = val.contents;
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {
@@ -290,13 +290,13 @@ export class TransactionsService {
       var description;
 
       if (val.transactionType == "suspension") {
-        description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " was " + val.contents;
+        description = val.contents;
       }
       else if (val.transactionType == "injuries") {
-        description = playerFullName + " " + val.playerPosition + " for the " + val.teamName +  " is out with " + val.contents;
+        description = val.contents;
       }
       else {
-        description = playerFullName + " was " + val.contents;
+        description = val.contents;
       }
 
       if (val.playerActive) {
