@@ -89,8 +89,18 @@ export class DeepDivePage implements OnInit{
     ){
       //check to see if scope is correct and redirect
       VerticalGlobalFunctions.scopeRedirect(_router, _params);
-        // needs to get Geolocation first
-      GlobalSettings.getParentParams(_router, parentParams => {
+      this.getPageData();
+    }
+
+    ngOnInit(){
+    }
+    ngOnChanges(){
+      this.getPageData();
+    }
+
+    getPageData(){
+      // needs to get Geolocation first
+      GlobalSettings.getParentParams(this._router, parentParams => {
         if(this.constructorControl){
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
@@ -98,12 +108,12 @@ export class DeepDivePage implements OnInit{
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
           if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
-            let relPath = this.getRelativePath(_router);
+            let relPath = this.getRelativePath(this._router);
             //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
             window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
           }
 
-          this.toggleData = this.scope == 'home' ? [this.getToggleInfo(_router)] : null;
+          this.toggleData = this.scope == 'home' ? [this.getToggleInfo(this._router)] : null;
 
           this.isPartnerZone = partnerHome;
           if(this.partnerID != null && this.partnerID != 'football'){
@@ -112,23 +122,27 @@ export class DeepDivePage implements OnInit{
           }else{
             this.getGeoLocation();
           }
-
-          //create meta description that is below 160 characters otherwise will be truncated
-          let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
-          let link = window.location.href;
-
-          _seoService.setCanonicalLink(this._params.params, this._router);
-          _seoService.setOgTitle('Deep Dive');
-          _seoService.setOgDesc(metaDesc);
-          _seoService.setOgType('Website');
-          _seoService.setOgUrl(link);
-          _seoService.setOgImage('./app/public/mainLogo.png');
-          _seoService.setTitle('Deep Dive');
-          _seoService.setMetaDescription(metaDesc);
-          _seoService.setMetaRobots('Index, Follow');
+          this.setMetaTags()
           this.constructorControl = false;
+
         }
       });
+    }
+
+    setMetaTags(){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
+      let link = window.location.href;
+
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle('Deep Dive');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('Deep Dive');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
     }
 
     getToggleInfo(router){
@@ -147,22 +161,27 @@ export class DeepDivePage implements OnInit{
       nflParams.scope = 'nfl';
       let ncaafParams = domainParams;
       ncaafParams.scope = 'ncaaf';
+      console.log(VerticalGlobalFunctions.getRandomToggleCarouselImage())
       let toggleData = {
         'nfl':{
           title: 'Loyal to th NFL?',
-          image: './app/public/mainLogo.png',
-          buttonClass:'orange_btn',
+          subtext: 'Stay up to date with everything NFL.',
+          scope:'NFL',
+          image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl,
+          buttonClass:'carousel_toggle-button',
           buttonText: 'Visit the NFL Section',
           buttonRoute: [relPath + domainHostName, nflParams, pageHostName]
         },
         'ncaaf':{
           title: 'Loyal to th NCAA?',
-          image: './app/public/mainLogo.png',
-          buttonClass:'orange_btn',
+          subtext: 'Stay up to date with everything NCAA.',
+          scope:'NCAA',
+          image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf,
+          buttonClass:'carousel_toggle-button',
           buttonText: 'Visit the College Section',
           buttonRoute: [relPath + domainHostName, nflParams, pageHostName]
         },
-        'mid-image': './app/public/mainLogo.png',
+        'midImage': './app/public/icon-t-d-l.svg',
       }
       return toggleData;
     }
@@ -309,11 +328,5 @@ export class DeepDivePage implements OnInit{
         //fire when scrolled into footer
         this.blockIndex = this.blockIndex + 1;
       }
-    }
-    ngOnInit(){
-      // var script = document.createElement("script");
-      // script.src = 'http://content.synapsys.us/deepdive/rails/rails.js?selector=.web-container&adMarginTop=100';
-      // document.head.appendChild(script);
-      // jQuery("deep-dive-page").parent().addClass('deep-dive-container');
     }
 }

@@ -631,4 +631,29 @@ export class VerticalGlobalFunctions {
     var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
     return relPath;
   }
+
+  static getRandomToggleCarouselImage() {
+    let nfl = [
+      "/nfl/carousel/image-carousel-nfl-01.jpg",
+      "/nfl/carousel/image-carousel-nfl-02.jpg",
+      "/nfl/carousel/image-carousel-nfl-03.jpg",
+      "/nfl/carousel/image-carousel-nfl-04.jpg",
+      "/nfl/carousel/image-carousel-nfl-05.jpg",
+    ];
+    let ncaaf = [
+      "/fbs/players/liveimages/001edf99-2757-4a73-ab7b-ac3ca88c95f8.jpg",
+      "/fbs/players/liveimages/016cc3ff-d07b-4e44-a0c1-da45908751bc.jpg",
+      "/fbs/players/liveimages/0121bbd3-dfa8-4304-9d2b-e5c60798bcee.jpg",
+      "/fbs/players/liveimages/a8715823-19aa-44df-a001-5718322ccef0.jpg",
+      "/fbs/players/liveimages/ae245483-8c1a-442e-a579-b36b4119cc33.jpg",
+    ];
+    let nflRandom = nfl[Math.floor(Math.random()*nfl.length)];
+    let ncaafRandom = ncaaf[Math.floor(Math.random()*ncaaf.length)];
+    var nflImage = this._proto + "//" + GlobalSettings._imageUrl + nflRandom;
+    var ncaafImage = this._proto + "//" + GlobalSettings._imageUrl + ncaafRandom;
+    return {
+      nfl:nflImage,
+      ncaaf:ncaafImage,
+    };
+  }
 }
