@@ -110,12 +110,12 @@ export class TransactionsService {
     }
   }
 
-  formatYearDropown() {
+  formatYearDropown(availableYears,availableSeasons) {
     let currentYear = new Date().getFullYear();
     let yearArray = [];
-    for ( var i = 0; i < 4; i++ ) {
-      let displayYear = currentYear - i;
-      let displaySeason = displayYear + '/' + (displayYear +1);
+    for ( var i = 0; i < availableYears.length; i++ ) {
+      let displayYear = availableYears[i];
+      let displaySeason = availableSeasons[i];
       yearArray.push({key:displayYear, value:displaySeason});
     }
     return yearArray;
@@ -178,6 +178,7 @@ export class TransactionsService {
       .map(res => res.json())
       .map(
         data => {
+          tab.yearArray=this.formatYearDropown(data.data.availableYears,data.data.availableSeasons);
           tab.totalTransactions = data.data.totalTransactions,
           tab.carData = this.carTransactions(data.data.transactions, type, tab, currentTeam);
           tab.dataArray = this.listTransactions(data.data.transactions, type);
