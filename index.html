@@ -17,10 +17,7 @@
     </script>
     <link rel="shortcut icon" href="/app/public/mainLogo.jpg" />
 
-    <!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">-->
-    <link href="/app/global/stylesheets/tdl-font.css" rel="stylesheet">
-    <link href="/app/global/stylesheets/bootstrap.min.css" rel="stylesheet">
-    <link href="/app/global/stylesheets/master.css" rel="stylesheet">
+
     <!-- 1. Load libraries -->
     <script src="lib/core.min.js"></script>
     <script src="lib/Reflect.js"></script>
@@ -61,6 +58,10 @@
 
   <!-- 3. Display the application -->
   <body>
+    <!--async loading-->
+    <link href="/app/global/stylesheets/tdl-font.css" rel="stylesheet" lazyload>
+    <link href="/app/global/stylesheets/bootstrap.min.css" rel="stylesheet" lazyload>
+    <link href="/app/global/stylesheets/master.css" rel="stylesheet" lazyload>
     <app-domain>
       <div class="page-loading">
         <img src="/app/public/page_loading.gif" alt=""/>
