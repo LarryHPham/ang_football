@@ -7,7 +7,7 @@
         </div>
         <loading-component *ngIf="!articleData && !error"></loading-component>
     <span *ngIf="articleData">
-        <shareLinks-component [shareUrl]="rawUrl" [isMain]="true"></shareLinks-component>
+        <share-links-component [shareUrl]="rawUrl" [isMain]="true"></share-links-component>
         <h1 class="articles-page-title">{{title}}</h1>
         <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
             <span *ngIf="imageData">
