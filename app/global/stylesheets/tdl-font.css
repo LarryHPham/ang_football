@@ -490,3 +490,6 @@
 .fa-age:before {
   content: "\2c";
 }
+.fa-box-scores:before {
+  content: "\2f";
+}

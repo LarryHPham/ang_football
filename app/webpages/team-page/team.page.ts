@@ -513,7 +513,7 @@ export class TeamPage implements OnInit {
       .subscribe(
           transactionsData => {
             if ( this.transactionFilter1 == undefined ) {
-              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              this.transactionFilter1 = transactionsData.yearArray;
               if(this.dropdownKey1 == null){
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }

@@ -397,11 +397,18 @@ export class ComparisonStatsService {
         var key = fields[i];
         var title = key;
         var bestStatFallback = null;
-        if (playerOneStats[key] != null) {
-          bestStatFallback = playerOneStats[key];
-        }
-        else if (playerTwoStats[key] != null) {
-          bestStatFallback = playerTwoStats[key];
+        if (playerOneStats[key] != null && playerTwoStats[key] != null) {
+          if(playerOneStats[key] >= playerTwoStats[key]){
+            bestStatFallback = playerOneStats[key];
+          } else {
+            bestStatFallback = playerTwoStats[key];
+          }
+        } else {
+          if (playerOneStats[key] != null) {
+            bestStatFallback = playerOneStats[key];
+          } else {
+            bestStatFallback = playerTwoStats[key];
+          }
         }
           seasonBarList.push({
             title: title,
