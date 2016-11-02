@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/share-links/share-links.component";
 import {ArticleContentComponent} from "../../fe-core/components/articles/article-content/article-content.component";
 import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
 import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
@@ -207,9 +207,20 @@ export class ArticlePages implements OnInit {
     }
 
     getCarouselImages(data) {
+        var images = [];
         var imageArray = [];
         var copyArray = [];
         var titleArray = [];
+
+        if (this.articleType == "game-module" || this.articleType == "team-record") {
+            images = data['home_images'].concat(data['away_images']);
+        } else if (this.articleType == "playerRoster") {
+            images = data['home_images'];
+        } else if (this.isFantasyReport) {
+            images = data['home_images'].concat(data['player_images']);
+        } else {
+            images = data['away_images'];
+        }
         data.sort(function () {
             return 0.5 - Math.random()
         });

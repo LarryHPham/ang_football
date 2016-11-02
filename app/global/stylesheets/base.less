@@ -148,7 +148,7 @@ ToC
 /* @Fonts */
 /**********/
 
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700,800,400italic');
+@import url('/app/global/stylesheets/gFont.css');
 @globalFont: 'Lato', sans-serif;
 
 .globalDefaultFont(@fontSize, @fontWeight) {
@@ -194,7 +194,7 @@ ToC
 }
 body, html {
   width: 100%;
-  height: auto;
+  height: 100%;
   position: relative;
 }
 
@@ -290,6 +290,9 @@ a.text-master{
 }
 .text-master{
   color: @masterBrandColor;
+}
+.setWidgetHeight{
+  max-height: 250px;
 }
 /****************/
 /* @Code Styles */

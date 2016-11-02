@@ -46,35 +46,14 @@
   height: auto;
   width: 100%;
 }
-.deep-dive-container {
-  width: 100%;
-}
-@media @tablet{
-  .web-container{
-    min-height: 785px;
-  }
-}
+.deep-dive-container {width: 100%}
+
 @media @desktop-l{
-  .web-container{
-    width: ~"calc(100% - 350px)";
-  }
-  .deep-dive-container {
-    width: 1024px;
-  }
-  .pick-a-team-container {
-    min-width: 640px;
-  }
+  .pick-a-team-container {min-width: 640px}
 }
 @media @desktop-xl{
-  .web-container{
-    width: 1245px;
-  }
-  .pick-a-team-container {
-    min-width: 1440px;
-  }
-  .deep-dive-container {
-    width: 1440px;
-  }
+  .pick-a-team-container {min-width: 1440px}
+  .deep-dive-container {width: 1440px}
 }
 
 .page-loading {
@@ -91,13 +70,13 @@
   background-color: @highlightGrey;
 }
 
-.vertical{
-  //min-width: 640px; TODO
-  overflow-x: visible;
-}
-sidekick-wrapper, team-page, player-page, deep-dive-page{
+.vertical{overflow-x: visible}
+sidekick-wrapper, team-page, player-page, deep-dive-page, home-page, syndicated-article-page{
   display: block;
   width: 100%;
+}
+deep-dive-page, directory-page, home-page, syndicated-article-page{
+  background-color: @white;
 }
 #partner{
   z-index: 1000;

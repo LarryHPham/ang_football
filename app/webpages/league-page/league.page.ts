@@ -242,36 +242,40 @@ export class LeaguePage implements OnInit {
                 this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
                 this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
                 this.getLeagueHeadlines();
-                /*** Keep Up With Everything TDL ***/
-                this.getBoxScores(this.dateParam);
-                this.eventStatus = 'pregame';
-                this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
-                this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
 
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
+                setTimeout(() => { // defer loading everything below the fold
+                  /*** Keep Up With Everything TDL ***/
+                  this.getBoxScores(this.dateParam);
+                  this.eventStatus = 'pregame';
+                  this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
+                  this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
 
-                //Initial position to display in MVP
-                this.globalMVPPosition = 'cb';
-                this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
-                this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
-                if ( this.positionData && this.positionData.length > 0 ) {
-                  //default params
-                  this.positionDropdown({
-                      tab: this.positionData[0],
-                      position: this.globalMVPPosition
-                  });
-                }
+                  this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
 
-                this.setupComparisonData();
+                  //Initial position to display in MVP
+                  this.globalMVPPosition = 'cb';
+                  this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
+                  this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
+                  if ( this.positionData && this.positionData.length > 0 ) {
+                    //default params
+                    this.positionDropdown({
+                        tab: this.positionData[0],
+                        position: this.globalMVPPosition
+                    });
+                  }
 
-                /*** Keep Up With Everything TDL ***/
-                this.getImages(this.imageData);
-                this.getNewsService();
-                this.getFaqService(this.profileType);
-                this.setupListOfListsModule();
-                this.getDykService(this.profileType);
-                this.getLeagueVideoBatch(7,1,1,0,scope);
-                this.getTwitterService(this.profileType, partnerID, scope);
+                  this.setupComparisonData();
+
+                  /*** Keep Up With Everything TDL ***/
+                  this.getImages(this.imageData);
+                  this.getNewsService();
+                  this.getFaqService(this.profileType);
+                  this.setupListOfListsModule();
+                  this.getDykService(this.profileType);
+                  this.getLeagueVideoBatch(7,1,1,0,scope);
+                  this.getTwitterService(this.profileType, partnerID, scope);
+                }, 2000);
+
              },
             err => {
                 this.hasError = true;
@@ -407,7 +411,7 @@ export class LeaguePage implements OnInit {
           transactionsData => {
 
             if ( this.transactionFilter1 == undefined ) {
-              this.transactionFilter1 = this._transactionsService.formatYearDropown();
+              this.transactionFilter1 = transactionsData.yearArray;
               if(this.dropdownKey1 == null){
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }

@@ -8,13 +8,7 @@
     <meta charset="UTF-8">
     <meta name="theme-color" content="#2d3e50 " />
     <meta http-equiv="Content-Language" content="en">
-    <!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">-->
-    <link href="/app/global/stylesheets/tdl-font.css" rel="stylesheet">
-    <link href="/app/global/stylesheets/bootstrap.min.css" rel="stylesheet">
-    <link href="/app/global/stylesheets/master.css" rel="stylesheet">
-    <!-- Owl carousel styles 2.1.6-->
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.6/assets/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.6/assets/owl.theme.default.css">
+
     <!-- 1. Load libraries -->
     <script src="lib/core.min.js"></script>
     <script src="lib/Reflect.js"></script>
@@ -22,16 +16,18 @@
     <script src="lib/moment.js"></script>
     <script src="lib/moment-timezone-with-data-2010-2020.js"></script>
     <script src="lib/zone.js"></script>
-    <script src="lib/fuse.min.js"></script>
-    <script src="lib/hammer.min.js"></script>
+    <script async src="lib/fuse.min.js"></script>
+    <script async src="lib/hammer.min.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script async src="lib/highcharts.js"></script>
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script async src="https://apis.google.com/js/platform.js"></script>
     <!-- social share button on home page -->
     <script type="text/javascript">var switchTo5x=true;</script>
     <script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
-    <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">stLight.options({publisher: "ab81b5e8-9aea-4921-9930-26ce6925e901", doNotHash: false, doNotCopy: false, hashAddressBar: false, onhover: false});</script>
+    <!-- <script src="//code.jquery.com/jquery-2.2.3.min.js"></script> -->
 
-    <script src="lib/highcharts.js"></script>
     <script>
         // setup DisQus config for initial load
         var disqus_config = function () {
@@ -39,7 +35,6 @@
             this.page.url = window.location.href + "#!newthread";
         };
     </script>
-    <script type="text/javascript">stLight.options({publisher: "ab81b5e8-9aea-4921-9930-26ce6925e901", doNotHash: false, doNotCopy: false, hashAddressBar: false, onhover: false});</script>
     <!-- 2. Configure SystemJS -->
     <script>
       System.config({
@@ -75,6 +70,10 @@
 
   <!-- 3. Display the application -->
   <body>
+    <!--async loading-->
+    <link href="/app/global/stylesheets/tdl-font.css" rel="stylesheet" lazyload>
+    <link href="/app/global/stylesheets/bootstrap.min.css" rel="stylesheet" lazyload>
+    <link href="/app/global/stylesheets/master.css" rel="stylesheet" lazyload>
     <app-domain>
       <div class="page-loading">
         <img src="/app/public/page_loading.gif" alt="" />
