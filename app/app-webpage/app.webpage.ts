@@ -269,8 +269,9 @@ export class AppComponent {
 
   getHeaderHeight(){
     var pageHeader = document.getElementById('pageHeader');
+    var saladBar = document.getElementById('salad-bar-top');
     if(pageHeader != null){
-      return pageHeader.offsetHeight;
+      return pageHeader.offsetHeight + saladBar.offsetHeight;
     }
   }
 
