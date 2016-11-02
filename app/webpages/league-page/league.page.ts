@@ -411,7 +411,7 @@ export class LeaguePage implements OnInit {
           transactionsData => {
 
             if ( this.transactionFilter1 == undefined ) {
-              this.transactionFilter1 = this.transactionsData.tabs[0].yearArray;
+              this.transactionFilter1 = transactionsData.yearArray;
               if(this.dropdownKey1 == null){
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
