@@ -730,7 +730,7 @@ export class GlobalFunctions {
                     return articleInformation = ["player-fantasy", "gameReport", "null"];
             }
         } else {
-            switch (parseInt(articleType)) {
+            switch (articleType) {
                 case "starting-roster-home-offense":
                     return articleInformation = ["starting-roster-home-offense", "playerRoster", "null"];
                 case "starting-roster-home-defense":

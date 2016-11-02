@@ -18,6 +18,8 @@ import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
+import {ComplexInnerHtml} from "../../fe-core/components/complex-inner-html/complex-inner-html.component";
+import {find} from "rxjs/operator/find";
 
 declare var moment;
 
@@ -34,7 +36,8 @@ declare var moment;
         DisqusComponent,
         LoadingComponent,
         TrendingComponent,
-        SidekickContainerComponent
+        SidekickContainerComponent,
+        ComplexInnerHtml
     ],
 })
 
@@ -109,6 +112,7 @@ export class ArticlePages implements OnInit {
                             this.eventID = Article['data'][0].event_id;
                             this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                         }
+                        this.parseLinks(Article['data'][0]['article_data']['route_config'], Article['data'][0]['article_data']['article']);
                         var articleType = [];
                         if (Article['data'][0].article_type != null) {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type, true);
@@ -164,6 +168,18 @@ export class ArticlePages implements OnInit {
                     }, 5000);
                 }
             );
+    }
+
+    parseLinks(routeData, articleData) {
+        //routeData.forEach(function (val, index) {
+        //    if (val.route_type == "tdl_team") {
+        //        var url = VerticalGlobalFunctions.formatTeamRoute(val.name, val.id);
+        //    }
+        //    var paragraph = articleData[val.paragraph_index];
+        //    var replace = new RegExp(find, val.display);
+        //    paragraph = paragraph.replace(replace, url);
+        //    console.log(paragraph);
+        //});
     }
 
     getRecommendedArticles() {
