@@ -2,7 +2,7 @@ import {Component, AfterViewInit,Input} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/share-links/share-links.component";
 import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
 import {SyndicatedTrendingComponent} from "../../fe-core/components/articles/syndicated-trending/syndicated-trending.component";
 import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
