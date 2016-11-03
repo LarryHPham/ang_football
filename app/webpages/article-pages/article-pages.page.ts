@@ -51,6 +51,7 @@ export class ArticlePages implements OnInit {
     imageTitle:Array<any>;
     randomArticles:Array<any>;
     randomHeadlines:Array<any>;
+    routeList:Array<any>;
     trendingData:Array<any>;
     trendingImages:Array<any>;
     aiSidekick:boolean = true;
@@ -73,7 +74,8 @@ export class ArticlePages implements OnInit {
     rawUrl:string;
     title:string;
     scope:string = null;
-    constructorControl: boolean = true;
+    constructorControl:boolean = true;
+
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
@@ -83,14 +85,14 @@ export class ArticlePages implements OnInit {
         VerticalGlobalFunctions.scopeRedirect(_router, _params);
         window.scrollTo(0, 0);
         GlobalSettings.getParentParams(_router, parentParams => {
-          if(this.constructorControl){
-            this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
-            if (parentParams.partnerID != null) {
-              this.partnerId = parentParams.partnerID;
+            if (this.constructorControl) {
+                this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
+                if (parentParams.partnerID != null) {
+                    this.partnerId = parentParams.partnerID;
+                }
+                this.getArticles();
+                this.constructorControl = false;
             }
-            this.getArticles();
-            this.constructorControl = false;
-          }
         });
         this.eventID = _params.get('eventID');
         this.eventType = _params.get('eventType');
@@ -113,6 +115,7 @@ export class ArticlePages implements OnInit {
                             this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                         }
                         this.parseLinks(Article['data'][0]['article_data']['route_config'], Article['data'][0]['article_data']['article']);
+                        //this.parseLinks(Article['data'][0]['article_data']['route_config']);
                         var articleType = [];
                         if (Article['data'][0].article_type != null) {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type, true);
@@ -125,7 +128,7 @@ export class ArticlePages implements OnInit {
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'].title;
-                        var date  = Article['data'][0]['article_data'].publication_date;
+                        var date = Article['data'][0]['article_data'].publication_date;
                         var date1 = moment(date).format();
                         this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
                         this.comment = Article['data'][0]['article_data'].comment_header;
@@ -170,16 +173,56 @@ export class ArticlePages implements OnInit {
             );
     }
 
+    //parseLinks(routeData) {
+    //    var routes = [];
+    //    var fullRoutes = [];
+    //    routeData.forEach(function (val) {
+    //        console.log(val);
+    //        if (val.route_type == "tdl_team") {
+    //            routes = [{
+    //                index: val.paragraph_index,
+    //                name: val.display,
+    //                route: VerticalGlobalFunctions.formatTeamRoute(val.display, val.id)
+    //            }];
+    //            fullRoutes.push(routes);
+    //        }
+    //    });
+    //    this.routeList = fullRoutes;
+    //    console.log(this.routeList);
+    //}
+
     parseLinks(routeData, articleData) {
-        //routeData.forEach(function (val, index) {
-        //    if (val.route_type == "tdl_team") {
-        //        var url = VerticalGlobalFunctions.formatTeamRoute(val.name, val.id);
-        //    }
-        //    var paragraph = articleData[val.paragraph_index];
-        //    var replace = new RegExp(find, val.display);
-        //    paragraph = paragraph.replace(replace, url);
-        //    console.log(paragraph);
-        //});
+        var newParagraph = [];
+        var routes = [];
+        var routeList = [];
+        var fullText = [];
+        routeData.forEach(function (val, index, array) {
+            var paragraph = articleData[val.paragraph_index];
+            var replace = new RegExp(val.display);
+            if (val.route_type == "tdl_team") {
+                routes =[
+                    //{text: paragraph.split(replace)[0]},
+                    {name: val.display},
+                    {route: VerticalGlobalFunctions.formatTeamRoute(val.display, val.id)}
+                    //{text: paragraph.split(replace)[1]}
+                ];
+                routeList.push(routes);
+                console.log(routeList);
+                //fullText = fullText.concat(routes);
+                //paragraph = paragraph.split(replace).join([{route: VerticalGlobalFunctions.formatTeamRoute(val.name, val.id)}]);
+            }
+            if (index === array.length - 1) {
+                for (var i = 0; i < routeList.length; i++) {
+                    var replace = new RegExp(routeList[i][0].name);
+                    paragraph = paragraph.split(replace).join(routeList[i][1].route);
+                }
+                console.log(paragraph);
+                //newParagraph.push(fullText);
+                //console.log('4', newParagraph);
+                articleData[val.paragraph_index] = newParagraph[0];
+            }
+        });
+        console.log(articleData);
     }
 
     getRecommendedArticles() {
@@ -418,12 +461,12 @@ export class ArticlePages implements OnInit {
         if (this.articleType == 'teamRecord') {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
-                if (val['teamRecordModule'] && isFirstTeam) {
-                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
+                if (val['team_record_module'] && isFirstTeam) {
+                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(val['team_record_module'].name, val['team_record_module'].id);
                     val['imageTop'] = {
                         imageClass: "image-122",
                         mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
+                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
                             urlRouteArray: urlFirstTeam,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -432,7 +475,7 @@ export class ArticlePages implements OnInit {
                     val['imageTopSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
+                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
                             urlRouteArray: urlFirstTeam,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
@@ -441,12 +484,12 @@ export class ArticlePages implements OnInit {
                     links.push(val['imageTop'], val['imageTopSmall']);
                     return isFirstTeam = false;
                 }
-                if (val['teamRecordModule'] && !isFirstTeam) {
-                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(val['teamRecordModule'].name, val['teamRecordModule'].id);
+                if (val['team_record_module'] && !isFirstTeam) {
+                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(val['team_record_module'].name, val['team_record_module'].id);
                     val['imageBottom'] = {
                         imageClass: "image-122",
                         mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
+                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
                             urlRouteArray: urlSecondTeam,
                             hoverText: "<p>View</p><p>Profile</p>",
                             imageClass: "border-logo"
@@ -455,7 +498,7 @@ export class ArticlePages implements OnInit {
                     val['imageBottomSmall'] = {
                         imageClass: "image-71",
                         mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['teamRecordModule'].logo),
+                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
                             urlRouteArray: urlSecondTeam,
                             hoverText: "<i class='fa fa-mail-forward'></i>",
                             imageClass: "border-logo"
