@@ -17,7 +17,7 @@ export class TwitterService {
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     fullUrl += "/"+profile+"/twitterInfo";
-    var newUrl = "http://dev-touchdownloyal-api.synapsys.us/twitter/"+profile;
+    var newUrl = GlobalSettings.getApiUrl() + "/twitter/" + profile;
 
     //if page is team/player or league
     if(id !== undefined){
