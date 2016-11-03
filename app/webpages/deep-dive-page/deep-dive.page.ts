@@ -54,6 +54,7 @@ export class DeepDivePage{
 
     //page variables
     scope: string;
+    scopeDisplayed:string;
     sidescrollScope:string;
     partnerID: string;
     partnerData:any;
@@ -61,6 +62,7 @@ export class DeepDivePage{
     geoLocation:string;
     isPartner: string = "";
 
+    sideScrollIcon:string;
     sideScrollData: any;
     scrollLength: number;
     ssMax:number = 9;
@@ -95,6 +97,7 @@ export class DeepDivePage{
         if(this.constructorControl){
           this.partnerID = parentParams.partnerID;
           this.scope = parentParams.scope;
+          this.scopeNameDisplay(this.scope);
           this.changeScopeVar = this.scope;
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
           var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
@@ -122,6 +125,28 @@ export class DeepDivePage{
 
     ngOnDestroy(){
       this._routeSubscription.unsubscribe();
+    }
+
+    scopeNameDisplay(scope){
+      scope = scope.toLowerCase();
+        switch(scope){
+          case 'nfl':
+            this.scopeDisplayed = 'Upcoming NFL Games';
+            this.sideScrollIcon = 'fa fa-calendar';
+          break;
+          case 'ncaaf':
+            this.scopeDisplayed = 'Upcoming NCAAF Games';
+            this.sideScrollIcon = 'fa fa-calendar';
+          break;
+          case 'home':
+            this.scopeDisplayed = 'Football';
+            this.sideScrollIcon = 'fa fa-tdl-football';
+          break;
+          default:
+            this.scopeDisplayed = 'Football';
+            this.sideScrollIcon = 'fa fa-tdl-football';
+          break;
+        }
     }
 
     setMetaTags(){
@@ -187,7 +212,7 @@ export class DeepDivePage{
     //api for Schedules
     private getSideScroll(){
       let self = this;
-      if(this.safeCall){
+      if(this.safeCall && this.scope != 'home'){
         this.safeCall = false;
         this.changeScopeVar = this.changeScopeVar.toLowerCase();
         let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
@@ -207,6 +232,7 @@ export class DeepDivePage{
       }
     }
     changeScope($event) {
+      this.scopeNameDisplay($event);
       var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
       let relPath = this.getRelativePath(this._router);
       if(partnerHome){
