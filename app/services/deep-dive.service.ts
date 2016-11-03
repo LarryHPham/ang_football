@@ -5,6 +5,8 @@ import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {DomSanitizationService} from '@angular/platform-browser';
+import {Router} from "@angular/router-deprecated";
+
 declare var moment;
 
 @Injectable()
@@ -190,14 +192,26 @@ export class DeepDiveService {
       return transformData;
   }
 
-  transformToArticleRow(data){
+  transformToArticleRow(data, router){
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data = data.data.slice(1,9);
+
+    var domainHostName, domainParams, urlRouteArray;
     data.forEach(function(val, index){
+      if(router != null){
+        var relPath = GlobalFunctions.routerRelPath(router);
+        domainHostName = router.parent.parent.currentInstruction.component.routeName;
+        domainParams = router.parent.parent.currentInstruction.component.params;
+        domainParams.scope = val.league == 'fbs' ? 'ncaaf' : domainParams.scope;
+        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
+      }else{
+        urlRouteArray = VerticalGlobalFunctions.formatSynRoute('story', val.id);
+      }
+
       var date = GlobalFunctions.formatDate(val.publishedDate);
       var s = {
-          stackRowsRoute: VerticalGlobalFunctions.formatSynRoute('story', val.id),
+          stackRowsRoute: urlRouteArray,
           keyword: val.keyword.replace('-', ' '),
           publishedDate: date.month + " " + date.day + ", " + date.year,
           provider1: val.author != null ? val.author : "",
@@ -208,18 +222,29 @@ export class DeepDiveService {
             imageClass: "image-100x56",
             imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
             /*hoverText: "View",*/
-            urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', val.id)
+            urlRouteArray: urlRouteArray
           }
       }
       articleStackArray.push(s);
     });
     return articleStackArray;
   }
-  transformToAiArticleRow(data, key){
+  transformToAiArticleRow(data, key, router?){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data.forEach(function(val, index){
+      var domainHostName, domainParams, urlRouteArray;
+      if(router != null){
+        var relPath = GlobalFunctions.routerRelPath(router);
+        domainHostName = router.parent.parent.currentInstruction.component.routeName;
+        domainParams = router.parent.parent.currentInstruction.component.params;
+        domainParams.scope = val.league == 'fbs' ? 'ncaaf' : domainParams.scope;
+        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
+      }else{
+        urlRouteArray = VerticalGlobalFunctions.formatSynRoute('story', val.id);
+      }
+
       var date = moment(Number(val.last_updated) * 1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
@@ -240,13 +265,25 @@ export class DeepDiveService {
     return articleStackArray;
   }
 
-  transformToArticleStack(data){
+  transformToArticleStack(data, router?){
     var sampleImage = "/app/public/placeholder_XL.png";
     var topData = data.data[0];
     var date = topData.publishedDate != null ? GlobalFunctions.formatDate(topData.publishedDate) : null;
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
+
+    var domainHostName, domainParams, urlRouteArray;
+    if(router != null){
+      var relPath = GlobalFunctions.routerRelPath(router);
+      domainHostName = router.parent.parent.currentInstruction.component.routeName;
+      domainParams = router.parent.parent.currentInstruction.component.params;
+      domainParams.scope = topData.league == 'fbs' ? 'ncaaf' : domainParams.scope;
+      urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: topData.id}];
+    }else{
+      urlRouteArray = VerticalGlobalFunctions.formatSynRoute('story', topData.id);
+    }
+
     var articleStackData = {
-        articleStackRoute: VerticalGlobalFunctions.formatSynRoute('story', topData.id),
+        articleStackRoute: urlRouteArray,
         keyword: topData.keyword.replace('-', ' '),
         date: date != null ? date.month + " " + date.day + ", " + date.year: "",
         headline: topData.title,
@@ -256,7 +293,7 @@ export class DeepDiveService {
         imageConfig: {
           imageClass: "image-320x180",
           imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
-          urlRouteArray: VerticalGlobalFunctions.formatSynRoute('story', topData.id)
+          urlRouteArray: urlRouteArray
         }
     };
     return articleStackData;
