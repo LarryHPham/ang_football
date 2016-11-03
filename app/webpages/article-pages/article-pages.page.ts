@@ -193,6 +193,8 @@ export class ArticlePages implements OnInit {
 
     parseLinks(routeData, articleData) {
         var newParagraph = [];
+        var testList = [];
+        var text = [];
         var routes = [];
         var routeList = [];
         var fullText = [];
@@ -202,27 +204,37 @@ export class ArticlePages implements OnInit {
             if (val.route_type == "tdl_team") {
                 routes =[
                     //{text: paragraph.split(replace)[0]},
-                    {name: val.display},
-                    {route: VerticalGlobalFunctions.formatTeamRoute(val.display, val.id)}
+                    {
+                        text: val.display,
+                        route: VerticalGlobalFunctions.formatTeamRoute(val.display, val.id)
+                    }
                     //{text: paragraph.split(replace)[1]}
                 ];
-                routeList.push(routes);
-                console.log(routeList);
-                //fullText = fullText.concat(routes);
-                //paragraph = paragraph.split(replace).join([{route: VerticalGlobalFunctions.formatTeamRoute(val.name, val.id)}]);
             }
+            console.log(routes);
+            newParagraph = paragraph.split(replace).concat(routes);
+            console.log('1', newParagraph);
+            routeList.push(routes);
+            //fullText = fullText.concat(routes);
             if (index === array.length - 1) {
                 for (var i = 0; i < routeList.length; i++) {
                     var replace = new RegExp(routeList[i][0].name);
-                    paragraph = paragraph.split(replace).join(routeList[i][1].route);
+                    //paragraph = paragraph.split(replace).join(routeList[i][1].route);
+                    fullText.push([
+                        {text: paragraph.split(replace)[0]},
+                        {
+                            text: val.display,
+                            route: routeList[i][1].route
+                        },
+                        {text: paragraph.split(replace)[1]}
+                    ]);
                 }
-                console.log(paragraph);
                 //newParagraph.push(fullText);
+                //console.log(newParagraph);
                 //console.log('4', newParagraph);
-                articleData[val.paragraph_index] = newParagraph[0];
+                articleData[val.paragraph_index] = fullText[1];
             }
         });
-        console.log(articleData);
     }
 
     getRecommendedArticles() {
