@@ -160,6 +160,7 @@ gulp.task('copy:dev-assets', ['clean'], function () {
         .pipe(gulp.dest('dist'));
 
     return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
+    .pipe(gulp.dest('dist'));
 });
 gulp.task('dev-build', ['dev-compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
