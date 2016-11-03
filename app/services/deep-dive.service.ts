@@ -172,8 +172,7 @@ export class DeepDiveService {
       arrayData.forEach(function(val,index){
         var curdate = new Date();
         var curmonthdate = curdate.getDate();
-        var date = moment(Number(val.publishedDate));
-        date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + date.format('hh:mm A') + ' ET';
+        var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone");
         let carData = {
           image_url: GlobalSettings.getImageUrl(val['imagePath']),
           title:  "<span> Today's News </span>" + val['title'],
@@ -194,11 +193,11 @@ export class DeepDiveService {
     var articleStackArray = [];
     data = data.data.slice(1,9);
     data.forEach(function(val, index){
-      var date = GlobalFunctions.formatDate(val.publishedDate);
+      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"defaultDate");
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatSynRoute('story', val.id),
           keyword: val.keyword.replace('-', ' '),
-          publishedDate: date.month + " " + date.day + ", " + date.year,
+          publishedDate: date,
           provider1: val.author != null ? val.author : "",
           provider2: val.publisher != null ? "Published By: " + val.publisher : "",
           description: val.title,
@@ -219,8 +218,10 @@ export class DeepDiveService {
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data.forEach(function(val, index){
-      var date = moment(Number(val.last_updated) * 1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
+      for(var p in val.article_data){
+        var dataLists = val.article_data[p];
+      }
+      var date = GlobalFunctions.sntGlobalDateFormatting(val.last_updated,"defaultDate");
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),
           keyword: key.replace('-', ' ').toUpperCase(),
@@ -236,18 +237,47 @@ export class DeepDiveService {
       }
       articleStackArray.push(s);
     });
+
+    return articleStackArray;
+  }
+
+  transformToAiHeavyArticleRow(data, key){
+    data = data.data;
+    var sampleImage = "/app/public/placeholder_XL.png";
+    var articleStackArray = [];
+    data.forEach(function(val, index){
+      for(var p in val.article_data){
+        var eventType = val.article_data[p];
+      }
+      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.last_updated),"defaultDate");
+      var s = {
+          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
+          keyword: key.replace('-',' ').toUpperCase(),
+          publishedDate: date,
+          provider1: '',
+          provider2: '',
+          description: eventType.metaHeadline,
+          imageConfig: {
+            imageClass: "image-100x56",
+            /*hoverText: "View",*/
+            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,//TODO
+            urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
+          }
+      }
+      articleStackArray.push(s);
+    });
     return articleStackArray;
   }
 
   transformToArticleStack(data){
     var sampleImage = "/app/public/placeholder_XL.png";
     var topData = data.data[0];
-    var date = topData.publishedDate != null ? GlobalFunctions.formatDate(topData.publishedDate) : null;
+    var date = topData.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(topData.publishedDate),"defaultDate") : null;
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
     var articleStackData = {
         articleStackRoute: VerticalGlobalFunctions.formatSynRoute('story', topData.id),
         keyword: topData.keyword.replace('-', ' '),
-        date: date != null ? date.month + " " + date.day + ", " + date.year: "",
+        date: date != null ? date : "",
         headline: topData.title,
         provider1: topData.author != null ? "<span style='font-weight: 400;'>By</span> " + topData.author : "",
         provider2: topData.publisher != null ? "Published By: " + topData.publisher : "",
@@ -282,8 +312,7 @@ export class DeepDiveService {
 
     articles.forEach(function(val, index){
       var info = val.info;
-      var date = moment(Number(info.dateline)*1000);
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
+      var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline*1000,"defaultDate");
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
@@ -291,7 +320,6 @@ export class DeepDiveService {
           new_date: date,
           displayHeadline: info.displayHeadline,
         }
-
       articleStackArray.push(s);
     });
 
@@ -301,10 +329,9 @@ export class DeepDiveService {
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      val["date"] = val.dateline;
+      val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"defaultDate");
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
-        //console.log(VerticalGlobalFunctions.formatNewsRoute(val.id),"News Route");
       //}
     })
     return data;
