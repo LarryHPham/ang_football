@@ -49,7 +49,7 @@ export class GlobalSettings {
     private static _copyrightInfo: string = "USA Today Sports Images";
 
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
-    private static _mainPageUrl: string = "touchdownloyal.com";
+    public static _mainPageUrl: string = "touchdownloyal.com";
 
     private static _currentRouteParams: any;
     private static _router: any;
