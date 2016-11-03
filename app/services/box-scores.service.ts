@@ -114,16 +114,29 @@ export class BoxScoresService {
                 var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
               }
             }
+
+            var relPath = GlobalSettings.getRouteFullParams().relPath;
+            let domainHostName;
+            let urlRouteArray;
+            let domainParams = {}
+
+            domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+            if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+              domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+            }
+            domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
+            urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: p, eventID: val.event}];
             var Box = {
               keyword: p.replace('-', ' '),
               date: date,
-              url: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event),
+              url: urlRouteArray,
               teaser: teaser,
               imageConfig:{
                 imageClass: "image-320x180-sm",
                 imageUrl: homeImage,
                 hoverText: "View Article",
-                urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event)
+                urlRouteArray: urlRouteArray
               }
             }
             boxArray.push(Box);

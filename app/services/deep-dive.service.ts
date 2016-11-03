@@ -177,6 +177,19 @@ export class DeepDiveService {
         var curmonthdate = curdate.getDate();
         var date = moment(Number(val.publishedDate));
         date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + date.format('hh:mm A') + ' ET';
+
+        var relPath = GlobalSettings.getRouteFullParams().relPath;
+        let domainHostName;
+        let urlRouteArray;
+        let domainParams = {}
+
+        domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+        if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+          domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+        }
+        domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
+        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
+
         let carData = {
           image_url: GlobalSettings.getImageUrl(val['imagePath']),
           title:  "<span> Today's News </span>" + val['title'],
@@ -192,22 +205,22 @@ export class DeepDiveService {
       return transformData;
   }
 
-  transformToArticleRow(data, router){
+  transformToArticleRow(data){
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
     data = data.data.slice(1,9);
-
-    var domainHostName, domainParams, urlRouteArray;
     data.forEach(function(val, index){
-      if(router != null){
-        var relPath = GlobalFunctions.routerRelPath(router);
-        domainHostName = router.parent.parent.currentInstruction.component.routeName;
-        domainParams = router.parent.parent.currentInstruction.component.params;
-        domainParams.scope = val.league == 'fbs' ? 'ncaaf' : domainParams.scope;
-        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
-      }else{
-        urlRouteArray = VerticalGlobalFunctions.formatSynRoute('story', val.id);
+      var relPath = GlobalSettings.getRouteFullParams().relPath;
+      let domainHostName;
+      let urlRouteArray;
+      let domainParams = {}
+
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
       }
+      domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
+      urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
 
       var date = GlobalFunctions.formatDate(val.publishedDate);
       var s = {
@@ -229,26 +242,28 @@ export class DeepDiveService {
     });
     return articleStackArray;
   }
-  transformToAiArticleRow(data, key, router?){
+  transformToAiArticleRow(data, key){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
     var articleStackArray = [];
+
     data.forEach(function(val, index){
-      var domainHostName, domainParams, urlRouteArray;
-      if(router != null){
-        var relPath = GlobalFunctions.routerRelPath(router);
-        domainHostName = router.parent.parent.currentInstruction.component.routeName;
-        domainParams = router.parent.parent.currentInstruction.component.params;
-        domainParams.scope = val.league == 'fbs' ? 'ncaaf' : domainParams.scope;
-        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
-      }else{
-        urlRouteArray = VerticalGlobalFunctions.formatSynRoute('story', val.id);
+      var relPath = GlobalSettings.getRouteFullParams().relPath;
+      let domainHostName;
+      let urlRouteArray;
+      let domainParams = {}
+
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
       }
+      domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
+      urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: key, eventID: val.event_id}];
 
       var date = moment(Number(val.last_updated) * 1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
       var s = {
-          stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id),
+          stackRowsRoute: urlRouteArray,
           keyword: key.replace('-', ' ').toUpperCase(),
           publishedDate: date,
           provider1: '',
@@ -257,7 +272,7 @@ export class DeepDiveService {
           imageConfig: {
           imageClass: "image-100x56",
           imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
-          urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(key, val.event_id)
+          urlRouteArray: urlRouteArray
           }
       }
       articleStackArray.push(s);
@@ -265,22 +280,24 @@ export class DeepDiveService {
     return articleStackArray;
   }
 
-  transformToArticleStack(data, router?){
+  transformToArticleStack(data){
     var sampleImage = "/app/public/placeholder_XL.png";
     var topData = data.data[0];
     var date = topData.publishedDate != null ? GlobalFunctions.formatDate(topData.publishedDate) : null;
     var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
 
-    var domainHostName, domainParams, urlRouteArray;
-    if(router != null){
-      var relPath = GlobalFunctions.routerRelPath(router);
-      domainHostName = router.parent.parent.currentInstruction.component.routeName;
-      domainParams = router.parent.parent.currentInstruction.component.params;
-      domainParams.scope = topData.league == 'fbs' ? 'ncaaf' : domainParams.scope;
-      urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: topData.id}];
-    }else{
-      urlRouteArray = VerticalGlobalFunctions.formatSynRoute('story', topData.id);
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
     }
+    domainParams['scope'] = topData.league == 'fbs' ? 'ncaaf' : topData.league;
+
+    urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: topData.id}];
 
     var articleStackData = {
         articleStackRoute: urlRouteArray,
@@ -322,6 +339,19 @@ export class DeepDiveService {
       var info = val.info;
       var date = moment(Number(info.dateline)*1000);
       date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
+
+      var relPath = GlobalSettings.getRouteFullParams().relPath;
+      let domainHostName;
+      let urlRouteArray;
+      let domainParams = {}
+
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      }
+      domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
+
+      urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.keyword, eventID: eventID}];
       var s = {
           urlRouteArray: VerticalGlobalFunctions.formatAiArticleRoute(val.keyword, eventID),
           bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
@@ -347,14 +377,47 @@ export class DeepDiveService {
     })
     return data;
   }
+
+  transformVideoStack(data){
+
+    data.forEach(function(val, i){
+      var relPath = GlobalSettings.getRouteFullParams().relPath;
+      let domainHostName;
+      let urlRouteArray;
+      let domainParams = {}
+
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      }
+      domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
+
+      urlRouteArray = [relPath+domainHostName,domainParams,'Syndicated-article-page', {articleType:'video', eventID:val.id}];
+      val['urlRoute'] = urlRouteArray
+    })
+    return data;
+  }
+
   transformTileStack(data, scope) {
     data = data.data;
     if(scope == null){
       scope = 'NFL';
     }
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+    }
+    domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
+
     var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope.toUpperCase()];
-    let pickATeam = ['Pick-team-page'];
-    let leaguePage = ['League-page'];
+    let pickATeam = [relPath+domainHostName, domainParams,'Pick-team-page'];
+    let leaguePage = [relPath+domainHostName, domainParams,'League-page'];
     var tileLink = [pickATeam, pickATeam, leaguePage];
     var dataStack = [];
     // create array of imagePaths

@@ -34,10 +34,22 @@ export class VerticalGlobalFunctions {
    */
   static formatTeamRoute(teamName: string, teamId: string): Array<any> {
     var teamRoute: Array<any>;
+
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+    }
+    domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
     if(typeof teamName != 'undefined' && teamName != null){
       teamName = this.RegExpSpecialCharacters(teamName);
       teamName = GlobalFunctions.toLowerKebab(teamName);
-      teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+      teamRoute = [relPath+domainHostName,domainParams,'Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
     } else{
       teamRoute = null;
     }
@@ -61,6 +73,18 @@ export class VerticalGlobalFunctions {
    */
   static formatNewsRoute(articleId: string): Array<any> {
     var articleRoute: Array<any>;
+
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+    }
+    domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
     if(articleId != null) {
       articleRoute = ['Syndicated-article-page', {articleType: 'story', eventID: articleId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
     } else{
@@ -125,15 +149,11 @@ export class VerticalGlobalFunctions {
 
   static scopeRedirect(router, params?) {
     var domainHostName, domainParams, pageHostName, pageParams;
-    if(router.parent.parent != null){//if there are more parameters past home page
-      domainHostName = router.parent.parent.currentInstruction.component.routeName;
-      domainParams = router.parent.parent.currentInstruction.component.params;
-      pageHostName = router.parent.currentInstruction.component.routeName;
-      pageParams = router.parent.currentInstruction.component.params;
-    }else{// if there are no more parameters then set domain routeName and param
-      domainHostName = router.parent.currentInstruction.component.routeName;
-      domainParams = router.parent.currentInstruction.component.params;
-    }
+    GlobalSettings.setRouter(router);// sets the router
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    domainParams = GlobalSettings.getRouteFullParams().domainParams;
+    pageHostName = GlobalSettings.getRouteFullParams().pageHostName;
+    pageParams = GlobalSettings.getRouteFullParams().pageParams;
 
     //create relative path for the redirect
     var relPath = GlobalFunctions.routerRelPath(router);

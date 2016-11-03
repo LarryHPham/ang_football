@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router-deprecated';
+import {GlobalFunctions} from './global-functions';
 
 @Injectable()
 
@@ -50,6 +51,9 @@ export class GlobalSettings {
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     private static _mainPageUrl: string = "touchdownloyal.com";
 
+    private static _currentRouteParams: any;
+    private static _router: any;
+
     static getEnv(env:string):string {
       if (env == "localhost"){
           env = "dev";
@@ -74,7 +78,6 @@ export class GlobalSettings {
 
     static getApiUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
-
     }
 
     static getPartnerApiUrl(partnerID):string {
@@ -138,6 +141,42 @@ export class GlobalSettings {
 
     static getPartnerHomePageLinkName() {
       return this._partnerHomepageLinkName;
+    }
+
+    static setRouter(router){
+      this._router = router;
+    }
+
+    static getRouteFullParams():any {
+      var domainHostName, domainParams, pageHostName, pageParams;
+      var router = this._router;
+      var relPath = GlobalFunctions.routerRelPath(router);
+      if(router != null){
+        if(router.parent.parent != null){//if there are more parameters past home page
+          domainHostName = router.parent.parent.currentInstruction.component.routeName;
+          domainParams = router.parent.parent.currentInstruction.component.params;
+          pageHostName = router.parent.currentInstruction.component.routeName;
+          pageParams = router.parent.currentInstruction.component.params;
+          this._currentRouteParams = {
+            relPath: relPath,
+            domainHostName: router.parent.parent.currentInstruction.component.routeName,
+            domainParams: router.parent.parent.currentInstruction.component.params,
+            pageHostName: router.parent.currentInstruction.component.routeName,
+            pageParams: router.parent.currentInstruction.component.params,
+          };
+        }else{// if there are no more parameters then set domain routeName and param
+          domainHostName = router.parent.currentInstruction.component.routeName;
+          domainParams = router.parent.currentInstruction.component.params;
+          this._currentRouteParams = {
+            relPath: relPath,
+            domainHostName: router.parent.parent.currentInstruction.component.routeName,
+            domainParams: router.parent.parent.currentInstruction.component.params,
+            pageHostName: null,
+            pageParams: null,
+          };
+        }
+      }
+      return this._currentRouteParams;
     }
 
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
