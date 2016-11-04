@@ -134,10 +134,13 @@ export class DeepDivePage{
             this.scopeDisplayed = 'Upcoming NFL Games';
             this.sideScrollIcon = 'fa fa-calendar';
           break;
+          case 'fbs':
           case 'ncaaf':
             this.scopeDisplayed = 'Upcoming NCAAF Games';
             this.sideScrollIcon = 'fa fa-calendar';
           break;
+          case 'all':
+          case 'football':
           case 'home':
             this.scopeDisplayed = 'Football';
             this.sideScrollIcon = 'fa fa-tdl-football';
