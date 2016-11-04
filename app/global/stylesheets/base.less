@@ -292,8 +292,20 @@ a.text-master{
 .text-master{
   color: @masterBrandColor;
 }
-.setWidgetHeight{
-  max-height: 250px;
+.res640{
+  @media @mobile{margin-bottom: 20px}
+  @media @tablet{margin-bottom: 30px}
+  @media @desktop-m{margin-bottom:0}
+}
+.res1024{
+  @media @desktop-m{margin-bottom: 40px}
+  @media @desktop-l{margin-bottom: 0}
+}
+.resAll{
+  @media @mobile{margin-bottom: 20px}
+  @media @tablet{margin-bottom: 30px}
+  @media @desktop-m{margin-bottom: 40px}
+  @media @desktop-l{margin-bottom: 0}
 }
 /****************/
 /* @Code Styles */

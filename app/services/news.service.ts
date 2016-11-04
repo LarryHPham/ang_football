@@ -33,7 +33,6 @@ export class NewsService {
     }
 
     fullUrl += '/'+type+'/'+scope+'/'+urlParams.limit+'/'+urlParams.pageNum+targetId;
-
     return this.http.get(fullUrl, {
       headers: headers
     })
@@ -60,7 +59,7 @@ export class NewsService {
         description: val.teaser.replace(/<\/?[^>]+(>|$)/g, ""),
         newsUrl: val.articleUrl,
         author: _getHostName(val.articleUrl) != null ? _getHostName(val.articleUrl) : 'Anonymous',
-        published: moment(Number(val.publishedDate)).format("dddd, MMM. Do, YYYY"),
+        published: GlobalFunctions.sntGlobalDateFormatting(+val.publishedDate,'dayOfWeek'),
         backgroundImage: GlobalSettings.getImageUrl('/TDL/stock_images/TDL_Stock-3.png'),
         footerData: {
           infoDesc: 'Want to check out the full story?',

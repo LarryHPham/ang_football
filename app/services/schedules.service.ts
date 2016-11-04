@@ -263,13 +263,12 @@ export class SchedulesService {
         }
       }
 
-      let date = moment(Number(val.eventStartTime)).tz('America/New_York').format('MMM. D, YYYY');
-      let time = moment(Number(val.eventStartTime)).tz('America/New_York').format('h:mm A z');
+      let date = GlobalFunctions.sntGlobalDateFormatting(Number(val.eventStartTime),"timeZone");
       let team1FullName = val.team1FullName;
       let team2FullName = val.team2FullName;
 
       newData = {
-        date: date + " &bull; " + time,
+        date: date,
         awayImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(val.team2FullName, val.team2Id)),
         homeImageConfig: self.imageData('image-44', 'border-1', GlobalSettings.getImageUrl(val.team1Logo), VerticalGlobalFunctions.formatTeamRoute(val.team1FullName, val.team1Id)),
         awayTeamName: scope =='fbs' ? val.team2Abbreviation: team2FullName.replace(val.team2Market+" ",''),
@@ -330,7 +329,7 @@ export class SchedulesService {
             if(typeof dateObject[splitToDate] == 'undefined'){
               dateObject[splitToDate] = {};
               dateObject[splitToDate]['tableData'] = [];
-              dateObject[splitToDate]['display'] = moment(Number(val.eventTimestamp)*1000).tz('America/New_York').format('dddd, MMM. Do, YYYY') + " Games";
+              dateObject[splitToDate]['display'] = GlobalFunctions.sntGlobalDateFormatting(val.eventTimestamp*1000,"timeZone") + " Games";
               dateObject[splitToDate]['tableData'].push(val);
             }else{
               dateObject[splitToDate]['tableData'].push(val);
@@ -340,7 +339,7 @@ export class SchedulesService {
           var splitToDate = moment().tz('America/New_York').format('YYYY-MM-DD');
           dateObject[splitToDate] = {};
           dateObject[splitToDate]['tableData'] = [];
-          dateObject[splitToDate]['display'] = moment().tz('America/New_York').format('dddd, MMM. Do, YYYY') + " Games";
+          dateObject[splitToDate]['display'] = GlobalFunctions.sntGlobalDateFormatting(splitToDate,"dayOfWeek") + " Games";
         }
         for(var date in dateObject){
           var newPostModel = new SchedulesTableModel(dateObject[date]['tableData'], eventStatus, teamId, isTeamProfilePage);

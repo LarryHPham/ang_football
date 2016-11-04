@@ -121,7 +121,7 @@ export class SyndicatedArticlePage{
           }
           this.metaTags(data);
           this.articleData = data.data;
-          this.articleData.publishedDate = moment.unix(this.articleData.publishedDate/1000).format("MMM. Do, YYYY h:mm A") + " EST";
+          this.articleData.publishedDate = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate/1000),"timeZone");
         }
       )
     }
@@ -218,9 +218,7 @@ export class SyndicatedArticlePage{
     }
 
     formatDate(date) {
-
-        return moment(date).format("MMM. DD, YYYY | h:mm A ")
-
+        return GlobalFunctions.sntGlobalDateFormatting(date,"timeZone");
     }
 
 }
