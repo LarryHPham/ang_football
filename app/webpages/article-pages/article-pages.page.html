@@ -19,7 +19,7 @@
                   </div>
               </span>
               <section class=" articles-page-container row">
-                <div class="arpt col-xs-12 col-lg-8">
+                <div class="arpt col-xs-12 col-lg-9">
                     <div class="arpt-date">Posted on: {{date}}</div>
                     <article-content-component class="articles-page-padding" [articleType]="articleType"
                                                [articleSubType]="articleSubType"
@@ -36,7 +36,7 @@
                     <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
                 </div>
 
-                <div class="vertical-widget col-lg-4">
+                <div class="vertical-widget col-lg-3">
                     <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
                 </div>
             </section>

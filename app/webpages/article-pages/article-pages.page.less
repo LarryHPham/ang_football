@@ -1,7 +1,7 @@
 .vertical-widget{
     @media @new-mobile{display:none}
     @media @new-tablet{display:none}
-    @media @new-desktop-l{display:block}
+    @media @new-desktop-l{display:block;padding-left:8px}
 }
 .large {
   display: block;
@@ -101,6 +101,7 @@
     overflow: hidden;
     position: relative;
     text-align: left;
+    @media @new-desktop-l{padding-right: 7px}
     &-author {
       width: 200%;
       height: 50px;
