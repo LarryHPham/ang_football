@@ -224,6 +224,7 @@ export class SchedulesService {
 
   setupSlideScroll(data, scope, profile, eventStatus, limit, pageNum, callback: Function, year?, week?){
     //(scope, profile, eventStatus, limit, pageNum, id?)
+    scope = scope == 'home' ? 'nfl' : scope;
     this.getBoxSchedule(scope, 'league', eventStatus, limit, pageNum)
     .subscribe( data => {
       var formattedData = this.transformSlideScroll(scope, data.data);
