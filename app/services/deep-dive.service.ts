@@ -176,7 +176,6 @@ export class DeepDiveService {
         var curdate = new Date();
         var curmonthdate = curdate.getDate();
         var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone");
-        date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + date.format('hh:mm A') + ' ET';
 
         var relPath = GlobalSettings.getRouteFullParams().relPath;
         let domainHostName;
