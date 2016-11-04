@@ -107,7 +107,7 @@ export class SearchService{
             let teamName = item.teamName;
 
             //generate route for team
-            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId, true);
             if(partnerScope.isPartner && item.scope != null && !partnerScope.isSubdomainPartner){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partner_id:partnerScope.partnerName});
             }else{
@@ -138,7 +138,7 @@ export class SearchService{
             count++;
             let item = playerResults[i];
             let playerName = item.playerName;
-            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
+            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId, true);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -297,7 +297,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
-            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId);
+            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId, true);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -343,7 +343,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
-            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId);
+            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId, true);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
