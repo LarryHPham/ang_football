@@ -176,6 +176,10 @@ export class TeamPage implements OnInit {
 
     constructorControl:boolean = true;
 
+    teamName: string;
+    activeTransactionsTab: string;
+    transactionModuleFooterParams: any;
+
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
@@ -201,6 +205,7 @@ export class TeamPage implements OnInit {
                 private _headlineDataService:HeadlineDataService,
                 private _seoService: SeoService,
                 private _videoBatchService: VideoService) {
+
         this.pageParams = {
             teamId: Number(_params.get("teamId"))
         };
@@ -222,6 +227,12 @@ export class TeamPage implements OnInit {
             }
             this.setupProfileData(this.partnerID,this.scope);
             this.constructorControl = false;
+          }
+
+          this.transactionModuleFooterParams = {
+              scope: this.scope,
+              teamName: _params.get("teamName"),
+              teamId: _params.get("teamId")
           }
         });
     }
@@ -252,7 +263,6 @@ export class TeamPage implements OnInit {
                   this.profileName = headerData.teamName != null ? this.profileName + ' ' + headerData.teamName : this.profileName;
                 }
                 this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
-
                 this.dailyUpdateModule(this.pageParams.teamId);
 
                 setTimeout(() => { // defer loading everything below the fold
@@ -266,7 +276,8 @@ export class TeamPage implements OnInit {
                 this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, this.profileName, true);
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.pageParams.teamId);
+                this.activeTransactionsTab = "Transactions"; // default tab is Transactions
+                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.pageParams.teamId, this.activeTransactionsTab);
                 //this.loadMVP
                 this.setupComparisonData();
 
@@ -498,6 +509,9 @@ export class TeamPage implements OnInit {
     }
 
     private transactionsTab(tab) {
+        console.log('-----transactionsTab-----');
+        console.log('tab - ',tab);
+        console.log('-----');
         this.transactionsActiveTab = tab;
         this.getTransactionsData();
     }

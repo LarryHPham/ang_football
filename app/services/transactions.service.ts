@@ -64,6 +64,7 @@ export class TransactionsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
   public transactionsTotal: any;
+  public activeTab: string;
 
   constructor(public http: Http) {}
 
@@ -132,14 +133,14 @@ export class TransactionsService {
     return this.getTabs(errorMessagePrepend, true);
   }
 
-  loadAllTabsForModule(profileName: string, teamId?: number): TransactionModuleData {
+  loadAllTabsForModule(profileName: string, teamId?: number, tab?:any): TransactionModuleData {
     var route, errorMessagePrepend;
     if ( teamId ) {
-      route = ['Transactions-page',{teamName: GlobalFunctions.toLowerKebab(profileName), teamId:teamId, limit:20, pageNum: 1}]
+      route = ['Transactions-page',{teamName: GlobalFunctions.toLowerKebab(profileName), teamId:teamId, limit:20, pageNum: 1, type: tab}] //TODO
       errorMessagePrepend = "Sorry, the " + profileName + " do not currently have any data for ";
     }
     else { //is league-wide data
-      route = ['Transactions-tdl-page',{limit:20, pageNum: 1}];
+      route = ['Transactions-tdl-page',{limit:20, pageNum: 1, type: 'Transactions'}];
       errorMessagePrepend = "Sorry, " + profileName + " does not currently have any data for ";
     }
 
@@ -153,6 +154,7 @@ export class TransactionsService {
   getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, sortOrder?, limit?, page?){
     //Configure HTTP Headers
     var headers = this.setToken();
+    this.activeTab = tab.tabDataKey;
     if( limit == null ){ limit = 4 };
     if( page == null ){ page = 1 };
     if ( sortOrder == null ) { sortOrder = 'desc' };

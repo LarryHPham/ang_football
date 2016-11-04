@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouteParams} from '@angular/router-deprecated';
+import {Router, ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {Title} from '@angular/platform-browser';
 
 import {TitleComponent, TitleInputData} from '../../fe-core/components/title/title.component';
@@ -47,11 +47,18 @@ export class TransactionsPage implements OnInit {
     dropdownKey1: string;
 
     paginationParameters: PaginationParameters;
+    selectedTabName: string;
 
     public scope: string;
     public partnerID: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+
+    private teamNameParam: string;
+    private teamIdParam: string;
+    private limitParam: string;
+    private pageNumParam: string;
+    private transactionTypeParam: string;
 
     constructor(private _router: Router,
         private _transactionsService: TransactionsService,
@@ -68,11 +75,13 @@ export class TransactionsPage implements OnInit {
         GlobalSettings.getParentParams(this._router, parentParams => {
             this.partnerID = parentParams.partnerID;
             this.scope = parentParams.scope;
-        }
-        );
+        });
 
+        this.teamNameParam = _params.get("teamName");
+        this.teamIdParam = _params.get("teamId");
         this.limit = Number(this._params.params['limit']);
         this.pageNum = Number(this._params.params['pageNum']);
+        this.transactionTypeParam = _params.get("type");
 
         if (this.pageNum === 0) {
             this.pageNum = 1; //page index starts at one
@@ -81,6 +90,11 @@ export class TransactionsPage implements OnInit {
 
     ngOnInit() {
         this.getProfileInfo();
+        this.selectedTabName = this.capitalize(this.transactionTypeParam); // TODO get rid of this function
+    }
+
+    capitalize(s) {
+        return s[0].toUpperCase() + s.slice(1);
     }
 
     getProfileInfo() {
@@ -128,12 +142,13 @@ export class TransactionsPage implements OnInit {
         }
     } //getProfileInfo()
 
-    getTransactionsPage() {
-        var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.selectedTabKey);
+    getTransactionsPage() { // Get data based on selected tab
+        var matchingTabs = this.tabs.filter(tab => tab.tabDisplay.toLowerCase() == this.selectedTabName.toLowerCase());
+
         if (matchingTabs.length > 0) {
             var tab = matchingTabs[0];
 
-            this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
+            this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
                 .subscribe(
                 transactionsData => {
                     if (this.transactionFilter1 == undefined) {
@@ -150,13 +165,25 @@ export class TransactionsPage implements OnInit {
         }
     } //getTransactionsPage()
 
-    transactionsTab(tab) {
-        if (this.selectedTabKey) {
-            this.profileHeaderData.text3 = tab.tabDisplay + ' - ' + this.profileName;
-        }
-        this.selectedTabKey = tab.tabDataKey;
-        this.transactionsActiveTab = tab;
+    transactionsTab(tab) { // set selected tab and route page if necessary
+        var tabRoute;
+        var tabNameFrom = this.selectedTabName; // capture previous value before changing it
+        var tabNameTo = tab.tabDisplay; // newly selected tab
+        this.selectedTabName = tab.tabDisplay
 
+        if ( tabNameTo != tabNameFrom ) { // check if clicked tab is already active
+            if ( this.teamIdParam ) {
+                tabRoute = ["Transactions-page", { teamName: this.teamNameParam, teamId: this.teamIdParam, limit: this.limit, pageNum: 1, type: tab.tabDataKey}];
+                this._router.navigate(tabRoute);
+            }
+            else {
+                tabRoute = ['Transactions-tdl-page',{limit:20, pageNum: 1, type: tab.tabDataKey}];
+                this._router.navigate(tabRoute);
+            }
+        }
+
+
+        this.transactionsActiveTab = tab;
         this.getTransactionsPage();
     } //transactionsTab(tab)
 
@@ -188,6 +215,10 @@ export class TransactionsPage implements OnInit {
 
         if (params['teamName'] != null) {
             navigationParams['teamName'] = params['teamName'];
+        }
+
+        if (params['type'] != null) {
+            navigationParams['type'] = params['type'];
         }
 
         var navigationPage = params['teamId'] != null ? 'Transactions-page' : 'Transactions-tdl-page';
