@@ -414,7 +414,6 @@ export class DeepDiveService {
     }
     domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
-
     var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope.toUpperCase()];
     let pickATeam = [relPath+domainHostName, domainParams,'Pick-team-page'];
     let leaguePage = [relPath+domainHostName, domainParams,'League-page'];
