@@ -114,20 +114,16 @@ export class ArticlePages implements OnInit {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         } else {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
-                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
-                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         }
                         this.articleType = articleType[1];
                         this.articleSubType = articleType[2];
-                        //this.articleType = articleType[0];
-                        //this.articleSubType = articleType[2];
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
                         var date  = Article['data'][0]['article_data'][this.pageIndex].dateline;
                         var date1 = moment(date).format();
-                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
+                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY at h:mmA (z)');
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
