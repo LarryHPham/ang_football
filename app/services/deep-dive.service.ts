@@ -365,7 +365,6 @@ export class DeepDiveService {
     articles.forEach(function(val, index){
       var info = val.info;
       var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline*1000,"defaultDate");
-      date = GlobalFunctions.formatAPMonth(date.month()) + date.format(' DD, YYYY');
 
       var relPath = GlobalSettings.getRouteFullParams().relPath;
       let domainHostName;
