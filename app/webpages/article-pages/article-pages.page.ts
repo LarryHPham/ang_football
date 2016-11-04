@@ -18,6 +18,7 @@ import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 declare var moment;
 
@@ -34,7 +35,8 @@ declare var moment;
         DisqusComponent,
         LoadingComponent,
         TrendingComponent,
-        SidekickContainerComponent
+        SidekickContainerComponent,
+        WidgetModule
     ],
 })
 

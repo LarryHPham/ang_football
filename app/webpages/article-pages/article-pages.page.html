@@ -7,7 +7,7 @@
       </div>
       <loading-component *ngIf="!articleData && !error"></loading-component>
       <span *ngIf="articleData">
-          <share-links-component class="articles-page-padding" [shareUrl]="rawUrl" [isMain]="true"></share-links-component>
+          <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
           <h1 class="articles-page-title">{{title}}</h1>
           <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
               <span *ngIf="imageData">
@@ -18,22 +18,28 @@
                                              [imageTitle]="imageTitle"></images-media-carousel>
                   </div>
               </span>
-              <div class="arpt">
-                  <div class="arpt-date">Posted on: {{date}}</div>
-              </div>
-              <article-content-component class="articles-page-padding" [articleType]="articleType"
-                                         [articleSubType]="articleSubType"
-                                         [articleData]="articleData"
-                                         [teamId]="teamId"
-                                         [imageLinks]="imageLinks"
-                                         [partnerId]="partnerId"
-                                         [scope]="scope"
-              ></article-content-component>
-              <sidekick-container-component></sidekick-container-component>
-              <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
-              <recommendations-component [randomHeadlines]="randomHeadlines"
-                                         [images]="images"></recommendations-component>
-              <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
+              <section class=" articles-page-container row">
+                <div class="arpt col-xs-12 col-lg-8">
+                    <div class="arpt-date">Posted on: {{date}}</div>
+                    <article-content-component class="articles-page-padding" [articleType]="articleType"
+                                               [articleSubType]="articleSubType"
+                                               [articleData]="articleData"
+                                               [teamId]="teamId"
+                                               [imageLinks]="imageLinks"
+                                               [partnerId]="partnerId"
+                                               [scope]="scope"
+                    ></article-content-component>
+                    <sidekick-container-component></sidekick-container-component>
+                    <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
+                    <recommendations-component [randomHeadlines]="randomHeadlines"
+                                               [images]="images"></recommendations-component>
+                    <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
+                </div>
+
+                <div class="vertical-widget col-lg-4">
+                    <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
+                </div>
+            </section>
           </sidekick-wrapper-ai>
       </span>
     </div>
