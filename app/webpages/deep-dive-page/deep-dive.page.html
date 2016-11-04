@@ -1,12 +1,12 @@
 <section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
   <section class="deep-dive-container1">
-	<div [ngStyle]="{'width':'100%', 'height': 'auto'}" class="carWrapper">
-    <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" [carData]="carouselData" [videoData]="videoData" auto-play="true">
-    </side-scroll-test>
+  	<div [ngStyle]="{'width':'100%', 'height': 'auto'}" class="carWrapper">
+      <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" (changeScope)="changeScope($event)" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" auto-play="true">
+      </side-scroll-test>
     </div>
     <div class="spacer" id="deep-dive-blueBar">
       <section class="deep-dive-adWrap">
-        <iframe *ngIf="scope == 'nfl'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
+        <iframe *ngIf="scope == 'nfl' || scope == 'home'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
         <iframe *ngIf="scope == 'fbs'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/ncaafbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
       </section>
     </div>
@@ -14,7 +14,7 @@
   <section class="deep-dive-container2">
     <div class="deep-dive-container2a">
       <div class="deep-dive-module">
-        <side-scroll-schedules *ngIf="sideScrollData" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="changeScopeVar" (changeScope)="changeScope($event)"></side-scroll-schedules>
+        <side-scroll-schedules [icon]="sideScrollIcon" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="changeScopeVar" (changeScope)="changeScope($event)"></side-scroll-schedules>
       </div>
 
       <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>

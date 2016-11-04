@@ -21,6 +21,8 @@ export class SeoService {
 
   private canonicalLink: HTMLElement;
 
+  private themeColor: HTMLElement;
+
   private ogTitle: HTMLElement;
   private ogType: HTMLElement;
   private ogUrl: HTMLElement;
@@ -44,6 +46,7 @@ export class SeoService {
     */
     this.headElement = this.DOM.query('head');
     this.metaDescription = this.getOrCreateMetaElement('description');
+    this.themeColor = this.getOrCreateMetaElement('theme-color');
     this.robots = this.getOrCreateMetaElement('robots');
     this.ogTitle = this.getOgMetaElement("og:title");
     this.ogType = this.getOgMetaElement("og:type");
@@ -107,7 +110,9 @@ export class SeoService {
   public setMetaRobots(robots: string) {
     this.robots.setAttribute('content', robots);
   }
-
+  public setThemeColor(color: string) {
+    this.themeColor.setAttribute('content', color);
+  }
   public setOgTitle(newTitle: string) {
     this.ogTitle.setAttribute('content', newTitle);
   }
@@ -129,6 +134,7 @@ export class SeoService {
     * @param name
     * @returns {HTMLElement}
     */
+
     private getOrCreateMetaElement(name: string): HTMLElement {
       let el: HTMLElement;
       el = this.DOM.query('meta[name=' + name + ']');

@@ -306,6 +306,8 @@ export class TeamPage implements OnInit {
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('Index, Follow');
 
+      let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+      this._seoService.setThemeColor(color);
       //grab domain for json schema
       let domainSite;
       if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
@@ -388,8 +390,9 @@ export class TeamPage implements OnInit {
        // if(teamID)
         this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
             .subscribe(data => {
+              ;
                 this.firstVideo = data.data[first].videoLink;
-                this.videoData = data.data.slice(1);
+                this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
             },
             err => {
                 console.log("Error getting video data");

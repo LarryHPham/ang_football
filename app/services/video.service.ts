@@ -31,4 +31,24 @@ export class VideoService {
                 return data;
             })
     }
+
+    transformVideoStack(data){
+
+      data.forEach(function(val, i){
+        var relPath = GlobalSettings.getRouteFullParams().relPath;
+        let domainHostName;
+        let urlRouteArray;
+        let domainParams = {}
+
+        domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+        if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+          domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+        }
+        domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
+
+        urlRouteArray = [relPath+domainHostName,domainParams,'Syndicated-article-page', {articleType:'video', eventID:val.id}];
+        val['urlRoute'] = urlRouteArray
+      })
+      return data;
+    }
 }
