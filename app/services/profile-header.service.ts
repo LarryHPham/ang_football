@@ -246,7 +246,7 @@ export class ProfileHeaderService {
     return {
       imageURL: '', //TODO
       imageRoute: VerticalGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
-      text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
+      text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
       icon: 'fa fa-map-marker'
@@ -257,7 +257,7 @@ export class ProfileHeaderService {
     return {
       imageURL: GlobalSettings.getImageUrl(data.leagueLogo),
       imageRoute: ["League-page"],
-      text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
+      text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
       text3: pageName,
       icon: 'fa fa-map-marker'
