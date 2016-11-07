@@ -90,12 +90,10 @@ export class TransactionsPage implements OnInit {
 
     ngOnInit() {
         this.getProfileInfo();
-        this.selectedTabName = this.capitalize(this.transactionTypeParam); // TODO get rid of this function
+        this.selectedTabName = this.capitalizeFirstLetter(this.transactionTypeParam); // use this function to match url param with display title of tabs
     }
 
-    capitalize(s) {
-        return s[0].toUpperCase() + s.slice(1);
-    }
+    capitalizeFirstLetter(s) { return s[0].toUpperCase() + s.slice(1); }
 
     getProfileInfo() {
         if (this.pageParams.teamId) {
@@ -143,7 +141,7 @@ export class TransactionsPage implements OnInit {
     } //getProfileInfo()
 
     getTransactionsPage() { // Get data based on selected tab
-        var matchingTabs = this.tabs.filter(tab => tab.tabDisplay.toLowerCase() == this.selectedTabName.toLowerCase());
+        var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName);
 
         if (matchingTabs.length > 0) {
             var tab = matchingTabs[0];
@@ -169,7 +167,7 @@ export class TransactionsPage implements OnInit {
         var tabRoute;
         var tabNameFrom = this.selectedTabName; // capture previous value before changing it
         var tabNameTo = tab.tabDisplay; // newly selected tab
-        this.selectedTabName = tab.tabDisplay
+        this.selectedTabName = tab.tabDisplay;
 
         if ( tabNameTo != tabNameFrom ) { // check if clicked tab is already active
             if ( this.teamIdParam ) {

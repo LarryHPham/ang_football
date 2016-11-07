@@ -509,9 +509,6 @@ export class TeamPage implements OnInit {
     }
 
     private transactionsTab(tab) {
-        console.log('-----transactionsTab-----');
-        console.log('tab - ',tab);
-        console.log('-----');
         this.transactionsActiveTab = tab;
         this.getTransactionsData();
     }
