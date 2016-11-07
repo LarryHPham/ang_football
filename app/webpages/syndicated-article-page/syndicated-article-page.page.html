@@ -8,9 +8,7 @@
 
     <span *ngIf="articleData">
       <shareLinks-component *ngIf="articleData.articleUrl" [shareUrl]="articleData.articleUrl" [isMain]="true"></shareLinks-component>
-         <shareLinks-component *ngIf="articleData.videoLink" [shareUrl]="articleData.videoLink" [isMain]="true"></shareLinks-component>
-
-
+      <shareLinks-component *ngIf="articleData.videoLink" [shareUrl]="articleData.videoLink" [isMain]="true"></shareLinks-component>
 
       <h1 class="articles-page-title" [innerHTML]="articleData.title | safeHtml"></h1>
         <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [syndicated]="true">
@@ -25,11 +23,11 @@
             </div>
             <div class="arpt" *ngIf="articleType == 'story'">
                 <span class="arpt-author" ><p>Written By:</p> <b>{{articleData.publisher}}</b></span>
-                <span class="arpt-date"><p>Posted: on </p>  {{" "+ articleData.publishedDate}}</span>
+                <span class="arpt-date"><p>Posted on </p><span class="upper-case">{{articleData.publishedDate}}</span></span>
             </div>
             <div class="arpt" *ngIf="articleType == 'video'">
 
-                <span class="arpt-date"><p>Posted: on </p> {{" "+ formatDate(articleData.pubDate)}}</span>
+                <span class="arpt-date"><p>Posted on </p><span class="upper-case">{{ formatDate(articleData.pubDate)}}</span></span>
             </div>
             <div class="content-exerpt" *ngIf="articleType == 'story'"  [innerHTML]="articleData.teaser | safeHtml">
             </div>

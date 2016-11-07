@@ -63,7 +63,6 @@ export class ArticlePages implements OnInit {
     articleType:string;
     articleSubType:string;
     content:string;
-    comment:string;
     eventID:string;
     eventType:string;
     date:string;
@@ -124,7 +123,6 @@ export class ArticlePages implements OnInit {
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
                         this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'][this.pageIndex].dateline,"timeZone");
-                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
                         if (this.teamId == null) {

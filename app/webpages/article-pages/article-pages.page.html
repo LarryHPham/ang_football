@@ -30,7 +30,7 @@
                                                [scope]="scope"
                     ></article-content-component>
                     <sidekick-container-component></sidekick-container-component>
-                    <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
+                    <disqus-component *ngIf="!checkPartner"></disqus-component>
                     <recommendations-component [randomHeadlines]="randomHeadlines"
                                                [images]="images"></recommendations-component>
                     <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
