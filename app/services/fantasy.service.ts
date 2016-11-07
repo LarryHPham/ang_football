@@ -17,6 +17,7 @@ export class FantasyService {
         if (playerId !== undefined) {
             fullUrl += playerId;
         }
+        console.log(fullUrl);
         return this.http.get(fullUrl)
             .map(res => res.json())
             .map(data => data.data[0]);

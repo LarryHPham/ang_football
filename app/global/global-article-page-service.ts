@@ -13,11 +13,11 @@ export class ArticleDataService {
         var fullUrl = GlobalSettings.getArticleUrl();
         //having the query string is only temporary until the partner site link issue is figured out.
         if (!isFantasyReport) {
-            return this.http.get(fullUrl + "articles?articleType=" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope)
+            return this.http.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope)
                 .map(res => res.json())
                 .map(data => data);
         } else {
-            return this.http.get(fullUrl + "articles?articleType=" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope)
+            return this.http.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope)
                 .map(res => res.json())
                 .map(data => data);
         }
