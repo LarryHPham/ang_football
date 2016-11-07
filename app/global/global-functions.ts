@@ -562,7 +562,7 @@ export class GlobalFunctions {
       let dd = moment(unixTimestamp).tz('America/New_York').format("DD");
       let year = moment(unixTimestamp).tz('America/New_York').format("YYYY");
       let shortDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY");
-      let timeZone = moment(unixTimestamp).tz('America/New_York').format('h:mmA (z)');
+      let timeZone = moment(unixTimestamp).tz('America/New_York').format('h:mmA z');
       let defaultDate = month + ' ' + dd + ', ' + year;
 
       switch(identifier){
@@ -574,6 +574,8 @@ export class GlobalFunctions {
           return newDate;
         case 'timeZone': newDate = day + ', ' + defaultDate + ' at ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
           return newDate;
+        case 'bulletedShortDateTime': newDate = day + ', ' + month + ' ' + dd + ' &bull; ' + moment(unixTimestamp).tz('America/New_York').format('h:mmA z'); // Tuesday, Jan. 14, 2016 12:00 (EST)
+            return newDate;
         case 'custom': break;
         default:
           return defaultDate;

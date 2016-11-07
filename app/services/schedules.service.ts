@@ -262,8 +262,10 @@ export class SchedulesService {
           reportText = 'POST GAME REPORT';
         }
       }
+      var today = moment().format('MM/DD/YYYY');
+      var gameDate = moment(val.eventStartTime).format('MM/DD/YYYY');
+      let date = today == gameDate ? 'Today &bull; '+moment(val.eventStartTime).tz('America/New_York').format('h:mmA (z)') : GlobalFunctions.sntGlobalDateFormatting(Number(val.eventStartTime),"bulletedShortDateTime");
 
-      let date = GlobalFunctions.sntGlobalDateFormatting(Number(val.eventStartTime),"timeZone");
       let team1FullName = val.team1FullName;
       let team2FullName = val.team2FullName;
 
