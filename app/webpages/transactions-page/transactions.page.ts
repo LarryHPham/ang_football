@@ -77,11 +77,11 @@ export class TransactionsPage implements OnInit {
             this.scope = parentParams.scope;
         });
 
+        this.transactionTypeParam = _params.get("type");
         this.teamNameParam = _params.get("teamName");
         this.teamIdParam = _params.get("teamId");
         this.limit = Number(this._params.params['limit']);
         this.pageNum = Number(this._params.params['pageNum']);
-        this.transactionTypeParam = _params.get("type");
 
         if (this.pageNum === 0) {
             this.pageNum = 1; //page index starts at one

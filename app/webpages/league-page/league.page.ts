@@ -260,7 +260,7 @@ export class LeaguePage implements OnInit {
                   this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
 
                   this.activeTransactionsTab = "Transactions";
-                  this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
+                  this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.activeTransactionsTab);
 
                   //Initial position to display in MVP
                   this.globalMVPPosition = 'cb';

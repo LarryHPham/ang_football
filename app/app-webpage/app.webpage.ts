@@ -190,7 +190,7 @@ declare var jQuery: any;
         component: TransactionsPage
     },
     {
-        path: '/transactions/:teamName/:teamId/:limit/:pageNum/:type',
+        path: '/:type/:teamName/:teamId/:limit/:pageNum/',
         name: 'Transactions-page',
         component: TransactionsPage
     },
@@ -200,7 +200,7 @@ declare var jQuery: any;
         component: TransactionsPage
     },
     {
-        path: '/transactions/league/:limit/:pageNum/:type',
+        path: '/:type/league/:limit/:pageNum/',
         name: 'Transactions-tdl-page',
         component: TransactionsPage
     },

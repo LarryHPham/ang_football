@@ -277,7 +277,7 @@ export class TeamPage implements OnInit {
                 this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
                 this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, this.profileName, true);
                 this.activeTransactionsTab = "Transactions"; // default tab is Transactions
-                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.pageParams.teamId, this.activeTransactionsTab);
+                this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
                 //this.loadMVP
                 this.setupComparisonData();
 

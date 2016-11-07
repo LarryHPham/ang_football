@@ -133,14 +133,14 @@ export class TransactionsService {
     return this.getTabs(errorMessagePrepend, true);
   }
 
-  loadAllTabsForModule(profileName: string, teamId?: number, tab?:any): TransactionModuleData {
+  loadAllTabsForModule(profileName: string, tab?:any, teamId?: number): TransactionModuleData {
     var route, errorMessagePrepend;
     if ( teamId ) {
-      route = ['Transactions-page',{teamName: GlobalFunctions.toLowerKebab(profileName), teamId:teamId, limit:20, pageNum: 1, type: tab}] //TODO
+      route = ['Transactions-page',{teamName: GlobalFunctions.toLowerKebab(profileName), type: tab, teamId:teamId, limit:20, pageNum: 1}] //TODO
       errorMessagePrepend = "Sorry, the " + profileName + " do not currently have any data for ";
     }
     else { //is league-wide data
-      route = ['Transactions-tdl-page',{limit:20, pageNum: 1, type: 'Transactions'}];
+      route = ['Transactions-tdl-page',{type: 'Transactions', limit:20, pageNum: 1}];
       errorMessagePrepend = "Sorry, " + profileName + " does not currently have any data for ";
     }
 
