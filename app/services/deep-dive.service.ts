@@ -220,7 +220,7 @@ export class DeepDiveService {
       }
       domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
       urlRouteArray = [relPath+domainHostName,domainParams,'Syndicated-article-page', {articleType: 'story', eventID: val.id}];
-      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"defaultDate");
+      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"dayOfWeek");
 
       var s = {
           stackRowsRoute: urlRouteArray,
@@ -259,7 +259,7 @@ export class DeepDiveService {
       domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
       urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: key, eventID: val.event_id}];
 
-      var date = GlobalFunctions.sntGlobalDateFormatting(val.last_updated,"defaultDate");
+      var date = GlobalFunctions.sntGlobalDateFormatting(val.last_updated,"dayOfWeek");
       var s = {
           stackRowsRoute: urlRouteArray,
           keyword: key.replace('-', ' ').toUpperCase(),
@@ -287,7 +287,7 @@ export class DeepDiveService {
       for(var p in val.article_data){
         var eventType = val.article_data[p];
       }
-      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.last_updated),"defaultDate");
+      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.last_updated),"dayOfWeek");
       var s = {
           stackRowsRoute: VerticalGlobalFunctions.formatAiArticleRoute(p, val.event_id),
           keyword: key.replace('-',' ').toUpperCase(),
@@ -329,7 +329,7 @@ export class DeepDiveService {
     var articleStackData = {
         articleStackRoute: urlRouteArray,
         keyword: topData.keyword.replace('-', ' '),
-        date: date != null ? date : "",
+        date: date != null ? GlobalFunctions.sntGlobalDateFormatting(date, 'dayOfWeek') : "",
         headline: topData.title,
         provider1: topData.author != null ? "<span style='font-weight: 400;'>By</span> " + topData.author : "",
         provider2: topData.publisher != null ? "Published By: " + topData.publisher : "",
@@ -364,7 +364,7 @@ export class DeepDiveService {
 
     articles.forEach(function(val, index){
       var info = val.info;
-      var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline*1000,"defaultDate");
+      var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline*1000,"dayOfWeek");
       var relPath = GlobalSettings.getRouteFullParams().relPath;
       let domainHostName;
       let urlRouteArray;
@@ -402,12 +402,11 @@ export class DeepDiveService {
   }
 
   transformVideoStack(data){
-
     data.forEach(function(val, i){
       var relPath = GlobalSettings.getRouteFullParams().relPath;
       let domainHostName;
       let urlRouteArray;
-      let domainParams = {}
+      let domainParams = {};
 
       domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
       if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
