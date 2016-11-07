@@ -796,4 +796,8 @@ export class GlobalFunctions {
             }
         }
     }
+
+    static capitalizeFirstLetter(s) {
+        return s[0].toUpperCase() + s.slice(1);
+    }
 }
