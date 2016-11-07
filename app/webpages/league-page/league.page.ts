@@ -382,7 +382,7 @@ export class LeaguePage implements OnInit {
             .subscribe(data => {
 
                     this.firstVideo = data.data[first].videoLink;
-                    this.videoData = data.data.slice(1);
+                    this.videoData = this.videoBatchService.transformVideoStack(data.data.slice(1));
 
                 },
                 err => {

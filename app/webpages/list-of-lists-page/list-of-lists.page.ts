@@ -122,7 +122,7 @@ export class ListOfListsPage implements OnInit{
                 this.titleData = {
                     imageURL : profileImage,
                     imageRoute: profileRoute,
-                    text1 : 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(list.lastUpdated['lastUpdated']),
+                    text1 : 'Last Updated: ' + GlobalFunctions.sntGlobalDateFormatting(list.lastUpdated['lastUpdated']),
                     text2 : ' United States',
                     text3 : 'Top lists - ' + this.profileName,
                     icon: 'fa fa-map-marker'

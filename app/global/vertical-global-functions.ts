@@ -32,14 +32,36 @@ export class VerticalGlobalFunctions {
    * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profile
    * @returns the teamName => boston-red-sox,  teamId => ##, routeName => 'Team-page'
    */
-  static formatTeamRoute(teamName: string, teamId: string): Array<any> {
+  static formatTeamRoute(teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
     var teamRoute: Array<any>;
-    if(typeof teamName != 'undefined' && teamName != null){
-      teamName = this.RegExpSpecialCharacters(teamName);
-      teamName = GlobalFunctions.toLowerKebab(teamName);
-      teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
-    } else{
-      teamRoute = null;
+
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    if(!ignoreRelPath){
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      }
+      domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
+      if(typeof teamName != 'undefined' && teamName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        teamRoute = [relPath+domainHostName,domainParams,'Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+      } else{
+        teamRoute = null;
+      }
+    }else{
+      if(typeof teamName != 'undefined' && teamName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+      } else{
+        teamRoute = null;
+      }
     }
     return teamRoute ? teamRoute : ['Error-page'];
   }
@@ -61,6 +83,18 @@ export class VerticalGlobalFunctions {
    */
   static formatNewsRoute(articleId: string): Array<any> {
     var articleRoute: Array<any>;
+
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+    }
+    domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
     if(articleId != null) {
       articleRoute = ['Syndicated-article-page', {articleType: 'story', eventID: articleId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
     } else{
@@ -85,15 +119,37 @@ export class VerticalGlobalFunctions {
    * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profilege
    * @returns the teamName => 'boston-red-sox',  playerName => 'babe-ruth' playerId => ##, routeName => 'Player-page'
    */
-  static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string):Array<any> {
+  static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string, ignoreRelPath?:boolean):Array<any> {
     var playerRoute: Array<any>;
-    if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
-      teamName = this.RegExpSpecialCharacters(teamName);
-      teamName = GlobalFunctions.toLowerKebab(teamName);
-      playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
-      playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    if(!ignoreRelPath){
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      }
+      domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
+      if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
+        playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+      }else{
+        playerRoute = null;
+      }
     }else{
-      playerRoute = null;
+      if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
+        playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+      }else{
+        playerRoute = null;
+      }
     }
     return playerRoute ? playerRoute : ['Error-page'];
   }
@@ -125,33 +181,15 @@ export class VerticalGlobalFunctions {
 
   static scopeRedirect(router, params?) {
     var domainHostName, domainParams, pageHostName, pageParams;
-    if(router.parent.parent != null){//if there are more parameters past home page
-      domainHostName = router.parent.parent.currentInstruction.component.routeName;
-      domainParams = router.parent.parent.currentInstruction.component.params;
-      pageHostName = router.parent.currentInstruction.component.routeName;
-      pageParams = router.parent.currentInstruction.component.params;
-    }else{// if there are no more parameters then set domain routeName and param
-      domainHostName = router.parent.currentInstruction.component.routeName;
-      domainParams = router.parent.currentInstruction.component.params;
-    }
+    GlobalSettings.setRouter(router);// sets the router
+    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    domainParams = GlobalSettings.getRouteFullParams().domainParams;
+    pageHostName = GlobalSettings.getRouteFullParams().pageHostName;
+    pageParams = GlobalSettings.getRouteFullParams().pageParams;
 
     //create relative path for the redirect
-    let counter = 0;
-    let hasParent = true;
-    let route = router;
-    for (var i = 0; hasParent == true; i++){
-      if(route.parent != null){
-        counter++;
-        route = route.parent;
-      }else{
-        hasParent = false;
-        var relPath = '';
-        for(var c = 1 ; c <= counter; c++){
-          relPath += '../';
-        }
-      }
-    }
-    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
+    var relPath = GlobalFunctions.routerRelPath(router);
+    if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf' || domainParams.scope === 'home'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
       // let routeArray = [(relPath+domainHostName), domainParams];
       // if(pageHostName && pageParams){
       //   routeArray.push(pageHostName, pageParams);
@@ -161,7 +199,7 @@ export class VerticalGlobalFunctions {
       // console.log(routeArray);
       // router.navigate(routeArray);
     }else{// else scope does not match nfl or ncaaf then redirect to homepage
-      domainParams.scope = 'nfl';
+      domainParams.scope = 'home';
       router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
     }
 
@@ -332,6 +370,10 @@ export class VerticalGlobalFunctions {
     });
     return sortOptions;
   }
+
+
+
+
 
 
   /**
@@ -644,5 +686,30 @@ export class VerticalGlobalFunctions {
     let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
     var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
     return relPath;
+  }
+
+  static getRandomToggleCarouselImage() {
+    let nfl = [
+      "/02/nfl/stock/2016/11/image-carousel-nfl-01.jpg",
+      "/02/nfl/stock/2016/11/image-carousel-nfl-02.jpg",
+      "/02/nfl/stock/2016/11/image-carousel-nfl-03.jpg",
+      "/02/nfl/stock/2016/11/image-carousel-nfl-04.jpg",
+      "/02/nfl/stock/2016/11/image-carousel-nfl-05.jpg",
+    ];
+    let ncaaf = [
+      "/02/ncaaf/stock/2016/11/image-carousel-ncaaf-01.jpg",
+      "/02/ncaaf/stock/2016/11/image-carousel-ncaaf-02.jpg",
+      "/02/ncaaf/stock/2016/11/image-carousel-ncaaf-03.jpg",
+      "/02/ncaaf/stock/2016/11/image-carousel-ncaaf-04.jpg",
+      "/02/ncaaf/stock/2016/11/image-carousel-ncaaf-05.jpg",
+    ];
+    let nflRandom = nfl[Math.floor(Math.random()*nfl.length)];
+    let ncaafRandom = ncaaf[Math.floor(Math.random()*ncaaf.length)];
+    var nflImage = this._proto + "//" + GlobalSettings._imageUrl + nflRandom;
+    var ncaafImage = this._proto + "//" + GlobalSettings._imageUrl + ncaafRandom;
+    return {
+      nfl:nflImage,
+      ncaaf:ncaafImage,
+    };
   }
 }

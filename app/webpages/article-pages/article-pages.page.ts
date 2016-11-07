@@ -18,6 +18,7 @@ import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 import {ComplexInnerHtml} from "../../fe-core/components/complex-inner-html/complex-inner-html.component";
 import {find} from "rxjs/operator/find";
 
@@ -37,6 +38,7 @@ declare var moment;
         LoadingComponent,
         TrendingComponent,
         SidekickContainerComponent,
+        WidgetModule,
         ComplexInnerHtml
     ],
 })
@@ -74,8 +76,7 @@ export class ArticlePages implements OnInit {
     rawUrl:string;
     title:string;
     scope:string = null;
-    constructorControl:boolean = true;
-
+    constructorControl: boolean = true;
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
@@ -118,10 +119,8 @@ export class ArticlePages implements OnInit {
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
-                        this.title = Article['data'][0]['article_data'].title;
-                        var date = Article['data'][0]['article_data'].publication_date;
-                        var date1 = moment(date).format();
-                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
+                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
+                        this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date,"timeZone");
                         this.comment = Article['data'][0]['article_data'].comment_header;
                         this.articleData = Article['data'][0]['article_data'];
                         this.teamId = Article['data'][0]['article_data'].teamId;
@@ -569,7 +568,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: moment(recommendations.last_updated).format('MMM. DD, YYYY'),
+            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated,"dayOfWeek"),
             keyword: "FOOTBALL"
         };
         return articles;

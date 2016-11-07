@@ -15,22 +15,26 @@ ToC
 @tablet:      ~"(min-width: 640px)";
 @desktop:     ~"(min-width: 768px)";
 @desktop-m:   ~"(min-width: 1000px)";
-@desktop-l:   ~"(min-width: 1317px)";
-@desktop-xl:  ~"(min-width: 1760px)";
+@desktop-l:   ~"(min-width: 1024px)";
+@desktop-xl:  ~"(min-width: 1480px)";
 @fluid:       ~"(max-width: 999px)";
 // @desktop-xl:  ~"only screen and (min-width: 1500px)";
-
+@new-mobile:      ~"(max-width: 767px)";  // < 768px   bootstrap: sm
+@new-tablet:      ~"(min-width: 768px)";  // > 768px   bootstrap: md
+@new-desktop-m:   ~"(min-width: 992px)";  // > 992px   bootstrap: lg
+@new-desktop-l:   ~"(min-width: 1280px)"; // > 1280px  bootstrap: xl
 /***********/
 /* @Colors */
 /***********/
 
 @white: #fff;
 @black: #000;
+@redType1: #b00f3a;
 // Body BG
 @bodyBg: @highlightGrey;
 
 // Brand Color Palette
-@touchDownLoyalBlue: #2d3e50;
+@touchDownLoyalBlue: #0b3656;
 @homeRunLoyalRed: #bc2027;
 @homeRunLoyalLightRed: #fff7f7;
 @touchDownLoyalLightBlue: #F4F9FF;
@@ -184,6 +188,26 @@ ToC
 .capString{
   text-transform: capitalize;
 }
+
+.sixteen-nine{
+  position: relative;
+  display: block;
+  content: "";
+  width: 100%;
+  overflow: hidden;
+  padding-top: 56.25%;
+  img{
+    position: absolute;
+    display: block;
+    max-width: 100%;
+    height: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+  }
+}
 /****************/
 /* @Base Styles */
 /****************/
@@ -248,9 +272,25 @@ img{
 /*******************/
 /* @Global Classes */
 /*******************/
+.upper-case{text-transform: uppercase}
 .hide-320{
   @media @mobile{
     display: none;
+  }
+}
+.hide-new320{
+  @media @new-mobile{
+    display: none!important;
+  }
+}
+.hide-768{
+  @media @new-tablet{
+    display: none!important;
+  }
+}
+.hide-under-lg{
+  @media @new-desktop-l{
+    display: none!important;
   }
 }
 .hide-class{
@@ -578,4 +618,8 @@ code.less-var-name-light {
 }
 .router-link-active{
   .disabled;
+}
+
+.floatRight{
+  float:right !important;
 }
