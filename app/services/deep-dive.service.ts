@@ -378,11 +378,12 @@ export class DeepDiveService {
       urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.keyword, eventID: eventID}];
 
       var s = {
-          urlRouteArray: urlRouteArray,
-          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
+          eventID: val.eventID,
+          eventType: val.keyword,
+          images: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
           keyword: val.keyword.replace('-', ' ').toUpperCase(),
-          new_date: date,
-          displayHeadline: info.displayHeadline,
+          date: date,
+          title: info.displayHeadline,
         }
       articleStackArray.push(s);
     });
