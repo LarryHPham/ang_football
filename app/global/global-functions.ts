@@ -562,7 +562,7 @@ export class GlobalFunctions {
       let dd = moment(unixTimestamp).tz('America/New_York').format("DD");
       let year = moment(unixTimestamp).tz('America/New_York').format("YYYY");
       let shortDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY");
-      let timeZone = moment(unixTimestamp).tz('America/New_York').format('h:mmA (z)');
+      let timeZone = moment(unixTimestamp).tz('America/New_York').format('h:mmA z');
       let defaultDate = month + ' ' + dd + ', ' + year;
 
       switch(identifier){
