@@ -130,7 +130,7 @@ export class SyndicatedArticlePage{
         data => {
           this.articleData = data.data;
           this.metaTags(data);
-            // this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
+            this.iframeUrl = this.articleData.videoLink;
         }
       )
     }
