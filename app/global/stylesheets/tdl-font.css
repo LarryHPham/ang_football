@@ -493,3 +493,6 @@
 .fa-box-scores:before {
   content: "\2f";
 }
+.fa-icon-x:before {
+  content: "\5e";
+}
