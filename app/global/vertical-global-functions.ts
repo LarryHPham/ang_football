@@ -32,7 +32,7 @@ export class VerticalGlobalFunctions {
    * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profile
    * @returns the teamName => boston-red-sox,  teamId => ##, routeName => 'Team-page'
    */
-  static formatTeamRoute(teamName: string, teamId: string): Array<any> {
+  static formatTeamRoute(teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
     var teamRoute: Array<any>;
 
     var relPath = GlobalSettings.getRouteFullParams().relPath;
@@ -40,18 +40,28 @@ export class VerticalGlobalFunctions {
     let urlRouteArray;
     let domainParams = {}
 
-    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-    }
-    domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+    if(!ignoreRelPath){
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      }
+      domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
-    if(typeof teamName != 'undefined' && teamName != null){
-      teamName = this.RegExpSpecialCharacters(teamName);
-      teamName = GlobalFunctions.toLowerKebab(teamName);
-      teamRoute = [relPath+domainHostName,domainParams,'Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
-    } else{
-      teamRoute = null;
+      if(typeof teamName != 'undefined' && teamName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        teamRoute = [relPath+domainHostName,domainParams,'Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+      } else{
+        teamRoute = null;
+      }
+    }else{
+      if(typeof teamName != 'undefined' && teamName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+      } else{
+        teamRoute = null;
+      }
     }
     return teamRoute ? teamRoute : ['Error-page'];
   }
@@ -109,15 +119,37 @@ export class VerticalGlobalFunctions {
    * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profilege
    * @returns the teamName => 'boston-red-sox',  playerName => 'babe-ruth' playerId => ##, routeName => 'Player-page'
    */
-  static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string):Array<any> {
+  static formatPlayerRoute(teamName: string, playerFullName:string, playerId: string, ignoreRelPath?:boolean):Array<any> {
     var playerRoute: Array<any>;
-    if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
-      teamName = this.RegExpSpecialCharacters(teamName);
-      teamName = GlobalFunctions.toLowerKebab(teamName);
-      playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
-      playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let domainHostName;
+    let urlRouteArray;
+    let domainParams = {}
+
+    if(!ignoreRelPath){
+      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      }
+      domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+
+      if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
+        playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+      }else{
+        playerRoute = null;
+      }
     }else{
-      playerRoute = null;
+      if(typeof teamName != 'undefined' && teamName != null && typeof playerFullName != 'undefined' && playerFullName != null){
+        teamName = this.RegExpSpecialCharacters(teamName);
+        teamName = GlobalFunctions.toLowerKebab(teamName);
+        playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
+        playerRoute = ['Player-page',{teamName:teamName, fullName:playerFullName, playerId: playerId}];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+      }else{
+        playerRoute = null;
+      }
     }
     return playerRoute ? playerRoute : ['Error-page'];
   }
