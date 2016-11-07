@@ -15,7 +15,7 @@ ToC
 @tablet:      ~"(min-width: 640px)";
 @desktop:     ~"(min-width: 768px)";
 @desktop-m:   ~"(min-width: 1000px)";
-@desktop-l:   ~"(min-width: 1317px)";
+@desktop-l:   ~"(min-width: 1024px)";
 @desktop-xl:  ~"(min-width: 1760px)";
 @fluid:       ~"(max-width: 999px)";
 // @desktop-xl:  ~"only screen and (min-width: 1500px)";
@@ -272,6 +272,7 @@ img{
 /*******************/
 /* @Global Classes */
 /*******************/
+.upper-case{text-transform: uppercase}
 .hide-320{
   @media @mobile{
     display: none;
@@ -617,4 +618,8 @@ code.less-var-name-light {
 }
 .router-link-active{
   .disabled;
+}
+
+.floatRight{
+  float:right !important;
 }

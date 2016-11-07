@@ -132,14 +132,14 @@ export class DeepDivePage{
         switch(scope){
           case 'nfl':
             this.scopeDisplayed = {
-                scope:'Football',
+                scope:null,
                 text: 'Upcoming NFL Games'
             };
           break;
           case 'fbs':
           case 'ncaaf':
             this.scopeDisplayed = {
-                scope:'Football',
+                scope:null,
                 text: 'Upcoming NCAAF Games'
             }
           break;
