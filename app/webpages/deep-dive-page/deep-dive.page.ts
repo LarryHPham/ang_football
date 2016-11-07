@@ -54,7 +54,7 @@ export class DeepDivePage{
 
     //page variables
     scope: string;
-    scopeDisplayed:string;
+    scopeDisplayed:any;
     sidescrollScope:string;
     partnerID: string;
     partnerData:any;
@@ -131,23 +131,31 @@ export class DeepDivePage{
       scope = scope.toLowerCase();
         switch(scope){
           case 'nfl':
-            this.scopeDisplayed = 'Upcoming NFL Games';
-            this.sideScrollIcon = 'fa fa-calendar';
+            this.scopeDisplayed = {
+                scope:null,
+                text: 'Upcoming NFL Games'
+            };
           break;
           case 'fbs':
           case 'ncaaf':
-            this.scopeDisplayed = 'Upcoming NCAAF Games';
-            this.sideScrollIcon = 'fa fa-calendar';
+            this.scopeDisplayed = {
+                scope:null,
+                text: 'Upcoming NCAAF Games'
+            }
           break;
           case 'all':
           case 'football':
           case 'home':
-            this.scopeDisplayed = 'Football';
-            this.sideScrollIcon = 'fa fa-tdl-football';
+            this.scopeDisplayed = {
+                scope:'Football',
+                text: null
+            };
           break;
           default:
-            this.scopeDisplayed = 'Football';
-            this.sideScrollIcon = 'fa fa-tdl-football';
+            this.scopeDisplayed = {
+                scope:'Football',
+                text: 'Upcoming NFL Games'
+            }
           break;
         }
     }
@@ -171,7 +179,7 @@ export class DeepDivePage{
     getToggleInfo(router){
       let toggleData = {
         'nfl':{
-          title: 'Loyal to th NFL?',
+          title: 'Loyal to the NFL?',
           subtext: 'Stay up to date with everything NFL.',
           scope:'NFL',
           image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl,
@@ -180,7 +188,7 @@ export class DeepDivePage{
           buttonScope: 'nfl'
         },
         'ncaaf':{
-          title: 'Loyal to th NCAA?',
+          title: 'Loyal to the NCAA?',
           subtext: 'Stay up to date with everything NCAA.',
           scope:'NCAA',
           image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf,

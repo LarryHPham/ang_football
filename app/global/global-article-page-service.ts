@@ -30,8 +30,8 @@ export class ArticleDataService {
     }
 
     getRecommendationsData(eventID, scope) {
-        var fullUrl = GlobalSettings.getRecommendUrl();
-        return this.http.get(fullUrl + "articles?&event=" + eventID + "&affiliation=" + scope + "&count=10")
+        var fullUrl = GlobalSettings.getRecommendUrl() + "articles?&event=" + eventID + "&affiliation=" + scope + "&count=10";
+        return this.http.get(fullUrl)
             .map(res => res.json())
             .map(data => data);
     }

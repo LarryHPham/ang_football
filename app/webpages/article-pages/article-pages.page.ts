@@ -18,6 +18,7 @@ import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 declare var moment;
 
@@ -34,7 +35,8 @@ declare var moment;
         DisqusComponent,
         LoadingComponent,
         TrendingComponent,
-        SidekickContainerComponent
+        SidekickContainerComponent,
+        WidgetModule
     ],
 })
 
@@ -114,13 +116,9 @@ export class ArticlePages implements OnInit {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         } else {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
-                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
-                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         }
                         this.articleType = articleType[1];
                         this.articleSubType = articleType[2];
-                        //this.articleType = articleType[0];
-                        //this.articleSubType = articleType[2];
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
@@ -469,7 +467,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated,"defaultDate"),
+            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated,"dayOfWeek"),
             keyword: "FOOTBALL"
         };
         return articles;
