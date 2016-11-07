@@ -1,46 +1,60 @@
+.vertical-widget{
+    @media @new-mobile{display:none}
+    @media @new-tablet{display:none}
+    @media @new-desktop-l{display:block;padding-left:8px;margin-top: 10px}
+}
 .large {
   display: block;
-  @media @mobile{
+  @media @new-mobile{
     display: none;
   }
 }
 
 .small {
   display: none;
-  @media @mobile{
+  @media @new-mobile{
     display: block;
   }
 }
 
 .article-image-responsive {
   .roundImageMain(121px);
-  @media @mobile{
+  @media @new-mobile{
     .roundImageMain(71px);
   }
 }
 
 .carousel-container {
-  width: 610px;
-  height: 345px;
-  @media @fluid {
-    height: 60vw;
-    width: ~"calc(100% + 20px)";
-    margin-left: -10px;
-  }
+    position: relative;
+    &:before{
+      display: block;
+      content: "";
+      width: 100%;
+      padding-top: 56.25%; //to keep 16:9 ratio
+    }
+    .images-media{
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
 }
 
 .articles-page {
   width: 100%;
+  min-width: 320px;
+  max-width: 1280px;
   height: auto;
   background-color: @white;
   text-align: left;
   position: relative;
   overflow: hidden;
-
-  @media @mobile{
-    .expand, .images, .sm-images {
-      display: none;
-    }
+  margin: 0 auto;
+  &-container{.flexDisplay;}
+  @media @new-mobile{
+    .expand, .images, .sm-images {display: none}//.expand, .images, .sm-images ends
 
     .plcholder {
       width: 100%;
@@ -49,27 +63,24 @@
 
     .grey-bar, .modal-grey-bar {
       height: 25px !important;
-      &-title {
-        display: none !important;
-      }
-    }
+      &-title {display: none !important}
+    }//.grey-bar, .modal-grey-bar ends
 
     .circles {
       background-color: transparent !important;
       border: none !important;
       font-size: 45px !important;
     }
-  }
+    &-padding{
+      display: block;
+      @media @new-mobile{padding: 10px 10px 0}
+    }
+  }//new-mobile ends
+  @media @new-tablet{padding: 15px 20px 0}
 
   &-content {
     position: relative;
     background-color: @white;
-    width: 960px;
-    @media @fluid {
-      width: 100%;
-      padding: 0 10px;
-    }
-    padding: 0 10px;
     margin: 0 auto;
     overflow: hidden;
     top: 1px;
@@ -79,24 +90,22 @@
     text-align: left;
     margin-top:0px;
     margin-bottom: 20px;
-    padding-top: 25px;
-    @media @mobile{
+    padding-top: 10px;
+    @media @new-mobile{
       .globalDefaultFont(20px, 800);
-      margin-bottom: 10px;
+      margin: 0 auto 10px 10px;
       width: 100%;
     }
   }
   .arpt {
     overflow: hidden;
     position: relative;
-    width: 100%;
     text-align: left;
-
+    @media @new-desktop-l{padding-right: 7px}
     &-author {
       width: 200%;
       height: 50px;
       float: left;
-
       &-image {
         background-image: url("/app/public/mainLogo.jpg");
         background-size: cover;
@@ -119,7 +128,7 @@
         text-align: left;
 
         &-name {
-          .globalDefaultModFont(16px, 700, @masterBrandColor);
+          .globalDefaultModFont(16px, 800, @masterBrandColor);
           text-align: left;
         }
       }
@@ -127,18 +136,13 @@
 
     &-date {
       .globalDefaultModFont(12px, 400, @bulletGrey);
+      line-height: 1em;
+      margin-top: 10px;
       width: 100%;
-      height: 11px;
-    //  text-transform: uppercase;
-      line-height: 10px;
-      float: left;
-      margin-top: 20px;
-      @media @mobile{
-        margin-top: 16px;
-      }
+      text-align: left;
+      @media @new-mobile{padding: 0 10px}
+      @media @new-tablet{text-align: right}
     }
   }
-  .trending-article-content{
-    line-height: 1.3;
-  }
+  .trending-article-content{line-height: 1.3}
 }
