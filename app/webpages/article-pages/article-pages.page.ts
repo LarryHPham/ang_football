@@ -21,6 +21,11 @@ import {SeoService} from '../../seo.service';
 import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 
+import {DeepDiveService} from '../../services/deep-dive.service';
+import {GeoLocation} from "../../global/global-service";
+import {PartnerHeader} from "../../global/global-service";
+
+declare var jQuery:any;
 declare var moment;
 
 @Component({
@@ -39,12 +44,13 @@ declare var moment;
         SidekickContainerComponent,
         WidgetModule
     ],
+    providers: [DeepDiveService, GeoLocation, PartnerHeader],
     pipes: [SanitizeRUrl, SanitizeHtml]
 })
 
 export class ArticlePages implements OnInit {
     article:Article;
-    articleData:ArticleData;
+    articleData:any;
     copyright:Array<any>;
     images:Array<any>;
     imageData:Array<any>;
@@ -62,11 +68,10 @@ export class ArticlePages implements OnInit {
     isFantasyReport:boolean = false;
     isSmall:boolean = false;
     teamId:number;
-    articleType:string;
+    eventType:string;
     articleSubType:string;
     content:string;
     eventID:string;
-    eventType:string;
     date:string;
     pageIndex:string;
     partnerId:string;
@@ -74,11 +79,20 @@ export class ArticlePages implements OnInit {
     title:string;
     scope:string = null;
     constructorControl: boolean = true;
+    recomendationData: any;
+
+    private subRec;
+    partnerID: string;
+    geoLocation:string;
+    iframeUrl: any;
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
-                private _seoService:SeoService) {
+                private _seoService:SeoService,
+                private _deepdiveservice:DeepDiveService,
+                private _geoLocation:GeoLocation,
+                private _partnerData: PartnerHeader) {
         //check to see if scope is correct and redirect
         VerticalGlobalFunctions.scopeRedirect(_router, _params);
         window.scrollTo(0, 0);
@@ -94,6 +108,12 @@ export class ArticlePages implements OnInit {
         });
         this.eventID = _params.get('eventID');
         this.eventType = _params.get('eventType');
+        if (this.eventType == "story") {
+          this.getDeepDiveArticle(this.eventID);
+        }
+        if (this.eventType == "video") {
+          this.getDeepDiveVideo(this.eventID);
+        }
         if (this.eventType == "upcoming-game") {
             this.eventType = "upcoming";
         }
@@ -101,6 +121,7 @@ export class ArticlePages implements OnInit {
         if (this.eventType == "player-fantasy") {
             this.isFantasyReport = true;
         }
+        this.rawUrl = window.location.href;
     }
 
     getArticles() {
@@ -112,17 +133,16 @@ export class ArticlePages implements OnInit {
                             this.eventID = Article['data'][0].event_id;
                             this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                         }
-                        var articleType = [];
+                        var eventType = [];
                         if (Article['data'][0].article_type_id != null) {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
+                            eventType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         } else {
-                            articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
+                            eventType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
                         }
-                        this.articleType = articleType[1];
-                        this.articleSubType = articleType[2];
+                        this.eventType = eventType[1];
+                        this.articleSubType = eventType[2];
                         this.isSmall = window.innerWidth < 640;
-                        this.rawUrl = window.location.href;
-                        this.pageIndex = articleType[0];
+                        this.pageIndex = eventType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
                         this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'][this.pageIndex].dateline,"timeZone");
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
@@ -198,9 +218,9 @@ export class ArticlePages implements OnInit {
         var copyArray = [];
         var titleArray = [];
 
-        if (this.articleType == "game-module" || this.articleType == "team-record") {
+        if (this.eventType == "game-module" || this.eventType == "team-record") {
             images = data['home_images'].concat(data['away_images']);
-        } else if (this.articleType == "playerRoster") {
+        } else if (this.eventType == "playerRoster") {
             images = data['home_images'];
         } else if (this.isFantasyReport) {
             images = data['home_images'].concat(data['player_images']);
@@ -233,7 +253,7 @@ export class ArticlePages implements OnInit {
 
     getImageLinks(data) {
         var links = [];
-        if (this.articleType == "playerRoster") {
+        if (this.eventType == "playerRoster") {
             data['article'].forEach(function (val) {
                 if (val['playerRosterModule']) {
                     let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['playerRosterModule'].teamName, val['playerRosterModule'].name, val['playerRosterModule'].id);
@@ -261,7 +281,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'playerComparison') {
+        if (this.eventType == 'playerComparison') {
             data['article'][2]['playerComparisonModule'].forEach(function (val, index) {
                 if (index == 0) {
                     let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, val.name, val.id);
@@ -310,7 +330,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'gameModule') {
+        if (this.eventType == 'gameModule') {
             data['article'].forEach(function (val, index) {
                 if (index == 1 && val['gameModule']) {
                     var shortDate = val['gameModule'].eventDate;
@@ -401,7 +421,7 @@ export class ArticlePages implements OnInit {
             });
             return links;
         }
-        if (this.articleType == 'teamRecord') {
+        if (this.eventType == 'teamRecord') {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
                 if (val['teamRecordModule'] && isFirstTeam) {
@@ -484,4 +504,127 @@ export class ArticlePages implements OnInit {
             window.dispatchEvent(resizeEvent);
         }
     }
+    ngAfterViewInit(){
+      // to run the resize event on load
+      try {
+        window.dispatchEvent(new Event('load'));
+      }catch(e){
+        //to run resize event on IE
+        var resizeEvent = document.createEvent('UIEvents');
+        resizeEvent.initUIEvent('load', true, false, window, 0);
+        window.dispatchEvent(resizeEvent);
+      }
+    }
+
+    private getDeepDiveArticle(articleID) {
+      this._deepdiveservice.getDeepDiveArticleService(articleID).subscribe(
+        data => {
+
+          if (data.data.imagePath == null || data.data.imagePath == undefined || data.data.imagePath == "") {
+            this.imageData  = ["/app/public/stockphoto_bb_1.jpg", "/app/public/stockphoto_bb_2.jpg"];
+            this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
+            this.imageTitle = ["", ""];
+          }
+          else {
+            this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath)];
+            this.copyright = ["USA Today Sports Images"];
+            this.imageTitle = [""];
+          }
+          this.metaTags(data);
+          this.articleData = data.data;
+          this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate/1000),"timeZone");
+        }
+      )
+    }
+    private getDeepDiveVideo(articleID){
+      this._deepdiveservice.getDeepDiveVideoService(articleID).subscribe(
+        data => {
+          this.articleData = data.data;
+          this.date = this.formatDate(this.articleData.pubDate);
+          this.metaTags(data);
+            this.iframeUrl = this.articleData.videoLink;
+        }
+      )
+    }
+
+    private metaTags(data){
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc;
+      if(data.data.teaser != null){
+        metaDesc = data.data.teaser;
+      }else{
+        metaDesc = data.data.description;
+      }
+
+      let link = window.location.href;
+      let image;
+      if(this.imageData != null){
+        image = this.imageData[0];
+      }else{
+        image = data.data.thumbnail;
+      }
+
+      this._seoService.setCanonicalLink(this._params.params, this._router);
+      this._seoService.setOgTitle(data.data.title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(image);
+      this._seoService.setTitle(data.data.title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+    }
+
+    getGeoLocation() {
+        var defaultState = 'ca';
+        this._geoLocation.getGeoLocation()
+            .subscribe(
+                geoLocationData => {
+                    this.geoLocation = geoLocationData[0].state;
+                    this.geoLocation = this.geoLocation.toLowerCase();
+                    this.callModules();
+
+                },
+                err => {
+                    this.geoLocation = defaultState;
+                    this.callModules();
+                }
+            );
+    }
+    callModules(){
+        this.getRecomendationData();
+    }
+
+    getPartnerHeader(){//Since it we are receiving
+      if(this.partnerID!= null){
+        this._partnerData.getPartnerData(this.partnerID)
+        .subscribe(
+          partnerScript => {
+            //super long way from partner script to get location using geo location api
+            var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
+            state = state.toLowerCase();
+            this.geoLocation = state;
+
+            this.getRecomendationData()
+          }
+        );
+      }else{
+        this.getGeoLocation();
+      }
+    }
+    formatDate(date) {
+        return GlobalFunctions.sntGlobalDateFormatting(date,"timeZone");
+    }
+    getRecomendationData(){
+      var startNum=Math.floor((Math.random() * 49) + 1);
+       //needed to uppoercase for ai to grab data correctly
+      this.subRec = this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
+          .subscribe(data => {
+            this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
+      });
+    }
+    ngOnDestroy(){
+        this.subRec.unsubscribe();
+    }
+
 }

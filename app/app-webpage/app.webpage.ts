@@ -42,7 +42,7 @@ import {SanitizeStyle} from "../fe-core/pipes/safe.pipe";
 import {GlobalSettings} from "../global/global-settings";
 
 //FOR DEEP DIVE
-import {SyndicatedArticlePage} from "../webpages/syndicated-article-page/syndicated-article-page.page";
+// import {SyndicatedArticlePage} from "../webpages/syndicated-article-page/syndicated-article-page.page";
 import {DeepDivePage} from "../webpages/deep-dive-page/deep-dive.page";
 import {PartnerHeader} from "../global/global-service";
 declare var jQuery: any;
@@ -214,11 +214,11 @@ declare var jQuery: any;
         name: 'Article-pages',
         component: ArticlePages
 	  },
-    {
-        path: '/news/:articleType/:eventID',
-        name: 'Syndicated-article-page',
-        component: SyndicatedArticlePage
-	  },
+    // {
+    //     path: '/news/:articleType/:eventID',
+    //     name: 'Syndicated-article-page',
+    //     component: SyndicatedArticlePage
+	  // },
     { // listOfLists/scope=nfl&target=team&perPageCount=5&pageNumber=1&targetId=155
         path: '/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         name: 'List-of-lists-page-scoped',
