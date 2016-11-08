@@ -19,6 +19,7 @@ import {SidekickContainerComponent} from "../../fe-core/components/articles/side
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
 import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 
 declare var moment;
 
@@ -38,6 +39,7 @@ declare var moment;
         SidekickContainerComponent,
         WidgetModule
     ],
+    pipes: [SanitizeRUrl, SanitizeHtml]
 })
 
 export class ArticlePages implements OnInit {

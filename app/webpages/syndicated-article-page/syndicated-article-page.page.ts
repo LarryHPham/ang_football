@@ -17,6 +17,7 @@ import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
 import {SeoService} from "../../seo.service";
 import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 
 declare var jQuery:any;
@@ -34,7 +35,8 @@ declare var moment;
         DisqusComponent,
         LoadingComponent,
         TrendingComponent,
-        ResponsiveWidget
+        ResponsiveWidget,
+        WidgetModule
     ],
     providers: [DeepDiveService, GeoLocation, PartnerHeader],
     pipes: [SanitizeRUrl, SanitizeHtml]
