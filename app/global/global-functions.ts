@@ -607,6 +607,9 @@ export class GlobalFunctions {
      * @param {number} month - The month to format (0-based)
      * @returns
      */
+
+    // formatAPMonth uses zero based index for month, Moment.js uses 1 based index
+    // when sending month numbers use JS, not Moment.js
     static formatAPMonth(month:number) {
         switch (month) {
             case 0:
