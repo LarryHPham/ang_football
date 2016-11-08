@@ -378,6 +378,7 @@ export class DeepDiveService {
       urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.keyword, eventID: eventID}];
 
       var s = {
+          urlRouteArray: urlRouteArray ? urlRouteArray : null,
           eventID: val.eventID,
           eventType: val.keyword,
           images: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
