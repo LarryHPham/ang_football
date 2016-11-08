@@ -24,8 +24,8 @@
                 <div class="arpt col-xs-12 col-lg-9">
                   <div class="arpt-main-article">
                     <section class="arpt-info">
-                      <div *ngIf="articleType == 'story'" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
-                      <div class="arpt-date">Posted on: <span class="upper-case" *ngIf="articleType == 'story'" [innerHTML]="articleData.publishedDate | safeHtml"></span><span class="upper-case" *ngIf="articleType == 'video'" [innerHTML]="articleData.publishedDate | safeHtml"></span></div>
+                      <div *ngIf="articleType == 'story' && articleData.publisher" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
+                      <div class="arpt-date">Posted on: <span class="upper-case" *ngIf="articleType == 'story' && articleData.publishedDate" [innerHTML]="articleData.publishedDate | safeHtml"></span><span class="upper-case" *ngIf="articleType == 'video' && articleData.pubDate" [innerHTML]="formatDate(articleData.pubDate) | safeHtml"></span></div>
                     </section>
 
                     <div class="content-exerpt" *ngIf="articleType == 'story'" [innerHTML]="articleData.teaser | safeHtml">
