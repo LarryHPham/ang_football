@@ -19,6 +19,7 @@ import {SidekickContainerComponent} from "../../fe-core/components/articles/side
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
 import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
+import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 
 declare var moment;
 
@@ -38,6 +39,7 @@ declare var moment;
         SidekickContainerComponent,
         WidgetModule
     ],
+    pipes: [SanitizeRUrl, SanitizeHtml]
 })
 
 export class ArticlePages implements OnInit {
@@ -63,7 +65,6 @@ export class ArticlePages implements OnInit {
     articleType:string;
     articleSubType:string;
     content:string;
-    comment:string;
     eventID:string;
     eventType:string;
     date:string;
@@ -124,7 +125,6 @@ export class ArticlePages implements OnInit {
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
                         this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'][this.pageIndex].dateline,"timeZone");
-                        this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
                         if (this.teamId == null) {
