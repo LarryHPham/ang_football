@@ -572,7 +572,7 @@ export class GlobalFunctions {
           return newDate;
         case 'dayOfWeek': newDate = day + ', ' + defaultDate; // Tuesday, Jan. 14, 2016
           return newDate;
-        case 'timeZone': newDate = day + ', ' + defaultDate + ' at ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
+        case 'timeZone': newDate = day + ', ' + defaultDate + ' ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
           return newDate;
         case 'bulletedShortDateTime': newDate = day + ', ' + month + ' ' + dd + ' &bull; ' + moment(unixTimestamp).tz('America/New_York').format('h:mmA z'); // Tuesday, Jan. 14, 2016 12:00 (EST)
             return newDate;
