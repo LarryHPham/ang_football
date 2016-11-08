@@ -58,10 +58,7 @@ export class GlobalSettings {
       if (env == "localhost"){
           env = "dev";
       }
-      if (env == "cdn"){
-          env = "cdn";
-      }
-      if (env != "dev" && env !="qa" && env !="cdn"){
+      if (env != "dev" && env !="qa"){
           env = "prod";
       }
       return env;
