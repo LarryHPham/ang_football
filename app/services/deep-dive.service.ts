@@ -394,7 +394,7 @@ export class DeepDiveService {
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"defaultDate");
+      val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"timeZone");
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}

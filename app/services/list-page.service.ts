@@ -112,7 +112,6 @@ export class ListPageService {
   else {
     callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
   }
-
   return this.http.get( callURL, {headers: headers})
     .map(res => res.json())
     .map(
@@ -257,7 +256,7 @@ export class ListPageService {
     return {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ["Home-page"],
-      text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
+      text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdated),
       text2: 'United States',
       text3: profile.listName,
       icon: 'fa fa-map-marker'

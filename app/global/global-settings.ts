@@ -46,7 +46,7 @@ export class GlobalSettings {
     private static _collegeDivisionSegments: string = "Conferences";
 
     private static _estYear: string = " 2016";
-    private static _copyrightInfo: string = "USA Today Sports Image";
+    private static _copyrightInfo: string = "USA Today Sports Images";
 
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     public static _mainPageUrl: string = "touchdownloyal.com";
