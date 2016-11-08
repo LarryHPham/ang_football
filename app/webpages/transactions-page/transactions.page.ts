@@ -103,7 +103,7 @@ export class TransactionsPage implements OnInit {
                     this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
                     this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
                     this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-                    profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
+                    profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
                     this.profileHeaderData = profileHeaderData;
 
                     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, this.pageParams.teamId.toString());
@@ -124,7 +124,7 @@ export class TransactionsPage implements OnInit {
                     this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
                     this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-                    profileHeaderData.text3 = this.tabs[0].tabDisplay + ' - ' + this.profileName;
+                    profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
                     this.profileHeaderData = profileHeaderData;
 
                     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.profileName, null);
@@ -139,7 +139,7 @@ export class TransactionsPage implements OnInit {
     } //getProfileInfo()
 
     getTransactionsPage() { // Get data based on selected tab
-        var matchingTabs = this.tabs.filter(tab => tab.tabDisplay.toLowerCase() == this.selectedTabName.toLowerCase() );
+        var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName );
 
         if (matchingTabs.length > 0) {
             var tab = matchingTabs[0];
@@ -163,8 +163,8 @@ export class TransactionsPage implements OnInit {
 
     transactionsTab(tab) { // set selected tab and route page if necessary
         var tabRoute;
-        var tabNameFrom = this.selectedTabName.toLowerCase(); // capture previous value before changing it
-        var tabNameTo = tab.tabDisplay.toLowerCase(); // newly selected tab
+        var tabNameFrom = this.selectedTabName; // capture previous value before changing it
+        var tabNameTo = tab.tabDisplay; // newly selected tab
         this.selectedTabName = tab.tabDisplay;
 
         if ( tabNameTo != tabNameFrom ) { // check if clicked tab is already active
