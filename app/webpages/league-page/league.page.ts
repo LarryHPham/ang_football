@@ -175,6 +175,9 @@ export class LeaguePage implements OnInit {
     limit: number;
     pageNum: number;
 
+    transactionModuleFooterParams: any;
+    activeTransactionsTab: string;
+
     public scope: string;
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
@@ -221,6 +224,12 @@ export class LeaguePage implements OnInit {
             this.setupProfileData(this.partnerID, this.scope);
             this.constructorControl = false;
           }
+
+          // pass transaction page route params to module filter, so set module footer route
+          this.transactionModuleFooterParams = {
+              scope: this.scope,
+              league: 'league'
+          }
         }); //GlobalSettings.getParentParams
 
         this.limit = Number(this._params.params['limit']);
@@ -250,7 +259,8 @@ export class LeaguePage implements OnInit {
                   this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
                   this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
 
-                  this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase());
+                  this.activeTransactionsTab = "Transactions";
+                  this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.activeTransactionsTab);
 
                   //Initial position to display in MVP
                   this.globalMVPPosition = 'cb';

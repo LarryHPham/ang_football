@@ -185,12 +185,12 @@ declare var jQuery: any;
         component: DraftHistoryPage
     },
     {
-        path: '/transactions/:teamName/:teamId/:limit/:pageNum',
+        path: '/:type/:teamName/:teamId/:limit/:pageNum',
         name: 'Transactions-page',
         component: TransactionsPage
     },
     {
-        path: '/transactions/league/:limit/:pageNum',
+        path: '/:type/league/:limit/:pageNum',
         name: 'Transactions-tdl-page',
         component: TransactionsPage
     },
