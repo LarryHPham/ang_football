@@ -92,8 +92,8 @@
     margin-bottom: 20px;
     padding-top: 10px;
     @media @new-mobile{
-      .globalDefaultFont(20px, 800);
-      margin: 0 auto 10px 10px;
+      font-size: 20px;
+      padding: 0 10px;
       width: 100%;
     }
   }
@@ -103,9 +103,7 @@
     text-align: left;
     @media @new-desktop-l{padding-right: 7px}
     &-author {
-      width: 200%;
-      height: 50px;
-      float: left;
+      margin-bottom: 10px;
       &-image {
         background-image: url("/app/public/mainLogo.jpg");
         background-size: cover;
@@ -126,7 +124,6 @@
         padding-top: 15px;
         padding-left: 15px;
         text-align: left;
-
         &-name {
           .globalDefaultModFont(16px, 800, @masterBrandColor);
           text-align: left;
@@ -138,10 +135,7 @@
       .globalDefaultModFont(12px, 400, @bulletGrey);
       line-height: 1em;
       margin-top: 10px;
-      width: 100%;
-      text-align: left;
-      @media @new-mobile{padding: 0 10px}
-      @media @new-tablet{text-align: right}
+      text-align: right;
     }
   }
   .trending-article-content{line-height: 1.3}

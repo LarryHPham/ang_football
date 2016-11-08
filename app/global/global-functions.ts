@@ -574,7 +574,7 @@ export class GlobalFunctions {
           return newDate;
         case 'dayOfWeek': newDate = day + ', ' + defaultDate; // Tuesday, Jan. 14, 2016
           return newDate;
-        case 'timeZone': newDate = day + ', ' + defaultDate + ' at ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
+        case 'timeZone': newDate = day + ', ' + defaultDate + ' ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
           return newDate;
         case 'bulletedShortDateTime': newDate = day + ', ' + month + ' ' + dd + ' &bull; ' + moment(unixTimestamp).tz('America/New_York').format('h:mmA z'); // Tuesday, Jan. 14, 2016 12:00 (EST)
             return newDate;
@@ -609,6 +609,9 @@ export class GlobalFunctions {
      * @param {number} month - The month to format (0-based)
      * @returns
      */
+
+    // formatAPMonth uses zero based index for month, Moment.js uses 1 based index
+    // when sending month numbers use JS, not Moment.js
     static formatAPMonth(month:number) {
         switch (month) {
             case 0:
@@ -918,5 +921,9 @@ export class GlobalFunctions {
             case "defense-player-comparison":
                 return articleInformation = ["defense-player-comparison", "playerComparison", "null"];
         }
+    }
+
+    static capitalizeFirstLetter(s) {
+        return s[0].toUpperCase() + s.slice(1);
     }
 }

@@ -8,7 +8,7 @@
       <loading-component *ngIf="!articleData && !error"></loading-component>
       <span *ngIf="articleData">
           <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
-          <h1 class="articles-page-title">{{title}}</h1>
+          <h1 class="articles-page-title" [innerHTML]="title | safeHtml"></h1>
           <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
               <span *ngIf="imageData">
                   <div template="ngIf hasImages" class="carousel-container">
@@ -18,9 +18,9 @@
                                              [imageTitle]="imageTitle"></images-media-carousel>
                   </div>
               </span>
-              <section class=" articles-page-container row">
+              <section class="articles-page-container row">
                 <div class="arpt col-xs-12 col-lg-9">
-                    <div class="arpt-date">Posted on: <span class="upper-case">{{date}}</span></div>
+                    <div class="arpt-date">Posted on: <span class="upper-case" [innerHTML]="date | safeHtml"></span></div>
                     <article-content-component class="articles-page-padding" [articleType]="articleType"
                                                [articleSubType]="articleSubType"
                                                [articleData]="articleData"
@@ -30,7 +30,7 @@
                                                [scope]="scope"
                     ></article-content-component>
                     <sidekick-container-component></sidekick-container-component>
-                    <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
+                    <disqus-component *ngIf="!checkPartner"></disqus-component>
                     <recommendations-component [randomHeadlines]="randomHeadlines"
                                                [images]="images"></recommendations-component>
                     <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>

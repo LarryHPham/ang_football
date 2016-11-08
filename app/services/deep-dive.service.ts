@@ -378,11 +378,13 @@ export class DeepDiveService {
       urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.keyword, eventID: eventID}];
 
       var s = {
-          urlRouteArray: urlRouteArray,
-          bg_image_var: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
+          urlRouteArray: urlRouteArray ? urlRouteArray : null,
+          eventID: val.eventID,
+          eventType: val.keyword,
+          images: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
           keyword: val.keyword.replace('-', ' ').toUpperCase(),
-          new_date: date,
-          displayHeadline: info.displayHeadline,
+          date: date,
+          title: info.displayHeadline,
         }
       articleStackArray.push(s);
     });
@@ -393,7 +395,7 @@ export class DeepDiveService {
   transformTrending (data, currentArticleId) {
     data.forEach(function(val,index){
       //if (val.id != currentArticleId) {
-      val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"defaultDate");
+      val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"timeZone");
       val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
       val["newsRoute"] = VerticalGlobalFunctions.formatNewsRoute(val.id);
       //}
@@ -436,7 +438,9 @@ export class DeepDiveService {
     }
     domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scope.toUpperCase()];
+    let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
+
+    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
     let pickATeam = [relPath+domainHostName, domainParams,'Pick-team-page'];
     let leaguePage = [relPath+domainHostName, domainParams,'League-page'];
     var tileLink = [pickATeam, pickATeam, leaguePage];
