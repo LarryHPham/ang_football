@@ -151,6 +151,7 @@ export class BoxScoresService {
     }
 
   }
+
   moduleHeader(date, team?){
     var moduleTitle;
     var convertedDate = GlobalFunctions.sntGlobalDateFormatting(date,"defaultDate");

@@ -26,6 +26,7 @@
 
     <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
       [data]="transactionsData"
+      [transactionModuleFooterParams]="transactionModuleFooterParams"
       [transactionFilter1]="transactionFilter1"
       [dropdownKey1]="dropdownKey1"
       (tabSwitched)="transactionsTab($event)"
