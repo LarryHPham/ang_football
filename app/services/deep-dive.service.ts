@@ -55,9 +55,10 @@ export class DeepDiveService {
       if(state == null|| state == undefined){
           state = 'CA';
       }
-  var headers = this.setToken();
+      var headers = this.setToken();
       // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
       var callURL = this._apiUrl + '/articleBatch/';
+
       scope = scope == 'home' ? 'football' : scope;
       if(scope == 'nfl' || scope == null || scope == 'football'){
         callURL +=  scope + '/' + limit + '/' + startNum + '/' + state;
