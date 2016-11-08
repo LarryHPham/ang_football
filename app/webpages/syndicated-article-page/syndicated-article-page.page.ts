@@ -58,6 +58,7 @@ export class SyndicatedArticlePage{
   public scope: string;
   public constructorControl: boolean = true;
   private subRec;
+  rawUrl:string;
   iframeUrl: any;
   constructor(
     private _params:RouteParams,
@@ -91,7 +92,7 @@ export class SyndicatedArticlePage{
           }
             this.constructorControl = false;
         }
-
+        this.rawUrl = window.location.href;
       });
     }
 
@@ -166,7 +167,6 @@ export class SyndicatedArticlePage{
     }
 
     getGeoLocation() {
-
         var defaultState = 'ca';
         this._geoLocation.getGeoLocation()
             .subscribe(

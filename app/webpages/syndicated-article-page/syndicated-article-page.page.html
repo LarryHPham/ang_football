@@ -7,8 +7,7 @@
       </div>
       <loading-component *ngIf="!articleData && !error"></loading-component>
       <span *ngIf="articleData">
-          <shareLinks-component *ngIf="articleData.articleUrl" [shareUrl]="articleData.articleUrl"></shareLinks-component>
-          <shareLinks-component *ngIf="articleData.videoLink" [shareUrl]="articleData.videoLink"></shareLinks-component>
+          <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
           <h1 class="articles-page-title" [innerHTML]="articleData.title | safeHtml"></h1>
           <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
             <span>
