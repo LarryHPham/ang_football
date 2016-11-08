@@ -282,7 +282,7 @@ export class ProfileHeaderService {
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
       var date = moment(headerData.dob);
-      formattedBirthDate = GlobalFunctions.formatAPMonth(date.month()) + date.format(" D, YYYY");
+      formattedBirthDate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
     }
     var formattedBirthlocation = "N/A"; //[Wichita], [Kan.]
     if ( headerData.playerBirthCity && headerData.playerBirthState ) {
