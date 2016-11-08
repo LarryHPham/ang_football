@@ -59,7 +59,7 @@ export class GlobalSettings {
           env = "dev";
       }
       if (env == "cdn"){
-          env = "cnd";
+          env = "cdn";
       }
       if (env != "dev" && env !="qa" && env !="cdn"){
           env = "prod";
