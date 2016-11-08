@@ -119,7 +119,7 @@ export class ArticlePages implements OnInit {
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
-                        this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
+                        this.title = Article['data'][0]['article_data'].title;
                         this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date,"timeZone");
                         this.comment = Article['data'][0]['article_data'].comment_header;
                         this.articleData = Article['data'][0]['article_data'];
@@ -239,6 +239,14 @@ export class ArticlePages implements OnInit {
                                     newParagraph = [];
                                     placeHolder = null;
                                 }
+                            } else if (i == self.routeList.length - 1) {
+                                complexArray = [
+                                    {text: placeHolder},
+                                    {text: "<br><br>", class: "line-break"}
+                                ];
+                                articleData[index] = newParagraph.concat(complexArray);
+                                newParagraph = [];
+                                placeHolder = null;
                             } else {
                                 complexArray = [
                                     {text: placeHolder},
