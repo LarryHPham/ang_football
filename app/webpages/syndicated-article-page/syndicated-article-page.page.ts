@@ -4,7 +4,6 @@ import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated'
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import {ShareLinksComponent} from "../../fe-core/components/articles/share-links/share-links.component";
 import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
-import {SyndicatedTrendingComponent} from "../../fe-core/components/articles/syndicated-trending/syndicated-trending.component";
 import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
 import {LoadingComponent} from "../../fe-core/components/loading/loading.component";
 import {DeepDiveService} from '../../services/deep-dive.service'
@@ -17,6 +16,8 @@ import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
 import {SeoService} from "../../seo.service";
+import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 
 declare var jQuery:any;
@@ -33,8 +34,9 @@ declare var moment;
         RecommendationsComponent,
         DisqusComponent,
         LoadingComponent,
-        SyndicatedTrendingComponent,
-        ResponsiveWidget
+        TrendingComponent,
+        ResponsiveWidget,
+        WidgetModule
     ],
     providers: [DeepDiveService, GeoLocation, PartnerHeader],
     pipes: [SanitizeRUrl, SanitizeHtml]
@@ -56,6 +58,7 @@ export class SyndicatedArticlePage{
   public scope: string;
   public constructorControl: boolean = true;
   private subRec;
+  rawUrl:string;
   iframeUrl: any;
   constructor(
     private _params:RouteParams,
@@ -89,7 +92,7 @@ export class SyndicatedArticlePage{
           }
             this.constructorControl = false;
         }
-
+        this.rawUrl = window.location.href;
       });
     }
 
@@ -164,7 +167,6 @@ export class SyndicatedArticlePage{
     }
 
     getGeoLocation() {
-
         var defaultState = 'ca';
         this._geoLocation.getGeoLocation()
             .subscribe(
@@ -206,12 +208,9 @@ export class SyndicatedArticlePage{
       var startNum=Math.floor((Math.random() * 49) + 1);
        //needed to uppoercase for ai to grab data correctly
         this.subRec= this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
-
           .subscribe(data => {
             this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
-
           });
-
     }
     ngOnDestroy(){
         this.subRec.unsubscribe();
