@@ -264,6 +264,14 @@ export class ProfileHeaderService {
     };
   } //convertLeagueHeader
 
+  checkClass(headerData) {
+      if(!headerData.class && !headerData.stat4){
+          return "N/A";
+      } else if(headerData.class){
+          return headerData.class;
+      } else return headerData.stat4;
+  }
+
   convertToPlayerProfileHeader(data: PlayerProfileData): ProfileHeaderData {
     if (!data.headerData) {
       return null;
@@ -313,13 +321,13 @@ export class ProfileHeaderService {
                       description = description + " and weighs " + formattedWeight + " pounds";
                     }
                     description = description + ".";
-        function checkClass(headerData) {
-            if(!headerData.class && !headerData.stat4){
-                return "N/A";
-            } else if(headerData.class){
-                return headerData.class;
-            } else return headerData.stat4;
-        }
+        // function this.checkClass(headerData) {
+        //     if(!headerData.class && !headerData.stat4){
+        //         return "N/A";
+        //     } else if(headerData.class){
+        //         return headerData.class;
+        //     } else return headerData.stat4;
+        // }
 
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
@@ -363,7 +371,7 @@ export class ProfileHeaderService {
           {
             label: headerData.stat4Type,
             labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-            value: checkClass(headerData),
+            value: this.checkClass(headerData),
           },
         ]
       } //var header: ProfileHeaderData = {
