@@ -13,8 +13,7 @@
           <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
             <span>
                 <div class="carousel-container" *ngIf="articleType == 'story'">
-                  <images-media-carousel [imageData]="imageData" [copyright]="copyright"
-                                         [imageTitle]="imageTitle"></images-media-carousel>
+                  <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle"></images-media-carousel>
                 </div>
             </span>
               <div class="videoFrame" *ngIf="articleType == 'video'">
@@ -25,13 +24,13 @@
                 <div class="arpt col-xs-12 col-lg-9">
                   <div class="arpt-main-article">
                     <section class="arpt-info">
-                      <div class="arpt-author" *ngIf="articleType == 'story'" >Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
-                      <div class="arpt-date">Posted on: <span class="upper-case" [innerHTML]="articleData.publishedDate | safeHtml"></span></div>
+                      <div *ngIf="articleType == 'story'" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
+                      <div class="arpt-date">Posted on: <span class="upper-case" *ngIf="articleType == 'story'" [innerHTML]="articleData.publishedDate | safeHtml"></span><span class="upper-case" *ngIf="articleType == 'video'" [innerHTML]="articleData.publishedDate | safeHtml"></span></div>
                     </section>
 
-                    <div class="content-exerpt" *ngIf="articleType == 'story'"  [innerHTML]="articleData.teaser | safeHtml">
+                    <div class="content-exerpt" *ngIf="articleType == 'story'" [innerHTML]="articleData.teaser | safeHtml">
                     </div>
-                    <div class="content-exerpt" *ngIf="articleType == 'video'"  [innerHTML]="articleData.description | safeHtml">
+                    <div class="content-exerpt" *ngIf="articleType == 'video'" [innerHTML]="articleData.description | safeHtml">
                     </div>
                     <div class="bottom-shader" *ngIf="articleType == 'story'"></div>
                     <a *ngIf="articleType == 'story'" class="mod-page-btn readMore" [href]="articleData.articleUrl" target="_blank">Read the Full Article <i class="fa fa-arrow-right"></i></a>
