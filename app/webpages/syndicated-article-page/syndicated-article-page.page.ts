@@ -2,7 +2,7 @@ import {Component, AfterViewInit,Input} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/share-links/share-links.component";
 import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
 import {SyndicatedTrendingComponent} from "../../fe-core/components/articles/syndicated-trending/syndicated-trending.component";
 import {DisqusComponent} from "../../fe-core/components/articles/disqus/disqus.component";
@@ -121,7 +121,7 @@ export class SyndicatedArticlePage{
           }
           this.metaTags(data);
           this.articleData = data.data;
-          this.articleData.publishedDate = moment.unix(this.articleData.publishedDate/1000).format("MMM. Do, YYYY h:mm A") + " EST";
+          this.articleData.publishedDate = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate/1000),"timeZone");
         }
       )
     }
@@ -130,7 +130,7 @@ export class SyndicatedArticlePage{
         data => {
           this.articleData = data.data;
           this.metaTags(data);
-            this.iframeUrl = this.articleData.videoLink + "&autoplay=on";
+            this.iframeUrl = this.articleData.videoLink;
         }
       )
     }
@@ -218,9 +218,7 @@ export class SyndicatedArticlePage{
     }
 
     formatDate(date) {
-
-        return moment(date).format("MMM. DD, YYYY | h:mm A ")
-
+        return GlobalFunctions.sntGlobalDateFormatting(date,"timeZone");
     }
 
 }

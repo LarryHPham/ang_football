@@ -7,6 +7,12 @@
   min-width: 320px;
   width: 100%;
   display: block;
+  &-widget{
+    width:100%;
+    max-height: 250px;
+    .flexDisplay;
+    // @media @desktop-l{display: none}
+  }
   @media @mobile{
     .carWrapper{
       min-height:240px;
@@ -14,7 +20,7 @@
       height: 55vw;
     }
     .carousel_scroll-button{
-      font-size:45px;
+      font-size:20px;
     }
     .carousel_scroll-box{
       min-height: 240px;
@@ -24,6 +30,9 @@
     .carWrapper {
       max-height: 420px;
       height: 55vw !important;
+    }
+    .carousel_scroll-button{
+      font-size:75px;
     }
   }
   @media @desktop-m {
@@ -55,7 +64,7 @@
     height:50px;
     width:100%;
     position:relative;
-    display: none;
+    // display: none;
   }
   &-container2{
     background-color: @white;
@@ -217,16 +226,15 @@
           .flexDisplay;
           .flexWrap(wrap);
           width:320px;
-
         }
       }
     }
     &-boxScore{
       .flexDisplay;
       width:100%;
-        .box-scores {
-          margin:0;
-        }
+      .box-scores {
+        margin:0;
+      }
       .deep-dive-module {
         width: auto;
       }

@@ -246,7 +246,7 @@ export class ProfileHeaderService {
     return {
       imageURL: '', //TODO
       imageRoute: VerticalGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
-      text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
+      text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
       icon: 'fa fa-map-marker'
@@ -257,12 +257,20 @@ export class ProfileHeaderService {
     return {
       imageURL: GlobalSettings.getImageUrl(data.leagueLogo),
       imageRoute: ["League-page"],
-      text1: 'Last Updated:' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
+      text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.lastUpdated),
       text2: 'United States',
       text3: pageName,
       icon: 'fa fa-map-marker'
     };
   } //convertLeagueHeader
+
+  checkClass(headerData) {
+      if(!headerData.class && !headerData.stat4){
+          return "N/A";
+      } else if(headerData.class){
+          return headerData.class;
+      } else return headerData.stat4;
+  }
 
   convertToPlayerProfileHeader(data: PlayerProfileData): ProfileHeaderData {
     if (!data.headerData) {
@@ -282,7 +290,7 @@ export class ProfileHeaderService {
     var formattedBirthDate = "N/A"; //[October] [3], [1991]
     if ( headerData.dob ) {
       var date = moment(headerData.dob);
-      formattedBirthDate = GlobalFunctions.formatAPMonth(date.month()) + date.format(" D, YYYY");
+      formattedBirthDate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY');
     }
     var formattedBirthlocation = "N/A"; //[Wichita], [Kan.]
     if ( headerData.playerBirthCity && headerData.playerBirthState ) {
@@ -313,13 +321,13 @@ export class ProfileHeaderService {
                       description = description + " and weighs " + formattedWeight + " pounds";
                     }
                     description = description + ".";
-        function checkClass(headerData) {
-            if(!headerData.class && !headerData.stat4){
-                return "N/A";
-            } else if(headerData.class){
-                return headerData.class;
-            } else return headerData.stat4;
-        }
+        // function this.checkClass(headerData) {
+        //     if(!headerData.class && !headerData.stat4){
+        //         return "N/A";
+        //     } else if(headerData.class){
+        //         return headerData.class;
+        //     } else return headerData.stat4;
+        // }
 
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
@@ -363,7 +371,7 @@ export class ProfileHeaderService {
           {
             label: headerData.stat4Type,
             labelCont: VerticalGlobalFunctions.nonRankedDataPoints(headerData.position, headerData.stat4Desc),
-            value: checkClass(headerData),
+            value: this.checkClass(headerData),
           },
         ]
       } //var header: ProfileHeaderData = {

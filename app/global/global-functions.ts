@@ -140,6 +140,8 @@ export class GlobalFunctions {
         return val;
     }
 
+
+
     /**
      * - Returns a comma-delimited string for the given value.
      * - If the value is undefined or null, then the def string is returned instead.
@@ -183,6 +185,7 @@ export class GlobalFunctions {
         }
         return parts.join(".");
     }
+
 
     /**
      * - Returns a comma-delimited currency string for the given value.
@@ -454,12 +457,12 @@ export class GlobalFunctions {
      * @returns {string} - formatted string
      */
     static formatUpdatedDate(jsDate:any, includeTimestamp?:boolean, timezone?:string):string {
-        var date = moment(jsDate);
-        var str = date.format("dddd ") + GlobalFunctions.formatAPMonth(date.month()) + date.format(' D, YYYY');
+        var date = GlobalFunctions.sntGlobalDateFormatting(jsDate,'dayOfWeek');
         if (includeTimestamp) {
-            str += ' | ' + date.format('h:mm A') + (timezone !== undefined && timezone !== null ? timezone : "");
+            var date2 = GlobalFunctions.sntGlobalDateFormatting(jsDate,'timeZone');
+            return date2;
         }
-        return str;
+        return date;
     }
 
     /**
@@ -480,6 +483,106 @@ export class GlobalFunctions {
     }
 
 
+    /*
+    Checks to see if the input is unix or not. Assumes that a series of number is unix.
+    */
+
+    static isXUnix(value:any) {
+      if(typeof value == 'string') { // if string return false;
+        if(value.match(/^[0-9]+$/) == null) {
+          return false;
+        } else
+        if(value.match(/^[0-9]+$/) != null) { // string number return true
+          return true;
+        }
+      } else
+      if(typeof value == 'number') { // assumes that if it is a number, it is unix
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
+
+
+
+    static convertToUnix(value:any){
+      if(GlobalFunctions.isXUnix(value) == false){
+        if(moment(value,'YYYY-MM-DD',true).isValid()){
+          value = moment(value,"YYYY-MM-DD").tz("America/New_York").unix() * 1000;
+          return value;
+        } else
+        if(moment(value.toString(),'h:mm:ss',true).isValid()) {
+          value = moment(value).tz("America/New_York").unix() * 1000;
+          return value;
+        } else
+        if(moment(value.toString(),'dddd, MMM. DD, YYYY',true).isValid()) {
+          value = moment(value).tz("America/New_York").unix() * 1000;
+          return value;
+        } else
+          if(moment(value.toString(),'hh:mm:ss',true).isValid()) {
+            value = moment(value).tz("America/New_York").unix() * 1000;
+        } else
+          if(moment(value,'YYYY-MM-DD h:mm:ss',true).isValid()) {
+            value = moment(value).tz("America/New_York").unix() * 1000;
+            return value;
+          }
+      }
+      else if(GlobalFunctions.isXUnix(value) == true) {
+        if(value.length <= 11) {
+          value = Number(value) * 1000;
+          return value;
+        } else {
+          value = Number(value);
+          return value;
+        }
+      }
+      return value; // if original input is Unix to begin with
+    }
+
+
+    /*
+    - Formats any stringed date into approrpriate styled date.
+    - Formats Unix into approrpriate styled date.
+    - Select the format of date you want with the identifiers:
+      - defaultDate
+      - shortDate
+      - dayOfWeek
+      - timeZone
+    */
+
+    static sntGlobalDateFormatting(unixTimestamp:any, identifier?:string, customDate?:string) {
+      unixTimestamp = GlobalFunctions.convertToUnix(unixTimestamp);
+      let newDate;
+      let monthnum = Number(moment(unixTimestamp).tz('America/New_York').format("MM")) - 1;
+      let month = GlobalFunctions.formatAPMonth(Number(monthnum));
+      let longmonth = moment(unixTimestamp).tz('America/New_York').format('MMMM');
+      let day = moment(unixTimestamp).tz('America/New_York').format('dddd');
+      let dd = moment(unixTimestamp).tz('America/New_York').format("DD");
+      let year = moment(unixTimestamp).tz('America/New_York').format("YYYY");
+      let shortDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY");
+      let timeZone = moment(unixTimestamp).tz('America/New_York').format('h:mmA z');
+      let defaultDate = month + ' ' + dd + ', ' + year;
+
+      switch(identifier){
+        case 'defaultDate': newDate = defaultDate; // Oct. O6, 2016
+          return newDate;
+        case 'shortDate': newDate = moment(unixTimestamp).tz('America/New_York').format("MM/DD/YY"); // mm/dd/yy
+          return newDate;
+        case 'dayOfWeek': newDate = day + ', ' + defaultDate; // Tuesday, Jan. 14, 2016
+          return newDate;
+        case 'timeZone': newDate = day + ', ' + defaultDate + ' ' + timeZone; // Tuesday, Jan. 14, 2016 12:00 (EST)
+          return newDate;
+        case 'bulletedShortDateTime': newDate = day + ', ' + month + ' ' + dd + ' &bull; ' + moment(unixTimestamp).tz('America/New_York').format('h:mmA z'); // Tuesday, Jan. 14, 2016 12:00 (EST)
+            return newDate;
+        case 'custom': break;
+        default:
+          return defaultDate;
+      }
+    }
+
+
     /**
      * Parses the date string with moment and returns it as a long-date formatted string
      * @param {string} dateStr
@@ -489,11 +592,13 @@ export class GlobalFunctions {
         if (!dateStr) {
             return "N/A";
         }
-        var date = moment(dateStr)
+        var dateUnix = GlobalFunctions.convertToUnix(dateStr);
+        var date = moment(dateUnix).format('d, YYYY')
+        var month = GlobalFunctions.formatAPMonth(moment(dateUnix).format('MM'));
         if (!date) {
             return "N/A";
         }
-        return GlobalFunctions.formatAPMonth(date.month()) + date.format(" d, YYYY");
+        return month + ' ' + date;
     }
 
     /**
@@ -502,6 +607,9 @@ export class GlobalFunctions {
      * @param {number} month - The month to format (0-based)
      * @returns
      */
+
+    // formatAPMonth uses zero based index for month, Moment.js uses 1 based index
+    // when sending month numbers use JS, not Moment.js
     static formatAPMonth(month:number) {
         switch (month) {
             case 0:
@@ -652,7 +760,8 @@ export class GlobalFunctions {
     }
 
     static formatDate(date) {
-        var month = moment.unix(date / 1000).format("MMM.");
+        var monthnum = moment.unix(date / 1000).format("MM");
+        var month = GlobalFunctions.formatAPMonth(Number(monthnum));
         var day = moment.unix(date / 1000).format("DD");
         var year = moment.unix(date / 1000).format("YYYY");
         var time = moment.unix(date / 1000).format("h:mm");

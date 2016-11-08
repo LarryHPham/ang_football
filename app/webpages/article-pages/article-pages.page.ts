@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
-import {ShareLinksComponent} from "../../fe-core/components/articles/shareLinks/shareLinks.component";
+import {ShareLinksComponent} from "../../fe-core/components/articles/share-links/share-links.component";
 import {ArticleContentComponent} from "../../fe-core/components/articles/article-content/article-content.component";
 import {RecommendationsComponent} from "../../fe-core/components/articles/recommendations/recommendations.component";
 import {TrendingComponent} from "../../fe-core/components/articles/trending/trending.component";
@@ -18,6 +18,7 @@ import {GlobalSettings} from "../../global/global-settings";
 import {SidekickContainerComponent} from "../../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import {HeadlineDataService} from "../../global/global-ai-headline-module-service";
 import {SeoService} from '../../seo.service';
+import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 declare var moment;
 
@@ -34,7 +35,8 @@ declare var moment;
         DisqusComponent,
         LoadingComponent,
         TrendingComponent,
-        SidekickContainerComponent
+        SidekickContainerComponent,
+        WidgetModule
     ],
 })
 
@@ -114,20 +116,14 @@ export class ArticlePages implements OnInit {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         } else {
                             articleType = GlobalFunctions.getArticleType(Article['data'][0].article_subtype_id, false);
-                            //articleType = [Object.keys(Article.data[0]['article_data'])[0]];
-                            //articleType = GlobalFunctions.getArticleType(Article['data'][0].article_type_id, true);
                         }
                         this.articleType = articleType[1];
                         this.articleSubType = articleType[2];
-                        //this.articleType = articleType[0];
-                        //this.articleSubType = articleType[2];
                         this.isSmall = window.innerWidth < 640;
                         this.rawUrl = window.location.href;
                         this.pageIndex = articleType[0];
                         this.title = Article['data'][0]['article_data'][this.pageIndex].displayHeadline;
-                        var date  = Article['data'][0]['article_data'][this.pageIndex].dateline;
-                        var date1 = moment(date).format();
-                        this.date = moment.tz(date1, 'America/New_York').format('dddd, MMM. DD, YYYY h:mmA (z)');
+                        this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'][this.pageIndex].dateline,"timeZone");
                         this.comment = Article['data'][0]['article_data'][this.pageIndex].commentHeader;
                         this.articleData = Article['data'][0]['article_data'][this.pageIndex];
                         this.teamId = Article['data'][0]['article_data'][this.pageIndex].teamId;
@@ -471,7 +467,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: moment(recommendations.last_updated).format('MMM. DD, YYYY'),
+            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated,"dayOfWeek"),
             keyword: "FOOTBALL"
         };
         return articles;

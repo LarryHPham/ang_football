@@ -1,40 +1,46 @@
 <div class="articles-page">
     <div class="articles-page-content">
-        <div *ngIf="error">
-            <div class="loading-container">
-                <span class="loading-text">The article you are trying to reach is unavailable. You will be redirected to your previous page shortly.</span>
-            </div>
-        </div>
-        <loading-component *ngIf="!articleData && !error"></loading-component>
-    <span *ngIf="articleData">
-        <shareLinks-component [shareUrl]="rawUrl" [isMain]="true"></shareLinks-component>
-        <h1 class="articles-page-title">{{title}}</h1>
-        <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
-            <span *ngIf="imageData">
-                <div template="ngIf hasImages" class="carousel-container">
-                    <images-media-carousel [isProfilePage]="false"
-                                           [imageData]="imageData"
-                                           [copyright]="copyright"
-                                           [imageTitle]="imageTitle"></images-media-carousel>
+      <div *ngIf="error">
+          <div class="loading-container">
+              <span class="loading-text">The article you are trying to reach is unavailable. You will be redirected to your previous page shortly.</span>
+          </div>
+      </div>
+      <loading-component *ngIf="!articleData && !error"></loading-component>
+      <span *ngIf="articleData">
+          <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
+          <h1 class="articles-page-title">{{title}}</h1>
+          <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
+              <span *ngIf="imageData">
+                  <div template="ngIf hasImages" class="carousel-container">
+                      <images-media-carousel [isProfilePage]="false"
+                                             [imageData]="imageData"
+                                             [copyright]="copyright"
+                                             [imageTitle]="imageTitle"></images-media-carousel>
+                  </div>
+              </span>
+              <section class=" articles-page-container row">
+                <div class="arpt col-xs-12 col-lg-9">
+                    <div class="arpt-date">Posted on: <span>{{date}}</span></div>
+                    <article-content-component class="articles-page-padding" [articleType]="articleType"
+                                               [articleSubType]="articleSubType"
+                                               [articleData]="articleData"
+                                               [teamId]="teamId"
+                                               [imageLinks]="imageLinks"
+                                               [partnerId]="partnerId"
+                                               [scope]="scope"
+                    ></article-content-component>
+                    <sidekick-container-component></sidekick-container-component>
+                    <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
+                    <recommendations-component [randomHeadlines]="randomHeadlines"
+                                               [images]="images"></recommendations-component>
+                    <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
                 </div>
-            </span>
-            <div class="arpt">
-                <div class="arpt-date">{{date}}</div>
-            </div>
-            <article-content-component [articleType]="articleType"
-                                       [articleSubType]="articleSubType"
-                                       [articleData]="articleData"
-                                       [teamId]="teamId"
-                                       [imageLinks]="imageLinks"
-                                       [partnerId]="partnerId"
-                                       [scope]="scope"
-            ></article-content-component>
-            <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
-            <sidekick-container-component></sidekick-container-component>
-            <recommendations-component [randomHeadlines]="randomHeadlines"
-                                       [images]="images"></recommendations-component>
-            <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
-        </sidekick-wrapper-ai>
-    </span>
+
+                <div class="vertical-widget col-lg-3">
+                    <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
+                </div>
+            </section>
+          </sidekick-wrapper-ai>
+      </span>
     </div>
 </div>
