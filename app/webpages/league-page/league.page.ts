@@ -390,13 +390,10 @@ export class LeaguePage implements OnInit {
 
         this.videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
             .subscribe(data => {
-
                     this.firstVideo = data.data[first].videoLink;
                     this.videoData = this.videoBatchService.transformVideoStack(data.data.slice(1));
-
                 },
                 err => {
-
                     console.log("Error getting video data");
                 }
 
