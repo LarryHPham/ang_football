@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, AfterViewInit, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router,ROUTER_DIRECTIVES, RouteParams} from '@angular/router-deprecated';
 import {ImagesMedia} from "../../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
@@ -79,9 +79,6 @@ export class ArticlePages implements OnInit {
     title:string;
     scope:string = null;
     constructorControl: boolean = true;
-    recomendationData: any;
-
-    private subRec;
     partnerID: string;
     geoLocation:string;
     iframeUrl: any;
@@ -90,7 +87,7 @@ export class ArticlePages implements OnInit {
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
                 private _seoService:SeoService,
-                private _deepdiveservice:DeepDiveService,
+                private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
                 private _partnerData: PartnerHeader) {
         //check to see if scope is correct and redirect
@@ -102,26 +99,28 @@ export class ArticlePages implements OnInit {
             if (parentParams.partnerID != null) {
               this.partnerId = parentParams.partnerID;
             }
-            this.getArticles();
+            this.eventID = _params.get('eventID');
+            this.eventType = _params.get('eventType');
+            if (this.eventType == "story") {
+              this.getDeepDiveArticle(this.eventID);
+            }
+            if (this.eventType == "video") {
+              this.getDeepDiveVideo(this.eventID);
+            }
+            if(this.eventType != 'story' && this.eventType != 'video'){
+              this.getArticles();
+            }
+            if (this.eventType == "upcoming-game") {
+              this.eventType = "upcoming";
+            }
+            this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+            if (this.eventType == "player-fantasy") {
+              this.isFantasyReport = true;
+            }
+            this.rawUrl = window.location.href;
             this.constructorControl = false;
           }
         });
-        this.eventID = _params.get('eventID');
-        this.eventType = _params.get('eventType');
-        if (this.eventType == "story") {
-          this.getDeepDiveArticle(this.eventID);
-        }
-        if (this.eventType == "video") {
-          this.getDeepDiveVideo(this.eventID);
-        }
-        if (this.eventType == "upcoming-game") {
-            this.eventType = "upcoming";
-        }
-        this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-        if (this.eventType == "player-fantasy") {
-            this.isFantasyReport = true;
-        }
-        this.rawUrl = window.location.href;
     }
 
     getArticles() {
@@ -208,8 +207,7 @@ export class ArticlePages implements OnInit {
                         }
                     }
                     this.randomHeadlines = result;
-                }
-            );
+              });
     }
 
     getCarouselImages(data) {
@@ -517,15 +515,13 @@ export class ArticlePages implements OnInit {
     }
 
     private getDeepDiveArticle(articleID) {
-      this._deepdiveservice.getDeepDiveArticleService(articleID).subscribe(
+      this._deepDiveService.getDeepDiveArticleService(articleID).subscribe(
         data => {
-
           if (data.data.imagePath == null || data.data.imagePath == undefined || data.data.imagePath == "") {
             this.imageData  = ["/app/public/stockphoto_bb_1.jpg", "/app/public/stockphoto_bb_2.jpg"];
             this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
             this.imageTitle = ["", ""];
-          }
-          else {
+          } else {
             this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath)];
             this.copyright = ["USA Today Sports Images"];
             this.imageTitle = [""];
@@ -537,7 +533,7 @@ export class ArticlePages implements OnInit {
       )
     }
     private getDeepDiveVideo(articleID){
-      this._deepdiveservice.getDeepDiveVideoService(articleID).subscribe(
+      this._deepDiveService.getDeepDiveVideoService(articleID).subscribe(
         data => {
           this.articleData = data.data;
           this.date = this.formatDate(this.articleData.pubDate);
@@ -578,21 +574,14 @@ export class ArticlePages implements OnInit {
     getGeoLocation() {
         var defaultState = 'ca';
         this._geoLocation.getGeoLocation()
-            .subscribe(
-                geoLocationData => {
-                    this.geoLocation = geoLocationData[0].state;
-                    this.geoLocation = this.geoLocation.toLowerCase();
-                    this.callModules();
-
-                },
-                err => {
-                    this.geoLocation = defaultState;
-                    this.callModules();
-                }
-            );
-    }
-    callModules(){
-        this.getRecomendationData();
+          .subscribe(
+              geoLocationData => {
+                  this.geoLocation = geoLocationData[0].state;
+                  this.geoLocation = this.geoLocation.toLowerCase();
+              },
+              err => {
+                  this.geoLocation = defaultState;
+          });
     }
 
     getPartnerHeader(){//Since it we are receiving
@@ -604,8 +593,6 @@ export class ArticlePages implements OnInit {
             var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
             state = state.toLowerCase();
             this.geoLocation = state;
-
-            this.getRecomendationData()
           }
         );
       }else{
@@ -615,16 +602,8 @@ export class ArticlePages implements OnInit {
     formatDate(date) {
         return GlobalFunctions.sntGlobalDateFormatting(date,"timeZone");
     }
-    getRecomendationData(){
-      var startNum=Math.floor((Math.random() * 49) + 1);
-       //needed to uppoercase for ai to grab data correctly
-      this.subRec = this._deepdiveservice.getRecArticleData(this.scope, this.geoLocation,startNum, 3)
-          .subscribe(data => {
-            this.recomendationData = this._deepdiveservice.transformToRecArticles(data);
-      });
-    }
     ngOnDestroy(){
-        this.subRec.unsubscribe();
+        // this.subRec.unsubscribe();
     }
 
 }

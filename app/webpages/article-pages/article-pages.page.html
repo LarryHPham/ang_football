@@ -32,7 +32,7 @@
                     <!-- ARTICLE INFORMATION -->
                     <section class="arpt-info">
                       <div *ngIf="eventType != 'video' && articleData.publisher" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
-                      <div class="arpt-date">Posted on: <span class="upper-case" [innerHTML]="date | safeHtml"></span></div>
+                      <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
                     </section>
                     <!-- DISPLAY ARTICLE -->
                     <article-content-component *ngIf="eventType != 'story' && eventType != 'video'" class="articles-page-padding" [eventType]="eventType" [articleSubType]="articleSubType" [articleData]="articleData" [teamId]="teamId" [imageLinks]="imageLinks" [partnerId]="partnerId" [scope]="scope"></article-content-component>
@@ -46,7 +46,7 @@
                     <!-- RESPONSIVE WIDGET -->
                     <sidekick-container-component></sidekick-container-component>
                     <disqus-component *ngIf="!checkPartner"></disqus-component>
-                    <recommendations-component [randomHeadlines]="randomHeadlines" [images]="images"></recommendations-component>
+                    <recommendations-component *ngIf="randomHeadlines" [randomHeadlines]="randomHeadlines" [images]="images"></recommendations-component>
                     <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
                 </div>
                 <!-- SIDEKICK WHEN IN DESKTOP LARGE SIZE -->
