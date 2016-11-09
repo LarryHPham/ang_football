@@ -280,7 +280,7 @@ export class DeepDivePage{
       }
 
     private getDataCarousel() {
-      this._deepDiveData.getCarouselData(this.scope, this.carouselData, '25', '1', this.geoLocation, (carData)=>{
+      this._deepDiveData.getCarouselData(this.scope, this.carouselData, '10', '1', this.geoLocation, (carData)=>{
         this.carouselData = carData;
       })
     }
