@@ -905,7 +905,12 @@ export class GlobalFunctions {
                     return articleInformation = ["fantasy-away-kicker1", "fantasy", "null"];
             }
         }
-    } //getArticleType
+
+    }
+
+    static capitalizeFirstLetter(s) {
+        return s[0].toUpperCase() + s.slice(1);
+    }
 
     static lazyLoadOnScroll(event, lazyLoadSectionIndex) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {

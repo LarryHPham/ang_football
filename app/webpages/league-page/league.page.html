@@ -32,6 +32,7 @@
       <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
         [data]="transactionsData"
+        [transactionModuleFooterParams]="transactionModuleFooterParams"
         [transactionFilter1]="transactionFilter1"
         [dropdownKey1]="dropdownKey1"
         (tabSwitched)="transactionsTab($event)"

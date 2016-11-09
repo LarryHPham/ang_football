@@ -46,7 +46,7 @@ export class VideoService {
         }
         domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
 
-        urlRouteArray = [relPath+domainHostName,domainParams,'Syndicated-article-page', {articleType:'video', eventID:val.id}];
+        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {articleType:'video', eventID:val.id}];
         val['urlRoute'] = urlRouteArray
       })
       return data;

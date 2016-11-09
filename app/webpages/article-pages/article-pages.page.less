@@ -5,23 +5,17 @@
 }
 .large {
   display: block;
-  @media @new-mobile{
-    display: none;
-  }
+  @media @new-mobile{display: none}
 }
 
 .small {
   display: none;
-  @media @new-mobile{
-    display: block;
-  }
+  @media @new-mobile{display: block}
 }
 
 .article-image-responsive {
   .roundImageMain(121px);
-  @media @new-mobile{
-    .roundImageMain(71px);
-  }
+  @media @new-mobile{.roundImageMain(71px);}
 }
 
 .carousel-container {
@@ -73,7 +67,7 @@
     }
     &-padding{
       display: block;
-      @media @new-mobile{padding: 10px 10px 0}
+      padding: 10px 10px 0;
     }
   }//new-mobile ends
   @media @new-tablet{padding: 15px 20px 0}
@@ -92,57 +86,89 @@
     margin-bottom: 20px;
     padding-top: 10px;
     @media @new-mobile{
-      .globalDefaultFont(20px, 800);
-      margin: 0 auto 10px 10px;
+      font-size: 20px;
+      padding: 0 10px;
       width: 100%;
-    }
-  }
-  .arpt {
-    overflow: hidden;
-    position: relative;
-    text-align: left;
-    @media @new-desktop-l{padding-right: 7px}
-    &-author {
-      width: 200%;
-      height: 50px;
-      float: left;
-      &-image {
-        background-image: url("/app/public/mainLogo.jpg");
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        border-radius: 100%;
-        width: 50px;
-        height: 50px;
-        float: left;
-      }
-
-      &-text {
-        .globalDefaultFont(16px, 400);
-        width: 520px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        padding-top: 15px;
-        padding-left: 15px;
-        text-align: left;
-
-        &-name {
-          .globalDefaultModFont(16px, 800, @masterBrandColor);
-          text-align: left;
-        }
-      }
-    }
-
-    &-date {
-      .globalDefaultModFont(12px, 400, @bulletGrey);
-      line-height: 1em;
-      margin-top: 10px;
-      width: 100%;
-      text-align: left;
-      @media @new-mobile{padding: 0 10px}
-      @media @new-tablet{text-align: right}
     }
   }
   .trending-article-content{line-height: 1.3}
 }
+.arpt{
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+  @media @new-desktop-l{padding-right: 7px}
+  &-author {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    &-image {
+      background-image: url("/app/public/mainLogo.jpg");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      border-radius: 100%;
+      width: 50px;
+      height: 50px;
+      float: left;
+    }
+
+    &-text {
+      .globalDefaultFont(16px, 400);
+      width: 520px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      padding-top: 15px;
+      padding-left: 15px;
+      text-align: left;
+      &-name {
+        .globalDefaultModFont(16px, 800, @masterBrandColor);
+        text-align: left;
+      }
+    }
+  }
+  &-date {
+    .globalDefaultModFont(12px, 400, @bulletGrey);
+    line-height: 1em;
+    margin-top: 10px;
+    text-align: right;
+  }
+  &-main-article{
+    margin-bottom: 30px;
+    @media @new-mobile{padding: 0 10px}
+    .readMore {
+      color: @white;
+      padding-left: 10px;
+      :hover{
+        color: @white;
+        background-color: @black;
+      }
+    }
+  }
+  &-info{
+    @media @new-mobile{padding: 0 10px}
+    .flexDisplay;
+    .flexJustify(space-between);
+    .arpt-author{margin-top: 10px}
+  }
+}
+.videoFrame {
+    position: relative;
+    padding-bottom: 56%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+    min-width: 320px;
+  }
+.videoFrame iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 320px;
+}
+.content-exerpt {
+    margin-bottom:30px;
+    line-height: 1.2;
+    p {line-height: 1.2}
+  }

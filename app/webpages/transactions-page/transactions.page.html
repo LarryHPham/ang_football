@@ -10,7 +10,8 @@
       [tabs]="tabs"
       [transactionFilter1]="transactionFilter1"
       [dropdownKey1]="dropdownKey1"
-      (tabSwitched)="transactionsTab($event)"
+      [selectedTabName]="selectedTabName"
+      (tabSelectedListener)="transactionsTab($event)"
       (transactionKeyFilter)="transactionsFilterDropdown($event)">
     </transactions>
   </div>

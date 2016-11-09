@@ -35,12 +35,15 @@
 
     <div class="loadBatch4" *ngIf="lazyLoadSectionIndex >= 4">
       <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-      <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
-      [data]="transactionsData"
-      [transactionFilter1]="transactionFilter1"
-      [dropdownKey1]="dropdownKey1"
-      (tabSwitched)="transactionsTab($event)"
-      (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
+      <transactions-module
+          *ngIf="scope == sportLeagueAbbrv && transactionsData"
+          [data]="transactionsData"
+          [transactionModuleFooterParams]="transactionModuleFooterParams"
+          [transactionFilter1]="transactionFilter1"
+          [dropdownKey1]="dropdownKey1"
+          (tabSwitched)="transactionsTab($event)"
+          (transactionKeyFilter)="transactionsFilterDropdown($event)">
+      </transactions-module>
       <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
       <draft-history-module *ngIf="profileData && scope == sportLeagueAbbrv.toLowerCase()" [profileData]="profileData"></draft-history-module>
       <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
