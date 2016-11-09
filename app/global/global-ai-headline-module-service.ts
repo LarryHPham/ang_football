@@ -10,7 +10,7 @@ export class HeadlineDataService {
 
     getAiHeadlineData(scope, teamID) {
         var fullUrl = GlobalSettings.getHeadlineUrl();
-        return this.http.get(fullUrl + 'headlines/' + scope + '/' + teamID)
+        return this.http.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
             .map(res => res.json())
             .map(data => data);
     }
@@ -19,7 +19,8 @@ export class HeadlineDataService {
         if(count == null){
             count = 10;
         }
-        var fullUrl = GlobalSettings.getHeadlineUrl();
+        var fullUrl = GlobalSettings.getArticleUrl();
+        console.log(fullUrl + "articles?page=1&count=" + count + "&scope="+scope+"&articleType=pregame-report");
         return this.http.get(fullUrl + "articles?page=1&count=" + count + "&scope="+scope+"&articleType=pregame-report")
             .map(res => res.json())
             .map(data => data);
