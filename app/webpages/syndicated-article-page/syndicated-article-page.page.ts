@@ -57,6 +57,9 @@ export class SyndicatedArticlePage{
   public constructorControl: boolean = true;
   private subRec;
   iframeUrl: any;
+
+  private lazyLoadSectionIndex: number = 1;
+
   constructor(
     private _params:RouteParams,
     private _router:Router,
@@ -219,6 +222,12 @@ export class SyndicatedArticlePage{
 
     formatDate(date) {
         return GlobalFunctions.sntGlobalDateFormatting(date,"timeZone");
+    }
+
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.lazyLoadSectionIndex = GlobalFunctions.lazyLoadOnScroll(event, this.lazyLoadSectionIndex);
+      return;
     }
 
 }

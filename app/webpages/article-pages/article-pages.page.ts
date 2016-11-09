@@ -21,6 +21,7 @@ import {SeoService} from '../../seo.service';
 import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 
 declare var moment;
+declare var jQuery: any; //used for scroll event
 
 @Component({
     selector: 'article-pages',
@@ -73,6 +74,9 @@ export class ArticlePages implements OnInit {
     title:string;
     scope:string = null;
     constructorControl: boolean = true;
+
+    private lazyLoadSectionIndex: number = 1;
+
     constructor(private _params:RouteParams,
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
@@ -483,5 +487,11 @@ export class ArticlePages implements OnInit {
             resizeEvent.initUIEvent('resize', true, false, window, 0);
             window.dispatchEvent(resizeEvent);
         }
+    }
+
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.lazyLoadSectionIndex = GlobalFunctions.lazyLoadOnScroll(event, this.lazyLoadSectionIndex);
+      return;
     }
 }

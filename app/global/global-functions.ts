@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
 
 declare var moment:any;
+declare var jQuery: any; //used for scroll event
 
 @Injectable()
 
@@ -904,5 +905,13 @@ export class GlobalFunctions {
                     return articleInformation = ["fantasy-away-kicker1", "fantasy", "null"];
             }
         }
-    }
+    } //getArticleType
+
+    static lazyLoadOnScroll(event, lazyLoadSectionIndex) {
+      if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+        //fire when scrolled into footer
+        lazyLoadSectionIndex = lazyLoadSectionIndex + 1;
+      }
+      return lazyLoadSectionIndex;
+    } //onScroll
 }

@@ -1,4 +1,4 @@
-<div class="syndicated-articles-page">
+<div class="syndicated-articles-page" (window:scroll)="onScroll($event)">
     <div class="syndicated-articles-page-content">
         <div *ngIf="error">
             <div class="loading-container">

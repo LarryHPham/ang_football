@@ -1,4 +1,4 @@
-<div class="articles-page">
+<div class="articles-page" (window:scroll)="onScroll($event)">
     <div class="articles-page-content">
       <div *ngIf="error">
           <div class="loading-container">
@@ -27,15 +27,17 @@
                                                [teamId]="teamId"
                                                [imageLinks]="imageLinks"
                                                [partnerId]="partnerId"
-                                               [scope]="scope"
-                    ></article-content-component>
+                                               [scope]="scope"></article-content-component>
                     <sidekick-container-component></sidekick-container-component>
                     <disqus-component *ngIf="!checkPartner" [comment]="comment"></disqus-component>
-                    <recommendations-component [randomHeadlines]="randomHeadlines"
-                                               [images]="images"></recommendations-component>
-                    <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
-                </div>
 
+                    <div class="loadBatch2" *ngIf="lazyLoadSectionIndex >= 2">
+                      <recommendations-component
+                        [randomHeadlines]="randomHeadlines"
+                        [images]="images"></recommendations-component>
+                      <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
+                    </div> <!--loadBatch2-->
+                </div>
                 <div class="vertical-widget col-lg-3">
                     <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
                 </div>

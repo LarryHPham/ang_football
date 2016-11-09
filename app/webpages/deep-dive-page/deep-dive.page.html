@@ -17,6 +17,12 @@
         <side-scroll-schedules *ngIf="scopeDisplayed" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="changeScopeVar" (changeScope)="changeScope($event)"></side-scroll-schedules>
       </div>
 
+      <!--First article stack was moved out of deep dive block 1 for performance-->
+      <div class="deep-dive-module" *ngIf="firstStackRow">
+        <article-stack-module [stackTop]="firstStackTop" [stackRow]="firstStackRow"></article-stack-module>
+      </div>
+      <!---->
+
       <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>
 
       <deep-dive-block-2 *ngIf="blockIndex >= 2 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-2>

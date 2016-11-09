@@ -67,6 +67,7 @@ import {HeadlineData} from "../../global/global-interface";
 import {SeoService} from "../../seo.service";
 
 declare var moment;
+declare var jQuery: any; //used for scroll event
 
 @Component({
     selector: 'League-page',
@@ -179,6 +180,8 @@ export class LeaguePage implements OnInit {
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
     private constructorControl: boolean = true;
+
+    private lazyLoadSectionIndex: number = 1;
 
     constructor(private _router:Router,
                 private _title: Title,
@@ -612,6 +615,11 @@ export class LeaguePage implements OnInit {
                 console.log('Error: Loading MVP Pitchers: ', err);
             })
       }
+    } //getMVPService
 
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.lazyLoadSectionIndex = GlobalFunctions.lazyLoadOnScroll(event, this.lazyLoadSectionIndex);
+      return;
     }
 }
