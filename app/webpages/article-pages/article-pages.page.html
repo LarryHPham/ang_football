@@ -15,10 +15,10 @@
           <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
               <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
               <section *ngIf="eventType != 'video'">
-                <div *ngIf="eventType == 'story'" class="carousel-container">
+                <!-- <div *ngIf="eventType == 'story'" class="carousel-container">
                   <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle"></images-media-carousel>
-                </div>
-                <div *ngIf="eventType != 'story'" template="ngIf hasImages" class="carousel-container">
+                </div> -->
+                <div *ngIf="imageData && imageTitle" class="carousel-container">
                     <images-media-carousel [isProfilePage]="false" [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle"></images-media-carousel>
                 </div>
               </section>

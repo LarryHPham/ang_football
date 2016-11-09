@@ -5,23 +5,17 @@
 }
 .large {
   display: block;
-  @media @new-mobile{
-    display: none;
-  }
+  @media @new-mobile{display: none}
 }
 
 .small {
   display: none;
-  @media @new-mobile{
-    display: block;
-  }
+  @media @new-mobile{display: block}
 }
 
 .article-image-responsive {
   .roundImageMain(121px);
-  @media @new-mobile{
-    .roundImageMain(71px);
-  }
+  @media @new-mobile{.roundImageMain(71px);}
 }
 
 .carousel-container {
@@ -73,7 +67,7 @@
     }
     &-padding{
       display: block;
-      @media @new-mobile{padding: 10px 10px 0}
+      padding: 10px 10px 0;
     }
   }//new-mobile ends
   @media @new-tablet{padding: 15px 20px 0}
