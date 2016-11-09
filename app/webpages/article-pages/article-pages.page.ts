@@ -123,8 +123,7 @@ export class ArticlePages implements OnInit {
                         this.title = Article['data'][0]['article_data'].title;
                         this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date,"timeZone");
                         this.articleData = Article['data'][0]['article_data'];
-                        this.teamId = Article['data'][0]['article_data'].teamId;
-
+                        this.teamId = Article['data'][0].team_id;
                         //create meta description that is below 160 characters otherwise will be truncated
                         let metaDesc = Article['data'][0].meta_headline;
                         let link = window.location.href;
