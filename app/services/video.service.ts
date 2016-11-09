@@ -33,7 +33,6 @@ export class VideoService {
     }
 
     transformVideoStack(data){
-
       data.forEach(function(val, i){
         var relPath = GlobalSettings.getRouteFullParams().relPath;
         let domainHostName;
@@ -46,7 +45,7 @@ export class VideoService {
         }
         domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
 
-        urlRouteArray = [relPath+domainHostName,domainParams,'Syndicated-article-page', {articleType:'video', eventID:val.id}];
+        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType:'video', eventID:val.id}];
         val['urlRoute'] = urlRouteArray
       })
       return data;
