@@ -352,7 +352,7 @@ export class DeepDivePage{
           });
       this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
           .subscribe(data => {
-            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data, 'postgame-report');
+            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
           },
           err => {
               console.log("Error getting first AI article batch data");
