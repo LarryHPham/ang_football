@@ -145,7 +145,7 @@ export class ArticlePages implements OnInit {
                             this.rawUrl = window.location.href;
                             this.pageIndex = articleType[0];
                             this.title = Article['data'][0]['article_data'].title;
-                            this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date, "timeZone");
+                            this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date*1000, "timeZone");
                             this.articleData = Article['data'][0]['article_data'];
                             if (this.eventType != "articleType=player-fantasy" || Article['data'][0].team_id != null) {
                                 this.teamId = Article['data'][0].team_id;
@@ -678,6 +678,7 @@ export class ArticlePages implements OnInit {
                 }
                 this.metaTags(data);
                 this.articleData = data.data;
+
                 this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
                 this.getRecommendedArticles();
             }
