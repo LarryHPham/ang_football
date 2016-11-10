@@ -404,5 +404,13 @@ export interface ArticleData {
         headline: string;
         content: any;
     }>;
+    route_config: Array<{
+        display: string;
+        name: string;
+        route_type: string;
+        id: string;
+        team_name: string;
+        paragraph_index: string;
+    }>;
 }
 /*ABOVE IS ARTICLE MODULE TEST INTERFACE*/

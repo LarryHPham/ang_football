@@ -2,41 +2,44 @@ import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
 
 declare var moment:any;
+declare var jQuery: any; //used for scroll event
 
 @Injectable()
 
 export class GlobalFunctions {
 
-  //return rel path position
-  static routerRelPath(router){
-    //create relative path for the redirect
-    let counter = 0;
-    let hasParent = true;
-    let route = router;
-    for (var i = 0; hasParent == true; i++){
-      if(route.parent != null){
-        counter++;
-        route = route.parent;
-      }else{
-        hasParent = false;
-        var relPath = '';
-        for(var c = 1 ; c <= counter; c++){
-          relPath += '../';
+    //return rel path position
+    static routerRelPath(router) {
+        //create relative path for the redirect
+        let counter = 0;
+        let hasParent = true;
+        let route = router;
+        for (var i = 0; hasParent == true; i++) {
+            if (route.parent != null) {
+                counter++;
+                route = route.parent;
+            } else {
+                hasParent = false;
+                var relPath = '';
+                for (var c = 1; c <= counter; c++) {
+                    relPath += '../';
+                }
+            }
         }
-      }
+        return relPath;
     }
-    return relPath;
-  }
+
     /*convert from inches to ft-in format*/
     static inchesToFeet(inch):string {
-      if(inch === undefined || inch === null){
-        return inch;
-      }
-      inch = Number(inch);
-      var feet = Math.floor(inch / 12);
-      inch %= 12;
-      return feet + "-" + inch;
+        if (inch === undefined || inch === null) {
+            return inch;
+        }
+        inch = Number(inch);
+        var feet = Math.floor(inch / 12);
+        inch %= 12;
+        return feet + "-" + inch;
     }
+
     /**
      * Returns the approriate ordinal suffix for the given number
      *
@@ -817,96 +820,120 @@ export class GlobalFunctions {
         return articles;
     }
 
-    static getArticleType(articleType, isMain) {
-        var articleInformation = [];
-        if (isMain) {
-            switch (parseInt(articleType)) {
-                case 0:
-                    return articleInformation = ["pregame-report", "gameReport", "null"];
-                case 1:
-                    return articleInformation = ["in-game-report", "gameReport", "null"];
-                case 2:
-                    return articleInformation = ["postgame-report", "gameReport", "null"];
-                case 3:
-                    return articleInformation = ["upcoming-games", "gameModule", "null"];
-                case 4:
-                    return articleInformation = ["about-the-teams", "teamRecord", "about"];
-                case 5:
-                    return articleInformation = ["historical-team-statistics", "teamRecord", "history"];
-                case 6:
-                    return articleInformation = ["last-matchup", "teamRecord", "last"];
-                case 11:
-                    return articleInformation = ["player-fantasy", "gameReport", "null"];
-            }
-        } else {
-            switch (parseInt(articleType)) {
-                case 0:
-                    return articleInformation = ["starting-roster-home-offense", "playerRoster", "null"];
-                case 1:
-                    return articleInformation = ["starting-roster-home-defense", "playerRoster", "null"];
-                case 2:
-                    return articleInformation = ["starting-roster-home-special-teams", "playerRoster", "null"];
-                case 3:
-                    return articleInformation = ["starting-roster-away-offense", "playerRoster", "null"];
-                case 4:
-                    return articleInformation = ["starting-roster-away-defense", "playerRoster", "null"];
-                case 5:
-                    return articleInformation = ["starting-roster-away-special-teams", "playerRoster", "null"];
-                case 6:
-                    return articleInformation = ["injuries-home", "playerRoster", "null"];
-                case 7:
-                    return articleInformation = ["injuries-away", "playerRoster", "null"];
-                case 8:
-                    return articleInformation = ["quarterback-player-comparison", "playerComparison", "null"];
-                case 9:
-                    return articleInformation = ["running-back-player-comparison", "playerComparison", "null"];
-                case 10:
-                    return articleInformation = ["wide-receiver-player-comparison", "playerComparison", "null"];
-                case 11:
-                    return articleInformation = ["tight-end-player-comparison", "playerComparison", "null"];
-                case 12:
-                    return articleInformation = ["defense-player-comparison", "playerComparison", "null"];
-                case 13:
-                    return articleInformation = ["fantasy-home-quarterback1", "fantasy", "null"];
-                case 14:
-                    return articleInformation = ["fantasy-home-running-back1", "fantasy", "null"];
-                case 15:
-                    return articleInformation = ["fantasy-home-running-back2", "fantasy", "null"];
-                case 16:
-                    return articleInformation = ["fantasy-home-wide-receiver1", "fantasy", "null"];
-                case 17:
-                    return articleInformation = ["fantasy-home-wide-receiver2", "fantasy", "null"];
-                case 18:
-                    return articleInformation = ["fantasy-home-tight-end1", "fantasy", "null"];
-                case 19:
-                    return articleInformation = ["fantasy-home-tight-end2", "fantasy", "null"];
-                case 20:
-                    return articleInformation = ["fantasy-home-defense1", "fantasy", "null"];
-                case 21:
-                    return articleInformation = ["fantasy-away-quarterback1", "fantasy", "null"];
-                case 22:
-                    return articleInformation = ["fantasy-away-running-back1", "fantasy", "null"];
-                case 23:
-                    return articleInformation = ["fantasy-away-running-back2", "fantasy", "null"];
-                case 24:
-                    return articleInformation = ["fantasy-away-wide-receiver1", "fantasy", "null"];
-                case 25:
-                    return articleInformation = ["fantasy-away-wide-receiver2", "fantasy", "null"];
-                case 26:
-                    return articleInformation = ["fantasy-away-tight-end1", "fantasy", "null"];
-                case 27:
-                    return articleInformation = ["fantasy-away-tight-end2", "fantasy", "null"];
-                case 28:
-                    return articleInformation = ["fantasy-away-defense1", "fantasy", "null"];
-                case 29:
-                    return articleInformation = ["fantasy-home-kicker1", "fantasy", "null"];
-                case 30:
-                    return articleInformation = ["fantasy-away-kicker1", "fantasy", "null"];
-            }
+    static getApiArticleType(type) {
+        var articleType;
+        switch (type) {
+            case "pregame-report":
+                return articleType = "articleType=pregame-report";
+            case "in-game-report":
+                return articleType = "articleType=in-game-report";
+            case "postgame-report":
+                return articleType = "articleType=postgame-report";
+            case "upcoming-games":
+                return articleType = "articleType=upcoming-games";
+            case "about-the-teams":
+                return articleType = "articleType=about-the-teams";
+            case "historical-team-statistics":
+                return articleType = "articleType=historical-team-statistics";
+            case "last-matchup":
+                return articleType = "articleType=last-matchup";
+            case "rosters":
+                return articleType = "articleType=player-fantasy";
+            case "injuries":
+                return articleType = "articleType=player-fantasy";
+            case "player-comparisons":
+                return articleType = "articleType=player-fantasy";
+            case "player-daily-udate":
+                return articleType = "articleType=player-fantasy";
+            case "player-fantasy":
+                return articleType = "articleType=player-fantasy";
+            case "starting-roster-home-offense":
+                return articleType = "articleSubType=starting-roster-home-offense";
+            case "starting-roster-home-defense":
+                return articleType = "articleSubType=starting-roster-home-defense";
+            case "starting-roster-home-special-teams":
+                return articleType = "articleSubType=starting-roster-home-special-teams";
+            case "starting-roster-away-offense":
+                return articleType = "articleSubType=starting-roster-away-offense";
+            case "starting-roster-away-defense":
+                return articleType = "articleSubType=starting-roster-away-defense";
+            case "starting-roster-away-special-teams":
+                return articleType = "articleSubType=starting-roster-away-special-teams";
+            case "injuries-home":
+                return articleType = "articleSubType=injuries-home";
+            case "injuries-away":
+                return articleType = "articleSubType=injuries-away";
+            case "quarterback-player-comparison":
+                return articleType = "articleSubType=quarterback-player-comparison";
+            case "running-back-player-comparison":
+                return articleType = "articleSubType=running-back-player-comparison";
+            case "wide-receiver-player-comparison":
+                return articleType = "articleSubType=wide-receiver-player-comparison";
+            case "tight-end-player-comparison":
+                return articleType = "articleSubType=tight-end-player-comparison";
+            case "defense-player-comparison":
+                return articleType = "articleSubType=defense-player-comparison";
         }
+    }
+
+    static getArticleType(articleType) {
+        var articleInformation = [];
+        switch (articleType) {
+            case "pregame-report":
+                return articleInformation = ["pregame-report", "gameReport", "null"];
+            case "in-game-report":
+                return articleInformation = ["in-game-report", "gameReport", "null"];
+            case "postgame-report":
+                return articleInformation = ["postgame-report", "gameReport", "null"];
+            case "upcoming-games":
+                return articleInformation = ["upcoming-games", "game_module", "null"];
+            case "about-the-teams":
+                return articleInformation = ["about-the-teams", "teamRecord", "about"];
+            case "historical-team-statistics":
+                return articleInformation = ["historical-team-statistics", "teamRecord", "history"];
+            case "last-matchup":
+                return articleInformation = ["last-matchup", "teamRecord", "last"];
+            case "player-fantasy":
+                return articleInformation = ["player-fantasy", "gameReport", "null"];
+            case "starting-roster-home-offense":
+                return articleInformation = ["starting-roster-home-offense", "playerRoster", "null"];
+            case "starting-roster-home-defense":
+                return articleInformation = ["starting-roster-home-defense", "playerRoster", "null"];
+            case "starting-roster-home-special-teams":
+                return articleInformation = ["starting-roster-home-special-teams", "playerRoster", "null"];
+            case "starting-roster-away-offense":
+                return articleInformation = ["starting-roster-away-offense", "playerRoster", "null"];
+            case "starting-roster-away-defense":
+                return articleInformation = ["starting-roster-away-defense", "playerRoster", "null"];
+            case "starting-roster-away-special-teams":
+                return articleInformation = ["starting-roster-away-special-teams", "playerRoster", "null"];
+            case "injuries-home":
+                return articleInformation = ["injuries-home", "playerRoster", "null"];
+            case "injuries-away":
+                return articleInformation = ["injuries-away", "playerRoster", "null"];
+            case "quarterback-player-comparison":
+                return articleInformation = ["quarterback-player-comparison", "playerComparison", "null"];
+            case "running-back-player-comparison":
+                return articleInformation = ["running-back-player-comparison", "playerComparison", "null"];
+            case "wide-receiver-player-comparison":
+                return articleInformation = ["wide-receiver-player-comparison", "playerComparison", "null"];
+            case "tight-end-player-comparison":
+                return articleInformation = ["tight-end-player-comparison", "playerComparison", "null"];
+            case "defense-player-comparison":
+                return articleInformation = ["defense-player-comparison", "playerComparison", "null"];
+        }
+
     }
 
     static capitalizeFirstLetter(s) {
         return s[0].toUpperCase() + s.slice(1);
     }
+
+    static lazyLoadOnScroll(event, batchLoadIndex) {
+      if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+        //fire when scrolled into footer
+        batchLoadIndex = batchLoadIndex + 1;
+      }
+      return batchLoadIndex;
+    } //onScroll
 }

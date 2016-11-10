@@ -76,6 +76,7 @@ import {HeadlineData} from "../../global/global-interface";
 import {SeoService} from "../../seo.service";
 
 declare var moment;
+declare var jQuery: any; //used for scroll event
 
 @Component({
     selector: 'Team-page',
@@ -175,6 +176,8 @@ export class TeamPage implements OnInit {
     twitterData: Array<twitterModuleData>;
 
     constructorControl:boolean = true;
+
+    private batchLoadIndex: number = 1;
 
     teamName: string;
     activeTransactionsTab: string;
@@ -621,5 +624,11 @@ export class TeamPage implements OnInit {
                     console.log('Error: listOfListsData API: ', err);
                 }
             );
+    }
+
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      return;
     }
 }
