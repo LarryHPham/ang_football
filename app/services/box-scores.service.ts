@@ -100,16 +100,16 @@ export class BoxScoresService {
       return null;
     }
     if (data[0].featuredReport['article'].status != "Error") {
-      if (data[0].featuredReport['article'].data[0].articleData != null) {
+      if (data[0].featuredReport['article'].data != null) {
         data.forEach(function(val, index){
-          let aiContent = val.featuredReport['article']['data'][0];
-          if(aiContent['articleData'] != null){
-            for(var p in aiContent['articleData']){
-              var eventType = aiContent['articleData'][p];
+          let aiContent = val.featuredReport['article']['data'];
+          if(aiContent){
+            for(var p in aiContent){
+              var eventType = aiContent[p];
               var teaser = eventType.displayHeadline;
-              var date = GlobalFunctions.sntGlobalDateFormatting(aiContent.lastUpdated,"defaultDate");
-              if(aiContent['articleData'][p]['images']['home_images'] != null){
-                var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
+              var date = GlobalFunctions.sntGlobalDateFormatting(eventType.last_updated,"defaultDate");
+              if(eventType.image_url != null){
+                var homeImage = GlobalSettings.getImageUrl(eventType.image_url);
               }else{
                 var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
               }
@@ -126,7 +126,7 @@ export class BoxScoresService {
             }
             domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
-            urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: p, eventID: val.event}];
+            urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: p, eventID: eventType.event_id}];
             var Box = {
               keyword: p.replace('-', ' '),
               date: date,
@@ -290,12 +290,14 @@ export class BoxScoresService {
             away:boxScores[dates].team2OtScore
           };
           if(aiContent != null){
-            let aiData = aiContent.featuredReport.article.data[0];
+            let aiData = aiContent.featuredReport.article.data;
             if(aiContent.featuredReport.article.status != 'Error'){
-              boxScoreObj[dates]['aiContent'] = {
-                event: aiData.eventId,
-                featuredReport: aiData.articleData,
-              };
+              for ( var report in aiData ) {
+                boxScoreObj[dates]['aiContent'] = {
+                  event: aiData[report].event_id,
+                  featuredReport: aiData,
+                };
+              }
             }else{
               boxScoreObj[dates]['aiContent'] = null;
             }
@@ -572,19 +574,20 @@ export class BoxScoresService {
     var gameArticle = {};
     for(var report in aiContent.featuredReport){
       gameArticle['report'] = "Read The Report";
-      gameArticle['headline'] = aiContent.featuredReport[report].displayHeadline;
+      gameArticle['headline'] = aiContent.featuredReport[report].title;
       gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
-      var i = aiContent.featuredReport[report]['images']['home_images'];
+      var i = aiContent.featuredReport[report].image_url;
       if(i != null){
         var random1 = Math.floor(Math.random() * i.length);
         var random2 = Math.floor(Math.random() * i.length);
         gameArticle['images'] = [];
-        if(random1 == random2){
-          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-        }else{
-          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
-        }
+        gameArticle['images'].push(GlobalSettings.getImageUrl(i));
+        // if(random1 == random2){
+        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        // }else{
+        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
+        // }
       }else{
         gameArticle['images'] = [];
         gameArticle['images'].push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null));

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
 
 declare var moment:any;
+declare var jQuery: any; //used for scroll event
 
 @Injectable()
 
@@ -921,9 +922,18 @@ export class GlobalFunctions {
             case "defense-player-comparison":
                 return articleInformation = ["defense-player-comparison", "playerComparison", "null"];
         }
+
     }
 
     static capitalizeFirstLetter(s) {
         return s[0].toUpperCase() + s.slice(1);
     }
+
+    static lazyLoadOnScroll(event, batchLoadIndex) {
+      if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+        //fire when scrolled into footer
+        batchLoadIndex = batchLoadIndex + 1;
+      }
+      return batchLoadIndex;
+    } //onScroll
 }
