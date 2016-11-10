@@ -169,7 +169,7 @@ export class DeepDiveService {
           if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
             domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
           }
-          domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
+          domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
           urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
 
           let carData = {
@@ -178,7 +178,7 @@ export class DeepDiveService {
             keyword: val['keyword'],
             teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
             id:val['id'],
-            articlelink: VerticalGlobalFunctions.formatArticleRoute('story', val.id),
+            articlelink: urlRouteArray,
             date: date,
           };
           transformData.push(carData);
@@ -242,7 +242,7 @@ export class DeepDiveService {
         if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
           domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
         }
-        domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
+        domainParams['scope'] = val.scope == 'fbs' ? 'ncaaf' : val.scope;
         urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.article_type, eventID: val.event_id}];
 
         var s = {
