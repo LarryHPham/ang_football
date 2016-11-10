@@ -1,17 +1,17 @@
 <sidekick-wrapper>
-<section class="page profile-container league-page" (window:scroll)="onScroll($event)">
+<section class="page profile-container league-page" (window:scroll)="onScroll()">
   <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
   <error-component *ngIf="hasError"></error-component>
   <div *ngIf="profileHeaderData">
 
-    <div class="loadBatch1">
+    <div class="loadBatch1" *ngIf="batchLoadIndex >= 1">
       <!-- <headline-component [title]="'About the MLB'"></headline-component> -->
       <profile-header [profileHeaderData]="profileHeaderData" [profileType]="profileType"></profile-header>
       <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="true"></articles-module>
       <!-- <headline-component [title]="'Keep Up With Everything MLB'"></headline-component> -->
     </div> <!--loadBatch1-->
 
-    <div class="loadBatch2" *ngIf="lazyLoadSectionIndex >= 2">
+    <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
       <video-module *ngIf="videoData" [firstVideo]="firstVideo"  [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
       <box-scores *ngIf="dateParam" [boxScores]="currentBoxScores" [calendarParams]="dateParam" (dateEmit)="getBoxScores($event)"></box-scores>
       <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
@@ -27,7 +27,7 @@
       <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
     </div> <!--loadBatch2-->
 
-    <div class="loadBatch3" *ngIf="lazyLoadSectionIndex >= 3">
+    <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
       <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
       <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <transactions-module *ngIf="scope == sportLeagueAbbrv && transactionsData"
@@ -41,7 +41,7 @@
       <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace"></responsive-widget>
     </div> <!--loadBatch3-->
 
-    <div class="loadBatch4" *ngIf="lazyLoadSectionIndex >= 4">
+    <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
       <mvp-module *ngIf="positionData && positionParams"
         [title]="'Position'"
         [mvpData]="positionData"
@@ -58,7 +58,7 @@
       </div>
     </div> <!--loadBatch4-->
 
-    <div class="loadBatch5" *ngIf="lazyLoadSectionIndex >= 5">
+    <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
       <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
       <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
@@ -66,7 +66,7 @@
       <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType"></list-of-lists>
     </div> <!--loadBatch5-->
 
-    <div class="loadBatch6" *ngIf="lazyLoadSectionIndex >= 6">
+    <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
       <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
       <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->

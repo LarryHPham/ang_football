@@ -912,11 +912,11 @@ export class GlobalFunctions {
         return s[0].toUpperCase() + s.slice(1);
     }
 
-    static lazyLoadOnScroll(event, lazyLoadSectionIndex) {
+    static lazyLoadOnScroll(event, batchLoadIndex) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
         //fire when scrolled into footer
-        lazyLoadSectionIndex = lazyLoadSectionIndex + 1;
+        batchLoadIndex = batchLoadIndex + 1;
       }
-      return lazyLoadSectionIndex;
+      return batchLoadIndex;
     } //onScroll
 }

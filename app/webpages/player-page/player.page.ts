@@ -149,7 +149,7 @@ export class PlayerPage implements OnInit {
 
     constructorControl: boolean = true;
 
-    private lazyLoadSectionIndex: number = 1;
+    private batchLoadIndex: number = 1;
 
     constructor(private _params: RouteParams,
         private _router: Router,
@@ -505,7 +505,7 @@ export class PlayerPage implements OnInit {
 
     // function to lazy load page sections
     private onScroll(event) {
-      this.lazyLoadSectionIndex = GlobalFunctions.lazyLoadOnScroll(event, this.lazyLoadSectionIndex);
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
       return;
     }
 }

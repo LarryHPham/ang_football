@@ -10,7 +10,7 @@
           <daily-update-module [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
         </div><!--loadBatch1-->
 
-        <div class="loadBatch2" *ngIf="lazyLoadSectionIndex >= 2">
+        <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
           <fantasy-module [fantasyData]="fantasyData" [fantasyDate]="fantasyDate" [profHeader]="profileHeaderData"></fantasy-module>
           <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <!-- <headline-component [title]="'Keep Up With Everything ' + profileHeaderData.profileName"></headline-component> -->
@@ -25,7 +25,7 @@
               (selectedKeyFilter)="filterDropdown($event)"></schedules>
         </div> <!--loadBatch2-->
 
-        <div class="loadBatch3" *ngIf="lazyLoadSectionIndex >= 3">
+        <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
           <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <standings-module *ngIf="standingsData" [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope" ></standings-module>
           <season-stats-module *ngIf="seasonStatsData" [pageParams]="pageParams" [data]="seasonStatsData"></season-stats-module>
@@ -33,7 +33,7 @@
           <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'player'" [profileId]="pageParams.playerId" [scope]="scope"></comparison-module>
         </div> <!--loadBatch3-->
 
-        <div class="loadBatch4" *ngIf="lazyLoadSectionIndex >= 4">
+        <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
           <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
           <div class="profile-carousel-container" *ngIf="imageData">
               <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
@@ -44,7 +44,7 @@
           <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
         </div> <!--loadBatch4-->
 
-        <div class="loadBatch5" *ngIf="lazyLoadSectionIndex >= 5">
+        <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
           <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <list-of-lists *ngIf="profileHeaderData && listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType" [playerId]="pageParams.playerId"></list-of-lists>
           <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>

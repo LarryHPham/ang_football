@@ -611,10 +611,4 @@ export class ArticlePages implements OnInit {
     ngOnDestroy(){
         // this.subRec.unsubscribe();
     }
-
-    // function to lazy load page sections
-    private onScroll(event) {
-      this.lazyLoadSectionIndex = GlobalFunctions.lazyLoadOnScroll(event, this.lazyLoadSectionIndex);
-      return;
-    }
 }

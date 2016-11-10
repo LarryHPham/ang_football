@@ -177,7 +177,7 @@ export class TeamPage implements OnInit {
 
     constructorControl:boolean = true;
 
-    private lazyLoadSectionIndex: number = 1;
+    private batchLoadIndex: number = 1;
 
     teamName: string;
     activeTransactionsTab: string;
@@ -621,7 +621,7 @@ export class TeamPage implements OnInit {
 
     // function to lazy load page sections
     private onScroll(event) {
-      this.lazyLoadSectionIndex = GlobalFunctions.lazyLoadOnScroll(event, this.lazyLoadSectionIndex);
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
       return;
     }
 }

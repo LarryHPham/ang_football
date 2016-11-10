@@ -10,7 +10,7 @@
       <daily-update-module *ngIf="dailyUpdateData" [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module>
     </div><!--loadBatch1-->
 
-    <div class="loadBatch2" *ngIf="lazyLoadSectionIndex >= 2">
+    <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
       <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="false"></articles-module>
       <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
@@ -19,7 +19,7 @@
       <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     </div> <!--loadBatch2-->
 
-    <div class="loadBatch3" *ngIf="lazyLoadSectionIndex >= 3">
+    <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
       <schedules *ngIf="schedulesData"
           [profHeader]="profileHeaderData"
           [data]="schedulesData"
@@ -33,7 +33,7 @@
         <player-stats-module *ngIf="playerStatsData" [data]="playerStatsData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage" [profileData]="profileData" (tabSelected)="playerStatsTabSelected($event)" [tabName]="ptabName"></player-stats-module>
     </div> <!--loadBatch3-->
 
-    <div class="loadBatch4" *ngIf="lazyLoadSectionIndex >= 4">
+    <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
       <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <transactions-module
           *ngIf="scope == sportLeagueAbbrv && transactionsData"
@@ -49,7 +49,7 @@
       <responsive-widget *ngIf="profileData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
     </div> <!--loadBatch4-->
 
-    <div class="loadBatch5" *ngIf="lazyLoadSectionIndex >= 5">
+    <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
       <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [profileType]="'team'" [profileId]="pageParams.teamId" [scope]="scope"></comparison-module>
       <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
       <div class="profile-carousel-container">
@@ -60,7 +60,7 @@
       <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
     </div> <!--loadBatch5-->
 
-    <div class="loadBatch6" *ngIf="lazyLoadSectionIndex >= 6">
+    <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
       <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
       <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType" [teamId]="pageParams.teamId"></list-of-lists>
