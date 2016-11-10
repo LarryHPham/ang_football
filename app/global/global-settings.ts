@@ -11,10 +11,8 @@ export class GlobalSettings {
     private static _newsUrl:string = 'newsapi.synapsys.us';
 
     private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
-    private static _articleUrl:string = '-tcxmedia-api.synapsys.us/';
     private static _articleDataUrl:string = "-touchdownloyal-ai.synapsys.us/";
     private static _tcxArticleUrl:string = '-tcxmedia-api.synapsys.us/';
-    private static _headlineUrl:string = "-touchdownloyal-ai.synapsys.us/";
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
@@ -110,7 +108,7 @@ export class GlobalSettings {
     }
 
     static getArticleUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
     }
 
     static getArticleDataUrl():string {
@@ -122,22 +120,22 @@ export class GlobalSettings {
     }
 
     static getRecommendUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
     }
 
     static getTrendingUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
     }
     static getRecUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._recUrl;
     }
 
     static getHeadlineUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._headlineUrl;
+        return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
     }
 
     static getFantasyUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleUrl
+        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl
     }
 
 
