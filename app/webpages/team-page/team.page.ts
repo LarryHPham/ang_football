@@ -307,6 +307,13 @@ export class TeamPage implements OnInit {
       let link = window.location.href;
       let title = header.teamMarket + ' ' + header.teamName;
       let image = header.teamLogo;
+      let record = '';
+      if (header.leagueRecord != null) {
+        record = header.leagueRecord;
+        let recordArr = record.split('-');
+        record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
+      }
+      title = title  + record;
       this._seoService.setCanonicalLink(this._params.params, this._router);
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc);
