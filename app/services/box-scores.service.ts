@@ -290,12 +290,14 @@ export class BoxScoresService {
             away:boxScores[dates].team2OtScore
           };
           if(aiContent != null){
-            let aiData = aiContent.featuredReport.article.data[0];
+            let aiData = aiContent.featuredReport.article.data;
             if(aiContent.featuredReport.article.status != 'Error'){
-              boxScoreObj[dates]['aiContent'] = {
-                event: aiData.eventId,
-                featuredReport: aiData.articleData,
-              };
+              for ( var report in aiData ) {
+                boxScoreObj[dates]['aiContent'] = {
+                  event: aiData[report].event_id,
+                  featuredReport: aiData,
+                };
+              }
             }else{
               boxScoreObj[dates]['aiContent'] = null;
             }
@@ -572,19 +574,20 @@ export class BoxScoresService {
     var gameArticle = {};
     for(var report in aiContent.featuredReport){
       gameArticle['report'] = "Read The Report";
-      gameArticle['headline'] = aiContent.featuredReport[report].displayHeadline;
+      gameArticle['headline'] = aiContent.featuredReport[report].title;
       gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
-      var i = aiContent.featuredReport[report]['images']['home_images'];
+      var i = aiContent.featuredReport[report].image_url;
       if(i != null){
         var random1 = Math.floor(Math.random() * i.length);
         var random2 = Math.floor(Math.random() * i.length);
         gameArticle['images'] = [];
-        if(random1 == random2){
-          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-        }else{
-          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-          gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
-        }
+        gameArticle['images'].push(GlobalSettings.getImageUrl(i));
+        // if(random1 == random2){
+        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        // }else{
+        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
+        // }
       }else{
         gameArticle['images'] = [];
         gameArticle['images'].push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null));
