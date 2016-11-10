@@ -12,7 +12,7 @@ declare var moment;
 @Injectable()
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _articleUrl: string = GlobalSettings.getArticleUrl();
+  private _articleUrl: string = GlobalSettings.getArticleDataUrl();
 
   constructor(
     public http: Http,
@@ -23,8 +23,8 @@ export class DeepDiveService {
       var headers = new Headers();
       //headers.append(this.headerName, this.apiToken);
       return headers;
-  }
 
+}
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
   var headers = this.setToken();
@@ -35,7 +35,7 @@ export class DeepDiveService {
       return data;
     })
   }
-  getDeepDiveVideoService(articleID){
+  getDeepDiveVideoService(articleID){;
         //Configure HTTP Headers
         var headers = this.setToken();
         var callURL = this._apiUrl + '/videoSingle/' + articleID;
@@ -128,17 +128,6 @@ export class DeepDiveService {
       })
   }
 
-  getAiArticleData(state){
-    var headers = this.setToken();
-    //this is the sidkeick url
-    var callURL = this._articleUrl + "sidekick-regional/"+ state +"/1/1";
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
-      .map(data => {
-        return data;
-      });
-  }
-
   getRecArticleData(scope, state, batch, limit){
     var headers = this.setToken();
     if(scope == null || scope == 'home'){
@@ -151,7 +140,7 @@ export class DeepDiveService {
       batch = 1;
       limit = 1;
     }
-    //this is the sidkeick url
+    //this is the sidekick url
     var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;//TODO won't need uppercase after ai fixes
       return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
@@ -346,16 +335,16 @@ export class DeepDiveService {
   transformToRecArticles(data){
     data = data.data;
     var sampleImage = "/app/public/placeholder_XL.png";
-
     var articleStackArray = [];
     var articles = [];
     var eventID = null;
+      console.log(data);
     for(var obj in data){
       if(obj != "meta-data" && obj != "timestamp"){
         var a = {
           keyword: obj,
           info: data[obj]
-        }
+        };
         articles.push(a);
       } else {
         var eventID = data['meta-data']['current']['eventID'];
@@ -368,7 +357,7 @@ export class DeepDiveService {
       var relPath = GlobalSettings.getRouteFullParams().relPath;
       let domainHostName;
       let urlRouteArray;
-      let domainParams = {}
+      let domainParams = {};
 
       domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
       if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
@@ -379,13 +368,13 @@ export class DeepDiveService {
 
       var s = {
           urlRouteArray: urlRouteArray ? urlRouteArray : null,
-          eventID: val.eventID,
+          eventID: eventID,
           eventType: val.keyword,
           images: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
           keyword: val.keyword.replace('-', ' ').toUpperCase(),
           date: date,
           title: info.displayHeadline,
-        }
+        };
       articleStackArray.push(s);
     });
 

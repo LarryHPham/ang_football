@@ -35,7 +35,15 @@
                       <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
                     </section>
                     <!-- DISPLAY ARTICLE -->
-                    <article-content-component *ngIf="eventType != 'story' && eventType != 'video'" class="articles-page-padding" [eventType]="eventType" [articleSubType]="articleSubType" [articleData]="articleData" [teamId]="teamId" [imageLinks]="imageLinks" [partnerId]="partnerId" [scope]="scope"></article-content-component>
+                    <article-content-component *ngIf="eventType != 'story' && eventType != 'video'" class="articles-page-padding"
+                                               [articleType]="articleType"
+                                               [articleSubType]="articleSubType"
+                                               [articleData]="articleData"
+                                               [teamId]="teamId"
+                                               [imageLinks]="imageLinks"
+                                               [partnerId]="partnerId"
+                                               [scope]="scope">
+                    </article-content-component>
                     <section *ngIf="eventType == 'story' || eventType == 'video'" class="arpt-main-article">
                         <div class="content-exerpt" *ngIf="eventType == 'story'" [innerHTML]="articleData.teaser | safeHtml"></div>
                         <div class="content-exerpt" *ngIf="eventType == 'video'" [innerHTML]="articleData.description | safeHtml"></div>
@@ -47,7 +55,12 @@
                     <sidekick-container-component></sidekick-container-component>
                     <disqus-component *ngIf="!checkPartner"></disqus-component>
                     <recommendations-component *ngIf="randomHeadlines" [randomHeadlines]="randomHeadlines" [images]="images"></recommendations-component>
-                    <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
+                    <trending-component [scope]="scope"
+                                        [currentArticleId]="eventID"
+                                        [eventType]="eventType"
+                                        [geoLocation]="geoLocation">
+
+                    </trending-component>
                 </div>
                 <!-- SIDEKICK WHEN IN DESKTOP LARGE SIZE -->
                 <div class="vertical-widget col-lg-3">
