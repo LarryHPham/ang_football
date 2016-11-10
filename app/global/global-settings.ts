@@ -13,6 +13,7 @@ export class GlobalSettings {
     private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
     private static _articleUrl:string = '-tcxmedia-api.synapsys.us/';
     private static _articleDataUrl:string = "-touchdownloyal-ai.synapsys.us/";
+    private static _tcxArticleUrl:string = '-tcxmedia-api.synapsys.us/';
     private static _headlineUrl:string = "-touchdownloyal-ai.synapsys.us/";
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
@@ -114,6 +115,10 @@ export class GlobalSettings {
 
     static getArticleDataUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
+    }
+
+    static getTcxArticleUrl():string {
+        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
     }
 
     static getRecommendUrl():string {
