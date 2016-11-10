@@ -601,7 +601,7 @@ export class LeaguePage implements OnInit {
     private checkToResetTabs(event) {
       let localPosition = event.position;
 
-      if ( localPosition != this.globalMVPPosition ) {``
+      if ( localPosition != this.globalMVPPosition ) {
         return this.listService.getMVPTabs(event.position, 'module');
       } else {
         return this.positionData;
