@@ -264,34 +264,6 @@ export class DeepDiveService {
       return articleStackArray;
     }
 
-    transformToAiHeavyArticleRow(data, key){
-      data = data.data;
-      var sampleImage = "/app/public/placeholder_XL.png";
-      var articleStackArray = [];
-      data.forEach(function(val, index){
-        for(var p in val.article_data){
-          var eventType = val.article_data[p];
-        }
-        var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.last_updated),"dayOfWeek");
-        var s = {
-            stackRowsRoute: VerticalGlobalFunctions.formatArticleRoute(p, val.event_id),
-            keyword: key.replace('-',' ').toUpperCase(),
-            publishedDate: date,
-            provider1: '',
-            provider2: '',
-            description: eventType.metaHeadline,
-            imageConfig: {
-              imageClass: "image-100x56",
-              /*hoverText: "View",*/
-              imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,//TODO
-              urlRouteArray: VerticalGlobalFunctions.formatArticleRoute(key, val.event_id)
-            }
-        }
-        articleStackArray.push(s);
-      });
-      return articleStackArray;
-    }
-
     transformToArticleStack(data){
       var sampleImage = "/app/public/placeholder_XL.png";
       var topData = data.data[0];
@@ -439,6 +411,7 @@ export class DeepDiveService {
       var imagePaths = imagePaths.filter( function(item, index, inputArray) {
         return inputArray.indexOf(item) == index;
       });
+
 
       for(var i = 0; i < 3; i++){
         var k = imagePaths[Math.floor(Math.random() * imagePaths.length)];
