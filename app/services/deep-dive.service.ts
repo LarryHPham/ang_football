@@ -186,16 +186,15 @@ export class DeepDiveService {
         if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
           domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
         }
-        domainParams['scope'] = val.affiliation == 'fbs' ? 'ncaaf' : val.affiliation;
+        domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
         urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
-
         let carData = {
           image_url: GlobalSettings.getImageUrl(val['imagePath']),
           title:  "<span> Today's News </span>" + val['title'],
           keyword: val['keyword'],
           teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
           id:val['id'],
-          articlelink: VerticalGlobalFunctions.formatArticleRoute('story', val.id),
+          articlelink: urlRouteArray,
           date: date,
         };
         transformData.push(carData);
@@ -417,7 +416,7 @@ export class DeepDiveService {
       domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
 
       urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType:'video', eventID:val.id}];
-      val['urlRoute'] = urlRouteArray
+      val['urlRoute'] = urlRouteArray;
     })
     return data;
   }
