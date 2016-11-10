@@ -12,7 +12,7 @@ declare var moment;
 @Injectable()
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _articleUrl: string = GlobalSettings.getArticleUrl();
+  private _articleUrl: string = GlobalSettings.getArticleDataUrl();
   private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
 
   constructor(

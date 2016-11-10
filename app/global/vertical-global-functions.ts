@@ -13,7 +13,7 @@ export class VerticalGlobalFunctions {
   }
 
   static RegExpSpecialCharacters(text){
-    let replacedText = text.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+    let replacedText = text.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ' ');
     return replacedText
   }
 
