@@ -136,7 +136,6 @@ export class ArticlePages implements OnInit {
                                 this.eventID = Article['data'][0].event_id;
                                 this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                             }
-                            console.log(Article['data']);
                             this.parseLinks(Article['data'][0]['article_data']['route_config'], Article['data'][0]['article_data']['article']);
                             var articleType = GlobalFunctions.getArticleType(this._params.get('eventType'));
                             this.articleType = articleType[1];
