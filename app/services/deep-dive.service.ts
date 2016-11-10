@@ -245,7 +245,7 @@ export class DeepDiveService {
         if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
           domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
         }
-        domainParams['scope'] = val.scope == 'fbs' ? 'ncaaf' : val.scopeDisplay;
+        domainParams['scope'] = val.scope == 'fbs' ? 'ncaaf' : val.scope;
         urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.article_type, eventID: val.event_id}];
 
         var s = {
