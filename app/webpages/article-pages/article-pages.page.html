@@ -1,4 +1,4 @@
-<div class="articles-page">
+<div class="articles-page" (window:scroll)="onScroll($event)">
     <div class="articles-page-content">
       <!-- ERROR MESSAGE HERE -->
       <section *ngIf="error">
@@ -62,7 +62,7 @@
 
                     </trending-component>
                 </div>
-                <!-- SIDEKICK WHEN IN DESKTOP LARGE SIZE -->
+
                 <div class="vertical-widget col-lg-3">
                     <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
                 </div>

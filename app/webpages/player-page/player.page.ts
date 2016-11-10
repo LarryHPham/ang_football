@@ -61,6 +61,7 @@ import {FantasyService} from "../../services/fantasy.service";
 import {SeoService} from "../../seo.service";
 
 declare var moment;
+declare var jQuery: any; //used for scroll event
 
 @Component({
     selector: 'Player-page',
@@ -147,6 +148,8 @@ export class PlayerPage implements OnInit {
     scope: string;
 
     constructorControl: boolean = true;
+
+    private batchLoadIndex: number = 1;
 
     constructor(private _params: RouteParams,
         private _router: Router,
@@ -499,5 +502,11 @@ export class PlayerPage implements OnInit {
                 console.log('Error: listOfListsData API: ', err);
             }
             );
+    }
+
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      return;
     }
 }

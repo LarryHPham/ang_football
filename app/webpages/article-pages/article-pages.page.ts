@@ -28,6 +28,7 @@ import {ComplexInnerHtml} from "../../fe-core/components/complex-inner-html/comp
 
 declare var jQuery:any;
 declare var moment;
+declare var jQuery: any; //used for scroll event
 
 @Component({
     selector: 'article-pages',
@@ -651,16 +652,16 @@ export class ArticlePages implements OnInit {
         }
     }
 
-    ngAfterViewInit() {
-        // to run the resize event on load
-        try {
-            window.dispatchEvent(new Event('load'));
-        } catch (e) {
-            //to run resize event on IE
-            var resizeEvent = document.createEvent('UIEvents');
-            resizeEvent.initUIEvent('load', true, false, window, 0);
-            window.dispatchEvent(resizeEvent);
-        }
+    ngAfterViewInit(){
+      // to run the resize event on load
+      try {
+        window.dispatchEvent(new Event('load'));
+      }catch(e){
+        //to run resize event on IE
+        var resizeEvent = document.createEvent('UIEvents');
+        resizeEvent.initUIEvent('load', true, false, window, 0);
+        window.dispatchEvent(resizeEvent);
+      }
     }
 
     private getDeepDiveArticle(articleID) {
@@ -759,5 +760,4 @@ export class ArticlePages implements OnInit {
     ngOnDestroy() {
         // this.subRec.unsubscribe();
     }
-
 }
