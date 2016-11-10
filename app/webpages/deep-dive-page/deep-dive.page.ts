@@ -19,6 +19,8 @@ import {DeepDiveBlock2} from '../../fe-core/modules/deep-dive-blocks/deep-dive-b
 import {DeepDiveBlock3} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
 import {DeepDiveBlock4} from '../../fe-core/modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
 
+import {ArticleStackModule} from '../../fe-core/modules/article-stack/article-stack.module';
+
 import {SideScroll} from '../../fe-core/components/side-scroll/side-scroll.component';
 
 import {SeoService} from '../../seo.service';
@@ -44,9 +46,10 @@ declare var jQuery: any;
       DeepDiveBlock2,
       DeepDiveBlock3,
       DeepDiveBlock4,
+      ArticleStackModule,
       SideScroll
     ],
-    providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader, Title],
+    providers: [SchedulesService,DeepDiveService,GeoLocation,PartnerHeader,Title],
 })
 
 export class DeepDivePage{
@@ -73,9 +76,13 @@ export class DeepDivePage{
     carouselData: any;
     videoData:any;
     toggleData:any;
-    blockIndex: number = 1;
+    blockIndex: number = 0;
     changeScopeVar: string = "";
 ​    constructorControl: boolean = true;
+
+    firstStackTop: any;
+    firstStackRow: any;
+
     private isPartnerZone: boolean = false;
     private _routeSubscription: any;
 
@@ -334,15 +341,34 @@ export class DeepDivePage{
                 }
             );
     }
+
+    getFirstArticleStackData(){
+      this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
+          .subscribe(data => {
+            this.firstStackTop = this._deepDiveData.transformToArticleStack(data);
+          },
+          err => {
+                console.log("Error getting first article stack data");
+          });
+      this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+          .subscribe(data => {
+            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
+          },
+          err => {
+              console.log("Error getting first AI article batch data");
+          });
+    }
+
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
       this.getSideScroll();
+      this.getFirstArticleStackData();
     }
+
+    // function to lazy load page sections
     private onScroll(event) {
-      if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
-        //fire when scrolled into footer
-        this.blockIndex = this.blockIndex + 1;
-      }
+      this.blockIndex = GlobalFunctions.lazyLoadOnScroll(event, this.blockIndex);
+      return;
     }
 }

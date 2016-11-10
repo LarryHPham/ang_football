@@ -12,7 +12,7 @@ declare var moment;
 @Injectable()
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  private _articleUrl: string = GlobalSettings.getArticleUrl();
+  private _articleUrl: string = GlobalSettings.getArticleDataUrl();
   private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
 
   constructor(
@@ -48,12 +48,15 @@ export class DeepDiveService {
   }
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
+
     //Configure HTTP Headers
       startNum = startNum == null ? 1 : startNum;
       state = state === null || typeof state == 'undefined' ? 'CA' : state;
+
       var headers = this.setToken();
       // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
       var callURL = this._apiUrl + '/articleBatch/';
+
       scope = scope == 'home' ? 'football' : scope;
       if(scope == 'nfl' || scope == null || scope == 'football'){
         callURL +=  scope + '/' + limit + '/' + startNum + '/' + state;

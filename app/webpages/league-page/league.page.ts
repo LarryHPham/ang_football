@@ -67,6 +67,7 @@ import {HeadlineData} from "../../global/global-interface";
 import {SeoService} from "../../seo.service";
 
 declare var moment;
+declare var jQuery: any; //used for scroll event
 
 @Component({
     selector: 'League-page',
@@ -183,6 +184,8 @@ export class LeaguePage implements OnInit {
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
     private constructorControl: boolean = true;
 
+    private batchLoadIndex: number = 1;
+
     constructor(private _router:Router,
                 private _title: Title,
                 private _standingsService:StandingsService,
@@ -220,8 +223,6 @@ export class LeaguePage implements OnInit {
               date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
               // date: '2016-09-11'
             }
-
-            this.setupProfileData(this.partnerID, this.scope);
             this.constructorControl = false;
           }
 
@@ -230,6 +231,8 @@ export class LeaguePage implements OnInit {
               scope: this.scope,
               league: 'league'
           }
+
+          this.setupProfileData(this.partnerID, this.scope);
         }); //GlobalSettings.getParentParams
 
         this.limit = Number(this._params.params['limit']);
@@ -246,46 +249,51 @@ export class LeaguePage implements OnInit {
         this._profileService.getLeagueProfile(scope).subscribe(
             data => {
             ///*** About TDL ***/
-                this.metaTags(data);
-                this.profileData = data;
-                this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-                this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
-                this.getLeagueHeadlines();
+
+                //---Batch 1 Load---//
+                  this.metaTags(data);
+                  this.profileData = data;
+                  this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
+                  this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
+                  this.getLeagueHeadlines();
 
                 setTimeout(() => { // defer loading everything below the fold
-                  /*** Keep Up With Everything TDL ***/
-                  this.getBoxScores(this.dateParam);
-                  this.eventStatus = 'pregame';
-                  this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
-                  this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
 
-                  this.activeTransactionsTab = "Transactions";
-                  this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.activeTransactionsTab);
+                  //--Batch 2 Load---//
+                    this.getLeagueVideoBatch(7,1,1,0,this.scope);
+                    this.getBoxScores(this.dateParam);
+                    this.eventStatus = 'pregame';
+                    this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
-                  //Initial position to display in MVP
-                  this.globalMVPPosition = 'cb';
-                  this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
-                  this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
-                  if ( this.positionData && this.positionData.length > 0 ) {
-                    //default params
-                    this.positionDropdown({
-                        tab: this.positionData[0],
-                        position: this.globalMVPPosition
-                    });
-                  }
+                  //---Batch 3 Load---//
+                    this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
+                    this.activeTransactionsTab = "Transactions";
+                    this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.activeTransactionsTab);
 
-                  this.setupComparisonData();
 
-                  /*** Keep Up With Everything TDL ***/
-                  this.getImages(this.imageData);
-                  this.getNewsService();
-                  this.getFaqService(this.profileType);
-                  this.setupListOfListsModule();
-                  this.getDykService(this.profileType);
-                  this.getLeagueVideoBatch(7,1,1,0,scope);
-                  this.getTwitterService(this.profileType, partnerID, scope);
+                  //---Batch 4 Load---//
+                    this.globalMVPPosition = 'cb'; //Initial position to display in MVP
+                    this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
+                    this.positionData = this.listService.getMVPTabs(this.globalMVPPosition, 'module');
+                    if ( this.positionData && this.positionData.length > 0 ) {
+                      //default params
+                      this.positionDropdown({
+                          tab: this.positionData[0],
+                          position: this.globalMVPPosition
+                      });
+                    }
+                    this.setupComparisonData();
+                    this.getImages(this.imageData);
+
+                  //---Batch 5 Load---//
+                    this.getDykService(this.profileType);
+                    this.getFaqService(this.profileType);
+                    this.setupListOfListsModule();
+
+                  //---Batch 6 Load---//
+                    this.getNewsService();
+                    this.getTwitterService(this.profileType, partnerID, scope);
                 }, 2000);
-
              },
             err => {
                 this.hasError = true;
@@ -315,7 +323,7 @@ export class LeaguePage implements OnInit {
 
     //api for League Headline Module
     private getLeagueHeadlines() {
-        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
+        var scope = this.scope == "fbs" ? "ncaaf" : "nfl";
         this._headlineDataService.getAiHeadlineDataLeague(null, scope)
             .subscribe(
                 HeadlineData => {
@@ -387,18 +395,14 @@ export class LeaguePage implements OnInit {
     }
 
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
-
         this.videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
-            .subscribe(data => {
-                    this.firstVideo = data.data[first].videoLink;
-                    this.videoData = this.videoBatchService.transformVideoStack(data.data.slice(1));
-                },
-                err => {
-                    console.log("Error getting video data");
-                }
-
-            );
-
+          .subscribe(data => {
+                  this.firstVideo = data.data[first].videoLink;
+                  this.videoData = this.videoBatchService.transformVideoStack(data.data.slice(1));
+              },
+              err => {
+                  console.log("Error getting video data");
+              });
     }
 
     private transactionsTab(tab) {
@@ -595,7 +599,6 @@ export class LeaguePage implements OnInit {
 
     //function to check if selected position in dropdown is currently active
     private checkToResetTabs(event) {
-
       let localPosition = event.position;
 
       if ( localPosition != this.globalMVPPosition ) {
@@ -619,6 +622,11 @@ export class LeaguePage implements OnInit {
                 console.log('Error: Loading MVP Pitchers: ', err);
             })
       }
+    } //getMVPService
 
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      return;
     }
 }
