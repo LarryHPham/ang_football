@@ -100,16 +100,16 @@ export class BoxScoresService {
       return null;
     }
     if (data[0].featuredReport['article'].status != "Error") {
-      if (data[0].featuredReport['article'].data[0].articleData != null) {
+      if (data[0].featuredReport['article'].data != null) {
         data.forEach(function(val, index){
-          let aiContent = val.featuredReport['article']['data'][0];
-          if(aiContent['articleData'] != null){
-            for(var p in aiContent['articleData']){
-              var eventType = aiContent['articleData'][p];
+          let aiContent = val.featuredReport['article']['data'];
+          if(aiContent){
+            for(var p in aiContent){
+              var eventType = aiContent[p];
               var teaser = eventType.displayHeadline;
-              var date = GlobalFunctions.sntGlobalDateFormatting(aiContent.lastUpdated,"defaultDate");
-              if(aiContent['articleData'][p]['images']['home_images'] != null){
-                var homeImage = GlobalSettings.getImageUrl(aiContent['articleData'][p]['images']['home_images'][0].image_url);
+              var date = GlobalFunctions.sntGlobalDateFormatting(eventType.last_updated,"defaultDate");
+              if(eventType.image_url != null){
+                var homeImage = GlobalSettings.getImageUrl(eventType.image_url);
               }else{
                 var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
               }
@@ -126,7 +126,7 @@ export class BoxScoresService {
             }
             domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
-            urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: p, eventID: val.event}];
+            urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: p, eventID: eventType.event_id}];
             var Box = {
               keyword: p.replace('-', ' '),
               date: date,
