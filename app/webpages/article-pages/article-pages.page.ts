@@ -145,7 +145,7 @@ export class ArticlePages implements OnInit {
                             this.rawUrl = window.location.href;
                             this.pageIndex = articleType[0];
                             this.title = Article['data'][0]['article_data'].title;
-                            this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date, "timeZone");
+                            this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date * 1000, "timeZone");
                             this.articleData = Article['data'][0]['article_data'];
                             if (this.eventType != "articleType=player-fantasy" || Article['data'][0].team_id != null) {
                                 this.teamId = Article['data'][0].team_id;
@@ -351,8 +351,8 @@ export class ArticlePages implements OnInit {
                 );
         } else {
             var startNum = Math.floor((Math.random() * 49) + 1);
-            //needed to uppoercase for ai to grab data correctly
-            this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, startNum, 3)
+            //needed to uppercase for ai to grab data correctly
+            this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, 1, 3)
                 .subscribe(data => {
                     this.randomHeadlines = this._deepDiveService.transformToRecArticles(data);
                 });
