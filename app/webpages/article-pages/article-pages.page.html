@@ -29,26 +29,38 @@
 
               <section class="articles-page-container row">
                 <div class="arpt col-xs-12 col-lg-9">
-                  <!-- ARTICLE INFORMATION -->
-                  <section class="arpt-info">
-                    <div *ngIf="eventType != 'video' && articleData.publisher" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
-                    <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
-                  </section>
-                  <!-- DISPLAY ARTICLE -->
-                  <article-content-component *ngIf="eventType != 'story' && eventType != 'video'" class="articles-page-padding" [eventType]="eventType" [articleSubType]="articleSubType" [articleData]="articleData" [teamId]="teamId" [imageLinks]="imageLinks" [partnerId]="partnerId" [scope]="scope"></article-content-component>
-                  <section *ngIf="eventType == 'story' || eventType == 'video'" class="arpt-main-article">
-                      <div class="content-exerpt" *ngIf="eventType == 'story'" [innerHTML]="articleData.teaser | safeHtml"></div>
-                      <div class="content-exerpt" *ngIf="eventType == 'video'" [innerHTML]="articleData.description | safeHtml"></div>
-                      <div class="bottom-shader" *ngIf="eventType == 'story'"></div>
-                      <a *ngIf="eventType == 'story'" class="mod-page-btn readMore" [href]="articleData.articleUrl" target="_blank">Read the Full Article <i class="fa fa-arrow-right"></i></a>
-                      <div [ngStyle]="{width: '100%', height:'5px','display':'block'}"></div>
-                  </section>
-                  <!-- RESPONSIVE WIDGET -->
-                  <sidekick-container-component></sidekick-container-component>
-                  <disqus-component *ngIf="!checkPartner"></disqus-component>
+                    <!-- ARTICLE INFORMATION -->
+                    <section class="arpt-info">
+                      <div *ngIf="eventType != 'video' && articleData.publisher" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
+                      <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
+                    </section>
+                    <!-- DISPLAY ARTICLE -->
+                    <article-content-component *ngIf="eventType != 'story' && eventType != 'video'" class="articles-page-padding"
+                                               [articleType]="articleType"
+                                               [articleSubType]="articleSubType"
+                                               [articleData]="articleData"
+                                               [teamId]="teamId"
+                                               [imageLinks]="imageLinks"
+                                               [partnerId]="partnerId"
+                                               [scope]="scope">
+                    </article-content-component>
+                    <section *ngIf="eventType == 'story' || eventType == 'video'" class="arpt-main-article">
+                        <div class="content-exerpt" *ngIf="eventType == 'story'" [innerHTML]="articleData.teaser | safeHtml"></div>
+                        <div class="content-exerpt" *ngIf="eventType == 'video'" [innerHTML]="articleData.description | safeHtml"></div>
+                        <div class="bottom-shader" *ngIf="eventType == 'story'"></div>
+                        <a *ngIf="eventType == 'story'" class="mod-page-btn readMore" [href]="articleData.articleUrl" target="_blank">Read the Full Article <i class="fa fa-arrow-right"></i></a>
+                        <div [ngStyle]="{width: '100%', height:'5px','display':'block'}"></div>
+                    </section>
+                    <!-- RESPONSIVE WIDGET -->
+                    <sidekick-container-component></sidekick-container-component>
+                    <disqus-component *ngIf="!checkPartner"></disqus-component>
+                    <recommendations-component *ngIf="randomHeadlines" [randomHeadlines]="randomHeadlines" [images]="images"></recommendations-component>
+                    <trending-component [scope]="scope"
+                                        [currentArticleId]="eventID"
+                                        [eventType]="eventType"
+                                        [geoLocation]="geoLocation">
 
-                  <recommendations-component *ngIf="randomHeadlines" [randomHeadlines]="randomHeadlines" [images]="images"></recommendations-component>
-                  <trending-component [scope]="scope" [currentArticleId]="eventID"></trending-component>
+                    </trending-component>
                 </div>
 
                 <div class="vertical-widget col-lg-3">
