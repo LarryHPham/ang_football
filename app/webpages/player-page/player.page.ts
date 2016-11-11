@@ -325,12 +325,14 @@ export class PlayerPage implements OnInit {
             });
     }
 
-    private getFantasyData(playerId) {
+    private getFantasyData(playerId) {;
         this._fantasyService.getFantasyReport(playerId)
             .subscribe(data => {
-                this.fantasyData = data;
-                var date = moment.unix(this.fantasyData['last_updated']).format();
-                this.fantasyDate = moment.tz(date, "America/New_York").fromNow();
+                if (playerId == data['player_id']) {
+                    this.fantasyData = data;
+                    var date = moment.unix(this.fantasyData['last_updated']).format();
+                    this.fantasyDate = moment.tz(date, "America/New_York").fromNow();
+                }
             },
             err => {
                 console.log("Error getting fantasy report data", err);

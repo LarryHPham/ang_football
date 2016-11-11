@@ -114,13 +114,15 @@ export class ArticlePages implements OnInit {
                     this.getPartnerHeader();
                 }
                 if (this.eventType != 'story' && this.eventType != 'video') {
+                    //AI Articles do not recognize ncaa; only ncaaf
+                    this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaaf";
                     this.eventType = GlobalFunctions.getApiArticleType(_params.get('eventType'));
+                    if (this.eventType == "articleType=player-fantasy") {
+                        this.isFantasyReport = true;
+                    }
                     this.getArticles();
                 }
                 this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-                if (this.eventType == "articleType=player-fantasy") {
-                    this.isFantasyReport = true;
-                }
                 this.rawUrl = window.location.href;
                 this.constructorControl = false;
             }
@@ -182,7 +184,7 @@ export class ArticlePages implements OnInit {
                             //removes error page from browser history
                             self._location.replaceState('/');
                             //returns user to previous page
-                            self._location.back();
+                            self._router.navigateByUrl('Default-home');
                         }, 5000);
                     }
                 },
@@ -193,7 +195,7 @@ export class ArticlePages implements OnInit {
                         //removes error page from browser history
                         self._location.replaceState('/');
                         //returns user to previous page
-                        self._location.back();
+                        self._router.navigateByUrl('Default-home');
                     }, 5000);
                 }
             );
@@ -350,8 +352,8 @@ export class ArticlePages implements OnInit {
                     }
                 );
         } else {
-            var startNum = Math.floor((Math.random() * 49) + 1);
-            //needed to uppoercase for ai to grab data correctly
+            var startNum = Math.floor((Math.random() * 8) + 1);
+            //needed to uppercase for ai to grab data correctly
             this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, startNum, 3)
                 .subscribe(data => {
                     this.randomHeadlines = this._deepDiveService.transformToRecArticles(data);

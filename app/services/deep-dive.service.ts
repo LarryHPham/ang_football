@@ -320,43 +320,38 @@ export class DeepDiveService {
           articles.push(a);
         }
       }
-        //temporary fix to hide recommended section until api is fixed
+        //In the event there are not 3 articles for this section then hide it.
         if (articles.length <= 2) {
             return
         }
-      //temporary counter until api is fixed
-      var count = 0;
       articles.forEach(function(val){
-        if (count <= 2) {
-            var info = val.info;
-            var date = GlobalFunctions.sntGlobalDateFormatting(info.last_updated * 1000, "dayOfWeek");
-            var relPath = GlobalSettings.getRouteFullParams().relPath;
-            let domainHostName;
-            let urlRouteArray;
-            let domainParams = {};
+          var info = val.info;
+          var date = GlobalFunctions.sntGlobalDateFormatting(info.last_updated * 1000, "dayOfWeek");
+          var relPath = GlobalSettings.getRouteFullParams().relPath;
+          let domainHostName;
+          let urlRouteArray;
+          let domainParams = {};
 
-            domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-            if (GlobalSettings.getRouteFullParams().domainParams.partner_id != null) {
-                domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-            }
-            domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
-            urlRouteArray = [relPath + domainHostName, domainParams, 'Article-pages', {
-                eventType: val.keyword,
-                eventID: eventID
-            }];
+          domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+          if (GlobalSettings.getRouteFullParams().domainParams.partner_id != null) {
+              domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+          }
+          domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+          urlRouteArray = [relPath + domainHostName, domainParams, 'Article-pages', {
+              eventType: val.keyword,
+              eventID: eventID
+          }];
 
-            var s = {
-                urlRouteArray: urlRouteArray ? urlRouteArray : null,
-                eventID: info.event_id,
-                eventType: val.keyword,
-                images: info.image_url != null ? GlobalSettings.getImageUrl(info.image_url) : sampleImage,
-                keyword: val.keyword.replace('-', ' ').toUpperCase(),
-                date: date,
-                title: info.title,
-            };
-            articleStackArray.push(s);
-            count++;
-        }
+          var s = {
+              urlRouteArray: urlRouteArray ? urlRouteArray : null,
+              eventID: info.event_id,
+              eventType: val.keyword,
+              images: info.image_url != null ? GlobalSettings.getImageUrl(info.image_url) : sampleImage,
+              keyword: val.keyword.replace('-', ' ').toUpperCase(),
+              date: date,
+              title: info.title,
+          };
+          articleStackArray.push(s);
       });
 
       return articleStackArray;
