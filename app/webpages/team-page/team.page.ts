@@ -383,8 +383,7 @@ export class TeamPage implements OnInit {
     }
     //api for Headline Module
     private getHeadlines(){
-        var scope = this.scope == "fbs" ? "ncaa" : "nfl";
-        this._headlineDataService.getAiHeadlineData(scope, this.pageParams.teamId)
+        this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId)
             .subscribe(
                 HeadlineData => {
                     this.headlineData = HeadlineData.data;
