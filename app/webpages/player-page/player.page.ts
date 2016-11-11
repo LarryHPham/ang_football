@@ -325,7 +325,7 @@ export class PlayerPage implements OnInit {
             });
     }
 
-    private getFantasyData(playerId) {;
+    private getFantasyData(playerId) {
         this._fantasyService.getFantasyReport(playerId)
             .subscribe(data => {
                 if (playerId == data['player_id']) {
