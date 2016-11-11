@@ -139,7 +139,7 @@ export class DeepDiveService {
       }
       //this is the sidkeick url
       var callURL = this._articleUrl + "sidekick-regional?scope=" + scope + "&region=" + state + "&index=" + batch + "&count=" + limit;
-        return this.http.get(callURL, {headers: headers})
+      return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
         return data;
@@ -246,7 +246,8 @@ export class DeepDiveService {
           domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
         }
         domainParams['scope'] = val.scope == 'fbs' ? 'ncaaf' : val.scope;
-        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.article_type, eventID: val.event_id}];
+        let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
+        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: articleType, eventID: val.event_id}];
 
         var s = {
             stackRowsRoute: urlRouteArray,
@@ -306,6 +307,7 @@ export class DeepDiveService {
     transformToRecArticles(data){
       data = data.data;
       var sampleImage = "/app/public/placeholder_XL.png";
+
       var articleStackArray = [];
       var articles = [];
       var eventID = null;

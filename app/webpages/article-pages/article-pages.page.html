@@ -31,7 +31,7 @@
                 <div class="arpt col-xs-12 col-lg-9">
                     <!-- ARTICLE INFORMATION -->
                     <section class="arpt-info">
-                      <div *ngIf="eventType != 'video' && articleData.publisher && eventType == 'story'" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
+                      <div *ngIf="eventType == 'story' && articleData.publisher" class="arpt-author">Written By: <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
                       <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
                     </section>
                     <!-- DISPLAY ARTICLE -->
