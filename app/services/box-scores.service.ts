@@ -104,13 +104,16 @@ export class BoxScoresService {
         data.forEach(function(val, index){
           let aiContent = val.featuredReport['article']['data'];
           if(aiContent){
-            for(var p in aiContent){
+            for(var p in aiContent) {
               var eventType = aiContent[p];
-              var teaser = eventType.displayHeadline;
-              var date = GlobalFunctions.sntGlobalDateFormatting(eventType.last_updated,"defaultDate");
-              if(eventType.image_url != null){
+              var teaser = eventType.title;
+              if (eventType.last_updated) {
+                var date = moment.unix(eventType.last_updated);
+                date = date.format('dddd') + ', ' + date.format('MMM') + date.format('. DD, YYYY');
+              }
+              if (eventType.image_url != null) {
                 var homeImage = GlobalSettings.getImageUrl(eventType.image_url);
-              }else{
+              } else {
                 var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
               }
             }
