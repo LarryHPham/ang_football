@@ -317,10 +317,9 @@ export class DeepDiveService {
             info: data[obj]
           }
           articles.push(a);
-        } else {
-          var eventID = data['meta-data']['current']['eventID'];
         }
       }
+      var eventID = data['meta-data']['current']['eventID'];
 
       articles.forEach(function(val, index){
         var info = val.info;
@@ -339,7 +338,7 @@ export class DeepDiveService {
 
         var s = {
             urlRouteArray: urlRouteArray ? urlRouteArray : null,
-            eventID: val.eventID,
+            eventID: eventID,
             eventType: val.keyword,
             images: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
             keyword: val.keyword.replace('-', ' ').toUpperCase(),
