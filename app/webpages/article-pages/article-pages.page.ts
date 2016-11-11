@@ -114,8 +114,7 @@ export class ArticlePages implements OnInit {
                     this.getPartnerHeader();
                 }
                 if (this.eventType != 'story' && this.eventType != 'video') {
-                    //Temporary until fbs push by backend has been implemented
-                    this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaaf";
+                    this.scope = parentParams.scope;
                     this.eventType = GlobalFunctions.getApiArticleType(_params.get('eventType'));
                     if (this.eventType == "articleType=player-fantasy") {
                         this.isFantasyReport = true;
