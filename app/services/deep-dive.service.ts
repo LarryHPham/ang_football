@@ -138,7 +138,7 @@ export class DeepDiveService {
         limit = 1;
       }
       //this is the sidkeick url
-      var callURL = this._articleUrl + "sidekick-regional/" + scope + "/" + state + "/" + batch + "/" + limit;
+      var callURL = this._articleUrl + "sidekick-regional?scope=" + scope + "&region=" + state + "&index=" + batch + "&count=" + limit;
       return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(data => {
@@ -316,37 +316,42 @@ export class DeepDiveService {
           var a = {
             keyword: obj,
             info: data[obj]
-          }
+          };
           articles.push(a);
         }
       }
-      var eventID = data['meta-data']['current']['eventID'];
-
-      articles.forEach(function(val, index){
-        var info = val.info;
-        var date = GlobalFunctions.sntGlobalDateFormatting(info.dateline*1000,"dayOfWeek");
-        var relPath = GlobalSettings.getRouteFullParams().relPath;
-        let domainHostName;
-        let urlRouteArray;
-        let domainParams = {}
-
-        domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-        if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-          domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+        //In the event there are not 3 articles for this section then hide it.
+        if (articles.length <= 2) {
+            return
         }
-        domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
-        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: val.keyword, eventID: eventID}];
+      articles.forEach(function(val){
+          var info = val.info;
+          var date = GlobalFunctions.sntGlobalDateFormatting(info.last_updated * 1000, "dayOfWeek");
+          var relPath = GlobalSettings.getRouteFullParams().relPath;
+          let domainHostName;
+          let urlRouteArray;
+          let domainParams = {};
 
-        var s = {
-            urlRouteArray: urlRouteArray ? urlRouteArray : null,
-            eventID: eventID,
-            eventType: val.keyword,
-            images: info.image != null ? GlobalSettings.getImageUrl(info.image) : sampleImage,
-            keyword: val.keyword.replace('-', ' ').toUpperCase(),
-            date: date,
-            title: info.displayHeadline,
+          domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+          if (GlobalSettings.getRouteFullParams().domainParams.partner_id != null) {
+              domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
           }
-        articleStackArray.push(s);
+          domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+          urlRouteArray = [relPath + domainHostName, domainParams, 'Article-pages', {
+              eventType: val.keyword,
+              eventID: eventID
+          }];
+
+          var s = {
+              urlRouteArray: urlRouteArray ? urlRouteArray : null,
+              eventID: info.event_id,
+              eventType: val.keyword,
+              images: info.image_url != null ? GlobalSettings.getImageUrl(info.image_url) : sampleImage,
+              keyword: val.keyword.replace('-', ' ').toUpperCase(),
+              date: date,
+              title: info.title,
+          };
+          articleStackArray.push(s);
       });
 
       return articleStackArray;
