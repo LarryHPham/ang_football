@@ -326,12 +326,12 @@ export class DeepDiveService {
         }
       articles.forEach(function(val){
           var info = val.info;
-          var date = GlobalFunctions.sntGlobalDateFormatting(info.last_updated * 1000, "dayOfWeek");
+          var date = GlobalFunctions.sntGlobalDateFormatting(Number(info.last_updated) * 1000, "dayOfWeek");
           var relPath = GlobalSettings.getRouteFullParams().relPath;
           let domainHostName;
           let urlRouteArray;
           let domainParams = {};
-
+          console.log("val", val);
           domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
           if (GlobalSettings.getRouteFullParams().domainParams.partner_id != null) {
               domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
@@ -339,7 +339,7 @@ export class DeepDiveService {
           domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
           urlRouteArray = [relPath + domainHostName, domainParams, 'Article-pages', {
               eventType: val.keyword,
-              eventID: eventID
+              eventID: info.event_id
           }];
 
           var s = {
