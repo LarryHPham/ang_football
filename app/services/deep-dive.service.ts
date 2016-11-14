@@ -331,7 +331,6 @@ export class DeepDiveService {
           let domainHostName;
           let urlRouteArray;
           let domainParams = {};
-          console.log("val", val);
           domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
           if (GlobalSettings.getRouteFullParams().domainParams.partner_id != null) {
               domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
