@@ -635,7 +635,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated, "dayOfWeek"),
+            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated*1000, "dayOfWeek"),
             keyword: "FOOTBALL"
         };
         return articles;
