@@ -1,51 +1,41 @@
-(function(global) {
+/**
+ * System configuration for Angular 2 samples
+ * Adjust as necessary for your application needs.
+ */
+(function (global) {
+  System.config({
 
     // map tells the System loader where to look for things
-    var map = {
-        "@angular/core"                    : "dist/lib/core",
-        "@angular/common"                  : "dist/lib/common",
-        "@angular/compiler"                : "dist/lib/compiler",
-        "@angular/router-deprecated"       : "dist/lib/router-deprecated",
-        "@angular/http"                    : "dist/lib/http",
-        "@angular/platform-browser"        : "dist/lib/platform-browser",
-        "@angular/platform-browser-dynamic": "dist/lib/platform-browser-dynamic",
-        "symbol-observable"                : "dist/lib",
-        "rxjs"                             : "dist/lib",
-        'app'                              : 'dist/app' // this is where your transpiled files live
-    };
+    map: {
+      // our app is within the app folder
+      app: 'app',
+      // angular bundles
+      '@angular/core':              'lib/core.umd.js',
+      '@angular/common':            'lib/common.umd.js',
+      '@angular/compiler':          'lib/compiler.umd.js',
+      '@angular/platform-browser':  'lib/platform-browser.umd.js',
+      '@angular/platform-browser-dynamic': 'lib/platform-browser-dynamic.umd.js',
+      '@angular/http':              'lib/http.umd.js',
+      '@angular/router':            'lib/router.umd.js',
+      '@angular/forms':             'lib/forms.umd.js',
+      // other libraries
+      'symbol-observable':          'lib',
+      'rxjs':                       'lib',
+      'angular2-in-memory-web-api': 'lib/angular2-in-memory-web-api'
+    },
     // packages tells the System loader how to load when no filename and/or no extension
-    var packages = {
-        'app':                        { format: "register",  defaultExtension: 'js' },
-        'rxjs':                       { defaultExtension: 'js' },
-        'symbol-observable':          { defaultExtension: 'js' }
-    };
-
-    var packageNames = [
-        '@angular/common',
-        '@angular/compiler',
-        '@angular/core',
-        '@angular/http',
-        '@angular/platform-browser',
-        '@angular/platform-browser-dynamic',
-        '@angular/router-deprecated',
-        '@angular/http',
-        '@angular/testing',
-        '@angular/upgrade',
-        'symbol-observable'
-    ];
-
-    // add package entries for angular packages in the form '@angular/common': { main: 'index.js', defaultExtension: 'js' }
-    packageNames.forEach(function(pkgName) {
-        packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
-    });
-
-    var config = {
-        map: map,
-        packages: packages,
-    };
-
-    // filterSystemConfig - index.html's chance to modify config before we register it.
-    if (global.filterSystemConfig) { global.filterSystemConfig(config); }
-
-    System.config(config);
+    packages: {
+      app: {
+        main: './main.js',
+        defaultExtension: 'js'
+      },
+      rxjs: {
+        defaultExtension: 'js'
+      },
+      'angular2-in-memory-web-api': {
+        main: './index.js',
+        defaultExtension: 'js'
+      }
+    }
+  });
 })(this);

@@ -20,6 +20,68 @@ gulp.task('clean', function () {
     return del('dist/**/*');
 });
 
+// TypeScript compile
+gulp.task('compile', function () {
+    return gulp
+        .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
+        .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
+        .pipe(gulp.dest('dist/app'))
+
+});
+
+gulp.task('less', ['clean'], function () {
+    return gulp.src(['./app/**/*.less'])
+        .pipe(concat('master.css'))
+        .pipe(less())
+        .pipe(gulp.dest('dist/app/global/stylesheets'));
+});
+
+// copy dependencies
+gulp.task('copy:libs', ['clean'], function () {
+    return gulp.src([
+      'node_modules/core-js/client/core.min.js',
+      'node_modules/core-js/client/core.min.js.map',
+      'node_modules/reflect-metadata/Reflect.js',
+      'node_modules/reflect-metadata/Reflect.js.map',
+      'node_modules/systemjs/dist/system.src.js',
+      'node_modules/moment/moment.js',
+      'node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
+      'node_modules/zone.js/dist/zone.js',
+      'node_modules/fuse.js/src/fuse.min.js',
+      'node_modules/hammerjs/hammer.min.js',
+      'node_modules/hammerjs/hammer.min.js.map',
+      'node_modules/@angular/core/bundles/core.umd.js',
+      'node_modules/@angular/common/bundles/common.umd.js',
+      'node_modules/@angular/compiler/bundles/compiler.umd.js',
+      'node_modules/@angular/platform-browser/bundles/platform-browser.umd.js',
+      'node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+      'node_modules/@angular/http/bundles/http.umd.js',
+      'node_modules/@angular/router/bundles/router.umd.js',
+      'node_modules/@angular/forms/bundles/forms.umd.js',
+      'node_modules/rxjs/**/*.js',
+      'node_modules/rxjs/**/*.map',
+      'node_modules/symbol-observable/*.js',
+      'node_modules/symbol-observable/*.map',
+      'node_modules/es6-shim/es6-shim.min.js',
+      'node_modules/systemjs/dist/system-polyfills.js',
+      'node_modules/systemjs/dist/system-polyfills.js.map',
+      'node_modules/@angular/**/*.js',
+      'node_modules/@angular/**/*.map',
+      'node_modules/node-uuid/uuid.js',
+      'node_modules/immutable/dist/immutable.js',
+      'node_modules/highcharts/highcharts.js',
+      'node_modules/moment-timezone/moment-timezone.js',//load only one moment timezone otherwise problems will occur
+      'system.config.js'
+        ])
+        .pipe(gulp.dest('dist/lib'));
+});
+
+// copy static assets - i.e. non TypeScript compiled source
+gulp.task('copy:assets', ['clean'], function () {
+    return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
+    .pipe(gulp.dest('dist'));
+});
+
 //minify the css
 gulp.task('minify-css', ['less'], function () {
     return gulp.src('dist/app/global/stylesheets/*.css')
@@ -30,94 +92,13 @@ gulp.task('minify-css', ['less'], function () {
         .pipe(gulp.dest('dist/app/global/stylesheets'));
 });
 
+// gulp task to build all of the files to be able to serve in index.html also have a task to watch those files and rebuild when modified
+gulp.task('build', ['compile', 'less', 'minify-css', 'copy:libs', 'copy:assets']);
+gulp.task('buildAndReload', ['build'], reload);
 
-// TypeScript compile
-gulp.task('compile', function () {
-    return gulp
-        .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
-        .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
-        .pipe(gulp.dest('dist/app'))
-
-});
-
-//special compile function for dev not to minify js
-// TypeScript compile
-gulp.task('dev-compile', function () {
-    return gulp
-        .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
-        .pipe(typescript(tscConfig.compilerOptions))
-        .pipe(gulp.dest('dist/app'))
-
-});
-// copy dependencies
-gulp.task('copy:libs', ['clean'], function () {
-    return gulp.src([
-            'node_modules/core-js/client/core.min.js',
-            'node_modules/core-js/client/core.min.js.map',
-            // 'node_modules/es6-shim/es6-shim.min.js',
-            'node_modules/systemjs/dist/system-polyfills.js',
-            'node_modules/systemjs/dist/system-polyfills.js.map',
-            'node_modules/reflect-metadata/Reflect.js',
-            'node_modules/reflect-metadata/Reflect.js.map',
-            'node_modules/symbol-observable/*.js',
-            'node_modules/symbol-observable/*.map',
-            'node_modules/@angular/**/*.js',
-            'node_modules/@angular/**/*.map',
-            'node_modules/systemjs/dist/system.src.js',
-            'node_modules/rxjs/**/*.js',
-            'node_modules/rxjs/**/*.map',
-            'node_modules/node-uuid/uuid.js',
-            'node_modules/immutable/dist/immutable.js',
-            'node_modules/highcharts/highcharts.js',
-            'node_modules/moment/moment.js',
-            'node_modules/hammerjs/hammer.min.js',
-            'node_modules/hammerjs/hammer.min.js.map',
-            // 'node_modules/moment-timezone/moment-timezone.js',//load only one moment timezone otherwise problems will occur
-            'node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
-            'node_modules/fuse.js/src/fuse.min.js',
-            'node_modules/zone.js/dist/zone.js',
-            'node_modules/jquery/dist/jquery.min.js',
-            'system.config.js'
-        ])
-        .pipe(gulp.dest('dist/lib'));
-});
-
-/** then bundle */
-gulp.task('bundle', ['clean', 'copy:libs'], function () {
-    // optional constructor options
-    // sets the baseURL and loads the configuration file
-    var builder = new Builder('', 'dist/lib/system.config.js');
-    /*
-     the parameters of the below buildStatic() method are:
-     - your transcompiled application boot file (the one wich would contain the bootstrap(MyApp, [PROVIDERS]) function - in my case 'dist/app/boot.js'
-     - the output (file into which it would output the bundled code)
-     - options {}
-     */
-    return builder
-        .buildStatic('dist/app/main.js', 'dist/lib/bundle.js', {minify: true, sourceMaps: true})
-        .then(function () {
-            console.log('Build complete');
-        })
-        .catch(function (err) {
-            console.log('Build error');
-            console.log(err);
-        });
-});
-
-// copy static assets - i.e. non TypeScript compiled source
-gulp.task('copy:assets', ['clean'], function () {
-    return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('less', ['clean'], function () {
-    return gulp.src(['./app/**/*.less'])
-        .pipe(concat('master.css'))
-        .pipe(less())
-        .pipe(gulp.dest('dist/app/global/stylesheets'));
-
-});
-
+/*
+ * MAIN GULP COMMAND TO SERVE CONTENT -> gulp serve
+ */
 // Run browsersync for development
 gulp.task('serve', ['build'], function () {
     browserSync({
@@ -126,16 +107,8 @@ gulp.task('serve', ['build'], function () {
             middleware: [historyApiFallback()]
         }
     });
-
     gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
 });
-
-// gulp.task('build', ['compile', 'less', 'copy:libs', 'copy:assets', 'minify-css', 'compress']);
-gulp.task('build', ['compile', 'less', 'minify-css', 'copy:libs', 'copy:assets', 'bundle']);
-gulp.task('buildAndReload', ['build'], reload);
-
-gulp.task('build-tests', ['compile-tests', 'build']);
-gulp.task('test', ['build-tests']);
 
 /**
  *
@@ -150,9 +123,19 @@ gulp.task('dev', ['dev-build'], function () {
             middleware: [historyApiFallback()]
         }
     });
-
     gulp.watch(['app/**/*', 'dev-index.html', 'master.css'], ['dev-buildAndReload']);
 });
+
+//special compile function for dev not to minify js
+// TypeScript compile
+gulp.task('dev-compile', function () {
+    return gulp
+        .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
+        .pipe(typescript(tscConfig.compilerOptions))
+        .pipe(gulp.dest('dist/app'))
+
+});
+
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:dev-assets', ['clean'], function () {
     gulp.src('dev-index.html')
@@ -162,6 +145,7 @@ gulp.task('copy:dev-assets', ['clean'], function () {
     return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
     .pipe(gulp.dest('dist'));
 });
+
 gulp.task('dev-build', ['dev-compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
 gulp.task('dev-buildAndReload', ['dev-build'], reload);
 
