@@ -13,6 +13,7 @@ const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
 const embedTemp = require('gulp-angular-embed-templates');
+const connect = require('gulp-connect');
 
 
 // clean the contents of the distribution directory
@@ -99,16 +100,16 @@ gulp.task('buildAndReload', ['build'], reload);
 /*
  * MAIN GULP COMMAND TO SERVE CONTENT -> gulp serve
  */
-// Run browsersync for development
-gulp.task('serve', ['build'], function () {
-    browserSync({
-        server: {
-            baseDir: 'dist',
-            middleware: [historyApiFallback()]
-        }
-    });
-    gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
-});
+ gulp.task('serve', ['build'], function () {
+  connect.server({
+    root: 'dist',
+    port: 3000,
+    livereload: true,
+    middleware: function(connect, opt) { return [ historyApiFallback({}) ] }
+  });
+
+  gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
+ });
 
 /**
  *
