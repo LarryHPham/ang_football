@@ -339,7 +339,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var imageUrl: string = null;
     var rank;
     if(item.groupName == 'Conference'){
-      rank = item.conferenceRank;
+      rank = item.conferenceRank === null ? item.divisionRank : item.conferenceRank;
     }else if(item.groupName == item.divisionName){
       rank = item.divisionRank;
     }else{
