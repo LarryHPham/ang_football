@@ -3,13 +3,11 @@ const del = require('del');
 const Builder = require('systemjs-builder');
 const typescript = require('gulp-typescript');
 const tscConfig = require('./tsconfig.json');
-const browserSync = require('browser-sync');
 const historyApiFallback = require('connect-history-api-fallback');
 const concat = require('gulp-concat');
 const less = require('gulp-less');
 const cleanCSS = require('gulp-clean-css');
 // const minify = require('gulp-minify');
-const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
 const embedTemp = require('gulp-angular-embed-templates');
@@ -97,7 +95,7 @@ gulp.task('minify-css', ['less'], function () {
 
 // gulp task to build all of the files to be able to serve in index.html also have a task to watch those files and rebuild when modified
 gulp.task('build', ['compile', 'less', 'minify-css', 'copy:libs', 'copy:assets']);
-gulp.task('buildAndReload', ['build'], reload);
+gulp.task('buildAndReload', ['build']);
 
 /*
  * MAIN GULP COMMAND TO SERVE CONTENT -> gulp serve
