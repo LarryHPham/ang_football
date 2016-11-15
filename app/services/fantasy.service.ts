@@ -13,7 +13,7 @@ export class FantasyService {
     };
 
     getFantasyReport(playerId) {
-        var fullUrl = GlobalSettings.getFantasyUrl() + "articles?articleType=player-fantasy&player[]=";
+        var fullUrl = GlobalSettings.getFantasyUrl() + "articles?articleType=player-fantasy&scope=nfl&player[]=";
         if (playerId !== undefined) {
             fullUrl += playerId;
         }
