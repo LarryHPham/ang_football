@@ -5,6 +5,12 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FooterComponent } from "../ui-modules/footer/footer.component";
+import { HeaderComponent } from "../ui-modules/header/header.component";
+import { GlobalSettings } from "../global/global-settings";
+import { FooterService } from '../services/footer.service';
+import { GlobalFunctions } from '../global/global-functions';
+
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
@@ -68,6 +74,8 @@ import { routing } from '../router/app.routing';
     ],
     declarations: [
       AppComponent,
+      HeaderComponent,
+      FooterComponent,
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -107,6 +115,8 @@ import { routing } from '../router/app.routing';
       // ResponsiveWidget
     ],
     exports: [
+      HeaderComponent,
+      FooterComponent,
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
@@ -145,12 +155,13 @@ import { routing } from '../router/app.routing';
       // ResponsiveWidget
     ],
     providers: [
-      // VerticalGlobalFunctions,
+      // GeoLocation
       // ScrollerFunctions,
       // SanitizeScript,
-      // GlobalSettings,
-      // GlobalFunctions,
-      // GeoLocation
+      // VerticalGlobalFunctions,
+      GlobalSettings,
+      GlobalFunctions,
+      FooterService
     ]
 })
 export class GlobalModule { }

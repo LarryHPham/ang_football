@@ -1,0 +1,236 @@
+.below768{
+  display:block !important;
+  @media @desktop{
+    display:none !important;
+  }
+}
+.above768{
+  display: none !important;
+  @media @desktop{
+    display:block !important;
+  }
+}
+.footer{
+  width: 100%;
+  height: auto;
+  width: 100%;
+  position: absolute;
+  z-index: 999;
+  .dropdownCategory{
+    width:136.5px;
+    margin: 0 5px;
+    @media @desktop{
+      width:225px;
+    }
+  }
+  .scrollable-item-scroller{
+    background: @white;
+  }
+  .dropdownOptions .scrollable-item-wrapper{
+    background-color: @darkBlueTD;
+    & ul{
+      .flexDisplay;
+      .flexJustify(center);
+      .flexAlignItems(baseline);
+      .flexWrap(wrap);
+      width:90%;
+      li{
+        .flexDisplay;
+      }
+    }
+  }
+  &-share{
+    position: absolute;
+    right:0;
+    top:45px;
+  }
+  &-top{
+    background-color: @masterBrandColor;
+    border-top: 3px solid @redType1;
+    width: 100%;
+    min-height: 40px;
+    padding: 0 15px;
+    display:inline-block;
+    @media @desktop{
+      .flexDisplay;
+      .flexJustify(space-between);
+    }
+    &-container{
+      height:90px;
+      @media @desktop{
+        height:auto;
+      }
+      .flexDisplay;
+      .flexDirection(column);
+      .flexJustify(center);
+    }
+    img{
+      height: 66px;
+      position: absolute;
+      top:20px;
+    }
+    ul{
+      text-align: center;
+      font-size:12px;
+      li{
+        &.share{
+          margin:0 10px;
+        }
+        float:right;
+        .globalDefaultModFont(14px, 400, @highlightGrey);
+      }// ul li ends
+    }// ul ends
+  }// footer-top ends
+  &-dropDown{
+    .flexDisplay;
+    .flexAlignItems(baseline);
+    .flexJustify(center);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    @media @desktop{
+      margin-bottom: 22px;
+    }
+    .toggle{
+      background-color: rgba(0, 0, 0, 0.35);
+    }
+    .dropdownArrow{
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+  }
+  &-main{
+    background-color: @masterBrandColor;
+    height: auto;
+    margin-bottom: 25px;
+    .globalDefaultModFont(10px, 400, @strokeGrey);
+    .flexAlignItems(center);
+    .flexDisplay;
+    .flexDirection(column);
+    @media @desktop{
+      margin-top: 30px;
+    }
+    ul{
+      .flexDisplay;
+      .flexJustify(center);
+      width:100%;
+      .sortCategory{
+        padding-right: 12px;
+      }
+      li{
+        line-height: 1em;
+        i{
+          padding: 0 7px;
+        }
+        span{
+          color: @strokeGrey;
+        }
+        &:hover{
+          a{
+            color: @white;
+          }
+        }
+        &:last-child{
+          span{
+            visibility: hidden;
+          }
+        }
+      }//li ends
+    }// ul ends
+    hr{
+      width: 70%;
+    }
+    &-cit{
+      width:auto;
+      .flexDisplay;
+      .flexDirection(column);
+      .flexAlignItems(center);
+      @media @desktop{
+        margin-top: 10px;
+      }
+      color:@strokeGrey;
+      .pipeSpacer{
+        display:none;
+      }
+      &-pipe{
+        display:none;
+        @media @desktop{
+          color:@bulletGrey;
+          display:block;
+          margin:0 10px;
+          position: relative;
+          bottom: 2px;
+        }
+      }
+      @media @desktop{
+        .pipeSpacer{
+          display:block;
+        }
+        .flexDirection(row);
+        .flexJustify(space-between);
+      }
+      .pipeSpacer {
+        margin:0 10px;
+      }
+      & p{
+        white-space: nowrap;
+      }
+    }
+    &-citation{
+      margin-top: 0;
+      margin-bottom: 0;
+      @media @mobile{
+        margin-top: 7px;
+      }
+      line-height: 1em;
+      .globalDefaultFont(10px, 400);
+      i{
+        font-size: 9px;
+      }
+      & .fa-copyright{
+        position: relative;
+        top:1px;
+      }
+    }
+  }// footer-main ends
+  &-text1{
+    a{
+      .globalDefaultFont(12px, 800);
+      margin-bottom:12px;
+      @media @desktop-l{
+        font-size: 14px;
+      }
+    }
+  }//footer-text1 ends
+  &-line3{
+    width: 70%;
+  }
+  @media @mobile {
+    #mlb-teams-dropdown {
+      display:none;
+    }
+  }
+}//footer ENDS
+#share-facebook{
+  &:hover, &:active{
+    .fa{
+      color: @white;
+    }
+  }
+}
+#share-twitter{
+  &:hover, &:active{
+    .fa{
+      color: @white;
+    }
+  }
+}
+
+#share-google{
+  &:hover, &:active{
+    .fa{
+      color: @white;
+    }
+  }
+}
+#set-width70{
+  width: 70%;
+}
