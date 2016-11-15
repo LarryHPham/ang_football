@@ -229,7 +229,8 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         },{
           headerValue: "RANK",
           columnClass: "data-column rank",
-          key: "rank"
+          key: "rank",
+          sortDirection: 1 //ascending
         },{
           headerValue: "W/L/T",
           columnClass: "data-column",
@@ -237,7 +238,6 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         },{
           headerValue: "CONF",
           columnClass: "data-column",
-          sortDirection: -1, //descending
           key: "conf"
         },{
           headerValue: "STRK",
@@ -269,7 +269,8 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           },{
             headerValue: "RANK",
             columnClass: "data-column rank",
-            key: "rank"
+            key: "rank",
+            sortDirection: 1 //ascending
           },{
             headerValue: "W/L/T",
             columnClass: "data-column",
@@ -277,7 +278,6 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
           },{
             headerValue: "PCT",
             columnClass: "data-column",
-            sortDirection: -1, //descending
             key: "pct"
           },{
             headerValue: "DIV",
@@ -337,7 +337,15 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var sort: any = null;
     var link: Array<any> = null;
     var imageUrl: string = null;
-    var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + item.divisionRank + GlobalFunctions.Suffix(Number(item.divisionRank)); +'</span>';
+    var rank;
+    if(item.groupName == 'Conference'){
+      rank = item.conferenceRank === null ? item.divisionRank : item.conferenceRank;
+    }else if(item.groupName == item.divisionName){
+      rank = item.divisionRank;
+    }else{
+      rank = item.leagueRank;
+    }
+    var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + rank + GlobalFunctions.Suffix(Number(rank)); +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
     var teamAbbr = item.teamAbbreviation && item.leagueAbbreviation == "FBS" ? item.teamAbbreviation + ' ' + item.teamName : item.teamName;
     switch (column.key) {
@@ -387,8 +395,8 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         break;
 
       case "rank":
-        display = item.divisionRank != null ? item.divisionRank : 'N/A';
-        sort = item.divisionRank ? Number(item.divisionRank) : null;
+        display = rank != null ? rank : 'N/A';
+        sort = rank ? Number(rank) : null;
         break;
 
       case "pct":
