@@ -7,7 +7,7 @@ import { AppDomain }  from '../app-domain/app.domain';
 
 //NgModules
 // import {GlobalModule} from "./global.ngmodule";
-// import { DeepDiveNgModule } from "./deep-dive.ngmodule";
+import { DeepDiveNgModule } from "./deep-dive.ngmodule";
 // import { SyndicatedArticleNgModule } from "./syndicated-article.ngmodule";
 import {HttpModule, Headers, Http} from "@angular/http";
 // import {SearchPageNgModule} from "./search-page.ngmodule";
@@ -19,7 +19,7 @@ import {HttpModule, Headers, Http} from "@angular/http";
     FormsModule,
     routing,
     // GlobalModule,
-    // DeepDiveNgModule,
+    DeepDiveNgModule,
     // SyndicatedArticleNgModule,
     // SearchPageNgModule
   ],

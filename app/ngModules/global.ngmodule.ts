@@ -1,16 +1,16 @@
-// //spits out router-outlet for our deepdive websites
-// import { AppComponent }  from '../app-component/app.component';
-//
-// import {CommonModule} from "@angular/common";
-// import { NgModule } from '@angular/core';
-// import { HttpModule } from '@angular/http';
+//spits out router-outlet for our deepdive websites
+import { AppComponent }  from '../app-component/app.component';
+
+import { CommonModule } from "@angular/common";
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 // import { GlobalSettings } from "../global/global-settings";
 // import { GlobalFunctions } from "../global/global-functions";
 // import { GeoLocation } from "../global/global-service";
-// import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 // /*** COMPONENTS ***/
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
@@ -53,104 +53,104 @@
 // import {SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle} from "../fe-core/pipes/safe.pipe";
 //
 // //router
-// import { routing  } from '../app.routing';
+import { routing } from './app.routing';
 // import {InputBar} from "../fe-core/components/input-bar/input-bar.component";
 // import {ArticleSearchBar} from "../fe-core/components/search-bar-article/search-bar-article.component";
 //
 //
-// @NgModule({
-//     imports: [
-//       CommonModule,
-//       HttpModule,
-//       routing,
-//       FormsModule,
-//       ReactiveFormsModule
-//     ],
-//     declarations: [
-//       SectionFrontTopNav,
-//       AppComponent,
-//       HeaderComponent,
-//       Search,
-//       HamburgerMenuComponent,
-//       HoverImage,
-//       CircleImage,
-//       RectangleImage,
-//       FooterComponent,
-//       ModuleHeader,
-//       ImagesMedia,
-//       CircleButton,
-//       LoadingComponent,
-//       SearchBoxModule,
-//       SidekickWrapperAI,
-//       WidgetModule,
-//       WidgetCarouselModule,
-//       SanitizeHtml,
-//       SanitizeRUrl,
-//       SanitizeStyle,
-//       SanitizeScript,
-//       ScrollableContent,
-//       DropdownComponent,
-// 	    Larousel,
-//       NewsBox,
-//       LineChartComponent,
-//       SectionNameComponent,
-//       ArticleBlockComponent,
-//       DeepDiveRecommendation,
-//       InputBar,
-//       ArticleSearchBar,
-//       BillboardModule,
-//       AboutUsPage,
-//       PrivacyPolicy,
-//       TermOfService,
-//       InfoComponent,
-//       ChatterboxModule,
-//       ResponsiveWidget
-//     ],
-//     exports: [
-//       SectionFrontTopNav,
-//       HeaderComponent,
-//       HoverImage,
-//       CircleImage,
-//       RectangleImage,
-//       FooterComponent,
-//       ModuleHeader,
-//       ImagesMedia,
-//       CircleButton,
-//       LoadingComponent,
-//       SearchBoxModule,
-//       SidekickWrapperAI,
-//       WidgetModule,
-//       WidgetCarouselModule,
-//       ScrollableContent,
-//       SanitizeHtml,
-//       SanitizeRUrl,
-//       SanitizeStyle,
-//       SanitizeScript,
-//       Larousel,
-//       DropdownComponent,
-//       Search,
-//       NewsBox,
-//       LineChartComponent,
-//       SectionNameComponent,
-//       ArticleBlockComponent,
-//       DeepDiveRecommendation,
-//       InputBar,
-//       ArticleSearchBar,
-//       BillboardModule,
-//       AboutUsPage,
-//       PrivacyPolicy,
-//       TermOfService,
-//       InfoComponent,
-//       ChatterboxModule,
-//       ResponsiveWidget
-//     ],
-//     providers: [
-//       VerticalGlobalFunctions,
-//       ScrollerFunctions,
-//       SanitizeScript,
-//       GlobalSettings,
-//       GlobalFunctions,
-//       GeoLocation
-//     ]
-// })
-// export class GlobalModule { }
+@NgModule({
+    imports: [
+      CommonModule,
+      HttpModule,
+      routing,
+      FormsModule,
+      ReactiveFormsModule
+    ],
+    declarations: [
+      AppComponent,
+      // SectionFrontTopNav,
+      // HeaderComponent,
+      // Search,
+      // HamburgerMenuComponent,
+      // HoverImage,
+      // CircleImage,
+      // RectangleImage,
+      // FooterComponent,
+      // ModuleHeader,
+      // ImagesMedia,
+      // CircleButton,
+      // LoadingComponent,
+      // SearchBoxModule,
+      // SidekickWrapperAI,
+      // WidgetModule,
+      // WidgetCarouselModule,
+      // SanitizeHtml,
+      // SanitizeRUrl,
+      // SanitizeStyle,
+      // SanitizeScript,
+      // ScrollableContent,
+      // DropdownComponent,
+	    // Larousel,
+      // NewsBox,
+      // LineChartComponent,
+      // SectionNameComponent,
+      // ArticleBlockComponent,
+      // DeepDiveRecommendation,
+      // InputBar,
+      // ArticleSearchBar,
+      // BillboardModule,
+      // AboutUsPage,
+      // PrivacyPolicy,
+      // TermOfService,
+      // InfoComponent,
+      // ChatterboxModule,
+      // ResponsiveWidget
+    ],
+    exports: [
+      // SectionFrontTopNav,
+      // HeaderComponent,
+      // HoverImage,
+      // CircleImage,
+      // RectangleImage,
+      // FooterComponent,
+      // ModuleHeader,
+      // ImagesMedia,
+      // CircleButton,
+      // LoadingComponent,
+      // SearchBoxModule,
+      // SidekickWrapperAI,
+      // WidgetModule,
+      // WidgetCarouselModule,
+      // ScrollableContent,
+      // SanitizeHtml,
+      // SanitizeRUrl,
+      // SanitizeStyle,
+      // SanitizeScript,
+      // Larousel,
+      // DropdownComponent,
+      // Search,
+      // NewsBox,
+      // LineChartComponent,
+      // SectionNameComponent,
+      // ArticleBlockComponent,
+      // DeepDiveRecommendation,
+      // InputBar,
+      // ArticleSearchBar,
+      // BillboardModule,
+      // AboutUsPage,
+      // PrivacyPolicy,
+      // TermOfService,
+      // InfoComponent,
+      // ChatterboxModule,
+      // ResponsiveWidget
+    ],
+    providers: [
+      // VerticalGlobalFunctions,
+      // ScrollerFunctions,
+      // SanitizeScript,
+      // GlobalSettings,
+      // GlobalFunctions,
+      // GeoLocation
+    ]
+})
+export class GlobalModule { }

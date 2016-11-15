@@ -1,8 +1,8 @@
-// import { NgModule } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { routing } from '../app.routing';
-// import { GlobalModule } from './global.ngmodule';
-// import { FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { routing } from '../router/app.routing';
+import { GlobalModule } from './global.ngmodule';
+import { FormsModule } from '@angular/forms';
 //
 // //providers
 // import { DeepDiveService } from '../services/deep-dive.service';
@@ -19,7 +19,7 @@
 // import { DeepDiveBlock2 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
 // import { DeepDiveBlock3 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
 //
-// import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive-page";
+import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive-page";
 // import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.component';
 // import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
 // import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';
@@ -37,15 +37,15 @@
 // //pipes
 // import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 //
-// @NgModule({
-//     imports:[
-//       CommonModule,
-//       GlobalModule,
-//       routing,
-//       FormsModule
-//     ],
-//     declarations:[
-//       DeepDivePage,
+@NgModule({
+    imports:[
+      CommonModule,
+      // GlobalModule,
+      routing,
+      FormsModule
+    ],
+    declarations:[
+      DeepDivePage,
 //       SideScrollSchedule,
 //       ScheduleBox,
 //       SideScroll,
@@ -66,9 +66,9 @@
 //       DeepDiveBlock1,
 //       DeepDiveBlock2,
 //       DeepDiveBlock3,
-//     ],
-//     exports:[
-//       DeepDivePage,
+    ],
+    exports:[
+      DeepDivePage,
 //       StackRowsComponent,
 //       ArticleStacktopComponent,
 //       ArticleStack1Module,
@@ -79,12 +79,12 @@
 //       DeepDiveBlock1,
 //       DeepDiveBlock2,
 //       DeepDiveBlock3,
-//     ],
-//     providers: [
+    ],
+    providers: [
 //       DeepDiveService,
 //       BoxScoresService,
 //       SchedulesService
-//     ]
-// })
-//
-// export class DeepDiveNgModule{}
+    ]
+})
+
+export class DeepDiveNgModule{}
