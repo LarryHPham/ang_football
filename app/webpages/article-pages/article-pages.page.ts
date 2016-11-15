@@ -28,7 +28,7 @@ import {ComplexInnerHtml} from "../../fe-core/components/complex-inner-html/comp
 
 declare var jQuery:any;
 declare var moment;
-declare var jQuery: any; //used for scroll event
+declare var jQuery:any; //used for scroll event
 
 @Component({
     selector: 'article-pages',
@@ -76,6 +76,7 @@ export class ArticlePages implements OnInit {
     content:string;
     eventID:string;
     date:string;
+    isArticle:string;
     pageIndex:string;
     partnerId:string;
     rawUrl:string;
@@ -106,14 +107,17 @@ export class ArticlePages implements OnInit {
                 this.eventID = _params.get('eventID');
                 this.eventType = _params.get('eventType');
                 if (this.eventType == "story") {
+                    this.isArticle = 'false';
                     this.getDeepDiveArticle(this.eventID);
                     this.getPartnerHeader();
                 }
                 if (this.eventType == "video") {
+                    this.isArticle = 'false';
                     this.getDeepDiveVideo(this.eventID);
                     this.getPartnerHeader();
                 }
                 if (this.eventType != 'story' && this.eventType != 'video') {
+                    this.isArticle = 'true';
                     this.scope = parentParams.scope;
                     this.eventType = GlobalFunctions.getApiArticleType(_params.get('eventType'));
                     if (this.eventType == "articleType=player-fantasy") {
@@ -146,26 +150,14 @@ export class ArticlePages implements OnInit {
                             this.rawUrl = window.location.href;
                             this.pageIndex = articleType[0];
                             this.title = Article['data'][0]['article_data'].title;
-                            this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date*1000, "timeZone");
+                            this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date * 1000, "timeZone");
                             this.articleData = Article['data'][0]['article_data'];
                             if (this.eventType != "articleType=player-fantasy" || Article['data'][0].team_id != null) {
                                 this.teamId = Article['data'][0].team_id;
                             } else {
                                 this.teamId = Article['data'][0]['article_data']['metadata'].team_id;
                             }
-                            let metaDesc = Article['data'][0].meta_headline;
-                            let link = window.location.href;
-                            let image = GlobalSettings.getImageUrl(Article['data'][0]['article_data']['images'][0].image_url);
-                            this._seoService.setCanonicalLink(this._params.params, this._router);
-                            this._seoService.setOgTitle(this.title);
-                            this._seoService.setOgDesc(metaDesc);
-                            this._seoService.setOgType('Website');
-                            this._seoService.setOgUrl(link);
-                            this._seoService.setOgImage(image);
-                            this._seoService.setTitle(this.title);
-                            this._seoService.setMetaDescription(metaDesc);
-                            this._seoService.setMetaRobots('INDEX, FOLLOW');
-
+                            this.metaTags(Article['data'][0]);
                             if (Article['data'][0]['article_data']['images'] != null) {
                                 this.getCarouselImages(Article['data'][0]['article_data']['images']);
                             } else {
@@ -176,7 +168,8 @@ export class ArticlePages implements OnInit {
                                 this.getRecommendedArticles();
                             }
                         }
-                    } catch (e) {
+                    }
+                    catch (e) {
                         this.error = true;
                         var self = this;
                         setTimeout(function () {
@@ -635,7 +628,7 @@ export class ArticlePages implements OnInit {
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
-            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated*1000, "dayOfWeek"),
+            date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated * 1000, "dayOfWeek"),
             keyword: "FOOTBALL"
         };
         return articles;
@@ -653,16 +646,16 @@ export class ArticlePages implements OnInit {
         }
     }
 
-    ngAfterViewInit(){
-      // to run the resize event on load
-      try {
-        window.dispatchEvent(new Event('load'));
-      }catch(e){
-        //to run resize event on IE
-        var resizeEvent = document.createEvent('UIEvents');
-        resizeEvent.initUIEvent('load', true, false, window, 0);
-        window.dispatchEvent(resizeEvent);
-      }
+    ngAfterViewInit() {
+        // to run the resize event on load
+        try {
+            window.dispatchEvent(new Event('load'));
+        } catch (e) {
+            //to run resize event on IE
+            var resizeEvent = document.createEvent('UIEvents');
+            resizeEvent.initUIEvent('load', true, false, window, 0);
+            window.dispatchEvent(resizeEvent);
+        }
     }
 
     private getDeepDiveArticle(articleID) {
@@ -700,30 +693,68 @@ export class ArticlePages implements OnInit {
 
     private metaTags(data) {
         //create meta description that is below 160 characters otherwise will be truncated
-        let metaDesc;
-        if (data.data.teaser != null) {
-            metaDesc = data.data.teaser;
-        } else {
-            metaDesc = data.data.description;
-        }
+        if (this.isArticle == 'true') {
+            var teams = [];
+            var players = [];
+            let headerData = data['article_data']['metadata'];
+            let metaDesc = data['article_data'].meta_headline;
+            let link = window.location.href;
+            if (headerData['team_name']) {
+                headerData['team_name'].forEach(function (val) {
+                    teams.push(val);
+                });
+            }
+            if (headerData['player_name']) {
+                headerData['player_name'].forEach(function (val) {
+                    players.push(val);
+                });
+            }
+            let playerNameMeta = players.join(',');
+            let teamNameMeta = teams.join(',');
+            let title = data.title;
+            let image = data.image_url;
+            let relevancyStart = headerData['relevancy_start_date'];
+            let relevancyEnd = headerData['relevancy_end_date'];
 
-        let link = window.location.href;
-        let image;
-        if (this.imageData != null) {
-            image = this.imageData[0];
+            this._seoService.setCanonicalLink(this._params.params, this._router);
+            this._seoService.setOgTitle(title);
+            this._seoService.setOgDesc(metaDesc);
+            this._seoService.setOgType('Website');
+            this._seoService.setOgUrl(link);
+            this._seoService.setOgImage(image);
+            this._seoService.setTitle(title);
+            this._seoService.setMetaDescription(metaDesc);
+            this._seoService.setPlayerNames(playerNameMeta);
+            this._seoService.setTeamNames(teamNameMeta);
+            this._seoService.setStartDate(relevancyStart);
+            this._seoService.setEndDate(relevancyEnd);
+            this._seoService.setIsArticle(this.isArticle);
+            this._seoService.setMetaRobots('INDEX, NOFOLLOW');
         } else {
-            image = data.data.thumbnail;
-        }
+            let metaDesc;
+            if (data.data.teaser != null) {
+                metaDesc = data.data.teaser;
+            } else {
+                metaDesc = data.data.description;
+            }
+            let link = window.location.href;
+            let image;
+            if (this.imageData != null) {
+                image = this.imageData[0];
+            } else {
+                image = data.data.thumbnail;
+            }
 
-        this._seoService.setCanonicalLink(this._params.params, this._router);
-        this._seoService.setOgTitle(data.data.title);
-        this._seoService.setOgDesc(metaDesc);
-        this._seoService.setOgType('Website');
-        this._seoService.setOgUrl(link);
-        this._seoService.setOgImage(image);
-        this._seoService.setTitle(data.data.title);
-        this._seoService.setMetaDescription(metaDesc);
-        this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+            this._seoService.setCanonicalLink(this._params.params, this._router);
+            this._seoService.setOgTitle(data.data.title);
+            this._seoService.setOgDesc(metaDesc);
+            this._seoService.setOgType('Website');
+            this._seoService.setOgUrl(link);
+            this._seoService.setOgImage(image);
+            this._seoService.setTitle(data.data.title);
+            this._seoService.setMetaDescription(metaDesc);
+            this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+        }
     }
 
     getGeoLocation() {
