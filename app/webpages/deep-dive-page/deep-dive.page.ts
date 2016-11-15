@@ -8,12 +8,12 @@ import { ActivatedRoute } from '@angular/router';
 
 // import { SectionNameData } from "../../fe-core/interfaces/deep-dive.data";
 
-declare var moment;
-declare var jQuery: any;
+// declare var moment;
+// declare var jQuery: any;
 
 @Component({
     selector: "deep-dive-page",
-    templateUrl: 'app/webpages/deep-dive-page/deep-dive-page.html',
+    templateUrl: 'app/webpages/deep-dive-page/deep-dive.page.html',
 })
 
 export class DeepDivePage implements OnInit {
@@ -53,8 +53,8 @@ export class DeepDivePage implements OnInit {
     constructor(
       // private _schedulesService:SchedulesService,
       // private _deepDiveData: DeepDiveService,
-      private _activatedRoute: ActivatedRoute,
-      // private _geoLocation: GeoLocation
+      // private _geoLocation: GeoLocation,
+      // private _activatedRoute: ActivatedRoute
     ) {
       // var categoryBlocks;
       // if(GlobalSettings.getHomeInfo().isHome){

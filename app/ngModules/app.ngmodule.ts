@@ -6,7 +6,7 @@ import { routing } from '../router/app.routing';
 import { AppDomain }  from '../app-domain/app.domain';
 
 //NgModules
-// import {GlobalModule} from "./global.ngmodule";
+import {GlobalModule} from "./global.ngmodule";
 import { DeepDiveNgModule } from "./deep-dive.ngmodule";
 // import { SyndicatedArticleNgModule } from "./syndicated-article.ngmodule";
 import {HttpModule, Headers, Http} from "@angular/http";
@@ -18,7 +18,7 @@ import {HttpModule, Headers, Http} from "@angular/http";
     BrowserModule,
     FormsModule,
     routing,
-    // GlobalModule,
+    GlobalModule,
     DeepDiveNgModule,
     // SyndicatedArticleNgModule,
     // SearchPageNgModule

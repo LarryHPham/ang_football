@@ -3,7 +3,7 @@ import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AppComponent }  from '../app-component/app.component';
 
 import {DeepDiveNgModule} from "../ngModules/deep-dive.ngmodule";
-import {DeepDivePage} from "../webpages/deep-dive-page/deep-dive-page";
+import {DeepDivePage} from "../webpages/deep-dive-page/deep-dive.page";
 // import {AboutUsPage} from "./webpages/aboutus/aboutus";
 // import {PrivacyPolicy} from "./webpages/privacy-policy/privacy-policy";
 // import {TermOfService} from "./webpages/term-of-service/term-of-service";

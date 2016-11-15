@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 // import { DeepDiveBlock2 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
 // import { DeepDiveBlock3 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
 //
-import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive-page";
+import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 // import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.component';
 // import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
 // import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';

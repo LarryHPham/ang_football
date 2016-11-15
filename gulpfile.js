@@ -24,8 +24,8 @@ gulp.task('clean', function () {
 // TypeScript compile
 gulp.task('compile', function () {
     return gulp
-    .src(['app/**/*.ts', '!app/**/*spec.ts'])
-    // .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
+    // .src(['app/**/*.ts', '!app/**/*spec.ts'])
+    .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
         .pipe(typescript(tscConfig.compilerOptions)).pipe(uglify())
         .pipe(gulp.dest('dist/app'))
 
@@ -80,8 +80,8 @@ gulp.task('copy:libs', ['clean'], function () {
 
 // copy static assets - i.e. non TypeScript compiled source
 gulp.task('copy:assets', ['clean'], function () {
-    return gulp.src(['app/**/*', 'index.html', 'systemjs.config.js', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less'], {base: './'})
-  // return gulp.src(['app/**/*', 'index.html', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
+    // return gulp.src(['app/**/*', 'index.html', 'systemjs.config.js', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less'], {base: './'})
+  return gulp.src(['app/**/*', 'index.html', 'systemjs.config.js', 'BingSiteAuth.xml', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
     .pipe(gulp.dest('dist'));
 });
 
@@ -112,52 +112,3 @@ gulp.task('buildAndReload', ['build'], reload);
 
   gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
  });
-
-/**
- *
- *BELOW ARE ALL FOR DEV BUILD TO RUN FOR DEVELOPMENT
- *
- */
-// Run browsersync for development
-gulp.task('dev', ['dev-build'], function () {
-    browserSync({
-        server: {
-            baseDir: 'dist',
-            middleware: [historyApiFallback()]
-        }
-    });
-    gulp.watch(['app/**/*', 'dev-index.html', 'master.css'], ['dev-buildAndReload']);
-});
-
-//special compile function for dev not to minify js
-// TypeScript compile
-gulp.task('dev-compile', function () {
-    return gulp
-        .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
-        .pipe(typescript(tscConfig.compilerOptions))
-        .pipe(gulp.dest('dist/app'))
-
-});
-
-// copy static assets - i.e. non TypeScript compiled source
-gulp.task('copy:dev-assets', ['clean'], function () {
-    gulp.src('dev-index.html')
-        .pipe(rename('index.html'))
-        .pipe(gulp.dest('dist'));
-
-    return gulp.src(['app/**/*', 'master.css', '!app/**/*.ts', '!app/**/*.less', '!app/fe-core/components/**/*.html', '!app/fe-core/modules/**/*.html', '!app/fe-core/webpages/**/*.html'], {base: './'})
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('dev-build', ['dev-compile', 'less', 'copy:libs', 'copy:dev-assets', 'minify-css']);
-gulp.task('dev-buildAndReload', ['dev-build'], reload);
-
-gulp.task('default', ['build']);
-
-//GULP TASKS for TESTING
-gulp.task('compile-tests', ['clean'], function () {
-    return gulp
-        .src(['app/main.ts', 'app/**/*.spec.ts'])
-        .pipe(typescript(tscConfig.compilerOptions))
-        .pipe(gulp.dest('dist'));
-});
