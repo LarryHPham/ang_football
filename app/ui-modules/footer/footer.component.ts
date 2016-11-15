@@ -8,7 +8,7 @@ import { FooterService } from '../../services/footer.service';
 
 @Component({
     selector: 'footer-component',
-    templateUrl: './app/fe-core/components/footer/footer.component.html',
+    templateUrl: './app/ui-modules/footer/footer.component.html',
     inputs: [],
 })
 export class FooterComponent implements OnInit {
