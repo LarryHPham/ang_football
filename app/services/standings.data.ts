@@ -165,7 +165,6 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     if(item.pageType == 'league' && item.leagueAbbreviation.toLowerCase() == 'nfl'){
       subheadercond = item.leagueAbbreviation + ' ' + 'STANDINGS'
     }
-
     //fbs divison sends back all uppercase and needs to be camel case
     if(this.conference !== undefined && this.division !== undefined){
       rank = item.divisionRank != null ? Number(item.divisionRank) : 'N/A';
@@ -174,7 +173,11 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
         rankPoint = item.conferenceName + ": " + GlobalFunctions.toTitleCase(item.divisionName.replace(item.conferenceName, '').toLowerCase());
       }
     } else if(this.conference !== undefined && this.division === undefined){
-      rank = item.conferenceRank != null ? Number(item.conferenceRank) : 'N/A';
+      if(item.conferenceName == item.divisionName){
+        rank = item.divisionRank != null ? item.divisionRank : 'N/A';
+      } else {
+        rank = item.conferenceRank != null ? Number(item.conferenceRank) : 'N/A';
+      }
       rankPoint = item.conferenceName;
     } else {
       rank = item.leagueRank != null ? Number(item.leagueRank) : 'N/A';
@@ -339,13 +342,18 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var imageUrl: string = null;
     var rank;
     if(item.groupName == 'Conference'){
-      rank = item.conferenceRank === null ? item.divisionRank : item.conferenceRank;
+      if(item.conferenceName == item.divisionName){
+        rank = item.divisionRank != null ? item.divisionRank : 'N/A';
+      } else {
+        rank = item.conferenceRank != null ? item.conferenceRank : 'N/A';
+      }
     }else if(item.groupName == item.divisionName){
-      rank = item.divisionRank;
+      rank = item.divisionRank != null ? item.divisionRank : 'N/A';
     }else{
-      rank = item.leagueRank;
+      rank = item.leagueRank != null ? item.leagueRank : 'N/A';
     }
-    var divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + rank + GlobalFunctions.Suffix(Number(rank)); +'</span>';
+    var divisionRank = rank != 'N/A' && rank !== null ? rank + GlobalFunctions.Suffix(Number(rank)) : 'N/A';
+    divisionRank = '<br><span class="standings-division-rank">' + 'Rank: ' + divisionRank  +'</span>';
     var teamFullName = item.teamMarket + ' ' + item.teamName;
     var teamAbbr = item.teamAbbreviation && item.leagueAbbreviation == "FBS" ? item.teamAbbreviation + ' ' + item.teamName : item.teamName;
     switch (column.key) {
