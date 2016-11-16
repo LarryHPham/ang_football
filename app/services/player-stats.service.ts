@@ -119,11 +119,11 @@ export class PlayerStatsService implements OnDestroy{
 
 
         let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
+        console.log(url);
         this.http.get(url)
             .map(res => res.json())
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {
-
                     standingsTab.isLoaded = true;
                     standingsTab.hasError = false;
                     standingsTab.seasonTableData[columnTabType] = data;
@@ -162,7 +162,7 @@ export class PlayerStatsService implements OnDestroy{
 
         //Set display values
         table.rows.forEach((value, index) => {
-            value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdate, false);
+            value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
             value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot);
             value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo);
             if ( value.backgroundImage ) {
