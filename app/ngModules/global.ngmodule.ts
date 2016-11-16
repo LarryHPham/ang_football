@@ -1,15 +1,31 @@
-//spits out router-outlet for our deepdive websites
 import { AppComponent }  from '../app-component/app.component';
-
 import { CommonModule } from "@angular/common";
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
-import { GlobalSettings } from "../global/global-settings";
-import { FooterService } from '../services/footer.service';
+import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
+import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
+
+//globals
 import { GlobalFunctions } from '../global/global-functions';
+import { GlobalSettings } from "../global/global-settings";
+
+//services
+import { FooterService } from '../services/footer.service';
+
+//pipes
+import { NaValuePipe } from "../fe-core/pipes/na.pipe";
+
+//components
+import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
+import { HoverImage } from "../fe-core/components/images/hover-image";
+import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
+//import { FooterComponent } from "../ui-modules/footer/footer.component";
+//import { HeaderComponent } from "../ui-modules/header/header.component";
+
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
@@ -73,9 +89,17 @@ import { routing } from '../router/app.routing';
       ReactiveFormsModule
     ],
     declarations: [
+      //components
       AppComponent,
+      CircleImage,
+      HoverImage,
+      ScrollableContent,
       HeaderComponent,
       FooterComponent,
+
+      //pipes
+      NaValuePipe
+
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -115,8 +139,16 @@ import { routing } from '../router/app.routing';
       // ResponsiveWidget
     ],
     exports: [
+      //components
+      CircleImage,
+      HoverImage,
+      ScrollableContent,
       HeaderComponent,
       FooterComponent,
+
+      //pipes
+      NaValuePipe
+
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
@@ -161,7 +193,8 @@ import { routing } from '../router/app.routing';
       // VerticalGlobalFunctions,
       GlobalSettings,
       GlobalFunctions,
-      FooterService
+      FooterService,
+      HamburgerDeliveryService
     ]
 })
 export class GlobalModule { }

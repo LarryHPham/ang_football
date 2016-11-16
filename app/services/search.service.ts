@@ -1,11 +1,57 @@
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
 import {SearchComponentResult, SearchComponentData} from '../fe-core/components/search/search.component';
-// import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
 import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions}  from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
+// import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
+//Interface for input of search component
+import {PaginationParameters} from '../fe-core/interfaces/pagination.data';
+export interface SearchInput {
+    //Text that goes in as the placeholder for the input
+    placeholderText: string;
+    //Boolean to determine if the search dropdown shosuld be displayed
+    hasSuggestions: boolean;
+    //Text that goes in the input on load
+    initialText?: string;
+}
+
+export interface SearchPageInput {
+    //Data for the search bar component
+    searchComponent: SearchInput;
+    //Search Image
+    heroImage: string;
+    //Title Text
+    headerText: string;
+    //Text under title of search header
+    subHeaderText: string;
+    //Query string of the search
+    query: string;
+    //Tab data
+    tabData: Array<{
+        //Name of Tab
+        tabName: string;
+        //Boolean to determine if tab is initially selected
+        isTabDefault?: boolean;
+        //Search results related to tab
+        results: Array<{
+            title: string;
+            url: Array<any>;
+            urlText: string;
+            description: string;
+        }>;
+        error:{
+          message:string;
+          icon:string;
+        };
+        pageMax:any;
+        totalResults:any;
+        paginationParameters: PaginationParameters;
+    }>
+}
+
 declare let Fuse: any;
 
 @Injectable()
@@ -14,7 +60,7 @@ export class SearchService{
     public searchJSON: any;
 
     public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
-    constructor(private http: Http){
+    constructor(private http: Http, private _router:Router){
 
         //Get initial search JSON data
         this.getSearchJSON()
@@ -61,7 +107,7 @@ export class SearchService{
      */
 
     //Function used by search input to get suggestions dropdown
-    getSearchDropdownData(router, term: string){
+    getSearchDropdownData(router:Router, term: string){
         //TODO: Wrap in async
         let data = this.searchJSON;
         let dataSearch = {
@@ -176,8 +222,7 @@ export class SearchService{
     /*
      * Functions for search page
      */
-
-    getSearchPageData(router, partnerId: string, query: string, scope, data){
+    getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
         let dataSearch = {
           players: [],
           teams: []
@@ -236,11 +281,11 @@ export class SearchService{
     }
 
     //Convert players and teams to tabs format
-    resultsToTabs(router, partnerId: string, query, playerResults, teamResults){
+    resultsToTabs(router: Router, partnerId: string, query, playerResults, teamResults){
       let self = this;
       let partnerScope = GlobalSettings.getHomeInfo();
 
-        let searchPageInput: any = {
+        let searchPageInput: SearchPageInput = {
             searchComponent : {
                 placeholderText: 'Search for a player or team...',
                 hasSuggestions: true,
@@ -438,7 +483,7 @@ export class SearchService{
       return fuse.search(term);
     }
 
-    getRelativePath(router){
+    getRelativePath(router:Router){
       let counter = 0;
       let hasParent = true;
       let route = router;
