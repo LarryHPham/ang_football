@@ -13,14 +13,22 @@ import { FooterService } from '../services/footer.service';
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
+import { SanitizeHtml } from "../fe-core/pipes/safe.pipe";
+
+//modules
+import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 
 //components
 import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
-//import { FooterComponent } from "../ui-modules/footer/footer.component";
-//import { HeaderComponent } from "../ui-modules/header/header.component";
-
+import { LoadingComponent } from "../fe-core/components/loading/loading.component";
+import { FooterComponent } from "../ui-modules/footer/footer.component";
+import { HeaderComponent } from "../ui-modules/header/header.component";
+import { ErrorComponent } from "../fe-core/components/error/error.component";
+import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
+import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
@@ -45,7 +53,6 @@ import { ScrollableContent } from "../fe-core/components/scrollable-content/scro
 // import { FooterComponent } from "../fe-core/components/footer/footer.component";
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 // import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
-// import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 // import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 // import { Larousel } from '../fe-core/components/larousel/larousel';
@@ -84,16 +91,25 @@ import { routing } from '../router/app.routing';
       ReactiveFormsModule
     ],
     declarations: [
+      //modules
+      WidgetModule,
+
       //components
       AppComponent,
       CircleImage,
       HoverImage,
       ScrollableContent,
-      //HeaderComponent,
-      //FooterComponent,
+      ErrorComponent,
+      LoadingComponent,
+      SidekickWrapper,
+      ModuleHeader,
+      VideoStackComponent,
+      // HeaderComponent,
+      // FooterComponent,
 
       //pipes
-      NaValuePipe
+      NaValuePipe,
+      SanitizeHtml
 
       // SectionFrontTopNav,
       // HeaderComponent,
@@ -134,15 +150,24 @@ import { routing } from '../router/app.routing';
       // ResponsiveWidget
     ],
     exports: [
+      //modules
+      WidgetModule,
+
       //components
       CircleImage,
       HoverImage,
       ScrollableContent,
-      //HeaderComponent,
-      //FooterComponent,
+      ErrorComponent,
+      LoadingComponent,
+      SidekickWrapper,
+      ModuleHeader,
+      VideoStackComponent,
+      // HeaderComponent,
+      // FooterComponent,
 
       //pipes
-      NaValuePipe
+      NaValuePipe,
+      SanitizeHtml
 
       // SectionFrontTopNav,
       // HeaderComponent,

@@ -4,10 +4,11 @@ import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 
 // interfaces
-import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from '../../services/profile-header.service';
+import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
 
 // services
 import { ProfileHeaderService} from '../../services/profile-header.service';
+import { VideoService } from "../../services/video.service";
 
 // Libraries
 declare var moment;
@@ -24,23 +25,30 @@ export class LeaguePage implements OnInit {
 
     private profileHeaderData:ProfileHeaderData;
     private profileData:IProfileData;
+    public isProfilePage:boolean = true;
+    public profileType:string = "league";
     public profileName:string = "TDL";
 
     private dateParam:any;
     private eventStatus: string;
 
+    private firstVideo:string;
+    private videoData:any;
+
+    private batchLoadIndex: number = 1;
 
     constructor(
       private _router:Router,
       private activateRoute:ActivatedRoute,
-      private _profileService: ProfileHeaderService
+      private _profileService: ProfileHeaderService,
+      private _videoBatchService:VideoService
     ) {
       var currentUnixDate = new Date().getTime();
 
       this.paramsub= this.activateRoute.params.subscribe(
             (param :any)=> {
               this.partnerID = param['partnerID'];
-              this.scope = param['scope'];
+              this.scope = param['scope'] != null ? param['scope'] : 'nfl';
             }
       );
 
@@ -64,7 +72,7 @@ export class LeaguePage implements OnInit {
           this.metaTags(data);
           this.profileData = data;
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-          //this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
+          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
 
           setTimeout(() => { // defer loading everything below the fold
 
@@ -84,7 +92,15 @@ export class LeaguePage implements OnInit {
     private metaTags(data){
     } //metaTags
 
-    private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?){
+    private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
+      this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
+        .subscribe(data => {
+            this.firstVideo = data.data[first].videoLink;
+            this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+        },
+        err => {
+            console.log("Error getting video data");
+        });
     } //getLeagueVideoBatch
 
     private getBoxScores(dateParams?) {
@@ -92,5 +108,11 @@ export class LeaguePage implements OnInit {
 
     private getSchedulesData(status, year?, week?) {
     } //getSchedulesData
+
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      return;
+    }
 
   }
