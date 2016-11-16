@@ -1,9 +1,11 @@
 <!-- <footer class="footer container-fluid">
     <section class="footer-top row">
       <div class="footer-top-container col-xs-6 col-md-2">
+        <a *ngIf="!partner" [routerLink]="['Home-page']"><img src="/app/public/Touchdown-Loyal_Logo_Outlined-W.svg" /></a>
         <img *ngIf="!partner" src="{{image}}"  alt="Football Logo"/>
       </div>
 
+      BELOW768 and ABOVE768 NOT PERMANENT PLEASE RECODE TO BOOTSTRAP
       <div class="below768 footer-top-container col-xs-6 col-md-2">
         <ul class="footer-share">
           <a href="{{_siteFacebookUrl}}" target="_blank"><li class="share" id="share-facebook"><i class="fa fa-facebook"></i></li></a>
@@ -25,6 +27,10 @@
           </dropdown-directory>
         </div>
         <ul>
+        <li class="footer-text1"><a [routerLink]="['Home-page']"><b>{{pageName}}</b></a></li>
+        </ul>
+        <ul>
+          <li><a [routerLink]="['Contact-us-page']">{{advertise}}</a> <i class="fa fa-caret-right"></i></li>
           <li><a [routerLink]="['About-us-page']">{{au}}</a><i>|</i></li>
           <li><a [routerLink]="['Contact-us-page']">{{contactUs}}</a><i>|</i></li>
           <li><a [routerLink]="['Disclaimer-page']">{{disc}}</a></li>

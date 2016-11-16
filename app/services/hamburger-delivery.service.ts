@@ -7,7 +7,7 @@ import {GlobalSettings} from '../global/global-settings';
 
 @Injectable()
 export class HamburgerDeliveryService {
-  static createMenu(division, partner?){
+  static createMenu(division?, partner?){ //TODO
     var params;
     var partnerUrl;
     var divisionUrl;

@@ -5,8 +5,33 @@ import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Gradient} from '../global/global-gradient';
+
+//Interfaces
 import {CircleImageData} from '../fe-core/components/images/image-data';
-import {GameInfoInput} from '../fe-core/components/game-info/game-info.component';
+export interface GameInfoInput {
+  gameHappened: boolean,
+  inning:string;
+  dataPointCategories:Array<string>;
+  verticalContent:string;
+  homeData:{
+    homeTeamName:string;
+    homeImageConfig:CircleImageData;
+    homeLink:any;
+    homeRecord:string;
+    DP1:any;
+    DP2:any;
+    DP3:any;
+  };
+  awayData:{
+    awayTeamName:string;
+    awayImageConfig:CircleImageData;
+    awayLink:any,
+    awayRecord:string;
+    DP1:any;
+    DP2:any;
+    DP3:any;
+  };
+} //GameInfoInput
 
 declare var moment;
 @Injectable()

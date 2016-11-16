@@ -4,15 +4,12 @@ import {Http, Headers} from '@angular/http';
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {Link} from '../global/global-interface';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class FooterService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-
-  //deprecated and should be removed
-  private _router:any;
-
-  constructor(public http: Http){}
+  constructor(public http: Http, private _router:Router){}
   setToken(){
     var headers = new Headers();
     return headers;
