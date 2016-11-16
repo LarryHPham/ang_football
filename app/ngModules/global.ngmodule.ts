@@ -4,6 +4,11 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { FooterComponent } from "../ui-modules/footer/footer.component";
+import { HeaderComponent } from "../ui-modules/header/header.component";
+import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
+import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
+
 //globals
 import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from "../global/global-settings";
@@ -89,8 +94,8 @@ import { routing } from '../router/app.routing';
       CircleImage,
       HoverImage,
       ScrollableContent,
-      //HeaderComponent,
-      //FooterComponent,
+      HeaderComponent,
+      FooterComponent,
 
       //pipes
       NaValuePipe
@@ -138,8 +143,8 @@ import { routing } from '../router/app.routing';
       CircleImage,
       HoverImage,
       ScrollableContent,
-      //HeaderComponent,
-      //FooterComponent,
+      HeaderComponent,
+      FooterComponent,
 
       //pipes
       NaValuePipe
@@ -188,7 +193,8 @@ import { routing } from '../router/app.routing';
       // VerticalGlobalFunctions,
       GlobalSettings,
       GlobalFunctions,
-      FooterService
+      FooterService,
+      HamburgerDeliveryService
     ]
 })
 export class GlobalModule { }
