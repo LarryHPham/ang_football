@@ -2,8 +2,9 @@ import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AppComponent }  from '../app-component/app.component';
 
-import {DeepDiveNgModule} from "../ngModules/deep-dive.ngmodule";
-import {DeepDivePage} from "../webpages/deep-dive-page/deep-dive.page";
+import { DeepDiveNgModule } from "../ngModules/deep-dive.ngmodule";
+import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
+import { LeaguePage } from "../webpages/league-page/league.page";
 // import {AboutUsPage} from "./webpages/aboutus/aboutus";
 // import {PrivacyPolicy} from "./webpages/privacy-policy/privacy-policy";
 // import {TermOfService} from "./webpages/term-of-service/term-of-service";
@@ -79,7 +80,10 @@ const appRoutes: Routes = [
         redirectTo:'deep-dive',
         pathMatch:'full'
     },
-
-    ];
+    {
+      path: ':scope/league',
+      component: LeaguePage
+    }
+];
 
 export const routing = RouterModule.forRoot(appRoutes);

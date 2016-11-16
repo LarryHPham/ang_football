@@ -1,10 +1,17 @@
-//spits out router-outlet for our deepdive websites
 import { AppComponent }  from '../app-component/app.component';
-
 import { CommonModule } from "@angular/common";
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+//pipes
+import { NaValuePipe } from "../fe-core/pipes/na.pipe";
+
+//components
+import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
+import { HoverImage } from "../fe-core/components/images/hover-image";
+import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
+
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
@@ -67,7 +74,15 @@ import { routing } from '../router/app.routing';
       ReactiveFormsModule
     ],
     declarations: [
+      //components
       AppComponent,
+      CircleImage,
+      HoverImage,
+      ScrollableContent,
+
+      //pipes
+      NaValuePipe
+
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -107,6 +122,13 @@ import { routing } from '../router/app.routing';
       // ResponsiveWidget
     ],
     exports: [
+      //components
+      CircleImage,
+      HoverImage,
+      ScrollableContent,
+
+      //pipes
+      NaValuePipe
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
