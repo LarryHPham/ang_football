@@ -7,6 +7,9 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
+import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
+import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
+
 import { GlobalSettings } from "../global/global-settings";
 import { FooterService } from '../services/footer.service';
 import { GlobalFunctions } from '../global/global-functions';
@@ -161,7 +164,8 @@ import { routing } from '../router/app.routing';
       // VerticalGlobalFunctions,
       GlobalSettings,
       GlobalFunctions,
-      FooterService
+      FooterService,
+      HamburgerDeliveryService
     ]
 })
 export class GlobalModule { }
