@@ -53,6 +53,10 @@ const relativeChildRoutes = [
     //     component: DeepDivePage,
     // },
     {
+      path: 'league',
+      component: LeaguePage
+    },
+    {
         path: '',
         component: DeepDivePage,
     },
@@ -61,29 +65,21 @@ const relativeChildRoutes = [
 
 const appRoutes: Routes = [
     {
-        path: 'deep-dive',
+        path: '',
         component: AppComponent,
         children: relativeChildRoutes
     },
     {
-        path: ':partner_id/news',
-        component: AppComponent,
-        children: relativeChildRoutes
-    },
-    {
-        path: ':partner_id',
-        redirectTo:':partner_id/news',
-        pathMatch:'full'
+      path: ':scope',
+      component: AppComponent,
+      children: relativeChildRoutes
     },
     {
         path: '',
         redirectTo:'deep-dive',
         pathMatch:'full'
     },
-    {
-      path: ':scope/league',
-      component: LeaguePage
-    }
+
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

@@ -64,7 +64,7 @@ export class LeaguePage implements OnInit {
           this.metaTags(data);
           this.profileData = data;
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
-          this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
+          //this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
 
           setTimeout(() => { // defer loading everything below the fold
 

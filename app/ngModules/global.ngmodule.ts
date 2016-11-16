@@ -18,8 +18,8 @@ import { NaValuePipe } from "../fe-core/pipes/na.pipe";
 import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
-import { FooterComponent } from "../ui-modules/footer/footer.component";
-import { HeaderComponent } from "../ui-modules/header/header.component";
+//import { FooterComponent } from "../ui-modules/footer/footer.component";
+//import { HeaderComponent } from "../ui-modules/header/header.component";
 
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
@@ -89,8 +89,8 @@ import { routing } from '../router/app.routing';
       CircleImage,
       HoverImage,
       ScrollableContent,
-      HeaderComponent,
-      FooterComponent,
+      //HeaderComponent,
+      //FooterComponent,
 
       //pipes
       NaValuePipe
@@ -138,8 +138,8 @@ import { routing } from '../router/app.routing';
       CircleImage,
       HoverImage,
       ScrollableContent,
-      HeaderComponent,
-      FooterComponent,
+      //HeaderComponent,
+      //FooterComponent,
 
       //pipes
       NaValuePipe
