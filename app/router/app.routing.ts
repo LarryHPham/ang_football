@@ -60,23 +60,13 @@ const relativeChildRoutes = [
 
 const appRoutes: Routes = [
     {
-        path: 'deep-dive',
+        path: ':scope',
         component: AppComponent,
         children: relativeChildRoutes
-    },
-    {
-        path: ':partner_id/news',
-        component: AppComponent,
-        children: relativeChildRoutes
-    },
-    {
-        path: ':partner_id',
-        redirectTo:':partner_id/news',
-        pathMatch:'full'
     },
     {
         path: '',
-        redirectTo:'deep-dive',
+        redirectTo:'nfl',
         pathMatch:'full'
     },
 
