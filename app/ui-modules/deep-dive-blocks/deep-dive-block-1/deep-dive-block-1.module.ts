@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, Injector, OnChanges} from '@angular/core';
+import { BoxScoresService } from '../../../services/box-scores.service';
 import { DeepDiveService } from '../../../services/deep-dive.service';
 import { ArticleStackData, VideoStackData } from "../../../fe-core/interfaces/deep-dive.data";
-import { BoxScoresService } from '../../../services/box-scores.service';
 import { GlobalSettings } from "../../../global/global-settings";
+import { GlobalFunctions } from '../../../global/global-functions';
 
 declare var moment;
 
@@ -11,137 +12,110 @@ declare var moment;
   templateUrl: './app/ui-modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module.html',
 })
 
-export class DeepDiveBlock1 implements OnInit {
-  @Input() scope: string;
-  @Input() geoLocation: string;
-  @Input() category:string;
-  videoDataTop: Array<VideoStackData>;
-  videoDataBatch: Array<VideoStackData>;
-  firstStackTop: Array<ArticleStackData>;
-  firstStackRow: Array<ArticleStackData>;
-  recData: Array<ArticleStackData>;//TODO
-  articleStack2DataTop: Array<ArticleStackData>;//TODO
-  articleStack2DataBatch: Array<ArticleStackData>;//TODO
-  articleCallLimit:number = 23;
-  videoCallLimit:number = 5;
-  batchNum: number = 1;
-  //Box Scores
+export class DeepDiveBlock1{
+  public widgetPlace: string = "widgetForPage";
+  firstStackTop: any;
+  firstStackRow: any;
+  callLimit:number = 8;
+  videoCallLimit: number = 6;
+  tilestackData: any;
+  //for box scores
   boxScoresData: any;
+  videoData: any;
   currentBoxScores: any;
+  page: number = 1;
   dateParam: any;
-  boxScoresTempVar: string = "nfl";
-  boxScoresScroll: boolean= true;
-  safeCounter: number = 0;
-
-  routeSubscription:any;
-  constructor(private _boxScoresService: BoxScoresService, private _deepDiveData: DeepDiveService){
-
-  }
-  // getFirstArticleStackData(){
-  //   this._deepDiveData.getDeepDiveBatchService(this.scope, this.articleCallLimit, this.batchNum, this.geoLocation)
-  //       .subscribe(data => {
-  //         let stackTop = [data[0]];
-  //         this.firstStackTop = this._deepDiveData.transformToArticleStack(stackTop, this.scope);
-  //         let stackRow = data.splice(1,8);
-  //         this.firstStackRow  = this._deepDiveData.transformToArticleStack(stackRow, this.scope);
-  //         let recInfo = data.splice(1, 6);//TODO
-  //         this.recData = this._deepDiveData.transformToArticleStack(recInfo, this.scope);//TODO
-  //         let articleStack2Top = [data[0]];//TODO
-  //         this.articleStack2DataTop = this._deepDiveData.transformToArticleStack(articleStack2Top, this.scope);//TODO
-  //         let articleStack2 = data.splice(1,4);//TODO
-  //         this.articleStack2DataBatch = this._deepDiveData.transformToArticleStack(articleStack2, this.scope);//TODO
-  //       },
-  //       err => {
-  //           console.log("Error getting first article stack data");
-  //       });
-  // }
-  //
-  // getDeepDiveVideo(){
-  //     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, this.videoCallLimit, this.batchNum, this.geoLocation).subscribe(
-  //       data => {
-  //         if(data != null){
-  //           this.videoDataBatch = this._deepDiveData.transformSportVideoBatchData(data, this.scope);//TODO
-  //         }
-  //       },
-  //       err => {
-  //         console.log("Error getting video batch data");
-  //     });
-  // }
-  //
-  // //API for Box Scores
-  // private getBoxScores(dateParams?) {
-  //   if(this.safeCounter < 10){
-  //     // console.log('1. deep-dive-page, getBoxScores - dateParams - ',dateParams);
-  //     if ( dateParams != null ) {
-  //       this.dateParam = dateParams;
-  //     }
-  //     // console.log('this.dateParam',this.dateParam);
-  //     this._boxScoresService.getBoxScores(this.boxScoresData, this.dateParam.scope, this.dateParam, (boxScoresData, currentBoxScores) => {
-  //       this.boxScoresData = boxScoresData;
-  //       this.currentBoxScores = currentBoxScores;
-  //       this.safeCounter = 0;
-  //       if(this.currentBoxScores == null && boxScoresData.transformedDate[dateParams.date] == null){
-  //         if(boxScoresData.previousGameDate != null && boxScoresData.transformedDate[dateParams.date] == null){
-  //           this.dateParam.date = boxScoresData.previousGameDate.event_date;
-  //           this.boxScoresData = null;
-  //           this.currentBoxScores = null;
-  //           this.safeCounter++;
-  //           this.getBoxScores(this.dateParam);
-  //         }else{
-  //           this.safeCounter = 0;
-  //         }
-  //         return;
-  //       }
-  //     });
-  //   }else{
-  //     this.dateParam = null;
-  //     this.boxScoresData = null;
-  //     this.currentBoxScores = null;
-  //   }
-  // }
-
-  callModules(){
-    // this.getDeepDiveVideo();
-    // this.getFirstArticleStackData();
-    // if(GlobalSettings.getTCXscope(this.scope).showBoxScores){
-    //   this.getBoxScores(this.dateParam);
-    // }else{
-    //   this.dateParam = null;
-    // }
-  }
-
-  // ngOnChanges(event) {
-  //   // console.log('ON CHANGES',event);
-  //   if(event.scope != null){
-  //     if(event.scope.currentValue != event.scope.previousValue){// if route has changed
-  //       this.scope = event.scope.currentValue;
-  //       this.boxScoresData = null;
-  //       this.currentBoxScores = null;
-  //       this.dateParam == null;
-  //       // console.log('change scope', this.scope);
-  //       // console.log('change boxScoresData', this.boxScoresData);
-  //       this.getDateParams();
-  //     }
-  //   }
-  //   if(this.dateParam == null){
-  //     this.getDateParams();
-  //   }
-  //   this.callModules();
-  // }
+  scroll: boolean = true;
+  @Input() maxHeight: any;
+  @Input() geoLocation: any;
+  @Input() profileName: any;
+  @Input() scope: string;
+  constructor(private _boxScores:BoxScoresService, private _deepDiveData: DeepDiveService){
+      window.onresize = (e) =>
+      {
+        // current use is box scores
+        this.checkSize();
+      }
+    }
 
   ngOnInit() {
-    // this.getDateParams();
-    this.callModules();
+    var currentUnixDate = new Date().getTime();
+    //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
+    this.dateParam ={
+      profile:'league',//current profile page
+      teamId:this.scope == 'home' ? 'nfl' : this.scope,
+      date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+    }
+     this.callModules();
   }
 
-  // getDateParams(){
-  //   //Box Scores
-  //   var currentUnixDate = new Date().getTime();
-  //   //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
-  //   this.dateParam ={
-  //     scope: this.scope,//current profile page
-  //     teamId: '',
-  //     date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-  //   }
-  // }
+  getFirstArticleStackData(){
+    this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
+        .subscribe(data => {
+          this.firstStackTop = this._deepDiveData.transformToArticleStack(data);
+        },
+        err => {
+              console.log("Error getting first article stack data");
+        });
+    this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+        .subscribe(data => {
+          this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
+        },
+        err => {
+            console.log("Error getting first AI article batch data");
+        });
+  }
+
+  getTileStackData(){
+    this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 2, this.geoLocation)
+        .subscribe(data => {
+          this.tilestackData = this._deepDiveData.transformTileStack(data, this.scope);
+        },
+        err => {
+            console.log("Error getting tile stack data");
+        });
+  }
+
+  private getDeepDiveVideoBatch(scope, region, numItems, startNum){
+    this._deepDiveData.getDeepDiveVideoBatchService(this.scope, numItems, startNum, region).subscribe(
+      data => {
+        this.videoData = this._deepDiveData.transformVideoStack(data.data);
+      },
+      err => {
+          console.log("Error getting video batch data");
+      });
+  }
+
+  //api for BOX SCORES
+  private getBoxScores(dateParams?) {
+    if(this.scope != 'home'){
+      if (dateParams != null) {
+        this.dateParam = dateParams;
+      }
+      this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+        this.boxScoresData = boxScoresData;
+        this.currentBoxScores = currentBoxScores;
+      })
+    }else{
+      this.dateParam = null;
+    }
+  }
+  checkSize(){
+    var width = window.outerWidth;
+    var height = window.outerHeight;
+    if(width < 640){
+      this.scroll = false;
+      this.maxHeight = 'auto';
+    }else if(width >= 640){
+      this.scroll = true;
+      this.maxHeight = 650;
+    }
+  }
+  callModules(){
+    setTimeout(() => { // wait to load the rest of the page below the fold
+      this.getBoxScores(this.dateParam);
+      this.getDeepDiveVideoBatch(this.scope, this.geoLocation, this.videoCallLimit, this.page);
+      this.getTileStackData();
+    }, 500);
+  }
 }
