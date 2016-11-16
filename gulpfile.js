@@ -128,7 +128,7 @@ gulp.task('buildAndReload', ['build']);
 
  });
 
- gulp.task('dev', ['build'], function () {
+ gulp.task('dev', ['dev-build'], function () {
   connect.server({
     root: 'dist',
     port: 3000,
@@ -136,7 +136,7 @@ gulp.task('buildAndReload', ['build']);
     middleware: function(connect, opt) { return [ historyApiFallback({}) ] }
   });
 
-  gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
+  gulp.watch(['app/**/*', 'index.html', 'master.css'], ['dev-buildAndReload']);
  });
 
  gulp.task('dev-build', ['dev-compile', 'less', 'minify-css', 'copy:libs', 'copy:assets']);
