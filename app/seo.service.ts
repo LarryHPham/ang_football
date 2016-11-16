@@ -7,7 +7,7 @@
  ***/
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter';
+//import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter';
 import {GlobalSettings} from "./global/global-settings";
 
 @Injectable()

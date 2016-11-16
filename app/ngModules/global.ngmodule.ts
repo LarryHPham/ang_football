@@ -36,8 +36,8 @@ import { VideoStackComponent } from "../fe-core/components/video-stack/video-sta
 import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
-import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
+import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
@@ -47,6 +47,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
 // import { GeoLocation } from "../global/global-service";
 // /*** COMPONENTS ***/
 
+// import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
 // import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
 // import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
 // import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
@@ -55,6 +56,9 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
 // import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
 // import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 
+
+
+
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
@@ -62,7 +66,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
 // import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
-//
+
 // import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 // import { FooterComponent } from "../fe-core/components/footer/footer.component";
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
@@ -165,6 +169,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       // Tabs,
       // Tab,
       // SideScroll
+
     ],
     exports: [
       //modules
@@ -179,6 +184,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       SidekickWrapper,
       ModuleHeader,
       VideoStackComponent,
+      SidekickWrapper,
       // HeaderComponent,
       // FooterComponent,
       // CustomTable,
@@ -210,8 +216,8 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       // SearchBoxModule,
       // SidekickWrapperAI,
       // WidgetModule,
-      // WidgetCarouselModule,
 
+      // WidgetCarouselModule,
       // Larousel,
       // DropdownComponent,
       // Search,
@@ -228,11 +234,17 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
+
       //ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll
+
+      // ResponsiveWidget,
+      // Carousel,
+      // Tabs,
+      // Tab,
+      // SideScroll,
     ],
     providers: [
       SanitizeScript,
