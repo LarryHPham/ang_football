@@ -70,6 +70,7 @@ gulp.task('copy:libs', ['clean'], function () {
       'node_modules/node-uuid/uuid.js',
       'node_modules/immutable/dist/immutable.js',
       'node_modules/highcharts/highcharts.js',
+      'node_modules/jquery/dist/jquery.min.js',
       'node_modules/moment-timezone/moment-timezone.js',//load only one moment timezone otherwise problems will occur
       'system.config.js'
         ])
