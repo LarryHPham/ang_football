@@ -14,10 +14,14 @@ import { GlobalFunctions } from '../global/global-functions';
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-// import { GlobalSettings } from "../global/global-settings";
 // import { GlobalFunctions } from "../global/global-functions";
 // import { GeoLocation } from "../global/global-service";
 // /*** COMPONENTS ***/
+
+import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
+import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
+import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
+import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
@@ -56,7 +60,7 @@ import { GlobalFunctions } from '../global/global-functions';
 // import { TermOfService } from "../webpages/term-of-service/term-of-service";
 //
 // //Pipes
-// import {SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle} from "../fe-core/pipes/safe.pipe";
+import {SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle} from "../fe-core/pipes/safe.pipe";
 //
 // //router
 import { routing } from '../router/app.routing';
@@ -76,6 +80,10 @@ import { routing } from '../router/app.routing';
       AppComponent,
       HeaderComponent,
       FooterComponent,
+      CustomTable,
+      SortDropdown,
+      TableCell,
+      TableHeader,
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -92,10 +100,10 @@ import { routing } from '../router/app.routing';
       // SidekickWrapperAI,
       // WidgetModule,
       // WidgetCarouselModule,
-      // SanitizeHtml,
-      // SanitizeRUrl,
-      // SanitizeStyle,
-      // SanitizeScript,
+      SanitizeHtml,
+      SanitizeRUrl,
+      SanitizeStyle,
+      SanitizeScript,
       // ScrollableContent,
       // DropdownComponent,
 	    // Larousel,
@@ -117,6 +125,10 @@ import { routing } from '../router/app.routing';
     exports: [
       HeaderComponent,
       FooterComponent,
+      CustomTable,
+      SortDropdown,
+      TableCell,
+      TableHeader,
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
@@ -132,10 +144,10 @@ import { routing } from '../router/app.routing';
       // WidgetModule,
       // WidgetCarouselModule,
       // ScrollableContent,
-      // SanitizeHtml,
-      // SanitizeRUrl,
-      // SanitizeStyle,
-      // SanitizeScript,
+      SanitizeHtml,
+      SanitizeRUrl,
+      SanitizeStyle,
+      SanitizeScript,
       // Larousel,
       // DropdownComponent,
       // Search,
@@ -157,7 +169,7 @@ import { routing } from '../router/app.routing';
     providers: [
       // GeoLocation
       // ScrollerFunctions,
-      // SanitizeScript,
+      SanitizeScript,
       // VerticalGlobalFunctions,
       GlobalSettings,
       GlobalFunctions,
