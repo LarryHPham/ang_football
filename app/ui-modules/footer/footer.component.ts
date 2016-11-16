@@ -19,8 +19,8 @@ export class FooterComponent implements OnInit {
     public currentUrl: string = window.location.href;
     public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public _copyrightInfo: string = "<i>Images Provided By: </i><b> " + GlobalSettings.getCopyrightInfo() + "</b>";
-    public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl();
-    public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl();
+    public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
+    public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
     public _siteGoogleUrl: string = GlobalSettings.getSiteGoogleUrl(this.partner);
     public _sportLeagueFull: string = GlobalSettings.getSportLeagueFull();
     public _lastUpdated: string;

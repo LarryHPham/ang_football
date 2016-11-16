@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FooterComponent } from "../ui-modules/footer/footer.component";
+import { FooterService } from '../services/footer.service';
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
 import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
@@ -14,18 +15,18 @@ import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from "../global/global-settings";
 
 //services
-import { FooterService } from '../services/footer.service';
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
 
 //components
+import { Tabs } from "../fe-core/components/tabs/tabs.component";
+import { Tab } from "../fe-core/components/tabs/tab.component";
+import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
+import { Carousel } from "../fe-core/components/carousels/carousel.component";
 import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
-//import { FooterComponent } from "../ui-modules/footer/footer.component";
-//import { HeaderComponent } from "../ui-modules/header/header.component";
-
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
@@ -39,6 +40,9 @@ import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.c
 import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
 import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
 import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
+import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
+import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
+
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
@@ -49,14 +53,13 @@ import { NoDataBox } from '../fe-core/components/error/data-box/data-box.compone
 // import { HoverImage } from "../fe-core/components/images/hover-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
-// import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
+import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
 //
 // import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 // import { FooterComponent } from "../fe-core/components/footer/footer.component";
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 // import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 // import { LoadingComponent } from "../fe-core/components/loading/loading.component";
-// import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 // import { Larousel } from '../fe-core/components/larousel/larousel';
 // import { NewsBox } from '../fe-core/components/news-box/news-box';
@@ -108,6 +111,7 @@ import { routing } from '../router/app.routing';
       //pipes
       NaValuePipe,
       NoDataBox,
+      DropdownDirectoryComponent,
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -128,7 +132,6 @@ import { routing } from '../router/app.routing';
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
-      // ScrollableContent,
       // DropdownComponent,
 	    // Larousel,
       // NewsBox,
@@ -144,7 +147,11 @@ import { routing } from '../router/app.routing';
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
-      // ResponsiveWidget
+      ResponsiveWidget,
+      Carousel,
+      Tabs,
+      Tab,
+      SideScroll
     ],
     exports: [
       //components
@@ -158,6 +165,7 @@ import { routing } from '../router/app.routing';
       TableCell,
       TableHeader,
       NoDataBox,
+      DropdownDirectoryComponent,
       //pipes
       NaValuePipe,
       // SectionFrontTopNav,
@@ -174,7 +182,6 @@ import { routing } from '../router/app.routing';
       // SidekickWrapperAI,
       // WidgetModule,
       // WidgetCarouselModule,
-      // ScrollableContent,
       SanitizeHtml,
       SanitizeRUrl,
       SanitizeStyle,
@@ -195,7 +202,11 @@ import { routing } from '../router/app.routing';
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
-      // ResponsiveWidget
+      ResponsiveWidget,
+      Carousel,
+      Tabs,
+      Tab,
+      SideScroll
     ],
     providers: [
       // GeoLocation

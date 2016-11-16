@@ -5,7 +5,7 @@ import { GlobalModule } from './global.ngmodule';
 import { FormsModule } from '@angular/forms';
 //
 // //providers
-// import { DeepDiveService } from '../services/deep-dive.service';
+import { DeepDiveService } from '../services/deep-dive.service';
 // import { BoxScoresService } from '../services/box-scores.service';
 //
 // import { SideScrollSchedule } from '../fe-core/modules/side-scroll-schedules/side-scroll-schedules.module';
@@ -13,18 +13,18 @@ import { FormsModule } from '@angular/forms';
 // import { SideScroll } from '../fe-core/components/side-scroll/side-scroll.component';
 // import { SchedulesService } from '../services/schedules.service';
 //
-// //deep-dive blocks
-// import { DeepDiveBlockMain } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-main/deep-dive-block-main.module';
-// import { DeepDiveBlock1 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module';
-// import { DeepDiveBlock2 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
-// import { DeepDiveBlock3 } from '../fe-core/modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
-//
+//deep-dive blocks
+import { DeepDiveBlock1 } from '../ui-modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module';
+import { DeepDiveBlock2 } from '../ui-modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
+import { DeepDiveBlock3 } from '../ui-modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
+
+import { ArticleStackModule } from '../fe-core/modules/article-stack/article-stack.module';
+import { TileStackModule } from '../fe-core/modules/tile-stack/tile-stack.module';
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
-// import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.component';
-// import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
+import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.component';
+import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
 // import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';
 // import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/article-stack.module';
-// import { DeepDiveVideoModule } from '../fe-core/modules/video-deep-dive/video-deep-dive.module';
 // import { VideoStackComponent } from '../fe-core/components/video-stack/video-stack.component';
 //
 // //Box Scores
@@ -35,7 +35,7 @@ import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 // import { GameArticle } from '../fe-core/components/game-article/game-article.component';
 //
 // //pipes
-// import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
+import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 //
 @NgModule({
     imports:[
@@ -55,17 +55,16 @@ import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 //       ArticleStack2Module,
 //       VideoStackComponent,
 //       BoxScoresModule,
-//       StatHyphenValuePipe,
+      StatHyphenValuePipe,
 //       BoxScoresModule,
 //       DatePicker,
 //       GameInfo,
 //       GameArticle,
 //       CalendarCarousel,
 //       DeepDiveVideoModule,
-//       DeepDiveBlockMain,
-//       DeepDiveBlock1,
-//       DeepDiveBlock2,
-//       DeepDiveBlock3,
+      DeepDiveBlock1,
+      DeepDiveBlock2,
+      DeepDiveBlock3,
     ],
     exports:[
       DeepDivePage,
@@ -75,13 +74,12 @@ import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 //       ArticleStack2Module,
 //       VideoStackComponent,
 //       DeepDiveVideoModule,
-//       DeepDiveBlockMain,
-//       DeepDiveBlock1,
-//       DeepDiveBlock2,
-//       DeepDiveBlock3,
+      DeepDiveBlock1,
+      DeepDiveBlock2,
+      DeepDiveBlock3,
     ],
     providers: [
-//       DeepDiveService,
+      DeepDiveService,
 //       BoxScoresService,
 //       SchedulesService
     ]
