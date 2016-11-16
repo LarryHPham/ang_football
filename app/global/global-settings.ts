@@ -27,9 +27,13 @@ export class GlobalSettings {
     private static _partnerHomepageUrl:string = '.mytouchdownzone.com';
     private static _partnerHomepageLinkName:string = 'mytouchdownzone';
 
-    private static _siteTwitterUrl:string = 'https://twitter.com/touchdownloyal';
-    private static _siteFacebookUrl:string = 'https://www.facebook.com/touchdownloyal';
+    //links from our share providers that do not change
+    private static _siteTwitterUrl:string = 'https://twitter.com/home?status=';
+    private static _siteFacebookUrl:string = 'https://www.facebook.com/sharer/sharer.php?u=';
+    private static _siteLinkedinUrl:string = 'https://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=&source=';
     private static _siteGoogleUrl:string = 'https://plus.google.com/share?url=';
+    private static _verticalFacebook: string = 'https://www.facebook.com/TCX-382018522187919';
+    private static _verticalTwitter: string = 'https://twitter.com/tcxmedia';
 
     private static _baseTitle: string = "Touchdown Loyal";
     private static _basePartnerTitle: string = "My Touchdown Zone";
@@ -341,18 +345,26 @@ export class GlobalSettings {
     static getCollegeDivisionSegments() {
       return this._collegeDivisionSegments;
     }
-
     static getCopyrightInfo() {
         return this._copyrightInfo;
     }
-    static getSiteTwitterUrl() {
-      return this._siteTwitterUrl;
+    static getVerticalFB() {
+        return this._verticalFacebook;
     }
-    static getSiteFacebookUrl() {
-      return this._siteFacebookUrl;
+    static getVerticalTwitter() {
+        return this._verticalTwitter;
     }
-    static getSiteGoogleUrl(partnerId: string) {
-      return this._siteGoogleUrl + this.getHomePage(partnerId);
+    static getSiteTwitterUrl(shareUrl: string) {
+      return this._siteTwitterUrl + shareUrl;
+    }
+    static getSiteFacebookUrl(shareUrl: string) {
+      return this._siteFacebookUrl + shareUrl;
+    }
+    static getLinkedInUrl(shareUrl: string) {
+      return this._siteLinkedinUrl + shareUrl;
+	  }
+    static getSiteGoogleUrl(shareUrl: string) {
+      return this._siteGoogleUrl + shareUrl;
 	  }
     static getSportName() {
       return this._sportName;

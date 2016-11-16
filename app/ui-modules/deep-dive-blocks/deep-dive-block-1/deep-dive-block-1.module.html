@@ -1,67 +1,26 @@
 <div id="deep-dive-block-1" class="deep-dive-block">
-  <!-- ARTICLE STACK TYPE 1 -->
-  <div *ngIf="firstStackTop && firstStackRow" class="deep-dive-module">
-    <article-stack-1-module [stackTop]="firstStackTop" [stackRow]="firstStackRow"></article-stack-1-module>
+  <div class="deep-dive-widget res640" *ngIf="firstStackRow">
+    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget>
   </div>
-  <!-- VIDEO STACK -->
-  <div *ngIf="videoDataBatch" class="deep-dive-module">
-    <deep-dive-video-module [videoData]="videoDataBatch"></deep-dive-video-module>
+  <div class="deep-dive-module" *ngIf = "tilestackData">
+    <tile-stack-module [tilestackData] = "tilestackData"></tile-stack-module>
   </div>
-  <!-- WIDGET -->
-  <div *ngIf="videoDataBatch" class="deep-dive-module">
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+  <div class="deep-dive-widget res1024" *ngIf = "tilestackData">
+    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget>
   </div>
-   <!-- BOX SCORE -->
-  <div *ngIf="dateParam" class="deep-dive-boxScores row">
-    <box-scores
-      class="col-lg-8"
-      [boxScores]="currentBoxScores"
-      [calendarParams]="dateParam"
-      [maxHeight]="maxHeight"
-      [scroll]="boxScoresScroll"
-      (dateEmit)="getBoxScores($event)">
-    </box-scores>
-    <!-- AiContent for BoxScores-->
-    <game-article
-      *ngIf="currentBoxScores && currentBoxScores.aiContent"
-      [gameArticle]="currentBoxScores.aiContent"
-      class="col-lg-4">
-    </game-article>
+  <div class="deep-dive-module" *ngIf="videoData">
+    <video-stack-component [state]="geoLocation" [page]="1" [videoData]="videoData"></video-stack-component>
   </div>
-  <!-- BILL BOARD -->
-  <div class="deep-dive-module">
-    <billboard-module></billboard-module>
+  <div class="deep-dive-widget res640" *ngIf="videoData">
+    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget>
   </div>
-  <!-- WIDGET -->
-  <div *ngIf="dateParam" class="deep-dive-module">
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+  <div class="deep-dive-module" *ngIf="dateParam">
+    <div class="deep-dive-boxScore">
+      <box-scores class="box-scores" [boxScores]="currentBoxScores" [calendarParams]="dateParam" (dateEmit)="getBoxScores($event)" [maxHeight]="maxHeight" [scroll]="scroll"></box-scores>
+      <box-article-component *ngIf="currentBoxScores" [boxArticleData]="currentBoxScores.aiContent"></box-article-component>
+    </div>
   </div>
-  <!-- SIX PACKS -->
-  <div *ngIf="recData" class="deep-dive-module">
-    <deep-dive-recommendation [recData]="recData"></deep-dive-recommendation>
-  </div>
-  <!-- SEARCH BOX -->
-  <div class="deep-dive-module" *ngIf="scope!='sports'">
-    <search-box-module [category]="category" [scope]="scope" ></search-box-module>
-  </div>
-  <!-- WIDGET -->
-  <div *ngIf="scope!='sports'" class="deep-dive-module">
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
-  </div>
-  <!-- ARTICLE STACK TYPE 1 -->
-  <div *ngIf="firstStackTop && firstStackRow" class="deep-dive-module">
-    <article-stack-1-module [stackTop]="firstStackTop" [stackRow]="firstStackRow"></article-stack-1-module>
-  </div>
-  <!-- ARTICLE STACK TYPE 2 -->
-  <div *ngIf="articleStack2DataTop && articleStack2DataBatch" class="deep-dive-module">
-    <article-stack-2-module [articleStack2DataTop]="articleStack2DataTop" [articleStack2DataBatch]="articleStack2DataBatch"></article-stack-2-module>
-  </div>
-  <!-- WIDGET -->
-  <div *ngIf="articleStack2DataTop && articleStack2DataBatch" class="deep-dive-module">
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
-  </div>
-  <!-- SIX PACKS -->
-  <div *ngIf="recData" class="deep-dive-module">
-    <deep-dive-recommendation [recData]="recData"></deep-dive-recommendation>
+  <div class="deep-dive-widget res1024">
+    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget>
   </div>
 </div>
