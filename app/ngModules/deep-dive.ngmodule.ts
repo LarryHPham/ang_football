@@ -3,20 +3,22 @@ import { CommonModule } from '@angular/common';
 import { routing } from '../router/app.routing';
 import { GlobalModule } from './global.ngmodule';
 import { FormsModule } from '@angular/forms';
-//
+
 // //providers
 import { DeepDiveService } from '../services/deep-dive.service';
 // import { BoxScoresService } from '../services/box-scores.service';
-//
-// import { SideScrollSchedule } from '../fe-core/modules/side-scroll-schedules/side-scroll-schedules.module';
+
+import { SideScrollSchedule } from '../fe-core/modules/side-scroll-schedules/side-scroll-schedules.module';
 // import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.component';
-// import { SideScroll } from '../fe-core/components/side-scroll/side-scroll.component';
+import { SideScroll } from '../fe-core/components/side-scroll/side-scroll.component';
 // import { SchedulesService } from '../services/schedules.service';
-//
+
 //deep-dive blocks
+import { CarouselDiveModule } from '../fe-core/modules/carousel-dive/carousel-dive.module';
 import { DeepDiveBlock1 } from '../ui-modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module';
 import { DeepDiveBlock2 } from '../ui-modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
 import { DeepDiveBlock3 } from '../ui-modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
+import { DeepDiveBlock4 } from '../ui-modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
 
 import { ArticleStackModule } from '../fe-core/modules/article-stack/article-stack.module';
 import { TileStackModule } from '../fe-core/modules/tile-stack/tile-stack.module';
@@ -46,9 +48,9 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
     ],
     declarations:[
       DeepDivePage,
-//       SideScrollSchedule,
+      SideScroll,
+      SideScrollSchedule,
 //       ScheduleBox,
-//       SideScroll,
 //       StackRowsComponent,
 //       ArticleStacktopComponent,
 //       ArticleStack1Module,
@@ -62,9 +64,11 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 //       GameArticle,
 //       CalendarCarousel,
 //       DeepDiveVideoModule,
+      CarouselDiveModule,
       DeepDiveBlock1,
       DeepDiveBlock2,
       DeepDiveBlock3,
+      DeepDiveBlock4,
     ],
     exports:[
       DeepDivePage,
@@ -74,9 +78,13 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 //       ArticleStack2Module,
 //       VideoStackComponent,
 //       DeepDiveVideoModule,
+      SideScroll,
+      SideScrollSchedule,
+      CarouselDiveModule,
       DeepDiveBlock1,
       DeepDiveBlock2,
       DeepDiveBlock3,
+      DeepDiveBlock4,
     ],
     providers: [
       DeepDiveService,

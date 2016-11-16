@@ -1,4 +1,4 @@
-<!-- <section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
+<section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
   <section class="deep-dive-container1">
   	<div [ngStyle]="{'width':'100%', 'height': 'auto'}" class="carWrapper">
       <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" (changeScope)="changeScope($event)" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" auto-play="true">
@@ -17,9 +17,11 @@
         <side-scroll-schedules *ngIf="scopeDisplayed" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="changeScopeVar" (changeScope)="changeScope($event)"></side-scroll-schedules>
       </div>
 
+      <!--First article stack was moved out of deep dive block 1 for performance-->
       <div class="deep-dive-module" *ngIf="firstStackRow">
         <article-stack-module [stackTop]="firstStackTop" [stackRow]="firstStackRow"></article-stack-module>
       </div>
+      <!---->
 
       <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>
 
@@ -34,5 +36,5 @@
       <div class="widget_wrapper"><widget-carousel-module></widget-carousel-module></div>
     </div>
   </section>
-</section> -->
+</section>
 <!-- <Partner-home-page *ngIf="isPartnerZone"></Partner-home-page> -->

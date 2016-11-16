@@ -8,7 +8,7 @@ import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { FooterService } from '../services/footer.service';
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
-import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
+import { HamburgerDeliveryService } from '../services/hamburger-delivery.service';
 
 //globals
 import { GlobalFunctions } from '../global/global-functions';
@@ -34,7 +34,7 @@ import { ScrollableContent } from "../fe-core/components/scrollable-content/scro
 // import { GlobalFunctions } from "../global/global-functions";
 // import { GeoLocation } from "../global/global-service";
 // /*** COMPONENTS ***/
-
+import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
 import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
 import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
 import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
@@ -54,7 +54,7 @@ import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scrol
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
 import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
-//
+import { SidekickWrapper } from '../fe-core/components/sidekick-wrapper/sidekick-wrapper.component';
 // import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 // import { FooterComponent } from "../fe-core/components/footer/footer.component";
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
@@ -69,7 +69,7 @@ import { ResponsiveWidget } from "../fe-core/components/responsive-widget/respon
 // /*** MODULES ***/
 // import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { ChatterboxModule } from "../fe-core/modules/chatterbox/chatterbox.module";
-// import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
+import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 // import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
 // import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
@@ -127,7 +127,7 @@ import { routing } from '../router/app.routing';
       // SearchBoxModule,
       // SidekickWrapperAI,
       // WidgetModule,
-      // WidgetCarouselModule,
+      WidgetCarouselModule,
       SanitizeHtml,
       SanitizeRUrl,
       SanitizeStyle,
@@ -151,7 +151,8 @@ import { routing } from '../router/app.routing';
       Carousel,
       Tabs,
       Tab,
-      SideScroll
+      SideScroll,
+      SidekickWrapper
     ],
     exports: [
       //components
@@ -181,7 +182,7 @@ import { routing } from '../router/app.routing';
       // SearchBoxModule,
       // SidekickWrapperAI,
       // WidgetModule,
-      // WidgetCarouselModule,
+      WidgetCarouselModule,
       SanitizeHtml,
       SanitizeRUrl,
       SanitizeStyle,
@@ -206,7 +207,8 @@ import { routing } from '../router/app.routing';
       Carousel,
       Tabs,
       Tab,
-      SideScroll
+      SideScroll,
+      SidekickWrapper
     ],
     providers: [
       // GeoLocation
