@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {GlobalFunctions} from './global-functions';
 
 @Injectable()
@@ -262,27 +263,27 @@ export class GlobalSettings {
      */
 
     //static getPartnerID(router: Router, subscribeListener: Function)
-    static getParentParams(router: Router, subscribeListener: Function) {
+    static getParentParams(router, subscribeListener: Function) {
         // if ( !subscribeListener ) return;
-        return router.root.subscribe (
-            route => {
-                let partnerID = null;
-                let scope = route.instruction.params["scope"];
-                if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
-                  partnerID = route.instruction.params["partner_id"];
-                }else if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
-                  partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
-                }
-
-                if ( scope == null ) {
-                  scope = this.getSportLeagueAbbrv();
-                }
-                subscribeListener({
-                  partnerID: partnerID == '' ? null : partnerID,
-                  scope: this.getScope(scope)
-                });
-            }
-        );
+        // return router.root.subscribe (
+        //     route => {
+        //         let partnerID = null;
+        //         let scope = route.instruction.params["scope"];
+        //         if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
+        //           partnerID = route.instruction.params["partner_id"];
+        //         }else if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
+        //           partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
+        //         }
+        //
+        //         if ( scope == null ) {
+        //           scope = this.getSportLeagueAbbrv();
+        //         }
+        //         subscribeListener({
+        //           partnerID: partnerID == '' ? null : partnerID,
+        //           scope: this.getScope(scope)
+        //         });
+        //     }
+        // );
     }
 
     //converts URL route scope from NCAAF to FBS

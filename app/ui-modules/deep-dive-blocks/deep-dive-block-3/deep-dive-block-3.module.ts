@@ -15,18 +15,18 @@ export class DeepDiveBlock3 implements OnInit {
   batchNum: number = 1;
 
   constructor(private _deepDiveData: DeepDiveService){}
-  getFirstArticleStackData(){
-    this._deepDiveData.getDeepDiveBatchService(this.scope, this.articleCallLimit, this.batchNum)
-        .subscribe(data => {
-          this.articleData = this._deepDiveData.transformToArticleStack(data, this.scope);
-        },
-        err => {
-            console.log("Error getting article data");
-        });
-  }
+  // getFirstArticleStackData(){
+  //   this._deepDiveData.getDeepDiveBatchService(this.scope, this.articleCallLimit, this.batchNum)
+  //       .subscribe(data => {
+  //         this.articleData = this._deepDiveData.transformToArticleStack(data, this.scope);
+  //       },
+  //       err => {
+  //           console.log("Error getting article data");
+  //       });
+  // }
 
   callModules(){
-    this.getFirstArticleStackData();
+    // this.getFirstArticleStackData();
   }
 
   ngOnChanges() {
