@@ -38,6 +38,7 @@ import { CustomTable } from '../fe-core/components/custom-table/custom-table.com
 import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
 import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
 import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
+import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
@@ -106,6 +107,7 @@ import { routing } from '../router/app.routing';
       TableHeader,
       //pipes
       NaValuePipe,
+      NoDataBox,
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -155,6 +157,7 @@ import { routing } from '../router/app.routing';
       SortDropdown,
       TableCell,
       TableHeader,
+      NoDataBox,
       //pipes
       NaValuePipe,
       // SectionFrontTopNav,
