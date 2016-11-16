@@ -4,7 +4,7 @@ import {Http, Headers} from '@angular/http';
 import {GlobalSettings} from '../global/global-settings';
 import {GlobalFunctions} from '../global/global-functions';
 import {Link} from '../global/global-interface';
-import {Router} from '@angular/router-deprecated';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class FooterService {
