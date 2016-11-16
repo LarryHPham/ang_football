@@ -35,7 +35,6 @@ export class FooterComponent implements OnInit {
 
     playerDirectoryListings: Array<Link>;
 
-    mlbTeamListings: Array<Link> = [];
     constructor(private _service: FooterService, private _globalFunc: GlobalFunctions){//TODO
       this.teamDirectory();
       this.playerDirectory();

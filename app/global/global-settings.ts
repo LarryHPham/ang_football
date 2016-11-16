@@ -258,7 +258,7 @@ export class GlobalSettings {
      */
 
     //static getPartnerID(router: Router, subscribeListener: Function)
-    static getParentParams(router: Router, subscribeListener: Function) {
+    static getParentParams(router, subscribeListener: Function) {
         // if ( !subscribeListener ) return;
         return router.root.subscribe (
             route => {
