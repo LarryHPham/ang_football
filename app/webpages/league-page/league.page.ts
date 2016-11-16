@@ -113,6 +113,6 @@ export class LeaguePage implements OnInit {
     private onScroll(event) {
       this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
       return;
-    }
+    } //onScroll
 
   }
