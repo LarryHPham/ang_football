@@ -110,3 +110,33 @@ gulp.task('buildAndReload', ['build']);
 
   gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
  });
+
+
+
+/*
+ * DEV BUILD
+ */
+
+ // TypeScript compile
+ gulp.task('dev-compile', function () {
+     return gulp
+     // .src(['app/**/*.ts', '!app/**/*spec.ts'])
+     .src(['app/**/*.ts', '!app/**/*spec.ts']).pipe(embedTemp({sourceType: 'ts', basePath: './'}))
+         .pipe(typescript(tscConfig.compilerOptions))
+         .pipe(gulp.dest('dist/app'))
+
+ });
+
+ gulp.task('dev', ['build'], function () {
+  connect.server({
+    root: 'dist',
+    port: 3000,
+    livereload: true,
+    middleware: function(connect, opt) { return [ historyApiFallback({}) ] }
+  });
+
+  gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
+ });
+
+ gulp.task('dev-build', ['dev-compile', 'less', 'minify-css', 'copy:libs', 'copy:assets']);
+ gulp.task('dev-buildAndReload', ['dev-build']);

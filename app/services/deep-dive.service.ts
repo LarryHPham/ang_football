@@ -4,8 +4,6 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {DomSanitizationService} from '@angular/platform-browser';
-import {Router} from "@angular/router-deprecated";
 
 declare var moment;
 
@@ -17,7 +15,7 @@ export class DeepDiveService {
 
   constructor(
     public http: Http,
-    private _sanitizer: DomSanitizationService){}
+  ){}
 
   //Function to set custom headers
   setToken(){

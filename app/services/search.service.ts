@@ -6,7 +6,7 @@ import {SearchComponentResult, SearchComponentData} from '../fe-core/components/
 import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions}  from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
-
+// import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
 //Interface for input of search component
 import {PaginationParameters} from '../fe-core/interfaces/pagination.data';
 export interface SearchInput {
@@ -51,6 +51,7 @@ export interface SearchPageInput {
         paginationParameters: PaginationParameters;
     }>
 }
+
 declare let Fuse: any;
 
 @Injectable()
@@ -221,7 +222,6 @@ export class SearchService{
     /*
      * Functions for search page
      */
-
     getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
         let dataSearch = {
           players: [],

@@ -4,6 +4,13 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+//globals
+import { GlobalFunctions } from '../global/global-functions';
+import { GlobalSettings } from "../global/global-settings";
+
+//services
+import { FooterService } from '../services/footer.service';
+
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
 
@@ -11,6 +18,9 @@ import { NaValuePipe } from "../fe-core/pipes/na.pipe";
 import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
+import { FooterComponent } from "../ui-modules/footer/footer.component";
+import { HeaderComponent } from "../ui-modules/header/header.component";
+
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
@@ -79,6 +89,8 @@ import { routing } from '../router/app.routing';
       CircleImage,
       HoverImage,
       ScrollableContent,
+      HeaderComponent,
+      FooterComponent,
 
       //pipes
       NaValuePipe
@@ -126,9 +138,12 @@ import { routing } from '../router/app.routing';
       CircleImage,
       HoverImage,
       ScrollableContent,
+      HeaderComponent,
+      FooterComponent,
 
       //pipes
       NaValuePipe
+
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
@@ -167,12 +182,13 @@ import { routing } from '../router/app.routing';
       // ResponsiveWidget
     ],
     providers: [
-      // VerticalGlobalFunctions,
+      // GeoLocation
       // ScrollerFunctions,
       // SanitizeScript,
-      // GlobalSettings,
-      // GlobalFunctions,
-      // GeoLocation
+      // VerticalGlobalFunctions,
+      GlobalSettings,
+      GlobalFunctions,
+      FooterService
     ]
 })
 export class GlobalModule { }
