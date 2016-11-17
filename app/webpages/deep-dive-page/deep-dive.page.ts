@@ -1,16 +1,16 @@
-import {Component, OnInit, Input, NgZone} from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {DeepDiveService} from '../../services/deep-dive.service';
+import { DeepDiveService } from '../../services/deep-dive.service';
 // import {SchedulesService} from '../../services/schedules.service';
-import {PartnerHeader} from "../../global/global-service";
-import {GlobalSettings} from "../../global/global-settings";
-import {GlobalFunctions} from "../../global/global-functions";
-import {GeoLocation} from "../../global/global-service";
-import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import { PartnerHeader } from "../../global/global-service";
+import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from "../../global/global-functions";
+import { GeoLocation } from "../../global/global-service";
+import { ResponsiveWidget } from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
 // import {SeoService} from '../../seo.service';
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
 declare var moment;
@@ -66,6 +66,7 @@ export class DeepDivePage{
       public ngZone:NgZone,
       // private _params:RouteParams
     ){
+      console.log('test');
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
       // needs to get Geolocation first
