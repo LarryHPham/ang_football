@@ -8,7 +8,7 @@ import {GlobalFunctions} from "../../global/global-functions";
 import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {GlobalSettings} from "../../global/global-settings";
 import {HeadlineDataService} from "../../services/headline-module-service";
-import {SeoService} from '../../seo.service';
+//import {SeoService} from '../../seo.service';
 import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 
@@ -66,7 +66,7 @@ export class ArticlePages implements OnInit {
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
-                private _seoService:SeoService,
+                //private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
                 private _partnerData:PartnerHeader) {
@@ -116,7 +116,7 @@ export class ArticlePages implements OnInit {
         this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport)
             .subscribe(
                 Article => {
-                    try {
+                    //try {
                         if (Article['data'].length > 0) {
                             if (this.isFantasyReport) {
                                 this.eventID = Article['data'][0].event_id;
@@ -148,17 +148,17 @@ export class ArticlePages implements OnInit {
                                 this.getRecommendedArticles();
                             }
                         }
-                    }
-                    catch (e) {
-                        this.error = true;
-                        var self = this;
-                        setTimeout(function () {
-                            //removes error page from browser history
-                            self._location.replaceState('/');
-                            //returns user to previous page
-                            self._router.navigateByUrl('Default-home');
-                        }, 5000);
-                    }
+                    //}
+                    //catch (e) {
+                    //    this.error = true;
+                    //    var self = this;
+                    //    setTimeout(function () {
+                    //        //removes error page from browser history
+                    //        self._location.replaceState('/');
+                    //        //returns user to previous page
+                    //        self._router.navigateByUrl('Default-home');
+                    //    }, 5000);
+                    //}
                 },
                 err => {
                     this.error = true;

@@ -42,10 +42,22 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 //article page blocks
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { ArticleDataService } from "../services/article-page-service";
+import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
+import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
+import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
+import { RecommendationsComponent } from "../fe-core/components/articles/recommendations/recommendations.component";
+import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
+import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
+import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
+import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
+import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import {ProfileDataComponent} from "../fe-core/components/articles/profile-data/profile-data.component";
+import {BillboardComponent} from "../fe-core/components/articles/billboard/billboard.component";
 //
 @NgModule({
     imports:[
       CommonModule,
+      GlobalModule,
       GlobalModule,
       routing,
       FormsModule
@@ -77,6 +89,17 @@ import { ArticleDataService } from "../services/article-page-service";
       DeepDiveBlock2,
       DeepDiveBlock3,
       DeepDiveBlock4,
+      ShareLinksComponent,
+      SidekickWrapperAI,
+      ImagesMedia,
+      ArticleContentComponent,
+      RecommendationsComponent,
+      DisqusComponent,
+      TrendingComponent,
+      SidekickContainerComponent,
+      ComplexInnerHtml,
+      ProfileDataComponent,
+      BillboardComponent
     ],
     exports:[
       DeepDivePage,
@@ -95,7 +118,18 @@ import { ArticleDataService } from "../services/article-page-service";
       DeepDiveBlock1,
       DeepDiveBlock2,
       DeepDiveBlock3,
-      DeepDiveBlock4
+      DeepDiveBlock4,
+      ShareLinksComponent,
+      SidekickWrapperAI,
+      ImagesMedia,
+      ArticleContentComponent,
+      RecommendationsComponent,
+      DisqusComponent,
+      TrendingComponent,
+      SidekickContainerComponent,
+      ComplexInnerHtml,
+      ProfileDataComponent,
+      BillboardComponent
     ],
     providers: [
       DeepDiveService,
