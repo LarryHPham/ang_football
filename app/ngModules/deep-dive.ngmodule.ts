@@ -38,6 +38,10 @@ import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/ar
 //
 // //pipes
 import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
+
+//article page blocks
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
+import { ArticleDataService } from "../services/article-page-service";
 //
 @NgModule({
     imports:[
@@ -48,6 +52,7 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
     ],
     declarations:[
       DeepDivePage,
+      ArticlePages,
 //       SideScroll,
 //       SideScrollSchedule,
 //       ScheduleBox,
@@ -75,6 +80,7 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
     ],
     exports:[
       DeepDivePage,
+      ArticlePages,
       StackRowsComponent,
       ArticleStacktopComponent,
       ArticleStackModule,
@@ -93,6 +99,7 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
     ],
     providers: [
       DeepDiveService,
+      ArticleDataService,
 //       BoxScoresService,
 //       SchedulesService
     ]

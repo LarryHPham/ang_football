@@ -5,6 +5,7 @@ import { AppComponent }  from '../app-component/app.component';
 import { DeepDiveNgModule } from "../ngModules/deep-dive.ngmodule";
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { LeaguePage } from "../webpages/league-page/league.page";
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 // import {AboutUsPage} from "./webpages/aboutus/aboutus";
 // import {PrivacyPolicy} from "./webpages/privacy-policy/privacy-policy";
 // import {TermOfService} from "./webpages/term-of-service/term-of-service";
@@ -52,6 +53,10 @@ const relativeChildRoutes = [
     //     path: ':category',
     //     component: DeepDivePage,
     // },
+    {
+      path: '/articles/:eventType/:eventID',
+      component: ArticlePages
+    },
     {
       path: 'league',
       component: LeaguePage
