@@ -1,8 +1,8 @@
               <section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
                 <section class="deep-dive-container1">
                 	<div [ngStyle]="{'width':'100%', 'height': 'auto'}" class="carWrapper">
-                    <!-- <side-scroll-test *ngIf="carouselData && videoData" [current]="curCount" (changeScope)="changeScope($event)" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" auto-play="true">
-                    </side-scroll-test> -->
+                    <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData">
+                    </news-box>
                   </div>
                   <div class="spacer" id="deep-dive-blueBar">
                     <!-- <section class="deep-dive-adWrap">
@@ -18,18 +18,18 @@
                     </div>
 
       <!-- First article stack was moved out of deep dive block 1 for performance-->
-                  <div class="deep-dive-module" *ngIf="firstStackRow">
+                  <div class="deep-dive-module" *ngIf="firstStackRow && firstStackTop">
                     <article-stack-module [stackTop]="firstStackTop" [stackRow]="firstStackRow"></article-stack-module>
                   </div>
       <!---->
 
-                    <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>
+                    <!-- <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>
 
                     <deep-dive-block-2 *ngIf="blockIndex >= 2 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-2>
 
                     <deep-dive-block-3 *ngIf="blockIndex >= 3 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-3>
 
-                    <deep-dive-block-4 *ngIf="blockIndex >= 4 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-4>
+                    <deep-dive-block-4 *ngIf="blockIndex >= 4 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-4> -->
 
                   </div>
                   <div class="deep-dive-container2b">

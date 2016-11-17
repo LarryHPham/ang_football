@@ -59,6 +59,8 @@ export class GlobalSettings {
     private static _currentRouteParams: any;
     private static _router: any;
 
+    public static _partnerId:string;
+
     static getEnv(env:string):string {
       if (env == "localhost"){
           env = "dev";
@@ -75,6 +77,10 @@ export class GlobalSettings {
       }else{
         return false;
       }
+    }
+
+    static storePartnerId(partnerId) {
+      this._partnerId = partnerId;
     }
 
     static getDynamicWidet():string {

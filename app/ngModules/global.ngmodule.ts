@@ -85,9 +85,9 @@ import { ArticleBlockComponent } from "../fe-core/components/article-block/artic
 // import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
-// import { Larousel } from '../fe-core/components/larousel/larousel';
-// import { NewsBox } from '../fe-core/components/news-box/news-box';
-// import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
+import { Larousel } from '../fe-core/components/larousel/larousel';
+import { NewsBox } from '../fe-core/components/news-box/news-box';
+import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
 // import { InfoComponent } from '../fe-core/components/page-information/page-information.component';
 //
 // /*** MODULES ***/
@@ -178,9 +178,9 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       WidgetCarouselModule,
 
       // DropdownComponent,
-	    // Larousel,
-      // NewsBox,
-      // LineChartComponent,
+	    Larousel,
+      NewsBox,
+      LineChartComponent,
       // SectionNameComponent,
       ArticleBlockComponent,
       DeepDiveRecommendation,
@@ -262,11 +262,11 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // WidgetModule,
 
       WidgetCarouselModule,
-      // Larousel,
+      Larousel,
       // DropdownComponent,
       // Search,
-      // NewsBox,
-      // LineChartComponent,
+      NewsBox,
+      LineChartComponent,
       // SectionNameComponent,
       ArticleBlockComponent,
       DeepDiveRecommendation,

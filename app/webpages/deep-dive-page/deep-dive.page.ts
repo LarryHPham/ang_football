@@ -9,12 +9,13 @@ import { GeoLocation } from "../../global/global-service";
 import { ResponsiveWidget } from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
+import { ActivatedRoute } from '@angular/router';
 // import {SeoService} from '../../seo.service';
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
 declare var moment;
-declare var jQuery: any;
+// declare var jQuery: any;
 
 @Component({
     selector: 'deep-dive-page',
@@ -56,7 +57,7 @@ export class DeepDivePage{
     private _routeSubscription: any;
 
     constructor(
-      // private _router:Router,
+      private _activatedRoute:ActivatedRoute,
       private _title: Title,
       private _deepDiveData: DeepDiveService,
       // private _schedulesService:SchedulesService,
@@ -66,7 +67,14 @@ export class DeepDivePage{
       public ngZone:NgZone,
       // private _params:RouteParams
     ){
-      console.log('test');
+      this._activatedRoute.params.subscribe(
+          (params:any) => {
+              console.log('Partner:',params);
+              this.scope = params.scope;
+              this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
+              // GlobalSettings.storePartnerId(params.partner_id);
+          }
+      );
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
       // needs to get Geolocation first
@@ -84,7 +92,7 @@ export class DeepDivePage{
       //       window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
       //     }
       //
-      //     this.toggleData = this.scope == 'home' ? [this.getToggleInfo(this._router)] : null;
+
       //
       //     this.isPartnerZone = partnerHome;
       //     if(this.partnerID != null && this.partnerID != 'football'){
@@ -153,7 +161,7 @@ export class DeepDivePage{
     //   this._seoService.setMetaRobots('Index, Follow');
     // }
 
-    getToggleInfo(router){
+    getToggleInfo(){
       let toggleData = {
         'nfl':{
           title: 'Loyal to the NFL?',
@@ -253,7 +261,6 @@ export class DeepDivePage{
         this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
           data => {
             this.videoData = this._deepDiveData.transformVideoStack(data.data);
-            console.log(this.videoData);
           }
         )
       }
@@ -261,7 +268,6 @@ export class DeepDivePage{
     private getDataCarousel() {
       this._deepDiveData.getCarouselData(this.scope, this.carouselData, '15', '1', this.geoLocation, (carData)=>{
         this.carouselData = carData;
-        console.log(this.carouselData);
       })
     }
 
@@ -318,18 +324,18 @@ export class DeepDivePage{
     getFirstArticleStackData(){
       this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
           .subscribe(data => {
-            this.firstStackTop = this._deepDiveData.transformToArticleStack(data);
+            this.firstStackTop = [this._deepDiveData.transformToArticleStack(data)];
           },
           err => {
                 console.log("Error getting first article stack data");
           });
-      this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
-          .subscribe(data => {
-            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
-          },
-          err => {
-              console.log("Error getting first AI article batch data");
-          });
+      // this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+      //     .subscribe(data => {
+      //       this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
+      //     },
+      //     err => {
+      //         console.log("Error getting first AI article batch data");
+      //     });
     }
 
     callModules(){
