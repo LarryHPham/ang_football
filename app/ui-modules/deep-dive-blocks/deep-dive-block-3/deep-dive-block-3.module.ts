@@ -10,6 +10,9 @@ declare var moment;
 
 export class DeepDiveBlock3 implements OnInit {
   @Input() scope: string;
+  @Input() geoLocation: string;
+  @Input() maxHeight: any;
+  @Input() profileName: any;
   articleData: Array<ArticleStackData>;
   articleCallLimit:number = 31;
   batchNum: number = 1;

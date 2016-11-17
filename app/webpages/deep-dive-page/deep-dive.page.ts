@@ -1,16 +1,16 @@
-import {Component, OnInit, Input, NgZone} from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {DeepDiveService} from '../../services/deep-dive.service';
+import { DeepDiveService } from '../../services/deep-dive.service';
 // import {SchedulesService} from '../../services/schedules.service';
-import {PartnerHeader} from "../../global/global-service";
-import {GlobalSettings} from "../../global/global-settings";
-import {GlobalFunctions} from "../../global/global-functions";
-import {GeoLocation} from "../../global/global-service";
-import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import { PartnerHeader } from "../../global/global-service";
+import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from "../../global/global-functions";
+import { GeoLocation } from "../../global/global-service";
+import { ResponsiveWidget } from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
 // import {SeoService} from '../../seo.service';
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
 declare var moment;
@@ -25,7 +25,7 @@ export class DeepDivePage{
     public widgetPlace: string = "widgetForPage";
 
     //page variables
-    scope: string;
+    scope: string = 'nfl';
     scopeDisplayed:any;
     sidescrollScope:string;
     partnerID: string;
@@ -66,6 +66,7 @@ export class DeepDivePage{
       public ngZone:NgZone,
       // private _params:RouteParams
     ){
+      console.log('test');
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
       // needs to get Geolocation first
@@ -90,7 +91,7 @@ export class DeepDivePage{
       //       this.getPartnerHeader();
       //       this.isPartner = "partner";
       //     }else{
-      //       this.getGeoLocation();
+            this.getGeoLocation();
       //     }
       //     this.setMetaTags()
       //     this.constructorControl = false;
@@ -252,6 +253,7 @@ export class DeepDivePage{
         this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
           data => {
             this.videoData = this._deepDiveData.transformVideoStack(data.data);
+            console.log(this.videoData);
           }
         )
       }
@@ -259,6 +261,7 @@ export class DeepDivePage{
     private getDataCarousel() {
       this._deepDiveData.getCarouselData(this.scope, this.carouselData, '15', '1', this.geoLocation, (carData)=>{
         this.carouselData = carData;
+        console.log(this.carouselData);
       })
     }
 
