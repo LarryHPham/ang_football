@@ -5,11 +5,13 @@ import { GlobalFunctions } from "../../global/global-functions";
 
 // interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
+import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
 
 // services
 import { ProfileHeaderService} from '../../services/profile-header.service';
 import { VideoService } from "../../services/video.service";
 import { BoxScoresService } from "../../services/box-scores.service";
+import { SchedulesService } from "../../services/schedules.service";
 
 // Libraries
 declare var moment;
@@ -23,6 +25,8 @@ export class LeaguePage implements OnInit {
     public partnerID: string;
     public scope: string;
     public paramsub;
+
+    private pageParams:SportPageParameters = {};
 
     private profileHeaderData:ProfileHeaderData;
     private profileData:IProfileData;
@@ -39,6 +43,13 @@ export class LeaguePage implements OnInit {
     private currentBoxScores:any;
     private dateParam:any;
 
+    private schedulesData:any;
+    private scheduleFilter1:Array<any>;
+    private scheduleFilter2:Array<any>;
+    private selectedFilter1:string
+    private selectedFilter2:string;
+    private isFirstNum:number = 0;
+
     private batchLoadIndex: number = 1;
 
     constructor(
@@ -46,7 +57,8 @@ export class LeaguePage implements OnInit {
       private activateRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
       private _videoBatchService: VideoService,
-      private _boxScores: BoxScoresService
+      private _boxScores: BoxScoresService,
+      private _schedulesService: SchedulesService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -125,7 +137,63 @@ export class LeaguePage implements OnInit {
         })
     }
 
+    //grab tab to make api calls for post of pregame table
+    private scheduleTab(tab) {
+        this.isFirstNum = 0;
+        if(tab == 'Upcoming Games'){
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus, null);
+        }else if(tab == 'Previous Games'){
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
+        }else{
+          this.eventStatus = 'postgame';
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
+        }
+    } //scheduleTab
+
+    private filterDropdown(filter){
+        let filterChange = false;
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key && this.scheduleFilter1 != null){
+          this.selectedFilter1 = filter.key;
+          this.selectedFilter2 = this.scheduleFilter2['data'][0].key;//reset weeks to first in dropdown
+          filterChange = true;
+        }
+        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key && this.scheduleFilter2 != null){
+          this.selectedFilter2 = filter.key;
+          filterChange = true;
+        }
+        if(this.selectedFilter2 != null && this.selectedFilter1 == null){
+          this.selectedFilter1 = new Date().getFullYear().toString();
+        }
+        if(filterChange){
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
+        }
+    } //filterDropdown
+
     private getSchedulesData(status, year?, week?) {
+      var limit = 5;
+      if(status == 'postgame'){
+        limit = 3;
+      }
+      if(typeof year == 'undefined'){
+        year = new Date().getFullYear();
+      }
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        if(status == 'pregame' || status == 'created'){
+          this.scheduleFilter1 = null;
+        }else{
+          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            this.scheduleFilter1 = schedulesData.seasons;
+          }
+        }
+        if(schedulesData.carData.length > 0){
+          this.scheduleFilter2 = schedulesData.weeks;
+        }else{
+          this.scheduleFilter2 = null;
+        }
+        this.schedulesData = schedulesData;
+      }, year, week) // isTeamProfilePage = true
     } //getSchedulesData
 
     // function to lazy load page sections
