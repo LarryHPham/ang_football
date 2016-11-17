@@ -10,17 +10,21 @@ import { routing } from '../router/app.routing';
 //globals
 import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from "../global/global-settings";
+import { ScrollerFunctions } from '../global/scroller-functions';
 
 //services
 import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
 import { FooterService } from '../services/footer.service';
+import { BoxScoresService } from "../services/box-scores.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
-import {SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle} from "../fe-core/pipes/safe.pipe";
+import { SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle } from "../fe-core/pipes/safe.pipe";
+import { StatHyphenValuePipe } from "../fe-core/pipes/stat-hyphen.pipe";
 
 //modules
 import { WidgetModule } from "../fe-core/modules/widget/widget.module";
+import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -38,7 +42,11 @@ import { ScrollableContent } from "../fe-core/components/scrollable-content/scro
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { FooterComponent } from "../ui-modules/footer/footer.component";
-import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
+import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
+import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
+import { GameInfo } from "../fe-core/components/game-info/game-info.component";
+import { GameArticle } from "../fe-core/components/game-article/game-article.component";
+import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
@@ -106,6 +114,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
     declarations: [
       //modules
       WidgetModule,
+      BoxScoresModule,
 
       //components
       AppComponent,
@@ -117,6 +126,10 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       SidekickWrapper,
       ModuleHeader,
       VideoStackComponent,
+      CalendarCarousel,
+      GameInfo,
+      GameArticle,
+      DatePicker,
       // HeaderComponent,
       // FooterComponent,
       // CustomTable,
@@ -134,6 +147,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
+      StatHyphenValuePipe,
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
@@ -174,6 +188,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
     exports: [
       //modules
       WidgetModule,
+      BoxScoresModule,
 
       //components
       CircleImage,
@@ -185,6 +200,10 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       ModuleHeader,
       VideoStackComponent,
       SidekickWrapper,
+      CalendarCarousel,
+      GameInfo,
+      GameArticle,
+      DatePicker,
       // HeaderComponent,
       // FooterComponent,
       // CustomTable,
@@ -203,6 +222,7 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
+      StatHyphenValuePipe,
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
@@ -251,8 +271,9 @@ import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/h
       GlobalSettings,
       GlobalFunctions,
       FooterService,
+      ScrollerFunctions,
+      BoxScoresService
       // GeoLocation
-      // ScrollerFunctions,
       // VerticalGlobalFunctions,
       // HamburgerDeliveryService
     ]
