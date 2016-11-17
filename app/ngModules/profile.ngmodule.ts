@@ -8,6 +8,9 @@ import { GlobalModule } from './global.ngmodule';
 //services
 import { ProfileHeaderService } from '../services/profile-header.service';
 import { VideoService } from "../services/video.service";
+import { StandingsService } from "../services/standings.service";
+import { TransactionsService } from "../services/transactions.service";
+import { DraftHistoryService } from "../services/draft-history.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -15,9 +18,19 @@ import { LeaguePage } from "../webpages/league-page/league.page";
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
 import { VideoModule } from "../fe-core/modules/video/video.module";
+import { StandingsModule } from "../fe-core/modules/standings/standings.module";
+import { SchedulesModule } from "../fe-core/modules/schedules/schedules.module";
+import { TransactionsModule } from "../fe-core/modules/transactions/transactions.module";
+import { DraftHistoryModule } from "../fe-core/modules/draft-history/draft-history.module";
 
 //components
-
+import { StandingsComponent } from "../fe-core/components/standings/standings.component";
+import { SchedulesComponent } from "../fe-core/components/schedules/schedules.component";
+import { SchedulesCarousel } from "../fe-core/components/carousels/schedules-carousel/schedules-carousel.component";
+import { TransactionsComponent } from "../fe-core/components/transactions/transactions.component";
+import { TransactionsListItem } from "../fe-core/components/transactions-list-item/transactions-list-item.component";
+import { DraftHistoryComponent } from "../fe-core/components/draft-history/draft-history.component";
+import { DetailedListItem } from "../fe-core/components/detailed-list-item/detailed-list-item.component";
 
 @NgModule({
   imports: [
@@ -33,7 +46,19 @@ import { VideoModule } from "../fe-core/modules/video/video.module";
 
     //modules
     ProfileHeaderModule,
-    VideoModule
+    VideoModule,
+    StandingsModule,
+    SchedulesModule,
+    TransactionsModule,
+    DraftHistoryModule,
+
+    //component
+    StandingsComponent,
+    SchedulesComponent,
+    TransactionsComponent,
+    TransactionsListItem,
+    DraftHistoryComponent,
+    DetailedListItem
   ],
 
   exports: [
@@ -42,13 +67,27 @@ import { VideoModule } from "../fe-core/modules/video/video.module";
 
     //modules
     ProfileHeaderModule,
-    VideoModule
+    VideoModule,
+    StandingsModule,
+    SchedulesModule,
+    TransactionsModule,
+    DraftHistoryModule,
 
+    //component
+    StandingsComponent,
+    SchedulesComponent,
+    TransactionsComponent,
+    TransactionsListItem,
+    DraftHistoryComponent,
+    DetailedListItem
   ],
 
   providers: [
     ProfileHeaderService,
-    VideoService
+    VideoService,
+    StandingsService,
+    TransactionsService,
+    DraftHistoryService
   ]
 })
 
