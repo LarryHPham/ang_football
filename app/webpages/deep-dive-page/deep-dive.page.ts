@@ -25,7 +25,7 @@ export class DeepDivePage{
     public widgetPlace: string = "widgetForPage";
 
     //page variables
-    scope: string;
+    scope: string = 'nfl';
     scopeDisplayed:any;
     sidescrollScope:string;
     partnerID: string;
@@ -91,7 +91,7 @@ export class DeepDivePage{
       //       this.getPartnerHeader();
       //       this.isPartner = "partner";
       //     }else{
-      //       this.getGeoLocation();
+            this.getGeoLocation();
       //     }
       //     this.setMetaTags()
       //     this.constructorControl = false;
@@ -253,6 +253,7 @@ export class DeepDivePage{
         this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
           data => {
             this.videoData = this._deepDiveData.transformVideoStack(data.data);
+            console.log(this.videoData);
           }
         )
       }
@@ -260,6 +261,7 @@ export class DeepDivePage{
     private getDataCarousel() {
       this._deepDiveData.getCarouselData(this.scope, this.carouselData, '15', '1', this.geoLocation, (carData)=>{
         this.carouselData = carData;
+        console.log(this.carouselData);
       })
     }
 
