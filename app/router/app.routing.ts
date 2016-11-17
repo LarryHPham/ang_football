@@ -12,73 +12,193 @@ import { LeaguePage } from "../webpages/league-page/league.page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
 const relativeChildRoutes = [
-   /* {
-        path:'search/:userInput',
-        component: SearchPage
-    },*/
-    // {
-    //     path: 'about-us',
-    //     component: AboutUsPage
-    // },
-    // {
-    //     path: 'privacy-policy',
-    //     component: PrivacyPolicy
-    // },
-    // {
-    //     path: 'term-of-service',
-    //     component: TermOfService
-    // },
-    // {
-    //     path: 'search/articles/:userInput',
-    //     component: SearchPage
-    // },
-    // {
-    //     path: ':category/:subCategory/article/:articleType/:articleID',
-    // //redirectTo: 'news/:articleType/:articleID',
-    //     component: SyndicatedArticlePage,
-    // },
-    // {
-    //     path: ':category/article/:articleType/:articleID',
-    //     //redirectTo: 'news/:articleType/:articleID',
-    //     component: SyndicatedArticlePage,
-    // },
-    // {
-    //     //added article category with subarticles
-    //     path: ':category/:subCategory',
-    //     component: DeepDivePage,
-    // },
-    // {
-    //     //category is top level deep dive page that are groupings of other deep dive pages (ex: sports)
-    //     path: ':category',
-    //     component: DeepDivePage,
-    // },
-    {
-      path: 'league',
-      component: LeaguePage
-    },
-    {
-        path: '',
-        component: DeepDivePage,
-    },
-
-  ];
+  // {
+  //     path: ':scope/pick-a-team',
+  //     name: 'Pick-team-page',
+  //     component: PickTeamPage,
+  // },
+  // {
+  //     path: ':scope/league',
+  //     name: 'League-page',
+  //     component: LeaguePage,
+  // },
+  // {
+  //     path: ':scope/team/:teamName/:teamId',
+  //     name: 'Team-page',
+  //     component: TeamPage,
+  // },
+  // {
+  //     path: ':scope/player/:teamName/:fullName/:playerId',
+  //     name: 'Player-page',
+  //     component: PlayerPage,
+  // },
+  // //Misc. Pages
+  // {
+  //     path: ':scope/directory/:type/:startsWith/page/:page',
+  //     name: 'Directory-page-starts-with',
+  //     component: DirectoryPage,
+  // },
+  // {
+  //     path: ':scope/about-us',
+  //     name: 'About-us-page',
+  //     component: AboutUsPage,
+  // },
+  // {
+  //     path: ':scope/contact-us',
+  //     name: 'Contact-us-page',
+  //     component: ContactUsPage,
+  // },
+  // {
+  //     path: ':scope/disclaimer',
+  //     name: 'Disclaimer-page',
+  //     component: DisclaimerPage,
+  // },
+  // {
+  //     path: ':scope/search/:query',
+  //     name: 'Search-page',
+  //     component: SearchPage
+  // },
+  // //Module Pages
+  // {
+  //     path: ':scope/mvp-list/:type/:pageNum',
+  //     name: 'MVP-list-page',
+  //     component: MVPListPage
+  // },
+  // {
+  //     path: ':scope/mvp-list/:type/:tab/:pageNum',
+  //     name: 'MVP-list-tab-page',
+  //     component: MVPListPage
+  // },
+  // {
+  //     path: ':scope/schedules/league/:year/:pageNum',
+  //     name: 'Schedules-page-league',
+  //     component: SchedulesPage
+  // },
+  // {
+  //     path: ':scope/schedules/league/:year/:tab/:pageNum',
+  //     name: 'Schedules-page-league-tab',
+  //     component: SchedulesPage
+  // },
+  // {
+  //     path: ':scope/schedules/:teamName/:teamId/:year/:pageNum',
+  //     name: 'Schedules-page-team',
+  //     component: SchedulesPage
+  // },
+  // {
+  //     path: ':scope/schedules/:teamName/:year/:tab/:teamId/:pageNum',
+  //     name: 'Schedules-page-team-tab',
+  //     component: SchedulesPage
+  // },
+  // {
+  //     path: ':scope/standings',
+  //     name: 'Standings-page',
+  //     component: StandingsPage
+  // },
+  // {
+  //     path: ':scope/standings/:type',
+  //     name: 'Standings-page-league',
+  //     component: StandingsPage
+  // },
+  // {
+  //     path: ':scope/standings/:type/:teamName/:teamId',
+  //     name: 'Standings-page-team',
+  //     component: StandingsPage
+  // },
+  // {
+  //     path: ':scope/list/:query',
+  //     name: 'Dynamic-list-page',
+  //     component: ListPage
+  // },
+  // {
+  //     path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
+  //     name: 'List-page',
+  //     component: ListPage
+  // },
+  // {
+  //     path: ':scope/draft-history',
+  //     name: 'Draft-history-mlb-page',
+  //     component: DraftHistoryPage
+  // },
+  // {
+  //     path: ':scope/draft-history/:teamName/:teamId',
+  //     name: 'Draft-history-page',
+  //     component: DraftHistoryPage
+  // },
+  // {
+  //     path: ':scope/:type/:teamName/:teamId/:limit/:pageNum',
+  //     name: 'Transactions-page',
+  //     component: TransactionsPage
+  // },
+  // {
+  //     path: ':scope/:type/league/:limit/:pageNum',
+  //     name: 'Transactions-tdl-page',
+  //     component: TransactionsPage
+  // },
+  // {
+  //     path: ':scope/team-roster/:teamName/:teamId',
+  //     name: 'Team-roster-page',
+  //     component: TeamRosterPage
+  // },
+  // {
+  //     path: ':scope/season-stats/:fullName/:playerId',
+  //     name: 'Season-stats-page',
+  //     component: SeasonStatsPage
+  // },
+  // {
+  //     path: ':scope/player-stats/:teamName/:teamId',
+  //     name: 'Player-stats-page',
+  //     component: PlayerStatsPage
+  // },
+  // {
+  //     path: ':scope/articles/:eventType/:eventID',
+  //     name: 'Article-pages',
+  //     component: ArticlePages
+  // },
+  // {
+  //     path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+  //     name: 'List-of-lists-page-scoped',
+  //     component: ListOfListsPage
+  // },
+  // //Error pages and error handling
+  // {
+  //     path: '/error',
+  //     name: 'Error-page',
+  //     component: ErrorPage
+  // },
+  // {
+  //     path: '/not-found',
+  //     component: ErrorPage,
+  // },
+  {
+    path: ':scope/league',
+    component: LeaguePage,
+  },
+  {
+    path: ':scope',
+    component: DeepDivePage,
+  },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  // {
+  //     path: '/*path',
+  //     redirectTo: ['NotFound-page']
+  // },
+];
 
 const appRoutes: Routes = [
-    {
-        path: '',
-        component: AppComponent,
-        children: relativeChildRoutes
-    },
-    {
-      path: ':scope',
-      component: AppComponent,
-      children: relativeChildRoutes
-    },
-    {
-        path: '',
-        redirectTo:'deep-dive',
-        pathMatch:'full'
-    },
+  {
+    path: '',
+    component: AppComponent,
+    children: relativeChildRoutes
+  },
+  {
+    path: ':partnerID',
+    component: AppComponent,
+    children: relativeChildRoutes
+  },
 
 ];
 

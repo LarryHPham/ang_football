@@ -89,7 +89,7 @@ import { ArticleBlockComponent } from "../fe-core/components/article-block/artic
 // /*** MODULES ***/
 import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { ChatterboxModule } from "../fe-core/modules/chatterbox/chatterbox.module";
-// import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
+import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 // import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
 import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
@@ -160,8 +160,7 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // LoadingComponent,
       // SearchBoxModule,
       // SidekickWrapperAI,
-      // WidgetModule,
-      // WidgetCarouselModule,
+      WidgetCarouselModule,
 
       // DropdownComponent,
 	    // Larousel,
@@ -237,7 +236,7 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // SidekickWrapperAI,
       // WidgetModule,
 
-      // WidgetCarouselModule,
+      WidgetCarouselModule,
       // Larousel,
       // DropdownComponent,
       // Search,
