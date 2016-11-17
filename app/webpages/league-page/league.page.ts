@@ -9,6 +9,7 @@ import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../
 // services
 import { ProfileHeaderService} from '../../services/profile-header.service';
 import { VideoService } from "../../services/video.service";
+import { BoxScoresService } from "../../services/box-scores.service";
 
 // Libraries
 declare var moment;
@@ -29,19 +30,23 @@ export class LeaguePage implements OnInit {
     public profileType:string = "league";
     public profileName:string = "TDL";
 
-    private dateParam:any;
     private eventStatus: string;
 
     private firstVideo:string;
     private videoData:any;
 
+    private boxScoresData:any;
+    private currentBoxScores:any;
+    private dateParam:any;
+
     private batchLoadIndex: number = 1;
 
     constructor(
       private _router:Router,
-      private activateRoute:ActivatedRoute,
+      private activateRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
-      private _videoBatchService:VideoService
+      private _videoBatchService: VideoService,
+      private _boxScores: BoxScoresService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -52,8 +57,15 @@ export class LeaguePage implements OnInit {
             }
       );
 
+      // OLD from TDL
+      // this.dateParam ={
+      //   profile:'league',
+      //   teamId: this.scope,
+      //   date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
+      // }
+
       this.dateParam ={
-        profile:'league',//current profile page
+        scope:'league',//current profile page
         teamId: this.scope,
         date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
       }
@@ -64,7 +76,6 @@ export class LeaguePage implements OnInit {
     ngOnInit() { console.log('League page'); }
 
     private setupProfileData(partnerID, scope) {
-      console.log('---setUpProfileData function---');
       this._profileService.getLeagueProfile(scope).subscribe(
         data => {
 
@@ -103,8 +114,16 @@ export class LeaguePage implements OnInit {
         });
     } //getLeagueVideoBatch
 
+    //api for BOX SCORES
     private getBoxScores(dateParams?) {
-    } //getBoxScores
+        if ( dateParams != null ) {
+            this.dateParam = dateParams;
+        }
+        this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+            this.boxScoresData = boxScoresData;
+            this.currentBoxScores = currentBoxScores;
+        })
+    }
 
     private getSchedulesData(status, year?, week?) {
     } //getSchedulesData
