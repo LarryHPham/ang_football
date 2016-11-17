@@ -35,34 +35,34 @@ export class VerticalGlobalFunctions {
   static formatTeamRoute(teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
     var teamRoute: Array<any>;
 
-    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    // var relPath = GlobalSettings.getRouteFullParams().relPath;
     let domainHostName;
     let urlRouteArray;
     let domainParams = {}
 
-    if(!ignoreRelPath){
-      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-      }
-      domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
-
-      if(typeof teamName != 'undefined' && teamName != null){
-        teamName = this.RegExpSpecialCharacters(teamName);
-        teamName = GlobalFunctions.toLowerKebab(teamName);
-        teamRoute = [relPath+domainHostName,domainParams,'Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
-      } else{
-        teamRoute = null;
-      }
-    }else{
-      if(typeof teamName != 'undefined' && teamName != null){
-        teamName = this.RegExpSpecialCharacters(teamName);
-        teamName = GlobalFunctions.toLowerKebab(teamName);
-        teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
-      } else{
-        teamRoute = null;
-      }
-    }
+    // if(!ignoreRelPath){
+    //   domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+    //   if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+    //     domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+    //   }
+    //   domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
+    //
+    //   if(typeof teamName != 'undefined' && teamName != null){
+    //     teamName = this.RegExpSpecialCharacters(teamName);
+    //     teamName = GlobalFunctions.toLowerKebab(teamName);
+    //     teamRoute = [relPath+domainHostName,domainParams,'Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+    //   } else{
+    //     teamRoute = null;
+    //   }
+    // }else{
+    //   if(typeof teamName != 'undefined' && teamName != null){
+    //     teamName = this.RegExpSpecialCharacters(teamName);
+    //     teamName = GlobalFunctions.toLowerKebab(teamName);
+    //     teamRoute = ['Team-page', {teamName: teamName, teamId: teamId}];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+    //   } else{
+    //     teamRoute = null;
+    //   }
+    // }
     return teamRoute ? teamRoute : ['Error-page'];
   }
 

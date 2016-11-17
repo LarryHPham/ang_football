@@ -10,18 +10,21 @@ import { routing } from '../router/app.routing';
 //globals
 import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from "../global/global-settings";
-// import { SeoService } from "../seo.service";
+import { ScrollerFunctions } from '../global/scroller-functions';
 
 //services
 import {HamburgerDeliveryService} from '../services/hamburger-delivery.service';
 import { FooterService } from '../services/footer.service';
+import { BoxScoresService } from "../services/box-scores.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
-import {SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle} from "../fe-core/pipes/safe.pipe";
+import { SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle } from "../fe-core/pipes/safe.pipe";
+import { StatHyphenValuePipe } from "../fe-core/pipes/stat-hyphen.pipe";
 
 //modules
 import { WidgetModule } from "../fe-core/modules/widget/widget.module";
+import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -39,7 +42,11 @@ import { ScrollableContent } from "../fe-core/components/scrollable-content/scro
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { FooterComponent } from "../ui-modules/footer/footer.component";
-import { HamburgerMenuComponent, MenuData } from '../ui-modules/hamburger-menu/hamburger-menu.component';
+import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
+import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
+import { GameInfo } from "../fe-core/components/game-info/game-info.component";
+import { GameArticle } from "../fe-core/components/game-article/game-article.component";
+import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
 
 // import { ScrollerFunctions } from '../global/scroller-functions';
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
@@ -64,13 +71,13 @@ import { GeoLocation, PartnerHeader } from "../global/global-service";
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
 // import { Search } from "../fe-core/components/search/search.component";
-import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
+// import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
 
 // import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 // import { FooterComponent } from "../fe-core/components/footer/footer.component";
-import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
+// import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 // import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
@@ -80,12 +87,12 @@ import { ArticleBlockComponent } from "../fe-core/components/article-block/artic
 // import { InfoComponent } from '../fe-core/components/page-information/page-information.component';
 //
 // /*** MODULES ***/
-import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
+// import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { ChatterboxModule } from "../fe-core/modules/chatterbox/chatterbox.module";
 // import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 // import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
-import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
+// import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 //
 // /*** WEBPAGES ***/
 // import { AboutUsPage } from "../webpages/aboutus/aboutus";
@@ -107,6 +114,7 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
     declarations: [
       //modules
       WidgetModule,
+      BoxScoresModule,
 
       //components
       AppComponent,
@@ -118,6 +126,10 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       SidekickWrapper,
       ModuleHeader,
       VideoStackComponent,
+      CalendarCarousel,
+      GameInfo,
+      GameArticle,
+      DatePicker,
       // HeaderComponent,
       // FooterComponent,
       // CustomTable,
@@ -135,11 +147,12 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
+      StatHyphenValuePipe,
       // SectionFrontTopNav,
       // HeaderComponent,
       // Search,
       // HamburgerMenuComponent,
-      RectangleImage,
+      // RectangleImage,
       // FooterComponent,
       // ModuleHeader,
       // ImagesMedia,
@@ -155,17 +168,17 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // NewsBox,
       // LineChartComponent,
       // SectionNameComponent,
-      ArticleBlockComponent,
-      DeepDiveRecommendation,
+      // ArticleBlockComponent,
+      // DeepDiveRecommendation,
       // InputBar,
       // ArticleSearchBar,
-      BillboardModule,
+      // BillboardModule,
       // AboutUsPage,
       // PrivacyPolicy,
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
-      ResponsiveWidget,
+      //ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
@@ -175,6 +188,7 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
     exports: [
       //modules
       WidgetModule,
+      BoxScoresModule,
 
       //components
       CircleImage,
@@ -186,6 +200,10 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       ModuleHeader,
       VideoStackComponent,
       SidekickWrapper,
+      CalendarCarousel,
+      GameInfo,
+      GameArticle,
+      DatePicker,
       // HeaderComponent,
       // FooterComponent,
       // CustomTable,
@@ -204,11 +222,12 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
+      StatHyphenValuePipe,
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
       // CircleImage,
-      RectangleImage,
+      // RectangleImage,
       // FooterComponent,
       // ModuleHeader,
       // ImagesMedia,
@@ -225,21 +244,23 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // NewsBox,
       // LineChartComponent,
       // SectionNameComponent,
-      ArticleBlockComponent,
-      DeepDiveRecommendation,
+      // ArticleBlockComponent,
+      // DeepDiveRecommendation,
       // InputBar,
       // ArticleSearchBar,
-      BillboardModule,
+      // BillboardModule,
       // AboutUsPage,
       // PrivacyPolicy,
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
 
+      //ResponsiveWidget,
       // Carousel,
       // Tabs,
+      // Tab,
 
-      ResponsiveWidget,
+      // ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
@@ -250,10 +271,10 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       GlobalSettings,
       GlobalFunctions,
       FooterService,
+      ScrollerFunctions,
+      BoxScoresService
       GeoLocation,
       PartnerHeader,
-      // SeoService
-      // ScrollerFunctions,
       // VerticalGlobalFunctions,
       // HamburgerDeliveryService
     ]
