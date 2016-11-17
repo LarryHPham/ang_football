@@ -17,21 +17,24 @@ export class VideoService {
         }
 
         if(state == null || state == undefined){
-
             tdlURL = teamID == null || teamID == undefined ? GlobalSettings.getApiUrl() + "/videoBatch/" + scope + '/' + limit + '/' + pageNum : GlobalSettings.getApiUrl() + "/videoBatchTeam/" + scope + '/' + limit + '/' + pageNum + '/' + teamID;
-
         } else {
             tdlURL = GlobalSettings.getApiUrl() + "/videoBatch/" + scope +'/'+ limit + '/' +pageNum+ '/'+ state;
         }
         return this.http.get(tdlURL)
-            .map(res => res.json())
-            .map(data => {
-                return data;
-            })
+          .map(res => res.json())
+          .map(data => {
+              return data;
+          })
     }
 
     transformVideoStack(data){
-      data.forEach(function(val, i){
+      data.forEach(function(val, i){val
+
+        val['video_thumbnail'] = val.thumbnail;
+        val['keyword'] = val.league;
+        val['time_stamp'] = val.pubDate;
+
         // var relPath = GlobalSettings.getRouteFullParams().relPath;
         // let domainHostName;
         // let urlRouteArray;

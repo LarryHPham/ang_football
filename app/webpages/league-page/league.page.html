@@ -10,6 +10,7 @@
 
         <div class="loadBatch2">
           <video-module *ngIf="videoData" [firstVideo]="firstVideo" [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
+          <box-scores *ngIf="dateParam" [boxScores]="currentBoxScores" [calendarParams]="dateParam" (dateEmit)="getBoxScores($event)"></box-scores>
         </div> <!--loadBatch2-->
       </div>
     </div>
