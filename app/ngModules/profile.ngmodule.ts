@@ -6,13 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { GlobalModule } from './global.ngmodule';
 
 //services
-import {ProfileHeaderService} from '../services/profile-header.service';
+import { ProfileHeaderService } from '../services/profile-header.service';
+import { VideoService } from "../services/video.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
+import { VideoModule } from "../fe-core/modules/video/video.module";
 
 //components
 
@@ -30,7 +32,8 @@ import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-h
     LeaguePage,
 
     //modules
-    ProfileHeaderModule
+    ProfileHeaderModule,
+    VideoModule
   ],
 
   exports: [
@@ -39,10 +42,13 @@ import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-h
 
     //modules
     ProfileHeaderModule,
+    VideoModule
+
   ],
 
   providers: [
-    ProfileHeaderService
+    ProfileHeaderService,
+    VideoService
   ]
 })
 
