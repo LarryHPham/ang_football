@@ -25,8 +25,8 @@ import { TileStackModule } from '../fe-core/modules/tile-stack/tile-stack.module
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.component';
 import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
-// import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';
-// import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/article-stack.module';
+import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';
+import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/article-stack.module';
 // import { VideoStackComponent } from '../fe-core/components/video-stack/video-stack.component';
 //
 // //Box Scores
@@ -42,7 +42,7 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 @NgModule({
     imports:[
       CommonModule,
-      // GlobalModule,
+      GlobalModule,
       routing,
       FormsModule
     ],
@@ -50,13 +50,14 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
       DeepDivePage,
 //       SideScroll,
 //       SideScrollSchedule,
-// //       ScheduleBox,
-// //       StackRowsComponent,
-// //       ArticleStacktopComponent,
-// //       ArticleStack1Module,
-// //       ArticleStack2Module,
-// //       VideoStackComponent,
-// //       BoxScoresModule,
+//       ScheduleBox,
+      StackRowsComponent,
+      ArticleStacktopComponent,
+      ArticleStackModule,
+      ArticleStack1Module,
+      ArticleStack2Module,
+//       VideoStackComponent,
+//       BoxScoresModule,
 //       StatHyphenValuePipe,
 //       BoxScoresModule,
 //       DatePicker,
@@ -66,29 +67,32 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 //       DeepDiveVideoModule,
 
       // CarouselDiveModule,
-      // DeepDiveBlock1,
-      // DeepDiveBlock2,
-      // DeepDiveBlock3,
-      // DeepDiveBlock4,
+      TileStackModule,
+      DeepDiveBlock1,
+      DeepDiveBlock2,
+      DeepDiveBlock3,
+      DeepDiveBlock4,
     ],
     exports:[
       DeepDivePage,
-//       StackRowsComponent,
-//       ArticleStacktopComponent,
-//       ArticleStack1Module,
-//       ArticleStack2Module,
+      StackRowsComponent,
+      ArticleStacktopComponent,
+      ArticleStackModule,
+      ArticleStack1Module,
+      ArticleStack2Module,
 //       VideoStackComponent,
 //       DeepDiveVideoModule,
-      // SideScroll,
-      // SideScrollSchedule,
-      // CarouselDiveModule,
-      // DeepDiveBlock1,
-      // DeepDiveBlock2,
-      // DeepDiveBlock3,
-      // DeepDiveBlock4
+//       SideScroll,
+//       SideScrollSchedule,
+//       CarouselDiveModule,
+      TileStackModule,
+      DeepDiveBlock1,
+      DeepDiveBlock2,
+      DeepDiveBlock3,
+      DeepDiveBlock4
     ],
     providers: [
-      // DeepDiveService,
+      DeepDiveService,
 //       BoxScoresService,
 //       SchedulesService
     ]

@@ -11,12 +11,14 @@ declare var moment;
 
 export class DeepDiveBlock2 implements OnInit {
   @Input() scope: string;
+  @Input() geoLocation: string;
+  @Input() maxHeight: any;
+  @Input() profileName: any;
   firstStackTop: Array<ArticleStackData>;
   firstStackRow: Array<ArticleStackData>;
-  recData: Array<ArticleStackData>;//TODO
-  articleStack2DataTop: Array<ArticleStackData>;//TODO
-  articleStack2DataBatch: Array<ArticleStackData>;//TODO
-  geoLocation: string = "ks";//TODO
+  recData: Array<ArticleStackData>;
+  articleStack2DataTop: Array<ArticleStackData>;
+  articleStack2DataBatch: Array<ArticleStackData>;
   articleCallLimit:number = 23;
   batchNum: number = 1;
 

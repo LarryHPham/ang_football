@@ -1,14 +1,16 @@
-import {Component, OnInit, Input, NgZone} from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {DeepDiveService} from '../../services/deep-dive.service';
-import {SchedulesService} from '../../services/schedules.service';
-import {PartnerHeader} from "../../global/global-service";
-import {GlobalSettings} from "../../global/global-settings";
-import {GlobalFunctions} from "../../global/global-functions";
-import {GeoLocation} from "../../global/global-service";
+import { DeepDiveService } from '../../services/deep-dive.service';
+// import {SchedulesService} from '../../services/schedules.service';
+import { PartnerHeader } from "../../global/global-service";
+import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from "../../global/global-functions";
+import { GeoLocation } from "../../global/global-service";
+import { ResponsiveWidget } from '../../fe-core/components/responsive-widget/responsive-widget.component';
+import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
-import {SeoService} from '../../seo.service';
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+// import {SeoService} from '../../seo.service';
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
 declare var moment;
@@ -57,13 +59,14 @@ export class DeepDivePage{
       // private _router:Router,
       private _title: Title,
       private _deepDiveData: DeepDiveService,
-      private _schedulesService:SchedulesService,
+      // private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
       private _partnerData: PartnerHeader,
-      private _seoService: SeoService,
+      // private _seoService: SeoService,
       public ngZone:NgZone,
       // private _params:RouteParams
     ){
+      console.log('test');
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
       // needs to get Geolocation first
@@ -134,21 +137,21 @@ export class DeepDivePage{
         }
     }
 
-    setMetaTags(){
-      //create meta description that is below 160 characters otherwise will be truncated
-      let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
-      let link = window.location.href;
-
-      // this._seoService.setCanonicalLink(this._params.params, this._router);
-      this._seoService.setOgTitle('Deep Dive');
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl(link);
-      this._seoService.setOgImage('./app/public/mainLogo.png');
-      this._seoService.setTitle('Deep Dive');
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('Index, Follow');
-    }
+    // setMetaTags(){
+    //   //create meta description that is below 160 characters otherwise will be truncated
+    //   let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
+    //   let link = window.location.href;
+    //
+    //   // this._seoService.setCanonicalLink(this._params.params, this._router);
+    //   this._seoService.setOgTitle('Deep Dive');
+    //   this._seoService.setOgDesc(metaDesc);
+    //   this._seoService.setOgType('Website');
+    //   this._seoService.setOgUrl(link);
+    //   this._seoService.setOgImage('./app/public/mainLogo.png');
+    //   this._seoService.setTitle('Deep Dive');
+    //   this._seoService.setMetaDescription(metaDesc);
+    //   this._seoService.setMetaRobots('Index, Follow');
+    // }
 
     getToggleInfo(router){
       let toggleData = {
@@ -194,28 +197,29 @@ export class DeepDivePage{
     //   }
     // }
 
-    //api for Schedules
-    private getSideScroll(){
-      let self = this;
-      if(this.safeCall && this.scope != 'home'){
-        this.safeCall = false;
-        this.changeScopeVar = this.changeScopeVar.toLowerCase();
-        let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-          if(this.sideScrollData == null){
-            this.sideScrollData = sideScrollData;
-          }
-          else{
-            sideScrollData.forEach(function(val,i){
-              self.sideScrollData.push(val);
-            })
-          }
-          this.safeCall = true;
-          this.callCount++;
-          this.scrollLength = this.sideScrollData.length;
-        }, null, null)
-      }
-    }
+    // //api for Schedules
+    // private getSideScroll(){
+    //   let self = this;
+    //   if(this.safeCall && this.scope != 'home'){
+    //     this.safeCall = false;
+    //     this.changeScopeVar = this.changeScopeVar.toLowerCase();
+    //     let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
+    //     this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+    //       if(this.sideScrollData == null){
+    //         this.sideScrollData = sideScrollData;
+    //       }
+    //       else{
+    //         sideScrollData.forEach(function(val,i){
+    //           self.sideScrollData.push(val);
+    //         })
+    //       }
+    //       this.safeCall = true;
+    //       this.callCount++;
+    //       this.scrollLength = this.sideScrollData.length;
+    //     }, null, null)
+    //   }
+    // }
+
     changeScope($event) {
       // this.scopeNameDisplay($event);
       // var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
@@ -241,7 +245,7 @@ export class DeepDivePage{
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
-       this.getSideScroll();
+      //  this.getSideScroll();
       }
     }
 
@@ -329,7 +333,7 @@ export class DeepDivePage{
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
-      this.getSideScroll();
+      // this.getSideScroll();
       this.getFirstArticleStackData();
     }
 

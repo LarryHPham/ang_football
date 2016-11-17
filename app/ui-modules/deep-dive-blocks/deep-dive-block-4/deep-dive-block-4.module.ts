@@ -1,7 +1,8 @@
-import {Component, Input, Injector, OnChanges} from '@angular/core';
-import {GlobalSettings} from '../../../global/global-settings';
-import {GlobalFunctions} from '../../../global/global-functions';
-import {DeepDiveService} from '../../../services/deep-dive.service';
+import { Component, Input, Injector, OnChanges } from '@angular/core';
+import { GlobalSettings } from '../../../global/global-settings';
+import { GlobalFunctions } from '../../../global/global-functions';
+import { DeepDiveService } from '../../../services/deep-dive.service';
+import { ArticleStackModule } from '../../../fe-core/modules/article-stack/article-stack.module';
 
 @Component({
     selector: 'deep-dive-block-4',
