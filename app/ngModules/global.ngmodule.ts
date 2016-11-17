@@ -52,7 +52,7 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
 // import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 // import { GlobalFunctions } from "../global/global-functions";
-// import { GeoLocation } from "../global/global-service";
+import { GeoLocation, PartnerHeader } from "../global/global-service";
 // /*** COMPONENTS ***/
 
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
@@ -71,13 +71,13 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
 // import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
 // import { Search } from "../fe-core/components/search/search.component";
-// import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
+import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
 
 // import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 // import { FooterComponent } from "../fe-core/components/footer/footer.component";
-// import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
+import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 // import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
@@ -87,12 +87,12 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
 // import { InfoComponent } from '../fe-core/components/page-information/page-information.component';
 //
 // /*** MODULES ***/
-// import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
+import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { ChatterboxModule } from "../fe-core/modules/chatterbox/chatterbox.module";
 // import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 // import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
-// import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
+import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 //
 // /*** WEBPAGES ***/
 // import { AboutUsPage } from "../webpages/aboutus/aboutus";
@@ -152,7 +152,7 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
       // HeaderComponent,
       // Search,
       // HamburgerMenuComponent,
-      // RectangleImage,
+      RectangleImage,
       // FooterComponent,
       // ModuleHeader,
       // ImagesMedia,
@@ -168,17 +168,17 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
       // NewsBox,
       // LineChartComponent,
       // SectionNameComponent,
-      // ArticleBlockComponent,
-      // DeepDiveRecommendation,
+      ArticleBlockComponent,
+      DeepDiveRecommendation,
       // InputBar,
       // ArticleSearchBar,
-      // BillboardModule,
+      BillboardModule,
       // AboutUsPage,
       // PrivacyPolicy,
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
-      //ResponsiveWidget,
+      ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
@@ -227,7 +227,7 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
       // HeaderComponent,
       // HoverImage,
       // CircleImage,
-      // RectangleImage,
+      RectangleImage,
       // FooterComponent,
       // ModuleHeader,
       // ImagesMedia,
@@ -244,23 +244,22 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
       // NewsBox,
       // LineChartComponent,
       // SectionNameComponent,
-      // ArticleBlockComponent,
-      // DeepDiveRecommendation,
+      ArticleBlockComponent,
+      DeepDiveRecommendation,
       // InputBar,
       // ArticleSearchBar,
-      // BillboardModule,
+      BillboardModule,
       // AboutUsPage,
       // PrivacyPolicy,
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
 
-      //ResponsiveWidget,
+      ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
 
-      // ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
@@ -272,8 +271,9 @@ import { DatePicker } from "../fe-core/components/date-picker/date-picker.compon
       GlobalFunctions,
       FooterService,
       ScrollerFunctions,
-      BoxScoresService
-      // GeoLocation
+      BoxScoresService,
+      GeoLocation,
+      PartnerHeader,
       // VerticalGlobalFunctions,
       // HamburgerDeliveryService
     ]
