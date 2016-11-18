@@ -12,7 +12,7 @@ declare var jQuery:any;
     providers: [],
 })
 export class HeaderComponent {
-  @Input('partner') partnerID:string;
+  @Input() partnerID:string;
   @Output() tabSelected = new EventEmitter();
   public scope: string;
   public routeSubscription: any;

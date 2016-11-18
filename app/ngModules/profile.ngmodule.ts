@@ -55,6 +55,7 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
     //component
     StandingsComponent,
     SchedulesComponent,
+    SchedulesCarousel,
     TransactionsComponent,
     TransactionsListItem,
     DraftHistoryComponent,
@@ -76,6 +77,7 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
     //component
     StandingsComponent,
     SchedulesComponent,
+    SchedulesCarousel,
     TransactionsComponent,
     TransactionsListItem,
     DraftHistoryComponent,

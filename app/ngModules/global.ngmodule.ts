@@ -53,45 +53,34 @@ import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calen
 import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 import { GameArticle } from "../fe-core/components/game-article/game-article.component";
 import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
-import { SchedulesCarousel } from "../fe-core/components/carousels/schedules-carousel/schedules-carousel.component";
 import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 import { CustomTable } from "../fe-core/components/custom-table/custom-table.component";
 import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
 import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
 import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
-import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
-import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
-// import { ScrollerFunctions } from '../global/scroller-functions';
-// import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-// import { GlobalFunctions } from "../global/global-functions";
 // /*** COMPONENTS ***/
 
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
 // import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
 // import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
-// import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
-// import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
-
-
-
+import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
+import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
 // import { Search } from "../fe-core/components/search/search.component";
+import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 
-// import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
-// import { FooterComponent } from "../fe-core/components/footer/footer.component";
-// import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
-
+import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
-// import { Larousel } from '../fe-core/components/larousel/larousel';
-// import { NewsBox } from '../fe-core/components/news-box/news-box';
-// import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
+import { Larousel } from '../fe-core/components/larousel/larousel';
+import { NewsBox } from '../fe-core/components/news-box/news-box';
+import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
 // import { InfoComponent } from '../fe-core/components/page-information/page-information.component';
 //
 // /*** MODULES ***/
@@ -140,7 +129,6 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       GameArticle,
       DatePicker,
       ResponsiveWidget,
-      SchedulesCarousel,
       DropdownComponent,
       CustomTable,
       Tab,
@@ -155,13 +143,13 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       ResponsiveWidget,
       SliderCarousel,
       ComplexInnerHtml,
-      PaginationFooter
+      PaginationFooter,
 
-      // HeaderComponent,
-      // FooterComponent,
+      HeaderComponent,
+      FooterComponent,
       // CustomTable,
       // SortDropdown,
-      // DropdownDirectoryComponent,
+      DropdownDirectoryComponent,
 
       //pipes
       NaValuePipe,
@@ -173,31 +161,37 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       SanitizeScript,
       StatHyphenValuePipe,
       // SectionFrontTopNav,
-      // HeaderComponent,
       // Search,
-      // HamburgerMenuComponent,
+      HamburgerMenuComponent,
+      RectangleImage,
       // FooterComponent,
+      // ModuleHeader,
       // ImagesMedia,
       // CircleButton,
       // LoadingComponent,
       // SearchBoxModule,
       // SidekickWrapperAI,
-      // DropdownComponent,
-	    // Larousel,
-      // NewsBox,
-      // LineChartComponent,
+      WidgetCarouselModule,
+
+	    Larousel,
+      NewsBox,
+      LineChartComponent,
       // SectionNameComponent,
+      ArticleBlockComponent,
+      DeepDiveRecommendation,
       // InputBar,
       // ArticleSearchBar,
+      BillboardModule,
       // AboutUsPage,
       // PrivacyPolicy,
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
+      ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll
+      SideScroll
 
     ],
     exports: [
@@ -224,7 +218,6 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       GameArticle,
       DatePicker,
       ResponsiveWidget,
-      SchedulesCarousel,
       DropdownComponent,
       CustomTable,
       Tab,
@@ -239,14 +232,14 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       ResponsiveWidget,
       SliderCarousel,
       ComplexInnerHtml,
-      PaginationFooter
+      PaginationFooter,
 
-      // HeaderComponent,
-      // FooterComponent,
+      HeaderComponent,
+      FooterComponent,
       // CustomTable,
       // SortDropdown,
-      // DropdownDirectoryComponent,
-      // HamburgerMenuComponent,
+      DropdownDirectoryComponent,
+      HamburgerMenuComponent,
 
       //pipes
       NaValuePipe,
@@ -262,6 +255,7 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       // HeaderComponent,
       // HoverImage,
       // CircleImage,
+      RectangleImage,
       // FooterComponent,
       // ModuleHeader,
       // ImagesMedia,
@@ -270,26 +264,31 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       // SearchBoxModule,
       // SidekickWrapperAI,
       // WidgetModule,
-      // Larousel,
-      // DropdownComponent,
+      WidgetCarouselModule,
+      Larousel,
+      NewsBox,
+      LineChartComponent,
       // Search,
-      // NewsBox,
-      // LineChartComponent,
       // SectionNameComponent,
+      ArticleBlockComponent,
+      DeepDiveRecommendation,
       // InputBar,
       // ArticleSearchBar,
+      BillboardModule,
       // AboutUsPage,
       // PrivacyPolicy,
       // TermOfService,
       // InfoComponent,
       // ChatterboxModule,
+
+      ResponsiveWidget,
       // Carousel,
       // Tabs,
       // Tab,
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll,
+      SideScroll,
     ],
     providers: [
       SanitizeScript,
@@ -301,9 +300,8 @@ import { PaginationFooter } from "../fe-core/components/pagination-footer/pagina
       SchedulesService,
       GeoLocation,
       PartnerHeader,
-      VerticalGlobalFunctions
-      // VerticalGlobalFunctions,
-      // HamburgerDeliveryService
+      VerticalGlobalFunctions,
+      HamburgerDeliveryService
     ]
 })
 export class GlobalModule { }
