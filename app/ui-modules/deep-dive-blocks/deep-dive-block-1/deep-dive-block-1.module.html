@@ -9,7 +9,7 @@
     <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget>
   </div>
   <div class="deep-dive-module" *ngIf="videoData">
-    <!-- <video-stack-component [state]="geoLocation" [page]="1" [videoData]="videoData"></video-stack-component> -->
+    <video-stack-component [page]="1" [videoData]="videoData"></video-stack-component>
   </div>
   <div class="deep-dive-widget res640" *ngIf="videoData">
     <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget>

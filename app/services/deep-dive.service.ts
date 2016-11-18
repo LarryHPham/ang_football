@@ -66,7 +66,7 @@ export class DeepDiveService {
       return this.http.get(callURL, {headers: headers})
         .map(res => res.json())
         .map(data => {
-          return data;
+          return data.data;
         })
     }
 
@@ -148,7 +148,7 @@ export class DeepDiveService {
       //always returns the first batch of articles
          this.getDeepDiveBatchService(scope, limit, batch, state)
          .subscribe(data=>{
-           var transformedData = this.carouselTransformData(data.data);
+           var transformedData = this.carouselTransformData(data);
            callback(transformedData);
          })
 
@@ -267,40 +267,43 @@ export class DeepDiveService {
       return articleStackArray;
     }
 
-    transformToArticleStack(data){
-      var sampleImage = "/app/public/placeholder_XL.png";
-      var topData = data.data[0];
-      var date = topData.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(topData.publishedDate),"defaultDate") : null;
-      var limitDesc = topData.teaser.substring(0, 360);//provided by design to limit characters
-
-      var relPath = GlobalSettings.getRouteFullParams().relPath;
+    transformToArticleStack(articles){
+      var sampleImage = "https://images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";
+      var articleArray = [];
+      articles.forEach(function(val){
+        let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
+        let limitDesc = val.teaser.substring(0, 360);;
+        var articleStackData = {
+            articleStackRoute: urlRouteArray,
+            keyword: val.keyword.replace('-', ' '),
+            timeStamp: date,
+            title: val.title,
+            author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
+            publisher: val.publisher != null ? "Published By: " + val.publisher : "",
+            teaser: limitDesc,
+            keyUrl: '/nfl/home',
+            imageConfig: {
+              imageClass: "embed-responsive embed-responsive-16by9",
+              imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
+              urlRouteArray: '/nfl/home'
+            }
+        };
+        articleArray.push(articleStackData);
+      });
+      // var relPath = GlobalSettings.getRouteFullParams().relPath;
       let domainHostName;
       let urlRouteArray;
       let domainParams = {}
 
-      domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-      if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-        domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-      }
-      domainParams['scope'] = topData.league == 'fbs' ? 'ncaaf' : topData.league;
+      // domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
+      // if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
+      //   domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
+      // }
+      // domainParams['scope'] = topData.league == 'fbs' ? 'ncaaf' : topData.league;
+      //
+      // urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: topData.id}];
 
-      urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: topData.id}];
-
-      var articleStackData = {
-          articleStackRoute: urlRouteArray,
-          keyword: topData.keyword.replace('-', ' '),
-          date: date != null ? GlobalFunctions.sntGlobalDateFormatting(date, 'dayOfWeek') : "",
-          headline: topData.title,
-          provider1: topData.author != null ? "<span style='font-weight: 400;'>By</span> " + topData.author : "",
-          provider2: topData.publisher != null ? "Published By: " + topData.publisher : "",
-          description: limitDesc,
-          imageConfig: {
-            imageClass: "image-320x180",
-            imageUrl: topData.imagePath != null ? GlobalSettings.getImageUrl(topData.imagePath) : sampleImage,
-            urlRouteArray: urlRouteArray
-          }
-      };
-      return articleStackData;
+      return articleArray;
     }
 
     transformToRecArticles(data){
@@ -390,7 +393,6 @@ export class DeepDiveService {
     }
 
     transformTileStack(data, scope) {
-      data = data.data;
       if(scope == null){
         scope = 'NFL';
       }

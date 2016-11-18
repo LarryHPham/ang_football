@@ -40,6 +40,10 @@ import { TransactionsComponent } from "../fe-core/components/transactions/transa
 import { TransactionsListItem } from "../fe-core/components/transactions-list-item/transactions-list-item.component";
 import { DraftHistoryComponent } from "../fe-core/components/draft-history/draft-history.component";
 import { DetailedListItem } from "../fe-core/components/detailed-list-item/detailed-list-item.component";
+import { ArticlesModule } from "../fe-core/modules/articles/articles.module";
+import { ArticleSubComponent } from "../fe-core/components/articles/sub-article/sub-article.component";
+import { ArticleMainComponent } from "../fe-core/components/articles/main-article/main-article.component";
+import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.component";
 import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
@@ -58,6 +62,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     LeaguePage,
 
     //modules
+    ArticlesModule,
     ProfileHeaderModule,
     VideoModule,
     StandingsModule,
@@ -80,7 +85,10 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     MVPListComponent,
     ComparisonTile,
     ComparisonLegend,
-    ComparisonBar
+    ComparisonBar,
+    ArticleScheduleComponent,
+    ArticleMainComponent,
+    ArticleSubComponent
   ],
 
   exports: [
@@ -88,6 +96,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     LeaguePage,
 
     //modules
+    ArticlesModule,
     ProfileHeaderModule,
     VideoModule,
     StandingsModule,
@@ -110,7 +119,10 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     MVPListComponent,
     ComparisonTile,
     ComparisonLegend,
-    ComparisonBar
+    ComparisonBar,
+    ArticleScheduleComponent,
+    ArticleMainComponent,
+    ArticleSubComponent
   ],
 
   providers: [
