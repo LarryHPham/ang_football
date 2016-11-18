@@ -31,6 +31,10 @@ import { TransactionsComponent } from "../fe-core/components/transactions/transa
 import { TransactionsListItem } from "../fe-core/components/transactions-list-item/transactions-list-item.component";
 import { DraftHistoryComponent } from "../fe-core/components/draft-history/draft-history.component";
 import { DetailedListItem } from "../fe-core/components/detailed-list-item/detailed-list-item.component";
+import {ArticlesModule} from "../fe-core/modules/articles/articles.module";
+import {ArticleSubComponent} from "../fe-core/components/articles/sub-article/sub-article.component";
+import {ArticleMainComponent} from "../fe-core/components/articles/main-article/main-article.component";
+import {ArticleScheduleComponent} from "../fe-core/components/articles/article-schedule/article-schedule.component";
 
 @NgModule({
   imports: [
@@ -45,6 +49,7 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
     LeaguePage,
 
     //modules
+    ArticlesModule,
     ProfileHeaderModule,
     VideoModule,
     StandingsModule,
@@ -59,7 +64,10 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
     TransactionsComponent,
     TransactionsListItem,
     DraftHistoryComponent,
-    DetailedListItem
+    DetailedListItem,
+    ArticleScheduleComponent,
+    ArticleMainComponent,
+    ArticleSubComponent
   ],
 
   exports: [
@@ -67,6 +75,7 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
     LeaguePage,
 
     //modules
+    ArticlesModule,
     ProfileHeaderModule,
     VideoModule,
     StandingsModule,
@@ -81,7 +90,10 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
     TransactionsComponent,
     TransactionsListItem,
     DraftHistoryComponent,
-    DetailedListItem
+    DetailedListItem,
+    ArticleScheduleComponent,
+    ArticleMainComponent,
+    ArticleSubComponent
   ],
 
   providers: [

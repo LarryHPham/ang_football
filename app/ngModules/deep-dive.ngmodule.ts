@@ -52,7 +52,7 @@ import { SidekickContainerComponent } from "../fe-core/components/articles/sidek
 import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
 import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
-import {HeadlineDataService} from "../services/headline-module-service";
+import { HeadlineDataService } from "../services/headline-module-service";
 //
 @NgModule({
     imports:[
@@ -131,7 +131,7 @@ import {HeadlineDataService} from "../services/headline-module-service";
     providers: [
       DeepDiveService,
       ArticleDataService,
-      HeadlineDataService
+      HeadlineDataService,
 //       BoxScoresService,
 //       SchedulesService
     ]
