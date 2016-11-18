@@ -336,7 +336,6 @@ export class ArticlePages implements OnInit {
     }
 
     getCarouselImages(data) {
-        console.log(data);
         var images = [];
         var imageArray = [];
         var copyArray = [];
