@@ -11,12 +11,13 @@ import { routing } from '../router/app.routing';
 import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from "../global/global-settings";
 import { ScrollerFunctions } from '../global/scroller-functions';
-
+import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 //services
 import { HamburgerDeliveryService } from '../services/hamburger-delivery.service';
 import { FooterService } from '../services/footer.service';
 import { BoxScoresService } from "../services/box-scores.service";
 import { SchedulesService } from "../services/schedules.service";
+import { GeoLocation, PartnerHeader } from "../global/global-service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
@@ -26,7 +27,9 @@ import { StatHyphenValuePipe } from "../fe-core/pipes/stat-hyphen.pipe";
 //modules
 import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
-import { SchedulesModule } from "../fe-core/modules/schedules/schedules.module";
+import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
+import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
+import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -38,6 +41,7 @@ import { HoverImage } from "../fe-core/components/images/hover-image";
 import { ErrorComponent } from "../fe-core/components/error/error.component";
 import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
+import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
 import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
@@ -49,54 +53,40 @@ import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calen
 import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 import { GameArticle } from "../fe-core/components/game-article/game-article.component";
 import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
-import { SchedulesComponent } from "../fe-core/components/schedules/schedules.component";
-import { SchedulesCarousel } from "../fe-core/components/carousels/schedules-carousel/schedules-carousel.component";
 import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 import { CustomTable } from "../fe-core/components/custom-table/custom-table.component";
 import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
 import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
 import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
-// import { ScrollerFunctions } from '../global/scroller-functions';
-// import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
+import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
+import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
+import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-// import { GlobalFunctions } from "../global/global-functions";
-import { GeoLocation, PartnerHeader } from "../global/global-service";
 // /*** COMPONENTS ***/
 
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
 // import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
 // import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
-// import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
-// import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
-
-
-
+import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
+import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
-// import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
 // import { Search } from "../fe-core/components/search/search.component";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 
-// import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
-// import { FooterComponent } from "../fe-core/components/footer/footer.component";
 import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
-// import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
-
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
-// import { Larousel } from '../fe-core/components/larousel/larousel';
-// import { NewsBox } from '../fe-core/components/news-box/news-box';
-// import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
+import { Larousel } from '../fe-core/components/larousel/larousel';
+import { NewsBox } from '../fe-core/components/news-box/news-box';
+import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
 // import { InfoComponent } from '../fe-core/components/page-information/page-information.component';
 //
 // /*** MODULES ***/
-import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { ChatterboxModule } from "../fe-core/modules/chatterbox/chatterbox.module";
-import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 // import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
-import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 //
 // /*** WEBPAGES ***/
 // import { AboutUsPage } from "../webpages/aboutus/aboutus";
@@ -119,7 +109,9 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       //modules
       WidgetModule,
       BoxScoresModule,
-      SchedulesModule,
+      BillboardModule,
+      DeepDiveRecommendation,
+      WidgetCarouselModule,
 
       //components
       AppComponent,
@@ -130,14 +122,13 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       LoadingComponent,
       SidekickWrapper,
       ModuleHeader,
+      ModuleFooter,
       VideoStackComponent,
       CalendarCarousel,
       GameInfo,
       GameArticle,
       DatePicker,
       ResponsiveWidget,
-      SchedulesComponent,
-      SchedulesCarousel,
       DropdownComponent,
       CustomTable,
       Tab,
@@ -147,12 +138,18 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       TableCell,
       NoDataBox,
       CircleButton,
+      RectangleImage,
+      ArticleBlockComponent,
+      ResponsiveWidget,
+      SliderCarousel,
+      ComplexInnerHtml,
+      PaginationFooter,
 
-      // HeaderComponent,
-      // FooterComponent,
+      HeaderComponent,
+      FooterComponent,
       // CustomTable,
       // SortDropdown,
-      // DropdownDirectoryComponent,
+      DropdownDirectoryComponent,
 
       //pipes
       NaValuePipe,
@@ -164,9 +161,8 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       SanitizeScript,
       StatHyphenValuePipe,
       // SectionFrontTopNav,
-      // HeaderComponent,
       // Search,
-      // HamburgerMenuComponent,
+      HamburgerMenuComponent,
       RectangleImage,
       // FooterComponent,
       // ModuleHeader,
@@ -177,10 +173,9 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // SidekickWrapperAI,
       WidgetCarouselModule,
 
-      // DropdownComponent,
-	    // Larousel,
-      // NewsBox,
-      // LineChartComponent,
+	    Larousel,
+      NewsBox,
+      LineChartComponent,
       // SectionNameComponent,
       ArticleBlockComponent,
       DeepDiveRecommendation,
@@ -196,14 +191,16 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll
+      SideScroll
 
     ],
     exports: [
       //modules
       WidgetModule,
       BoxScoresModule,
-      SchedulesModule,
+      WidgetCarouselModule,
+      BillboardModule,
+      DeepDiveRecommendation,
 
       //components
       CircleImage,
@@ -213,6 +210,7 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       LoadingComponent,
       SidekickWrapper,
       ModuleHeader,
+      ModuleFooter,
       VideoStackComponent,
       SidekickWrapper,
       CalendarCarousel,
@@ -220,8 +218,6 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       GameArticle,
       DatePicker,
       ResponsiveWidget,
-      SchedulesComponent,
-      SchedulesCarousel,
       DropdownComponent,
       CustomTable,
       Tab,
@@ -231,12 +227,19 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       TableCell,
       NoDataBox,
       CircleButton,
-      // HeaderComponent,
-      // FooterComponent,
+      RectangleImage,
+      ArticleBlockComponent,
+      ResponsiveWidget,
+      SliderCarousel,
+      ComplexInnerHtml,
+      PaginationFooter,
+
+      HeaderComponent,
+      FooterComponent,
       // CustomTable,
       // SortDropdown,
-      // DropdownDirectoryComponent,
-      // HamburgerMenuComponent,
+      DropdownDirectoryComponent,
+      HamburgerMenuComponent,
 
       //pipes
       NaValuePipe,
@@ -247,6 +250,7 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       SanitizeStyle,
       SanitizeScript,
       StatHyphenValuePipe,
+
       // SectionFrontTopNav,
       // HeaderComponent,
       // HoverImage,
@@ -260,13 +264,11 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // SearchBoxModule,
       // SidekickWrapperAI,
       // WidgetModule,
-
       WidgetCarouselModule,
-      // Larousel,
-      // DropdownComponent,
+      Larousel,
+      NewsBox,
+      LineChartComponent,
       // Search,
-      // NewsBox,
-      // LineChartComponent,
       // SectionNameComponent,
       ArticleBlockComponent,
       DeepDiveRecommendation,
@@ -283,11 +285,10 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       // Carousel,
       // Tabs,
       // Tab,
-
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll,
+      SideScroll,
     ],
     providers: [
       SanitizeScript,
@@ -299,8 +300,8 @@ import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendat
       SchedulesService,
       GeoLocation,
       PartnerHeader,
-      // VerticalGlobalFunctions,
-      // HamburgerDeliveryService
+      VerticalGlobalFunctions,
+      HamburgerDeliveryService
     ]
 })
 export class GlobalModule { }

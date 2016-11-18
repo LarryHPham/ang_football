@@ -23,7 +23,22 @@
             (tabSelected)="scheduleTab($event)"
             (selectedKeyFilter)="filterDropdown($event)">
           </schedules>
+          <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
         </div> <!--loadBatch2-->
+
+        <div class="loadBatch3">
+          <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
+          <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <transactions-module
+            *ngIf="transactionsData"
+            [data]="transactionsData"
+            [transactionModuleFooterParams]="transactionModuleFooterParams"
+            [transactionFilter1]="transactionFilter1"
+            [dropdownKey1]="dropdownKey1"
+            (tabSwitched)="transactionsTab($event)"
+            (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
+          <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
+        </div>
       </div>
     </div>
   </section> <!--profile-container-->

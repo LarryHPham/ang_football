@@ -171,15 +171,16 @@ export class DeepDiveService {
             domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
           }
           domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
-          urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
+          // urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
 
           let carData = {
             image_url: GlobalSettings.getImageUrl(val['imagePath']),
-            title:  "<span> Today's News </span>" + val['title'],
+            title:  "<span> Today's News </span>",
+            headline: val['title'],
             keyword: val['keyword'],
             teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
             id:val['id'],
-            articlelink: urlRouteArray,
+            articlelink: 'urlRouteArray',
             date: date,
           };
           transformData.push(carData);
@@ -379,7 +380,11 @@ export class DeepDiveService {
         domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
 
         urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType:'video', eventID:val.id}];
-        val['urlRoute'] = urlRouteArray
+        val['video_thumbnail'] = val.thumbnail;
+        val['embed_url'] = val.videoLink;
+        val['teaser'] = val.description;
+        val['time_stamp'] = GlobalFunctions.sntGlobalDateFormatting(moment(val.pubDate).unix()*1000,'timeZone');
+        val['urlRoute'] = urlRouteArray;
       })
       return data;
     }

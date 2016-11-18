@@ -9,11 +9,11 @@
   <div class="row">
     <div class="col-xs-12">
       <div id="partner" *ngIf="partnerScript" [innerHTML]="partnerScript"></div> <!--TODO needs Safe pipe-->
-      <!-- <header-component *ngIf="!hideHeader" partner="{{partnerID}}"></header-component> -->
+      <header-component *ngIf="!hideHeader" [partnerID]="partnerID"></header-component>
       <div class='web-container container-fluid' [style.padding-top]="shiftContainer"> <!--TODO needs Safe pipe-->
         <router-outlet></router-outlet>
       </div>
-      <!-- <footer-component *ngIf="!hideHeader" [partner]="partnerID"></footer-component> -->
+      <footer-component *ngIf="!hideHeader" [partnerID]="partnerID"></footer-component>
     </div>
   </div>
 </div>
