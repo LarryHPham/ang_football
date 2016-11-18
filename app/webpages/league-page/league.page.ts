@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+
+//globals
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
 import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
+import { ComparisonModuleData } from '../../fe-core/modules/comparison/comparison.module';
+import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
+import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -14,12 +20,10 @@ import { BoxScoresService } from "../../services/box-scores.service";
 import { SchedulesService } from "../../services/schedules.service";
 import { StandingsService } from "../../services/standings.service";
 import { TransactionsService } from "../../services/transactions.service";
+import { ListPageService, positionMVPTabData } from '../../services/list-page.service';
+import { ComparisonStatsService } from '../../services/comparison-stats.service';
 
-//modules
-import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
-import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
 
-//components
 
 // Libraries
 declare var moment;
@@ -66,6 +70,18 @@ export class LeaguePage implements OnInit {
     private transactionModuleFooterParams: any;
     private dropdownKey1: string;
 
+    private positionParams: any;
+    private positionData: Array<positionMVPTabData>;
+    private globalMVPPosition:any;
+    private filter1:any;
+    private isFirstRun: boolean = true;
+    private listMax:number = 10;
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+    public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+    public positionNameDisplay: string;
+
+    private comparisonModuleData: ComparisonModuleData;
+
     private batchLoadIndex: number = 1;
 
     constructor(
@@ -76,7 +92,9 @@ export class LeaguePage implements OnInit {
       private _boxScores: BoxScoresService,
       private _schedulesService: SchedulesService,
       private _standingsService:StandingsService,
-      private _transactionsService: TransactionsService
+      private _transactionsService: TransactionsService,
+      private _listService: ListPageService,
+      private _comparisonService: ComparisonStatsService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -127,7 +145,21 @@ export class LeaguePage implements OnInit {
             this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.scope);
             this.transactionsActiveTab = "Transactions";
             this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
-          });
+
+            //---Batch 4 Load---//
+            this.globalMVPPosition = 'cb'; //Initial position to display in MVP
+            this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
+            this.positionData = this._listService.getMVPTabs(this.globalMVPPosition, 'module');
+            if ( this.positionData && this.positionData.length > 0 ) {
+              //default params
+              this.positionDropdown({
+                  tab: this.positionData[0],
+                  position: this.globalMVPPosition
+              });
+            };
+            this.setupComparisonData();
+
+          }, 2000);
         }
       )
     } //setupProfileData
@@ -264,6 +296,96 @@ export class LeaguePage implements OnInit {
           league: 'league'
       }
     } //getTransactionsData
+
+
+
+    private positionDropdown(event) {
+      this.positionData = this.checkToResetTabs(event);
+
+      if(event.tab != null){
+
+        var matches = this.checkMatchingTabs(event);
+
+        this.globalMVPPosition = event.position;
+        var date = new Date;
+        var season;
+        var compareDate = new Date('09 15 ' + date.getFullYear());
+        if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
+          season = date.getFullYear();
+        }
+        else if (date.getMonth() > compareDate.getMonth()) {
+          season = date.getFullYear();
+        }
+        else {
+          season = (date.getFullYear() - 1);
+        }
+        if(matches != null){
+          this.positionParams = {
+            scope:  this.scope, //TODO change to active scope
+            target: 'player',
+            position: event.position,
+            statName: matches.tabDataKey,
+            ordering: 'asc',
+            perPageCount: this.listMax,
+            pageNumber: 1,
+            season: season
+          }
+          this.positionNameDisplay = VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.positionParams.position);
+          this.getMVPService(matches, this.positionParams);
+        }
+      }
+    } //positionDropdown
+
+    //function to check if selected position in dropdown is currently active
+    private checkToResetTabs(event) {
+      let localPosition = event.position;
+
+      if ( localPosition != this.globalMVPPosition ) {
+        return this._listService.getMVPTabs(event.position, 'module');
+      } else {
+        return this.positionData;
+      } //private checkToResetTabs
+    } //checkToResetTabs
+
+    //function to check if selected position in dropdown is currently active
+    private checkMatchingTabs(event) {
+      let localPosition = event.position;
+      let listName = event.tab.tabDataKey;
+      if( event.position != this.globalMVPPosition && this.positionData != [] ){
+        this.positionData[0].isLoaded = false;
+        return this.positionData[0];
+      } else {
+        return this.positionData.filter(tab => tab.tabDataKey == listName)[0];
+      }
+    } //checkMatchingTabs
+
+    getMVPService(tab, params){
+      if( this.isFirstRun ) {
+        this.isFirstRun = false;
+        this._listService.getListModuleService(tab, params)
+            .subscribe(updatedTab => {
+                //do nothing?
+                var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+                matches[0] = updatedTab;
+                this.isFirstRun = true;
+            }, err => {
+                tab.isLoaded = true;
+                console.log('Error: Loading MVP Pitchers: ', err);
+            })
+      }
+    } //getMVPService
+
+
+
+    private setupComparisonData() {
+        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+            data => {
+                this.comparisonModuleData = data;
+            },
+            err => {
+                console.log("Error getting comparison data", err);
+            });
+    }
 
 
 

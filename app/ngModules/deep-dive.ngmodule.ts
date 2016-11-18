@@ -38,6 +38,21 @@ import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/ar
 //
 // //pipes
 import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
+
+//article page blocks
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
+import { ArticleDataService } from "../services/article-page-service";
+import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
+import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
+import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
+import { RecommendationsComponent } from "../fe-core/components/articles/recommendations/recommendations.component";
+import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
+import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
+import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
+import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
+import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
+import {HeadlineDataService} from "../services/headline-module-service";
 //
 @NgModule({
     imports:[
@@ -48,6 +63,7 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
     ],
     declarations:[
       DeepDivePage,
+      ArticlePages,
 //       SideScroll,
       SideScrollSchedule,
       ScheduleBox,
@@ -72,9 +88,20 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
       DeepDiveBlock2,
       DeepDiveBlock3,
       DeepDiveBlock4,
+      ShareLinksComponent,
+      SidekickWrapperAI,
+      ImagesMedia,
+      ArticleContentComponent,
+      RecommendationsComponent,
+      DisqusComponent,
+      TrendingComponent,
+      SidekickContainerComponent,
+      ProfileDataComponent,
+      BillboardComponent
     ],
     exports:[
       DeepDivePage,
+      ArticlePages,
       SideScrollSchedule,
       ScheduleBox,
       StackRowsComponent,
@@ -89,10 +116,22 @@ import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
       DeepDiveBlock1,
       DeepDiveBlock2,
       DeepDiveBlock3,
-      DeepDiveBlock4
+      DeepDiveBlock4,
+      ShareLinksComponent,
+      SidekickWrapperAI,
+      ImagesMedia,
+      ArticleContentComponent,
+      RecommendationsComponent,
+      DisqusComponent,
+      TrendingComponent,
+      SidekickContainerComponent,
+      ProfileDataComponent,
+      BillboardComponent
     ],
     providers: [
       DeepDiveService,
+      ArticleDataService,
+      HeadlineDataService
 //       BoxScoresService,
 //       SchedulesService
     ]
