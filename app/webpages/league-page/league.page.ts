@@ -12,6 +12,7 @@ import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
 import { ComparisonModuleData } from '../../fe-core/modules/comparison/comparison.module';
 import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
 import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
+import { HeadlineData } from "../../global/global-interface";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -20,6 +21,7 @@ import { BoxScoresService } from "../../services/box-scores.service";
 import { SchedulesService } from "../../services/schedules.service";
 import { StandingsService } from "../../services/standings.service";
 import { TransactionsService } from "../../services/transactions.service";
+import { HeadlineDataService } from "../../services/headline-module-service";
 import { ListPageService, positionMVPTabData } from '../../services/list-page.service';
 import { ComparisonStatsService } from '../../services/comparison-stats.service';
 
@@ -38,6 +40,7 @@ export class LeaguePage implements OnInit {
     public scope: string;
     public paramsub;
 
+    private headlineData:HeadlineData;
     private pageParams:SportPageParameters = {};
 
     private profileHeaderData:ProfileHeaderData;
@@ -94,6 +97,7 @@ export class LeaguePage implements OnInit {
       private _standingsService:StandingsService,
       private _transactionsService: TransactionsService,
       private _listService: ListPageService,
+      private _headlineDataService:HeadlineDataService,
       private _comparisonService: ComparisonStatsService
     ) {
       var currentUnixDate = new Date().getTime();
@@ -132,6 +136,7 @@ export class LeaguePage implements OnInit {
           this.profileData = data;
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
+          this.getLeagueHeadlines();
 
           setTimeout(() => { // defer loading everything below the fold
 
@@ -189,7 +194,19 @@ export class LeaguePage implements OnInit {
         })
     }
 
-
+    //api for League Headline Module
+    private getLeagueHeadlines() {
+        var scope = this.scope == "fbs" ? "ncaaf" : "nfl";
+        this._headlineDataService.getAiHeadlineDataLeague(null, scope)
+            .subscribe(
+                HeadlineData => {
+                    this.headlineData = HeadlineData;
+                },
+                err => {
+                    console.log("Error loading AI headline data for League Page", err);
+                }
+            )
+    }
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
