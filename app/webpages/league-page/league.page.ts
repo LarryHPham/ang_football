@@ -381,8 +381,6 @@ export class LeaguePage implements OnInit {
         this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
             data => {
                 this.comparisonModuleData = data;
-                console.log('---setupComparisonData---');
-                console.log('this.comparisonModuleData - ',this.comparisonModuleData);
             },
             err => {
                 console.log("Error getting comparison data", err);

@@ -242,9 +242,6 @@ export class ComparisonStatsService {
         team2Data
       ];
 
-      console.log('---getInitialPlayerStats---');
-      console.log('moduleData - ',moduleData);
-
       return moduleData;
     });
   }
