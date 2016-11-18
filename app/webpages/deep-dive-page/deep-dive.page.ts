@@ -73,6 +73,7 @@ export class DeepDivePage{
               this.scope = params.scope;
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
+              this.getGeoLocation();
           }
       );
       //check to see if scope is correct and redirect
@@ -99,7 +100,7 @@ export class DeepDivePage{
       //       this.getPartnerHeader();
       //       this.isPartner = "partner";
       //     }else{
-            this.getGeoLocation();
+            // this.getGeoLocation();
       //     }
       //     this.setMetaTags()
       //     this.constructorControl = false;
