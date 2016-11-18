@@ -73,6 +73,7 @@ export class DeepDivePage{
               this.scope = params.scope;
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
+              this.getGeoLocation();
           }
       );
       //check to see if scope is correct and redirect
@@ -99,7 +100,7 @@ export class DeepDivePage{
       //       this.getPartnerHeader();
       //       this.isPartner = "partner";
       //     }else{
-            this.getGeoLocation();
+            // this.getGeoLocation();
       //     }
       //     this.setMetaTags()
       //     this.constructorControl = false;
@@ -324,18 +325,18 @@ export class DeepDivePage{
     getFirstArticleStackData(){
       this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
           .subscribe(data => {
-            this.firstStackTop = [this._deepDiveData.transformToArticleStack(data)];
+            this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]]);
           },
           err => {
                 console.log("Error getting first article stack data");
           });
-      // this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
-      //     .subscribe(data => {
-      //       this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
-      //     },
-      //     err => {
-      //         console.log("Error getting first AI article batch data");
-      //     });
+      this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+          .subscribe(data => {
+            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
+          },
+          err => {
+              console.log("Error getting first AI article batch data");
+          });
     }
 
     callModules(){
