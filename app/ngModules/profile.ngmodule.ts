@@ -14,6 +14,8 @@ import { TransactionsService } from "../services/transactions.service";
 import { DraftHistoryService } from "../services/draft-history.service";
 import { ListPageService } from '../services/list-page.service';
 import { ComparisonStatsService } from '../services/comparison-stats.service';
+import { DykService } from '../services/dyk.service';
+import { FaqService } from "../services/faq.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -27,6 +29,8 @@ import { TransactionsModule } from "../fe-core/modules/transactions/transactions
 import { DraftHistoryModule } from "../fe-core/modules/draft-history/draft-history.module";
 import { MVPModule } from "../fe-core/modules/mvp/mvp.module";
 import { ComparisonModule } from "../fe-core/modules/comparison/comparison.module";
+import { DYKModule } from "../fe-core/modules/dyk/dyk.module";
+import { FAQModule } from "../fe-core/modules/faq/faq.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -62,6 +66,8 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     DraftHistoryModule,
     MVPModule,
     ComparisonModule,
+    DYKModule,
+    FAQModule,
 
     //component
     StandingsComponent,
@@ -90,6 +96,8 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     DraftHistoryModule,
     MVPModule,
     ComparisonModule,
+    DYKModule,
+    FAQModule,
 
     //component
     StandingsComponent,
@@ -112,7 +120,9 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     TransactionsService,
     DraftHistoryService,
     ListPageService,
-    ComparisonStatsService
+    ComparisonStatsService,
+    DykService,
+    FaqService
   ]
 })
 

@@ -49,7 +49,6 @@ import { RecommendationsComponent } from "../fe-core/components/articles/recomme
 import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
 import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
 import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
-import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
 import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
 import {HeadlineDataService} from "../services/headline-module-service";
@@ -90,7 +89,6 @@ import {HeadlineDataService} from "../services/headline-module-service";
       DeepDiveBlock4,
       ShareLinksComponent,
       SidekickWrapperAI,
-      ImagesMedia,
       ArticleContentComponent,
       RecommendationsComponent,
       DisqusComponent,
@@ -119,7 +117,6 @@ import {HeadlineDataService} from "../services/headline-module-service";
       DeepDiveBlock4,
       ShareLinksComponent,
       SidekickWrapperAI,
-      ImagesMedia,
       ArticleContentComponent,
       RecommendationsComponent,
       DisqusComponent,

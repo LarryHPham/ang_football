@@ -19,6 +19,8 @@ import { FooterService } from '../services/footer.service';
 import { BoxScoresService } from "../services/box-scores.service";
 import { SchedulesService } from "../services/schedules.service";
 import { GeoLocation, PartnerHeader } from "../global/global-service";
+import { ImagesService } from "../services/carousel.service";
+import { ListOfListsService } from "../services/list-of-lists.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
@@ -31,6 +33,7 @@ import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module
 import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
+import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -63,13 +66,14 @@ import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
 import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
-import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
+import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 import { Larousel } from '../fe-core/components/larousel/larousel';
 import { NewsBox } from '../fe-core/components/news-box/news-box';
 import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
-
+import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
@@ -112,6 +116,7 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       DeepDiveRecommendation,
       WidgetCarouselModule,
       BillboardModule,
+      ListOfListsModule,
 
       //components
       AppComponent,
@@ -154,8 +159,8 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       DeepDiveRecommendation,
       ResponsiveWidget,
       SideScroll,
-      // CustomTable,
-      // SortDropdown,
+      ImagesMedia,
+      ListOfListsItem,
 
       //pipes
       NaValuePipe,
@@ -168,27 +173,7 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       StatHyphenValuePipe,
       HamburgerMenuComponent,
       RectangleImage,
-      WidgetCarouselModule,
-      // SectionFrontTopNav,
-      // Search,
-      // FooterComponent,
-      // ModuleHeader,
-      // ImagesMedia,
-      // CircleButton,
-      // LoadingComponent,
-      // SearchBoxModule,
-      // SidekickWrapperAI,
-      // SectionNameComponent,
-      // InputBar,
-      // ArticleSearchBar,
-      // AboutUsPage,
-      // PrivacyPolicy,
-      // TermOfService,
-      // InfoComponent,
-      // ChatterboxModule,
-      // Carousel,
-      // Tabs,
-      // Tab,
+      WidgetCarouselModule
 
     ],
     exports: [
@@ -200,6 +185,7 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       DeepDiveRecommendation,
       WidgetCarouselModule,
       BillboardModule,
+      ListOfListsModule,
 
       //components
       CircleImage,
@@ -244,10 +230,8 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       DeepDiveRecommendation,
       ResponsiveWidget,
       SideScroll,
-
-      // CustomTable,
-      // SortDropdown,
-
+      ImagesMedia,
+      ListOfListsItem,
 
       //pipes
       NaValuePipe,
@@ -257,35 +241,7 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
-      StatHyphenValuePipe,
-
-      // SectionFrontTopNav,
-      // HeaderComponent,
-      // HoverImage,
-      // CircleImage,
-      // FooterComponent,
-      // ModuleHeader,
-      // ImagesMedia,
-      // CircleButton,
-      // LoadingComponent,
-      // SearchBoxModule,
-      // SidekickWrapperAI,
-      // WidgetModule,
-      // Search,
-      // SectionNameComponent,
-      // InputBar,
-      // ArticleSearchBar,
-      // AboutUsPage,
-      // PrivacyPolicy,
-      // TermOfService,
-      // InfoComponent,
-      // ChatterboxModule,
-      // Carousel,
-      // Tabs,
-      // Tab,
-      // Carousel,
-      // Tabs,
-      // Tab,
+      StatHyphenValuePipe
     ],
     providers: [
       SanitizeScript,
@@ -298,7 +254,9 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       GeoLocation,
       PartnerHeader,
       VerticalGlobalFunctions,
-      HamburgerDeliveryService
+      HamburgerDeliveryService,
+      ImagesService,
+      ListOfListsService
     ]
 })
 export class GlobalModule { }
