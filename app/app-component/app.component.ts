@@ -9,10 +9,12 @@ import {HeaderComponent} from "../ui-modules/header/header.component";
   templateUrl: 'app/app-component/app.component.html'
 })
 export class AppComponent {
+  public partnerID:string;
+  public hideHeader:string;
   constructor(private _activatedRoute:ActivatedRoute){
     this._activatedRoute.params.subscribe(
         (params:any) => {
-            console.log('Partner:',params);
+            this.partnerID = params.partnerID;
             GlobalSettings.storePartnerId(params.partnerID);
         }
     );

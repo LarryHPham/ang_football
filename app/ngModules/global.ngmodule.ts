@@ -61,30 +61,22 @@ import { NoDataBox } from '../fe-core/components/error/data-box/data-box.compone
 import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
-// import { ScrollerFunctions } from '../global/scroller-functions';
-// import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-// import { GlobalFunctions } from "../global/global-functions";
 // /*** COMPONENTS ***/
 
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
 // import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
 // import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
-// import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
-// import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
+import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
+import {SideScroll} from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
-// import { HeaderComponent } from "../fe-core/components/header/header.component";
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
 // import { Search } from "../fe-core/components/search/search.component";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 
-// import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
-// import { FooterComponent } from "../fe-core/components/footer/footer.component";
 import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
-// import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
-
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import { Larousel } from '../fe-core/components/larousel/larousel';
 import { NewsBox } from '../fe-core/components/news-box/news-box';
@@ -153,11 +145,11 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       ComplexInnerHtml,
       PaginationFooter,
 
-      // HeaderComponent,
-      // FooterComponent,
+      HeaderComponent,
+      FooterComponent,
       // CustomTable,
       // SortDropdown,
-      // DropdownDirectoryComponent,
+      DropdownDirectoryComponent,
 
       //pipes
       NaValuePipe,
@@ -169,9 +161,8 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       SanitizeScript,
       StatHyphenValuePipe,
       // SectionFrontTopNav,
-      // HeaderComponent,
       // Search,
-      // HamburgerMenuComponent,
+      HamburgerMenuComponent,
       RectangleImage,
       // FooterComponent,
       // ModuleHeader,
@@ -182,7 +173,6 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       // SidekickWrapperAI,
       WidgetCarouselModule,
 
-      // DropdownComponent,
 	    Larousel,
       NewsBox,
       LineChartComponent,
@@ -201,7 +191,7 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll
+      SideScroll
 
     ],
     exports: [
@@ -244,12 +234,12 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       ComplexInnerHtml,
       PaginationFooter,
 
-      // HeaderComponent,
-      // FooterComponent,
+      HeaderComponent,
+      FooterComponent,
       // CustomTable,
       // SortDropdown,
-      // DropdownDirectoryComponent,
-      // HamburgerMenuComponent,
+      DropdownDirectoryComponent,
+      HamburgerMenuComponent,
 
       //pipes
       NaValuePipe,
@@ -278,7 +268,6 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       Larousel,
       NewsBox,
       LineChartComponent,
-      // DropdownComponent,
       // Search,
       // SectionNameComponent,
       ArticleBlockComponent,
@@ -299,7 +288,7 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       // Carousel,
       // Tabs,
       // Tab,
-      // SideScroll,
+      SideScroll,
     ],
     providers: [
       SanitizeScript,
@@ -311,9 +300,8 @@ import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.
       SchedulesService,
       GeoLocation,
       PartnerHeader,
-      VerticalGlobalFunctions
-      // VerticalGlobalFunctions,
-      // HamburgerDeliveryService
+      VerticalGlobalFunctions,
+      HamburgerDeliveryService
     ]
 })
 export class GlobalModule { }
