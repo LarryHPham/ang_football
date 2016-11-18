@@ -12,7 +12,7 @@ import { FooterService } from '../../services/footer.service';
     inputs: [],
 })
 export class FooterComponent implements OnInit {
-    @Input() partner: string;
+    @Input() partnerID: string;
     public pageName: string;
     public homePageLinkName: string;
     public linkName: string;
@@ -21,7 +21,7 @@ export class FooterComponent implements OnInit {
     public _copyrightInfo: string = "<i>Images Provided By: </i><b> " + GlobalSettings.getCopyrightInfo() + "</b>";
     public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
     public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
-    public _siteGoogleUrl: string = GlobalSettings.getSiteGoogleUrl(this.partner);
+    public _siteGoogleUrl: string = GlobalSettings.getSiteGoogleUrl(this.partnerID);
     public _sportLeagueFull: string = GlobalSettings.getSportLeagueFull();
     public _lastUpdated: string;
     public advertise: string = "Advertise with ";
@@ -73,6 +73,6 @@ export class FooterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loadData(this.partner);
+        this.loadData(this.partnerID);
     }
 }
