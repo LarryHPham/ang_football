@@ -56,6 +56,7 @@ export class ArticlePages implements OnInit {
     partnerId:string;
     rawUrl:string;
     title:string;
+    type:string;
     scope:string = null;
     constructorControl:boolean = true;
     partnerID:string;
@@ -70,46 +71,47 @@ export class ArticlePages implements OnInit {
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
                 private _partnerData:PartnerHeader) {
-        //check to see if scope is correct and redirect
-        VerticalGlobalFunctions.scopeRedirect(_router, _activateRoute);
         window.scrollTo(0, 0);
-        GlobalSettings.getParentParams(_router, parentParams => {
-            if (this.constructorControl) {
-                this.scope = parentParams.scope == "nfl" ? "nfl" : "ncaa";
-                if (parentParams.partnerID != null) {
-                    this.partnerId = parentParams.partnerID;
-                }
-                this.params = this._activateRoute.params.subscribe(
-                    (param:any)=> {
-                        this.eventID = param['eventID'];
-                        this.eventType = param['eventType'];
+        this._activateRoute.params.subscribe(
+            (params:any) => {
+                if (this.constructorControl) {
+                    this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
+                    if (params.partnerID != null) {
+                        this.partnerId = params.partnerID;
                     }
-                );
+                    this.params = this._activateRoute.params.subscribe(
+                        (param:any)=> {
+                            this.eventID = param['eventID'];
+                            this.eventType = param['eventType'];
+                        }
+                    );
 
-                if (this.eventType == "story") {
-                    this.isArticle = 'false';
-                    this.getDeepDiveArticle(this.eventID);
-                    this.getPartnerHeader();
-                }
-                if (this.eventType == "video") {
-                    this.isArticle = 'false';
-                    this.getDeepDiveVideo(this.eventID);
-                    this.getPartnerHeader();
-                }
-                if (this.eventType != 'story' && this.eventType != 'video') {
-                    this.isArticle = 'true';
-                    this.scope = parentParams.scope;
-                    this.eventType = GlobalFunctions.getApiArticleType(this.eventType);
-                    if (this.eventType == "articleType=player-fantasy") {
-                        this.isFantasyReport = true;
+                    if (this.eventType == "story") {
+                        this.isArticle = 'false';
+                        this.getDeepDiveArticle(this.eventID);
+                        this.getPartnerHeader();
                     }
-                    this.getArticles();
+                    if (this.eventType == "video") {
+                        this.isArticle = 'false';
+                        this.getDeepDiveVideo(this.eventID);
+                        this.getPartnerHeader();
+                    }
+                    if (this.eventType != 'story' && this.eventType != 'video') {
+                        this.isArticle = 'true';
+                        this.scope = params.scope;
+                        this.type = this.eventType;
+                        this.eventType = GlobalFunctions.getApiArticleType(this.eventType);
+                        if (this.eventType == "articleType=player-fantasy") {
+                            this.isFantasyReport = true;
+                        }
+                        this.getArticles();
+                    }
+                    this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+                    this.rawUrl = window.location.href;
+                    this.constructorControl = false;
                 }
-                this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-                this.rawUrl = window.location.href;
-                this.constructorControl = false;
             }
-        });
+        );
     }
 
     getArticles() {
@@ -123,7 +125,7 @@ export class ArticlePages implements OnInit {
                                 this.eventID != null ? this.hasEventId = true : this.hasEventId = false;
                             }
                             this.parseLinks(Article['data'][0]['article_data']['route_config'], Article['data'][0]['article_data']['article']);
-                            var articleType = GlobalFunctions.getArticleType(this.eventType);
+                            var articleType = GlobalFunctions.getArticleType(this.type);
                             this.articleType = articleType[1];
                             this.articleSubType = articleType[2];
                             this.isSmall = window.innerWidth < 640;
@@ -334,6 +336,7 @@ export class ArticlePages implements OnInit {
     }
 
     getCarouselImages(data) {
+        console.log(data);
         var images = [];
         var imageArray = [];
         var copyArray = [];

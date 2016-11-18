@@ -51,8 +51,9 @@ import { TrendingComponent } from "../fe-core/components/articles/trending/trend
 import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
-import {ProfileDataComponent} from "../fe-core/components/articles/profile-data/profile-data.component";
-import {BillboardComponent} from "../fe-core/components/articles/billboard/billboard.component";
+import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
+import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
+import {HeadlineDataService} from "../services/headline-module-service";
 //
 @NgModule({
     imports:[
@@ -134,6 +135,7 @@ import {BillboardComponent} from "../fe-core/components/articles/billboard/billb
     providers: [
       DeepDiveService,
       ArticleDataService,
+      HeadlineDataService
 //       BoxScoresService,
 //       SchedulesService
     ]
