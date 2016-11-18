@@ -273,7 +273,7 @@ export class DeepDiveService {
       var articleArray = [];
       articles.forEach(function(val){
         let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
-        let limitDesc = val.teaser;
+        let limitDesc = val.teaser.substring(0, 360);;
         var articleStackData = {
             articleStackRoute: urlRouteArray,
             keyword: val.keyword.replace('-', ' '),

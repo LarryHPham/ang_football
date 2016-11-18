@@ -325,18 +325,18 @@ export class DeepDivePage{
     getFirstArticleStackData(){
       this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
           .subscribe(data => {
-            this.firstStackTop = [this._deepDiveData.transformToArticleStack(data)];
+            this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]]);
           },
           err => {
                 console.log("Error getting first article stack data");
           });
-      // this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
-      //     .subscribe(data => {
-      //       this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
-      //     },
-      //     err => {
-      //         console.log("Error getting first AI article batch data");
-      //     });
+      this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+          .subscribe(data => {
+            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
+          },
+          err => {
+              console.log("Error getting first AI article batch data");
+          });
     }
 
     callModules(){
