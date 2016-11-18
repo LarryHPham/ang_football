@@ -187,25 +187,6 @@ export class DeepDivePage{
       return toggleData;
     }
 
-    // getRelativePath(router:Router){
-    //   let counter = 0;
-    //   let hasParent = true;
-    //   let route = router;
-    //   for (var i = 0; hasParent == true; i++){
-    //     if(route.parent != null){
-    //       counter++;
-    //       route = route.parent;
-    //     }else{
-    //       hasParent = false;
-    //       let relPath = '';
-    //       for(var c = 1 ; c <= counter; c++){
-    //         relPath += '../';
-    //       }
-    //       return relPath;
-    //     }
-    //   }
-    // }
-
     // //api for Schedules
     // private getSideScroll(){
     //   let self = this;
