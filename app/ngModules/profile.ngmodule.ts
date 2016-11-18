@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { routing } from '../router/app.routing';
 import { FormsModule } from '@angular/forms';
 
+//ngModules
 import { GlobalModule } from './global.ngmodule';
 
 //services
@@ -11,6 +12,8 @@ import { VideoService } from "../services/video.service";
 import { StandingsService } from "../services/standings.service";
 import { TransactionsService } from "../services/transactions.service";
 import { DraftHistoryService } from "../services/draft-history.service";
+import { ListPageService } from '../services/list-page.service';
+import { ComparisonStatsService } from '../services/comparison-stats.service';
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -22,6 +25,8 @@ import { StandingsModule } from "../fe-core/modules/standings/standings.module";
 import { SchedulesModule } from "../fe-core/modules/schedules/schedules.module";
 import { TransactionsModule } from "../fe-core/modules/transactions/transactions.module";
 import { DraftHistoryModule } from "../fe-core/modules/draft-history/draft-history.module";
+import { MVPModule } from "../fe-core/modules/mvp/mvp.module";
+import { ComparisonModule } from "../fe-core/modules/comparison/comparison.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -31,10 +36,14 @@ import { TransactionsComponent } from "../fe-core/components/transactions/transa
 import { TransactionsListItem } from "../fe-core/components/transactions-list-item/transactions-list-item.component";
 import { DraftHistoryComponent } from "../fe-core/components/draft-history/draft-history.component";
 import { DetailedListItem } from "../fe-core/components/detailed-list-item/detailed-list-item.component";
-import {ArticlesModule} from "../fe-core/modules/articles/articles.module";
-import {ArticleSubComponent} from "../fe-core/components/articles/sub-article/sub-article.component";
-import {ArticleMainComponent} from "../fe-core/components/articles/main-article/main-article.component";
-import {ArticleScheduleComponent} from "../fe-core/components/articles/article-schedule/article-schedule.component";
+import { ArticlesModule } from "../fe-core/modules/articles/articles.module";
+import { ArticleSubComponent } from "../fe-core/components/articles/sub-article/sub-article.component";
+import { ArticleMainComponent } from "../fe-core/components/articles/main-article/main-article.component";
+import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
+import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.component";
+import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
+import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
+import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
 
 @NgModule({
   imports: [
@@ -56,6 +65,8 @@ import {ArticleScheduleComponent} from "../fe-core/components/articles/article-s
     SchedulesModule,
     TransactionsModule,
     DraftHistoryModule,
+    MVPModule,
+    ComparisonModule,
 
     //component
     StandingsComponent,
@@ -65,6 +76,10 @@ import {ArticleScheduleComponent} from "../fe-core/components/articles/article-s
     TransactionsListItem,
     DraftHistoryComponent,
     DetailedListItem,
+    MVPListComponent,
+    ComparisonTile,
+    ComparisonLegend,
+    ComparisonBar,
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent
@@ -82,6 +97,8 @@ import {ArticleScheduleComponent} from "../fe-core/components/articles/article-s
     SchedulesModule,
     TransactionsModule,
     DraftHistoryModule,
+    MVPModule,
+    ComparisonModule,
 
     //component
     StandingsComponent,
@@ -91,6 +108,10 @@ import {ArticleScheduleComponent} from "../fe-core/components/articles/article-s
     TransactionsListItem,
     DraftHistoryComponent,
     DetailedListItem,
+    MVPListComponent,
+    ComparisonTile,
+    ComparisonLegend,
+    ComparisonBar,
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent
@@ -101,7 +122,9 @@ import {ArticleScheduleComponent} from "../fe-core/components/articles/article-s
     VideoService,
     StandingsService,
     TransactionsService,
-    DraftHistoryService
+    DraftHistoryService,
+    ListPageService,
+    ComparisonStatsService
   ]
 })
 

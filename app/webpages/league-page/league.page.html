@@ -3,6 +3,7 @@
     <div *ngIf="profileHeaderData">
       <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
       <error-component *ngIf="hasError"></error-component>
+
       <div *ngIf="profileHeaderData">
         <div class="loadBatch1" *ngIf="batchLoadIndex >= 1">
           <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
@@ -39,7 +40,30 @@
             (tabSwitched)="transactionsTab($event)"
             (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
           <draft-history-module *ngIf="profileData" [profileData]="profileData"></draft-history-module>
-        </div>
+          <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace"></responsive-widget>
+        </div> <!--loadBatch3-->
+
+        <div class="loadBatch4">
+          <mvp-module
+            *ngIf="positionData && positionParams"
+            [collegeDivisionAbbrv]="collegeDivisionAbbrv"
+            [collegeDivisionFullAbbrv]="collegeDivisionFullAbbrv"
+            [positionNameDisplay]="positionNameDisplay"
+            [title]="'Position'"
+            [mvpData]="positionData"
+            [query]="positionParams"
+            [filter1]="filter1"
+            (tabSelectedListener)="positionDropdown($event)"
+            (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+          <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <comparison-module
+            [modelData]="comparisonModuleData"
+            [profileName]="profileHeaderData.profileName"
+            [scope]="scope"></comparison-module>
+          <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+          <div class="profile-carousel-container">
+          </div>
+        </div> <!--loadBatch4-->
       </div>
     </div>
   </section> <!--profile-container-->
