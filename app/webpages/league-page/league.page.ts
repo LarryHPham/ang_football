@@ -3,15 +3,23 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 
-// interfaces
+//interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
 import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
 
-// services
+//services
 import { ProfileHeaderService} from '../../services/profile-header.service';
 import { VideoService } from "../../services/video.service";
 import { BoxScoresService } from "../../services/box-scores.service";
 import { SchedulesService } from "../../services/schedules.service";
+import { StandingsService } from "../../services/standings.service";
+import { TransactionsService } from "../../services/transactions.service";
+
+//modules
+import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
+import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
+
+//components
 
 // Libraries
 declare var moment;
@@ -50,6 +58,14 @@ export class LeaguePage implements OnInit {
     private selectedFilter2:string;
     private isFirstNum:number = 0;
 
+    private standingsData:StandingsModuleData;
+
+    private transactionsData: TransactionModuleData;
+    private transactionsActiveTab: any;
+    private transactionFilter1: Array<any>;
+    private transactionModuleFooterParams: any;
+    private dropdownKey1: string;
+
     private batchLoadIndex: number = 1;
 
     constructor(
@@ -58,7 +74,9 @@ export class LeaguePage implements OnInit {
       private _profileService: ProfileHeaderService,
       private _videoBatchService: VideoService,
       private _boxScores: BoxScoresService,
-      private _schedulesService: SchedulesService
+      private _schedulesService: SchedulesService,
+      private _standingsService:StandingsService,
+      private _transactionsService: TransactionsService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -106,7 +124,9 @@ export class LeaguePage implements OnInit {
             this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
             //---Batch 3 Load---//
-            //this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.profile);
+            this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.scope);
+            this.transactionsActiveTab = "Transactions";
+            this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
           });
         }
       )
@@ -137,6 +157,8 @@ export class LeaguePage implements OnInit {
         })
     }
 
+
+
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
         this.isFirstNum = 0;
@@ -151,7 +173,6 @@ export class LeaguePage implements OnInit {
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     } //scheduleTab
-
     private filterDropdown(filter){
         let filterChange = false;
         if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key && this.scheduleFilter1 != null){
@@ -170,7 +191,6 @@ export class LeaguePage implements OnInit {
           this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
         }
     } //filterDropdown
-
     private getSchedulesData(status, year?, week?) {
       var limit = 5;
       if(status == 'postgame'){
@@ -195,6 +215,57 @@ export class LeaguePage implements OnInit {
         this.schedulesData = schedulesData;
       }, year, week) // isTeamProfilePage = true
     } //getSchedulesData
+
+
+
+    private standingsTabSelected(tabData: Array<any>) {
+        //only show 5 rows in the module
+        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile);
+    } //standingsTabSelected
+    private standingsFilterSelected(tabData: Array<any>) {
+      this.pageParams.scope = this.scope;
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      }, 5 , this.dateParam.profile);
+    } //standingsFilterSelected
+
+
+
+    private transactionsTab(tab) {
+        this.transactionsActiveTab = tab;
+        this.getTransactionsData();
+    } //transactionsTab
+    private transactionsFilterDropdown(filter) {
+      if ( this.transactionsActiveTab == null ) {
+        this.transactionsActiveTab = this.transactionsData[0];
+      }
+      this.dropdownKey1 = filter;
+      this.getTransactionsData();
+    } //transactionsFilterDropdown
+    private getTransactionsData() {
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
+      .subscribe(
+          transactionsData => {
+            if ( this.transactionFilter1 == undefined ) {
+              this.transactionFilter1 = transactionsData.yearArray;
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
+              }
+            }
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
+          },
+          err => {
+          console.log('Error: transactionsData API: ', err);
+          }
+      );
+
+      // pass transaction page route params to module filter, so set module footer route
+      this.transactionModuleFooterParams = {
+          scope: this.scope,
+          league: 'league'
+      }
+    } //getTransactionsData
+
+
 
     // function to lazy load page sections
     private onScroll(event) {
