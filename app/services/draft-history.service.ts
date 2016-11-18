@@ -55,31 +55,14 @@ export interface PlayerDraftData {
   playerCollegeNickname?:string;
 }
 
+
+
 @Injectable()
 export class DraftHistoryService {
-
-  getDraftHistoryTabs(profileData: IProfileData): DraftHistoryTab[] {
-    // console.log("interface - getDraftHistoryTabs")
-    return [];
-  }
-
-  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string, sortBy: string): Observable<DraftHistoryData> {
-    // console.log("interface - getDraftHistoryService")
-    return null;
-  }
-
-}
-
-@Injectable()
-export class MLBDraftHistoryService extends DraftHistoryService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  constructor(public http: Http){
-    super();
-  }
+  constructor(public http: Http){}
 
   getDraftHistoryTabs(profileData: IProfileData): DraftHistoryTab[] {
-    // console.log("concrete - getDraftHistoryTabs")
-
     let errorMessage; // {0} is for the season name
     // if ( profileData.isLegit && year == currentYear ) {
       if ( profileData.profileType == "team" ) {
@@ -147,8 +130,6 @@ export class MLBDraftHistoryService extends DraftHistoryService {
           if(data.data.length > 1) {
             // the module should only have 2 data points displaying
             data.data = data.data.slice(0,2);
-            console.log('---getDraftHistoryService---');
-            console.log(data);
           }
         }
         var allCarouselItems = this.carDraftHistory(data.data, tab.errorMessage, type);
