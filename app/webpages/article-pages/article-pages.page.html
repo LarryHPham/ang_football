@@ -70,7 +70,8 @@
                                           [currentArticleId]="eventID"
                                           [eventType]="eventType"
                                           [geoLocation]="geoLocation"
-                                          [trendingData]="trendingData">
+                                          [trendingData]="trendingData"
+                                          (window:scroll)="trendingScroll($event)">
                       </trending-component>
                   </div>
 

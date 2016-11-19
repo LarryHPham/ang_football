@@ -612,7 +612,6 @@ export class ArticlePages implements OnInit {
                      if (!this.hasRun) {
                          this.hasRun = true;
                          this.trendingData = this.transformTrending(data['data'], currentArticleId);
-                         console.log(this.trendingData);
                          if (this.trendingLength <= 100) {
                              this.trendingLength = this.trendingLength + 10;
                          }
@@ -677,13 +676,13 @@ export class ArticlePages implements OnInit {
         return articles;
     }
 
-    //private trendingScroll(event) {
-    //    this.hasRun = false;
-    //    if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
-    //        this.batch = this.batch + 1;
-    //        this.getTrendingArticles(this.trendingLength, this.eventID);
-    //    }
-    //}
+    private trendingScroll(event) {
+        this.hasRun = false;
+        if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
+            this.batch = this.batch + 1;
+            this.getTrendingArticles(this.trendingLength, this.eventID);
+        }
+    }
 
 
     getImages(imageList) {
