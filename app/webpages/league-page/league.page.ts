@@ -519,7 +519,6 @@ export class LeaguePage implements OnInit {
 
 
     private getTwitterService(profileType, partnerID, scope) {
-      console.log('---getTwitterService---');
       this.scope = scope;
       this.partnerID = partnerID;
       this.isProfilePage = true;

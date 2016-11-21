@@ -42,7 +42,7 @@ import { SchedulesComponent } from "../fe-core/components/schedules/schedules.co
 import { SchedulesCarousel } from "../fe-core/components/carousels/schedules-carousel/schedules-carousel.component";
 import { TransactionsComponent } from "../fe-core/components/transactions/transactions.component";
 import { TransactionsListItem } from "../fe-core/components/transactions-list-item/transactions-list-item.component";
-import { DraftHistoryComponent } from "../fe-core/components/draft-history/draft-history.component";
+import { DraftHistoryComponent } from "../ui-modules/draft-history/draft-history.component";
 import { DetailedListItem } from "../fe-core/components/detailed-list-item/detailed-list-item.component";
 import { ArticlesModule } from "../fe-core/modules/articles/articles.module";
 import { ArticleSubComponent } from "../fe-core/components/articles/sub-article/sub-article.component";
