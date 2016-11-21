@@ -62,9 +62,29 @@
             [scope]="scope"></comparison-module>
           <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
           <div class="profile-carousel-container">
+            <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
           </div>
         </div> <!--loadBatch4-->
-      </div>
+
+        <div class="loadBatch5">
+          <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
+          <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
+          <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" ></responsive-widget>
+          <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType"></list-of-lists>
+        </div> <!--loadBatch5-->
+
+        <div class="loadBatch6">
+          <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
+          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
+          <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
+          <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+          <!--Like Us On FB Module, only display if not on partner page-->
+          <section *ngIf="!partnerID">
+            <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
+          </section>
+        </div> <!--loadBatch6-->
     </div>
   </section> <!--profile-container-->
 </sidekick-wrapper>

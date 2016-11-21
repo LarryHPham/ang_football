@@ -12,7 +12,10 @@ import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
 import { ComparisonModuleData } from '../../fe-core/modules/comparison/comparison.module';
 import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
 import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
+import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
+import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { HeadlineData } from "../../global/global-interface";
+import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -24,8 +27,12 @@ import { TransactionsService } from "../../services/transactions.service";
 import { HeadlineDataService } from "../../services/headline-module-service";
 import { ListPageService, positionMVPTabData } from '../../services/list-page.service';
 import { ComparisonStatsService } from '../../services/comparison-stats.service';
-
-
+import { ImagesService } from "../../services/carousel.service";
+import { DykService } from '../../services/dyk.service';
+import { FaqService } from '../../services/faq.service';
+import { ListOfListsService } from "../../services/list-of-lists.service";
+import { NewsService } from "../../services/news.service";
+import { TwitterService } from "../../services/twitter.service";
 
 // Libraries
 declare var moment;
@@ -85,6 +92,20 @@ export class LeaguePage implements OnInit {
 
     private comparisonModuleData: ComparisonModuleData;
 
+    private imageData:Array<any>;
+    private copyright:any;
+    private imageTitle:any;
+
+    private dykData: Array<dykModuleData>;
+
+    private faqData: Array<faqModuleData>;
+
+    private listOfListsData:Object; // paginated data to be displayed
+
+    private newsDataArray: Array<Object>;
+
+    private twitterData: Array<twitterModuleData>;
+
     private batchLoadIndex: number = 1;
 
     constructor(
@@ -97,8 +118,14 @@ export class LeaguePage implements OnInit {
       private _standingsService:StandingsService,
       private _transactionsService: TransactionsService,
       private _listService: ListPageService,
+      private _comparisonService: ComparisonStatsService,
+      private _imagesService: ImagesService,
+      private _dykService: DykService,
+      private _faqService: FaqService,
+      private _lolService: ListOfListsService,
       private _headlineDataService:HeadlineDataService,
-      private _comparisonService: ComparisonStatsService
+      private _newsService: NewsService,
+      private _twitterService: TwitterService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -163,6 +190,16 @@ export class LeaguePage implements OnInit {
               });
             };
             this.setupComparisonData();
+            this.getImages(this.imageData);
+
+            //---Batch 5 Load---//
+            this.getDykService(this.profileType);
+            this.getFaqService(this.profileType);
+            this.setupListOfListsModule();
+
+            //---Batch 6 Load---//
+            this.getNewsService();
+            this.getTwitterService(this.profileType, partnerID, scope);
 
           }, 2000);
         }
@@ -380,29 +417,122 @@ export class LeaguePage implements OnInit {
       if( this.isFirstRun ) {
         this.isFirstRun = false;
         this._listService.getListModuleService(tab, params)
-            .subscribe(updatedTab => {
-                //do nothing?
-                var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
-                matches[0] = updatedTab;
-                this.isFirstRun = true;
-            }, err => {
-                tab.isLoaded = true;
-                console.log('Error: Loading MVP Pitchers: ', err);
-            })
+          .subscribe(updatedTab => {
+            //do nothing?
+            var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
+            matches[0] = updatedTab;
+            this.isFirstRun = true;
+          }, err => {
+            tab.isLoaded = true;
+            console.log('Error: Loading MVP Pitchers: ', err);
+          })
       }
     } //getMVPService
 
 
 
     private setupComparisonData() {
-        this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
-            data => {
-                this.comparisonModuleData = data;
-            },
-            err => {
-                console.log("Error getting comparison data", err);
-            });
-    }
+      this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+        data => {
+          this.comparisonModuleData = data;
+        },
+        err => {
+          console.log("Error getting comparison data", err);
+        });
+    } //setupComparisonData
+
+
+
+    private getImages(imageData) {
+      this._imagesService.getImages(this.profileType, this.scope)
+        .subscribe(data => {
+          return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
+        },
+        err => {
+          console.log("Error getting image data" + err);
+        });
+    } //getImages
+
+
+
+    private getDykService(profileType) {
+      this._dykService.getDykService(this.profileType, this.scope)
+        .subscribe(data => {
+          this.dykData = data;
+        },
+        err => {
+          console.log("Error getting did you know data");
+        });
+    } //getDykService
+
+
+
+    private getFaqService(profileType) {
+      this._faqService.getFaqService(this.profileType, this.scope)
+        .subscribe(data => {
+            this.faqData = data;
+        },
+        err => {
+            console.log("Error getting faq data for mlb", err);
+        });
+   } //getFaqService
+
+
+
+    private setupListOfListsModule() {
+      let params = {
+        //  targetId : 11621,
+        limit : 4,
+        pageNum : 1,
+        scope: this.scope
+      }
+      this._lolService.getListOfListsService(params, "league", "module")
+        .subscribe(
+          listOfListsData => {
+            this.listOfListsData = listOfListsData.listData;
+            // this.listOfListsData["id"] = this.pageParams.teamId;
+            // this.listOfListsData["type"] = "league";
+          },
+          err => {
+            console.log('Error: listOfListsData API: ', err);
+          }
+      );
+    } //setupListOfListsModule
+
+
+
+    private getNewsService() {
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id: ''
+      }
+      this._newsService.getNewsService(this.scope,params, "league", "module")
+        .subscribe(data => {
+          this.newsDataArray = data.news;
+        },
+        err => {
+          console.log("Error getting news data");
+      });
+    } //getNewsService
+
+
+
+    private getTwitterService(profileType, partnerID, scope) {
+      console.log('---getTwitterService---');
+      this.scope = scope;
+      this.partnerID = partnerID;
+      this.isProfilePage = true;
+      this.profileType = 'league';
+
+      this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
+        .subscribe(data => {
+          this.twitterData = data;
+        },
+        err => {
+          console.log("Error getting twitter data");
+        });
+    } //getTwitterService
 
 
 

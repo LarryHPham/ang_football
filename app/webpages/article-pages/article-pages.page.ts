@@ -27,8 +27,11 @@ declare var moment;
 
 export class ArticlePages implements OnInit {
     public params;
+    public trendingData:any;
+    public trendingLength:number = 10;
     article:Article;
     articleData:any;
+    throttle:any;
     copyright:Array<any>;
     images:Array<any>;
     imageData:Array<any>;
@@ -42,6 +45,7 @@ export class ArticlePages implements OnInit {
     error:boolean = false;
     hasEventId:boolean = true;
     hasImages:boolean = false;
+    hasRun:boolean = false;
     isFantasyReport:boolean = false;
     isSmall:boolean = false;
     teamId:number;
@@ -62,6 +66,8 @@ export class ArticlePages implements OnInit {
     partnerID:string;
     geoLocation:string;
     iframeUrl:any;
+    batch:number = 1;
+    isScroll:number = 0;
 
     constructor(private _activateRoute:ActivatedRoute,
                 private _router:Router,
@@ -70,7 +76,8 @@ export class ArticlePages implements OnInit {
                 //private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
-                private _partnerData:PartnerHeader) {
+                private _partnerData:PartnerHeader,
+                private _headlineDataService:HeadlineDataService) {
         window.scrollTo(0, 0);
         this._activateRoute.params.subscribe(
             (params:any) => {
@@ -149,6 +156,7 @@ export class ArticlePages implements OnInit {
                             if (this.hasEventId) {
                                 this.getRecommendedArticles();
                             }
+                            this.getTrendingArticles(10, this.eventID);
                         }
                     //}
                     //catch (e) {
@@ -596,6 +604,86 @@ export class ArticlePages implements OnInit {
             return links;
         }
     }
+
+    private getTrendingArticles(count, currentArticleId) {
+         if (this.eventType != "story" && this.eventType != "video") {
+             this._headlineDataService.getAiTrendingData(count, this.scope).subscribe(
+                 data => {
+                     if (!this.hasRun) {
+                         this.hasRun = true;
+                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
+                         if (this.trendingLength <= 100) {
+                             this.trendingLength = this.trendingLength + 10;
+                         }
+                     }
+                 }
+             )
+         } else {
+             this._deepDiveService.getDeepDiveBatchService(this.scope, count, 1, this.geoLocation).subscribe(
+                 data => {
+                     if (!this.hasRun) {
+                         this.hasRun = true;
+                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
+                         if (this.trendingLength <= 100) {
+                             this.trendingLength = this.trendingLength + 10;
+                         }
+                     }
+                 }
+             )
+         }
+    }
+
+    transformTrending(data, currentArticleId) {
+        var articles = [];
+        var self = this;
+        data.forEach(function (val, index) {
+            var articleData;
+            if (self.eventType != "story" && self.eventType != "video") {
+                if (val.event_id != currentArticleId) {
+                    var date = "TODO";
+                    val["date"] = date;
+                    articleData = {
+                        title: val.title,
+                        date: val["date"],
+                        content: val.teaser,
+                        eventId: val.event_id,
+                        eventType: "pregame-report",
+                        image: GlobalSettings.getImageUrl(val.image_url),
+                        url: "TODO",
+                        rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/pregame-report/" + val.event_id
+                    };
+                }
+            } else {
+                if (val.id != currentArticleId) {
+                    var date = "TODO";
+                    val["date"] = date;
+                    articleData = {
+                        title: val.title,
+                        date: val["date"],
+                        content: val.teaser,
+                        eventId: val.id,
+                        eventType: "story",
+                        image: GlobalSettings.getImageUrl(val.imagePath),
+                        url: "TODO",
+                        rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
+                    };
+                }
+            }
+            if (articleData != null) {
+                articles.push(articleData);
+            }
+        });
+        return articles;
+    }
+
+    private trendingScroll(event) {
+        this.hasRun = false;
+        if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
+            this.batch = this.batch + 1;
+            this.getTrendingArticles(this.trendingLength, this.eventID);
+        }
+    }
+
 
     getImages(imageList) {
         imageList.sort(function () {

@@ -69,8 +69,9 @@
                       <trending-component [scope]="scope"
                                           [currentArticleId]="eventID"
                                           [eventType]="eventType"
-                                          [geoLocation]="geoLocation">
-
+                                          [geoLocation]="geoLocation"
+                                          [trendingData]="trendingData"
+                                          (window:scroll)="trendingScroll($event)">
                       </trending-component>
                   </div>
 
