@@ -57,6 +57,7 @@ import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/h
 import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
 import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 import { GameArticle } from "../fe-core/components/game-article/game-article.component";
+import { BoxArticleComponent } from "../fe-core/components/box-article/box-article.component";
 import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
 import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
 import { CustomTable } from "../fe-core/components/custom-table/custom-table.component";
@@ -78,7 +79,6 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
-// import { CustomTable } from '../fe-core/components/custom-table/custom-table.component';
 // import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
@@ -134,6 +134,7 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       CalendarCarousel,
       GameInfo,
       GameArticle,
+      BoxArticleComponent,
       DatePicker,
       ResponsiveWidget,
       DropdownComponent,
@@ -204,6 +205,7 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       CalendarCarousel,
       GameInfo,
       GameArticle,
+      BoxArticleComponent,
       DatePicker,
       ResponsiveWidget,
       DropdownComponent,

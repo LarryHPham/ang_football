@@ -26,14 +26,7 @@ import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.
 import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
 import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';
 import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/article-stack.module';
-// import { VideoStackComponent } from '../fe-core/components/video-stack/video-stack.component';
-//
-// //Box Scores
-// import { BoxScoresModule } from '../fe-core/modules/box-scores/box-scores.module';
-// import { GameInfo } from '../fe-core/components/game-info/game-info.component';
-// import { CalendarCarousel } from '../fe-core/components/carousels/calendar/calendar-carousel.component';
-// import { DatePicker } from '../fe-core/components/date-picker/date-picker.component';
-// import { GameArticle } from '../fe-core/components/game-article/game-article.component';
+
 import { DeepDiveVideoModule } from '../fe-core/modules/video-deep-dive/video-deep-dive.module';
 //
 // //pipes
@@ -63,7 +56,6 @@ import { HeadlineDataService } from "../services/headline-module-service";
     declarations:[
       DeepDivePage,
       ArticlePages,
-//       SideScroll,
       SideScrollSchedule,
       ScheduleBox,
       StackRowsComponent,
@@ -71,14 +63,6 @@ import { HeadlineDataService } from "../services/headline-module-service";
       ArticleStackModule,
       ArticleStack1Module,
       ArticleStack2Module,
-//       VideoStackComponent,
-//       BoxScoresModule,
-//       StatHyphenValuePipe,
-//       BoxScoresModule,
-//       DatePicker,
-//       GameInfo,
-//       GameArticle,
-//       CalendarCarousel,
       DeepDiveVideoModule,
 
       // CarouselDiveModule,
@@ -129,8 +113,6 @@ import { HeadlineDataService } from "../services/headline-module-service";
       DeepDiveService,
       ArticleDataService,
       HeadlineDataService,
-//       BoxScoresService,
-//       SchedulesService
     ]
 })
 
