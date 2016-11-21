@@ -211,7 +211,7 @@ export class ProfileHeaderService {
           {
             label: "Team",
             value: headerData.teamFullName,
-            routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
+            routerLink: VerticalGlobalFunctions.formatTeamRoute(this.scope, headerData.teamFullName, headerData.teamId.toString())
           },
           {
             label: "Jersey Number",

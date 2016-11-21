@@ -32,13 +32,22 @@ export class VerticalGlobalFunctions {
    * @param {teamId} teamId - team ID the required field needed to successfully navigate to team profile
    * @returns the teamName => boston-red-sox,  teamId => ##, routeName => 'Team-page'
    */
-  static formatTeamRoute(teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
+  static formatTeamRoute(scope: string, teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
     var teamRoute: Array<any>;
 
     // var relPath = GlobalSettings.getRouteFullParams().relPath;
     let domainHostName;
     let urlRouteArray;
     let domainParams = {}
+
+
+    if(typeof teamName != 'undefined' && teamName != null){
+      teamName = this.RegExpSpecialCharacters(teamName);
+      teamName = GlobalFunctions.toLowerKebab(teamName);
+      teamRoute = ['/'+scope, 'team', teamName, teamId];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+    } else{
+      teamRoute = null;
+    }
 
     // if(!ignoreRelPath){
     //   domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
