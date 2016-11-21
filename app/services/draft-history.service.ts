@@ -132,6 +132,7 @@ export class DraftHistoryService {
             data.data = data.data.slice(0,2);
           }
         }
+
         var allCarouselItems = this.carDraftHistory(data.data, tab.errorMessage, type);
         var allDetailItems = this.detailedData(data.data, sortBy);
         var totalPages = allDetailItems ? Math.ceil(allDetailItems.length / itemsOnPage) : 0;
