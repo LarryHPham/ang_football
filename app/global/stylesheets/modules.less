@@ -73,13 +73,21 @@
     padding: 0 15px 0 15px;
   }
 }
-@media @desktop-m{
+
+.widget-page-wrapper {
+  > .col-xs-8, > .col-xs-4 {
+    flex: none;
+  }
+}
+@media @desktop-m {
   .widget-page-wrapper {
     > .col-xs-8 {
       width: ~"calc(100% - 345px)";
       margin-left: 15px;
+      flex: none;
     }
     > .col-xs-4 {
+      flex: none;
       display: block;
       width: 300px;
       margin-top: 20px;
