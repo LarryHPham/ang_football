@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {ScheduleBox} from '../../fe-core/components/schedule-box/schedule-box.component';
-import {SideScroll} from '../../fe-core/components/carousels/side-scroll/side-scroll.component';
+// import {ScheduleBox} from '../../fe-core/components/schedule-box/schedule-box.component';
+// import {SideScroll} from '../../fe-core/components/carousels/side-scroll/side-scroll.component';
 import {GlobalSettings} from '../../global/global-settings';
 
 @Component({
@@ -14,6 +14,7 @@ export class SideScrollSchedule{
   @Input() scrollLength: any;
   @Input() scope:string;
   @Input() scopeDisplayed:string;
+  @Input() topScope: any;
   @Output() changeScope = new EventEmitter();
 
   public count = new EventEmitter();
@@ -21,10 +22,6 @@ export class SideScrollSchedule{
   _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   _collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   _collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
-
-  ngOnChanges(){
-    console.log(this.sideScrollData);
-  }
 
   counter(event){
     this.curCount = event;

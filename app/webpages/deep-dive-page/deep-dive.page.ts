@@ -67,7 +67,6 @@ export class DeepDivePage{
     ){
       this._activatedRoute.params.subscribe(
           (params:any) => {
-              console.log('Partner:',params);
               this.scope = params.scope;
               this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
@@ -117,14 +116,16 @@ export class DeepDivePage{
           case 'nfl':
             this.scopeDisplayed = {
                 scope:'Football',
-                text: 'Upcoming NFL Games'
+                text: 'Upcoming NFL Games',
+                topScope: 'football'
             };
           break;
           case 'fbs':
           case 'ncaaf':
             this.scopeDisplayed = {
                 scope:'Football',
-                text: 'Upcoming NCAAF Games'
+                text: 'Upcoming NCAAF Games',
+                topScope: 'football'
             }
           break;
           case 'all':
@@ -132,13 +133,15 @@ export class DeepDivePage{
           case 'home':
             this.scopeDisplayed = {
                 scope:'Football',
-                text: null
+                text: null,
+                topScope: 'football'
             };
           break;
           default:
             this.scopeDisplayed = {
                 scope:'Football',
-                text: 'Upcoming NFL Games'
+                text: 'Upcoming NFL Games',
+                topScope: null
             }
           break;
         }
@@ -193,7 +196,6 @@ export class DeepDivePage{
         this.scope = this.scope.toLowerCase();
         let changeScope = this.scope == 'ncaaf'?'fbs':this.scope;
         this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-          console.log(sideScrollData);
           if(this.sideScrollData == null){
             this.sideScrollData = sideScrollData;
           }

@@ -34,6 +34,7 @@ import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/ar
 // import { CalendarCarousel } from '../fe-core/components/carousels/calendar/calendar-carousel.component';
 // import { DatePicker } from '../fe-core/components/date-picker/date-picker.component';
 // import { GameArticle } from '../fe-core/components/game-article/game-article.component';
+import { DeepDiveVideoModule } from '../fe-core/modules/video-deep-dive/video-deep-dive.module';
 //
 // //pipes
 import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
@@ -78,7 +79,7 @@ import { HeadlineDataService } from "../services/headline-module-service";
 //       GameInfo,
 //       GameArticle,
 //       CalendarCarousel,
-//       DeepDiveVideoModule,
+      DeepDiveVideoModule,
 
       // CarouselDiveModule,
       TileStackModule,
@@ -107,7 +108,7 @@ import { HeadlineDataService } from "../services/headline-module-service";
       ArticleStack1Module,
       ArticleStack2Module,
 //       VideoStackComponent,
-//       DeepDiveVideoModule,
+      DeepDiveVideoModule,
 //       CarouselDiveModule,
       TileStackModule,
       DeepDiveBlock1,

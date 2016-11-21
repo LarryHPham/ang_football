@@ -18,7 +18,7 @@
   </div>
   <side-scroll *ngIf="sideScrollData" (carouselCount)="counter($event)" [current]="curCount" [maxLength]="scrollLength" [data]="sideScrollData">
     <template ngFor let-item [ngForOf]="sideScrollData">
-      <schedule-box *ngIf="item" [boxData]="item"></schedule-box>
+      <schedule-box *ngIf="item" [topScope]="topScope" [scope]="scope" [boxData]="item"></schedule-box>
     </template>
   </side-scroll>
 </section>
