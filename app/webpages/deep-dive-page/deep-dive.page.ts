@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
-import {Title} from '@angular/platform-browser';
 import { DeepDiveService } from '../../services/deep-dive.service';
-// import {SchedulesService} from '../../services/schedules.service';
+import { SchedulesService } from '../../services/schedules.service';
 import { PartnerHeader } from "../../global/global-service";
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
@@ -58,9 +57,8 @@ export class DeepDivePage{
 
     constructor(
       private _activatedRoute:ActivatedRoute,
-      private _title: Title,
       private _deepDiveData: DeepDiveService,
-      // private _schedulesService:SchedulesService,
+      private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
       private _partnerData: PartnerHeader,
       // private _seoService: SeoService,
@@ -69,8 +67,8 @@ export class DeepDivePage{
     ){
       this._activatedRoute.params.subscribe(
           (params:any) => {
-              console.log('Partner:',params);
               this.scope = params.scope;
+              this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
               this.getGeoLocation();
@@ -83,7 +81,6 @@ export class DeepDivePage{
       //   if(this.constructorControl){
       //     this.partnerID = parentParams.partnerID;
       //     this.scope = parentParams.scope;
-      //     this.scopeNameDisplay(this.scope);
       //     this.changeScopeVar = this.scope;
       //     this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
       //     var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
@@ -119,14 +116,16 @@ export class DeepDivePage{
           case 'nfl':
             this.scopeDisplayed = {
                 scope:'Football',
-                text: 'Upcoming NFL Games'
+                text: 'Upcoming NFL Games',
+                topScope: 'football'
             };
           break;
           case 'fbs':
           case 'ncaaf':
             this.scopeDisplayed = {
                 scope:'Football',
-                text: 'Upcoming NCAAF Games'
+                text: 'Upcoming NCAAF Games',
+                topScope: 'football'
             }
           break;
           case 'all':
@@ -134,13 +133,15 @@ export class DeepDivePage{
           case 'home':
             this.scopeDisplayed = {
                 scope:'Football',
-                text: null
+                text: null,
+                topScope: 'football'
             };
           break;
           default:
             this.scopeDisplayed = {
                 scope:'Football',
-                text: 'Upcoming NFL Games'
+                text: 'Upcoming NFL Games',
+                topScope: null
             }
           break;
         }
@@ -187,50 +188,31 @@ export class DeepDivePage{
       return toggleData;
     }
 
-    // getRelativePath(router:Router){
-    //   let counter = 0;
-    //   let hasParent = true;
-    //   let route = router;
-    //   for (var i = 0; hasParent == true; i++){
-    //     if(route.parent != null){
-    //       counter++;
-    //       route = route.parent;
-    //     }else{
-    //       hasParent = false;
-    //       let relPath = '';
-    //       for(var c = 1 ; c <= counter; c++){
-    //         relPath += '../';
-    //       }
-    //       return relPath;
-    //     }
-    //   }
-    // }
-
-    // //api for Schedules
-    // private getSideScroll(){
-    //   let self = this;
-    //   if(this.safeCall && this.scope != 'home'){
-    //     this.safeCall = false;
-    //     this.changeScopeVar = this.changeScopeVar.toLowerCase();
-    //     let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
-    //     this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-    //       if(this.sideScrollData == null){
-    //         this.sideScrollData = sideScrollData;
-    //       }
-    //       else{
-    //         sideScrollData.forEach(function(val,i){
-    //           self.sideScrollData.push(val);
-    //         })
-    //       }
-    //       this.safeCall = true;
-    //       this.callCount++;
-    //       this.scrollLength = this.sideScrollData.length;
-    //     }, null, null)
-    //   }
-    // }
+    //api for Schedules
+    private getSideScroll(){
+      let self = this;
+      if(this.safeCall && this.scope != 'home'){
+        this.safeCall = false;
+        this.scope = this.scope.toLowerCase();
+        let changeScope = this.scope == 'ncaaf'?'fbs':this.scope;
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+          if(this.sideScrollData == null){
+            this.sideScrollData = sideScrollData;
+          }
+          else{
+            sideScrollData.forEach(function(val,i){
+              self.sideScrollData.push(val);
+            })
+          }
+          this.safeCall = true;
+          this.callCount++;
+          this.scrollLength = this.sideScrollData.length;
+        }, null, null)
+      }
+    }
 
     changeScope($event) {
-      // this.scopeNameDisplay($event);
+      this.scopeNameDisplay($event);
       // var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
       // let relPath = this.getRelativePath(this._router);
       // if(partnerHome){
@@ -254,7 +236,7 @@ export class DeepDivePage{
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
-      //  this.getSideScroll();
+       this.getSideScroll();
       }
     }
 
@@ -342,7 +324,7 @@ export class DeepDivePage{
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
-      // this.getSideScroll();
+      this.getSideScroll();
       this.getFirstArticleStackData();
     }
 

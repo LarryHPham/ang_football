@@ -8,10 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { DeepDiveService } from '../services/deep-dive.service';
 // import { BoxScoresService } from '../services/box-scores.service';
 
-import { SideScrollSchedule } from '../fe-core/modules/side-scroll-schedules/side-scroll-schedules.module';
+import { SideScrollSchedule } from '../ui-modules/side-scroll-schedules/side-scroll-schedules.module';
 import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.component';
 import { SideScroll } from '../fe-core/components/side-scroll/side-scroll.component';
-// import { SchedulesService } from '../services/schedules.service';
 
 //deep-dive blocks
 import { CarouselDiveModule } from '../fe-core/modules/carousel-dive/carousel-dive.module';
@@ -35,6 +34,7 @@ import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/ar
 // import { CalendarCarousel } from '../fe-core/components/carousels/calendar/calendar-carousel.component';
 // import { DatePicker } from '../fe-core/components/date-picker/date-picker.component';
 // import { GameArticle } from '../fe-core/components/game-article/game-article.component';
+import { DeepDiveVideoModule } from '../fe-core/modules/video-deep-dive/video-deep-dive.module';
 //
 // //pipes
 import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
@@ -79,7 +79,7 @@ import { HeadlineDataService } from "../services/headline-module-service";
 //       GameInfo,
 //       GameArticle,
 //       CalendarCarousel,
-//       DeepDiveVideoModule,
+      DeepDiveVideoModule,
 
       // CarouselDiveModule,
       TileStackModule,
@@ -108,7 +108,7 @@ import { HeadlineDataService } from "../services/headline-module-service";
       ArticleStack1Module,
       ArticleStack2Module,
 //       VideoStackComponent,
-//       DeepDiveVideoModule,
+      DeepDiveVideoModule,
 //       CarouselDiveModule,
       TileStackModule,
       DeepDiveBlock1,
