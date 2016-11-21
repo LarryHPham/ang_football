@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
-import {Title} from '@angular/platform-browser';
 import { DeepDiveService } from '../../services/deep-dive.service';
-// import {SchedulesService} from '../../services/schedules.service';
+import { SchedulesService } from '../../services/schedules.service';
 import { PartnerHeader } from "../../global/global-service";
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
@@ -58,9 +57,8 @@ export class DeepDivePage{
 
     constructor(
       private _activatedRoute:ActivatedRoute,
-      private _title: Title,
       private _deepDiveData: DeepDiveService,
-      // private _schedulesService:SchedulesService,
+      private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
       private _partnerData: PartnerHeader,
       // private _seoService: SeoService,
@@ -71,6 +69,7 @@ export class DeepDivePage{
           (params:any) => {
               console.log('Partner:',params);
               this.scope = params.scope;
+              this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
               this.getGeoLocation();
@@ -83,7 +82,6 @@ export class DeepDivePage{
       //   if(this.constructorControl){
       //     this.partnerID = parentParams.partnerID;
       //     this.scope = parentParams.scope;
-      //     this.scopeNameDisplay(this.scope);
       //     this.changeScopeVar = this.scope;
       //     this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
       //     var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
@@ -187,31 +185,32 @@ export class DeepDivePage{
       return toggleData;
     }
 
-    // //api for Schedules
-    // private getSideScroll(){
-    //   let self = this;
-    //   if(this.safeCall && this.scope != 'home'){
-    //     this.safeCall = false;
-    //     this.changeScopeVar = this.changeScopeVar.toLowerCase();
-    //     let changeScope = this.changeScopeVar == 'ncaaf'?'fbs':this.changeScopeVar;
-    //     this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-    //       if(this.sideScrollData == null){
-    //         this.sideScrollData = sideScrollData;
-    //       }
-    //       else{
-    //         sideScrollData.forEach(function(val,i){
-    //           self.sideScrollData.push(val);
-    //         })
-    //       }
-    //       this.safeCall = true;
-    //       this.callCount++;
-    //       this.scrollLength = this.sideScrollData.length;
-    //     }, null, null)
-    //   }
-    // }
+    //api for Schedules
+    private getSideScroll(){
+      let self = this;
+      if(this.safeCall && this.scope != 'home'){
+        this.safeCall = false;
+        this.scope = this.scope.toLowerCase();
+        let changeScope = this.scope == 'ncaaf'?'fbs':this.scope;
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+          console.log(sideScrollData);
+          if(this.sideScrollData == null){
+            this.sideScrollData = sideScrollData;
+          }
+          else{
+            sideScrollData.forEach(function(val,i){
+              self.sideScrollData.push(val);
+            })
+          }
+          this.safeCall = true;
+          this.callCount++;
+          this.scrollLength = this.sideScrollData.length;
+        }, null, null)
+      }
+    }
 
     changeScope($event) {
-      // this.scopeNameDisplay($event);
+      this.scopeNameDisplay($event);
       // var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
       // let relPath = this.getRelativePath(this._router);
       // if(partnerHome){
@@ -235,7 +234,7 @@ export class DeepDivePage{
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
-      //  this.getSideScroll();
+       this.getSideScroll();
       }
     }
 
@@ -323,7 +322,7 @@ export class DeepDivePage{
     callModules(){
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
-      // this.getSideScroll();
+      this.getSideScroll();
       this.getFirstArticleStackData();
     }
 
