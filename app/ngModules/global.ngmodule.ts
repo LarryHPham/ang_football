@@ -34,6 +34,7 @@ import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
 import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
+import { CommentModule } from "../fe-core/modules/comment/comment.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -117,6 +118,7 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       WidgetCarouselModule,
       BillboardModule,
       ListOfListsModule,
+      CommentModule,
 
       //components
       AppComponent,
@@ -186,6 +188,7 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       WidgetCarouselModule,
       BillboardModule,
       ListOfListsModule,
+      CommentModule,
 
       //components
       CircleImage,

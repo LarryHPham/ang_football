@@ -15,6 +15,7 @@ import { TransactionModuleData } from "../../fe-core/modules/transactions/transa
 import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { HeadlineData } from "../../global/global-interface";
+import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -30,6 +31,8 @@ import { ImagesService } from "../../services/carousel.service";
 import { DykService } from '../../services/dyk.service';
 import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
+import { NewsService } from "../../services/news.service";
+import { TwitterService } from "../../services/twitter.service";
 
 // Libraries
 declare var moment;
@@ -99,6 +102,10 @@ export class LeaguePage implements OnInit {
 
     private listOfListsData:Object; // paginated data to be displayed
 
+    private newsDataArray: Array<Object>;
+
+    private twitterData: Array<twitterModuleData>;
+
     private batchLoadIndex: number = 1;
 
     constructor(
@@ -117,6 +124,8 @@ export class LeaguePage implements OnInit {
       private _faqService: FaqService,
       private _lolService: ListOfListsService,
       private _headlineDataService:HeadlineDataService,
+      private _newsService: NewsService,
+      private _twitterService: TwitterService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -188,6 +197,9 @@ export class LeaguePage implements OnInit {
             this.getFaqService(this.profileType);
             this.setupListOfListsModule();
 
+            //---Batch 6 Load---//
+            this.getNewsService();
+            this.getTwitterService(this.profileType, partnerID, scope);
 
           }, 2000);
         }
@@ -486,6 +498,41 @@ export class LeaguePage implements OnInit {
           }
       );
     } //setupListOfListsModule
+
+
+
+    private getNewsService() {
+      let params = {
+        limit : 10,
+        pageNum : 1,
+        id: ''
+      }
+      this._newsService.getNewsService(this.scope,params, "league", "module")
+        .subscribe(data => {
+          this.newsDataArray = data.news;
+        },
+        err => {
+          console.log("Error getting news data");
+      });
+    } //getNewsService
+
+
+
+    private getTwitterService(profileType, partnerID, scope) {
+      console.log('---getTwitterService---');
+      this.scope = scope;
+      this.partnerID = partnerID;
+      this.isProfilePage = true;
+      this.profileType = 'league';
+
+      this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
+        .subscribe(data => {
+          this.twitterData = data;
+        },
+        err => {
+          console.log("Error getting twitter data");
+        });
+    } //getTwitterService
 
 
 

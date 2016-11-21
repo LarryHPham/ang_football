@@ -3,6 +3,7 @@ import {Component, Input, OnInit, OnChanges, Output, EventEmitter, ElementRef, R
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
 import {HamburgerMenuComponent, MenuData} from '../../ui-modules/hamburger-menu/hamburger-menu.component';
+
 declare var stButtons: any;
 declare var jQuery:any;
 
