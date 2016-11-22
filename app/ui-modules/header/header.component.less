@@ -4,6 +4,7 @@
 }
 .main-logo{
   position: absolute;
+  top:0;
   left: 85px;
   z-index: 9999;
   img{
@@ -16,6 +17,7 @@
   }
 }
 .header{
+  .no-select;
   height: auto;
   .ddb-parbutton {
     line-height: 2.5;
@@ -28,6 +30,9 @@
     }
   }
   &-top{
+    &:focus{
+      outline:none;
+    }
     height: 65px;
     background-color: @masterBrandColor;
     .flexDisplay;

@@ -42,8 +42,8 @@ export class DeepDiveBlock1{
     var currentUnixDate = new Date().getTime();
     //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
     this.dateParam ={
-      profile:'league',//current profile page
-      teamId:this.scope == 'home' ? 'nfl' : this.scope,
+      teamId:this.scope == 'home' ? 'nfl' : this.scope,//current profile page
+      scope:'league',
       date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
     }
      this.callModules();

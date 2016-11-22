@@ -189,43 +189,6 @@ export class DeepDiveService {
         return transformData;
     }
 
-    transformToArticleRow(data){
-      var sampleImage = "/app/public/placeholder_XL.png";
-      var articleStackArray = [];
-      data = data.data.slice(1,9);
-      data.forEach(function(val, index){
-        var relPath = GlobalSettings.getRouteFullParams().relPath;
-        let domainHostName;
-        let urlRouteArray;
-        let domainParams = {}
-
-        domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-        if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-          domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-        }
-        domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
-        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
-        var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"dayOfWeek");
-
-        var s = {
-            stackRowsRoute: urlRouteArray,
-            keyword: val.keyword.replace('-', ' '),
-            publishedDate: date,
-            provider1: val.author != null ? val.author : "",
-            provider2: val.publisher != null ? "Published By: " + val.publisher : "",
-            description: val.title,
-            images:  val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
-            imageConfig: {
-              imageClass: "image-100x56",
-              imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
-              /*hoverText: "View",*/
-              urlRouteArray: urlRouteArray
-            }
-        }
-        articleStackArray.push(s);
-      });
-      return articleStackArray;
-    }
     transformToAiArticleRow(data){
       data = data.data;
       var sampleImage = "/app/public/placeholder_XL.png";
@@ -249,18 +212,20 @@ export class DeepDiveService {
         urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: articleType, eventID: val.event_id}];
 
         var s = {
-            stackRowsRoute: urlRouteArray,
+            articleStackRoute: urlRouteArray,
             keyword: val.article_type.replace('-', ' ').toUpperCase(),
-            publishedDate: val.last_updated ? date : null,
-            provider1: '',
-            provider2: '',
-            description: val.title,
+            timeStamp: val.last_updated ? date : null,
+            title: val.title,
+            author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
+            publisher: val.publisher != null ? "Published By: " + val.publisher : "",
+            teaser: val.title,
+            keyUrl: '/nfl/home',
             imageConfig: {
-            imageClass: "image-100x56",
-            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
-            urlRouteArray: urlRouteArray
+              imageClass: "embed-responsive embed-responsive-16by9",
+              imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
+              urlRouteArray: '/nfl/home'
             }
-        }
+        };
         articleStackArray.push(s);
       });
 
@@ -381,8 +346,8 @@ export class DeepDiveService {
           domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
         }
         domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
-
         urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType:'video', eventID:val.id}];
+        val['keyword'] = val.league.toUpperCase();
         val['video_thumbnail'] = val.thumbnail;
         val['embed_url'] = val.videoLink;
         val['teaser'] = val.description;

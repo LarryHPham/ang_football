@@ -146,7 +146,7 @@ export class LeaguePage implements OnInit {
 
       this.dateParam ={
         scope:'league',//current profile page
-        teamId: this.scope,
+        teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
         date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
       }
 

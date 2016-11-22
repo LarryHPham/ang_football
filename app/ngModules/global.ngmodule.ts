@@ -77,6 +77,9 @@ import { NewsBox } from '../fe-core/components/news-box/news-box';
 import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
 import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
+import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
+import { TitleComponent } from "../fe-core/components/title/title.component";
+import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
@@ -94,9 +97,9 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
 //
 // /*** WEBPAGES ***/
-// import { AboutUsPage } from "../webpages/aboutus/aboutus";
-// import { PrivacyPolicy } from "../webpages/privacy-policy/privacy-policy";
-// import { TermOfService } from "../webpages/term-of-service/term-of-service";
+import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
+import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
+import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 
 // import {InputBar} from "../fe-core/components/input-bar/input-bar.component";
 // import {ArticleSearchBar} from "../fe-core/components/search-bar-article/search-bar-article.component";
@@ -111,6 +114,11 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       ReactiveFormsModule
     ],
     declarations: [
+      //pages
+      AboutUsPage,
+      ContactUsPage,
+      DisclaimerPage,
+
       //modules
       WidgetModule,
       BoxScoresModule,
@@ -165,6 +173,9 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       SideScroll,
       ImagesMedia,
       ListOfListsItem,
+      BackTabComponent,
+      TitleComponent,
+      ContactUsComponent,
 
       //pipes
       NaValuePipe,
@@ -182,6 +193,11 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 
     ],
     exports: [
+      //pages
+      AboutUsPage,
+      ContactUsPage,
+      DisclaimerPage,
+
       //modules
       WidgetModule,
       BoxScoresModule,
@@ -239,6 +255,9 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       SideScroll,
       ImagesMedia,
       ListOfListsItem,
+      BackTabComponent,
+      TitleComponent,
+      ContactUsComponent,
 
       //pipes
       NaValuePipe,
