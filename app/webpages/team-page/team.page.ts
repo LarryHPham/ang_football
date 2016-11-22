@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -23,6 +23,7 @@ import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { Division, Conference, SportPageParameters } from '../../global/global-interface';
@@ -53,7 +54,7 @@ export class TeamPage implements OnInit {
   private constructorControl:boolean = true;
   public partnerID: string;
   public scope: string;
-  public paramsub;
+  public paramsub: any;
   private teamID: number;
   private pageParams:SportPageParameters;
   private dateParam:any;
@@ -79,6 +80,7 @@ export class TeamPage implements OnInit {
   private selectedFilter1:string;
   private eventStatus: any;
   private isFirstRun:number = 0;
+  private scheduleParams: any;
 
   private standingsData:StandingsModuleData;
 
@@ -112,6 +114,8 @@ export class TeamPage implements OnInit {
 
   private ptabName:string;
 
+  private batchLoadIndex: number = 1;
+
   constructor(
     private activateRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
@@ -129,7 +133,8 @@ export class TeamPage implements OnInit {
     private _faqService: FaqService,
     private _lolService: ListOfListsService,
     private _newsService: NewsService,
-    private _twitterService: TwitterService
+    private _twitterService: TwitterService,
+    private _seoService: SeoService
   ) {
     var currDate = new Date();
     var currentUnixDate = new Date().getTime();
@@ -204,8 +209,83 @@ export class TeamPage implements OnInit {
     )
   } //setupProfileData
 
-  private metaTags(data){
+  private metaTags(data) {
+    // //create meta description that is below 160 characters otherwise will be truncated
+    // let header = data.headerData;
+    // let metaDesc =  header.description;
+    // let link = window.location.href;
+    // let title = header.teamMarket + ' ' + header.teamName;
+    // let image = header.teamLogo;
+    // let record = '';
+    // if (header.leagueRecord != null) {
+    //   record = header.leagueRecord;
+    // let recordArr = record.split('-');
+    //   record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
+    // }
+    // title = title  + ' ' + record;
+    // //this._seoService.setCanonicalLink(this._params.params, this._router);
+    // this._seoService.setOgTitle(title);
+    // this._seoService.setOgDesc(metaDesc);
+    // this._seoService.setOgType('Website');
+    // this._seoService.setOgUrl(link);
+    // this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+    // this._seoService.setTitle(title);
+    // this._seoService.setMetaDescription(metaDesc);
+    // this._seoService.setMetaRobots('Index, Follow');
+    //
+    // let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+    // this._seoService.setThemeColor(color);
+    // //grab domain for json schema
+    // let domainSite;
+    // if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+    //   domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
+    // }else{
+    //   domainSite = "https://"+window.location.hostname;
+    // }
+    //
+    // //manually generate team schema for team page until global funcation can be created
+    // let teamSchema = `
+    // {
+    //   "@context": "http://schema.org",
+    //   "@type": "SportsTeam",
+    //   "name": "`+header.teamMarket + ' ' + header.teamName+`",
+    // }`;
+    //
+    // //manually generate json schema for BreadcrumbList
+    // let jsonSchema = `
+    // {
+    //   "@context": "http://schema.org",
+    //   "@type": "BreadcrumbList",
+    //   "itemListElement": [{
+    //   "@type": "ListItem",
+    //   "position": 1,
+    //   "item": {
+    //     "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+    //     "name": "`+this.scope.toUpperCase()+`"
+    //   }
+    // },{
+    //   "@type": "ListItem",
+    //   "position": 2,
+    //   "item": {
+    //     "@id": "`+window.location.href+"?league="+header.divisionName+`",
+    //     "name": "`+header.divisionName+`"
+    //   }
+    // },{
+    //   "@type": "ListItem",
+    //   "position": 3,
+    //   "item": {
+    //     "@id": "`+window.location.href+`",
+    //     "name": "`+header.teamMarket + ' ' + header.teamName+`"
+    //     }
+    //   }]
+    // }`;
+    // this._seoService.setApplicationJSON(teamSchema, 'page');
+    // this._seoService.setApplicationJSON(jsonSchema, 'json');
   } //metaTags
+  ngOnDestroy(){
+    // this._seoService.removeApplicationJSON('page');
+    // this._seoService.removeApplicationJSON('json');
+  } //ngOnDestroy
 
 
 
@@ -288,6 +368,15 @@ export class TeamPage implements OnInit {
           }
         }
         this.schedulesData = schedulesData;
+
+        this.scheduleParams = {
+          scope: this.scope,
+          teamName: 'league',
+          teamID: null,
+          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
+          tab : status == 'pregame' ? 'pregame' : 'postgame',
+          pageNum: 1,
+        }
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
 
@@ -457,4 +546,9 @@ export class TeamPage implements OnInit {
 
 
 
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      return;
+    }
 }

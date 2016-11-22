@@ -118,7 +118,7 @@ export class DraftHistoryService {
     // }
     if(profileData['headerData'] != null){
       let scope = profileData['headerData'].leagueAbbreviatedName;
-      this._scope = scope.toLowerCase() == 'fbs' ? 'ncaaf' : scope.toLowerCase();
+      this._scope = scope == 'fbs' ? 'ncaaf' : scope;
     }else{
       this._scope = 'nfl';
     }

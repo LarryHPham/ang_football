@@ -21,6 +21,7 @@ import { SchedulesService } from "../services/schedules.service";
 import { GeoLocation, PartnerHeader } from "../global/global-service";
 import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
+import { SeoService } from "../seo.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
@@ -284,7 +285,8 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       VerticalGlobalFunctions,
       HamburgerDeliveryService,
       ImagesService,
-      ListOfListsService
+      ListOfListsService,
+      SeoService
     ]
 })
 export class GlobalModule { }

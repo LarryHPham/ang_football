@@ -21,6 +21,8 @@ import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
 import { HeadlineDataService } from "../global/global-ai-headline-module-service";
+import { FantasyService } from '../services/fantasy.service';
+import { SeasonStatsService } from "../services/season-stats.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -45,6 +47,8 @@ import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
 import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
 import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
 import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
+import { FantasyModule } from "../fe-core/modules/fantasy/fantasy.module";
+import { SeasonStatsModule } from "../fe-core/modules/season-stats/season-stats.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -101,6 +105,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     DailyUpdateModule,
     TeamRosterModule,
     PlayerStatsModule,
+    FantasyModule,
+    SeasonStatsModule,
 
     //component
     StandingsComponent,
@@ -149,6 +155,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     DailyUpdateModule,
     TeamRosterModule,
     PlayerStatsModule,
+    FantasyModule,
+    SeasonStatsModule,
 
     //component
     StandingsComponent,
@@ -186,7 +194,9 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     NewsService,
     TwitterService,
     RosterService,
-    DailyUpdateService
+    DailyUpdateService,
+    FantasyService,
+    SeasonStatsService
   ]
 })
 
