@@ -5,10 +5,12 @@ import { AppComponent }  from '../app-component/app.component';
 import { DeepDiveNgModule } from "../ngModules/deep-dive.ngmodule";
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { LeaguePage } from "../webpages/league-page/league.page";
+import { TeamPage } from "../webpages/team-page/team.page";
+
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
-// import {AboutUsPage} from "./webpages/aboutus/aboutus";
-// import {PrivacyPolicy} from "./webpages/privacy-policy/privacy-policy";
-// import {TermOfService} from "./webpages/term-of-service/term-of-service";
+import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
+import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
+import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import {SyndicatedArticlePage} from "./webpages/syndicated-article-page/syndicated-article-page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
@@ -23,11 +25,10 @@ const relativeChildRoutes = [
   //     name: 'League-page',
   //     component: LeaguePage,
   // },
-  // {
-  //     path: ':scope/team/:teamName/:teamId',
-  //     name: 'Team-page',
-  //     component: TeamPage,
-  // },
+  {
+      path: ':scope/team/:teamName/:teamId',
+      component: TeamPage,
+  },
   // {
   //     path: ':scope/player/:teamName/:fullName/:playerId',
   //     name: 'Player-page',
@@ -39,21 +40,20 @@ const relativeChildRoutes = [
   //     name: 'Directory-page-starts-with',
   //     component: DirectoryPage,
   // },
-  // {
-  //     path: ':scope/about-us',
-  //     name: 'About-us-page',
-  //     component: AboutUsPage,
-  // },
-  // {
-  //     path: ':scope/contact-us',
-  //     name: 'Contact-us-page',
-  //     component: ContactUsPage,
-  // },
-  // {
-  //     path: ':scope/disclaimer',
-  //     name: 'Disclaimer-page',
-  //     component: DisclaimerPage,
-  // },
+  {
+      path: '/about-us',
+      component: AboutUsPage,
+  },
+  {
+      path: '/contact-us',
+      name: 'Contact-us-page',
+      component: ContactUsPage,
+  },
+  {
+      path: '/disclaimer',
+      name: 'Disclaimer-page',
+      component: DisclaimerPage,
+  },
   // {
   //     path: ':scope/search/:query',
   //     name: 'Search-page',

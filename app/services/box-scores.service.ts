@@ -9,8 +9,9 @@ import {Gradient} from '../global/global-gradient';
 //Interfaces
 import {CircleImageData} from '../fe-core/components/images/image-data';
 export interface GameInfoInput {
-  gameHappened: boolean,
-  inning:string;
+  gameHappened: boolean;
+  segment:string;
+  liveStatus: boolean;
   dataPointCategories:Array<string>;
   verticalContent:string;
   homeData:{
@@ -18,18 +19,18 @@ export interface GameInfoInput {
     homeImageConfig:CircleImageData;
     homeLink:any;
     homeRecord:string;
-    DP1:any;
-    DP2:any;
-    DP3:any;
+    dataPoint1:any;
+    dataPoint2:any;
+    dataPoint3:any;
   };
   awayData:{
     awayTeamName:string;
     awayImageConfig:CircleImageData;
     awayLink:any,
     awayRecord:string;
-    DP1:any;
-    DP2:any;
-    DP3:any;
+    dataPoint1:any;
+    dataPoint2:any;
+    dataPoint3:any;
   };
 } //GameInfoInput
 
@@ -247,12 +248,12 @@ export class BoxScoresService {
           boxScoreObj[dates]['gameInfo']= {
             isNCAA:isNCAA,
             eventId: boxScores[dates].eventId,
-            seasonId: boxScores[dates].seasonId,
-            inningsPlayed: boxScores[dates].eventQuarter,
             timeLeft: boxScores[dates].eventQuarterTimeLeft,
             live: boxScores[dates].liveStatus == 'Y'?true:false,
             startDateTime: boxScores[dates].eventDate,
             startDateTimestamp: boxScores[dates].eventStartTime,
+            seasonId: boxScores[dates].seasonId,
+            eventQuarter: boxScores[dates].eventQuarter,
             dataPointCategories:['Yards','Poss.','Score']
           };
           //0 = home team 1 = away team.
@@ -350,9 +351,12 @@ export class BoxScoresService {
       data = data[0];
       let awayData = data.awayTeamInfo;
       let homeData = data.homeTeamInfo;
+      let gameInfo = data.gameInfo;
       var left, right;
-      var homeRoute = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-      var awayRoute = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+
+      let scope = gameInfo.isNCAA == true ? 'ncaaf' : 'nfl';
+      var homeRoute = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
+      var awayRoute = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
       if(profile == 'team'){
         if(teamId == homeData.id){
           homeRoute = null;
@@ -411,8 +415,11 @@ export class BoxScoresService {
         let awayData = data.awayTeamInfo;
         let homeData = data.homeTeamInfo;
         let gameInfo = data.gameInfo;
-        let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-        let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+
+        let scope = gameInfo.isNCAA == true ? 'ncaaf' : 'nfl';
+
+        let homeLink = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
+        let awayLink = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
         var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
         if(teamId != null && profile == 'team'){//if league then both items will link
@@ -443,12 +450,15 @@ export class BoxScoresService {
         var currentTime = new Date().getTime();
         var inningTitle = '';
         var verticalContentLive;
+        var liveStatus;
         if(gameInfo.live){
+          liveStatus = true;
           verticalContentLive = gameInfo.verticalContent;
           // let inningHalf = gameInfo.inningHalf != null ? GlobalFunctions.toTitleCase(gameInfo.inningHalf) : '';
-          inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
+          inningTitle = gameInfo.eventQuarter != null ? gameInfo.eventQuarter +  GlobalFunctions.Suffix(gameInfo.eventQuarter) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
         }else{
           verticalContentLive = "";
+          liveStatus = false;
           if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
             inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
           }else{
@@ -457,9 +467,10 @@ export class BoxScoresService {
         }
 
         info = {
-          gameHappened:gameInfo.inningsPlayed != null ?  true : false,
+          gameHappened:gameInfo.eventQuarter != null ?  true : false,
           //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
-          inning:inningTitle,
+          segment:inningTitle,
+          liveStatus:liveStatus,
           dataPointCategories:gameInfo.dataPointCategories,
           verticalContent:verticalContentLive,
           homeData:{
@@ -467,18 +478,18 @@ export class BoxScoresService {
             homeImageConfig:link1,
             homeLink: homeLink,
             homeRecord: homeWin +'-'+ homeLoss,
-            DP1:homeData.dataP1,
-            DP2:homeData.dataP2,
-            DP3:homeData.dataP3
+            dataPoint1:homeData.dataP1,
+            dataPoint2:homeData.dataP2,
+            dataPoint3:homeData.dataP3
           },
           awayData:{
             awayTeamName:  gameInfo.isNCAA ? awayData.abbreviation + ' ' + awayData.lastName : awayData.lastName,
             awayImageConfig:link2,
             awayLink: awayLink,
             awayRecord: awayWin +'-'+ awayLoss,
-            DP1:awayData.dataP1,
-            DP2:awayData.dataP2,
-            DP3:awayData.dataP3
+            dataPoint1:awayData.dataP1,
+            dataPoint2:awayData.dataP2,
+            dataPoint3:awayData.dataP3
           }
         };
 
@@ -516,8 +527,11 @@ export class BoxScoresService {
         let awayData = data.awayTeamInfo;
         let homeData = data.homeTeamInfo;
         let gameInfo = data.gameInfo;
-        let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-        let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+
+        let scope = gameInfo.isNCAA == true ? 'ncaaf' : 'nfl';
+
+        let homeLink = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
+        let awayLink = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
         var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
         if(teamId != null && profile == 'team'){//if league then both items will link
@@ -547,22 +561,27 @@ export class BoxScoresService {
         //determine if a game is live or not and display correct game time
         var currentTime = new Date().getTime();
         var inningTitle = '';
+        var segmentTitle = '';
+        var liveStatus;
 
         if(gameInfo.live){
-          inningTitle = gameInfo.inningsPlayed != null ? gameInfo.inningsPlayed +  GlobalFunctions.Suffix(gameInfo.inningsPlayed) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
+          segmentTitle = gameInfo.eventQuarter != null ? gameInfo.eventQuarter +  GlobalFunctions.Suffix(gameInfo.eventQuarter) + " Quarter: " + "<span class='gameTime'>"+gameInfo.timeLeft+"</span>" : '';
+          liveStatus = true;
 
         }else{
+          liveStatus = false;
           if((currentTime < gameInfo.startDateTimestamp) && !gameInfo.live){
-            inningTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
+            segmentTitle = moment(gameDate.startDateTimestamp).tz('America/New_York').format('h:mm A z');
           }else{
-            inningTitle = 'Final';
+            segmentTitle = 'Final';
           }
         }
 
         info = {
-          gameHappened:gameInfo.inningsPlayed != null ?  true : false,
+          gameHappened:gameInfo.eventQuarter != null ?  true : false,
           //inning will display the Inning the game is on otherwise if returning null then display the date Time the game is going to be played
-          inning:inningTitle,
+          segment:segmentTitle,
+          liveStatus: liveStatus,
           dataPointCategories:gameInfo.dataPointCategories,
           verticalContent:gameInfo.verticalContent,
           homeData:{
@@ -570,18 +589,18 @@ export class BoxScoresService {
             homeImageConfig:link1,
             homeLink: homeLink,
             homeRecord: homeWin +'-'+ homeLoss,
-            DP1:homeData.dataP1,
-            DP2:homeData.dataP2,
-            DP3:homeData.dataP3
+            dataPoint1:homeData.dataP1,
+            dataPoint2:homeData.dataP2,
+            dataPoint3:homeData.dataP3
           },
           awayData:{
             awayTeamName:awayData.lastName,
             awayImageConfig:link2,
             awayLink: awayLink,
             awayRecord: awayWin +'-'+ awayLoss,
-            DP1:awayData.dataP1,
-            DP2:awayData.dataP2,
-            DP3:awayData.dataP3
+            dataPoint1:awayData.dataP1,
+            dataPoint2:awayData.dataP2,
+            dataPoint3:awayData.dataP3
           }
         };
         if(teamId != null){

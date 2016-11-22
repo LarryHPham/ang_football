@@ -18,9 +18,13 @@ import { DykService } from '../services/dyk.service';
 import { FaqService } from "../services/faq.service";
 import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
+import { RosterService } from '../services/roster.service';
+import { DailyUpdateService } from "../services/daily-update.service";
+import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
+import { TeamPage } from "../webpages/team-page/team.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -64,6 +68,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
   declarations: [
     //pages
     LeaguePage,
+    TeamPage,
 
     //modules
     ArticlesModule,
@@ -100,6 +105,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
   exports: [
     //pages
     LeaguePage,
+    TeamPage,
 
     //modules
     ArticlesModule,
@@ -144,7 +150,9 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     DykService,
     FaqService,
     NewsService,
-    TwitterService
+    TwitterService,
+    RosterService,
+    DailyUpdateService
   ]
 })
 
