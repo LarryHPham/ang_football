@@ -39,6 +39,7 @@
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
         <schedules *ngIf="schedulesData"
+          [footerParams]="scheduleParams"
           [profHeader]="profileHeaderData"
           [data]="schedulesData"
           [filter1]="scheduleFilter1"

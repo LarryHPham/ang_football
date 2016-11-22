@@ -33,12 +33,13 @@
             (dateEmit)="getBoxScores($event)"></box-scores>
             <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
             <schedules *ngIf="schedulesData"
-                [profHeader]="profileHeaderData"
-                [data]="schedulesData"
-                [filter1]="scheduleFilter1"
-                [dropdownKey1]="selectedFilter1"
-                (tabSelected)="scheduleTab($event)"
-                (selectedKeyFilter)="filterDropdown($event)"></schedules>
+              [footerParams]="scheduleParams"
+              [profHeader]="profileHeaderData"
+              [data]="schedulesData"
+              [filter1]="scheduleFilter1"
+              [dropdownKey1]="selectedFilter1"
+              (tabSelected)="scheduleTab($event)"
+              (selectedKeyFilter)="filterDropdown($event)"></schedules>
         </div> <!--loadBatch2-->
 
         <div class="loadBatch3">
