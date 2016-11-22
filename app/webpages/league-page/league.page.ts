@@ -68,6 +68,7 @@ export class LeaguePage implements OnInit {
     private dateParam:any;
 
     private schedulesData:any;
+    private scheduleParams:any;
     private scheduleFilter1:Array<any>;
     private scheduleFilter2:Array<any>;
     private selectedFilter1:string
@@ -132,8 +133,10 @@ export class LeaguePage implements OnInit {
 
       this.paramsub = this.activateRoute.params.subscribe(
             (param :any)=> {
+              this.pageParams = param;
+              console.log(this.pageParams);
               this.partnerID = param['partnerID'];
-              this.scope = param['scope'] != null ? param['scope'] : 'nfl';
+              this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
             }
       );
 
@@ -175,7 +178,7 @@ export class LeaguePage implements OnInit {
             this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
             //---Batch 3 Load---//
-            this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.dateParam.scope);
+            this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.profileType);
             this.transactionsActiveTab = "Transactions";
             this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
 
@@ -300,6 +303,16 @@ export class LeaguePage implements OnInit {
           this.scheduleFilter2 = null;
         }
         this.schedulesData = schedulesData;
+
+        this.scheduleParams = {
+          scope: this.scope,
+          teamName: 'league',
+          teamID: null,
+          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
+          tab : status == 'pregame' ? 'pregame' : 'postgame',
+          pageNum: 1,
+        }
+
       }, year, week) // isTeamProfilePage = true
     } //getSchedulesData
 

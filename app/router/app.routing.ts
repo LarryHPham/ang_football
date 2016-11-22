@@ -6,6 +6,9 @@ import { DeepDiveNgModule } from "../ngModules/deep-dive.ngmodule";
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
+import { PlayerPage } from "../webpages/player-page/player.page";
+import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
+import { StandingsPage } from "../webpages/standings-page/standings.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -32,20 +35,14 @@ const relativeChildRoutes = [
   //     name: 'Pick-team-page',
   //     component: PickTeamPage,
   // },
-  // {
-  //     path: ':scope/league',
-  //     name: 'League-page',
-  //     component: LeaguePage,
-  // },
   {
       path: ':scope/team/:teamName/:teamID',
       component: TeamPage,
   },
-  // {
-  //     path: ':scope/player/:teamName/:fullName/:playerId',
-  //     name: 'Player-page',
-  //     component: PlayerPage,
-  // },
+  {
+      path: ':scope/player/:teamName/:fullName/:playerID',
+      component: PlayerPage,
+  },
   // //Misc. Pages
   // {
   //     path: ':scope/directory/:type/:startsWith/page/:page',
@@ -68,41 +65,26 @@ const relativeChildRoutes = [
   //     name: 'MVP-list-tab-page',
   //     component: MVPListPage
   // },
-  // {
-  //     path: ':scope/schedules/league/:year/:pageNum',
-  //     name: 'Schedules-page-league',
-  //     component: SchedulesPage
-  // },
-  // {
-  //     path: ':scope/schedules/league/:year/:tab/:pageNum',
-  //     name: 'Schedules-page-league-tab',
-  //     component: SchedulesPage
-  // },
-  // {
-  //     path: ':scope/schedules/:teamName/:teamId/:year/:pageNum',
-  //     name: 'Schedules-page-team',
-  //     component: SchedulesPage
-  // },
-  // {
-  //     path: ':scope/schedules/:teamName/:year/:tab/:teamId/:pageNum',
-  //     name: 'Schedules-page-team-tab',
-  //     component: SchedulesPage
-  // },
-  // {
-  //     path: ':scope/standings',
-  //     name: 'Standings-page',
-  //     component: StandingsPage
-  // },
-  // {
-  //     path: ':scope/standings/:type',
-  //     name: 'Standings-page-league',
-  //     component: StandingsPage
-  // },
-  // {
-  //     path: ':scope/standings/:type/:teamName/:teamId',
-  //     name: 'Standings-page-team',
-  //     component: StandingsPage
-  // },
+  {
+      path: ':scope/schedules/:teamName/:year/:tab/:pageNum',
+      component: SchedulesPage
+  },
+  {
+      path: ':scope/schedules/:teamName/:teamID/:year/:tab/:pageNum',
+      component: SchedulesPage
+  },
+  {
+      path: ':scope/standings',
+      component: StandingsPage
+  },
+  {
+      path: ':scope/standings/:type',
+      component: StandingsPage
+  },
+  {
+      path: ':scope/standings/:type/:teamName/:teamID',
+      component: StandingsPage
+  },
   // {
   //     path: ':scope/list/:query',
   //     name: 'Dynamic-list-page',
@@ -119,7 +101,7 @@ const relativeChildRoutes = [
   //     component: DraftHistoryPage
   // },
   // {
-  //     path: ':scope/draft-history/:teamName/:teamId',
+  //     path: ':scope/draft-history/:teamName/:teamID',
   //     name: 'Draft-history-page',
   //     component: DraftHistoryPage
   // },
@@ -134,17 +116,17 @@ const relativeChildRoutes = [
   //     component: TransactionsPage
   // },
   // {
-  //     path: ':scope/team-roster/:teamName/:teamId',
+  //     path: ':scope/team-roster/:teamName/:teamID',
   //     name: 'Team-roster-page',
   //     component: TeamRosterPage
   // },
   // {
-  //     path: ':scope/season-stats/:fullName/:playerId',
+  //     path: ':scope/season-stats/:fullName/:playerID',
   //     name: 'Season-stats-page',
   //     component: SeasonStatsPage
   // },
   // {
-  //     path: ':scope/player-stats/:teamName/:teamId',
+  //     path: ':scope/player-stats/:teamName/:teamID',
   //     name: 'Player-stats-page',
   //     component: PlayerStatsPage
   // },

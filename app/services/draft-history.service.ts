@@ -60,6 +60,7 @@ export interface PlayerDraftData {
 @Injectable()
 export class DraftHistoryService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
+  private _scope: string;
   constructor(public http: Http){}
 
   getDraftHistoryTabs(profileData: IProfileData): DraftHistoryTab[] {
@@ -115,6 +116,12 @@ export class DraftHistoryService {
     // if(year == null){
     //   year = new Date().getFullYear().toString();
     // }
+    if(profileData['headerData'] != null){
+      let scope = profileData['headerData'].leagueAbbreviatedName;
+      this._scope = scope == 'fbs' ? 'ncaaf' : scope;
+    }else{
+      this._scope = 'nfl';
+    }
     if ( profileData.profileType == "team" ) {
       callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/999/1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
@@ -182,7 +189,7 @@ export class DraftHistoryService {
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
 
         var playerRoute = null;
-        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullName, val.playerId);
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(self._scope, val.draftTeamName, playerFullName, val.playerId);
         var playerLinkText = {
           route: playerRoute,
           text: playerFullName
@@ -245,9 +252,8 @@ export class DraftHistoryService {
   }
 
   private detailedData(data: Array<PlayerDraftData>, sortBy){
-
+    let self = this;
     var listDataArray = data.map(function(val, index){
-
       var playerFullName = val.playerFirstName + " " + val.playerLastName;
       var playerFullNameUrl = val.playerFirstName + "-" + val.playerLastName;
       if (val.playerCity == null || val.playerState == null || val.playerCity == "" || val.playerState == ""){
@@ -262,8 +268,8 @@ export class DraftHistoryService {
             collegeNickname = val.playerCollegeAbbreviation + " " + val.playerCollegeNickname;
         }
       var playerRoute = null;
-      playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.draftTeamName, playerFullNameUrl, val.playerId);
-      var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.draftTeamName, val.id);
+      playerRoute = VerticalGlobalFunctions.formatPlayerRoute(self._scope, val.draftTeamName, playerFullNameUrl, val.playerId);
+      var teamRoute = VerticalGlobalFunctions.formatTeamRoute(self._scope, val.draftTeamName, val.id);
       var college;
 
       if (val.playerCollegeAbbreviation != null && val.playerCollegeAbbreviation != "") {

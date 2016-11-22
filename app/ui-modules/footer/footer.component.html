@@ -1,8 +1,7 @@
 <footer class="footer container-fluid">
     <section class="footer-top row">
       <div class="footer-top-container col-xs-6 col-md-2">
-        <a *ngIf="!partner" [routerLink]="['Home-page']"><img src="/app/public/Touchdown-Loyal_Logo_Outlined-W.svg" /></a>
-        <img *ngIf="!partner" src="{{image}}"  alt="Football Logo"/>
+        <a *ngIf="!partner" [routerLink]="['Home-page']"><img *ngIf="!partner" src="{{image}}"  alt="Football Logo"/></a>
       </div>
 
       <!-- BELOW768 and ABOVE768 NOT PERMANENT PLEASE RECODE TO BOOTSTRAP -->

@@ -135,8 +135,10 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
     let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
     let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
 
-    var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
-    var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+    let routeScope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf': item.leagueAbbreviation.toLowerCase();
+
+    var teamRouteAway = this.currentTeamProfile == item.team2Id ? null : VerticalGlobalFunctions.formatTeamRoute(routeScope, awayFullTeamName, item.team2Id);
+    var teamRouteHome = this.currentTeamProfile == item.team1Id ? null : VerticalGlobalFunctions.formatTeamRoute(routeScope, homeFullTeamName, item.team1Id);
     //TEST colors
     item.team1ColorHex = item.team1ColorHex != null ? item.team1ColorHex:'#a1a1a1';
     item.team2ColorHex = item.team2ColorHex != null ? item.team2ColorHex:'#d2d2d2';
@@ -334,6 +336,8 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         hdrColumnKey = this.curTeam == item.team1Id ? "away" : "home";
     }
     let isNCAA = item.leagueAbbreviation.toLowerCase() == 'nfl' ? false : true;
+    let routeScope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : item.leagueAbbreviation.toLowerCase();
+
     switch (hdrColumnKey) {
       case "date":
       let date320 = moment(Number(item.eventTimestamp)*1000).tz('America/New_York').format("MM/DD");
@@ -368,7 +372,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team2Id) {
           if(item.team2Id != null){
-            link = VerticalGlobalFunctions.formatTeamRoute(awayFullTeamName, item.team2Id);
+            link = VerticalGlobalFunctions.formatTeamRoute(routeScope, awayFullTeamName, item.team2Id);
           }
         }
         break;
@@ -389,7 +393,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
         let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
           if(item.team1Id != null){
-            link = VerticalGlobalFunctions.formatTeamRoute(homeFullTeamName, item.team1Id);
+            link = VerticalGlobalFunctions.formatTeamRoute(routeScope, homeFullTeamName, item.team1Id);
           }
         }
         break;

@@ -107,7 +107,7 @@ export class ProfileHeaderService {
         });
   } //getLeagueProfile
 
-  convertTeamPageHeader(data: TeamProfileData, pageName:string): TitleInputData {
+  convertTeamPageHeader(scope:string , data: TeamProfileData, pageName:string): TitleInputData {
     if(typeof pageName == 'undefined'){
       pageName = '';
     }
@@ -115,7 +115,7 @@ export class ProfileHeaderService {
     var teamId = data.pageParams.teamId ? data.pageParams.teamId : null;
     return {
       imageURL: '', //TODO
-      imageRoute: VerticalGlobalFunctions.formatTeamRoute(data.teamName, teamId.toString() ),
+      imageRoute: VerticalGlobalFunctions.formatTeamRoute(scope, data.teamName, teamId.toString() ),
       text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
       text2: 'United States',
       text3: pageName,
@@ -278,7 +278,7 @@ export class ProfileHeaderService {
           {
             label: "Team",
             value: headerData.teamFullName,
-            routerLink: VerticalGlobalFunctions.formatTeamRoute(headerData.teamFullName, headerData.teamId.toString())
+            routerLink: VerticalGlobalFunctions.formatTeamRoute(this.scope, headerData.teamFullName, headerData.teamId.toString())
           },
           {
             label: "Jersey Number",

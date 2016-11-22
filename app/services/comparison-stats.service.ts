@@ -208,10 +208,10 @@ export class ComparisonStatsService {
       var playerName2 = data.playerTwo.playerFirstName + " " + data.playerTwo.playerLastName;
 
       //Routes
-      data.playerOne['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(data.playerOne.teamName, playerName1, data.playerOne.playerId);
-      data.playerTwo['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(data.playerOne.teamName, playerName2, data.playerOne.playerId);
-      data.playerOne['teamRoute'] = VerticalGlobalFunctions.formatTeamRoute(data.playerOne.teamName, data.playerOne.teamId);
-      data.playerTwo['teamRoute'] = VerticalGlobalFunctions.formatTeamRoute(data.playerTwo.teamName, data.playerTwo.teamId);
+      data.playerOne['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(this.scope, data.playerOne.teamName, playerName1, data.playerOne.playerId);
+      data.playerTwo['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(this.scope, data.playerOne.teamName, playerName2, data.playerOne.playerId);
+      data.playerOne['teamRoute'] = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.playerOne.teamName, data.playerOne.teamId);
+      data.playerTwo['teamRoute'] = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.playerTwo.teamName, data.playerTwo.teamId);
 
       data.playerOne['height'] = GlobalFunctions.inchesToFeet(data.playerOne.height);
       data.playerTwo['height'] = GlobalFunctions.inchesToFeet(data.playerTwo.height);
@@ -219,7 +219,6 @@ export class ComparisonStatsService {
       data.playerOne['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerOne.playerHeadshot);
       data.playerTwo['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerTwo.playerHeadshot);
 
-      data.playerOne
       var team1Data = {
         teamId: data.playerOne.teamId,
         playerList: [{key: data.playerOne.playerId, value: playerName1}]

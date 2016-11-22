@@ -107,7 +107,7 @@ export class DeepDivePage{
     }
 
     ngOnDestroy(){
-      this._routeSubscription.unsubscribe();
+      // this._routeSubscription.unsubscribe();
     }
 
     scopeNameDisplay(scope){
