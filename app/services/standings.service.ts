@@ -28,7 +28,6 @@ export class StandingsService {
       linkToPage.push(GlobalFunctions.toLowerKebab(pageParams.teamName), pageParams.teamID);
     }else{
     }
-    console.log(linkToPage);
     return linkToPage;
   }
 
@@ -60,7 +59,6 @@ export class StandingsService {
   }
 
   loadAllTabsForModule(pageParams: SportPageParameters, profileType:string, currentTeamId?: string, currentTeamName?: string, page?: string) {
-    console.log(profileType);
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
         pageRouterLink: this.getLinkToPage(pageParams, profileType),
