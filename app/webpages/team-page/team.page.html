@@ -1,0 +1,16 @@
+<sidekick-wrapper>
+  <section class="page profile-container team-page">
+    <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
+     <error-component *ngIf="hasError"></error-component>
+
+    <div *ngIf="profileHeaderData && pageParams">
+    <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
+
+      <div class="loadBatch1">
+        <profile-header [profileHeaderData]="profileHeaderData" [profileType]="'team'"></profile-header>
+        <!-- <daily-update-module *ngIf="dailyUpdateData" [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart" [data]="dailyUpdateData"></daily-update-module> -->
+      </div><!--loadBatch1-->
+
+     </div>
+  </section>
+</sidekick-wrapper>

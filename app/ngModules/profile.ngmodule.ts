@@ -18,9 +18,11 @@ import { DykService } from '../services/dyk.service';
 import { FaqService } from "../services/faq.service";
 import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
+import { DailyUpdateService } from "../services/daily-update.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
+import { TeamPage } from "../webpages/team-page/team.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -35,6 +37,7 @@ import { DYKModule } from "../fe-core/modules/dyk/dyk.module";
 import { FAQModule } from "../fe-core/modules/faq/faq.module";
 import { NewsModule } from "../fe-core/modules/news/news.module";
 import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
+import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -52,6 +55,7 @@ import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.compon
 import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
+import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/profile-video-stack.component";
 
 @NgModule({
   imports: [
@@ -64,6 +68,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
   declarations: [
     //pages
     LeaguePage,
+    TeamPage,
 
     //modules
     ArticlesModule,
@@ -79,6 +84,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     FAQModule,
     NewsModule,
     TwitterModule,
+    DailyUpdateModule,
 
     //component
     StandingsComponent,
@@ -94,12 +100,14 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     ComparisonBar,
     ArticleScheduleComponent,
     ArticleMainComponent,
-    ArticleSubComponent
+    ArticleSubComponent,
+    ProfileVideoStackComponent
   ],
 
   exports: [
     //pages
     LeaguePage,
+    TeamPage,
 
     //modules
     ArticlesModule,
@@ -115,6 +123,7 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     FAQModule,
     NewsModule,
     TwitterModule,
+    DailyUpdateModule,
 
     //component
     StandingsComponent,
@@ -130,7 +139,8 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     ComparisonBar,
     ArticleScheduleComponent,
     ArticleMainComponent,
-    ArticleSubComponent
+    ArticleSubComponent,
+    ProfileVideoStackComponent
   ],
 
   providers: [
@@ -144,7 +154,8 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     DykService,
     FaqService,
     NewsService,
-    TwitterService
+    TwitterService,
+    DailyUpdateService
   ]
 })
 

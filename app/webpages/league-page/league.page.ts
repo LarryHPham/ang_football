@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -109,7 +109,6 @@ export class LeaguePage implements OnInit {
     private batchLoadIndex: number = 1;
 
     constructor(
-      private _router:Router,
       private activateRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
       private _videoBatchService: VideoService,
@@ -129,7 +128,7 @@ export class LeaguePage implements OnInit {
     ) {
       var currentUnixDate = new Date().getTime();
 
-      this.paramsub= this.activateRoute.params.subscribe(
+      this.paramsub = this.activateRoute.params.subscribe(
             (param :any)=> {
               this.partnerID = param['partnerID'];
               this.scope = param['scope'] != null ? param['scope'] : 'nfl';
