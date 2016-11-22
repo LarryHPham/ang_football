@@ -21,12 +21,10 @@ const relativeChildRoutes = [
   },
   {
       path: 'contact-us',
-      name: 'Contact-us-page',
       component: ContactUsPage,
   },
   {
       path: 'disclaimer',
-      name: 'Disclaimer-page',
       component: DisclaimerPage,
   },
   // {
