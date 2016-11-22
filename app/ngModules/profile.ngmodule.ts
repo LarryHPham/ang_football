@@ -19,6 +19,8 @@ import { FaqService } from "../services/faq.service";
 import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
+import { RosterService } from '../services/roster.service';
+import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -38,6 +40,8 @@ import { FAQModule } from "../fe-core/modules/faq/faq.module";
 import { NewsModule } from "../fe-core/modules/news/news.module";
 import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
 import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
+import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
+import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -56,6 +60,10 @@ import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
 import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/profile-video-stack.component";
+import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.component";
+import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
+import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
+import { RosterComponent } from "../fe-core/components/roster/roster.component";
 
 @NgModule({
   imports: [
@@ -85,6 +93,8 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     NewsModule,
     TwitterModule,
     DailyUpdateModule,
+    TeamRosterModule,
+    PlayerStatsModule,
 
     //component
     StandingsComponent,
@@ -101,7 +111,11 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
-    ProfileVideoStackComponent
+    ProfileVideoStackComponent,
+    BarChartComponent,
+    GlossaryComponent,
+    RosterComponent,
+    PlayerStatsComponent
   ],
 
   exports: [
@@ -124,6 +138,8 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     NewsModule,
     TwitterModule,
     DailyUpdateModule,
+    TeamRosterModule,
+    PlayerStatsModule,
 
     //component
     StandingsComponent,
@@ -140,7 +156,12 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
-    ProfileVideoStackComponent
+    ProfileVideoStackComponent,
+    BarChartComponent,
+    PlayerStatsComponent,
+    GlossaryComponent,
+    RosterComponent,
+    PlayerStatsComponent
   ],
 
   providers: [
@@ -155,6 +176,7 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     FaqService,
     NewsService,
     TwitterService,
+    RosterService,
     DailyUpdateService
   ]
 })

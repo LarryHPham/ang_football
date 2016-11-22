@@ -223,14 +223,14 @@ export class DeepDivePage{
       //   // window.location.pathname = "/"+$event.toLowerCase();
       // }
 
-      // if($event == this.changeScopeVar){
-      //   this.getSideScroll();
-      // }else{
-      //   this.changeScopeVar = $event;
-      //   this.callCount = 1;
-      //   this.sideScrollData = null;
-      //   this.getSideScroll();
-      // }
+      if($event == this.changeScopeVar){
+        this.getSideScroll();
+      }else{
+        this.changeScopeVar = $event;
+        this.callCount = 1;
+        this.sideScrollData = null;
+        this.getSideScroll();
+      }
     }
 
     private scrollCheck(event){
