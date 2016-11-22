@@ -39,6 +39,8 @@ import { DYKModule } from "../fe-core/modules/dyk/dyk.module";
 import { FAQModule } from "../fe-core/modules/faq/faq.module";
 import { NewsModule } from "../fe-core/modules/news/news.module";
 import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
+import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
+import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -56,6 +58,10 @@ import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.compon
 import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
+import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
+import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
+import { RosterComponent } from "../fe-core/components/roster/roster.component";
+
 
 @NgModule({
   imports: [
@@ -84,6 +90,8 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     FAQModule,
     NewsModule,
     TwitterModule,
+    TeamRosterModule,
+    PlayerStatsModule,
 
     //component
     StandingsComponent,
@@ -99,7 +107,11 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     ComparisonBar,
     ArticleScheduleComponent,
     ArticleMainComponent,
-    ArticleSubComponent
+    ArticleSubComponent,
+    PlayerStatsComponent,
+    GlossaryComponent,
+    RosterComponent
+
   ],
 
   exports: [
@@ -121,6 +133,8 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     FAQModule,
     NewsModule,
     TwitterModule,
+    TeamRosterModule,
+    PlayerStatsModule,
 
     //component
     StandingsComponent,
@@ -136,7 +150,11 @@ import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-b
     ComparisonBar,
     ArticleScheduleComponent,
     ArticleMainComponent,
-    ArticleSubComponent
+    ArticleSubComponent,
+    PlayerStatsComponent,
+    GlossaryComponent,
+    RosterComponent
+
   ],
 
   providers: [

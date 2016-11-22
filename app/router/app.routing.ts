@@ -15,6 +15,20 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
 const relativeChildRoutes = [
+  {
+      path: 'about-us',
+      component: AboutUsPage,
+  },
+  {
+      path: 'contact-us',
+      name: 'Contact-us-page',
+      component: ContactUsPage,
+  },
+  {
+      path: 'disclaimer',
+      name: 'Disclaimer-page',
+      component: DisclaimerPage,
+  },
   // {
   //     path: ':scope/pick-a-team',
   //     name: 'Pick-team-page',
@@ -40,20 +54,6 @@ const relativeChildRoutes = [
   //     name: 'Directory-page-starts-with',
   //     component: DirectoryPage,
   // },
-  {
-      path: '/about-us',
-      component: AboutUsPage,
-  },
-  {
-      path: '/contact-us',
-      name: 'Contact-us-page',
-      component: ContactUsPage,
-  },
-  {
-      path: '/disclaimer',
-      name: 'Disclaimer-page',
-      component: DisclaimerPage,
-  },
   // {
   //     path: ':scope/search/:query',
   //     name: 'Search-page',
