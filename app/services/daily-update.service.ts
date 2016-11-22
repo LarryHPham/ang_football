@@ -11,16 +11,18 @@ import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 //interfaces
 import { DailyUpdateData, DailyUpdateChart, DataSeries, APIDailyUpdateData, APIGameData, PostGameArticleData } from "../fe-core/modules/daily-update/daily-update.module";
-
+import { CircleImageData } from "../fe-core/components/images/image-data";
 
 
 declare var moment: any;
 
 @Injectable()
 export class DailyUpdateService {
-  postGameArticleData: PostGameArticleData;
 
-  constructor(public http: Http){}
+  private postGameArticleData: PostGameArticleData;
+  public imageConfig: CircleImageData;
+
+  constructor(public http: Http) {}
 
   getErrorData(): DailyUpdateData {
     return {
@@ -32,7 +34,7 @@ export class DailyUpdateService {
       fullBackgroundImageUrl: "",
       seasonStats: []
     };
-  }
+  };
 
   getTeamDailyUpdate(teamId: number): Observable<DailyUpdateData> {
     //http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800
@@ -418,5 +420,21 @@ export class DailyUpdateService {
     else {
       return null;
     }
-  }
+  };
+
+  getImageConfig() {
+    this.imageConfig = {
+      imageClass: "image-121",
+      mainImage: {
+        imageClass: "border-2",
+        imageUrl: GlobalSettings.getSiteLogoUrl(),
+        placeholderImageUrl: GlobalSettings.getSiteLogoUrl()
+      }
+    };
+    return this.imageConfig;
+  } //getImageConfig
+
+
+
+
 }
