@@ -411,8 +411,8 @@ export class BoxScoresService {
         let awayData = data.awayTeamInfo;
         let homeData = data.homeTeamInfo;
         let gameInfo = data.gameInfo;
-        let homeLink = VerticalGlobalFunctions.formatTeamRoute(homeData.name, homeData.id);
-        let awayLink = VerticalGlobalFunctions.formatTeamRoute(awayData.name, awayData.id);
+        let homeLink = VerticalGlobalFunctions.formatTeamRoute('nfl', homeData.name, homeData.id);
+        let awayLink = VerticalGlobalFunctions.formatTeamRoute('nfl', awayData.name, awayData.id);
         var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
         if(teamId != null && profile == 'team'){//if league then both items will link

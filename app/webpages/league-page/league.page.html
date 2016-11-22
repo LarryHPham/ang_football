@@ -1,5 +1,5 @@
 <sidekick-wrapper>
-  <section class="page profile-container league-page" (window:scroll)="onScroll()">
+  <section class="page profile-container league-page">
     <div *ngIf="profileHeaderData">
       <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
       <error-component *ngIf="hasError"></error-component>
