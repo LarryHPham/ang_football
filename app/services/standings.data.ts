@@ -143,7 +143,8 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
   convertToCarouselItem(item: TeamStandingsData, index:number): SliderCarouselInput {
     var yearEnd = Number(item.seasonBase)+1;
     var teamFullName = item.teamMarket + ' ' + item.teamName;
-    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId);
+    var routeScope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : item.leagueAbbreviation.toLowerCase();
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, teamFullName, item.teamId);
     var teamNameLink = {
         route: teamRoute,
         text: teamFullName
@@ -185,20 +186,32 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
     }
     var overallRecord = item.teamOverallRecord ? item.teamOverallRecord : 'N/A';
 
-
+      // subheader: Array<Link | string>;
+      // profileNameLink: Link;
+      // description: Array<Link | string>;
+      // copyrightInfo?: string;
+      // lastUpdatedDate: string;
+      // backgroundImage?: string;
+      // circleImageUrl: string;
+      // circleImageRoute: Array<any>;
+      // subImageUrl?: string;
+      // subImageRoute?: Array<any>;
+      // rank?: string;
+      // rankClass?: string;
+      // noData?: boolean;
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
-      copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [subheadercond],
       profileNameLink: teamNameLink,
       description:[
-          "The ", teamNameLink,
-          " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + rankPoint + "</span>, with a record of " + "<span class='text-heavy'>" + overallRecord + "</span>."
+        "The ", teamNameLink,
+        " are currently <span class='text-heavy'>ranked #" + rank + "</span>" + " in the <span class='text-heavy'>" + rankPoint + "</span>, with a record of " + "<span class='text-heavy'>" + overallRecord + "</span>."
       ],
+      copyrightInfo: GlobalSettings.getCopyrightInfo(),
       lastUpdatedDate: item.displayDate,
+      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
       circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
       circleImageRoute: teamRoute,
-      rank: rank
+      rank: rank.toString()
     });
   }
 }
@@ -341,6 +354,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
     var link: Array<any> = null;
     var imageUrl: string = null;
     var rank;
+    var routeScope = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : item.leagueAbbreviation.toLowerCase();
     if(item.groupName == 'Conference'){
       if(item.conferenceName == item.divisionName){
         rank = item.divisionRank != null ? item.divisionRank : 'N/A';
@@ -361,7 +375,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         display = teamAbbr + divisionRank;
         sort = teamAbbr;
         if ( item.teamId != this.currentTeamId ) {
-          link = VerticalGlobalFunctions.formatTeamRoute(teamFullName,item.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(routeScope, teamFullName,item.teamId);
         }
         imageUrl = item.teamLogo ? GlobalSettings.getImageUrl(item.teamLogo) : null;
         break;
