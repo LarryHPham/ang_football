@@ -132,7 +132,6 @@ export class VerticalGlobalFunctions {
     //   }
     // }
     return playerRoute ? playerRoute : ['Error-page'];
-  }eturn playerRoute ? playerRoute : ['Error-page'];
   }
 
   /**
