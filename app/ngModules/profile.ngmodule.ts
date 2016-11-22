@@ -60,6 +60,7 @@ import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
 import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/profile-video-stack.component";
+import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.component";
 import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
 import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 import { RosterComponent } from "../fe-core/components/roster/roster.component";
@@ -111,6 +112,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     ArticleMainComponent,
     ArticleSubComponent,
     ProfileVideoStackComponent,
+    BarChartComponent,
     GlossaryComponent,
     RosterComponent,
     PlayerStatsComponent
@@ -155,6 +157,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     ArticleMainComponent,
     ArticleSubComponent,
     ProfileVideoStackComponent,
+    BarChartComponent,
     PlayerStatsComponent,
     GlossaryComponent,
     RosterComponent,

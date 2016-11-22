@@ -38,7 +38,7 @@ const relativeChildRoutes = [
   //     component: LeaguePage,
   // },
   {
-      path: ':scope/team/:teamName/:teamId',
+      path: ':scope/team/:teamName/:teamID',
       component: TeamPage,
   },
   // {
