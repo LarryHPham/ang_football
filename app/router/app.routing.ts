@@ -8,6 +8,7 @@ import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
 import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
+import { StandingsPage } from "../webpages/standings-page/standings.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -72,21 +73,18 @@ const relativeChildRoutes = [
       path: ':scope/schedules/:teamName/:teamID/:year/:tab/:pageNum',
       component: SchedulesPage
   },
-  // {
-  //     path: ':scope/standings',
-  //     name: 'Standings-page',
-  //     component: StandingsPage
-  // },
-  // {
-  //     path: ':scope/standings/:type',
-  //     name: 'Standings-page-league',
-  //     component: StandingsPage
-  // },
-  // {
-  //     path: ':scope/standings/:type/:teamName/:teamID',
-  //     name: 'Standings-page-team',
-  //     component: StandingsPage
-  // },
+  {
+      path: ':scope/standings',
+      component: StandingsPage
+  },
+  {
+      path: ':scope/standings/:type',
+      component: StandingsPage
+  },
+  {
+      path: ':scope/standings/:type/:teamName/:teamID',
+      component: StandingsPage
+  },
   // {
   //     path: ':scope/list/:query',
   //     name: 'Dynamic-list-page',

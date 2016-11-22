@@ -13,23 +13,23 @@ import {StandingsTableTabData} from '../fe-core/components/standings/standings.c
 
 @Injectable()
 export class StandingsService {
-  constructor(public http: Http, private _mlbFunctions: VerticalGlobalFunctions){}
+  constructor(public http: Http){}
 
-  private getLinkToPage(pageParams: SportPageParameters, teamName: string): Array<any> {
-    var pageName = "Standings-page";
+  private getLinkToPage(pageParams, profile: string): Array<any> {
+    var linkToPage = [];
+    let pageName = 'standings';
     var pageValues = {};
 
-    if ( pageParams.teamId && teamName ) {
-      pageValues["teamId"] = pageParams.teamId;
-      pageValues["teamName"] = GlobalFunctions.toLowerKebab(teamName);
-      pageValues["type"] = "team";
-      pageName += "-team";
+    let routeScope = pageParams.scope != null ? pageParams.scope : 'nfl';
+
+    linkToPage.push('/' + routeScope, pageName, profile);
+
+    if(profile != 'league'){
+      linkToPage.push(GlobalFunctions.toLowerKebab(pageParams.teamName), pageParams.teamID);
+    }else{
     }
-    else if ( pageParams.conference != null ) {
-      pageValues["type"] = Conference[pageParams.conference];
-      pageName += "-league";
-    }
-    return [pageName, pageValues];
+    console.log(linkToPage);
+    return linkToPage;
   }
 
   private getModuleTitle(pageParams: SportPageParameters, teamName: string): string {
@@ -59,10 +59,11 @@ export class StandingsService {
     return pageTitle;
   }
 
-  loadAllTabsForModule(pageParams: SportPageParameters, scope?:string, currentTeamId?: string, currentTeamName?: string, page?: string) {
+  loadAllTabsForModule(pageParams: SportPageParameters, profileType:string, currentTeamId?: string, currentTeamName?: string, page?: string) {
+    console.log(profileType);
     return {
         moduleTitle: this.getModuleTitle(pageParams, currentTeamName),
-        pageRouterLink: this.getLinkToPage(pageParams, currentTeamName),
+        pageRouterLink: this.getLinkToPage(pageParams, profileType),
         tabs: this.initializeAllTabs(pageParams,currentTeamId ? currentTeamId : null, page ? page : null)
     };
   }
