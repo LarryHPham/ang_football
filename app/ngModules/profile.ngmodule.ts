@@ -43,6 +43,7 @@ import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
 import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
 import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
 import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
+import { FantasyModule } from "../fe-core/modules/fantasy/fantasy.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -97,6 +98,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     DailyUpdateModule,
     TeamRosterModule,
     PlayerStatsModule,
+    FantasyModule,
 
     //component
     StandingsComponent,
@@ -143,6 +145,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     DailyUpdateModule,
     TeamRosterModule,
     PlayerStatsModule,
+    FantasyModule,
 
     //component
     StandingsComponent,

@@ -1,11 +1,11 @@
 //angular core libraries
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Title} from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 //interfaces
-import {ProfileHeaderData} from '../../fe-core/modules/profile-header/profile-header.module';
-import {DailyUpdateData} from "../../fe-core/modules/daily-update/daily-update.module";
+import { ProfileHeaderData } from '../../fe-core/modules/profile-header/profile-header.module';
+import { DailyUpdateData } from "../../fe-core/modules/daily-update/daily-update.module";
 // import {SportPageParameters} from '../../global/global-interface';
 // import {dykModuleData} from "../../fe-core/modules/dyk/dyk.module";
 // import {faqModuleData} from "../../fe-core/modules/faq/faq.module";
@@ -15,8 +15,8 @@ import {DailyUpdateData} from "../../fe-core/modules/daily-update/daily-update.m
 // import {TDLStandingsTabdata} from '../../services/standings.data';
 
 //services
-import {ProfileHeaderService} from '../../services/profile-header.service';
-import {DailyUpdateService} from "../../services/daily-update.service";
+import {ProfileHeaderService } from '../../services/profile-header.service';
+import {DailyUpdateService } from "../../services/daily-update.service";
 // import {DykService} from '../../services/dyk.service';
 // import {FaqService} from '../../services/faq.service';
 // import {BoxScoresService} from '../../services/box-scores.service';
