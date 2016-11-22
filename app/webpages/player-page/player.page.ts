@@ -70,7 +70,6 @@ export class PlayerPage{
   ) {
     this.paramsub = this.activateRoute.params.subscribe(
       (param: any) => {
-        console.log(param);
         this.playerID = param['playerID'];
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
 
@@ -82,7 +81,6 @@ export class PlayerPage{
   private setupPlayerProfileData() {
     this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
-        console.log(data);
         /*** About [Player Name] ***/
         // this.metaTags(data);
         // this.pageParams = data.pageParams;
@@ -117,7 +115,6 @@ export class PlayerPage{
     this.imageConfig = this._dailyUpdateService.getImageConfig();
     this._dailyUpdateService.getPlayerDailyUpdate(playerId)
       .subscribe(data => {
-        console.log(data);
         this.dailyUpdateData = data;
       },
       err => {
