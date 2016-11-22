@@ -20,7 +20,6 @@ import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
-import { DailyUpdateService } from "../services/daily-update.service";
 import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 
 //pages
@@ -93,6 +92,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     NewsModule,
     TwitterModule,
     DailyUpdateModule,
+    TeamRosterModule,
+    PlayerStatsModule,
 
     //component
     StandingsComponent,
@@ -109,7 +110,10 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
-    ProfileVideoStackComponent
+    ProfileVideoStackComponent,
+    GlossaryComponent,
+    RosterComponent,
+    PlayerStatsComponent
   ],
 
   exports: [
@@ -153,7 +157,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     ProfileVideoStackComponent,
     PlayerStatsComponent,
     GlossaryComponent,
-    RosterComponent
+    RosterComponent,
+    PlayerStatsComponent
   ],
 
   providers: [
