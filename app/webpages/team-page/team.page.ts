@@ -54,7 +54,7 @@ export class TeamPage implements OnInit {
   private constructorControl:boolean = true;
   public partnerID: string;
   public scope: string;
-  public paramsub;
+  public paramsub: any;
   private teamID: number;
   private pageParams:SportPageParameters;
   private dateParam:any;
@@ -80,6 +80,7 @@ export class TeamPage implements OnInit {
   private selectedFilter1:string;
   private eventStatus: any;
   private isFirstRun:number = 0;
+  private scheduleParams: any;
 
   private standingsData:StandingsModuleData;
 
@@ -367,6 +368,15 @@ export class TeamPage implements OnInit {
           }
         }
         this.schedulesData = schedulesData;
+
+        this.scheduleParams = {
+          scope: this.scope,
+          teamName: 'league',
+          teamID: null,
+          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
+          tab : status == 'pregame' ? 'pregame' : 'postgame',
+          pageNum: 1,
+        }
       }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
 
