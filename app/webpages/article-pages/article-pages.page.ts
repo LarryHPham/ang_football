@@ -9,7 +9,6 @@ import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {GlobalSettings} from "../../global/global-settings";
 import {HeadlineDataService} from "../../services/headline-module-service";
 //import {SeoService} from '../../seo.service';
-import {WidgetModule} from "../../fe-core/modules/widget/widget.module";
 import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 
 import {DeepDiveService} from '../../services/deep-dive.service';
@@ -197,14 +196,14 @@ export class ArticlePages implements OnInit {
                     routes = {
                         index: val.paragraph_index,
                         name: val.display,
-                        route: VerticalGlobalFunctions.formatTeamRoute(val.display, val.id),
+                        route: VerticalGlobalFunctions.formatTeamRoute(self.scope, val.display, val.id),
                         searchParameter: "<ng2-route>" + val.display + "<\s*/?ng2-route>",
                     };
                 } else {
                     routes = {
                         index: val.paragraph_index,
                         name: val.display,
-                        route: VerticalGlobalFunctions.formatPlayerRoute(val.team_name, val.display, val.id),
+                        route: VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.display, val.id),
                         searchParameter: "<ng2-route>" + val.display + "<\s*/?ng2-route>",
                     };
                 }
@@ -387,7 +386,7 @@ export class ArticlePages implements OnInit {
         if (this.articleType == "playerRoster") {
             data['article'].forEach(function (val) {
                 if (val['player_roster_module']) {
-                    let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(val['player_roster_module'].team_name, val['player_roster_module'].name, val['player_roster_module'].id);
+                    let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(this.scope, val['player_roster_module'].team_name, val['player_roster_module'].name, val['player_roster_module'].id);
                     val['player'] = {
                         imageClass: "image-122",
                         mainImage: {
@@ -415,7 +414,7 @@ export class ArticlePages implements OnInit {
         if (this.articleType == 'playerComparison') {
             data['article'][2]['player_comparison_module'].forEach(function (val, index) {
                 if (index == 0) {
-                    let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(val.team_name, val.name, val.id);
+                    let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(this.scope, val.team_name, val.name, val.id);
                     val['imageLeft'] = {
                         imageClass: "image-122",
                         mainImage: {
@@ -437,7 +436,7 @@ export class ArticlePages implements OnInit {
                     links.push(val['imageLeft'], val['imageLeftSmall']);
                 }
                 if (index == 1) {
-                    let urlPlayerRight = VerticalGlobalFunctions.formatPlayerRoute(val.team_name, val.name, val.id);
+                    let urlPlayerRight = VerticalGlobalFunctions.formatPlayerRoute(this.scope, val.team_name, val.name, val.id);
                     val['imageRight'] = {
                         imageClass: "image-122",
                         mainImage: {
@@ -466,8 +465,8 @@ export class ArticlePages implements OnInit {
                 if (index == 1 && val['game_module']) {
                     var shortDate = val['game_module'].event_date;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(val['game_module'].home_team_name, val['game_module'].home_team_id);
-                    let urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(val['game_module'].away_team_name, val['game_module'].away_team_id);
+                    let urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(this.scope, val['game_module'].home_team_name, val['game_module'].home_team_id);
+                    let urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(this.scope, val['game_module'].away_team_name, val['game_module'].away_team_id);
                     val['teamLeft'] = {
                         imageClass: "image-122",
                         mainImage: {
@@ -509,8 +508,8 @@ export class ArticlePages implements OnInit {
                 if (index == 4 && val['game_module']) {
                     var shortDate = val['game_module'].event_date;
                     shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(val['game_module'].home_team_name, val['game_module'].home_team_id);
-                    let urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(val['game_module'].away_team_name, val['game_module'].away_team_id);
+                    let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(this.scope, val['game_module'].home_team_name, val['game_module'].home_team_id);
+                    let urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(this.scope, val['game_module'].away_team_name, val['game_module'].away_team_id);
                     val['teamLeft'] = {
                         imageClass: "image-122",
                         mainImage: {
@@ -556,7 +555,7 @@ export class ArticlePages implements OnInit {
             var isFirstTeam = true;
             data['article'].forEach(function (val) {
                 if (val['team_record_module'] && isFirstTeam) {
-                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(val['team_record_module'].name, val['team_record_module'].id);
+                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(this.scope, val['team_record_module'].name, val['team_record_module'].id);
                     val['imageTop'] = {
                         imageClass: "image-122",
                         mainImage: {
@@ -579,7 +578,7 @@ export class ArticlePages implements OnInit {
                     return isFirstTeam = false;
                 }
                 if (val['team_record_module'] && !isFirstTeam) {
-                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(val['team_record_module'].name, val['team_record_module'].id);
+                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(this.scope, val['team_record_module'].name, val['team_record_module'].id);
                     val['imageBottom'] = {
                         imageClass: "image-122",
                         mainImage: {
