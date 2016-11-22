@@ -112,6 +112,8 @@ export class TeamPage implements OnInit {
 
   private ptabName:string;
 
+  private batchLoadIndex: number = 1;
+
   constructor(
     private activateRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
@@ -136,15 +138,17 @@ export class TeamPage implements OnInit {
 
     this.imageConfig = this._dailyUpdateService.getImageConfig();
 
-    this.paramsub = this.activateRoute.params.subscribe(
-      (param :any)=> {
-        this.teamID = param['teamID'];
-        this.partnerID = param['partnerID'];
-        this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+    if (this.constructorControl) {
+      this.paramsub = this.activateRoute.params.subscribe(
+        (param :any)=> {
+          this.teamID = param['teamID'];
+          this.partnerID = param['partnerID'];
+          this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
 
-        this.setupProfileData(this.partnerID, this.scope, this.teamID);
-      }
-    ) //this.paramsub
+          this.setupProfileData(this.partnerID, this.scope, this.teamID);
+        }
+      ) //this.paramsub
+    }
 
     this.dateParam = {
       scope: 'team',//current profile page
@@ -457,4 +461,9 @@ export class TeamPage implements OnInit {
 
 
 
+    // function to lazy load page sections
+    private onScroll(event) {
+      this.batchLoadIndex = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      return;
+    }
 }
