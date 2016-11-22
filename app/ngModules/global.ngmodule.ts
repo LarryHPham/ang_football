@@ -54,7 +54,7 @@ import { LoadingComponent } from "../fe-core/components/loading/loading.componen
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
-import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
+import { CalendarCarousel } from "../ui-modules/calendar/calendar-carousel.component";
 import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 import { GameArticle } from "../fe-core/components/game-article/game-article.component";
 import { BoxArticleComponent } from "../fe-core/components/box-article/box-article.component";

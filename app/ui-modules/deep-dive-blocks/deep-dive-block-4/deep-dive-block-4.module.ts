@@ -26,7 +26,7 @@ export class DeepDiveBlock4{
     }
 
   getFourthArticleStackData(){
-    this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 4, this.geoLocation)
+    this._deepDiveData.getDeepDiveBatchService(this.scope, 1, 4, this.geoLocation)
         .subscribe(data => {
           this.fourthStackTop = this._deepDiveData.transformToArticleStack(data);
         },
