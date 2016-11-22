@@ -68,6 +68,7 @@ export class LeaguePage implements OnInit {
     private dateParam:any;
 
     private schedulesData:any;
+    private scheduleParams:any;
     private scheduleFilter1:Array<any>;
     private scheduleFilter2:Array<any>;
     private selectedFilter1:string
@@ -300,6 +301,16 @@ export class LeaguePage implements OnInit {
           this.scheduleFilter2 = null;
         }
         this.schedulesData = schedulesData;
+
+        this.scheduleParams = {
+          scope: this.scope,
+          teamName: 'league',
+          teamID: null,
+          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
+          tab : status == 'pregame' ? 'pregame' : 'postgame',
+          pageNum: 1,
+        }
+
       }, year, week) // isTeamProfilePage = true
     } //getSchedulesData
 
