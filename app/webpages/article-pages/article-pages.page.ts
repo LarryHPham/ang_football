@@ -636,12 +636,11 @@ export class ArticlePages implements OnInit {
     transformTrending(data, currentArticleId) {
         var articles = [];
         var self = this;
-        data.forEach(function (val, index) {
+        data.forEach(function (val) {
             var articleData;
             if (self.eventType != "story" && self.eventType != "video") {
                 if (val.event_id != currentArticleId) {
-                    var date = "TODO";
-                    val["date"] = date;
+                    val["date"]= GlobalFunctions.sntGlobalDateFormatting(moment.unix(val['article_data'].publication_date), "timeZone");
                     articleData = {
                         title: val.title,
                         date: val["date"],
@@ -655,8 +654,7 @@ export class ArticlePages implements OnInit {
                 }
             } else {
                 if (val.id != currentArticleId) {
-                    var date = "TODO";
-                    val["date"] = date;
+                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(val['article_data'].publication_date), "timeZone");
                     articleData = {
                         title: val.title,
                         date: val["date"],
