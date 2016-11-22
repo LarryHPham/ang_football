@@ -18,6 +18,7 @@ import { DykService } from '../services/dyk.service';
 import { FaqService } from "../services/faq.service";
 import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
+import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
 import { DailyUpdateService } from "../services/daily-update.service";
 import { HeadlineDataService } from "../global/global-ai-headline-module-service";
@@ -39,6 +40,7 @@ import { DYKModule } from "../fe-core/modules/dyk/dyk.module";
 import { FAQModule } from "../fe-core/modules/faq/faq.module";
 import { NewsModule } from "../fe-core/modules/news/news.module";
 import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
+import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
 import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
 import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
 
@@ -58,10 +60,10 @@ import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.compon
 import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
+import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/profile-video-stack.component";
 import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
 import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 import { RosterComponent } from "../fe-core/components/roster/roster.component";
-
 
 @NgModule({
   imports: [
@@ -90,8 +92,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     FAQModule,
     NewsModule,
     TwitterModule,
-    TeamRosterModule,
-    PlayerStatsModule,
+    DailyUpdateModule,
 
     //component
     StandingsComponent,
@@ -108,10 +109,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
-    PlayerStatsComponent,
-    GlossaryComponent,
-    RosterComponent
-
+    ProfileVideoStackComponent
   ],
 
   exports: [
@@ -133,6 +131,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     FAQModule,
     NewsModule,
     TwitterModule,
+    DailyUpdateModule,
     TeamRosterModule,
     PlayerStatsModule,
 
@@ -151,10 +150,10 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
+    ProfileVideoStackComponent,
     PlayerStatsComponent,
     GlossaryComponent,
     RosterComponent
-
   ],
 
   providers: [

@@ -1,59 +1,18 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import {Http} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { Headers, Http } from '@angular/http';
+import { Router } from '@angular/router';
+import 'rxjs/add/operator/map';
 
-import {GlobalFunctions} from "../global/global-functions";
-import {GlobalSettings} from "../global/global-settings";
-import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
+//globals
+import { GlobalFunctions } from "../global/global-functions";
+import { GlobalSettings } from "../global/global-settings";
+import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
-export interface DailyUpdateData {
-  hasError: boolean;
-  type: string;
-  wrapperStyle: any;
-  lastUpdateDate: string;
-  chart: DailyUpdateChart;
-  fullBackgroundImageUrl: string;
-  seasonStats: Array<{name: string, value: string, icon: string}>;
-  postGameArticle?: PostGameArticleData;
-}
+//interfaces
+import { DailyUpdateData, DailyUpdateChart, DataSeries, APIDailyUpdateData, APIGameData, PostGameArticleData } from "../fe-core/modules/daily-update/daily-update.module";
 
-export interface DailyUpdateChart {
-  categories: Array<string>;
-  dataSeries: Array<{name: string, values: Array<any>}>;
-}
 
-interface DataSeries {
-  name: string;
-  key: string;
-}
-
-interface APIDailyUpdateData {
-  lastUpdated: string;
-  backgroundImage: string;
-  pitcher: boolean;
-  seasonStats: Array<any>;
-  recentGames: APIGameData;
-}
-
-interface APIGameData {
-  pointsFor?: string;
-  opponentTeamName?: string;
-  pointsAgainst?: string;
-  eventId?: string;
-  teamId?: string;
-  gameStat1?: string;
-  gameStat2?: string;
-}
-
-interface PostGameArticleData {
-  eventId: string;
-  teamId: string;
-  url?: Object;
-  pubDate: string;
-  headline: string;
-  text: Array<any>;
-  img: string;
-}
 
 declare var moment: any;
 
