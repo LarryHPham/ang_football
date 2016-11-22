@@ -28,6 +28,7 @@ import { SeasonStatsService } from "../services/season-stats.service";
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
+import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -83,6 +84,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     LeaguePage,
     TeamPage,
     PlayerPage,
+    SchedulesPage,
 
     //modules
     ArticlesModule,
@@ -131,6 +133,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     LeaguePage,
     TeamPage,
     PlayerPage,
+    SchedulesPage,
 
     //modules
     ArticlesModule,
