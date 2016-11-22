@@ -59,6 +59,7 @@ export class PlayerPage{
   private profileHeaderData: any;
   private dailyUpdateData: any;
 
+  private imageConfig:any;
   private batchLoadIndex:any;
   private hasError:any;
 
@@ -113,6 +114,7 @@ export class PlayerPage{
   }
 
   private dailyUpdateModule(playerId: number) {
+    this.imageConfig = this._dailyUpdateService.getImageConfig();
     this._dailyUpdateService.getPlayerDailyUpdate(playerId)
       .subscribe(data => {
         console.log(data);
