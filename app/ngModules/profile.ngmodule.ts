@@ -56,6 +56,7 @@ import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
 import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/profile-video-stack.component";
+import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.component";
 
 @NgModule({
   imports: [
@@ -101,7 +102,9 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
-    ProfileVideoStackComponent
+    ProfileVideoStackComponent,
+    BarChartComponent
+
   ],
 
   exports: [
@@ -140,7 +143,9 @@ import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/pr
     ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
-    ProfileVideoStackComponent
+    ProfileVideoStackComponent,
+    BarChartComponent
+    
   ],
 
   providers: [

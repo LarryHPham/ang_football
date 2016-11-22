@@ -26,6 +26,7 @@ import { ListOfListsService } from "../services/list-of-lists.service";
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
 import { SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle } from "../fe-core/pipes/safe.pipe";
 import { StatHyphenValuePipe } from "../fe-core/pipes/stat-hyphen.pipe";
+import { PossessivePipe } from "../fe-core/pipes/possessive.pipe";
 
 //modules
 import { WidgetModule } from "../fe-core/modules/widget/widget.module";
@@ -176,7 +177,8 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       StatHyphenValuePipe,
       HamburgerMenuComponent,
       RectangleImage,
-      WidgetCarouselModule
+      WidgetCarouselModule,
+      PossessivePipe
 
     ],
     exports: [
@@ -246,7 +248,9 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
       SanitizeRUrl,
       SanitizeStyle,
       SanitizeScript,
-      StatHyphenValuePipe
+      StatHyphenValuePipe,
+      PossessivePipe
+
     ],
     providers: [
       SanitizeScript,

@@ -6,17 +6,6 @@ import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
-//interfaces
-import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
-import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
-import { ComparisonModuleData } from '../../fe-core/modules/comparison/comparison.module';
-import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
-import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
-import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
-import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
-import { HeadlineData } from "../../global/global-interface";
-import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
-
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
 import { VideoService } from "../../services/video.service";
@@ -33,6 +22,19 @@ import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
+
+//interfaces
+import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
+import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
+import { ComparisonModuleData } from '../../fe-core/modules/comparison/comparison.module';
+import { StandingsModuleData } from '../../fe-core/modules/standings/standings.module';
+import { TransactionModuleData } from "../../fe-core/modules/transactions/transactions.module";
+import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
+import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
+import { HeadlineData } from "../../global/global-interface";
+import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
+
+
 
 // Libraries
 declare var moment;
