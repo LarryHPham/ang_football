@@ -224,13 +224,14 @@ export class TransactionsService {
 
       //if data is coming through then run through the transforming function for the module
       carouselArray = data.map((val, index) => {
-        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var scope = val.affiliation.toUpperCase();
+        var routeScope = val.affiliation.toLowerCase() == 'fbs' ? 'ncaaf' : val.affiliation.toLowerCase();
         var playerFullName = val.playerFirstName + ' ' + val.playerLastName;
         var playerRoute = null;
-        var scope = val.affiliation.toUpperCase();
+        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
 
         if (val.playerActive) {
-          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+          playerRoute = VerticalGlobalFunctions.formatPlayerRoute(routeScope, val.teamName, playerFullName, val.playerId);
         }
         var teamLinkText = {
           route: teamId == val.teamId ? null : teamRoute,
@@ -290,6 +291,7 @@ export class TransactionsService {
 
       //Description conditional need updated when correct API gets set up and "Type" is added to JSON object
       var description;
+      var routeScope = val.affiliation.toLowerCase() == 'fbs' ? 'ncaaf' : val.affiliation.toLowerCase();
 
       if (val.transactionType == "suspension") {
         description = val.contents;
@@ -302,7 +304,7 @@ export class TransactionsService {
       }
 
       if (val.playerActive) {
-        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+        playerRoute = VerticalGlobalFunctions.formatPlayerRoute(routeScope, val.teamName, playerFullName, val.playerId);
       }
 
       var playerTextLink = {

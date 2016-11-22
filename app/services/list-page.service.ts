@@ -18,6 +18,7 @@ import { TitleInputData } from '../fe-core/components/title/title.component';
 declare var moment;
 
 interface PlayerItem {
+    affiliation: string,
     teamName: string,
     teamId: string,
     conferenceName: string,
@@ -278,9 +279,10 @@ export class ListPageService {
     } else{
       //if data is coming through then run through the transforming function for the module
       carouselArray = carData.map(function(val, index){
+        let routeScope = val.affiliation.toLowerCase() == 'fbs' ? 'ncaaf' : val.affiliation.toLowerCase();
         var carouselItem;
         var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
-        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+        var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
           text: val.teamName,
@@ -306,7 +308,7 @@ export class ListPageService {
           description = ['<i class="fa fa-map-marker text-master"></i>', val.teamCity + ', ' + val.teamState];
         } else { //if profile == 'player'
           ctaDesc = 'Interested in discovering more about this player?';
-          primaryRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,playerName,val.playerId.toString());
+          primaryRoute = VerticalGlobalFunctions.formatPlayerRoute(routeScope, val.teamName,playerName,val.playerId.toString());
           primaryImage = GlobalSettings.getImageUrl(val.playerHeadshotUrl);
 
           profileLinkText = {
@@ -340,7 +342,8 @@ export class ListPageService {
     var detailData = data.listData;
     var detailInfo = data.listInfo;
     return detailData.map(function(val, index){
-      var teamRoute = VerticalGlobalFunctions.formatTeamRoute(val.teamName, val.teamId);
+      let routeScope = val.affiliation.toLowerCase() == 'fbs' ? 'ncaaf' : val.affiliation.toLowerCase();
+      var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
       var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
@@ -368,7 +371,7 @@ export class ListPageService {
         };
       }else if(data.query.target == 'player'){
         var playerFullName = val.playerFirstName + " " + val.playerLastName;
-        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName, playerFullName, val.playerId);
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(routeScope, val.teamName, playerFullName, val.playerId);
         var position = val.playerPosition;
         var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var stat = GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) );
