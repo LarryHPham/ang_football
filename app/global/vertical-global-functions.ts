@@ -149,10 +149,10 @@ export class VerticalGlobalFunctions {
    * @param {eventID} eventID - event ID the required field needed to successfully navigate to artcile page
    * @returns the eventType => pregame-report,  teamId => ##, routeName => 'Article-page'
    */
-  static formatArticleRoute(eventType: string, eventID: string): Array<any> {
+  static formatArticleRoute(scope: string, eventType: string, eventID: string): Array<any> {
     var articleRoute: Array<any>;
     if(typeof eventType != 'undefined' && eventType != null){
-      articleRoute = ['Article-pages', {eventType: eventType, eventID: eventID}];
+      articleRoute = ['/'+scope, 'articles', eventType, eventID];
     } else{
       articleRoute = null;
     }
