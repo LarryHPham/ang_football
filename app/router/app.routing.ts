@@ -12,6 +12,7 @@ import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.p
 import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
+import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -122,21 +123,6 @@ const relativeChildRoutes = [
   //     name: 'Transactions-tdl-page',
   //     component: TransactionsPage
   // },
-  // {
-  //     path: ':scope/team-roster/:teamName/:teamID',
-  //     name: 'Team-roster-page',
-  //     component: TeamRosterPage
-  // },
-  // {
-  //     path: ':scope/draft-history',
-  //     name: 'Draft-history-mlb-page',
-  //     component: DraftHistoryPage
-  // },
-  // {
-  //     path: ':scope/draft-history/:teamName/:teamID',
-  //     name: 'Draft-history-page',
-  //     component: DraftHistoryPage
-  // },
   {
       path: ':scope/Transactions/:teamName/:teamId/:limit/:pageNum',
       component: TransactionsPage
@@ -161,11 +147,10 @@ const relativeChildRoutes = [
       path: ':scope/Injuries/league/:limit/:pageNum',
       component: TransactionsPage
   },
-  // {
-  //     path: ':scope/season-stats/:fullName/:playerID',
-  //     name: 'Season-stats-page',
-  //     component: SeasonStatsPage
-  // },
+  {
+      path: ':scope/season-stats/:fullName/:playerID',
+      component: SeasonStatsPage
+  },
   // {
   //     path: ':scope/player-stats/:teamName/:teamID',
   //     name: 'Player-stats-page',

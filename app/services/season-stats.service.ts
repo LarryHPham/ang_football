@@ -167,7 +167,8 @@ export class SeasonStatsService {
         }
         else if ( leaderValue ) {
           var playerName = stats[index].leaderName;
-          var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
+          var linkToPlayer = '';
+          //var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
           infoBox = [{
               teamName: stats[index].leaderTeamName,
               playerName: playerName,
@@ -181,7 +182,8 @@ export class SeasonStatsService {
                 },
               },
               routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
+              routerLinkTeam: ''
+              //routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
             }];
         }
       }
@@ -261,7 +263,8 @@ export class SeasonStatsService {
     if ( !playerInfo[0] ) {
       return null;
     }
-    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
+    var teamRoute = '';
+    //var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerInfo[0].teamName,

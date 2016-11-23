@@ -122,7 +122,6 @@ export class SchedulesPage implements OnInit {
 
   private getSchedulesData(status, pageNum, year?, week?) {
     var teamId = this.teamID; //determines to call league page or team page for schedules-table
-    console.log('getSchedulesData - ',teamId);
     if (typeof year == 'undefined') {
       year == new Date().getFullYear();
       this.selectedFilter1 = year;
