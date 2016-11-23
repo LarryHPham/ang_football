@@ -10,6 +10,7 @@ import { PlayerPage } from "../webpages/player-page/player.page";
 import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
+import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -110,16 +111,30 @@ const relativeChildRoutes = [
   //     name: 'Draft-history-page',
   //     component: DraftHistoryPage
   // },
-  // {
-  //     path: ':scope/:type/:teamName/:teamId/:limit/:pageNum',
-  //     name: 'Transactions-page',
-  //     component: TransactionsPage
-  // },
-  // {
-  //     path: ':scope/:type/league/:limit/:pageNum',
-  //     name: 'Transactions-tdl-page',
-  //     component: TransactionsPage
-  // },
+  {
+      path: ':scope/Transactions/:teamName/:teamId/:limit/:pageNum',
+      component: TransactionsPage
+  },
+  {
+      path: ':scope/Suspensions/:teamName/:teamId/:limit/:pageNum',
+      component: TransactionsPage
+  },
+  {
+      path: ':scope/Injuries/:teamName/:teamId/:limit/:pageNum',
+      component: TransactionsPage
+  },
+  {
+      path: ':scope/Transactions/league/:limit/:pageNum',
+      component: TransactionsPage
+  },
+  {
+      path: ':scope/Suspensions/league/:limit/:pageNum',
+      component: TransactionsPage
+  },
+  {
+      path: ':scope/Injuries/league/:limit/:pageNum',
+      component: TransactionsPage
+  },
   // {
   //     path: ':scope/season-stats/:fullName/:playerID',
   //     name: 'Season-stats-page',
