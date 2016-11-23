@@ -9,6 +9,7 @@ import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
 import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 import { StandingsPage } from "../webpages/standings-page/standings.page";
+import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -85,6 +86,10 @@ const relativeChildRoutes = [
       path: ':scope/standings/:type/:teamName/:teamID',
       component: StandingsPage
   },
+  {
+      path: ':scope/team-roster/:teamName/:teamID',
+      component: TeamRosterPage
+  },
   // {
   //     path: ':scope/list/:query',
   //     name: 'Dynamic-list-page',
@@ -114,11 +119,6 @@ const relativeChildRoutes = [
   //     path: ':scope/:type/league/:limit/:pageNum',
   //     name: 'Transactions-tdl-page',
   //     component: TransactionsPage
-  // },
-  // {
-  //     path: ':scope/team-roster/:teamName/:teamID',
-  //     name: 'Team-roster-page',
-  //     component: TeamRosterPage
   // },
   // {
   //     path: ':scope/season-stats/:fullName/:playerID',
