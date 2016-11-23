@@ -47,7 +47,7 @@ declare var moment;
 export class LeaguePage implements OnInit {
     public partnerID: string;
     public scope: string;
-    public paramsub;
+    public paramsub: any;
 
     private headlineData:HeadlineData;
     private pageParams:SportPageParameters = {};
