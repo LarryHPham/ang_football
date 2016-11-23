@@ -134,7 +134,6 @@ export class LeaguePage implements OnInit {
       this.paramsub = this.activateRoute.params.subscribe(
             (param :any)=> {
               this.pageParams = param;
-              console.log(this.pageParams);
               this.partnerID = param['partnerID'];
               this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
             }
