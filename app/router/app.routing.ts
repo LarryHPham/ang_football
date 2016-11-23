@@ -8,6 +8,7 @@ import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
 import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
+import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -97,16 +98,16 @@ const relativeChildRoutes = [
   //     name: 'List-page',
   //     component: ListPage
   // },
-  // {
-  //     path: ':scope/draft-history',
-  //     name: 'Draft-history-mlb-page',
-  //     component: DraftHistoryPage
-  // },
-  // {
-  //     path: ':scope/draft-history/:teamName/:teamID',
-  //     name: 'Draft-history-page',
-  //     component: DraftHistoryPage
-  // },
+  {
+      path: ':scope/draft-history',
+      name: 'Draft-history-mlb-page',
+      component: DraftHistoryPage
+  },
+  {
+      path: ':scope/draft-history/:teamName/:teamID',
+      name: 'Draft-history-page',
+      component: DraftHistoryPage
+  },
   // {
   //     path: ':scope/:type/:teamName/:teamId/:limit/:pageNum',
   //     name: 'Transactions-page',

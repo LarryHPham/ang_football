@@ -55,9 +55,9 @@ export class TeamPage implements OnInit {
   public partnerID: string;
   public scope: string;
   public paramsub: any;
-  private teamID: number;
-  private pageParams:SportPageParameters;
-  private dateParam:any;
+  public teamID: number;
+  public pageParams:SportPageParameters;
+  public dateParam:any;
 
   public imageConfig: any;
 
