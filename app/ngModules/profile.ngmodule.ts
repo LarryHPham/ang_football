@@ -32,6 +32,7 @@ import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
+import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -91,6 +92,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     StandingsPage,
     TeamRosterPage,
     TransactionsPage,
+    DraftHistoryPage,
 
     //modules
     ArticlesModule,
@@ -143,6 +145,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     StandingsPage,
     TeamRosterPage,
     TransactionsPage,
+    DraftHistoryPage,
 
     //modules
     ArticlesModule,
