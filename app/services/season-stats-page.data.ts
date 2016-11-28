@@ -1,3 +1,5 @@
+import { ActivatedRoute } from "@angular/router";
+
 //globals
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
 import { GlobalFunctions } from '../global/global-functions';
@@ -21,7 +23,7 @@ export interface PlayerInfo {
   playerFirstName: string,
   playerLastName: string,
   playerId: string;
-  lastUpdate: string;
+  lastUpdated: string;
   teamName: string;
   teamId: string;
   backgroundUrl: string;
@@ -112,6 +114,8 @@ export interface seasonStatsData {
 }
 
 export class MLBSeasonStatsTableData implements TableComponentData<TeamSeasonStatsData> {
+  scope: string;
+
   groupName: string;
 
   tableData: MLBSeasonStatsTableModel;
@@ -120,7 +124,11 @@ export class MLBSeasonStatsTableData implements TableComponentData<TeamSeasonSta
 
   year: number;
 
-  constructor(title: string, season: Season, year: number, table: MLBSeasonStatsTableModel) {
+  constructor(
+    title: string,
+    season: Season,
+    year: number,
+    table: MLBSeasonStatsTableModel) {
     this.groupName = title;
     this.season = season;
     this.year = year;
@@ -130,6 +138,7 @@ export class MLBSeasonStatsTableData implements TableComponentData<TeamSeasonSta
 }
 
 export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> {
+  scope: string;
 
   playerId: string;
 
@@ -235,12 +244,13 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
 
   convertToCarouselItem(item: TeamSeasonStatsData, index:number): SliderCarouselInput {
     var playerData = item.playerInfo != null ? item.playerInfo : null;
-    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(playerData.teamName,playerData.playerName,playerData.playerId.toString());
+    var playerName = item.playerInfo.playerFirstName+'-'+item.playerInfo.playerLastName;
+    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, playerData.teamName, playerName, playerData.playerId.toString());
     var playerRouteText = {
       route: playerRoute,
       text: playerData.playerFirstName + " " + playerData.playerLastName
     }
-    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerData.teamName, playerData.teamId);
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, playerData.teamName, playerData.teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerData.teamName,
@@ -248,14 +258,13 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
     }
     var description: any = ["No Information for this season"];
     description = this.getDescription(item, playerData.position, playerRouteText, playerData.statScope);
-
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(playerData.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [item.seasonId + " Season Stats Report"],
       profileNameLink: playerRouteText,
       description: description,
-      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerData.lastUpdate),
+      lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerData.lastUpdated),
       circleImageUrl: GlobalSettings.getImageUrl(playerData.playerHeadshot),
       circleImageRoute: playerRoute
       // subImageUrl: GlobalSettings.getImageUrl(playerData.teamLogo),
@@ -265,6 +274,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
 }
 
 export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData> {
+  scope: string;
   columns: Array<TableColumn>;
   rows: Array<TeamSeasonStatsData>;
   selectedKey: string = "";
@@ -635,7 +645,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
         }
         else {
           display = item.playerInfo.teamMarket + " " + item.playerInfo.teamName;
-          link = VerticalGlobalFunctions.formatTeamRoute(item.playerInfo.teamName,item.playerInfo.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(this.scope, item.playerInfo.teamName,item.playerInfo.teamId);
         }
         sort = item.playerInfo.teamName;
         break;
