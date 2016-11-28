@@ -53,7 +53,7 @@ export class StandingsPage {
     ) {
       this.paramsub = this.activateRoute.params.subscribe(
         (param :any)=> {
-          this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+          this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
           this.type = param['type'];
           this.teamID = param['teamID'];

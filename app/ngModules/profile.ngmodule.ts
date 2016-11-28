@@ -34,6 +34,7 @@ import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
+import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -76,6 +77,7 @@ import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-
 import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 import { RosterComponent } from "../fe-core/components/roster/roster.component";
 import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-stats.component";
+import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.component";
 
 @NgModule({
   imports: [
@@ -97,6 +99,7 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     TransactionsPage,
     SeasonStatsPage,
     DraftHistoryPage,
+    MVPListPage,
 
     //modules
     ArticlesModule,
@@ -138,7 +141,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     GlossaryComponent,
     RosterComponent,
     PlayerStatsComponent,
-    SeasonStatsComponent
+    SeasonStatsComponent,
+    MVPListComponent
   ],
 
   exports: [
@@ -153,6 +157,7 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     TransactionsPage,
     SeasonStatsPage,
     DraftHistoryPage,
+    MVPListPage,
 
     //modules
     ArticlesModule,
@@ -195,7 +200,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     GlossaryComponent,
     RosterComponent,
     PlayerStatsComponent,
-    SeasonStatsComponent
+    SeasonStatsComponent,
+    MVPListComponent
   ],
 
   providers: [
