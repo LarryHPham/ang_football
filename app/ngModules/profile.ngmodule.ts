@@ -22,7 +22,7 @@ import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
 import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 import { FantasyService } from '../services/fantasy.service';
-import { SeasonStatsService } from "../services/season-stats.service";
+import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -33,7 +33,7 @@ import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.p
 import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
-import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
+import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -75,6 +75,7 @@ import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.com
 import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
 import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 import { RosterComponent } from "../fe-core/components/roster/roster.component";
+import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-stats.component";
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     StandingsPage,
     TeamRosterPage,
     TransactionsPage,
+    SeasonStatsPage,
     DraftHistoryPage,
 
     //modules
@@ -135,7 +137,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     BarChartComponent,
     GlossaryComponent,
     RosterComponent,
-    PlayerStatsComponent
+    PlayerStatsComponent,
+    SeasonStatsComponent
   ],
 
   exports: [
@@ -148,6 +151,7 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     StandingsPage,
     TeamRosterPage,
     TransactionsPage,
+    SeasonStatsPage,
     DraftHistoryPage,
 
     //modules
@@ -190,7 +194,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     PlayerStatsComponent,
     GlossaryComponent,
     RosterComponent,
-    PlayerStatsComponent
+    PlayerStatsComponent,
+    SeasonStatsComponent
   ],
 
   providers: [
@@ -208,7 +213,8 @@ import { RosterComponent } from "../fe-core/components/roster/roster.component";
     RosterService,
     DailyUpdateService,
     FantasyService,
-    SeasonStatsService
+    SeasonStatsService,
+    SeasonStatsPageService
   ]
 })
 

@@ -1,23 +1,26 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Title} from '@angular/platform-browser';
-
-//interface
-import {TitleInputData} from '../../fe-core/components/title/title.component';
-import {TransactionTabData} from '../../fe-core/components/transactions/transactions.component';
-import {SportPageParameters} from '../../global/global-interface';
-import {PaginationParameters} from '../../fe-core/components/pagination-footer/pagination-footer.component';
-
-//service
-import {TransactionsService} from '../../services/transactions.service';
-import {ProfileHeaderService} from '../../services/profile-header.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from "@angular/router";
+import { Title } from '@angular/platform-browser';
 
 //global functions
-import {GlobalSettings} from "../../global/global-settings";
-import {GlobalFunctions} from "../../global/global-functions";
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from "../../global/global-functions";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
+//service
+import { TransactionsService } from '../../services/transactions.service';
+import { ProfileHeaderService } from '../../services/profile-header.service';
+
+//interface
+import { TitleInputData } from '../../fe-core/components/title/title.component';
+import { TransactionTabData } from '../../fe-core/components/transactions/transactions.component';
+import { SportPageParameters } from '../../global/global-interface';
+import { PaginationParameters } from '../../fe-core/components/pagination-footer/pagination-footer.component';
+
+//libraries
 declare var moment: any;
+
+
 
 @Component({
     selector: 'transactions-page',
@@ -25,117 +28,124 @@ declare var moment: any;
 })
 
 export class TransactionsPage implements OnInit {
-    profileHeaderData: TitleInputData;
-    pageParams: SportPageParameters;
+  public scope: string;
+  public partnerID: string;
+  public teamNameParam: string;
+  public teamIdParam: string;
+  public limitParam: string;
+  public pageNumParam: string;
+  public transactionTypeParam: string;
+  public paramsub: any;
 
-    tabs: Array<TransactionTabData>;
+  profileHeaderData: TitleInputData;
+  pageParams: SportPageParameters;
 
-    isError: boolean = false;
-    profileName: string;
-    sort: string = "desc";
-    limit: number;
-    pageNum: number;
-    selectedTabKey: string;
-    listSort: string = "recent";
+  tabs: Array<TransactionTabData>;
 
-    transactionsActiveTab: any;
-    transactionsData: TransactionTabData;
-    transactionFilter1: Array<any>;
-    dropdownKey1: string;
+  isError: boolean = false;
+  profileName: string;
+  sort: string = "desc";
+  limit: number;
+  pageNum: number;
+  selectedTabKey: string;
+  listSort: string = "recent";
 
-    paginationParameters: PaginationParameters;
-    selectedTabName: string;
+  transactionsActiveTab: any;
+  transactionsData: TransactionTabData;
+  transactionFilter1: Array<any>;
+  dropdownKey1: string;
 
-    public scope: string;
-    public partnerID: string;
-    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
-    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  paginationParameters: PaginationParameters;
+  selectedTabName: string;
 
-    private teamNameParam: string;
-    private teamIdParam: string;
-    private limitParam: string;
-    private pageNumParam: string;
-    private transactionTypeParam: string;
+  public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(
+        private router: Router,
+        private activateRoute: ActivatedRoute,
         private _transactionsService: TransactionsService,
-        private _profileService: ProfileHeaderService
+        private _profileService: ProfileHeaderService,
+        private _title: Title
     ) {
+      // this.paramsub = this.activateRoute.params.subscribe(
+      //   (param :any)=> {
+      //     this.transactionTypeParam = param["type"];
+      //     this.teamNameParam = param["teamName"];
+      //     this.teamIdParam = param["teamId"];
+      //     this.limit = Number(param['limit']);
+      //     this.pageNum = Number(param['pageNum']);
+      //
+      //     //check to see if scope is correct and redirect
+      //     this.pageParams = {
+      //       teamId: this.teamIdParam ? Number(this.teamIdParam) : null
+      //     }
+      //
+      //     if (this.pageNum === 0) {
+      //         this.pageNum = 1; //page index starts at one
+      //     }
+      //   }
+      // )
+    } //constructor
 
-        //check to see if scope is correct and redirect
-        // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-        // this.pageParams = {
-        //     teamId: _params.get("teamId") ? Number(_params.get("teamId")) : null
-        // };
-        //
-        // GlobalSettings.getParentParams(this._router, parentParams => {
-        //     this.partnerID = parentParams.partnerID;
-        //     this.scope = parentParams.scope;
-        // });
-        //
-        // this.transactionTypeParam = _params.get("type");
-        // this.teamNameParam = _params.get("teamName");
-        // this.teamIdParam = _params.get("teamId");
-        // this.limit = Number(this._params.params['limit']);
-        // this.pageNum = Number(this._params.params['pageNum']);
-        //
-        // if (this.pageNum === 0) {
-        //     this.pageNum = 1; //page index starts at one
-        // }
-    }
+
 
     ngOnInit() {
         // this.getProfileInfo();
         // this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(this.transactionTypeParam); // use this function to match url param with display title of tabs
-    }
+    } //ngOnInit
+
+
 
     getProfileInfo() {
-        // if (this.pageParams.teamId) {
-        //     this._profileService.getTeamProfile(this.pageParams.teamId)
-        //         .subscribe(
-        //         data => {
-        //             //var stats = data.headerData.stats;
-        //             var profileHeaderData = this._profileService.convertTeamPageHeader(data, "");
-        //             this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
-        //             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
-        //             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-        //             profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-        //             this.profileHeaderData = profileHeaderData;
-        //
-        //             var teamRoute = VerticalGlobalFunctions.formatTeamRoute(data.teamName, this.pageParams.teamId.toString());
-        //         },
-        //         err => {
-        //             this.isError = true;
-        //             console.error('Error: transactionsData Profile Header API: ', err);
-        //             // this.isError = true;
-        //         }
-        //         );
-        // }
-        // else {
-        //     this._profileService.getLeagueProfile()
-        //         .subscribe(
-        //         data => {
-        //             this.profileName = this.scope.toUpperCase();
-        //             var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
-        //             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
-        //
-        //             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-        //             profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-        //             this.profileHeaderData = profileHeaderData;
-        //
-        //             var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.profileName, null);
-        //         },
-        //         err => {
-        //             this.isError = true;
-        //             console.error('Error: transactionsData Profile Header API: ', err);
-        //             // this.isError = true;
-        //         }
-        //         )
-        // }
+      // if (this.pageParams.teamId) {
+      //     this._profileService.getTeamProfile(this.pageParams.teamId)
+      //         .subscribe(
+      //         data => {
+      //             //var stats = data.headerData.stats;
+      //             var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
+      //             this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
+      //             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
+      //             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
+      //             profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+      //             this.profileHeaderData = profileHeaderData;
+      //
+      //             var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.pageParams.teamId.toString());
+      //         },
+      //         err => {
+      //             this.isError = true;
+      //             console.error('Error: transactionsData Profile Header API: ', err);
+      //             // this.isError = true;
+      //         }
+      //         );
+      // }
+      // else {
+      //     this._profileService.getLeagueProfile()
+      //         .subscribe(
+      //         data => {
+      //             this.profileName = this.scope.toUpperCase();
+      //             var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
+      //             this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
+      //
+      //             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
+      //             profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+      //             this.profileHeaderData = profileHeaderData;
+      //
+      //             var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
+      //         },
+      //         err => {
+      //             this.isError = true;
+      //             console.error('Error: transactionsData Profile Header API: ', err);
+      //             // this.isError = true;
+      //         }
+      //         )
+      // }
     } //getProfileInfo()
 
+
+
     getTransactionsPage() { // Get data based on selected tab
-        // var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName );
+        // var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName);
         //
         // if (matchingTabs.length > 0) {
         //     var tab = matchingTabs[0];
@@ -144,7 +154,7 @@ export class TransactionsPage implements OnInit {
         //         .subscribe(
         //         transactionsData => {
         //             if (this.transactionFilter1 == undefined) {
-        //                 this.transactionFilter1 =transactionsData.yearArray;
+        //                 this.transactionFilter1 = transactionsData.yearArray;
         //                 if (this.dropdownKey1 == null) {
         //                     this.dropdownKey1 = this.transactionFilter1[0].key;
         //                 }
@@ -157,20 +167,22 @@ export class TransactionsPage implements OnInit {
         // }
     } //getTransactionsPage()
 
+
+
     transactionsTab(tab) { // set selected tab and route page if necessary
         // var tabRoute;
         // var tabNameFrom = this.selectedTabName; // capture previous value before changing it
         // var tabNameTo = tab.tabDisplay; // newly selected tab
         // this.selectedTabName = tab.tabDisplay;
         //
-        // if ( tabNameTo != tabNameFrom ) { // check if clicked tab is already active
-        //     if ( this.teamIdParam ) {
-        //         tabRoute = ["Transactions-page", { teamName: this.teamNameParam, teamId: this.teamIdParam, limit: this.limit, pageNum: 1, type: tab.tabDataKey}];
-        //         this._router.navigate(tabRoute);
+        // if (tabNameTo != tabNameFrom) { // check if clicked tab is already active
+        //     if (this.teamIdParam) {
+        //         tabRoute = ["Transactions-page", { teamName: this.teamNameParam, teamId: this.teamIdParam, limit: this.limit, pageNum: 1, type: tab.tabDataKey }];
+        //         this.router.navigate(tabRoute);
         //     }
         //     else {
-        //         tabRoute = ['Transactions-tdl-page',{limit:20, pageNum: 1, type: tab.tabDataKey}];
-        //         this._router.navigate(tabRoute);
+        //         tabRoute = ['Transactions-tdl-page', { limit: 20, pageNum: 1, type: tab.tabDataKey }];
+        //         this.router.navigate(tabRoute);
         //     }
         // }
         //
@@ -178,6 +190,8 @@ export class TransactionsPage implements OnInit {
         // this.transactionsActiveTab = tab;
         // this.getTransactionsPage();
     } //transactionsTab(tab)
+
+
 
     transactionsFilterDropdown(filter) {
         // if (this.transactionsActiveTab == null) {
@@ -188,8 +202,10 @@ export class TransactionsPage implements OnInit {
         // this.getTransactionsPage();
     } //transactionsFilterDropdown(filter)
 
+
+
     setPaginationParams(input) {
-        // var params = this._params.params;
+        // var params = this.activateRoute.params; //TODO
         //
         // //path: '/directory/:type/:startsWith/page/:page',
         // var navigationParams = {
@@ -223,6 +239,6 @@ export class TransactionsPage implements OnInit {
         //     navigationPage: navigationPage,
         //     navigationParams: navigationParams,
         //     indexKey: 'pageNum'
-        // };
+        // }
     } //setPaginationParams(input)
 }
