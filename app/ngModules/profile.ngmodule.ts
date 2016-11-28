@@ -23,6 +23,7 @@ import { RosterService } from '../services/roster.service';
 import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 import { FantasyService } from '../services/fantasy.service';
 import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
+import { PlayerStatsService } from "../services/player-stats.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -35,6 +36,7 @@ import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
+import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -77,7 +79,6 @@ import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-
 import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 import { RosterComponent } from "../fe-core/components/roster/roster.component";
 import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-stats.component";
-import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.component";
 
 @NgModule({
   imports: [
@@ -100,6 +101,7 @@ import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.compon
     SeasonStatsPage,
     DraftHistoryPage,
     MVPListPage,
+    PlayerStatsPage,
 
     //modules
     ArticlesModule,
@@ -158,6 +160,7 @@ import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.compon
     SeasonStatsPage,
     DraftHistoryPage,
     MVPListPage,
+    PlayerStatsPage,
 
     //modules
     ArticlesModule,
@@ -220,7 +223,8 @@ import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.compon
     DailyUpdateService,
     FantasyService,
     SeasonStatsService,
-    SeasonStatsPageService
+    SeasonStatsPageService,
+    PlayerStatsService
   ]
 })
 
