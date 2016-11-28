@@ -21,6 +21,7 @@ import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
+import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 // import {SyndicatedArticlePage} from "./webpages/syndicated-article-page/syndicated-article-page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
@@ -151,11 +152,10 @@ const relativeChildRoutes = [
       path: ':scope/season-stats/:fullName/:playerID',
       component: SeasonStatsPage
   },
-  // {
-  //     path: ':scope/player-stats/:teamName/:teamID',
-  //     name: 'Player-stats-page',
-  //     component: PlayerStatsPage
-  // },
+  {
+      path: ':scope/player-stats/:teamName/:teamID',
+      component: PlayerStatsPage
+  },
    {
        path: ':scope/articles/:eventType/:eventID',
        component: ArticlePages

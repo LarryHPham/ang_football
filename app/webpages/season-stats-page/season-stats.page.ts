@@ -41,12 +41,12 @@ export class SeasonStatsPage implements OnInit {
   public titleData: TitleInputData;
 
     constructor(
-      private activateRoute: ActivatedRoute,
+      private activatedRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
       private _seasonStatsPageService: SeasonStatsPageService,
       private _title: Title
     ) {
-      this.paramsub = this.activateRoute.params.subscribe(
+      this.paramsub = this.activatedRoute.params.subscribe(
         (param :any)=> {
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
