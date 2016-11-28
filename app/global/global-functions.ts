@@ -460,6 +460,8 @@ export class GlobalFunctions {
      * @returns {string} - formatted string
      */
     static formatUpdatedDate(jsDate:any, includeTimestamp?:boolean, timezone?:string):string {
+        if ( !jsDate ) return;
+
         var date = GlobalFunctions.sntGlobalDateFormatting(jsDate,'dayOfWeek');
         if (includeTimestamp) {
             var date2 = GlobalFunctions.sntGlobalDateFormatting(jsDate,'timeZone');

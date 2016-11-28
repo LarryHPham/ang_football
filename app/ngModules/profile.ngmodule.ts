@@ -96,6 +96,7 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     TeamRosterPage,
     TransactionsPage,
     SeasonStatsPage,
+    DraftHistoryPage,
 
     //modules
     ArticlesModule,
@@ -151,6 +152,7 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     TeamRosterPage,
     TransactionsPage,
     SeasonStatsPage,
+    DraftHistoryPage,
 
     //modules
     ArticlesModule,

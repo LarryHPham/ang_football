@@ -112,14 +112,14 @@ export class SeasonStatsService {
     //Load 4 years worth of data, starting from current year
     for ( var year = curYear; year > curYear-4; year-- ) {
       var strYear = year.toString();
-      seasonStatTabs.push(this.getTabData(strYear, data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, year == curYear,scope));
+      seasonStatTabs.push(this.getTabData(strYear, data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, year == curYear, scope));
     }
     //Load "Career Stats" data
     seasonStatTabs.push(this.getTabData("Career", data, playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName, false, null, scope));
     return {
       tabs: seasonStatTabs,
       profileName: playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName,
-      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), curYear.toString()),
+      carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), curYear.toString(), scope),
       pageRouterLink: this.getLinkToPage(Number(playerInfo[0].playerId), playerInfo[0].playerFirstName + " " + playerInfo[0].playerLastName),
       playerInfo: playerInfo,
       stats: stats
@@ -167,8 +167,7 @@ export class SeasonStatsService {
         }
         else if ( leaderValue ) {
           var playerName = stats[index].leaderName;
-          var linkToPlayer = '';
-          //var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(stats[index].leaderName, playerName, stats[index].leaderId);
+          var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(scope, stats[index].leaderName, playerName, stats[index].leaderId);
           infoBox = [{
               teamName: stats[index].leaderTeamName,
               playerName: playerName,
@@ -182,8 +181,7 @@ export class SeasonStatsService {
                 },
               },
               routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: ''
-              //routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(stats[index].leaderTeamName, stats[index].leaderTeamId),
+              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(scope, stats[index].leaderTeamName, stats[index].leaderTeamId),
             }];
         }
       }
@@ -255,7 +253,7 @@ export class SeasonStatsService {
     };
   }
 
-  static getCarouselData(playerInfo: SeasonStatsPlayerData, stats, longSeasonName: string, currentTab): SliderCarouselInput {
+  static getCarouselData(playerInfo: SeasonStatsPlayerData, stats, longSeasonName: string, currentTab, scope?): SliderCarouselInput {
     var date = new Date();
     if (currentTab == "Current Season") {
       currentTab = date.getFullYear();
@@ -263,8 +261,7 @@ export class SeasonStatsService {
     if ( !playerInfo[0] ) {
       return null;
     }
-    var teamRoute = '';
-    //var teamRoute = VerticalGlobalFunctions.formatTeamRoute(playerInfo[0].teamName, playerInfo[0].teamId);
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, playerInfo[0].teamName, playerInfo[0].teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerInfo[0].teamName,

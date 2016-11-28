@@ -44,7 +44,6 @@ export class SeasonStatsPage implements OnInit {
       private activateRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
       private _seasonStatsPageService: SeasonStatsPageService,
-      private _mlbFunctions: VerticalGlobalFunctions,
       private _title: Title
     ) {
       this.paramsub = this.activateRoute.params.subscribe(
@@ -65,6 +64,7 @@ export class SeasonStatsPage implements OnInit {
                 data => {
                     this.profileLoaded = true;
                     this.pageParams = data.pageParams;
+                    this.pageParams['scope'] = this.scope;
                     // this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
                     this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
                     this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams);

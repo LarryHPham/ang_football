@@ -324,7 +324,7 @@ export class ArticlePages implements OnInit {
                                 if (HeadlineData[rand].article_data != null) {
                                     var eventType = HeadlineData[rand]['article_data'].report_type;
                                     var eventId = eventType != "player-fantasy" ? HeadlineData[rand].event_id.toString() : HeadlineData[rand].article_id.toString();
-                                    result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, eventId));
+                                    result.push(ArticlePages.getRandomArticles(HeadlineData[rand], eventType, eventId, this.scope));
                                     HeadlineData.splice(rand, 1);
                                 }
                             }
@@ -647,7 +647,7 @@ export class ArticlePages implements OnInit {
                         eventId: val.event_id,
                         eventType: "pregame-report",
                         image: GlobalSettings.getImageUrl(val.image_url),
-                        url: "TODO",
+                        url: VerticalGlobalFunctions.formatArticleRoute(self.scope, "pregame-report", val.event_id),
                         rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/pregame-report/" + val.event_id
                     };
                 }
@@ -689,13 +689,14 @@ export class ArticlePages implements OnInit {
         return this.images = imageList;
     }
 
-    static getRandomArticles(recommendations, pageIndex, eventID) {
+    static getRandomArticles(recommendations, pageIndex, eventID, scope) {
         var articles = {
             title: recommendations.title,
             eventType: pageIndex,
             eventID: eventID,
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
             date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated * 1000, "dayOfWeek"),
+            articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, eventID),
             keyword: "FOOTBALL"
         };
         return articles;
