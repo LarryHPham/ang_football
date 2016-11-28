@@ -63,7 +63,7 @@ export class SchedulesPage implements OnInit {
 
     this.paramsub = this.activateRoute.params.subscribe(
       (param :any)=> {
-        this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+        this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
         this.initialPage = Number(param['pageNum']);
         this.partnerID = param['partnerID'];
         this.teamID = param['teamID'];
