@@ -234,7 +234,6 @@ export class ListPageService {
         callURL += '&' + q +'='+ query[q];
       }
     }
-
     return this.http.get(callURL, {headers: headers})
       .map(res => res.json())
       .map(

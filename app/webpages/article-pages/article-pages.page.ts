@@ -77,9 +77,9 @@ export class ArticlePages implements OnInit {
                 private _geoLocation:GeoLocation,
                 private _partnerData:PartnerHeader,
                 private _headlineDataService:HeadlineDataService) {
-        window.scrollTo(0, 0);
         this._activateRoute.params.subscribe(
             (params:any) => {
+                window.scrollTo(0, 0);
                 if (this.constructorControl) {
                     this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
                     if (params.partnerID != null) {

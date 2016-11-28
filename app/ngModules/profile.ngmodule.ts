@@ -23,6 +23,7 @@ import { RosterService } from '../services/roster.service';
 import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 import { FantasyService } from '../services/fantasy.service';
 import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
+import { PlayerStatsService } from "../services/player-stats.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -34,6 +35,8 @@ import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
+import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
+import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -97,6 +100,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     TransactionsPage,
     SeasonStatsPage,
     DraftHistoryPage,
+    MVPListPage,
+    PlayerStatsPage,
 
     //modules
     ArticlesModule,
@@ -138,7 +143,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     GlossaryComponent,
     RosterComponent,
     PlayerStatsComponent,
-    SeasonStatsComponent
+    SeasonStatsComponent,
+    MVPListComponent
   ],
 
   exports: [
@@ -153,6 +159,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     TransactionsPage,
     SeasonStatsPage,
     DraftHistoryPage,
+    MVPListPage,
+    PlayerStatsPage,
 
     //modules
     ArticlesModule,
@@ -195,7 +203,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     GlossaryComponent,
     RosterComponent,
     PlayerStatsComponent,
-    SeasonStatsComponent
+    SeasonStatsComponent,
+    MVPListComponent
   ],
 
   providers: [
@@ -214,7 +223,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     DailyUpdateService,
     FantasyService,
     SeasonStatsService,
-    SeasonStatsPageService
+    SeasonStatsPageService,
+    PlayerStatsService
   ]
 })
 
