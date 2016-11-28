@@ -41,8 +41,8 @@
             (tabSwitched)="transactionsTab($event)"
             (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
           <draft-history-module
-            *ngIf="scope == 'nfl' && profileData"
-            [profileData]="profileData"></draft-history-module>
+            *ngIf="scope == 'nfl' && profileData && pageParams"
+            [profileData]="profileData" [footerData]="pageParams"></draft-history-module>
           <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace"></responsive-widget>
         </div> <!--loadBatch3-->
 

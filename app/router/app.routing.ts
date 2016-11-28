@@ -8,10 +8,10 @@ import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
 import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
-import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 import { StandingsPage } from "../webpages/standings-page/standings.page";
 import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
+import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
@@ -104,39 +104,12 @@ const relativeChildRoutes = [
   // },
   {
       path: ':scope/draft-history',
-      name: 'Draft-history-mlb-page',
       component: DraftHistoryPage
   },
   {
       path: ':scope/draft-history/:teamName/:teamID',
-      name: 'Draft-history-page',
       component: DraftHistoryPage
   },
-  // {
-  //     path: ':scope/:type/:teamName/:teamId/:limit/:pageNum',
-  //     name: 'Transactions-page',
-  //     component: TransactionsPage
-  // },
-  // {
-  //     path: ':scope/:type/league/:limit/:pageNum',
-  //     name: 'Transactions-tdl-page',
-  //     component: TransactionsPage
-  // },
-  // {
-  //     path: ':scope/team-roster/:teamName/:teamID',
-  //     name: 'Team-roster-page',
-  //     component: TeamRosterPage
-  // },
-  // {
-  //     path: ':scope/draft-history',
-  //     name: 'Draft-history-mlb-page',
-  //     component: DraftHistoryPage
-  // },
-  // {
-  //     path: ':scope/draft-history/:teamName/:teamID',
-  //     name: 'Draft-history-page',
-  //     component: DraftHistoryPage
-  // },
   {
       path: ':scope/Transactions/:teamName/:teamId/:limit/:pageNum',
       component: TransactionsPage
