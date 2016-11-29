@@ -79,7 +79,7 @@ export class ArticlePages implements OnInit {
                 private _headlineDataService:HeadlineDataService) {
         this._activateRoute.params.subscribe(
             (params:any) => {
-                window.scrollTo(0, 0);
+                //window.scrollTo(0, 0);
                 if (this.constructorControl) {
                     this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
                     if (params.partnerID != null) {
@@ -168,17 +168,17 @@ export class ArticlePages implements OnInit {
                     //        self._router.navigateByUrl('Default-home');
                     //    }, 5000);
                     //}
-                },
-                err => {
-                    this.error = true;
-                    var self = this;
-                    setTimeout(function () {
-                        //removes error page from browser history
-                        self._location.replaceState('/');
-                        //returns user to previous page
-                        self._router.navigateByUrl('Default-home');
-                    }, 5000);
                 }
+                //err => {
+                //    this.error = true;
+                //    var self = this;
+                //    setTimeout(function () {
+                //        //removes error page from browser history
+                //        self._location.replaceState('/');
+                //        //returns user to previous page
+                //        self._router.navigateByUrl('Default-home');
+                //    }, 5000);
+                //}
             );
     }
 
