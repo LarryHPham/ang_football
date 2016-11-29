@@ -75,6 +75,14 @@ const relativeChildRoutes = [
       component: MVPListPage
   },
   {
+      path: ':scope/schedules/league/:year/:pageNum',
+      component: SchedulesPage
+  },
+  {
+      path: ':scope/schedules/league/:year/:tab/:pageNum',
+      component: SchedulesPage
+  },
+  {
       path: ':scope/schedules/:teamName/:year/:tab/:pageNum',
       component: SchedulesPage
   },
