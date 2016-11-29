@@ -22,6 +22,8 @@ import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
+import { ListPage } from "../webpages/list-page/list.page";
+import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 // import {SyndicatedArticlePage} from "./webpages/syndicated-article-page/syndicated-article-page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
@@ -96,16 +98,14 @@ const relativeChildRoutes = [
       path: ':scope/team-roster/:teamName/:teamID',
       component: TeamRosterPage
   },
-  // {
-  //     path: ':scope/list/:query',
-  //     name: 'Dynamic-list-page',
-  //     component: ListPage
-  // },
-  // {
-  //     path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
-  //     name: 'List-page',
-  //     component: ListPage
-  // },
+  {
+      path: ':scope/list/:query',
+      component: ListPage
+  },
+  {
+      path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
+      component: ListPage
+  },
   {
       path: ':scope/draft-history',
       component: DraftHistoryPage
@@ -160,11 +160,11 @@ const relativeChildRoutes = [
        path: ':scope/articles/:eventType/:eventID',
        component: ArticlePages
    },
-  // {
-  //     path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
-  //     name: 'List-of-lists-page-scoped',
-  //     component: ListOfListsPage
-  // },
+  {
+      path: ':scope/list-of-lists/:target/:targetID/:perPageCount/:pageNumber',
+      name: 'List-of-lists-page-scoped',
+      component: ListOfListsPage
+  },
   // //Error pages and error handling
   // {
   //     path: '/error',

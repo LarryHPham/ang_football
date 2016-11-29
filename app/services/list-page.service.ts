@@ -117,6 +117,7 @@ export class ListPageService {
   else {
     callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
   }
+
   return this.http.get( callURL, {headers: headers})
     .map(res => res.json())
     .map(

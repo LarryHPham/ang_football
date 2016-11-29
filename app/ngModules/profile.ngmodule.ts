@@ -24,6 +24,7 @@ import { HeadlineDataService } from "../global/global-ai-headline-module-service
 import { FantasyService } from '../services/fantasy.service';
 import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 import { PlayerStatsService } from "../services/player-stats.service";
+import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -37,6 +38,8 @@ import { TransactionsPage } from "../webpages/transactions-page/transactions.pag
 import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
+import { ListPage } from "../webpages/list-page/list.page";
+import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -102,6 +105,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     DraftHistoryPage,
     MVPListPage,
     PlayerStatsPage,
+    ListPage,
+    ListOfListsPage,
 
     //modules
     ArticlesModule,
@@ -161,6 +166,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     DraftHistoryPage,
     MVPListPage,
     PlayerStatsPage,
+    ListPage,
+    ListOfListsPage,
 
     //modules
     ArticlesModule,
@@ -224,7 +231,8 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     FantasyService,
     SeasonStatsService,
     SeasonStatsPageService,
-    PlayerStatsService
+    PlayerStatsService,
+    DynamicWidgetCall
   ]
 })
 

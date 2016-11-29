@@ -69,10 +69,6 @@ interface SimplePlayerData {
 export class SeasonStatsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
-  private pitchingFields = ["pitchWins", "pitchInningsPitched", "pitchStrikeouts", "pitchEra", "pitchHits"];
-
-  private battingFields = ["batHomeRuns", "batAverage", "batRbi", "batHits", "batBasesOnBalls"];
-
   constructor(public http: Http) { }
 
   setToken(){
@@ -102,7 +98,6 @@ export class SeasonStatsService {
     //var fields = data.playerInfo.position[0].charAt(0) == "P" ? this.pitchingFields : this.battingFields;
     let playerInfo = data.playerInfo;
     let stats = data.stats;
-
     //Check to see if the position list contains pitcher abbreviation
     //in order to select the appropriate fields
     //let isPitcher = playerInfo.position.filter(item => item == "P").length > 0;
@@ -415,13 +410,13 @@ export class SeasonStatsPageService {
     for ( var i = 0; i < 4; i++ ){
       let title = year == curYear ? 'Current Season' : year.toString();
       let tabName = possessivePlayer + " " + title + " Stats";
-      tabs.push(new MLBSeasonStatsTabData(title, tabName, null, year.toString(), i==0));
+      tabs.push(new MLBSeasonStatsTabData(title, tabName, null, year.toString(), i==0, pageParams.scope));
       year--;
     }
     //also push in last the career stats tab
     let title = 'Career Stats';
     let tabName = possessivePlayer + " Career Stats";
-    tabs.push(new MLBSeasonStatsTabData(title, tabName, null, 'career', false));
+    tabs.push(new MLBSeasonStatsTabData(title, tabName, null, 'career', false, pageParams.scope));
     return tabs;
   }
 
@@ -433,7 +428,7 @@ export class SeasonStatsPageService {
       seasonStatsTab.hasError = false;
       this.http.get(url)
           .map(res => res.json())
-          .map(data => this.setupTabData(seasonStatsTab, data.data, pageParams.teamId, maxRows))
+          .map(data => this.setupTabData(seasonStatsTab, data.data, pageParams.teamId, maxRows, pageParams.scope))
           .subscribe(data => {
             seasonStatsTab.isLoaded = true;
             seasonStatsTab.hasError = false;
@@ -447,14 +442,13 @@ export class SeasonStatsPageService {
           });
   }
 
-  private setupTabData(seasonStatsTab: MLBSeasonStatsTabData, apiData: any, playerId: number, maxRows: number): any{
+  private setupTabData(seasonStatsTab: MLBSeasonStatsTabData, apiData: any, playerId: number, maxRows: number, scope): any{
     let seasonTitle;
     let sectionTable;
     var sections : Array<MLBSeasonStatsTableData> = [];
     var totalRows = 0;
     var seasonKey = seasonStatsTab.year;
     var tableData = {};
-
     //run through each object in the api and set the title of only the needed season for the table regular and post season
     for(var season in apiData.stats){
       if (season == seasonKey) {
@@ -496,7 +490,7 @@ export class SeasonStatsPageService {
               sectionData.push(sectionTable['career'][statType]);
 
               //sort by season id and put career at the end
-              sections.push(this.setupTableData(sectionTitle, seasonKey, sectionData, maxRows));
+              sections.push(this.setupTableData(sectionTitle, seasonKey, sectionData, maxRows, scope));
             }//END OF SECTION TITLE IF STATEMENT
           }//END OF SEASON YEAR FOR LOOP
 
@@ -527,7 +521,7 @@ export class SeasonStatsPageService {
                 let sectionData = sectionYear[statType];
                 sectionData.playerInfo = apiData.playerInfo[0];
                 sectionData.teamInfo = apiData.teamInfo != null ? apiData.teamInfo : {};
-                sections.push(this.setupTableData(sectionTitle, seasonKey, sectionData, maxRows));
+                sections.push(this.setupTableData(sectionTitle, seasonKey, sectionData, maxRows, scope));
               }//END OF SECTION TITLE IF STATEMENT
             }//END OF SEASON YEAR FOR LOOP
           }//end of season year if check
@@ -539,7 +533,7 @@ export class SeasonStatsPageService {
     return sections;
   }
 
-  private setupTableData(season, year, rows: Array<any>, maxRows: number): MLBSeasonStatsTableData {
+  private setupTableData(season, year, rows: Array<any>, maxRows: number, scope: string): MLBSeasonStatsTableData {
     var tableName;
     let self = this;
     //convert object coming in into array
@@ -550,7 +544,7 @@ export class SeasonStatsPageService {
       rowArray.push(rows);
     }
     tableName = season;
-    var table = new MLBSeasonStatsTableModel(rowArray, true);// set if pitcher to true
+    var table = new MLBSeasonStatsTableModel(rowArray, scope);// set if pitcher to true
 
     return new MLBSeasonStatsTableData(tableName, season, year, table);
   }
