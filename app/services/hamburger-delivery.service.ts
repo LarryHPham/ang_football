@@ -25,15 +25,15 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Standings",
-        url: [params ,'Standings-page']
+        url: [params ,'standings']
       },
       {
         menuTitle: division + " Schedule",
-        url: [params ,'Schedules-page-league', {pageNum:1, year: "all"}]//todo
+        url: [params ,'schedules','league','all','1']
       },
       {
         menuTitle: division + " League",
-        url: [params ,'League-page']//todo
+        url: [params ,'league']
       },
       {
         menuTitle: division + " Teams",
@@ -41,20 +41,20 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Player Directory",
-        url: [params ,'Directory-page-starts-with', {type: "players", startsWith: "a", page: "1"}]//todo
+        url: [params ,'directory','players','a','page','1']
       }
       ];
     var menuInfo = [{
         menuTitle: "About Us",
-        url: ['about-us']
+        url: ['/about-us']
       },
       {
         menuTitle: "Contact Us",
-        url: ['contact-us']
+        url: ['/contact-us']
       },
       {
         menuTitle: "Disclaimer",
-        url: ['disclaimer']
+        url: ['/disclaimer']
     }];
 
     return {menuData: menuData, menuInfo: menuInfo};
