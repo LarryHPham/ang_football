@@ -228,7 +228,7 @@ export class ListPage implements OnInit {
             .subscribe(data => {
                 this.getListPage(this.pageParams);
             }, err => {
-                console.log("Error loading MLB profile");
+                console.log("Error loading profile");
             });
         var date = new Date();
         var dateStr = (Number(date.getFullYear()) - 1).toString() + " / " + date.getFullYear();

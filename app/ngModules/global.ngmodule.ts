@@ -22,12 +22,19 @@ import { GeoLocation, PartnerHeader } from "../global/global-service";
 import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
 import { SeoService } from "../seo.service";
+import { DirectoryService } from "../services/directory.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
 import { SanitizeScript, SanitizeHtml, SanitizeRUrl, SanitizeStyle } from "../fe-core/pipes/safe.pipe";
 import { StatHyphenValuePipe } from "../fe-core/pipes/stat-hyphen.pipe";
 import { PossessivePipe } from "../fe-core/pipes/possessive.pipe";
+
+//pages
+import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
+import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
+import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
+import { DirectoryPage } from "../webpages/directory-page/directory.page";
 
 //modules
 import { WidgetModule } from "../fe-core/modules/widget/widget.module";
@@ -37,6 +44,7 @@ import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.
 import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
+import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -81,6 +89,7 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
 import { TitleComponent } from "../fe-core/components/title/title.component";
 import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
+import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
@@ -97,10 +106,6 @@ import { ContactUsComponent } from "../fe-core/components/contactus/contactus.co
 // import { WidgetModule } from "../fe-core/modules/widget/widget.module";
 // import { SearchBoxModule } from "../fe-core/modules/search-box-module/search-box-module.module";
 //
-// /*** WEBPAGES ***/
-import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
-import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
-import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 
 // import {InputBar} from "../fe-core/components/input-bar/input-bar.component";
 // import {ArticleSearchBar} from "../fe-core/components/search-bar-article/search-bar-article.component";
@@ -119,6 +124,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       AboutUsPage,
       ContactUsPage,
       DisclaimerPage,
+      DirectoryPage,
 
       //modules
       WidgetModule,
@@ -129,6 +135,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       BillboardModule,
       ListOfListsModule,
       CommentModule,
+      DirectoryModule,
 
       //components
       AppComponent,
@@ -177,6 +184,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       BackTabComponent,
       TitleComponent,
       ContactUsComponent,
+      DirectoryPagination,
 
       //pipes
       NaValuePipe,
@@ -198,6 +206,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       AboutUsPage,
       ContactUsPage,
       DisclaimerPage,
+      DirectoryPage,
 
       //modules
       WidgetModule,
@@ -209,6 +218,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       BillboardModule,
       ListOfListsModule,
       CommentModule,
+      DirectoryModule,
 
       //components
       CircleImage,
@@ -259,6 +269,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       BackTabComponent,
       TitleComponent,
       ContactUsComponent,
+      DirectoryPagination,
 
       //pipes
       NaValuePipe,
@@ -286,7 +297,8 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
       HamburgerDeliveryService,
       ImagesService,
       ListOfListsService,
-      SeoService
+      SeoService,
+      DirectoryService
     ]
 })
 export class GlobalModule { }

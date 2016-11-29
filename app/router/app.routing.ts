@@ -24,6 +24,7 @@ import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 import { ListPage } from "../webpages/list-page/list.page";
 import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
+import { DirectoryPage } from "../webpages/directory-page/directory.page";
 // import {SyndicatedArticlePage} from "./webpages/syndicated-article-page/syndicated-article-page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
@@ -54,11 +55,10 @@ const relativeChildRoutes = [
       component: PlayerPage,
   },
   // //Misc. Pages
-  // {
-  //     path: ':scope/directory/:type/:startsWith/page/:page',
-  //     name: 'Directory-page-starts-with',
-  //     component: DirectoryPage,
-  // },
+  {
+      path: ':scope/directory/:type/:startsWith/page/:page',
+      component: DirectoryPage,
+  },
   // {
   //     path: ':scope/search/:query',
   //     name: 'Search-page',

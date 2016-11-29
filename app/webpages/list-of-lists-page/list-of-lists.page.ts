@@ -82,7 +82,7 @@ export class ListOfListsPage implements OnInit {
           .subscribe(data => {
               this.getListOfListsPage(this.pageParams, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
           }, err => {
-              console.log("Error loading MLB profile");
+              console.log("Error loading profile");
           });
       } else{
         this.getListOfListsPage(this.pageParams);
