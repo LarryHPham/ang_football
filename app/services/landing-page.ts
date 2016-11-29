@@ -53,7 +53,6 @@ export class LandingPageService {
     var self = this;
     var leagueArray = [];
     var teamArray = [];
-    console.log(data);
     for(var league in data){//get each of the league given by data
       var divisionArray = [];
       for(var division in data[league]){//get each division within league data
@@ -62,7 +61,6 @@ export class LandingPageService {
           val.name = val.name.toUpperCase();
           val.nickname = val.nickname.replace("Diamondbacks","D-backs");
           var teamName = val.name + ' ' + val.nickname;
-          console.log(self.scope);
           val.teamRoute = VerticalGlobalFunctions.formatTeamRoute(self.scope,teamName, val.id.toString());
           val.imageData= {
             imageClass: "image-100",
