@@ -544,7 +544,6 @@ export class SeasonStatsPageService {
       rowArray.push(rows);
     }
     tableName = season;
-    console.log()
     var table = new MLBSeasonStatsTableModel(rowArray, scope);// set if pitcher to true
 
     return new MLBSeasonStatsTableData(tableName, season, year, table);
