@@ -75,6 +75,7 @@
         <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
         <draft-history-module
           *ngIf="scope == 'nfl' && profileData"
+          [footerData]="pageParams"
           [profileData]="profileData"></draft-history-module>
         <responsive-widget
           *ngIf="profileData"
