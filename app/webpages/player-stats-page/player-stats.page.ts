@@ -138,7 +138,6 @@ export class PlayerStatsPage implements OnInit {
                 this.tabName = tabData[0].tabActive;
             };
             //tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
-
         });
     } //playerStatsTabSelected
 
@@ -151,5 +150,5 @@ export class PlayerStatsPage implements OnInit {
             this.titleData.text1 = "Last Updated: " + GlobalFunctions.formatUpdatedDate(lastUpdated, false);
             this.lastUpdatedDateSet = true;
         }
-    } //getLastUpdatedDateForPage
+    } //getLastUpdatedDateForPagegit
 }
