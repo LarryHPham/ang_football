@@ -47,6 +47,7 @@ export class ArticlePages implements OnInit {
     hasRun:boolean = false;
     isFantasyReport:boolean = false;
     isSmall:boolean = false;
+    isTrendingMax:boolean = false;
     teamId:number;
     articleSubType:string;
     articleType:string;
@@ -607,17 +608,25 @@ export class ArticlePages implements OnInit {
 
     private getTrendingArticles(count, currentArticleId) {
          if (this.eventType != "story" && this.eventType != "video") {
-             this._headlineDataService.getAiTrendingData(count, this.scope).subscribe(
-                 data => {
-                     if (!this.hasRun) {
-                         this.hasRun = true;
-                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
-                         if (this.trendingLength <= 100) {
-                             this.trendingLength = this.trendingLength + 10;
+             if (!this.isTrendingMax) {
+                 this._headlineDataService.getAiTrendingData(count, this.scope).subscribe(
+                     data => {
+                         if (!this.hasRun) {
+                             this.hasRun = true;
+                             this.trendingData = this.transformTrending(data['data'], currentArticleId);
+                             if (this.trendingLength <= 100) {
+                                 this.trendingLength = this.trendingLength + 10;
+                             } else {
+                                 jQuery('.loading-more').css('display', 'none');
+                             }
+                         if (data.article_count < this.trendingLength) {
+                                 this.isTrendingMax = true;
+                                 jQuery('.loading-more').css('display', 'none');
+                             }
                          }
                      }
-                 }
-             )
+                 );
+             }
          } else {
              this._deepDiveService.getDeepDiveBatchService(this.scope, count, 1, this.geoLocation).subscribe(
                  data => {
