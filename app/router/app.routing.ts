@@ -7,6 +7,7 @@ import { DeepDiveNgModule } from "../ngModules/deep-dive.ngmodule";
 
 //pages
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
+import { PickTeamPage } from "../webpages/home-page/home-page.page";
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
@@ -42,11 +43,10 @@ const relativeChildRoutes = [
       path: 'disclaimer',
       component: DisclaimerPage,
   },
-  // {
-  //     path: ':scope/pick-a-team',
-  //     name: 'Pick-team-page',
-  //     component: PickTeamPage,
-  // },
+  {
+      path: ':scope/pick-a-team',
+      component: PickTeamPage,
+  },
   {
       path: ':scope/team/:teamName/:teamID',
       component: TeamPage,
@@ -74,6 +74,14 @@ const relativeChildRoutes = [
   {
       path: ':scope/mvp-list/:type/:tab/:pageNum',
       component: MVPListPage
+  },
+  {
+      path: ':scope/schedules/league/:year/:pageNum',
+      component: SchedulesPage
+  },
+  {
+      path: ':scope/schedules/league/:year/:tab/:pageNum',
+      component: SchedulesPage
   },
   {
       path: ':scope/schedules/:teamName/:year/:tab/:pageNum',

@@ -23,6 +23,7 @@ import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
 import { SeoService } from "../seo.service";
 import { DirectoryService } from "../services/directory.service";
+import { SearchService } from "../services/search.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
@@ -38,14 +39,15 @@ import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 
 //modules
-import { WidgetModule } from "../fe-core/modules/widget/widget.module";
+import { WidgetModule } from "../ui-modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
-import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
+import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
 import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
+import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -59,7 +61,7 @@ import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
-import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
+import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
@@ -90,14 +92,13 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
 import { TitleComponent } from "../fe-core/components/title/title.component";
 import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
-import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
+import { Search } from "../fe-core/components/search/search.component";
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
 // import { SortDropdown } from '../fe-core/components/custom-table/sort-dropdown.component';
 // import { SectionFrontTopNav } from '../fe-core/components/section-front-top-nav/section-front-top-nav.component';
 // import { SectionNameComponent } from "../fe-core/components/section-name/section-name.component";
-// import { Search } from "../fe-core/components/search/search.component";
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 // import { InfoComponent } from '../fe-core/components/page-information/page-information.component';
@@ -187,6 +188,7 @@ import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagi
       TitleComponent,
       ContactUsComponent,
       DirectoryPagination,
+      Search,
 
       //pipes
       NaValuePipe,
@@ -273,6 +275,7 @@ import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagi
       TitleComponent,
       ContactUsComponent,
       DirectoryPagination,
+      Search,
 
       //pipes
       NaValuePipe,
@@ -301,7 +304,8 @@ import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagi
       ImagesService,
       ListOfListsService,
       SeoService,
-      DirectoryService
+      DirectoryService,
+      SearchService
     ]
 })
 export class GlobalModule { }
