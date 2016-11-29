@@ -6,7 +6,6 @@ import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from '../../global/global-settings';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
-import {ResponsiveWidget} from '../../fe-core/components/responsive-widget/responsive-widget.component';
 // import {SeoService} from "../../seo.service";
 // import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 

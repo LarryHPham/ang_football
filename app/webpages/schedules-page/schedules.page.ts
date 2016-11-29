@@ -83,8 +83,6 @@ export class SchedulesPage implements OnInit {
 
   ngOnInit() {} //ngOnInit
 
-
-
   resetDropdown1() {
     this.scheduleFilter1 = null;
     this.selectedFilter1 = null;
