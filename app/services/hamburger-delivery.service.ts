@@ -37,7 +37,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Teams",
-        url: [params ,'Pick-team-page']//todo
+        url: [params ,'pick-a-team']
       },
       {
         menuTitle: division + " Player Directory",

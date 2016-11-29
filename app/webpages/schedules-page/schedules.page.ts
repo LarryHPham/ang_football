@@ -76,6 +76,8 @@ export class SchedulesPage implements OnInit {
         if (this.initialPage <= 0) {
             this.initialPage = 1;
         }
+        console.log(this.selectedFilter1);
+        console.log(this.selectedFilter2);
         this.getSchedulesData(this.initialTabKey, this.initialPage, this.selectedFilter1, this.selectedFilter2);
       }
     );
@@ -83,7 +85,9 @@ export class SchedulesPage implements OnInit {
 
   ngOnInit() {} //ngOnInit
 
-
+  ngOnChanges(event){
+    console.log(event);
+  }
 
   resetDropdown1() {
     this.scheduleFilter1 = null;
@@ -216,6 +220,7 @@ export class SchedulesPage implements OnInit {
 
 
   private filterDropdown(filter) {
+    console.log(filter);
     let tabCheck = 0;
     if (this.eventStatus == 'postgame') {
         tabCheck = -1;
