@@ -104,11 +104,10 @@ export class HeaderComponent {
 
     // with router deprecated being able to navigate correctly on different layered router outlets
     var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
-    let relPath = GlobalFunctions.routerRelPath(this._router);
     if(partnerHome){
-      this.linkHome = [relPath+'Partner-home',{scope:'home',partner_id:GlobalSettings.getHomeInfo().partnerName}];
+      // this.linkHome = [relPath+'Partner-home',{scope:'home',partner_id:GlobalSettings.getHomeInfo().partnerName}];
     }else{
-      this.linkHome = [relPath+'Default-home',{scope:'home'}];
+      this.linkHome = ['/home'];
     }
     stButtons.locateElements();
     this._renderer.listenGlobal('document', 'click', (event) => {
