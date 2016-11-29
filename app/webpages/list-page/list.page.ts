@@ -25,7 +25,7 @@ import { DynamicWidgetCall } from "../../services/dynamic-list-page.service";
     templateUrl: './app/webpages/list-page/list.page.html'
 })
 
-export class ListPage implements OnInit {
+export class ListPage {
   public partnerID: string;
   public scope: string;
   public target: string;
@@ -68,29 +68,13 @@ export class ListPage implements OnInit {
         (param :any)=> {
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
-          this.target = param['target'];
-          this.statName = param['statName'];
-          this.season = param['season'];
-          this.ordering = param['ordering'];
-          this.perPageCount = param['perPageCount'];
-          this.pageNumber = param['pageNumber'];
-          this.query = param['query'];
+          this.pageParams = param;
+          this.getListPage(this.pageParams);
         }
       )
 
-      this.pageParams = {
-        scope: this.scope,
-        target: this.target,
-        statName: this.statName,
-        season: this.season,
-        ordering: this.ordering,
-        perPageCount:this.perPageCount,
-        pageNumber: this.pageNumber,
-        query: this.query
-      }
-
-      if ( this.query != null ) {
-          let query = this.query;
+      if ( this.pageParams.query != null ) {
+          let query = this.pageParams.query;
           // Setup this way in case we want to switch out null with some default values
           let twArr = query.match(/tw-(.*?)(\+|$)/);
           this.tw = twArr != null && twArr.length > 1 ? twArr[1] : null;
@@ -120,17 +104,17 @@ export class ListPage implements OnInit {
     setPaginationParams(input) {
         var info = input.listInfo;
         var navigationParams = {
-            pageNumber: this.pageNumber,
-            statName: this.statName,
-            season: this.season,
-            ordering: this.ordering,
-            perPageCount: this.perPageCount,
-            target: this.target,
+          target: this.pageParams.target,
+          statName: this.pageParams.statName,
+          season: this.pageParams.season,
+          ordering: this.pageParams.ordering,
+          perPageCount: this.pageParams.perPageCount,
+          pageNumber: this.pageParams.pageNumber,
         };
-        var navigationPage = this.detailedDataArray ? "List-page" : "Error-page";
+        var navigationPage = '/' + this.pageParams.scope + '/list';
 
         this.paginationParameters = {
-            index: this.pageNumber != null ? Number(this.pageNumber) : null,
+            index: this.pageParams.pageNumber != null ? Number(this.pageParams.pageNumber) : null,
             max: Number(input.pageCount),
             paginationType: 'page',
             navigationPage: navigationPage,
@@ -165,7 +149,6 @@ export class ListPage implements OnInit {
         this.listService.getListPageService(urlParams, errorMessage, this.scope, season)
             .subscribe(
             list => {
-                // this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayName, "Lists"));
                 this.profileHeaderData = list.profHeader;
                 if (list.listData.length == 0) {//makes sure it only runs once
                     this.detailedDataArray = null;
@@ -196,7 +179,6 @@ export class ListPage implements OnInit {
         this.dynamicWidget.getWidgetData(this.tw, this.sw, this.input)
             .subscribe(
             list => {
-                // this._title.setTitle(GlobalSettings.getPageTitle(list.listDisplayTitle, "Lists"));
                 this.profileHeaderData = list.profHeader;
                 if (list.listData.length == 0) {//makes sure it only runs once
                     this.detailedDataArray = null;
@@ -217,27 +199,24 @@ export class ListPage implements OnInit {
 
 
     newIndex(index) {
-        // this.pageNumber = index;
-        // window.scrollTo(0, 0);
+        this.pageParams.pageNumber = index;
+        window.scrollTo(0, 0);
     } //newIndex
 
-
-
-    ngOnInit() {
-        this._profileService.getLeagueProfile()
-            .subscribe(data => {
-                this.getListPage(this.pageParams);
-            }, err => {
-                console.log("Error loading profile");
-            });
-        var date = new Date();
-        var dateStr = (Number(date.getFullYear()) - 1).toString() + " / " + date.getFullYear();
-        this.sortSeason = [
-            { key: (Number(date.getFullYear()) - 1).toString(), value: dateStr }
-        ];
-    } //ngOnInit
-
-
+    getPage(){
+      this._profileService.getLeagueProfile()
+          .subscribe(data => {
+            console.log(data);
+              this.getListPage(this.pageParams);
+          }, err => {
+              console.log("Error loading profile");
+          });
+      var date = new Date();
+      var dateStr = (Number(date.getFullYear()) - 1).toString() + " / " + date.getFullYear();
+      this.sortSeason = [
+          { key: (Number(date.getFullYear()) - 1).toString(), value: dateStr }
+      ];
+    }
 
     dropdownChanged(event) {
         if (this.dropdownCounter > 0) {

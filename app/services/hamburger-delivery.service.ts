@@ -9,55 +9,52 @@ import {GlobalSettings} from '../global/global-settings';
 export class HamburgerDeliveryService {
   static createMenu(division?, partner?){ //TODO
     var params;
-    var partnerUrl;
     var divisionUrl;
     if (division != null) {
       divisionUrl = division.toLowerCase();
     }
     if (partner == null || partner == false || GlobalSettings.getHomeInfo().isSubdomainPartner){
-      partnerUrl = "Default";
-      params = {scope: divisionUrl};
+      params = '/' + divisionUrl;
     }
     else {
-      partnerUrl = "Partner";
-      params = {scope: divisionUrl, partner_id: partner};
+      params = '/' + divisionUrl +'/'+ partner;
     }
     var menuData = [{
         menuTitle: "Home",
-        url: [partnerUrl +'-home',params ,'Home-page']
+        url: [params]
       },
       {
         menuTitle: division + " Standings",
-        url: [partnerUrl +'-home',params ,'Standings-page']
+        url: [params ,'standings']
       },
       {
         menuTitle: division + " Schedule",
-        url: [partnerUrl +'-home',params ,'Schedules-page-league', {pageNum:1, year: "all"}]//todo
+        url: [params ,'schedules','league','all','1']
       },
       {
         menuTitle: division + " League",
-        url: [partnerUrl +'-home',params ,'League-page']//todo
+        url: [params ,'league']
       },
       {
         menuTitle: division + " Teams",
-        url: [partnerUrl +'-home',params ,'Pick-team-page']//todo
+        url: [params ,'Pick-team-page']//todo
       },
       {
         menuTitle: division + " Player Directory",
-        url: [partnerUrl +'-home',params ,'Directory-page-starts-with', {type: "players", startsWith: "a", page: "1"}]//todo
+        url: [params ,'directory','players','a','page','1']
       }
       ];
     var menuInfo = [{
         menuTitle: "About Us",
-        url: ['About-us-page']
+        url: ['/about-us']
       },
       {
         menuTitle: "Contact Us",
-        url: ['Contact-us-page']
+        url: ['/contact-us']
       },
       {
         menuTitle: "Disclaimer",
-        url: ['Disclaimer-page']
+        url: ['/disclaimer']
     }];
 
     return {menuData: menuData, menuInfo: menuInfo};
