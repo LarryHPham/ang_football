@@ -158,12 +158,13 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
 
   year: string;
 
-  constructor(title: string, tabName: string, season: Season, year: string, isActive: boolean) {
+  constructor(title: string, tabName: string, season: Season, year: string, isActive: boolean, scope) {
     this.title = title;
     this.tabName = tabName;
     this.season = season;
     this.year = year;
     this.isActive = isActive;
+    this.scope = scope;
   }
 
   getDescription(stats, position, playerRouteText, scope) {
@@ -278,9 +279,9 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
   columns: Array<TableColumn>;
   rows: Array<TeamSeasonStatsData>;
   selectedKey: string = "";
-  isPitcher: boolean;
 
-  constructor(rows: Array<TeamSeasonStatsData>, isPitcher: boolean){
+  constructor(rows: Array<TeamSeasonStatsData>, scope: string){
+    this.scope = scope;
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
       this.rows = [];
@@ -627,7 +628,6 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
     var sort = null;
     var link = undefined;
     var isTotalColumn = item['sectionStat'] != null;
-
     switch (column.key) {
       case "year":
       if(item.seasonId != null && item.seasonId != "") {
