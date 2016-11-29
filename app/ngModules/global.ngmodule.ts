@@ -35,6 +35,7 @@ import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
+import { ErrorPage } from "../webpages/error-page/error-page.page";
 
 //modules
 import { WidgetModule } from "../fe-core/modules/widget/widget.module";
@@ -125,6 +126,7 @@ import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagi
       ContactUsPage,
       DisclaimerPage,
       DirectoryPage,
+      ErrorPage,
 
       //modules
       WidgetModule,
@@ -207,6 +209,7 @@ import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagi
       ContactUsPage,
       DisclaimerPage,
       DirectoryPage,
+      ErrorPage,
 
       //modules
       WidgetModule,

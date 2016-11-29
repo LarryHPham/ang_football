@@ -25,6 +25,7 @@ import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page
 import { ListPage } from "../webpages/list-page/list.page";
 import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
+import { ErrorPage } from "../webpages/error-page/error-page.page";
 // import {SyndicatedArticlePage} from "./webpages/syndicated-article-page/syndicated-article-page";
 // import {SearchPage} from "./webpages/search-page/search-page";
 
@@ -166,15 +167,14 @@ const relativeChildRoutes = [
       component: ListOfListsPage
   },
   // //Error pages and error handling
-  // {
-  //     path: '/error',
-  //     name: 'Error-page',
-  //     component: ErrorPage
-  // },
-  // {
-  //     path: '/not-found',
-  //     component: ErrorPage,
-  // },
+  {
+      path: '/error',
+      component: ErrorPage
+  },
+  {
+      path: '/not-found',
+      component: ErrorPage,
+  },
   {
     path: ':scope/league',
     component: LeaguePage,
