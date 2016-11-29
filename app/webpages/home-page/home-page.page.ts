@@ -100,8 +100,6 @@ export class PickTeamPage{
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
 
-      this.getListData();
-
       // this._routeSubscription = GlobalSettings.getParentParams(_router, parentParams => {
       this._routeSubscription = this.activateRoute.params.subscribe(
         (param :any)=> {
@@ -159,32 +157,6 @@ export class PickTeamPage{
 
     ngOnDestroy(){
       this._routeSubscription.unsubscribe();
-    }
-
-    getListData(){
-      this.listData = [
-        {
-          newsTitle: "Pitchers with the Most Strikeouts Thrown",
-          newsSubTitle: "See which MLB Pitchers are performing at the top of their game",
-          routerInfo: ['List-page', {profile:'player', listname: 'pitcher-strikeouts', sort:'asc', conference: 'all', division: 'all', limit: '20', pageNum:'1'} ]
-        },
-        {
-          newsTitle: "Batters With the Most Strikeouts in the MLB",
-          newsSubTitle: "See which MLB Batters are performing at the top of their game",
-          routerInfo: ['List-page', {profile:'player', listname: 'batter-strikeouts', sort:'asc', conference: 'all', division: 'all', limit: '20', pageNum:'1'} ]
-        },
-        {
-          newsTitle: "Teams with the Most Runs Allowed in the MLB",
-          newsSubTitle: "See which MLB Teams are performing at the top of their game",
-          routerInfo: ['List-page', {profile:'team', listname: 'pitcher-runs-allowed', sort:'asc', conference: 'all', division: 'all', limit: '20', pageNum:'1'} ]
-        },
-        {
-          newsTitle: "Teams with the Most RBIs in the MLB",
-          newsSubTitle: "See which MLB Teams are performing at the top of their game",
-          routerInfo: ['List-page', {profile:'team', listname: 'batter-runs-batted-in', sort:'asc', conference: 'all', division: 'all', limit: '20', pageNum:'1'} ]
-        }
-      ];
-      this.changeMain(this.counter);
     }
 
     left(){

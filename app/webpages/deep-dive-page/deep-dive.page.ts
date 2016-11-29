@@ -5,7 +5,6 @@ import { PartnerHeader } from "../../global/global-service";
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
-import { ResponsiveWidget } from '../../fe-core/components/responsive-widget/responsive-widget.component';
 import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
 import { ActivatedRoute } from '@angular/router';

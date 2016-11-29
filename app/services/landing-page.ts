@@ -59,7 +59,6 @@ export class LandingPageService {
         var div = data[league][division];
         div.forEach(function(val, index){//start converting team info
           val.name = val.name.toUpperCase();
-          val.nickname = val.nickname.replace("Diamondbacks","D-backs");
           var teamName = val.name + ' ' + val.nickname;
           val.teamRoute = VerticalGlobalFunctions.formatTeamRoute(self.scope,teamName, val.id.toString());
           val.imageData= {

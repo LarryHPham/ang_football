@@ -39,10 +39,10 @@ import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 
 //modules
-import { WidgetModule } from "../fe-core/modules/widget/widget.module";
+import { WidgetModule } from "../ui-modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
-import { WidgetCarouselModule } from "../fe-core/modules/widget/widget-carousel.module";
+import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
 import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
@@ -61,7 +61,7 @@ import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
-import { ResponsiveWidget } from "../fe-core/components/responsive-widget/responsive-widget.component";
+import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
