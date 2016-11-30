@@ -28,12 +28,7 @@ import { DynamicWidgetCall } from "../../services/dynamic-list-page.service";
 export class ListPage {
   public partnerID: string;
   public scope: string;
-  public target: string;
-  public statName: string;
-  public season: string;
-  public ordering: string;
-  public perPageCount: number;
-  public pageNumber: number;
+
   public query: string;
   public pageParams: any;
 
@@ -66,6 +61,10 @@ export class ListPage {
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
       this.activatedRoute.params.subscribe(
         (param :any)=> {
+          this.detailedDataArray = null;
+          this.carouselDataArray = null;
+          this.paginationParameters = null;
+
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
           this.pageParams = param;
@@ -83,7 +82,7 @@ export class ListPage {
           // input always needs to be last item
           let inputArr = query.match(/input-(.*)/);
           this.input = inputArr != null && inputArr.length > 1 ? inputArr[1] : null;
-          this.pageNumber = 1;
+          this.pageParams.pageNumber = 1;
       }
     } //constructor
 
@@ -133,7 +132,7 @@ export class ListPage {
         var navigationPage = this.detailedDataArray ? "Dynamic-list-page" : "Error-page";
 
         this.paginationParameters = {
-            index: this.pageNumber,
+            index: this.pageParams.pageNumber,
             max: Number(input.pageCount),
             paginationType: 'page',
             navigationPage: navigationPage,

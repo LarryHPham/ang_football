@@ -84,7 +84,6 @@ export class ListPageService {
 
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
-
   constructor(public http: Http) {}
 
   //Function to set custom headers
@@ -125,7 +124,7 @@ export class ListPageService {
         data.data['query'] = query;
         this.formatData(data.data.listInfo.stat, data.data.listData);
         return {
-          profHeader: ListPageService.profileHeader(data.data),
+          profHeader: ListPageService.profileHeader(data.data, scope),
           carData: ListPageService.carDataPage(data.data, 'page', errorMessage),
           listData: ListPageService.detailedData(data.data),
           pagination: data.data.listInfo,
@@ -256,11 +255,11 @@ export class ListPageService {
       });
   }
 
-  static profileHeader(data): TitleInputData {
+  static profileHeader(data, scope): TitleInputData {
     var profile = data.listInfo;
     return {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
-      imageRoute: ["Home-page"],
+      imageRoute: ['/'+scope,"home"],
       text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdated),
       text2: 'United States',
       text3: profile.listName,

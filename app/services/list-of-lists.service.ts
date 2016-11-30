@@ -16,7 +16,7 @@ declare var moment: any;
 export class ListOfListsService {
   private _apiUrlTdl: string = GlobalSettings.getApiUrl();
   private _proto = window.location.protocol;
-
+  private _scope:string;
 
   // private _apiToken: string = 'BApA7KEfj';
   // private _headerName: string = 'X-SNT-TOKEN';
@@ -38,14 +38,17 @@ export class ListOfListsService {
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
-    let id      = urlParams.targetId != null ? urlParams.targetId : "";
+    let id = urlParams.targetId != null ? urlParams.targetId : "";
     if(id == 'all'){
-      id = '';
+      id = 'null';
     }
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
     var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
     var target =  profileType;
     let scope = urlParams.scope;
+
+    //usesd for keeping all data withing given scope of api
+    this._scope = scope;
 
     if (profileType == 'league' && pageType == 'module') {
       id = '';
@@ -123,9 +126,9 @@ export class ListOfListsService {
         if( itemTargetData.rankType == "player") {
           itemProfile       = itemTargetData.playerName;
           itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl);
-          itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
+          itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
           itemSubImg        = VerticalGlobalFunctions.formatTeamLogo(itemTargetData.teamLogo);
-          itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
+          itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
           profileLinkText   = {
             route: itemRoute,
             text: itemProfile,
@@ -135,7 +138,7 @@ export class ListOfListsService {
         } else if ( itemTargetData.rankType == "team" ) {
           itemProfile       = itemTargetData.teamName;
           itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
-          itemRoute         = VerticalGlobalFunctions.formatTeamRoute(itemTargetData.teamName, itemTargetData.teamId);
+          itemRoute         = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
           profileLinkText   = {
             route: itemRoute,
             text: itemProfile
@@ -181,10 +184,10 @@ export class ListOfListsService {
     let dummyDivision     = "all";
     let dummyListCount    = 1;
     let dummyPageCount    = 1;
-    let dummyListRank     = 1;
+    let dummyListRank     = 0;
     let dummyIcon         = "fa fa-mail-forward";
 
-
+    let self = this;
     var leagueimgclass;
     var leaguerank;
 
@@ -197,9 +200,6 @@ export class ListOfListsService {
 
 
     data.forEach(function(item, index){
-
-
-
       let itemInfo = item.listInfo;
       let itemListData = item.listData;
       var itemTarget;
@@ -291,7 +291,7 @@ export class ListOfListsService {
         ctaBtn        : '',
         ctaDesc       : 'Want to see the ' + profileTypePlural + ' in this list?',
         ctaText       : 'View The List',
-        ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArr)  != null ? VerticalGlobalFunctions.formatListRoute(ctaUrlArr) : dummyUrl
+        ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArr, self._scope)  != null ? VerticalGlobalFunctions.formatListRoute(ctaUrlArr, self._scope) : dummyUrl
       };
 
 
@@ -301,8 +301,8 @@ export class ListOfListsService {
         let itemUrlRouteArray = itemTarget['rankType'] == "player"  ?
 
 
-          VerticalGlobalFunctions.formatPlayerRoute(itemTarget.teamName, itemTarget.playerFirstName, itemTarget.playerId) :
-          VerticalGlobalFunctions.formatTeamRoute(itemTarget.teamName, itemTarget.teamId);
+          VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTarget.teamName, itemTarget.playerFirstName, itemTarget.playerId) :
+          VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTarget.teamName, itemTarget.teamId);
 
            //let firstItemHover    = version == "page" ? "<p>View</p><p>Profile</p>" : null;
           let firstItemHover = "<p>View</p><p>Profile</p>";
