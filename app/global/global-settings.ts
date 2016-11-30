@@ -12,7 +12,7 @@ export class GlobalSettings {
 
     private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
     private static _articleDataUrl:string = "-touchdownloyal-ai.synapsys.us/";
-    private static _tcxArticleUrl:string = '-tcxmedia-api.synapsys.us/';
+    private static _tcxArticleUrl:string = '-article-library.synapsys.us/';
 
     private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
