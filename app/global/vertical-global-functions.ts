@@ -352,48 +352,36 @@ export class VerticalGlobalFunctions {
   }
 
 
-
-
-
-
   /**
    * TODO-JVW
    * @param urlArr
    * @returns {any}
    */
   //path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
-  static formatListRoute(urlArr: Array<any>): Array<any> {
+  static formatListRoute(urlArr: Array<any>, scope): Array<any> {
     for(var arg in urlArr) {
       if (arg == null) return ['Error-page'];
     }
     // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
 
-    let listRoute = ['List-page', {
-      target      : urlArr[0],
-      statName    : urlArr[1],
-      season      : urlArr[2],
-      ordering    : urlArr[3],
-      perPageCount: urlArr[4],
-      pageNumber  : urlArr[5]
-
-    }];
+    let listRoute = ['/'+scope, 'list', urlArr[0], urlArr[1], urlArr[2], urlArr[3], urlArr[4], urlArr[5]];
     return listRoute;
   }
-  static formatModuleListRoute(modUrlArr: Array<any>): Array<any> {
-    for(var arg in modUrlArr) {
-      if (arg == null) return ['Error-page'];
-    }
-    // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
-
-    let listModuleRoute = ['List-of-lists', {
-      target      : modUrlArr[0],
-      id          : modUrlArr[1],
-      perPageCount: modUrlArr[2],
-      pageNumber  : modUrlArr[3]
-
-    }];
-    return listModuleRoute;
-  }
+  // static formatModuleListRoute(modUrlArr: Array<any>): Array<any> {
+  //   for(var arg in modUrlArr) {
+  //     if (arg == null) return ['Error-page'];
+  //   }
+  //   // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
+  //
+  //   let listModuleRoute = ['List-of-lists', {
+  //     target      : modUrlArr[0],
+  //     id          : modUrlArr[1],
+  //     perPageCount: modUrlArr[2],
+  //     pageNumber  : modUrlArr[3]
+  //
+  //   }];
+  //   return listModuleRoute;
+  // }
 
 
   /**

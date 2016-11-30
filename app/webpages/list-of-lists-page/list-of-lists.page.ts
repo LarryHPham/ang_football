@@ -28,10 +28,6 @@ declare var moment:any;
 export class ListOfListsPage implements OnInit {
   public partnerID: string;
   public scope: string;
-  public target: string;
-  public targetID: string;
-  public perPageCount: number;
-  public pageNumber: number;
   public pageParams: any;
 
   errorData             : string;
@@ -55,44 +51,42 @@ export class ListOfListsPage implements OnInit {
         private _profileService: ProfileHeaderService,
         private _title: Title
     ) {
+
       // check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
       this.activatedRoute.params.subscribe(
         (param :any)=> {
+          //if the activated route changes then reset all important variables
+          this.paginationParameters = null;
+          this.detailedDataArray = null;
+          this.carouselDataArray = null;
+
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
-          this.pageType = param['target'];
-          this.targetID = param['statName'];
-          this.perPageCount = param['perPageCount'];
-          this.pageNumber = param['pageNumber'];
+          this.pageParams = param;
+
+          //determine if a team or league list of list page is needed to be called
+          if ( this.pageParams.target == null ) {
+            this.pageParams.target = "league";
+            this._profileService.getLeagueProfile()
+            .subscribe(data => {
+              this.getListOfListsPage(this.pageParams, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
+            }, err => {
+              console.log("Error loading profile");
+            });
+          } else{
+            this.getListOfListsPage(this.pageParams);
+          }
         }
       )
 
-      this.pageParams = {
-        scope: this.scope,
-        pageType: this.pageType,
-        targetID: this.targetID,
-        perPageCount:this.perPageCount,
-        pageNumber: this.pageNumber
-      }
 
-      if ( this.pageType == null ) {
-          this.pageType = "league";
-          this._profileService.getLeagueProfile()
-          .subscribe(data => {
-              this.getListOfListsPage(this.pageParams, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
-          }, err => {
-              console.log("Error loading profile");
-          });
-      } else{
-        this.getListOfListsPage(this.pageParams);
-      }
     } //constructor
 
 
 
     getListOfListsPage(urlParams, logoUrl?: string) {
-        this.listService.getListOfListsService(urlParams, this.pageType, "page")
+        this.listService.getListOfListsService(urlParams, urlParams.target, "page")
           .subscribe(
             list => {
                 if(list.listData.length == 0){//makes sure it only runs once
@@ -105,13 +99,13 @@ export class ListOfListsPage implements OnInit {
 
 
                 var profileName = "League";
-                var profileRoute = ["League-page"];
+                var profileRoute = ['/' + urlParams.scope, 'league'];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
 
 
                 var listTargetData;
 
-                if (this.pageType != 'league') {
+                if (urlParams.target != 'league') {
                   listTargetData = list.targetData[0];
                 }
                 else {
@@ -159,38 +153,30 @@ export class ListOfListsPage implements OnInit {
     //PAGINATION
     //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
     setPaginationParams(input) {
-        var params = this.pageParams;
-
-        var navigationParams = {
-            perPageCount     : params['perPageCount'],
-            pageNumber    : params['pageNumber'],
-
+        var params = {
+          target: this.pageParams.target,
+          targetId: this.pageParams.targetId,
+          perPageCount: this.pageParams.perPageCount,
+          pageNumber: this.pageParams.pageNumber,
         };
 
-        if(params['targetId'] != null) {
-           navigationParams['targetId'] = params['targetId'];
-        }
-        else {
-          navigationParams['targetId'] = 'null';
+        if(params['targetId'] == null) {
+          params['targetId'] = 'null';
         }
 
-        navigationParams['target'] = this.pageType;
-
-
-
-        var navigationPage = 'List-of-lists-page-scoped';
+        var navigationPage;
         if ( !this.detailedDataArray ) {
             navigationPage = "Error-page";
         }
-        else if ( navigationParams['scope'] ) {
-            navigationPage = 'List-of-lists-page-scoped';
+        else if ( this.pageParams['scope'] ) {
+            navigationPage = '/'+this.pageParams['scope']+'/list-of-lists';
         }
         this.paginationParameters = {
             index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
             max: Number(input.listPageCount),
             paginationType: 'page',
             navigationPage: navigationPage,
-            navigationParams: navigationParams,
+            navigationParams: params,
             indexKey: 'pageNumber'
         };
     } //setPaginationParams

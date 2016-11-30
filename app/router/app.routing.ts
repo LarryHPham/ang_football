@@ -170,8 +170,7 @@ const relativeChildRoutes = [
        component: ArticlePages
    },
   {
-      path: ':scope/list-of-lists/:target/:targetID/:perPageCount/:pageNumber',
-      name: 'List-of-lists-page-scoped',
+      path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
       component: ListOfListsPage
   },
   // //Error pages and error handling

@@ -27,13 +27,13 @@ export class LandingPageService {
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     this.scope = scope;
+    let urlScope = scope == 'ncaaf' ? 'fbs' : 'nfl';
     if (geoLocation) {
-      var newFullUrl = this._apiUrl+'/landingPage/'+scope+'/'+geoLocation; //TODO
+      var newFullUrl = this._apiUrl+'/landingPage/'+urlScope+'/'+geoLocation; //TODO
     }
     else {
-      var newFullUrl = this._apiUrl+'/landingPage/'+scope; //TODO
+      var newFullUrl = this._apiUrl+'/landingPage/'+urlScope; //TODO
     }
-
     return this.http.get(newFullUrl, {
       headers: headers
     })

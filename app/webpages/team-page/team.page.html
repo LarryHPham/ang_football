@@ -118,7 +118,8 @@
           [profileHeaderData]="profileHeaderData"
           [listOfListsData]="listOfListsData"
           [profileType]="profileType"
-          [teamId]="pageParams.teamId"></list-of-lists>
+          [teamId]="pageParams.teamId"
+          [scope]="scope"></list-of-lists>
         <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
         <news-module
           *ngIf="newsDataArray"
