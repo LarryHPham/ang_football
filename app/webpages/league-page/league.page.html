@@ -74,7 +74,7 @@
           <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
           <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
           <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" ></responsive-widget>
-          <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType"></list-of-lists>
+          <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType" [scope]="scope"></list-of-lists>
         </div> <!--loadBatch5-->
 
         <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">

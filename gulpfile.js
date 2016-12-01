@@ -3,15 +3,16 @@ const del = require('del');
 const Builder = require('systemjs-builder');
 const typescript = require('gulp-typescript');
 const tscConfig = require('./tsconfig.json');
+const browserSync = require('browser-sync');
 const historyApiFallback = require('connect-history-api-fallback');
 const concat = require('gulp-concat');
 const less = require('gulp-less');
 const cleanCSS = require('gulp-clean-css');
 // const minify = require('gulp-minify');
+const reload = browserSync.reload;
 const rename = require('gulp-rename'); //for dev
 const uglify = require('gulp-uglify');
 const embedTemp = require('gulp-angular-embed-templates');
-const connect = require('gulp-connect');
 
 
 // clean the contents of the distribution directory
@@ -96,18 +97,18 @@ gulp.task('minify-css', ['less'], function () {
 
 // gulp task to build all of the files to be able to serve in index.html also have a task to watch those files and rebuild when modified
 gulp.task('build', ['compile', 'less', 'minify-css', 'copy:libs', 'copy:assets']);
-gulp.task('buildAndReload', ['build']);
+gulp.task('buildAndReload', ['build'], reload);
 
 /*
  * MAIN GULP COMMAND TO SERVE CONTENT -> gulp serve
  */
  gulp.task('serve', ['build'], function () {
-  connect.server({
-    root: 'dist',
-    port: 3000,
-    livereload: true,
-    middleware: function(connect, opt) { return [ historyApiFallback({}) ] }
-  });
+   browserSync({
+       server: {
+           baseDir: 'dist',
+           middleware: [historyApiFallback()]
+       }
+   });
 
   gulp.watch(['app/**/*', 'index.html', 'master.css'], ['buildAndReload']);
  });
@@ -129,15 +130,15 @@ gulp.task('buildAndReload', ['build']);
  });
 
  gulp.task('dev', ['dev-build'], function () {
-  connect.server({
-    root: 'dist',
-    port: 3000,
-    livereload: true,
-    middleware: function(connect, opt) { return [ historyApiFallback({}) ] }
-  });
+   browserSync({
+       server: {
+           baseDir: 'dist',
+           middleware: [historyApiFallback()]
+       }
+   });
 
   gulp.watch(['app/**/*', 'index.html', 'master.css'], ['dev-buildAndReload']);
  });
 
  gulp.task('dev-build', ['dev-compile', 'less', 'minify-css', 'copy:libs', 'copy:assets']);
- gulp.task('dev-buildAndReload', ['dev-build']);
+ gulp.task('dev-buildAndReload', ['dev-build'], reload);
