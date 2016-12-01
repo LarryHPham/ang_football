@@ -14,7 +14,7 @@ import {ImageData,CircleImageData} from '../../fe-core/components/images/image-d
 import {LandingPageService} from '../../services/landing-page';
 import {GeoLocation} from "../../global/global-service";
 import {PartnerHeader} from "../../global/global-service";
-import {SearchInput} from '../../fe-core/components/search/search.component';
+import {SearchInput} from '../../ui-modules/search/search.component';
 
 export interface homePageData {
   imageData: CircleImageData;
