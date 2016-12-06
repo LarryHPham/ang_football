@@ -167,6 +167,9 @@ export class TeamPage implements OnInit {
       data => {
         this.metaTags(data);
         this.pageParams = data.pageParams;
+        this.pageParams['scope'] = this.scope;
+        this.pageParams['teamName'] = GlobalFunctions.toLowerKebab(this.pageParams['teamName']);
+        this.pageParams['teamID'] = this.teamID;
         this.profileData = data;
         let headerData = data.headerData != null ? data.headerData : null;
         this.profileName = data.teamName;
@@ -174,6 +177,7 @@ export class TeamPage implements OnInit {
           this.profileName = headerData.teamMarket;
           this.profileName = headerData.teamName != null ? this.profileName + ' ' + headerData.teamName : this.profileName;
         }
+        data['scope'] = this.scope;
         this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.dailyUpdateModule(teamID);
 

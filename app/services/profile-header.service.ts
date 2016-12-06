@@ -28,13 +28,13 @@ export class ProfileHeaderService {
     );
   }
 
-  getPlayerProfile(playerId: number): Observable<PlayerProfileData> {
+  getPlayerProfile(playerId: number) {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
-          var headerData: PlayerProfileHeaderData = data.data[0];
+          var headerData = data.data[0];
 
           if (!headerData) {
             return null;
@@ -59,14 +59,14 @@ export class ProfileHeaderService {
         });
   } //getPlayerProfile
 
-  getTeamProfile(teamId: number): Observable<TeamProfileData> {
+  getTeamProfile(teamId: number) {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/team/' + teamId;
 
     return this.http.get(url)
         .map(res => res.json())
         .map(data => {
-          var headerData: TeamProfileHeaderData = data.data[0];
+          var headerData = data.data[0];
           return {
             pageParams: {
               teamId: headerData.teamId,
