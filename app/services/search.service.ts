@@ -92,7 +92,6 @@ export class SearchService{
     }
     //Function get search JSON object
     getSearch(){
-      console.log('---getSearch---');
         return this.http.get(this.searchAPI, {})
             .map(
                 res => res.json()
@@ -227,7 +226,6 @@ export class SearchService{
      * Functions for search page
      */
     getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
-      console.log('---getSearchPageData---');
         let dataSearch = {
           players: [],
           teams: []
