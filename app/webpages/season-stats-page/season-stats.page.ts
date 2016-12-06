@@ -47,7 +47,7 @@ export class SeasonStatsPage implements OnInit {
       private _title: Title
     ) {
       this.paramsub = this.activatedRoute.params.subscribe(
-        (param :any)=> {``
+        (param :any)=> {
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
           this.playerID = param["playerID"];
