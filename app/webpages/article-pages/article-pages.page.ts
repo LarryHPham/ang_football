@@ -1,27 +1,30 @@
 import {Component, AfterViewInit, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
-import {Article} from "../../global/global-interface";
-import {ArticleData} from "../../global/global-interface";
-import {ArticleDataService} from "../../services/article-page-service";
+import {Router, ActivatedRoute} from '@angular/router';
+
+//globals
 import {GlobalFunctions} from "../../global/global-functions";
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 import {GlobalSettings} from "../../global/global-settings";
+import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+
+//services
+import {ArticleDataService} from "../../services/article-page-service";
+import {DeepDiveService} from '../../services/deep-dive.service';
+import {GeoLocation, PartnerHeader} from "../../global/global-service";
 import {HeadlineDataService} from "../../services/headline-module-service";
 //import {SeoService} from '../../seo.service';
-import {SanitizeRUrl, SanitizeHtml} from "../../fe-core/pipes/safe.pipe";
 
-import {DeepDiveService} from '../../services/deep-dive.service';
-import {GeoLocation} from "../../global/global-service";
-import {PartnerHeader} from "../../global/global-service";
+//interfaces
+import {Article} from "../../global/global-interface";
+import {ArticleData} from "../../global/global-interface";
 
+//libraries
 declare var jQuery:any;
 declare var moment;
 
 @Component({
     selector: 'article-pages',
-    templateUrl: './app/webpages/article-pages/article-pages.page.html',
-    providers: [DeepDiveService, GeoLocation, PartnerHeader]
+    templateUrl: './app/webpages/article-pages/article-pages.page.html'
 })
 
 export class ArticlePages implements OnInit {
@@ -30,6 +33,7 @@ export class ArticlePages implements OnInit {
     public trendingLength:number = 10;
     article:Article;
     articleData:any;
+    subRec:any;
     throttle:any;
     copyright:Array<any>;
     images:Array<any>;
@@ -47,6 +51,7 @@ export class ArticlePages implements OnInit {
     hasRun:boolean = false;
     isFantasyReport:boolean = false;
     isSmall:boolean = false;
+    isTrendingMax:boolean = false;
     teamId:number;
     articleSubType:string;
     articleType:string;
@@ -61,7 +66,6 @@ export class ArticlePages implements OnInit {
     title:string;
     type:string;
     scope:string = null;
-    constructorControl:boolean = true;
     partnerID:string;
     geoLocation:string;
     iframeUrl:any;
@@ -77,45 +81,42 @@ export class ArticlePages implements OnInit {
                 private _geoLocation:GeoLocation,
                 private _partnerData:PartnerHeader,
                 private _headlineDataService:HeadlineDataService) {
-        window.scrollTo(0, 0);
-        this._activateRoute.params.subscribe(
+        this.subRec = this._activateRoute.params.subscribe(
             (params:any) => {
-                if (this.constructorControl) {
-                    this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
-                    if (params.partnerID != null) {
-                        this.partnerId = params.partnerID;
-                    }
-                    this.params = this._activateRoute.params.subscribe(
-                        (param:any)=> {
-                            this.eventID = param['eventID'];
-                            this.eventType = param['eventType'];
-                        }
-                    );
-
-                    if (this.eventType == "story") {
-                        this.isArticle = 'false';
-                        this.getDeepDiveArticle(this.eventID);
-                        this.getPartnerHeader();
-                    }
-                    if (this.eventType == "video") {
-                        this.isArticle = 'false';
-                        this.getDeepDiveVideo(this.eventID);
-                        this.getPartnerHeader();
-                    }
-                    if (this.eventType != 'story' && this.eventType != 'video') {
-                        this.isArticle = 'true';
-                        this.scope = params.scope;
-                        this.type = this.eventType;
-                        this.eventType = GlobalFunctions.getApiArticleType(this.eventType);
-                        if (this.eventType == "articleType=player-fantasy") {
-                            this.isFantasyReport = true;
-                        }
-                        this.getArticles();
-                    }
-                    this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-                    this.rawUrl = window.location.href;
-                    this.constructorControl = false;
+                this.articleData = null;
+                window.scrollTo(0, 0);
+                this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
+                if (params.partnerID != null) {
+                    this.partnerId = params.partnerID;
                 }
+                this.params = this._activateRoute.params.subscribe(
+                    (param:any)=> {
+                        this.eventID = param['eventID'];
+                        this.eventType = param['eventType'];
+                    }
+                );
+                if (this.eventType == "story") {
+                    this.isArticle = 'false';
+                    this.getDeepDiveArticle(this.eventID);
+                    this.getPartnerHeader();
+                }
+                if (this.eventType == "video") {
+                    this.isArticle = 'false';
+                    this.getDeepDiveVideo(this.eventID);
+                    this.getPartnerHeader();
+                }
+                if (this.eventType != 'story' && this.eventType != 'video') {
+                    this.isArticle = 'true';
+                    this.scope = params.scope;
+                    this.type = this.eventType;
+                    this.eventType = GlobalFunctions.getApiArticleType(this.eventType);
+                    if (this.eventType == "articleType=player-fantasy") {
+                        this.isFantasyReport = true;
+                    }
+                    this.getArticles();
+                }
+                this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
+                this.rawUrl = window.location.href;
             }
         );
     }
@@ -124,7 +125,7 @@ export class ArticlePages implements OnInit {
         this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport)
             .subscribe(
                 Article => {
-                    //try {
+                    try {
                         if (Article['data'].length > 0) {
                             if (this.isFantasyReport) {
                                 this.eventID = Article['data'][0].event_id;
@@ -157,17 +158,16 @@ export class ArticlePages implements OnInit {
                             }
                             this.getTrendingArticles(10, this.eventID);
                         }
-                    //}
-                    //catch (e) {
-                    //    this.error = true;
-                    //    var self = this;
-                    //    setTimeout(function () {
-                    //        //removes error page from browser history
-                    //        self._location.replaceState('/');
-                    //        //returns user to previous page
-                    //        self._router.navigateByUrl('Default-home');
-                    //    }, 5000);
-                    //}
+                    } catch (e) {
+                        this.error = true;
+                        var self = this;
+                        setTimeout(function () {
+                            //removes error page from browser history
+                            self._location.replaceState('/');
+                            //returns user to previous page
+                            self._router.navigateByUrl('Default-home');
+                        }, 5000);
+                    }
                 },
                 err => {
                     this.error = true;
@@ -606,31 +606,38 @@ export class ArticlePages implements OnInit {
     }
 
     private getTrendingArticles(count, currentArticleId) {
-         if (this.eventType != "story" && this.eventType != "video") {
-             this._headlineDataService.getAiTrendingData(count, this.scope).subscribe(
-                 data => {
-                     if (!this.hasRun) {
-                         this.hasRun = true;
-                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
-                         if (this.trendingLength <= 100) {
-                             this.trendingLength = this.trendingLength + 10;
-                         }
-                     }
-                 }
-             )
-         } else {
-             this._deepDiveService.getDeepDiveBatchService(this.scope, count, 1, this.geoLocation).subscribe(
-                 data => {
-                     if (!this.hasRun) {
-                         this.hasRun = true;
-                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
-                         if (this.trendingLength <= 100) {
-                             this.trendingLength = this.trendingLength + 10;
-                         }
-                     }
-                 }
-             )
-         }
+        if (this.eventType != "story" && this.eventType != "video") {
+            this._headlineDataService.getAiTrendingData(count, this.scope).subscribe(
+                data => {
+                    if (!this.hasRun) {
+                        this.hasRun = true;
+                        this.trendingData = this.transformTrending(data['data'], currentArticleId);
+                        if (data.article_count == this.trendingLength) {
+                            this.trendingLength = this.trendingLength + 10
+                        } else {
+                            this.isTrendingMax = true;
+                            jQuery('.loading-more').css('display', 'none');
+                        }
+                    }
+                }
+            )
+        }
+        else {
+            this._deepDiveService.getDeepDiveBatchService(this.scope, count, 1, this.geoLocation).subscribe(
+                data => {
+                    if (!this.hasRun) {
+                        this.hasRun = true;
+                        this.trendingData = this.transformTrending(data['data'], currentArticleId);
+                        if (data.article_count == this.trendingLength) {
+                            this.trendingLength = this.trendingLength + 10
+                        } else {
+                            this.isTrendingMax = true;
+                            jQuery('.loading-more').css('display', 'none');
+                        }
+                    }
+                }
+            )
+        }
     }
 
     transformTrending(data, currentArticleId) {
@@ -640,7 +647,7 @@ export class ArticlePages implements OnInit {
             var articleData;
             if (self.eventType != "story" && self.eventType != "video") {
                 if (val.event_id != currentArticleId) {
-                    val["date"]= GlobalFunctions.sntGlobalDateFormatting(moment.unix(val['article_data'].publication_date), "timeZone");
+                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(val['article_data'].publication_date), "timeZone");
                     articleData = {
                         title: val.title,
                         date: val["date"],
@@ -675,10 +682,12 @@ export class ArticlePages implements OnInit {
     }
 
     private trendingScroll(event) {
-        this.hasRun = false;
-        if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
-            this.batch = this.batch + 1;
-            this.getTrendingArticles(this.trendingLength, this.eventID);
+        if (!this.isTrendingMax) {
+            this.hasRun = false;
+            if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
+                this.batch = this.batch + 1;
+                this.getTrendingArticles(this.trendingLength, this.eventID);
+            }
         }
     }
 
@@ -860,6 +869,6 @@ export class ArticlePages implements OnInit {
     }
 
     ngOnDestroy() {
-        // this.subRec.unsubscribe();
+        this.subRec.unsubscribe();
     }
 }

@@ -151,6 +151,7 @@ export interface HeadlineData {
 export interface Article {
     data: {
         affiliation?: string;
+        article_count?: number;
         article_subtype_id?: string;
         json_url?: string;
         article_type_id?: string;

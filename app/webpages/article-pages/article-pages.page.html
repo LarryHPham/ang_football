@@ -11,7 +11,7 @@
         <!-- ARTICLE PAGE BEGINS -->
       <span *ngIf="articleData">
           <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
-          <h1 class="articles-page-title"><span *ngIf="eventType !='story' && eventType !='video'"
+          <h1 class="articles-page-title col-xs-12"><span *ngIf="eventType !='story' && eventType !='video'"
                                                 [innerHTML]="title | safeHtml"></span><span
                   *ngIf="eventType == 'story' || eventType == 'video'"
                   [innerHTML]="articleData.title | safeHtml"></span></h1>

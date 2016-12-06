@@ -94,7 +94,7 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
 import { TitleComponent } from "../fe-core/components/title/title.component";
 import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
-import { Search } from "../fe-core/components/search/search.component";
+import { Search } from "../ui-modules/search/search.component";
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';

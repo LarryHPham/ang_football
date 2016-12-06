@@ -236,7 +236,10 @@ export class LeaguePage implements OnInit {
 
     //api for League Headline Module
     private getLeagueHeadlines() {
-        var scope = this.scope == "fbs" ? "ncaaf" : "nfl";
+        var scope = this.scope;
+        if (scope == "ncaa") {
+            scope = "ncaaf";
+        }
         this._headlineDataService.getAiHeadlineDataLeague(null, scope)
             .subscribe(
                 HeadlineData => {
