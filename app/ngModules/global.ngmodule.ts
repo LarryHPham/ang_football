@@ -37,6 +37,7 @@ import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
+import { SearchPage } from "../webpages/search-page/search.page";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
@@ -48,6 +49,7 @@ import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-list
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
+import { SearchPageModule } from "../fe-core/modules/search-page/search-page.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -128,6 +130,7 @@ import { Search } from "../ui-modules/search/search.component";
       DisclaimerPage,
       DirectoryPage,
       ErrorPage,
+      SearchPage,
 
       //modules
       WidgetModule,
@@ -139,6 +142,7 @@ import { Search } from "../ui-modules/search/search.component";
       ListOfListsModule,
       CommentModule,
       DirectoryModule,
+      SearchPageModule,
 
       //components
       AppComponent,
@@ -212,6 +216,7 @@ import { Search } from "../ui-modules/search/search.component";
       DisclaimerPage,
       DirectoryPage,
       ErrorPage,
+      SearchPage,
 
       //modules
       WidgetModule,
@@ -224,6 +229,7 @@ import { Search } from "../ui-modules/search/search.component";
       ListOfListsModule,
       CommentModule,
       DirectoryModule,
+      SearchPageModule,
 
       //components
       CircleImage,
