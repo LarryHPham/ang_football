@@ -16,7 +16,14 @@
         </daily-update-module>
       </div><!--loadBatch1-->
 
-      <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
+      <comparison-module
+        [modelData]="comparisonModuleData"
+        [profileName]="profileHeaderData.profileName"
+        [profileType]="'team'"
+        [profileId]="pageParams.teamId"
+        [scope]="scope"></comparison-module>
+
+      <!-- <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
         <responsive-widget
           *ngIf="dailyUpdateData"
           [embedPlace]="widgetPlace"
@@ -26,16 +33,16 @@
           [headlineData]="headlineData"
           [isLeague]="false"></articles-module>
         <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-        <!-- <box-scores
+        <box-scores
           *ngIf="dateParam"
           [boxScores]="currentBoxScores"
           [calendarParams]="dateParam"
-          (dateEmit)="getBoxScores($event)"></box-scores> -->
+          (dateEmit)="getBoxScores($event)"></box-scores>
         <responsive-widget
           *ngIf="dateParam"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget>
-      </div> <!--loadBatch2-->
+      </div> -->
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
         <schedules *ngIf="schedulesData"
@@ -94,12 +101,12 @@
         <div class="profile-carousel-container">
           <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel>
         </div>
-        <video-module
+        <!-- <video-module
           *ngIf="videoData"
           [firstVideo]="firstVideo"
           [videoData]="videoData"
           [profileHeader]="profileHeaderData"
-          [isProfilePage]="isProfilePage"></video-module>
+          [isProfilePage]="isProfilePage"></video-module> -->
         <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
         <dyk-module
           *ngIf="dykData"

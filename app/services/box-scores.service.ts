@@ -52,7 +52,6 @@ export class BoxScoresService {
   }
 
   getBoxScoresService(profile, date, teamId?){//DATE
-    console.log('---getBoxScoresService---');
   //Configure HTTP Headers
   var headers = this.setToken();
   let chosenDate = date;
@@ -65,8 +64,6 @@ export class BoxScoresService {
   }
   //date needs to be the date coming in AS EST and come back as UTC
   var callURL = this._apiUrl+'/boxScores/'+profile+'/'+teamId+'/'+ date;
-  console.log('callURL - ',callURL);
-  console.log()
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {

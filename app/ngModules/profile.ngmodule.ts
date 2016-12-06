@@ -25,7 +25,6 @@ import { FantasyService } from '../services/fantasy.service';
 import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 import { PlayerStatsService } from "../services/player-stats.service";
 import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
-import { LandingPageService } from '../services/landing-page';
 
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
@@ -40,8 +39,7 @@ import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 import { ListPage } from "../webpages/list-page/list.page";
-import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
-import { PickTeamPage } from "../webpages/home-page/home-page.page";
+import { ListOfListsPage } from "../webpage/list-of-lists-page/list"
 
 //modules
 import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -108,8 +106,6 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     MVPListPage,
     PlayerStatsPage,
     ListPage,
-    ListOfListsPage,
-    PickTeamPage,
 
     //modules
     ArticlesModule,
@@ -170,8 +166,6 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     MVPListPage,
     PlayerStatsPage,
     ListPage,
-    ListOfListsPage,
-    PickTeamPage,
 
     //modules
     ArticlesModule,
@@ -236,8 +230,7 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     SeasonStatsService,
     SeasonStatsPageService,
     PlayerStatsService,
-    DynamicWidgetCall,
-    LandingPageService
+    DynamicWidgetCall
   ]
 })
 
