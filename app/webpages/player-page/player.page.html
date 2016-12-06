@@ -26,11 +26,11 @@
             [embedPlace]="widgetPlace"
             [displayAtRes]="'640'"></responsive-widget>
           <!-- <headline-component [title]="'Keep Up With Everything ' + profileHeaderData.profileName"></headline-component> -->
-          <box-scores
+          <!-- <box-scores
             *ngIf="dateParam"
             [boxScores]="currentBoxScores"
             [calendarParams]="dateParam"
-            (dateEmit)="getBoxScores($event)"></box-scores>
+            (dateEmit)="getBoxScores($event)"></box-scores> -->
             <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
             <schedules *ngIf="schedulesData"
               [footerParams]="scheduleParams"

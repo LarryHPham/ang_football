@@ -47,7 +47,7 @@ export class RosterService {
     return {
         moduleTitle: "Team Roster",
         moduleIdentifier: " - " + teamName,
-        pageRouterLink: this.getLinkToPage(teamId, teamName),
+        pageRouterLink: this.getLinkToPage(scope, teamId, teamName),
         tabs: this.initializeAllTabs(scope, teamId.toString(), conference, 5, isTeamProfilePage)
     };
   }
@@ -68,13 +68,9 @@ export class RosterService {
     return pageTitle;
   }
 
-  getLinkToPage(teamId: number, teamName: string): Array<any> {
-    var pageName = "Team-roster-page";
-    var pageValues = {
-      teamName: GlobalFunctions.toLowerKebab(teamName),
-      teamId: teamId
-    };
-    return [pageName, pageValues];
+  getLinkToPage(scope, teamId: number, teamName: string): Array<any> {
+    var pageName = "team-roster";
+    return [ '/'+scope, pageName, GlobalFunctions.toLowerKebab(teamName), teamId];
   }
 
 }

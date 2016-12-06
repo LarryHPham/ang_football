@@ -145,6 +145,7 @@ export class PlayerPage{
         this.profileName = data.headerData.playerFullName;
         this.teamName = data.headerData.teamFullName;
         this.teamID = data.headerData.teamId;
+        this.pageParams['teamID'] = this.teamID;
         this.dateParam = {
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
