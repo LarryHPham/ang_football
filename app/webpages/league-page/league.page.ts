@@ -112,7 +112,7 @@ export class LeaguePage implements OnInit {
     private batchLoadIndex: number = 1;
 
     constructor(
-      private activateRoute: ActivatedRoute,
+      private activatedRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
       private _videoBatchService: VideoService,
       private _boxScores: BoxScoresService,
@@ -131,7 +131,7 @@ export class LeaguePage implements OnInit {
     ) {
       var currentUnixDate = new Date().getTime();
 
-      this.paramsub = this.activateRoute.params.subscribe(
+      this.paramsub = this.activatedRoute.params.subscribe(
             (param :any)=> {
               this.pageParams = param;
               this.partnerID = param['partnerID'];

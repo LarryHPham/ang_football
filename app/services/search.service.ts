@@ -1,14 +1,19 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {SearchComponentResult, SearchComponentData} from '../fe-core/components/search/search.component';
-import {GlobalFunctions} from '../global/global-functions';
-import {VerticalGlobalFunctions}  from '../global/vertical-global-functions';
-import {GlobalSettings} from '../global/global-settings';
-// import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
+
+//globals
+import { GlobalFunctions } from '../global/global-functions';
+import { VerticalGlobalFunctions }  from '../global/vertical-global-functions';
+import { GlobalSettings } from '../global/global-settings';
+
+//interfaces
+import { SearchComponentResult, SearchComponentData } from '../fe-core/components/search/search.component';
+import { PaginationParameters } from '../fe-core/interfaces/pagination.data';
+
+//import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
 //Interface for input of search component
-import {PaginationParameters} from '../fe-core/interfaces/pagination.data';
 export interface SearchInput {
     //Text that goes in as the placeholder for the input
     placeholderText: string;
@@ -87,9 +92,8 @@ export class SearchService{
     }
     //Function get search JSON object
     getSearch(){
-        return this.http.get(this.searchAPI, {
-
-            })
+      console.log('---getSearch---');
+        return this.http.get(this.searchAPI, {})
             .map(
                 res => res.json()
             ).map(
@@ -152,7 +156,7 @@ export class SearchService{
             let teamName = item.teamName;
 
             //generate route for team
-            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId, true);
+            let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null && !partnerScope.isSubdomainPartner){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partner_id:partnerScope.partnerName});
             }else{
@@ -183,7 +187,7 @@ export class SearchService{
             count++;
             let item = playerResults[i];
             let playerName = item.playerName;
-            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId, true);
+            let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -223,47 +227,48 @@ export class SearchService{
      * Functions for search page
      */
     getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
-        let dataSearch = {
-          players: [],
-          teams: []
-        };
-        //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
-        scope = scope == 'ncaaf'?'fbs':scope;
-
-        if(scope !== null){
-          data[scope]['players'].forEach(function(item){
-            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
-            dataSearch.players.push(item);
-          });
-          data[scope]['teams'].forEach(function(item){
-            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
-            dataSearch.teams.push(item);
-          })
-        }else{
-          for(var s in data){
-            data[s]['players'].forEach(function(item){
-              item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
-              dataSearch.players.push(item);
-            })
-            data[s]['teams'].forEach(function(item){
-              item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
-              dataSearch.teams.push(item);
-            })
-          }
-        }
-
-        //converts to usable scope for api calls null is default value for all
-        scope = scope != null ? GlobalSettings.getScope(scope):null;
-        //Search for players and teams
-        let playerResults = this.searchPlayers(query, scope, dataSearch.players);
-        let teamResults = this.searchTeams(query, scope, dataSearch.teams);
-
-        let searchResults = this.resultsToTabs(router, partnerId, query, playerResults, teamResults);
-
-        return {
-          results: searchResults,
-          filters: this.filterDropdown()
-        };
+      console.log('---getSearchPageData---');
+        // let dataSearch = {
+        //   players: [],
+        //   teams: []
+        // };
+        // //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
+        // scope = scope == 'ncaaf'?'fbs':scope;
+        //
+        // if(scope !== null){
+        //   data[scope]['players'].forEach(function(item){
+        //     item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
+        //     dataSearch.players.push(item);
+        //   });
+        //   data[scope]['teams'].forEach(function(item){
+        //     item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
+        //     dataSearch.teams.push(item);
+        //   })
+        // }else{
+        //   for(var s in data){
+        //     data[s]['players'].forEach(function(item){
+        //       item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
+        //       dataSearch.players.push(item);
+        //     })
+        //     data[s]['teams'].forEach(function(item){
+        //       item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
+        //       dataSearch.teams.push(item);
+        //     })
+        //   }
+        // }
+        //
+        // //converts to usable scope for api calls null is default value for all
+        // scope = scope != null ? GlobalSettings.getScope(scope):null;
+        // //Search for players and teams
+        // let playerResults = this.searchPlayers(query, scope, dataSearch.players);
+        // let teamResults = this.searchTeams(query, scope, dataSearch.teams);
+        //
+        // let searchResults = this.resultsToTabs(router, partnerId, query, playerResults, teamResults);
+        //
+        // return {
+        //   results: searchResults,
+        //   filters: this.filterDropdown()
+        // };
     }
 
     filterDropdown(){
@@ -341,7 +346,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
-            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId, true);
+            let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -387,7 +392,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
-            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId, true);
+            let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -488,17 +493,17 @@ export class SearchService{
       let hasParent = true;
       let route = router;
       for (var i = 0; hasParent == true; i++){
-        if(route.parent != null){
-          counter++;
-          route = route.parent;
-        }else{
-          hasParent = false;
-          let relPath = '';
-          for(var c = 1 ; c <= counter; c++){
-            relPath += '../';
-          }
-          return relPath;
-        }
+        // if(route.parent != null){
+        //   counter++;
+        //   route = route.parent;
+        // }else{
+        //   hasParent = false;
+        //   let relPath = '';
+        //   for(var c = 1 ; c <= counter; c++){
+        //     relPath += '../';
+        //   }
+        //   return relPath;
+        // }
       }
     }
 
