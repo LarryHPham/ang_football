@@ -92,7 +92,6 @@ export class SearchService{
     }
     //Function get search JSON object
     getSearch(){
-      console.log('---getSearch---');
         return this.http.get(this.searchAPI, {})
             .map(
                 res => res.json()
