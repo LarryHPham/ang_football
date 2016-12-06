@@ -14,7 +14,7 @@ import { SeasonStatsPageService } from '../../services/season-stats.service';
 //interfaces
 import { TitleInputData } from "../../fe-core/components/title/title.component";
 import { CircleImageData, ImageData } from "../../fe-core/components/images/image-data";
-import { MLBSeasonStatsTabData, MLBSeasonStatsTableData } from '../../services/season-stats-page.data';
+import { SportSeasonStatsTabData, SportSeasonStatsTableData } from '../../services/season-stats-page.data';
 import { Season, SportPageParameters } from '../../global/global-interface';
 
 
@@ -32,7 +32,7 @@ export class SeasonStatsPage implements OnInit {
   public pageParams: SportPageParameters = {}
 
   public widgetPlace: string = "widgetForPage";
-  public tabs: Array<MLBSeasonStatsTabData>;
+  public tabs: Array<SportSeasonStatsTabData>;
 
   public profileLoaded: boolean = false;
 
@@ -81,7 +81,7 @@ export class SeasonStatsPage implements OnInit {
 
 
     private setupTitleData(imageUrl: string, teamName: string, playerId: string, playerName: string) {
-        var profileLink = ["League-page"];
+        var profileLink = ["/home"];
         if (playerId) {
             profileLink = VerticalGlobalFunctions.formatPlayerRoute(this.scope, teamName, playerName, playerId);
         }
@@ -98,7 +98,7 @@ export class SeasonStatsPage implements OnInit {
 
 
 
-    private seasonStatsTabSelected(tab: MLBSeasonStatsTabData) {
+    private seasonStatsTabSelected(tab: SportSeasonStatsTabData) {
         this._seasonStatsPageService.getSeasonStatsTabData(tab, this.pageParams, data => {
             this.getLastUpdatedDateForPage(data);
         });
@@ -106,7 +106,7 @@ export class SeasonStatsPage implements OnInit {
 
 
 
-    private getLastUpdatedDateForPage(data: MLBSeasonStatsTableData[]) {
+    private getLastUpdatedDateForPage(data: SportSeasonStatsTableData[]) {
         if (data && data.length > 0 &&
             data[0].tableData && data[0].tableData.rows &&
             data[0].tableData.rows.length > 0) {
