@@ -35,7 +35,7 @@ export class VideoService {
         val['keyword'] = val.league;
         val['time_stamp'] = val.pubDate;
 
-        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league,"story", val.id);
+        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league,"video", val.id);
         val['urlRoute'] = urlRouteArray
       })
       return data;
