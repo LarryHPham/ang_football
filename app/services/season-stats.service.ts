@@ -13,7 +13,7 @@ import { CircleImageData } from '../fe-core/components/images/image-data';
 import { ComparisonBarInput } from '../fe-core/components/comparison-bar/comparison-bar.component';
 import { SeasonStatsModuleData, SeasonStatsTabData } from '../fe-core/modules/season-stats/season-stats.module';
 import { Season, SportPageParameters } from '../global/global-interface';
-import { TeamSeasonStatsData, MLBSeasonStatsTabData, MLBSeasonStatsTableModel, MLBSeasonStatsTableData } from './season-stats-page.data';
+import { TeamSeasonStatsData, SportSeasonStatsTabData, SportSeasonStatsTableModel, SportSeasonStatsTableData } from './season-stats-page.data';
 import { TableTabData } from '../fe-core/components/season-stats/season-stats.component';
 
 export interface SeasonStatsPlayerData {
@@ -68,7 +68,7 @@ interface SimplePlayerData {
 @Injectable()
 export class SeasonStatsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-
+  private _scope: string;
   constructor(public http: Http) { }
 
   setToken(){
@@ -77,21 +77,21 @@ export class SeasonStatsService {
   }
 
   private getLinkToPage(playerId: number, playerName: string): Array<any> {
-    return ["Season-stats-page", {
-      playerId: playerId,
-      fullName: GlobalFunctions.toLowerKebab(playerName)
-    }];
+    return ['/'+this._scope ,"season-stats", GlobalFunctions.toLowerKebab(playerName), playerId];
   }
 
-  getPlayerStats(playerId: number, scope?: string): Observable<SeasonStatsModuleData> {
+  getPlayerStats(playerId: number, scope?: string){
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
     let url = GlobalSettings.getApiUrl() + "/seasonStats/module/player/" + playerId;
+    if(scope != null){
+      this._scope = scope;
+    }
     return this.http.get(url)
       .map(res => res.json())
       .map(data => this.formatData(data.data, scope));
   }
 
-  private formatData(data: APISeasonStatsData, scope?: string): SeasonStatsModuleData {
+  private formatData(data: APISeasonStatsData, scope?: string) {
     if ( !data ) {
       return null;
     }
@@ -121,10 +121,10 @@ export class SeasonStatsService {
     };
   }
 
-  private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean, scope): Array<ComparisonBarInput> {
+  private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean, scope) {
     if(stats !== undefined){ //catch if no data for season
     //let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
-    let bars: Array<ComparisonBarInput> = [];
+    let bars = [];
 
     for ( var index in stats ) {
       var fieldName = stats[index].statDescription;
@@ -196,13 +196,13 @@ export class SeasonStatsService {
   }
 
 
-  private getTabData(seasonId: string, data: APISeasonStatsData, playerName: string, isPitcher: boolean, isCurrYear?: boolean, scopeName?: string): SeasonStatsTabData {
+  private getTabData(seasonId: string, data: APISeasonStatsData, playerName: string, isPitcher: boolean, isCurrYear?: boolean, scopeName?: string) {
     var legendValues;
     var subTitle;
     var tabTitle;
     var longSeasonName; // for display in the carousel and module title
     var isCareer = seasonId == "career";
-    var bars: Array<ComparisonBarInput> = this.getBarData(data.stats[seasonId], isCareer, isPitcher, data.playerInfo[0].statScope);
+    var bars= this.getBarData(data.stats[seasonId], isCareer, isPitcher, data.playerInfo[0].statScope);
 
     scopeName = scopeName != null ? scopeName.toUpperCase() : "League";
     scopeName = scopeName == "FBS" ? "NCAAF" : scopeName;
@@ -257,6 +257,7 @@ export class SeasonStatsService {
       return null;
     }
     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, playerInfo[0].teamName, playerInfo[0].teamId);
+
     var teamRouteText = {
       route: teamRoute,
       text: playerInfo[0].teamName,
@@ -400,8 +401,8 @@ export class SeasonStatsPageService {
     return pageTitle;
   }
 
-  initializeAllTabs(pageParams: SportPageParameters): Array<MLBSeasonStatsTabData> {
-    let tabs: Array<MLBSeasonStatsTabData> = [];
+  initializeAllTabs(pageParams: SportPageParameters): Array<SportSeasonStatsTabData> {
+    let tabs: Array<SportSeasonStatsTabData> = [];
     var curYear = new Date().getFullYear();
     var year = curYear;
     var playerName = pageParams['playerName'];
@@ -410,17 +411,17 @@ export class SeasonStatsPageService {
     for ( var i = 0; i < 4; i++ ){
       let title = year == curYear ? 'Current Season' : year.toString();
       let tabName = possessivePlayer + " " + title + " Stats";
-      tabs.push(new MLBSeasonStatsTabData(title, tabName, null, year.toString(), i==0, pageParams.scope));
+      tabs.push(new SportSeasonStatsTabData(title, tabName, null, year.toString(), i==0, pageParams.scope));
       year--;
     }
     //also push in last the career stats tab
     let title = 'Career Stats';
     let tabName = possessivePlayer + " Career Stats";
-    tabs.push(new MLBSeasonStatsTabData(title, tabName, null, 'career', false, pageParams.scope));
+    tabs.push(new SportSeasonStatsTabData(title, tabName, null, 'career', false, pageParams.scope));
     return tabs;
   }
 
-  getSeasonStatsTabData(seasonStatsTab: MLBSeasonStatsTabData, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number){
+  getSeasonStatsTabData(seasonStatsTab: SportSeasonStatsTabData, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number){
       var playerId = pageParams.playerId;
       //example url: http://dev-homerunloyal-api.synapsys.us/player/statsDetail/96652
       let url = GlobalSettings.getApiUrl() + "/seasonStats/page/player/" + playerId;
@@ -442,10 +443,10 @@ export class SeasonStatsPageService {
           });
   }
 
-  private setupTabData(seasonStatsTab: MLBSeasonStatsTabData, apiData: any, playerId: number, maxRows: number, scope): any{
+  private setupTabData(seasonStatsTab: SportSeasonStatsTabData, apiData: any, playerId: number, maxRows: number, scope): any{
     let seasonTitle;
     let sectionTable;
-    var sections : Array<MLBSeasonStatsTableData> = [];
+    var sections : Array<SportSeasonStatsTableData> = [];
     var totalRows = 0;
     var seasonKey = seasonStatsTab.year;
     var tableData = {};
@@ -533,7 +534,7 @@ export class SeasonStatsPageService {
     return sections;
   }
 
-  private setupTableData(season, year, rows: Array<any>, maxRows: number, scope: string): MLBSeasonStatsTableData {
+  private setupTableData(season, year, rows: Array<any>, maxRows: number, scope: string): SportSeasonStatsTableData {
     var tableName;
     let self = this;
     //convert object coming in into array
@@ -544,9 +545,9 @@ export class SeasonStatsPageService {
       rowArray.push(rows);
     }
     tableName = season;
-    var table = new MLBSeasonStatsTableModel(rowArray, scope);// set if pitcher to true
+    var table = new SportSeasonStatsTableModel(rowArray, scope);// set if pitcher to true
 
-    return new MLBSeasonStatsTableData(tableName, season, year, table);
+    return new SportSeasonStatsTableData(tableName, season, year, table);
   }
 
 }

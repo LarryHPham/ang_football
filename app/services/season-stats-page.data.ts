@@ -113,12 +113,12 @@ export interface seasonStatsData {
   postSeasonTotal: Array<TeamSeasonStatsData>;
 }
 
-export class MLBSeasonStatsTableData implements TableComponentData<TeamSeasonStatsData> {
+export class SportSeasonStatsTableData implements TableComponentData<TeamSeasonStatsData> {
   scope: string;
 
   groupName: string;
 
-  tableData: MLBSeasonStatsTableModel;
+  tableData: SportSeasonStatsTableModel;
 
   season: any;
 
@@ -128,7 +128,7 @@ export class MLBSeasonStatsTableData implements TableComponentData<TeamSeasonSta
     title: string,
     season: Season,
     year: number,
-    table: MLBSeasonStatsTableModel) {
+    table: SportSeasonStatsTableModel) {
     this.groupName = title;
     this.season = season;
     this.year = year;
@@ -137,7 +137,7 @@ export class MLBSeasonStatsTableData implements TableComponentData<TeamSeasonSta
 
 }
 
-export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> {
+export class SportSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> {
   scope: string;
 
   playerId: string;
@@ -152,7 +152,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
 
   hasError: boolean;
 
-  sections: Array<MLBSeasonStatsTableData>;
+  sections: Array<SportSeasonStatsTableData>;
 
   season: Season;
 
@@ -246,12 +246,12 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
   convertToCarouselItem(item: TeamSeasonStatsData, index:number): SliderCarouselInput {
     var playerData = item.playerInfo != null ? item.playerInfo : null;
     var playerName = item.playerInfo.playerFirstName+'-'+item.playerInfo.playerLastName;
-    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, playerData.teamName, playerName, playerData.playerId.toString());
+    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, playerData.teamMarket + ' ' + playerData.teamName, playerName, playerData.playerId.toString());
     var playerRouteText = {
       route: playerRoute,
       text: playerData.playerFirstName + " " + playerData.playerLastName
     }
-    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, playerData.teamName, playerData.teamId);
+    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, playerData.teamMarket + ' ' + playerData.teamName, playerData.teamId);
     var teamRouteText = {
       route: teamRoute,
       text: playerData.teamName,
@@ -259,6 +259,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
     }
     var description: any = ["No Information for this season"];
     description = this.getDescription(item, playerData.position, playerRouteText, playerData.statScope);
+
     return SliderCarousel.convertToCarouselItemType1(index, {
       backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(playerData.backgroundUrl),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
@@ -274,7 +275,7 @@ export class MLBSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> 
   }
 }
 
-export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData> {
+export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsData> {
   scope: string;
   columns: Array<TableColumn>;
   rows: Array<TeamSeasonStatsData>;
@@ -645,7 +646,7 @@ export class MLBSeasonStatsTableModel implements TableModel<TeamSeasonStatsData>
         }
         else {
           display = item.playerInfo.teamMarket + " " + item.playerInfo.teamName;
-          link = VerticalGlobalFunctions.formatTeamRoute(this.scope, item.playerInfo.teamName,item.playerInfo.teamId);
+          link = VerticalGlobalFunctions.formatTeamRoute(this.scope, item.playerInfo.teamMarket + ' ' + item.playerInfo.teamName,item.playerInfo.teamId);
         }
         sort = item.playerInfo.teamName;
         break;
