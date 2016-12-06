@@ -226,7 +226,6 @@ export class SearchService{
      * Functions for search page
      */
     getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
-      console.log('---getSearchPageData---');
         let dataSearch = {
           players: [],
           teams: []
