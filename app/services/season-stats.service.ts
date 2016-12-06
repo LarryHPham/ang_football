@@ -77,7 +77,6 @@ export class SeasonStatsService {
   }
 
   private getLinkToPage(playerId: number, playerName: string): Array<any> {
-    console.log(playerId, playerName);
     return ['/'+this._scope ,"season-stats", GlobalFunctions.toLowerKebab(playerName), playerId];
   }
 
@@ -257,7 +256,6 @@ export class SeasonStatsService {
     if ( !playerInfo[0] ) {
       return null;
     }
-    console.log(playerInfo);
     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, playerInfo[0].teamName, playerInfo[0].teamId);
 
     var teamRouteText = {
