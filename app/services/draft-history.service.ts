@@ -63,7 +63,7 @@ export class DraftHistoryService {
   private _scope: string;
   constructor(public http: Http){}
 
-  getDraftHistoryTabs(profileData: IProfileData): DraftHistoryTab[] {
+  getDraftHistoryTabs(profileData: IProfileData) {
     let errorMessage; // {0} is for the season name
     // if ( profileData.isLegit && year == currentYear ) {
       if ( profileData.profileType == "team" ) {
@@ -118,7 +118,7 @@ export class DraftHistoryService {
     // }
     if(profileData['headerData'] != null){
       let scope = profileData['headerData'].leagueAbbreviatedName;
-      this._scope = scope == 'fbs' ? 'ncaaf' : scope;
+      this._scope = scope == 'fbs' ? 'ncaaf' : 'nfl';
     }else{
       this._scope = 'nfl';
     }

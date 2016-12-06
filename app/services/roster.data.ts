@@ -129,8 +129,8 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   }
 
   convertToCarouselItem(val:TeamRosterData, index:number):SliderCarouselInput {
-    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
-    var teamRoute = this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
+    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
+    var teamRoute = this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(this.scope, val.teamName,val.teamId);
     var curYear = new Date().getFullYear();
 
     // var formattedHeight = VerticalGlobalFunctions.formatHeightWithFoot(val.height);
@@ -232,7 +232,9 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
 
   selectedKey: string = "";
 
+  scope: string;
   constructor(scope:string, rows: Array<TeamRosterData>) {
+    this.scope = scope;
     if(scope == 'nfl'){
       this.columns.push({
         headerValue: "Age",
@@ -293,7 +295,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
     var imageUrl: string = null;
     var displayAsRawText = false;
     var pColumn;
-
+    var scope = this.scope;
       function getFullClassName(classyear){
           switch(classyear) {
            case 'FR':
@@ -314,13 +316,12 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
            return classyear;
 
       }
-
       function tabCellDataroster(columnType) {
           return{
               "name":{
                   display : item.playerFirstName + " " + item.playerLastName,
                   sort : item.playerLastName + ', ' + item.playerFirstName,
-                  link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                  link : VerticalGlobalFunctions.formatPlayerRoute(scope, item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
                   imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl),
                   bottomStat: "Jersey No.",
                   bottomStat2:item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A',

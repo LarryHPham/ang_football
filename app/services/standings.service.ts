@@ -25,9 +25,9 @@ export class StandingsService {
     linkToPage.push('/' + routeScope, pageName, profile);
 
     if(profile != 'league'){
-      linkToPage.push(GlobalFunctions.toLowerKebab(pageParams.teamName), pageParams.teamID);
-    }else{
+      linkToPage.push(GlobalFunctions.toLowerKebab(pageParams.teamName), pageParams.teamId);
     }
+
     return linkToPage;
   }
 
