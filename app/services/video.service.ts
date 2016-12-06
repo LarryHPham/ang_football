@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Http, Response, Headers} from "@angular/http";
 import { GlobalSettings } from "../global/global-settings";
 import { Observable } from "rxjs/Observable";
+import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
 
 @Injectable()
 
@@ -30,24 +31,12 @@ export class VideoService {
 
     transformVideoStack(data){
       data.forEach(function(val, i){val
-
         val['video_thumbnail'] = val.thumbnail;
         val['keyword'] = val.league;
         val['time_stamp'] = val.pubDate;
 
-        // var relPath = GlobalSettings.getRouteFullParams().relPath;
-        // let domainHostName;
-        // let urlRouteArray;
-        // let domainParams = {}
-        //
-        // domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-        // if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-        //   domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-        // }
-        // domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
-        //
-        // urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType:'video', eventID:val.id}];
-        // val['urlRoute'] = urlRouteArray
+        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league,"story", val.id);
+        val['urlRoute'] = urlRouteArray
       })
       return data;
     }

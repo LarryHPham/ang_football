@@ -328,7 +328,7 @@ export class DeepDiveService {
         //if (val.id != currentArticleId) {
         val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"timeZone");
         val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
-        val["newsRoute"] = VerticalGlobalFunctions.formatArticleRoute("story", val.id);
+        val["newsRoute"] = VerticalGlobalFunctions.formatArticleRoute('nfl',"story", val.id);//TODO
         //}
       })
       return data;
@@ -336,17 +336,7 @@ export class DeepDiveService {
 
     transformVideoStack(data){
       data.forEach(function(val, i){
-        var relPath = GlobalSettings.getRouteFullParams().relPath;
-        let domainHostName;
-        let urlRouteArray;
-        let domainParams = {};
-
-        domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-        if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-          domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-        }
-        domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
-        urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType:'video', eventID:val.id}];
+        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute('nfl',"story", val.id);//TODO
         val['keyword'] = val.league.toUpperCase();
         val['video_thumbnail'] = val.thumbnail;
         val['embed_url'] = val.videoLink;
