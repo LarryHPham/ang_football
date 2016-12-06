@@ -9,7 +9,7 @@ import { VerticalGlobalFunctions }  from '../global/vertical-global-functions';
 import { GlobalSettings } from '../global/global-settings';
 
 //interfaces
-import { SearchComponentResult, SearchComponentData } from '../fe-core/components/search/search.component';
+import { SearchComponentResult, SearchComponentData } from '../ui-modules/search/search.component';
 import { PaginationParameters } from '../fe-core/interfaces/pagination.data';
 
 //import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
@@ -228,47 +228,47 @@ export class SearchService{
      */
     getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
       console.log('---getSearchPageData---');
-        // let dataSearch = {
-        //   players: [],
-        //   teams: []
-        // };
-        // //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
-        // scope = scope == 'ncaaf'?'fbs':scope;
-        //
-        // if(scope !== null){
-        //   data[scope]['players'].forEach(function(item){
-        //     item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
-        //     dataSearch.players.push(item);
-        //   });
-        //   data[scope]['teams'].forEach(function(item){
-        //     item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
-        //     dataSearch.teams.push(item);
-        //   })
-        // }else{
-        //   for(var s in data){
-        //     data[s]['players'].forEach(function(item){
-        //       item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
-        //       dataSearch.players.push(item);
-        //     })
-        //     data[s]['teams'].forEach(function(item){
-        //       item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
-        //       dataSearch.teams.push(item);
-        //     })
-        //   }
-        // }
-        //
-        // //converts to usable scope for api calls null is default value for all
-        // scope = scope != null ? GlobalSettings.getScope(scope):null;
-        // //Search for players and teams
-        // let playerResults = this.searchPlayers(query, scope, dataSearch.players);
-        // let teamResults = this.searchTeams(query, scope, dataSearch.teams);
-        //
-        // let searchResults = this.resultsToTabs(router, partnerId, query, playerResults, teamResults);
-        //
-        // return {
-        //   results: searchResults,
-        //   filters: this.filterDropdown()
-        // };
+        let dataSearch = {
+          players: [],
+          teams: []
+        };
+        //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
+        scope = scope == 'ncaaf'?'fbs':scope;
+
+        if(scope !== null){
+          data[scope]['players'].forEach(function(item){
+            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
+            dataSearch.players.push(item);
+          });
+          data[scope]['teams'].forEach(function(item){
+            item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
+            dataSearch.teams.push(item);
+          })
+        }else{
+          for(var s in data){
+            data[s]['players'].forEach(function(item){
+              item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
+              dataSearch.players.push(item);
+            })
+            data[s]['teams'].forEach(function(item){
+              item['scope'] = s == 'fbs'? 'ncaaf': 'nfl';
+              dataSearch.teams.push(item);
+            })
+          }
+        }
+
+        //converts to usable scope for api calls null is default value for all
+        scope = scope != null ? GlobalSettings.getScope(scope):null;
+        //Search for players and teams
+        let playerResults = this.searchPlayers(query, scope, dataSearch.players);
+        let teamResults = this.searchTeams(query, scope, dataSearch.teams);
+
+        let searchResults = this.resultsToTabs(router, partnerId, query, playerResults, teamResults);
+
+        return {
+          results: searchResults,
+          filters: this.filterDropdown()
+        };
     }
 
     filterDropdown(){

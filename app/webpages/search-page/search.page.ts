@@ -60,7 +60,7 @@ export class SearchPage implements OnInit {
 
     configureSearchPageData(filter?) {
         let self = this;
-        let query = self.pageParams.query;cd
+        let query = self.pageParams.query;
 
         if (typeof filter == 'undefined') {
             filter = null;
