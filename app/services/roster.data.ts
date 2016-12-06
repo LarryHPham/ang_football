@@ -57,6 +57,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   scope:string;
 
   constructor(private _service: RosterService, scope, teamId: string, type: string, conference: Conference, maxRows: number, isTeamProfilePage: boolean) {
+    console.log(scope);
     this.type = type;
     this.teamId = teamId;
     this.maxRows = maxRows;
@@ -129,8 +130,9 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   }
 
   convertToCarouselItem(val:TeamRosterData, index:number):SliderCarouselInput {
-    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
-    var teamRoute = this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(val.teamName,val.teamId);
+    console.log(val);
+    var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, val.teamName,val.playerFirstName + " " + val.playerLastName,val.playerId);
+    var teamRoute = this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(this.scope, val.teamName,val.teamId);
     var curYear = new Date().getFullYear();
 
     // var formattedHeight = VerticalGlobalFunctions.formatHeightWithFoot(val.height);
@@ -316,11 +318,12 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       }
 
       function tabCellDataroster(columnType) {
+        console.log(this.scope);
           return{
               "name":{
                   display : item.playerFirstName + " " + item.playerLastName,
                   sort : item.playerLastName + ', ' + item.playerFirstName,
-                  link : VerticalGlobalFunctions.formatPlayerRoute(item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
+                  link : VerticalGlobalFunctions.formatPlayerRoute(this.scope, item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
                   imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl),
                   bottomStat: "Jersey No.",
                   bottomStat2:item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A',

@@ -185,7 +185,7 @@ export class TeamPage implements OnInit {
           //---Batch 3---//
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.scope, this.pageParams.teamId.toString(), data.headerData.teamMarket + ' ' + data.teamName);
+          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
           this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
 
           //--Batch 4--//

@@ -67,11 +67,10 @@ export class ProfileHeaderService {
         .map(res => res.json())
         .map(data => {
           var headerData: TeamProfileHeaderData = data.data[0];
-
           return {
             pageParams: {
               teamId: headerData.teamId,
-              teamName: headerData.teamName,
+              teamName: headerData.teamMarket + ' ' + headerData.teamName,
               division: headerData.divisionName,
               conference: headerData.conferenceName,
             },
@@ -79,7 +78,7 @@ export class ProfileHeaderService {
             fullProfileImageUrl: GlobalSettings.getImageUrl(headerData.teamLogo),
             headerData: headerData,
             teamName: headerData.teamName,
-            profileName: headerData.teamName,
+            profileName: headerData.teamMarket + ' ' + headerData.teamName,
             profileId: headerData.teamId.toString(),
             profileType: "team"
           };
