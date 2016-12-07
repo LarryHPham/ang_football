@@ -464,7 +464,7 @@ export class TeamPage implements OnInit {
     private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
       this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
         .subscribe(data => {
-          this.firstVideo = data.data[first].videoLink;
+          this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
           this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
         },
         err => {
@@ -509,7 +509,7 @@ export class TeamPage implements OnInit {
       this._lolService.getListOfListsService(params, "team", "module")
         .subscribe(
           listOfListsData => {
-            this.listOfListsData = listOfListsData.listData;
+            this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
             // this.listOfListsData["type"] = "team";
             // this.listOfListsData["id"] = this.pageParams.teamId;
           },
