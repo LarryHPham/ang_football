@@ -26,11 +26,11 @@
           [headlineData]="headlineData"
           [isLeague]="false"></articles-module>
         <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-        <!-- <box-scores
+        <box-scores
           *ngIf="dateParam"
           [boxScores]="currentBoxScores"
           [calendarParams]="dateParam"
-          (dateEmit)="getBoxScores($event)"></box-scores> -->
+          (dateEmit)="getBoxScores($event)"></box-scores>
         <responsive-widget
           *ngIf="dateParam"
           [embedPlace]="widgetPlace"

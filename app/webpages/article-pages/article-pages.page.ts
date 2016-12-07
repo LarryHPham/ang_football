@@ -627,7 +627,7 @@ export class ArticlePages implements OnInit {
                 data => {
                     if (!this.hasRun) {
                         this.hasRun = true;
-                        this.trendingData = this.transformTrending(data['data'], currentArticleId);
+                        this.trendingData = this.transformTrending(data, currentArticleId);
                         if (data.article_count == this.trendingLength) {
                             this.trendingLength = this.trendingLength + 10
                         } else {
@@ -647,29 +647,33 @@ export class ArticlePages implements OnInit {
             var articleData;
             if (self.eventType != "story" && self.eventType != "video") {
                 if (val.event_id != currentArticleId) {
-                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(val['article_data'].publication_date), "timeZone");
+                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone");
                     articleData = {
+                        author: val['author'],
+                        publisher: val['publisher'],
                         title: val.title,
                         date: val["date"],
-                        content: val.teaser,
+                        teaser: val.teaser,
                         eventId: val.event_id,
                         eventType: "pregame-report",
                         image: GlobalSettings.getImageUrl(val.image_url),
-                        url: VerticalGlobalFunctions.formatArticleRoute(self.scope, "pregame-report", val.event_id),
+                        url: VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id),
                         rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/pregame-report/" + val.event_id
                     };
                 }
             } else {
                 if (val.id != currentArticleId) {
-                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(val['article_data'].publication_date), "timeZone");
+                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate)/1000), "timeZone");
                     articleData = {
+                        author: val['author'],
+                        publisher: val['publisher'],
                         title: val.title,
                         date: val["date"],
-                        content: val.teaser,
+                        teaser: val.teaser,
                         eventId: val.id,
                         eventType: "story",
                         image: GlobalSettings.getImageUrl(val.imagePath),
-                        url: "TODO",
+                        url: VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
                         rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
                     };
                 }
