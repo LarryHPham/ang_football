@@ -131,9 +131,9 @@ export class VerticalGlobalFunctions {
     if(typeof eventType != 'undefined' && eventType != null){
       articleRoute = ['/'+scope, 'articles', eventType, eventID];
     } else{
-      articleRoute = null;
+      articleRoute = ['/home'];
     }
-    return articleRoute ? articleRoute : ['Error-page'];
+    return articleRoute;
   }
 
   static scopeRedirect(router, params?) {
