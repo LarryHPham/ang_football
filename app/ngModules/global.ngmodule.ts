@@ -37,6 +37,7 @@ import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
+import { SearchPage } from "../webpages/search-page/search.page";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
@@ -48,6 +49,7 @@ import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-list
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
+import { SearchPageModule } from "../fe-core/modules/search-page/search-page.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -93,6 +95,9 @@ import { BackTabComponent } from "../fe-core/components/backtab/backtab.componen
 import { TitleComponent } from "../fe-core/components/title/title.component";
 import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 import { Search } from "../ui-modules/search/search.component";
+import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
+import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
+
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
@@ -128,6 +133,7 @@ import { Search } from "../ui-modules/search/search.component";
       DisclaimerPage,
       DirectoryPage,
       ErrorPage,
+      SearchPage,
 
       //modules
       WidgetModule,
@@ -139,6 +145,7 @@ import { Search } from "../ui-modules/search/search.component";
       ListOfListsModule,
       CommentModule,
       DirectoryModule,
+      SearchPageModule,
 
       //components
       AppComponent,
@@ -189,6 +196,8 @@ import { Search } from "../ui-modules/search/search.component";
       ContactUsComponent,
       DirectoryPagination,
       Search,
+      ArticleScheduleComponent,
+      ScoreBoard,
 
       //pipes
       NaValuePipe,
@@ -212,6 +221,7 @@ import { Search } from "../ui-modules/search/search.component";
       DisclaimerPage,
       DirectoryPage,
       ErrorPage,
+      SearchPage,
 
       //modules
       WidgetModule,
@@ -224,6 +234,7 @@ import { Search } from "../ui-modules/search/search.component";
       ListOfListsModule,
       CommentModule,
       DirectoryModule,
+      SearchPageModule,
 
       //components
       CircleImage,
@@ -276,6 +287,8 @@ import { Search } from "../ui-modules/search/search.component";
       ContactUsComponent,
       DirectoryPagination,
       Search,
+      ArticleScheduleComponent,
+      ScoreBoard,
 
       //pipes
       NaValuePipe,

@@ -1,14 +1,19 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Rx';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import {Http} from '@angular/http';
-import {SearchComponentResult, SearchComponentData} from '../fe-core/components/search/search.component';
-import {GlobalFunctions} from '../global/global-functions';
-import {VerticalGlobalFunctions}  from '../global/vertical-global-functions';
-import {GlobalSettings} from '../global/global-settings';
-// import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
+
+//globals
+import { GlobalFunctions } from '../global/global-functions';
+import { VerticalGlobalFunctions }  from '../global/vertical-global-functions';
+import { GlobalSettings } from '../global/global-settings';
+
+//interfaces
+import { SearchComponentResult, SearchComponentData } from '../ui-modules/search/search.component';
+import { PaginationParameters } from '../fe-core/interfaces/pagination.data';
+
+//import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
 //Interface for input of search component
-import {PaginationParameters} from '../fe-core/interfaces/pagination.data';
 export interface SearchInput {
     //Text that goes in as the placeholder for the input
     placeholderText: string;
@@ -87,9 +92,7 @@ export class SearchService{
     }
     //Function get search JSON object
     getSearch(){
-        return this.http.get(this.searchAPI, {
-
-            })
+        return this.http.get(this.searchAPI, {})
             .map(
                 res => res.json()
             ).map(
@@ -152,7 +155,7 @@ export class SearchService{
             let teamName = item.teamName;
 
             //generate route for team
-            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId, true);
+            let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null && !partnerScope.isSubdomainPartner){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partner_id:partnerScope.partnerName});
             }else{
@@ -183,7 +186,7 @@ export class SearchService{
             count++;
             let item = playerResults[i];
             let playerName = item.playerName;
-            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId, true);
+            let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -341,7 +344,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
-            let route = VerticalGlobalFunctions.formatPlayerRoute(item.teamName, playerName, item.playerId, true);
+            let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -387,7 +390,7 @@ export class SearchService{
             //TODO: use router functions to get URL
             // let urlText = 'http://www.homerunloyal.com/';
             // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
-            let route = VerticalGlobalFunctions.formatTeamRoute(teamName, item.teamId, true);
+            let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
             if(partnerScope.isPartner && item.scope != null){
               route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
             }else{
@@ -488,17 +491,17 @@ export class SearchService{
       let hasParent = true;
       let route = router;
       for (var i = 0; hasParent == true; i++){
-        if(route.parent != null){
-          counter++;
-          route = route.parent;
-        }else{
-          hasParent = false;
-          let relPath = '';
-          for(var c = 1 ; c <= counter; c++){
-            relPath += '../';
-          }
-          return relPath;
-        }
+        // if(route.parent != null){
+        //   counter++;
+        //   route = route.parent;
+        // }else{
+        //   hasParent = false;
+        //   let relPath = '';
+        //   for(var c = 1 ; c <= counter; c++){
+        //     relPath += '../';
+        //   }
+        //   return relPath;
+        // }
       }
     }
 

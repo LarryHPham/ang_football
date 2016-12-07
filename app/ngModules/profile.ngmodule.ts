@@ -73,7 +73,6 @@ import { DetailedListItem } from "../fe-core/components/detailed-list-item/detai
 import { ArticlesModule } from "../fe-core/modules/articles/articles.module";
 import { ArticleSubComponent } from "../fe-core/components/articles/sub-article/sub-article.component";
 import { ArticleMainComponent } from "../fe-core/components/articles/main-article/main-article.component";
-import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.component";
 import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
 import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
@@ -143,7 +142,6 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     ComparisonTile,
     ComparisonLegend,
     ComparisonBar,
-    ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
     ProfileVideoStackComponent,
@@ -205,7 +203,6 @@ import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-
     ComparisonTile,
     ComparisonLegend,
     ComparisonBar,
-    ArticleScheduleComponent,
     ArticleMainComponent,
     ArticleSubComponent,
     ProfileVideoStackComponent,
