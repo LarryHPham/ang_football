@@ -210,22 +210,13 @@ export class DeepDivePage{
       }
     }
 
-    changeScope($event) {
-      this.scopeNameDisplay($event);
-      // var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
-      // let relPath = this.getRelativePath(this._router);
-      // if(partnerHome){
-      //   this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partner_id:GlobalSettings.getHomeInfo().partnerName}]);
-      //   // window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
-      // }else{
-      //   this._router.navigate([relPath+'Default-home',{scope:$event.toLowerCase()}]);
-      //   // window.location.pathname = "/"+$event.toLowerCase();
-      // }
-
-      if($event == this.changeScopeVar){
+    changeScope(event) {
+      event = event.toLowerCase();
+      this.scopeNameDisplay(event);
+      if(event == this.scope){
         this.getSideScroll();
       }else{
-        this.changeScopeVar = $event;
+        this.scope = event;
         this.callCount = 1;
         this.sideScrollData = null;
         this.getSideScroll();
