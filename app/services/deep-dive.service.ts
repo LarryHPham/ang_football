@@ -169,6 +169,8 @@ export class DeepDiveService {
             title:  "<span> Today's News </span>",
             headline: val['title'],
             keyword: val['keyword'],
+            keywords: val['keyword'],
+            keyUrl: urlRouteArray,
             teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
             id:val['id'],
             articlelink: urlRouteArray,
@@ -273,7 +275,6 @@ export class DeepDiveService {
       articles.forEach(function(val){
           var info = val.info;
           var date = GlobalFunctions.sntGlobalDateFormatting(Number(info.last_updated) * 1000, "dayOfWeek");
-
           let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.subCategory,val.keyword, info.event_id);//TODO PARTNER
           var s = {
               urlRouteArray: urlRouteArray ? urlRouteArray : null,
