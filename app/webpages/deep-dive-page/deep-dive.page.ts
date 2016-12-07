@@ -7,7 +7,7 @@ import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
 import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 // import {SeoService} from '../../seo.service';
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
@@ -62,7 +62,7 @@ export class DeepDivePage{
       private _partnerData: PartnerHeader,
       // private _seoService: SeoService,
       public ngZone:NgZone,
-      // private _params:RouteParams
+      private _route:Router
     ){
       this._activatedRoute.params.subscribe(
           (params:any) => {
@@ -242,7 +242,9 @@ export class DeepDivePage{
     private getDeepDiveVideoBatch(){
         this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
           data => {
-            this.videoData = this._deepDiveData.transformVideoStack(data.data);
+            if(data.data != null){
+              this.videoData = this._deepDiveData.transformVideoStack(data.data);
+            }
           }
         )
       }
@@ -331,5 +333,9 @@ export class DeepDivePage{
     private onScroll(event) {
       this.blockIndex = GlobalFunctions.lazyLoadOnScroll(event, this.blockIndex);
       return;
+    }
+
+    toggleRoute(event) {
+      this._route.navigate(['/'+event.toLowerCase()]);
     }
 }
