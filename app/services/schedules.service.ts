@@ -237,23 +237,25 @@ export class SchedulesService {
       let partner = GlobalSettings.getHomeInfo();
       var reportLink;
       let reportUrl;
+      let routeScope = scope == 'fbs' ? 'ncaaf': scope;
+      console.log(val);
       if(val.eventStatus == 'inprogress'){
         if(Number(val.eventQuarter) > 1){// so that ai gets a chance to generate an article and no one really needs an article created for first quarter
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute('in-game-report',val.eventId);
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'in-game-report',val.eventId);
           reportText = 'LIVE GAME REPORT';
         }else{// link if game is inprogress and still 1st quarter
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute('pregame-report',val.eventId);
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
           reportText = 'PRE GAME REPORT'
         }
       }else{
         if(val.eventStatus = 'pregame'){
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute('pregame-report',val.eventId);
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
           reportText = 'PRE GAME REPORT'
         }else if (val.eventStatus == 'postgame'){
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute('postgame-report',val.eventId);
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'postgame-report',val.eventId);
           reportText = 'POST GAME REPORT';
         }else{
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute('postgame-report',val.eventId);
+          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'postgame-report',val.eventId);
           reportText = 'POST GAME REPORT';
         }
       }
@@ -264,7 +266,6 @@ export class SchedulesService {
       let team1FullName = val.team1FullName;
       let team2FullName = val.team2FullName;
 
-      let routeScope = scope == 'fbs' ? 'ncaaf': scope;
 
       newData = {
         eos: false,
@@ -277,6 +278,7 @@ export class SchedulesService {
         homeLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id),
         reportDisplay: reportText,
         reportLink: reportUrl,
+        extUrl:false,
         isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
         inning: val.eventQuarter != null ? "Current: Quarter " + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
       }
