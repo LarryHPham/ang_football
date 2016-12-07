@@ -238,7 +238,6 @@ export class SchedulesService {
       var reportLink;
       let reportUrl;
       let routeScope = scope == 'fbs' ? 'ncaaf': scope;
-      console.log(val);
       if(val.eventStatus == 'inprogress'){
         if(Number(val.eventQuarter) > 1){// so that ai gets a chance to generate an article and no one really needs an article created for first quarter
           reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'in-game-report',val.eventId);
