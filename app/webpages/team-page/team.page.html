@@ -57,6 +57,14 @@
           [embedPlace]="widgetPlace"
           [displayAtRes]="'1024'"></responsive-widget>
         <team-roster-module *ngIf="rosterData" [data]="rosterData"></team-roster-module>
+        <player-stats-module
+          *ngIf="playerStatsData"
+          [data]="playerStatsData"
+          [profileHeader]="profileHeaderData"
+          [isProfilePage]="isProfilePage"
+          [profileData]="profileData"
+          [tabName]="ptabName"
+          (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
       </div> <!--loadBatch3-->
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
