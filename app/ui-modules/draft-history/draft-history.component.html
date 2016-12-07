@@ -16,6 +16,7 @@
       <div class="sort-title">
         <span class="sort-title-text">Sort By: </span>
       <dropdown
+        [isModule]="'true'"
         [list]="sortOptions"
         [selectedKey]=""
         (selectionChanged)="dropdownChanged($event)"></dropdown>
