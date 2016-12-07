@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 //globals
@@ -44,7 +44,7 @@ declare var moment;
     templateUrl: './app/webpages/league-page/league.page.html'
 })
 
-export class LeaguePage implements OnInit {
+export class LeaguePage{
     public partnerID: string;
     public scope: string;
     public paramsub: any;
@@ -154,8 +154,6 @@ export class LeaguePage implements OnInit {
 
       this.setupProfileData(this.partnerID, this.scope);
     }
-
-    ngOnInit() { console.log('League page'); }
 
     private setupProfileData(partnerID, scope) {
       this._profileService.getLeagueProfile(scope).subscribe(
