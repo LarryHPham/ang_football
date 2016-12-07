@@ -1,6 +1,6 @@
               <section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
                 <section class="deep-dive-container1">
-                  <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData">
+                  <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" (changeScope)="toggleRoute($event)">
                   </news-box>
                   <div class="spacer" id="deep-dive-blueBar">
                     <section class="deep-dive-adWrap">

@@ -14,7 +14,7 @@ export class DeepDiveService {
   private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
 
   constructor(
-    public http: Http,
+    public http: Http
   ){}
 
   //Function to set custom headers
@@ -161,17 +161,8 @@ export class DeepDiveService {
           var curmonthdate = curdate.getDate();
           var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone");
 
-          var relPath = GlobalSettings.getRouteFullParams().relPath;
-          let domainHostName;
           let urlRouteArray;
-          let domainParams = {}
-
-          domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-          if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-            domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-          }
-          domainParams['scope'] = val.league == 'fbs' ? 'ncaaf' : val.league;
-          // urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: 'story', eventID: val.id}];
+          urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id);
 
           let carData = {
             image_url: GlobalSettings.getImageUrl(val['imagePath']),
@@ -180,7 +171,7 @@ export class DeepDiveService {
             keyword: val['keyword'],
             teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
             id:val['id'],
-            articlelink: 'urlRouteArray',
+            articlelink: urlRouteArray,
             date: date,
           };
           transformData.push(carData);
@@ -336,7 +327,7 @@ export class DeepDiveService {
 
     transformVideoStack(data){
       data.forEach(function(val, i){
-        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute('nfl',"story", val.id);//TODO
+        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute('nfl',"video", val.id);//TODO
         val['keyword'] = val.league.toUpperCase();
         val['video_thumbnail'] = val.thumbnail;
         val['embed_url'] = val.videoLink;
