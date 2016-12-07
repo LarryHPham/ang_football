@@ -1,7 +1,7 @@
 <footer class="footer container-fluid">
     <section class="footer-top row">
       <div class="footer-top-container col-xs-6 col-md-2">
-        <a *ngIf="!partner" [routerLink]="['Home-page']"><img *ngIf="!partner" src="{{image}}"  alt="Football Logo"/></a>
+        <a *ngIf="!partner" [routerLink]="['/home']"><img *ngIf="!partner" src="{{image}}"  alt="Football Logo"/></a>
       </div>
 
       <!-- BELOW768 and ABOVE768 NOT PERMANENT PLEASE RECODE TO BOOTSTRAP -->
@@ -29,10 +29,10 @@
         <li class="footer-text1"><a [routerLink]="['Home-page']"><b>{{pageName}}</b></a></li>
         </ul>
         <ul>
-          <li><a [routerLink]="['Contact-us-page']">{{advertise}}</a> <i class="fa fa-caret-right"></i></li>
-          <li><a [routerLink]="['About-us-page']">{{au}}</a><i>|</i></li>
-          <li><a [routerLink]="['Contact-us-page']">{{contactUs}}</a><i>|</i></li>
-          <li><a [routerLink]="['Disclaimer-page']">{{disc}}</a></li>
+          <li><a [routerLink]="['/>contact-us']">{{advertise}}</a> <i class="fa fa-caret-right"></i></li>
+          <li><a [routerLink]="['/>about-us']">{{au}}</a><i>|</i></li>
+          <li><a [routerLink]="['/>contact-us']">{{contactUs}}</a><i>|</i></li>
+          <li><a [routerLink]="['/>disclaimer']">{{disc}}</a></li>
         </ul>
         <div class="footer-main-cit row">
           <p class="footer-main-citation" [innerHTML]="_copyrightInfo"></p><i class="footer-main-cit-pipe">|</i>

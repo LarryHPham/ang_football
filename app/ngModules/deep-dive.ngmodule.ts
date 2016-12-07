@@ -10,7 +10,6 @@ import { DeepDiveService } from '../services/deep-dive.service';
 
 import { SideScrollSchedule } from '../ui-modules/side-scroll-schedules/side-scroll-schedules.module';
 import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.component';
-import { SideScroll } from '../fe-core/components/side-scroll/side-scroll.component';
 
 //deep-dive blocks
 import { CarouselDiveModule } from '../fe-core/modules/carousel-dive/carousel-dive.module';
