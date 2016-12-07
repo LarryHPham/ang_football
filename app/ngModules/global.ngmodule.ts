@@ -95,6 +95,9 @@ import { BackTabComponent } from "../fe-core/components/backtab/backtab.componen
 import { TitleComponent } from "../fe-core/components/title/title.component";
 import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 import { Search } from "../ui-modules/search/search.component";
+import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
+import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
+
 
 // /*** COMPONENTS ***/
 // import {PartnerHomePage} from '../webpages/partner-home-page/partner-home-page';
@@ -193,6 +196,8 @@ import { Search } from "../ui-modules/search/search.component";
       ContactUsComponent,
       DirectoryPagination,
       Search,
+      ArticleScheduleComponent,
+      ScoreBoard,
 
       //pipes
       NaValuePipe,
@@ -282,6 +287,8 @@ import { Search } from "../ui-modules/search/search.component";
       ContactUsComponent,
       DirectoryPagination,
       Search,
+      ArticleScheduleComponent,
+      ScoreBoard,
 
       //pipes
       NaValuePipe,
