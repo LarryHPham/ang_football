@@ -28,7 +28,7 @@ import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.pa
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 // import {SyndicatedArticlePage} from "./webpages/syndicated-article-page/syndicated-article-page";
-import { SearchPage } from "./webpages/search-page/search-page";
+import { SearchPage } from "../webpages/search-page/search.page";
 
 const relativeChildRoutes = [
     {
@@ -62,7 +62,7 @@ const relativeChildRoutes = [
     },
     {
         path: ':scope/search/:query',
-        component: SearchPage
+        component: SearchPage,
     },
 
     // //Module Pages
