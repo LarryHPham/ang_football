@@ -198,7 +198,6 @@ export class DeepDiveService {
         }else{
           urlRouteArray = [val.article_url];
         }
-        console.log(urlRouteArray);
         var s = {
             articleUrl: urlRouteArray,
             keyword: val.article_type.replace('-', ' ').toUpperCase(),
@@ -294,7 +293,6 @@ export class DeepDiveService {
     transformTrending (data, currentArticleId) {
       data.forEach(function(val,index){
         //if (val.id != currentArticleId) {
-        console.log(val);
         val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"timeZone");
         val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
         val["newsRoute"] = VerticalGlobalFunctions.formatArticleRoute('nfl',"story", val.id);//TODO
