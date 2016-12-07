@@ -13,11 +13,11 @@ export class ArticleDataService {
         var fullUrl = GlobalSettings.getArticleUrl();
         //having the query string is only temporary until the partner site link issue is figured out.
         if (!isFantasyReport) {
-            return this.http.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope)
+            return this.http.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
                 .map(res => res.json())
                 .map(data => data);
         } else {
-            return this.http.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope)
+            return this.http.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
                 .map(res => res.json())
                 .map(data => data);
         }
@@ -30,7 +30,7 @@ export class ArticleDataService {
     }
 
     getRecommendationsData(eventID, scope) {
-        var fullUrl = GlobalSettings.getRecommendUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10";
+        var fullUrl = GlobalSettings.getRecommendUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10&readyToPublish=all";
         return this.http.get(fullUrl)
             .map(res => res.json())
             .map(data => data);

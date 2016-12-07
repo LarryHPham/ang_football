@@ -52,6 +52,7 @@ export class ArticlePages implements OnInit {
     isFantasyReport:boolean = false;
     isSmall:boolean = false;
     isTrendingMax:boolean = false;
+    showLoading:boolean = false;
     teamId:number;
     articleSubType:string;
     articleType:string;
@@ -613,10 +614,10 @@ export class ArticlePages implements OnInit {
                         this.hasRun = true;
                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
                         if (data.article_count == this.trendingLength) {
-                            this.trendingLength = this.trendingLength + 10
+                            this.trendingLength = this.trendingLength + 10;
                         } else {
                             this.isTrendingMax = true;
-                            jQuery('.loading-more').css('display', 'none');
+                            this.showLoading = false;
                         }
                     }
                 }
@@ -629,10 +630,10 @@ export class ArticlePages implements OnInit {
                         this.hasRun = true;
                         this.trendingData = this.transformTrending(data, currentArticleId);
                         if (data.article_count == this.trendingLength) {
-                            this.trendingLength = this.trendingLength + 10
+                            this.trendingLength = this.trendingLength + 10;
                         } else {
                             this.isTrendingMax = true;
-                            jQuery('.loading-more').css('display', 'none');
+                            this.showLoading = false;
                         }
                     }
                 }
@@ -689,6 +690,7 @@ export class ArticlePages implements OnInit {
         if (!this.isTrendingMax) {
             this.hasRun = false;
             if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
+                this.showLoading = true;
                 this.batch = this.batch + 1;
                 this.getTrendingArticles(this.trendingLength, this.eventID);
             }
