@@ -24,6 +24,7 @@ import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
 import { SeoService } from "../../seo.service";
+import { PlayerStatsService } from "../../services/player-stats.service";
 
 //interfaces
 import { Division, Conference, SportPageParameters } from '../../global/global-interface';
@@ -38,6 +39,7 @@ import { ComparisonModuleData } from '../../fe-core/modules/comparison/compariso
 import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
+import { PlayerStatsModule, PlayerStatsModuleData } from '../../fe-core/modules/player-stats/player-stats.module';
 
 //Libraries
 declare var moment;
@@ -116,6 +118,8 @@ export class TeamPage implements OnInit {
 
   private batchLoadIndex: number = 1;
 
+  private playerStatsData: PlayerStatsModuleData;
+
   constructor(
     private activateRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
@@ -134,7 +138,8 @@ export class TeamPage implements OnInit {
     private _lolService: ListOfListsService,
     private _newsService: NewsService,
     private _twitterService: TwitterService,
-    private _seoService: SeoService
+    private _seoService: SeoService,
+    private _playerStatsService: PlayerStatsService
   ) {
     var currDate = new Date();
     var currentUnixDate = new Date().getTime();
@@ -191,6 +196,7 @@ export class TeamPage implements OnInit {
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
           this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
           this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, this.profileName, true);
 
           //--Batch 4--//
           this.activeTransactionsTab = "Transactions"; // default tab is Transactions
@@ -464,7 +470,7 @@ export class TeamPage implements OnInit {
     private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
       this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
         .subscribe(data => {
-          this.firstVideo = data.data[first].videoLink;
+          this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
           this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
         },
         err => {
@@ -509,7 +515,7 @@ export class TeamPage implements OnInit {
       this._lolService.getListOfListsService(params, "team", "module")
         .subscribe(
           listOfListsData => {
-            this.listOfListsData = listOfListsData.listData;
+            this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
             // this.listOfListsData["type"] = "team";
             // this.listOfListsData["id"] = this.pageParams.teamId;
           },
@@ -535,6 +541,31 @@ export class TeamPage implements OnInit {
           console.log("Error getting news data");
       });
     } //getNewsService
+
+
+
+    private playerStatsTabSelected(tabData: Array<any>) {
+         //only show 4 rows in the module
+        this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
+        var seasonArray=tabData[0];
+        var seasonIds=seasonArray.seasonIds;
+        var seasonTab = seasonIds.find(function (e) {
+            if( e.value===tabData[1]){
+                return true;
+            }
+
+        });
+        if (tabData[0].tabActive=="Special"){
+            this.ptabName="Kicking";
+            if(seasonTab){
+
+            }else{
+                this.ptabName=tabData[1];
+            }
+        }else{
+            this.ptabName=tabData[0].tabActive;
+        };
+    }
 
 
 
