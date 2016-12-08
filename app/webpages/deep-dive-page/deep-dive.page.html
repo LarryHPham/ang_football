@@ -1,5 +1,5 @@
-              <section *ngIf="!isPartnerZone" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
-                <section class="deep-dive-container1">
+              <section *ngIf="!isPartnerZone && isLoading" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
+                <section *ngIf="carouselData"class="deep-dive-container1">
                   <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" (changeScope)="toggleRoute($event)">
                   </news-box>
                   <div class="spacer" id="deep-dive-blueBar">
@@ -9,7 +9,7 @@
                     </section>
                   </div>
                 </section>
-                <section class="deep-dive-container2">
+                <section *ngIf="carouselData" class="deep-dive-container2">
                   <div class="deep-dive-container2a">
                     <div class="deep-dive-module">
                       <side-scroll-schedules *ngIf="scopeDisplayed" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="scope" [topScope]="scopeDisplayed.topScope" (changeScope)="changeScope($event)"></side-scroll-schedules>
