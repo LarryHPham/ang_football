@@ -20,7 +20,7 @@ export class DeepDiveBlock2 implements OnInit {
   articleStack2DataTop: Array<ArticleStackData>;
   articleStack2DataBatch: Array<ArticleStackData>;
   articleCallLimit:number = 23;
-  batchNum: number = 1;
+  batchNum: number = 2;
 
   constructor(private _deepDiveData: DeepDiveService){}
   getFirstArticleStackData(){
