@@ -30,10 +30,10 @@ declare var moment;
 export class ArticlePages implements OnInit {
     public params;
     public trendingData:any;
-    public trendingLength:number = 10;
     article:Article;
     articleData:any;
     subRec:any;
+    trendingArticles:any;
     throttle:any;
     copyright:Array<any>;
     images:Array<any>;
@@ -52,7 +52,9 @@ export class ArticlePages implements OnInit {
     isFantasyReport:boolean = false;
     isSmall:boolean = false;
     isTrendingMax:boolean = false;
+    showLoading:boolean = true;
     teamId:number;
+    trendingLength:number;
     articleSubType:string;
     articleType:string;
     eventType:string;
@@ -83,8 +85,11 @@ export class ArticlePages implements OnInit {
                 private _headlineDataService:HeadlineDataService) {
         this.subRec = this._activateRoute.params.subscribe(
             (params:any) => {
-                this.articleData = null;
                 window.scrollTo(0, 0);
+                this.articleData = null;
+                this.trendingData = null;
+                this.trendingLength = 10;
+                this.isTrendingMax = false;
                 this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
                 if (params.partnerID != null) {
                     this.partnerId = params.partnerID;
@@ -156,7 +161,8 @@ export class ArticlePages implements OnInit {
                             if (this.hasEventId) {
                                 this.getRecommendedArticles();
                             }
-                            this.getTrendingArticles(10, this.eventID);
+                            this.isTrendingMax = false;
+                            this.getTrendingArticles(this.eventID);
                         }
                     } catch (e) {
                         this.error = true;
@@ -605,34 +611,35 @@ export class ArticlePages implements OnInit {
         }
     }
 
-    private getTrendingArticles(count, currentArticleId) {
+    private getTrendingArticles(currentArticleId) {
         if (this.eventType != "story" && this.eventType != "video") {
-            this._headlineDataService.getAiTrendingData(count, this.scope).subscribe(
+            this.trendingArticles = this._headlineDataService.getAiTrendingData(this.trendingLength, this.scope).subscribe(
                 data => {
                     if (!this.hasRun) {
                         this.hasRun = true;
                         this.trendingData = this.transformTrending(data['data'], currentArticleId);
-                        if (data.article_count == this.trendingLength) {
-                            this.trendingLength = this.trendingLength + 10
+                        if (data.article_count % 10 == 0 && this.trendingData) {
+                            this.trendingLength = this.trendingLength + 10;
                         } else {
                             this.isTrendingMax = true;
-                            jQuery('.loading-more').css('display', 'none');
+                            this.showLoading = false;
                         }
                     }
                 }
             )
         }
         else {
-            this._deepDiveService.getDeepDiveBatchService(this.scope, count, 1, this.geoLocation).subscribe(
+            this.trendingArticles = this._deepDiveService.getDeepDiveBatchService(this.scope, this.trendingLength, 1, this.geoLocation).subscribe(
                 data => {
                     if (!this.hasRun) {
                         this.hasRun = true;
+                        console.log(this.trendingLength);
                         this.trendingData = this.transformTrending(data, currentArticleId);
-                        if (data.article_count == this.trendingLength) {
-                            this.trendingLength = this.trendingLength + 10
+                        if (data.article_count % 10 == 0 && this.trendingData) {
+                            this.trendingLength = this.trendingLength + 10;
                         } else {
                             this.isTrendingMax = true;
-                            jQuery('.loading-more').css('display', 'none');
+                            this.showLoading = false;
                         }
                     }
                 }
@@ -663,7 +670,7 @@ export class ArticlePages implements OnInit {
                 }
             } else {
                 if (val.id != currentArticleId) {
-                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate)/1000), "timeZone");
+                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
                     articleData = {
                         author: val['author'],
                         publisher: val['publisher'],
@@ -688,9 +695,10 @@ export class ArticlePages implements OnInit {
     private trendingScroll(event) {
         if (!this.isTrendingMax) {
             this.hasRun = false;
-            if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop() && this.trendingLength <= 100) {
+            if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+                this.showLoading = true;
                 this.batch = this.batch + 1;
-                this.getTrendingArticles(this.trendingLength, this.eventID);
+                this.getTrendingArticles(this.eventID);
             }
         }
     }
@@ -711,7 +719,7 @@ export class ArticlePages implements OnInit {
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
             date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated * 1000, "dayOfWeek"),
             articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, eventID),
-            keyword: "FOOTBALL"
+            keyword: recommendations.keywords[0].toUpperCase()
         };
         return articles;
     }
@@ -874,5 +882,6 @@ export class ArticlePages implements OnInit {
 
     ngOnDestroy() {
         this.subRec.unsubscribe();
+        this.trendingArticles.unsubscribe();
     }
 }
