@@ -15,7 +15,7 @@ export class DeepDiveBlock3 implements OnInit {
   @Input() profileName: any;
   articleData: Array<ArticleStackData>;
   articleCallLimit:number = 31;
-  batchNum: number = 1;
+  batchNum: number = 3;
 
   constructor(private _deepDiveData: DeepDiveService){}
   getFirstArticleStackData(){
