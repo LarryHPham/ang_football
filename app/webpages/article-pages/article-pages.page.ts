@@ -719,7 +719,7 @@ export class ArticlePages implements OnInit {
             images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
             date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated * 1000, "dayOfWeek"),
             articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, eventID),
-            keyword: "FOOTBALL"
+            keyword: recommendations.keywords[0].toUpperCase()
         };
         return articles;
     }
