@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 //globals
 import { GlobalFunctions } from "../../global/global-functions";
 import { GlobalSettings } from "../../global/global-settings";
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //interfaces
 import { DetailListInput } from '../../fe-core/components/detailed-list-item/detailed-list-item.component';
@@ -18,6 +18,7 @@ import { PaginationParameters } from '../../fe-core/components/pagination-footer
 import { ListPageService } from '../../services/list-page.service';
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { DynamicWidgetCall } from "../../services/dynamic-list-page.service";
+import { SeoService } from "../../seo.service";
 
 
 @Component({
@@ -55,7 +56,8 @@ export class ListPage {
         private listService: ListPageService,
         private _profileService: ProfileHeaderService,
         private dynamicWidget: DynamicWidgetCall,
-        private _title: Title
+        private _title: Title,
+        private _seoService: SeoService
     ) {
       // check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
@@ -149,6 +151,7 @@ export class ListPage {
             .subscribe(
             list => {
                 this.profileHeaderData = list.profHeader;
+                this.metaTags(this.profileHeaderData);
                 if (list.listData.length == 0) {//makes sure it only runs once
                     this.detailedDataArray = null;
                 } else {
@@ -179,6 +182,7 @@ export class ListPage {
             .subscribe(
             list => {
                 this.profileHeaderData = list.profHeader;
+                this.metaTags(this.profileHeaderData);
                 if (list.listData.length == 0) {//makes sure it only runs once
                     this.detailedDataArray = null;
                 } else {
@@ -194,6 +198,32 @@ export class ListPage {
             }
             );
     } //getDynamicList
+
+
+
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
 
 
 

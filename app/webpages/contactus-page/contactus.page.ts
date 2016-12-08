@@ -6,7 +6,7 @@ import {Title} from '@angular/platform-browser';
 
 import {GlobalSettings} from '../../global/global-settings';
 import {SidekickWrapper} from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
-// import {SeoService} from "../../seo.service";
+import { SeoService } from "../../seo.service";
 // import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 declare var moment;
@@ -22,8 +22,8 @@ export class ContactUsPage{
 
     constructor(
       private http:Http,
-      private _title: Title
-      // private _seoService: SeoService
+      private _title: Title,
+      private _seoService: SeoService
     ) {
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
@@ -98,19 +98,27 @@ export class ContactUsPage{
         this.http.get(this.mailManUrl,{})
     }
 
+
+
     ngAfterViewInit(){
+      this.metaTags();
+    }
+
+
+
+    metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
       let link = window.location.href;
-      //
-      // this._seoService.setCanonicalLink(this._params.params, this._router);
-      // this._seoService.setOgTitle('Contact Us');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl(link);
-      // this._seoService.setOgImage(GlobalSettings.getmainLogoUrl());
-      // this._seoService.setTitle('Contact Us');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('INDEX, FOLLOW');
-    }
+
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle('Contact Us');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(GlobalSettings.getmainLogoUrl());
+      this._seoService.setTitle('Contact Us');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
 }

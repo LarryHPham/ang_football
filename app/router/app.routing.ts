@@ -32,16 +32,16 @@ import { SearchPage } from "../webpages/search-page/search.page";
 
 const relativeChildRoutes = [
     {
-        path: 'about-us',
-        component: AboutUsPage,
-    },
-    {
         path: 'contact-us',
         component: ContactUsPage,
     },
     {
         path: 'disclaimer',
         component: DisclaimerPage,
+    },
+    {
+        path: ':scope/about-us',
+        component: AboutUsPage,
     },
     {
         path: ':scope/pick-a-team',

@@ -1,13 +1,13 @@
-import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Injector} from '@angular/core';
-import {Title} from '@angular/platform-browser';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Injector } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
-import {TitleInputData} from "../../fe-core/components/title/title.component";
-import {GlobalSettings} from '../../global/global-settings';
-import {GlobalFunctions} from '../../global/global-functions';
-// import {SeoService} from "../../seo.service";
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+import { TitleInputData } from "../../fe-core/components/title/title.component";
+import { GlobalSettings } from '../../global/global-settings';
+import { GlobalFunctions } from '../../global/global-functions';
+import { SeoService } from "../../seo.service";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'Disclaimer-page',
@@ -23,29 +23,35 @@ export class DisclaimerPage {
 
     constructor(
       private _title: Title,
-      // private _seoService: SeoService,
+      private _seoService: SeoService,
       public activatedRoute: ActivatedRoute
     ) {
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
       // GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
+      this.metaTags();
     }
 
-    ngAfterViewInit(){
+    ngAfterViewInit(){}
+
+
+
+    private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Disclaimer page to disclose any information';
       let link = window.location.href;
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle('Disclaimer');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('Disclaimer');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+    } //metaTags
 
-      // this._seoService.setCanonicalLink(this._params.params, this._router);
-      // this._seoService.setOgTitle('Disclaimer');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl(link);
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('Disclaimer');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('NOINDEX, FOLLOW');
-    }
+
 
     loadData(partnerID:string) {
       this.pageLinkName = GlobalSettings.getHomePage(partnerID).replace(/https?:\/\//, "");
