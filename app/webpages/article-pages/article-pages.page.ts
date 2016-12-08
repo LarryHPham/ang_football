@@ -12,7 +12,7 @@ import {ArticleDataService} from "../../services/article-page-service";
 import {DeepDiveService} from '../../services/deep-dive.service';
 import {GeoLocation, PartnerHeader} from "../../global/global-service";
 import {HeadlineDataService} from "../../services/headline-module-service";
-//import {SeoService} from '../../seo.service';
+import { SeoService } from '../../seo.service';
 
 //interfaces
 import {Article} from "../../global/global-interface";
@@ -76,7 +76,7 @@ export class ArticlePages implements OnInit {
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
-                //private _seoService:SeoService,
+                private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
                 private _partnerData:PartnerHeader,
@@ -119,7 +119,9 @@ export class ArticlePages implements OnInit {
                 this.rawUrl = window.location.href;
             }
         );
-    }
+    } //constructor
+
+
 
     getArticles() {
         this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport)
@@ -771,73 +773,132 @@ export class ArticlePages implements OnInit {
                 this.getRecommendedArticles();
             }
         )
-    }
+    } //getDeepDiveVideo
+
+
 
     private metaTags(data) {
-        //create meta description that is below 160 characters otherwise will be truncated
-        //if (this.isArticle == 'true') {
-        //    var teams = [];
-        //    var players = [];
-        //    let headerData = data['article_data']['metadata'];
-        //    let metaDesc = data['article_data'].meta_headline;
-        //    let link = window.location.href;
-        //    if (headerData['team_name']) {
-        //        headerData['team_name'].forEach(function (val) {
-        //            teams.push(val);
-        //        });
-        //    }
-        //    if (headerData['player_name']) {
-        //        headerData['player_name'].forEach(function (val) {
-        //            players.push(val);
-        //        });
-        //    }
-        //    let playerNameMeta = players.join(',');
-        //    let teamNameMeta = teams.join(',');
-        //    let title = data.title;
-        //    let image = data.image_url;
-        //    let relevancyStart = headerData['relevancy_start_date'];
-        //    let relevancyEnd = headerData['relevancy_end_date'];
-        //
-        //    this._seoService.setCanonicalLink(this.params, this._router);
-        //    this._seoService.setOgTitle(title);
-        //    this._seoService.setOgDesc(metaDesc);
-        //    this._seoService.setOgType('Website');
-        //    this._seoService.setOgUrl(link);
-        //    this._seoService.setOgImage(image);
-        //    this._seoService.setTitle(title);
-        //    this._seoService.setMetaDescription(metaDesc);
-        //    //this._seoService.setPlayerNames(playerNameMeta);
-        //    //this._seoService.setTeamNames(teamNameMeta);
-        //    //this._seoService.setStartDate(relevancyStart);
-        //    //this._seoService.setEndDate(relevancyEnd);
-        //    //this._seoService.setIsArticle(this.isArticle);
-        //    this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-        //} else {
-        //    let metaDesc;
-        //    if (data.data.teaser != null) {
-        //        metaDesc = data.data.teaser;
-        //    } else {
-        //        metaDesc = data.data.description;
-        //    }
-        //    let link = window.location.href;
-        //    let image;
-        //    if (this.imageData != null) {
-        //        image = this.imageData[0];
-        //    } else {
-        //        image = data.data.thumbnail;
-        //    }
-        //
-        //    this._seoService.setCanonicalLink(this.params, this._router);
-        //    this._seoService.setOgTitle(data.data.title);
-        //    this._seoService.setOgDesc(metaDesc);
-        //    this._seoService.setOgType('Website');
-        //    this._seoService.setOgUrl(link);
-        //    this._seoService.setOgImage(image);
-        //    this._seoService.setTitle(data.data.title);
-        //    this._seoService.setMetaDescription(metaDesc);
-        //    this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-        //}
-    }
+      //create meta description that is below 160 characters otherwise will be truncated
+      if (this.isArticle == 'true') {
+          let teams = [];
+          let players = [];
+          let searchString;
+          let searchArray = [];
+          let headerData = data['article_data']['metadata'];
+          let metaDesc = data['article_data'].meta_headline;
+          let link = window.location.href;
+          if (data['keywords'] && data['keywords'].constructor === Array) {
+              data['keywords'].forEach(function (val) {
+                  searchArray.push(val);
+              });
+          }
+          if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
+              headerData['team_name'].forEach(function (val) {
+                  searchArray.push(val);
+                  teams.push(val);
+              });
+          }
+          if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
+              headerData['player_name'].forEach(function (val) {
+                  searchArray.push(val);
+                  players.push(val);
+              });
+          }
+          searchString = searchArray.join(',');
+          let image;
+          if (this.imageData != null) {
+              image = this.imageData[0];
+          } else {
+              image = data.image_url;
+          }
+          let title = data.title;
+          let relevancyStart = headerData['relevancy_start_date'];
+          let relevancyEnd = headerData['relevancy_end_date'];
+
+          this._seoService.setCanonicalLink();
+          this._seoService.setOgTitle(title);
+          this._seoService.setOgDesc(metaDesc);
+          this._seoService.setOgType('Website');
+          this._seoService.setOgUrl();
+          this._seoService.setOgImage(image);
+          this._seoService.setTitle(title);
+          this._seoService.setMetaDescription(metaDesc);
+          this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+
+          //Elastic Search meta tags
+          this._seoService.setStartDate(relevancyStart);
+          this._seoService.setEndDate(relevancyEnd);
+          this._seoService.setIsArticle(this.isArticle);
+          this._seoService.setSearchType("article");
+          this._seoService.setSource(data.source);
+          this._seoService.setArticleId(this.eventID);
+          this._seoService.setArticleTitle(title);
+          this._seoService.setKeyword(data['keywords']);
+          this._seoService.setPublishedDate(data['article_data'].publication_date);
+          this._seoService.setAuthor(data.author);
+          this._seoService.setPublisher(data.publisher);
+          this._seoService.setImageUrl(image);
+          this._seoService.setArticleTeaser(data.teaser);
+          this._seoService.setArticleUrl(link);
+          this._seoService.setArticleType(data.article_type);
+          this._seoService.setSearchString(searchString);
+      } else {
+          let searchString;
+          let searchArray = [];
+          if (data.data['keyword'] && data.data['keyword'].constructor === Array) {
+              data['keyword'].forEach(function (val) {
+                  searchArray.push(val);
+              });
+              searchString = searchArray.join(',');
+          } else {
+              searchString = data.data['keyword'];
+          }
+          let metaDesc;
+          if (data.data.teaser != null) {
+              metaDesc = data.data.teaser;
+          } else {
+              metaDesc = data.data.description;
+          }
+          let link = window.location.href;
+          let image;
+          if (this.imageData != null) {
+              image = this.imageData[0];
+          } else {
+              image = data.data.thumbnail;
+          }
+          let isArticle;
+          isArticle = this.eventType == "story";
+          this._seoService.setCanonicalLink();
+          this._seoService.setOgTitle(data.data.title);
+          this._seoService.setOgDesc(metaDesc);
+          this._seoService.setOgType('Website');
+          this._seoService.setOgUrl();
+          this._seoService.setOgImage(image);
+          this._seoService.setTitle(data.data.title);
+          this._seoService.setMetaDescription(metaDesc);
+          this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+
+          //Elastic Search meta tags
+          this._seoService.setStartDate(data.data.publishedDate);
+          this._seoService.setEndDate(data.data.publishedDate);
+          this._seoService.setIsArticle(isArticle);
+          this._seoService.setSearchType("article");
+          this._seoService.setSource("TCA");
+          this._seoService.setArticleId(this.eventID);
+          this._seoService.setArticleTitle(data.data.title);
+          this._seoService.setKeyword(data.data.keyword);
+          this._seoService.setPublishedDate(data.data.publishedDate);
+          this._seoService.setAuthor(data.data.author);
+          this._seoService.setPublisher(data.data.publisher);
+          this._seoService.setImageUrl(image);
+          this._seoService.setArticleTeaser(data.data.teaser);
+          this._seoService.setArticleUrl(link);
+          this._seoService.setArticleType(this.scope);
+          this._seoService.setSearchString(searchString);
+      }
+    } //metTags
+
+
 
     getGeoLocation() {
         var defaultState = 'ca';
@@ -850,7 +911,9 @@ export class ArticlePages implements OnInit {
                 err => {
                     this.geoLocation = defaultState;
                 });
-    }
+    } //getGeoLocation
+
+
 
     getPartnerHeader() {//Since it we are receiving
         if (this.partnerID != null) {

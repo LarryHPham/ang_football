@@ -22,6 +22,7 @@ import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
@@ -127,7 +128,8 @@ export class LeaguePage{
       private _lolService: ListOfListsService,
       private _headlineDataService:HeadlineDataService,
       private _newsService: NewsService,
-      private _twitterService: TwitterService
+      private _twitterService: TwitterService,
+      private _seoService: SeoService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -207,8 +209,27 @@ export class LeaguePage{
       )
     } //setupProfileData
 
+
+
     private metaTags(data){
-    } //metaTags
+      //create meta description that is below 160 characters otherwise will be truncated
+      let header = data.headerData;
+      let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
+      let link = window.location.href;
+      let title = header.leagueFullName;
+      let image = header.leagueLogo;
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
+    } // metaTags
+
+
 
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
       this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
@@ -221,7 +242,8 @@ export class LeaguePage{
         });
     } //getLeagueVideoBatch
 
-    //api for BOX SCORES
+
+
     private getBoxScores(dateParams?) {
         if ( dateParams != null ) {
             this.dateParam = dateParams;
@@ -231,6 +253,9 @@ export class LeaguePage{
             this.currentBoxScores = currentBoxScores;
         })
     }
+    //getBoxScores
+
+
 
     //api for League Headline Module
     private getLeagueHeadlines() {

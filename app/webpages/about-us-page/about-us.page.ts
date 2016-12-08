@@ -1,5 +1,5 @@
 import {Component, Injector} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {Title} from '@angular/platform-browser';
 
 import {AboutUsService} from '../../services/about-us.service';
@@ -7,7 +7,7 @@ import {CircleImageData} from "../../fe-core/components/images/image-data";
 import {GlobalSettings} from '../../global/global-settings';
 import {GlobalFunctions} from '../../global/global-functions';
 import {TitleInputData} from "../../fe-core/components/title/title.component";
-// import {SeoService} from "../../seo.service";
+import { SeoService } from "../../seo.service";
 import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 
 export interface AuBlockData {
@@ -57,8 +57,8 @@ export class AboutUsPage {
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(
-      private _service: AboutUsService
-      // private _seoService: SeoService
+      private _service: AboutUsService,
+      private _seoService: SeoService
     ) {
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);
@@ -68,19 +68,27 @@ export class AboutUsPage {
     }
 
     ngAfterViewInit(){
+      this.metaTags();
+    }
+
+
+
+    private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
-      let link = window.location.href;
-      // this._seoService.setCanonicalLink(this._params.params, this._router);
-      // this._seoService.setOgTitle('About Us');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl(link);
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('About Us');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('INDEX, FOLLOW');
-    }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle('About Us');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('About Us');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
+
+
+
     loadData(partnerID?:string, scope?:string) {
         this._service.getData(partnerID, scope).subscribe(
           data => this.setupAboutUsData(data),
