@@ -68,7 +68,6 @@ export class DeepDivePage{
           (params:any) => {
               this.isLoading = false;
               this.carouselData = null;
-              console.log(this.isLoading, this.carouselData);
               this.blockIndex = 1;
               this.scope = params.scope;
               this.scopeNameDisplay(this.scope);
