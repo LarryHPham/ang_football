@@ -46,7 +46,7 @@ export class DeepDivePage{
     toggleData:any;
     blockIndex: number = 0;
     changeScopeVar: string = "";
-​    constructorControl: boolean = true;
+​    isLoading: boolean = false;
 
     firstStackTop: any;
     firstStackRow: any;
@@ -64,8 +64,11 @@ export class DeepDivePage{
       public ngZone:NgZone,
       private _route:Router
     ){
-      this._activatedRoute.params.subscribe(
+      this._routeSubscription = this._activatedRoute.params.subscribe(
           (params:any) => {
+              this.isLoading = false;
+              this.carouselData = null;
+              this.blockIndex = 1;
               this.scope = params.scope;
               this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
@@ -106,7 +109,7 @@ export class DeepDivePage{
     }
 
     ngOnDestroy(){
-      // this._routeSubscription.unsubscribe();
+      this._routeSubscription.unsubscribe();
     }
 
     scopeNameDisplay(scope){
@@ -210,26 +213,20 @@ export class DeepDivePage{
       }
     }
 
-    changeScope($event) {
-      this.scopeNameDisplay($event);
-      // var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
-      // let relPath = this.getRelativePath(this._router);
-      // if(partnerHome){
-      //   this._router.navigate([relPath+'Partner-home',{scope:$event.toLowerCase(),partner_id:GlobalSettings.getHomeInfo().partnerName}]);
-      //   // window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/"+$event.toLowerCase();
-      // }else{
-      //   this._router.navigate([relPath+'Default-home',{scope:$event.toLowerCase()}]);
-      //   // window.location.pathname = "/"+$event.toLowerCase();
-      // }
+    changeScope(event) {
+      event = event.toLowerCase();
+      this.scopeNameDisplay(event);
 
-      if($event == this.changeScopeVar){
-        this.getSideScroll();
-      }else{
-        this.changeScopeVar = $event;
-        this.callCount = 1;
-        this.sideScrollData = null;
-        this.getSideScroll();
-      }
+      this._route.navigate(['/'+event.toLowerCase()]);
+
+      // if(event == this.scope){
+      //   this.getSideScroll();
+      // }else{
+      //   this.scope = event;
+      //   this.callCount = 1;
+      //   this.sideScrollData = null;
+      //   this.getSideScroll();
+      // }
     }
 
     private scrollCheck(event){
@@ -323,6 +320,7 @@ export class DeepDivePage{
     }
 
     callModules(){
+      this.isLoading = true;
       this.getDataCarousel();
       this.getDeepDiveVideoBatch();
       this.getSideScroll();
