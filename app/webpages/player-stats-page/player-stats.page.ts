@@ -14,6 +14,9 @@ import { ProfileHeaderService } from '../../services/profile-header.service';
 import { MLBPlayerStatsTableData, MLBPlayerStatsTableModel } from '../../services/player-stats.data';
 import { SportPageParameters } from '../../global/global-interface';
 
+//services
+import { SeoService } from "../../seo.service";
+
 
 
 @Component({
@@ -52,7 +55,8 @@ export class PlayerStatsPage implements OnInit {
         private activatedRoute: ActivatedRoute,
         private _title: Title,
         private _profileService: ProfileHeaderService,
-        private _statsService: PlayerStatsService
+        private _statsService: PlayerStatsService,
+        private _seoService: SeoService
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
@@ -101,6 +105,32 @@ export class PlayerStatsPage implements OnInit {
 
 
 
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
+
+
+
     private setupTitleData(route: Array<any>, teamName?: string, imageUrl?: string) {
         var title = this._statsService.getPageTitle(teamName);
         this.titleData = {
@@ -111,6 +141,7 @@ export class PlayerStatsPage implements OnInit {
             text3: title,
             icon: "fa fa-map-marker"
         };
+        this.metaTags(this.titleData);
     } //setupTitleData
 
 

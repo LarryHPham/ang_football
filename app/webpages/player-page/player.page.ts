@@ -206,11 +206,11 @@ export class PlayerPage{
       record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
     }
     title = title  + ' ' + record;
-    this._seoService.setCanonicalLink(link);
+    this._seoService.setCanonicalLink();
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl(link);
+    this._seoService.setOgUrl();
     this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
