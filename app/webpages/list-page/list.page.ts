@@ -127,6 +127,7 @@ export class ListPage {
 
 
     setDynamicPagination(input) {
+      console.log('setDynmaicPagination');
         var navigationParams = {
             query: this.query
         };
