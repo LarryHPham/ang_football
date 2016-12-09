@@ -1,7 +1,7 @@
 <div id="deep-dive-block-3" class="deep-dive-block">
   <!-- ARTICLE STACK TYPE 1 -->
   <div *ngIf="articleData" class="deep-dive-module">
-    <article-stack-1-module [stackTop]="articleData.splice(0, 1)" [stackRow]="articleData.splice(0, 6)"></article-stack-1-module>
+    <article-stack-1-module [stackTop]="stackTop1" [stackRow]="stackRow1"></article-stack-1-module>
   </div>
   <!-- BILL BOARD -->
   <div class="deep-dive-module">
@@ -13,11 +13,11 @@
   </div>
   <!-- SIX PACKS -->
   <div *ngIf="articleData" class="deep-dive-module">
-    <deep-dive-recommendation [recData]="articleData.splice(0, 6)"></deep-dive-recommendation>
+    <deep-dive-recommendation [recData]="recData1"></deep-dive-recommendation>
   </div>
   <!-- ARTICLE STACK TYPE 1 -->
   <div *ngIf="articleData" class="deep-dive-module">
-    <article-stack-1-module  [stackTop]="articleData.splice(0, 1)" [stackRow]="articleData.splice(0, 6)"></article-stack-1-module>
+    <article-stack-1-module [stackTop]="stackTop2" [stackRow]="stackRow2"></article-stack-1-module>
   </div>
   <!-- WIDGET -->
   <div *ngIf="articleData" class="deep-dive-module">
@@ -25,11 +25,11 @@
   </div>
   <!-- ARTICLE STACK TYPE 2 -->
   <div *ngIf="articleData" class="deep-dive-module">
-    <article-stack-2-module [articleStack2DataTop]="articleData.splice(0, 1)" [articleStack2DataBatch]="articleData.splice(0, 4)"></article-stack-2-module>
+    <article-stack-2-module [articleStack2DataTop]="articleStack2DataTop" [articleStack2DataBatch]="articleStack2DataBatch"></article-stack-2-module>
   </div>
   <!-- SIX PACKS -->
   <div *ngIf="articleData" class="deep-dive-module">
-    <deep-dive-recommendation [recData]="articleData.splice(0, 6)"></deep-dive-recommendation>
+    <deep-dive-recommendation [recData]="recData2"></deep-dive-recommendation>
   </div>
 </div>
 <!-- WIDGET -->

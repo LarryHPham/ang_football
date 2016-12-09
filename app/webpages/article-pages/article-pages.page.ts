@@ -10,7 +10,7 @@ import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
 //services
 import {ArticleDataService} from "../../services/article-page-service";
 import {DeepDiveService} from '../../services/deep-dive.service';
-import {GeoLocation, PartnerHeader} from "../../global/global-service";
+import {GeoLocation} from "../../global/global-service";
 import {HeadlineDataService} from "../../services/headline-module-service";
 import { SeoService } from '../../seo.service';
 
@@ -81,7 +81,6 @@ export class ArticlePages implements OnInit {
                 private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
-                private _partnerData:PartnerHeader,
                 private _headlineDataService:HeadlineDataService) {
         this.subRec = this._activateRoute.params.subscribe(
             (params:any) => {
@@ -103,12 +102,12 @@ export class ArticlePages implements OnInit {
                 if (this.eventType == "story") {
                     this.isArticle = 'false';
                     this.getDeepDiveArticle(this.eventID);
-                    this.getPartnerHeader();
+                    this.getGeoLocation();
                 }
                 if (this.eventType == "video") {
                     this.isArticle = 'false';
                     this.getDeepDiveVideo(this.eventID);
-                    this.getPartnerHeader();
+                    this.getGeoLocation();
                 }
                 if (this.eventType != 'story' && this.eventType != 'video') {
                     this.isArticle = 'true';
@@ -889,7 +888,7 @@ export class ArticlePages implements OnInit {
           //Elastic Search meta tags
           this._seoService.setStartDate(data.data.publishedDate);
           this._seoService.setEndDate(data.data.publishedDate);
-          this._seoService.setIsArticle(isArticle);
+          this._seoService.setIsArticle(isArticle.toString());
           this._seoService.setSearchType("article");
           this._seoService.setSource("TCA");
           this._seoService.setArticleId(this.eventID);
@@ -910,10 +909,10 @@ export class ArticlePages implements OnInit {
 
     getGeoLocation() {
         var defaultState = 'ca';
-        this._geoLocation.getGeoLocation()
+        this._geoLocation.grabLocation()
             .subscribe(
-                geoLocationData => {
-                    this.geoLocation = geoLocationData[0].state;
+                res => {
+                    this.geoLocation = res.state.toLowerCase();
                     this.geoLocation = this.geoLocation.toLowerCase();
                 },
                 err => {
@@ -922,22 +921,6 @@ export class ArticlePages implements OnInit {
     } //getGeoLocation
 
 
-
-    getPartnerHeader() {//Since it we are receiving
-        if (this.partnerID != null) {
-            this._partnerData.getPartnerData(this.partnerID)
-                .subscribe(
-                    partnerScript => {
-                        //super long way from partner script to get location using geo location api
-                        var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-                        state = state.toLowerCase();
-                        this.geoLocation = state;
-                    }
-                );
-        } else {
-            this.getGeoLocation();
-        }
-    }
 
     formatDate(date) {
         return GlobalFunctions.sntGlobalDateFormatting(date, "timeZone");
