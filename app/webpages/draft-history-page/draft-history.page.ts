@@ -8,6 +8,7 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { IProfileData } from "../../fe-core/modules/profile-header/profile-header.module";
@@ -33,7 +34,9 @@ export class DraftHistoryPage implements OnInit {
     constructor(
         private activateRoute: ActivatedRoute,
         private _profileService: ProfileHeaderService,
-        private _title: Title) {
+        private _title: Title,
+        private _seoService: SeoService
+    ) {
         this.paramsub = this.activateRoute.params.subscribe(
             (param: any) => {
               this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
@@ -42,7 +45,9 @@ export class DraftHistoryPage implements OnInit {
               this.teamID = param['teamID'];
             }
         ) //this.paramsub
-    }
+    } //constructor
+
+
 
     ngOnInit() {
         let teamId = null;
@@ -59,6 +64,7 @@ export class DraftHistoryPage implements OnInit {
                     var pageNameForTitle = this.whatProfile + " - " + data.profileName;
                     this.profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, pageNameForTitle);
                     this.profileData = data;
+                    this.metaTags(this.profileHeaderData);
                 },
                 err => {
                     this.isError = true;
@@ -73,6 +79,7 @@ export class DraftHistoryPage implements OnInit {
                     // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
                     this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, data.headerData.leagueAbbreviatedName + ' ' + this.whatProfile);
                     this.profileData = data;
+                    this.metaTags(this.profileHeaderData);
                 },
                 err => {
                     this.isError = true;
@@ -80,5 +87,31 @@ export class DraftHistoryPage implements OnInit {
                 }
                 );
         }
-    }
+    } //ngOnInit
+
+
+
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
 }

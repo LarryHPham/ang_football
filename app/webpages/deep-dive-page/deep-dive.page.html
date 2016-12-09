@@ -10,7 +10,7 @@
                   </div>
                 </section>
                 <section *ngIf="carouselData" class="deep-dive-container2">
-                  <div class="deep-dive-container2a">
+                  <div class="deep-dive-container2a col-sm-12 col-xl-9">
                     <div class="deep-dive-module">
                       <side-scroll-schedules *ngIf="scopeDisplayed" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="scope" [topScope]="scopeDisplayed.topScope" (changeScope)="changeScope($event)"></side-scroll-schedules>
                     </div>
@@ -30,7 +30,7 @@
                     <deep-dive-block-4 *ngIf="blockIndex >= 4 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-4>
 
                   </div>
-                  <div class="deep-dive-container2b">
+                  <div class="deep-dive-container2b col-xl-3">
                     <div class="widget_wrapper"><widget-carousel-module></widget-carousel-module></div>
                   </div>
                 </section>

@@ -1,3 +1,9 @@
+.fixedHeader{
+  position:fixed !important;
+  top:0 !important;
+  z-index: 9999 !important;
+}
+
 .placeholderImg{
   width: 184px;
   height: 35px;
@@ -18,6 +24,7 @@
 }
 .header{
   .no-select;
+  width:100%;
   height: auto;
   .ddb-parbutton {
     line-height: 2.5;
@@ -29,7 +36,11 @@
       margin-right: 5px;
     }
   }
+  &-bottom{
+    width:100%;
+  }
   &-top{
+    width:100%;
     &:focus{
       outline:none;
     }

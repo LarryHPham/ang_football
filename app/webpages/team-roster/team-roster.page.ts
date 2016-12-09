@@ -10,6 +10,7 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 //service
 import { RosterService } from '../../services/roster.service';
 import { ProfileHeaderService } from '../../services/profile-header.service';
+import { SeoService } from "../../seo.service";
 
 //interface
 import { TitleInputData } from "../../fe-core/components/title/title.component";
@@ -45,7 +46,8 @@ export class TeamRosterPage implements OnInit {
     constructor(
         private activateRoute: ActivatedRoute,
         private _profileService: ProfileHeaderService,
-        private _rosterService: RosterService
+        private _rosterService: RosterService,
+        private _seoService: SeoService
     ) {
       this.paramsub = this.activateRoute.params.subscribe(
         (param :any)=> {
@@ -68,6 +70,32 @@ export class TeamRosterPage implements OnInit {
 
 
 
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
+
+
+
     getData() {
       if ( this.pageParams.teamId ) {
         this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
@@ -76,6 +104,7 @@ export class TeamRosterPage implements OnInit {
             this.pageParams = data.pageParams;
               data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
             this.titleData = this._profileService.convertTeamPageHeader(this.scope, data, this._rosterService.getPageTitle(data.teamName));
+            this.metaTags(this.titleData);
             this.setupRosterData();
           },
           err => {

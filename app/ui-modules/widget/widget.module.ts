@@ -50,7 +50,7 @@ export class WidgetModule {
         }
         var titleHeight = 0;
         var pageHeader = document.getElementById('pageHeader').offsetHeight;
-        var padding =  document.getElementById('salad-bar-top').getBoundingClientRect().top + document.getElementById('salad-bar-top').offsetHeight + 10;
+        var padding =  document.getElementById('header-bottom').getBoundingClientRect().top + document.getElementById('header-bottom').offsetHeight + 10;
         var parentElem = document.getElementById('widget').parentElement.getBoundingClientRect().top + 10;
         var y_buffer = 23;
         var scrollTop = jQuery(window).scrollTop();

@@ -24,6 +24,7 @@ import { ListOfListsService } from "../services/list-of-lists.service";
 import { SeoService } from "../seo.service";
 import { DirectoryService } from "../services/directory.service";
 import { SearchService } from "../services/search.service";
+import { AboutUsService } from "../services/about-us.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
@@ -318,7 +319,8 @@ import { ScoreBoard } from "../fe-core/components/score-board/score-board.compon
       ListOfListsService,
       SeoService,
       DirectoryService,
-      SearchService
+      SearchService,
+      AboutUsService
     ]
 })
 export class GlobalModule { }

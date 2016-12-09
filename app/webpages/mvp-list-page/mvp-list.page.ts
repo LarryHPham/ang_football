@@ -10,6 +10,7 @@ import { GlobalSettings } from "../../global/global-settings";
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { ListPageService } from '../../services/list-page.service';
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { TitleInputData } from '../../fe-core/components/title/title.component';
@@ -60,7 +61,8 @@ export class MVPListPage implements OnInit {
       private activateRoute: ActivatedRoute,
       private _service: ListPageService,
       private _profileService: ProfileHeaderService,
-      private _title: Title
+      private _title: Title,
+      private _seoService: SeoService
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
@@ -137,10 +139,40 @@ export class MVPListPage implements OnInit {
                     icon: 'fa fa-map-marker'
                 };
                 this.loadTabs();
+                this.metaTags(this.profileHeaderData);
             }, err => {
                 console.log("Error loading profile");
             });
-    }
+
+
+    } //startUp
+
+
+
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
+
 
 
     loadTabs() {

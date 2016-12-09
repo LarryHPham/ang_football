@@ -17,6 +17,7 @@ import { IListOfListsItem } from "../../fe-core/components/list-of-lists-item/li
 //services
 import { ListOfListsService } from "../../services/list-of-lists.service";
 import { ProfileHeaderService } from '../../services/profile-header.service';
+import { SeoService } from "../../seo.service";
 
 declare var moment:any;
 
@@ -49,9 +50,9 @@ export class ListOfListsPage implements OnInit {
         private activatedRoute: ActivatedRoute,
         private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
-        private _title: Title
+        private _title: Title,
+        private _seoService: SeoService
     ) {
-
       // check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
       this.activatedRoute.params.subscribe(
@@ -79,8 +80,6 @@ export class ListOfListsPage implements OnInit {
           }
         }
       )
-
-
     } //constructor
 
 
@@ -139,6 +138,7 @@ export class ListOfListsPage implements OnInit {
                     text3 : 'Top lists - ' + this.profileName,
                     icon: 'fa fa-map-marker'
                 };
+                this.metaTags(this.titleData);
 
             },
             err => {
@@ -147,6 +147,36 @@ export class ListOfListsPage implements OnInit {
             }
           );
     } //getListOfListsPage
+
+
+
+    ngOnInit(){}
+
+
+
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
 
 
 
@@ -183,5 +213,4 @@ export class ListOfListsPage implements OnInit {
 
 
 
-    ngOnInit(){}
 }

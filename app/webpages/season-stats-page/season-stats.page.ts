@@ -10,6 +10,7 @@ import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { SeasonStatsPageService } from '../../services/season-stats.service';
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { TitleInputData } from "../../fe-core/components/title/title.component";
@@ -44,7 +45,8 @@ export class SeasonStatsPage implements OnInit {
       private activatedRoute: ActivatedRoute,
       private _profileService: ProfileHeaderService,
       private _seasonStatsPageService: SeasonStatsPageService,
-      private _title: Title
+      private _title: Title,
+      private _seoService: SeoService
     ) {
       this.paramsub = this.activatedRoute.params.subscribe(
         (param :any)=> {
@@ -80,6 +82,32 @@ export class SeasonStatsPage implements OnInit {
 
 
 
+    private metaTags(data) {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let text3 = data.text3 != null ? data.text3: '';
+      let text4 = data.text4 != null ? '. '+data.text4: '';
+      let title = text3 + ' ' + text4;
+      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+      let link = window.location.href;
+      let imageUrl;
+      if(data.imageURL != null && data.imageURL != ""){
+         imageUrl = data.imageURL;
+      }else{
+         imageUrl = GlobalSettings.getmainLogoUrl();
+      }
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+    } //metaTags
+
+
+
     private setupTitleData(imageUrl: string, teamName: string, playerId: string, playerName: string) {
         var profileLink = ["/home"];
         if (playerId) {
@@ -94,6 +122,7 @@ export class SeasonStatsPage implements OnInit {
             text3: title,
             icon: "fa fa-map-marker"
         };
+        this.metaTags(this.titleData);
     } //setupTitleData
 
 

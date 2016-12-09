@@ -8,7 +8,7 @@ import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
 //services
 import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
-// import {SeoService} from "../../seo.service";
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import {LandingPageService} from '../../services/landing-page';
@@ -94,13 +94,9 @@ export class PickTeamPage{
       private _landingPageService: LandingPageService,
       private _geoLocation:GeoLocation,
       private _partnerData: PartnerHeader,
-      private activateRoute: ActivatedRoute
-      // private _seoService: SeoService
+      private activateRoute: ActivatedRoute,
+      private _seoService: SeoService
     ) {
-      //check to see if scope is correct and redirect
-      // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-
-      // this._routeSubscription = GlobalSettings.getParentParams(_router, parentParams => {
       this._routeSubscription = this.activateRoute.params.subscribe(
         (param :any)=> {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
@@ -137,23 +133,29 @@ export class PickTeamPage{
         this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
         this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
 
-        //create meta description that is below 160 characters otherwise will be truncated
-        // let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
-        // let link = window.location.href;
-        //
-        // _seoService.setCanonicalLink(this._params.params, this._router);
-        // _seoService.setOgTitle('Pick A Team');
-        // _seoService.setOgDesc(metaDesc);
-        // _seoService.setOgType('Website');
-        // _seoService.setOgUrl(link);
-        // _seoService.setOgImage('./app/public/mainLogo.png');
-        // _seoService.setTitle('Pick A Team');
-        // _seoService.setMetaDescription(metaDesc);
-        // _seoService.setMetaRobots('Index, Follow');
-
+        this.metaTags();
       }); //GlobalSettings.getParentParams
+    } //constructor
 
-    }
+
+
+    private metaTags() {
+      //create meta description that is below 160 characters otherwise will be truncated
+      let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
+      let link = window.location.href;
+
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle('Pick A Team');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('Pick A Team');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('Index, Follow');
+    } //metaTags
+
+
 
     ngOnDestroy(){
       this._routeSubscription.unsubscribe();

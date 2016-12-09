@@ -10,6 +10,7 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 //service
 import { TransactionsService } from '../../services/transactions.service';
 import { ProfileHeaderService } from '../../services/profile-header.service';
+import { SeoService } from "../../seo.service";
 
 //interface
 import { TitleInputData } from '../../fe-core/components/title/title.component';
@@ -66,7 +67,8 @@ export class TransactionsPage implements OnInit {
         private activateRoute: ActivatedRoute,
         private _transactionsService: TransactionsService,
         private _profileService: ProfileHeaderService,
-        private _title: Title
+        private _title: Title,
+        private _seoService: SeoService
     ) {
       // this.paramsub = this.activateRoute.params.subscribe(
       //   (param :any)=> {
@@ -97,6 +99,32 @@ export class TransactionsPage implements OnInit {
 
 
 
+    // private metaTags(data) {
+    //   //create meta description that is below 160 characters otherwise will be truncated
+    //   let text3 = data.text3 != null ? data.text3: '';
+    //   let text4 = data.text4 != null ? '. '+data.text4: '';
+    //   let title = text3 + ' ' + text4;
+    //   let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+    //   let link = window.location.href;
+    //   let imageUrl;
+    //   if(data.imageURL != null && data.imageURL != ""){
+    //      imageUrl = data.imageURL;
+    //   }else{
+    //      imageUrl = GlobalSettings.getmainLogoUrl();
+    //   }
+    //   this._seoService.setCanonicalLink();
+    //   this._seoService.setOgTitle(title);
+    //   this._seoService.setOgDesc(metaDesc +". Know more about football.");
+    //   this._seoService.setOgType('Website');
+    //   this._seoService.setOgUrl();
+    //   this._seoService.setOgImage(imageUrl);
+    //   this._seoService.setTitle(title);
+    //   this._seoService.setMetaDescription(metaDesc);
+    //   this._seoService.setMetaRobots('INDEX, FOLLOW');
+    // } //metaTags
+
+
+
     getProfileInfo() {
       // if (this.pageParams.teamId) {
       //     this._profileService.getTeamProfile(this.pageParams.teamId)
@@ -109,6 +137,7 @@ export class TransactionsPage implements OnInit {
       //             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
       //             profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
       //             this.profileHeaderData = profileHeaderData;
+      //             this.metaTags(this.profileHeaderData);
       //
       //             var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.pageParams.teamId.toString());
       //         },
@@ -130,7 +159,8 @@ export class TransactionsPage implements OnInit {
       //             this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
       //             profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
       //             this.profileHeaderData = profileHeaderData;
-      //
+      //             this.metaTags(this.profileHeaderData);
+
       //             var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
       //         },
       //         err => {
