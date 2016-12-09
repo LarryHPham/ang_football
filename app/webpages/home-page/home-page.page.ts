@@ -7,13 +7,12 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
 //services
-import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
 import { SeoService } from "../../seo.service";
+import {GeoLocation} from "../../global/global-service";
+import {LandingPageService} from '../../services/landing-page';
 
 //interfaces
-import {LandingPageService} from '../../services/landing-page';
-import {GeoLocation} from "../../global/global-service";
-import {PartnerHeader} from "../../global/global-service";
+import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
 import {SearchInput} from '../../ui-modules/search/search.component';
 
 export interface homePageData {
@@ -93,7 +92,6 @@ export class PickTeamPage{
     constructor(
       private _landingPageService: LandingPageService,
       private _geoLocation:GeoLocation,
-      private _partnerData: PartnerHeader,
       private activateRoute: ActivatedRoute,
       private _seoService: SeoService
     ) {
@@ -102,16 +100,8 @@ export class PickTeamPage{
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
         this.isPartnerZone = partnerHome;
 
-        // this.partnerID = parentParams.partnerID;
-        // this.scope = parentParams.scope;
         this.scope = param.scope;
-
-        if(this.partnerID != null) {
-           this.getPartnerHeader();
-        }
-        else {
-          this.getGeoLocation(this.scope);
-        }
+        this.getGeoLocation(this.scope);
 
         //set the active league variables based on scope
         if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
@@ -200,37 +190,14 @@ export class PickTeamPage{
       }
     }
 
-    getPartnerHeader() {//Since it we are receiving
-      if(this.partnerID != null){
-        this._partnerData.getPartnerData(this.partnerID)
-        .subscribe(
-          partnerScript => {
-            this.partnerData = partnerScript;
-            //super long way from partner script to get location using geo location api
-            var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-            this.setLocationHeaderString(state);
-
-            if ( state != null ) {
-              state = state.toLowerCase();
-              this.geoLocationState = state;
-
-              this.getData(this.scope, state);
-            }
-            else {
-              this.getGeoLocation(this.scope);
-            }
-          }
-        );
-      }
-    } //getPartnerData
 
     getGeoLocation(scope) {
       var defaultState = 'ca';
-      this._geoLocation.getGeoLocation()
+      this._geoLocation.grabLocation()
         .subscribe(
-          geoLocationData => {
-            this.geoLocationState = geoLocationData[0].state;
-            this.geoLocationCity = geoLocationData[0].city;
+          res => {
+            this.geoLocationState = res.state;
+            this.geoLocationCity = res.city;
 
             this.setLocationHeaderString(this.geoLocationState);
 

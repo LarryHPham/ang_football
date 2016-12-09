@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { DeepDiveService } from '../../services/deep-dive.service';
 import { SchedulesService } from '../../services/schedules.service';
-import { PartnerHeader } from "../../global/global-service";
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
@@ -59,7 +58,6 @@ export class DeepDivePage{
       private _deepDiveData: DeepDiveService,
       private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
-      private _partnerData: PartnerHeader,
       private _seoService: SeoService,
       public ngZone:NgZone,
       private _route:Router
@@ -73,41 +71,19 @@ export class DeepDivePage{
               this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
+              this.metaTags();
               this.getGeoLocation();
           }
       );
-      //check to see if scope is correct and redirect
-      // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-      // needs to get Geolocation first
-      // this._routeSubscription = GlobalSettings.getParentParams(this._router, parentParams => {
-      //   if(this.constructorControl){
-      //     this.partnerID = parentParams.partnerID;
-      //     this.scope = parentParams.scope;
-      //     this.changeScopeVar = this.scope;
-      //     this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase();
-      //     var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
-      //     if (window.location.pathname == "/" + GlobalSettings.getHomeInfo().partnerName && GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
-      //       let relPath = this.getRelativePath(this._router);
-      //       //_router.navigate([relPath+'Partner-home',{scope:'nfl',partnerId:GlobalSettings.getHomeInfo().partnerName}]);
-      //       window.location.pathname = "/" + GlobalSettings.getHomeInfo().partnerName + "/nfl";
-      //     }
-      //
-
-      //
-      //     this.isPartnerZone = partnerHome;
-      //     if(this.partnerID != null && this.partnerID != 'football'){
-      //       this.getPartnerHeader();
-      //       this.isPartner = "partner";
-      //     }else{
-            // this.getGeoLocation();
-      //     }
-          this.metaTags();
-      //     this.constructorControl = false;
-      //
-      //   }
-      // });
     }
 
+    //Subscribe to getGeoLocation in geo-location.service.ts. On Success call getNearByCities function.
+    getGeoLocation() {
+      this._geoLocation.grabLocation().subscribe( res => {
+        this.geoLocation = res.state;
+        this.callModules();
+      });
+    }
     ngOnDestroy(){
       this._routeSubscription.unsubscribe();
     }
@@ -222,15 +198,6 @@ export class DeepDivePage{
       this.scopeNameDisplay(event);
 
       this._route.navigate(['/'+event.toLowerCase()]);
-
-      // if(event == this.scope){
-      //   this.getSideScroll();
-      // }else{
-      //   this.scope = event;
-      //   this.callCount = 1;
-      //   this.sideScrollData = null;
-      //   this.getSideScroll();
-      // }
     }
 
     private scrollCheck(event){
@@ -254,56 +221,6 @@ export class DeepDivePage{
       this._deepDiveData.getCarouselData(this.scope, this.carouselData, '15', '1', this.geoLocation, (carData)=>{
         this.carouselData = carData;
       })
-    }
-
-    getPartnerHeader(){//Since it we are receiving
-      if(this.partnerID != null){
-        this._partnerData.getPartnerData(this.partnerID)
-        .subscribe(
-          partnerScript => {
-            if(partnerScript['results'] != null){
-              this.partnerData = partnerScript;
-              //super long way from partner script to get location using geo location api
-              var state;
-              if (partnerScript['results']['location']['realestate']['location']['city'][0]) {
-                state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-                state = state.toLowerCase();
-                this.geoLocation = state;
-                this.callModules();
-              }
-              else {
-                this.getGeoLocation();
-              }
-            }else{//IF BAD PARTNER ID IS INPUTED AN NO RESULTS COME BACK FROM SUBSCRIBE THEN REDIRECT TO DEFAULT 'football' partner id which will just run geo location and not grab partnerID
-              // let relpath = GlobalFunctions.routerRelPath(this._router);
-              // let badLinkRedirect = {
-              //   partner_id: 'football',
-              //   scope: 'home'
-              // };
-              // this._router.navigate([relpath+'Partner-home',badLinkRedirect, 'Home-page']);
-            }
-          }
-        );
-      }else{
-        this.getGeoLocation();
-      }
-    }
-
-    //Subscribe to getGeoLocation in geo-location.service.ts. On Success call getNearByCities function.
-    getGeoLocation() {
-      var defaultState = 'ca';
-        this._geoLocation.getGeoLocation()
-            .subscribe(
-                geoLocationData => {
-                  this.geoLocation = geoLocationData[0].state;
-                  this.geoLocation = this.geoLocation.toLowerCase();
-                  this.callModules();
-                },
-                err => {
-                  this.geoLocation = defaultState;
-                  this.callModules();
-                }
-            );
     }
 
     getFirstArticleStackData(){

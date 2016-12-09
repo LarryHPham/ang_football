@@ -1,4 +1,5 @@
 <header class="header container-fluid" id="pageHeader" [class.fixedHeader]="scrollUp" (window:scroll)="onScrollStick($event)" (window:resize)="menuCheck($event)">
+  <div id="partner" *ngIf="partnerID && partnerScript" [innerHTML]="partnerScript | safeHtml"></div>
   <section class="scrollUp && header-top" [class.header-partner]="partnerID">
     <div class="header-left">
       <div class="header-hamburger" tabindex="999">

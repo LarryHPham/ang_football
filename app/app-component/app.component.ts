@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from "../global/global-settings";
-import {FooterComponent} from "../ui-modules/footer/footer.component";
-import {HeaderComponent} from "../ui-modules/header/header.component";
+import { GeoLocation } from "../global/global-service";
 
 @Component({
   selector: 'my-app',
@@ -10,13 +9,30 @@ import {HeaderComponent} from "../ui-modules/header/header.component";
 })
 export class AppComponent {
   public partnerID:string;
-  public hideHeader:string;
-  constructor(private _activatedRoute:ActivatedRoute){
+  public partnerScript: string;
+  private isLoading:boolean = true;
+  private scrollPadding:string = '0px';
+
+  constructor(private _activatedRoute:ActivatedRoute, private _geoLocation: GeoLocation){
     this._activatedRoute.params.subscribe(
         (params:any) => {
-            this.partnerID = params.partnerID;
-            GlobalSettings.storePartnerId(params.partnerID);
+          //function that grabs the designated location needed for the client and if a partnerID is sent through then it will also set the partnerID and partnerScript for their Header
+          GlobalSettings.storedPartnerId(params.partnerID);
+          this.partnerID = params.partnerID;
+          this._geoLocation.grabLocation(this.partnerID).subscribe(res => {
+            if(res.partner_id){
+              GlobalSettings.storedPartnerId(res.partner_id);
+              this.partnerID = res.partner_id;
+            }
+            if(res.partner_script){
+              this.partnerScript = res.partner_script;
+            }
+          })
         }
     );
+  }
+
+  setScrollPadding(event){
+    this.scrollPadding = event + 'px';
   }
 }
