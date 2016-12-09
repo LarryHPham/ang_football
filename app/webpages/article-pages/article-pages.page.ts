@@ -80,8 +80,6 @@ export class ArticlePages implements OnInit {
                 private _location:Location,
                 //private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
-                private _geoLocation:GeoLocation,
-                private _partnerData:PartnerHeader,
                 private _headlineDataService:HeadlineDataService) {
         this.subRec = this._activateRoute.params.subscribe(
             (params:any) => {
@@ -103,12 +101,10 @@ export class ArticlePages implements OnInit {
                 if (this.eventType == "story") {
                     this.isArticle = 'false';
                     this.getDeepDiveArticle(this.eventID);
-                    this.getPartnerHeader();
                 }
                 if (this.eventType == "video") {
                     this.isArticle = 'false';
                     this.getDeepDiveVideo(this.eventID);
-                    this.getPartnerHeader();
                 }
                 if (this.eventType != 'story' && this.eventType != 'video') {
                     this.isArticle = 'true';
@@ -171,7 +167,7 @@ export class ArticlePages implements OnInit {
                             //removes error page from browser history
                             self._location.replaceState('/');
                             //returns user to previous page
-                            self._router.navigateByUrl('Default-home');
+                            self._router.navigateByUrl('/home');
                         }, 5000);
                     }
                 },
@@ -182,7 +178,7 @@ export class ArticlePages implements OnInit {
                         //removes error page from browser history
                         self._location.replaceState('/');
                         //returns user to previous page
-                        self._router.navigateByUrl('Default-home');
+                        self._router.navigateByUrl('/home');
                     }, 5000);
                 }
             );
@@ -387,227 +383,101 @@ export class ArticlePages implements OnInit {
         }
     }
 
-    getImageLinks(data) {
-        var links = [];
-        var self = this;
-        if (this.articleType == "playerRoster") {
-            data['article'].forEach(function (val) {
-                if (val['player_roster_module']) {
-                    let playerUrl = VerticalGlobalFunctions.formatPlayerRoute(self.scope, val['player_roster_module'].team_name, val['player_roster_module'].name, val['player_roster_module'].id);
-                    val['player'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['player_roster_module']['headshot']),
-                            urlRouteArray: playerUrl,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
+    static getProfileImages(routeArray, url, size) {
+        return {
+            imageClass: size,
+            mainImage: {
+                imageUrl: url,
+                urlRouteArray: routeArray,
+                hoverText: "<i class='fa fa-mail-forward'></i>",
+                imageClass: "border-logo"
+            }
+        };
+    }
 
-                    };
-                    val['playerSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['player_roster_module']['headshot']),
-                            urlRouteArray: playerUrl,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['player'], val['playerSmall']);
+    processLinks(imageData, dataType, type) {
+        var isFirstTeam = true;
+        var imageLinkArray = [];
+        var self = this;
+        imageData.forEach(function (val, index) {
+            if (type == 'roster') {
+                if (val[dataType]) {
+                    var routeArray = VerticalGlobalFunctions.formatPlayerRoute(self.scope, val[dataType].team_name, val[dataType].name, val[dataType].id);
+                    var url = GlobalSettings.getImageUrl(val[dataType]['headshot']);
+                    val['image1'] = ArticlePages.getProfileImages(routeArray, url, "image-122");
+                    val['image2'] = ArticlePages.getProfileImages(routeArray, url, "image-71");
+                    imageLinkArray.push(val['image1'], val['image2']);
                 }
-            });
-            return links;
-        }
-        if (this.articleType == 'playerComparison') {
-            data['article'][2]['player_comparison_module'].forEach(function (val, index) {
-                if (index == 0) {
-                    let urlPlayerLeft = VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.name, val.id);
-                    val['imageLeft'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
-                            urlRouteArray: urlPlayerLeft,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
+            }
+            if (type == 'compare' || type == 'teamRecord' || type == 'game_module') {
+                let topCondition = (type == 'compare') ? index == 0 : (type == 'teamRecord') ? val[dataType] && isFirstTeam : index == 1 && val[dataType];
+                let bottomCondition = (type == 'compare') ? index == 1 : (type == 'teamRecord') ? val[dataType] && !isFirstTeam : index == 4 && val[dataType];
+                if (topCondition) {
+                    if (type == 'compare' || type == 'teamRecord') {
+                        if (type == 'compare') {
+                            var routeArray = VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.name, val.id);
+                            var url = GlobalSettings.getImageUrl(val['headshot']);
+                        } else if (type == 'teamRecord') {
+                            var routeArray = VerticalGlobalFunctions.formatTeamRoute(self.scope, val[dataType].name, val[dataType].id);
+                            var url = GlobalSettings.getImageUrl(val[dataType].logo);
                         }
-                    };
-                    val['imageLeftSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
-                            urlRouteArray: urlPlayerLeft,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['imageLeft'], val['imageLeftSmall']);
+                        val['image1'] = ArticlePages.getProfileImages(routeArray, url, "image-122");
+                        val['image2'] = ArticlePages.getProfileImages(routeArray, url, "image-71");
+                        imageLinkArray.push(val['image1'], val['image2']);
+                        isFirstTeam = false;
+                    } else {
+                        var shortDate = val[dataType].event_date.substr(val[dataType].event_date.indexOf(",") + 1);
+                        var urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(self.scope, val[dataType].home_team_name, val[dataType].home_team_id);
+                        var urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(self.scope, val[dataType].away_team_name, val[dataType].away_team_id);
+                        var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo);
+                        var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo);
+                        val['image1'] = ArticlePages.getProfileImages(urlTeamLeftTop, homeUrl, "image-122");
+                        val['image2'] = ArticlePages.getProfileImages(urlTeamRightTop, awayUrl, "image-122");
+                        val['image3'] = ArticlePages.getProfileImages(urlTeamLeftTop, homeUrl, "image-71");
+                        val['image4'] = ArticlePages.getProfileImages(urlTeamRightTop, awayUrl, "image-71");
+                        imageLinkArray.push(val['image1'], val['image2'], val['image3'], val['image4'], shortDate);
+                    }
                 }
-                if (index == 1) {
-                    let urlPlayerRight = VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.name, val.id);
-                    val['imageRight'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
-                            urlRouteArray: urlPlayerRight,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
+                if (bottomCondition) {
+                    if (type == 'compare' || type == 'teamRecord') {
+                        if (type == 'compare') {
+                            var routeArray = VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.name, val.id);
+                            var url = GlobalSettings.getImageUrl(val['headshot']);
+                        } else {
+                            var routeArray = VerticalGlobalFunctions.formatTeamRoute(self.scope, val[dataType].name, val[dataType].id);
+                            var url = GlobalSettings.getImageUrl(val[dataType].logo);
                         }
-                    };
-                    val['imageRightSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['headshot']),
-                            urlRouteArray: urlPlayerRight,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['imageRight'], val['imageRightSmall']);
+                        val['image3'] = ArticlePages.getProfileImages(routeArray, url, "image-122");
+                        val['image4'] = ArticlePages.getProfileImages(routeArray, url, "image-71");
+                        imageLinkArray.push(val['image3'], val['image4']);
+                    } else {
+                        var shortDate = val[dataType].event_date.substr(val[dataType].event_date.indexOf(",") + 1);
+                        var urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(self.scope, val[dataType].home_team_name, val[dataType].home_team_id);
+                        var urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(self.scope, val[dataType].away_team_name, val[dataType].away_team_id);
+                        var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo);
+                        var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo);
+                        val['image1'] = ArticlePages.getProfileImages(urlTeamLeftBottom, homeUrl, "image-122");
+                        val['image2'] = ArticlePages.getProfileImages(urlTeamRightBottom, awayUrl, "image-122");
+                        val['image3'] = ArticlePages.getProfileImages(urlTeamLeftBottom, homeUrl, "image-71");
+                        val['image4'] = ArticlePages.getProfileImages(urlTeamRightBottom, awayUrl, "image-71");
+                        imageLinkArray.push(val['image1'], val['image2'], val['image3'], val['image4'], shortDate);
+                    }
                 }
-            });
-            return links;
-        }
-        if (this.articleType == 'game_module') {
-            data['article'].forEach(function (val, index) {
-                if (index == 1 && val['game_module']) {
-                    var shortDate = val['game_module'].event_date;
-                    shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(self.scope, val['game_module'].home_team_name, val['game_module'].home_team_id);
-                    let urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(self.scope, val['game_module'].away_team_name, val['game_module'].away_team_id);
-                    val['teamLeft'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].home_team_logo),
-                            urlRouteArray: urlTeamLeftTop,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['teamRight'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].away_team_logo),
-                            urlRouteArray: urlTeamRightTop,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['teamLeftSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].home_team_logo),
-                            urlRouteArray: urlTeamLeftTop,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['teamRightSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].away_team_logo),
-                            urlRouteArray: urlTeamRightTop,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['teamLeft'], val['teamRight'], val['teamLeftSmall'], val['teamRightSmall'], shortDate);
-                }
-                if (index == 4 && val['game_module']) {
-                    var shortDate = val['game_module'].event_date;
-                    shortDate = shortDate.substr(shortDate.indexOf(",") + 1);
-                    let urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(self.scope, val['game_module'].home_team_name, val['game_module'].home_team_id);
-                    let urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(self.scope, val['game_module'].away_team_name, val['game_module'].away_team_id);
-                    val['teamLeft'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].home_team_logo),
-                            urlRouteArray: urlTeamLeftBottom,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['teamRight'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].away_team_logo),
-                            urlRouteArray: urlTeamRightBottom,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['teamLeftSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].home_team_logo),
-                            urlRouteArray: urlTeamLeftBottom,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['teamRightSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['game_module'].away_team_logo),
-                            urlRouteArray: urlTeamRightBottom,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['teamLeft'], val['teamRight'], val['teamLeftSmall'], val['teamRightSmall'], shortDate);
-                }
-            });
-            return links;
-        }
-        if (this.articleType == 'teamRecord') {
-            var isFirstTeam = true;
-            data['article'].forEach(function (val) {
-                if (val['team_record_module'] && isFirstTeam) {
-                    let urlFirstTeam = VerticalGlobalFunctions.formatTeamRoute(self.scope, val['team_record_module'].name, val['team_record_module'].id);
-                    val['imageTop'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
-                            urlRouteArray: urlFirstTeam,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['imageTopSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
-                            urlRouteArray: urlFirstTeam,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['imageTop'], val['imageTopSmall']);
-                    return isFirstTeam = false;
-                }
-                if (val['team_record_module'] && !isFirstTeam) {
-                    let urlSecondTeam = VerticalGlobalFunctions.formatTeamRoute(self.scope, val['team_record_module'].name, val['team_record_module'].id);
-                    val['imageBottom'] = {
-                        imageClass: "image-122",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
-                            urlRouteArray: urlSecondTeam,
-                            hoverText: "<p>View</p><p>Profile</p>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    val['imageBottomSmall'] = {
-                        imageClass: "image-71",
-                        mainImage: {
-                            imageUrl: GlobalSettings.getImageUrl(val['team_record_module'].logo),
-                            urlRouteArray: urlSecondTeam,
-                            hoverText: "<i class='fa fa-mail-forward'></i>",
-                            imageClass: "border-logo"
-                        }
-                    };
-                    links.push(val['imageBottom'], val['imageBottomSmall']);
-                }
-            });
-            return links;
+            }
+        });
+        return imageLinkArray
+    }
+
+    getImageLinks(data) {
+        switch (this.articleType) {
+            case "playerRoster":
+                return this.processLinks(data['article'], 'player_roster_module', 'roster');
+            case "playerComparison":
+                return this.processLinks(data['article'][2]['player_comparison_module'], 'player_comparison_module', 'compare');
+            case "teamRecord":
+                return this.processLinks(data['article'], 'team_record_module', 'teamRecord');
+            case "game_module":
+                return this.processLinks(data['article'], 'game_module', 'game_module');
         }
     }
 
@@ -633,7 +503,6 @@ export class ArticlePages implements OnInit {
                 data => {
                     if (!this.hasRun) {
                         this.hasRun = true;
-                        console.log(this.trendingLength);
                         this.trendingData = this.transformTrending(data, currentArticleId);
                         if (data.article_count % 10 == 0 && this.trendingData) {
                             this.trendingLength = this.trendingLength + 10;
@@ -703,14 +572,6 @@ export class ArticlePages implements OnInit {
         }
     }
 
-
-    getImages(imageList) {
-        imageList.sort(function () {
-            return 0.5 - Math.random()
-        });
-        return this.images = imageList;
-    }
-
     static getRandomArticles(recommendations, pageIndex, eventID, scope) {
         var articles = {
             title: recommendations.title,
@@ -773,7 +634,7 @@ export class ArticlePages implements OnInit {
         this._deepDiveService.getDeepDiveVideoService(articleID).subscribe(
             data => {
                 this.articleData = data.data;
-                this.date = this.formatDate(this.articleData.pubDate);
+                this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
                 this.metaTags(data);
                 this.iframeUrl = this.articleData.videoLink;
                 this.getRecommendedArticles();
@@ -845,39 +706,6 @@ export class ArticlePages implements OnInit {
         //    this._seoService.setMetaDescription(metaDesc);
         //    this._seoService.setMetaRobots('INDEX, NOFOLLOW');
         //}
-    }
-
-    getGeoLocation() {
-        var defaultState = 'ca';
-        this._geoLocation.getGeoLocation()
-            .subscribe(
-                geoLocationData => {
-                    this.geoLocation = geoLocationData[0].state;
-                    this.geoLocation = this.geoLocation.toLowerCase();
-                },
-                err => {
-                    this.geoLocation = defaultState;
-                });
-    }
-
-    getPartnerHeader() {//Since it we are receiving
-        if (this.partnerID != null) {
-            this._partnerData.getPartnerData(this.partnerID)
-                .subscribe(
-                    partnerScript => {
-                        //super long way from partner script to get location using geo location api
-                        var state = partnerScript['results']['location']['realestate']['location']['city'][0].state;
-                        state = state.toLowerCase();
-                        this.geoLocation = state;
-                    }
-                );
-        } else {
-            this.getGeoLocation();
-        }
-    }
-
-    formatDate(date) {
-        return GlobalFunctions.sntGlobalDateFormatting(date, "timeZone");
     }
 
     ngOnDestroy() {
