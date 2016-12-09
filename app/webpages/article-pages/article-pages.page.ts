@@ -634,7 +634,6 @@ export class ArticlePages implements OnInit {
                 data => {
                     if (!this.hasRun) {
                         this.hasRun = true;
-                        console.log(this.trendingLength);
                         this.trendingData = this.transformTrending(data, currentArticleId);
                         if (data.article_count % 10 == 0 && this.trendingData) {
                             this.trendingLength = this.trendingLength + 10;

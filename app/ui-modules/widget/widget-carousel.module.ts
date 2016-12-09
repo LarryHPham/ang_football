@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ElementRef} from '@angular/core';
 import {Http, Headers} from '@angular/http';
 import {GlobalSettings} from "../../global/global-settings";
 
@@ -18,13 +18,21 @@ export class WidgetCarouselModule {
 
     // Page is being scrolled
     onScroll(event) {
-        var scrollTop = event.srcElement.body.scrollTop;
-        var header = document.getElementById('pageHeader');
-        var headerbottom = document.getElementById('header-bottom');
-        var widgetContainer = document.getElementById('widgetContainer');
-        var widget = document.getElementById('widget');
+        var scrollTop = event.srcElement.body.scrollTop; //find the current scroll of window from top of page
+        var header = document.getElementById('pageHeader'); // grab the height of the entire header
+        var headerbottom = document.getElementById('header-bottom'); // grab the bottom piece of the header that sticks on scroll
+        var widgetContainer = document.getElementById('widgetContainer');// grab the container that the widget lives in
+        var widget = document.getElementById('widget');// grab the actual widget so we can add the fixed classed to it
+        let widgetFixed = document.getElementsByClassName('fixedWidget')[0]; // if the fixedWidget class exist grab it to be used
 
-        if(widgetContainer.getBoundingClientRect().top < headerbottom.offsetHeight){
+        //set the scroll height that the widget needs to meet before sticking
+        let scrollAmount = widgetContainer.getBoundingClientRect().top;
+        if(widgetFixed){// if the widget is already fixed then be sure to add the header height when scrolling up
+          scrollAmount = scrollAmount - header.offsetHeight;
+        }
+
+        //if the scroll amount reaches the sticky header then add padding in place of the missing header since its fixed and determine if a fixedWidget class needs to be added of not
+        if(scrollAmount < headerbottom.offsetHeight){
           if(header.getBoundingClientRect().top >= 0){
             this.widgetPadding = header.offsetHeight + 10 + 'px';
           }else{
@@ -36,74 +44,5 @@ export class WidgetCarouselModule {
           widget.classList.remove('fixedWidget');
         }
 
-        // var partnerHeight = document.getElementById('partner') != null ? document.getElementById('partner').offsetHeight:0;
-        // if( document.getElementById('partner') != null && scrollTop <=  (jQuery('.deep-dive-container1').height() + partnerHeight)){
-        //     partnerHeight = partnerHeight + scrollTop;
-        // }
-        // var blueBar = 0;
-        // if (document.getElementById('deep-dive-blueBar') != null){
-        //   blueBar = document.getElementById('deep-dive-blueBar').offsetHeight;
-        // }
-        // var titleHeight = 0;
-        // var padding =  document.getElementById('header-bottom').getBoundingClientRect().top + document.getElementById('header-bottom').offsetHeight + 10;
-        // var parentElem = document.getElementById('widget').parentElement.getBoundingClientRect().top;
-        // var y_buffer = 50;
-        // var maxScroll = partnerHeight - scrollTop;
-        // var widgetTop = document.getElementById('widget').getBoundingClientRect().top;
-        // var carouselTop = jQuery('.deep-dive-container1').height() - scrollTop;
-        // if (!this.aiSidekick) {
-        //     this.sidekickHeight = 0;
-        // } else {
-        //     titleHeight = jQuery('.articles-page-title').height();
-        //     if (titleHeight == 40) {//
-        //         this.sidekickHeight = 95;
-        //     } else if (titleHeight == 80) {
-        //         this.sidekickHeight = 135;
-        //     }
-        //     if (maxScroll <= 0) {
-        //         this.sidekickHeight += maxScroll;
-        //         if (this.sidekickHeight < 0) {
-        //             this.sidekickHeight = 0
-        //         }
-        //     }
-        //     y_buffer += this.sidekickHeight;
-        // }
-        // if(maxScroll <= 0){
-        //     maxScroll = 0;
-        // }
-        // if(carouselTop <=0){
-        //   carouselTop = 0;
-        // }
-        // //this.headerHeight = carouselTop + padding + maxScroll + this.sidekickHeight + 'px';
-        // //set class on blue bar and widget once user has scrolled past the carousel and top partner header
-        // if (widgetTop <= padding && parentElem < 0) {
-        //   jQuery("#widget").addClass("widget-top");
-        //   jQuery("#widget").css('margin-top',padding);
-        // }
-        // else {
-        //   jQuery("#widget").css('margin-top',0);
-        //   jQuery("#widget").removeClass("widget-top");
-        // }
-        // var $widget = jQuery("#widget");
-        // var $pageWrapper = jQuery(".deep-dive-container2a");
-        // if ($widget.length > 0 && $pageWrapper.length > 0) {
-        //     var widgetHeight = $widget.height();
-        //     var pageWrapperTop = $pageWrapper.offset().top;
-        //     var pageWrapperBottom = pageWrapperTop + $pageWrapper.height() - padding;
-        //     //logic for when user scrolls to bottom of page
-        //     if ((scrollTop + widgetHeight + y_buffer) > (pageWrapperBottom  + this.sidekickHeight)) {
-        //         $widget.addClass("widget-bottom");
-        //         var diff = $pageWrapper.height() - (widgetHeight + y_buffer);
-        //         $widget.get(0).style.top = diff + "px";
-        //     }
-        //     else if (scrollTop < (pageWrapperTop + this.sidekickHeight)) {
-        //         $widget.removeClass("widget-bottom");
-        //         $widget.get(0).style.top = "";
-        //     }
-        //     else {
-        //         $widget.removeClass("widget-bottom");
-        //         $widget.get(0).style.top = "";
-        //     }
-        // }
     }
 }
