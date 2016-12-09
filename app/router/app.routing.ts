@@ -83,7 +83,7 @@ const relativeChildRoutes = [
         component: SchedulesPage
     },
     {
-        path: ':scope/schedules/:teamName/:year/:tab/:pageNum',
+        path: ':scope/schedules/:teamName/:teamID/:year/:pageNum',
         component: SchedulesPage
     },
     {
@@ -194,10 +194,10 @@ const relativeChildRoutes = [
         redirectTo: 'home',
         pathMatch: 'full'
     },
-    // {
-    //     path: '/*path',
-    //     redirectTo: ['home']
-    // }
+    {
+        path: '/**',
+        redirectTo: 'home'
+    }
 ];
 
 const appRoutes: Routes = [

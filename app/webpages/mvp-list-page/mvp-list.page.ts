@@ -69,10 +69,13 @@ export class MVPListPage implements OnInit {
 
         this.activateRoute.params.subscribe(
           (param :any) => {
+            this.paginationParameters = null;
+
             this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
             this.listType = param['type'] ? param['type'] : null;
             this.tab = param['tab'] ? param['tab'] : null;
             this.pageNum = param['pageNum'] ? param['pageNum'] : null;
+            this.startUp();
           }
         )
 
@@ -105,7 +108,7 @@ export class MVPListPage implements OnInit {
             pageNumber: this.pageNum,
             season: season
         };
-        this.startUp();
+
     }
 
     ngOnInit() {
@@ -143,8 +146,6 @@ export class MVPListPage implements OnInit {
             }, err => {
                 console.log("Error loading profile");
             });
-
-
     } //startUp
 
 
@@ -198,17 +199,13 @@ export class MVPListPage implements OnInit {
     //move from page to page without losing the sorting of the list
     setPaginationParams(input) {
         //path: '/directory/:type/:startsWith/page/:page',
-        var navigationParams = [
-            this.listType,
-            this.tab,
-            this.pageNum
-        ];
+        var navigationParams = {
+            position: this.listType,
+            statName: this.tab,
+            pageNumber: this.pageNum
+        };
 
-        if (this.scope != null) {
-            navigationParams['scope'] = this.scope;
-        }
-
-        var navigationPage = 'mvp-list';
+        var navigationPage = '/' + this.scope + '/mvp-list';
         let max = Math.ceil(input.listInfo.resultCount / this.listMax); //NEED Number of entries from API
 
         this.paginationParameters = {
@@ -217,7 +214,7 @@ export class MVPListPage implements OnInit {
             paginationType: 'page',
             navigationPage: navigationPage,
             navigationParams: navigationParams,
-            indexKey: 'pageNum'
+            indexKey: 'pageNumber'
         };
     } //setPaginationParams(input)
 
