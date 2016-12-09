@@ -114,13 +114,15 @@ export class HeaderComponent {
         stButtons.locateElements();
         this._renderer.listenGlobal('document', 'click', (event) => {
             var element = document.elementFromPoint(event.clientX, event.clientY);
-            let menuCheck = element.className.indexOf("menucheck");
-            let searchCheck = element.className.indexOf("searchcheck");
-            if (this.isOpened && menuCheck < 0) {
+            if(element){
+              let menuCheck = element.className.indexOf("menucheck");
+              let searchCheck = element.className.indexOf("searchcheck");
+              if (this.isOpened && menuCheck < 0) {
                 this.isOpened = false;
-            }
-            if (this.isSearchOpened && searchCheck < 0) {
+              }
+              if (this.isSearchOpened && searchCheck < 0) {
                 this.isSearchOpened = false;
+              }
             }
         });
         this.logoUrl = 'app/public/icon-t-d-l.svg';

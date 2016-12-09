@@ -62,19 +62,6 @@ export class DeepDiveBlock2 {
                         this.recData2 = this.articleData.splice(0, 6);
                         this.recData2 = this.recData2.length > 0 ? this.recData2 : null;
 
-                        // if(data.length > 0){
-                        //   let stackRow = data.splice(1,8);
-                        //   this.firstStackRow  = this._deepDiveData.transformToArticleStack(stackRow);
-                        //
-                        //   let recInfo = data.splice(1, 6);//TODO
-                        //   this.recData = this._deepDiveData.transformToArticleStack(recInfo);//TODO
-                        //
-                        //   let articleStack2Top = [data[0]];//TODO
-                        //   this.articleStack2DataTop = this._deepDiveData.transformToArticleStack(articleStack2Top);//TODO
-                        //   let articleStack2 = data.splice(1,4);//TODO
-                        //   this.articleStack2DataBatch = this._deepDiveData.transformToArticleStack(articleStack2);//TODO
-                        //
-                        // }
                     }
                 },
                 err => {
