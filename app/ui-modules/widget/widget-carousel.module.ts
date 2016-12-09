@@ -51,7 +51,7 @@ export class WidgetCarouselModule {
           blueBar = document.getElementById('deep-dive-blueBar').offsetHeight;
         }
         var titleHeight = 0;
-        var padding =  document.getElementById('salad-bar-top').getBoundingClientRect().top + document.getElementById('salad-bar-top').offsetHeight + 10;
+        var padding =  document.getElementById('header-bottom').getBoundingClientRect().top + document.getElementById('header-bottom').offsetHeight + 10;
         var parentElem = document.getElementById('widget').parentElement.getBoundingClientRect().top;
         var y_buffer = 50;
         var maxScroll = partnerHeight - scrollTop;
