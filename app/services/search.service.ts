@@ -12,7 +12,6 @@ import { GlobalSettings } from '../global/global-settings';
 import { SearchComponentResult, SearchComponentData } from '../ui-modules/search/search.component';
 import { PaginationParameters } from '../fe-core/interfaces/pagination.data';
 
-//import {SearchPageInput} from '../fe-core/modules/search-page/search-page.module';
 //Interface for input of search component
 export interface SearchInput {
     //Text that goes in as the placeholder for the input

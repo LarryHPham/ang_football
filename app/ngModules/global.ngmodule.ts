@@ -50,7 +50,7 @@ import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-list
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
-import { SearchPageModule } from "../fe-core/modules/search-page/search-page.module";
+import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";

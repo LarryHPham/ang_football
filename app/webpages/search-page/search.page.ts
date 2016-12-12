@@ -10,7 +10,7 @@ import { VerticalGlobalFunctions } from '../../global/vertical-global-functions'
 import { SearchService } from '../../services/search.service';
 
 //interfaces
-import { SearchPageInput } from '../../fe-core/modules/search-page/search-page.module';
+import { SearchPageInput } from '../../ui-modules/search-page/search-page.module';
 
 interface SearchPageParams {
     query: string;
