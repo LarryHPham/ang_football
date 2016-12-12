@@ -141,13 +141,6 @@ export class LeaguePage{
             }
       );
 
-      // OLD from TDL
-      // this.dateParam ={
-      //   profile:'league',
-      //   teamId: this.scope,
-      //   date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
-      // }
-
       this.dateParam ={
         scope:'league',//current profile page
         teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
@@ -370,12 +363,15 @@ export class LeaguePage{
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {
+            //create footer call to action (CTA) link
+
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
               if(this.dropdownKey1 == null){
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
+            this.transactionModuleFooterParams = ['/'+this.scope, transactionsData.tabDataKey, 'league', 20, 1];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
@@ -384,10 +380,6 @@ export class LeaguePage{
       );
 
       // pass transaction page route params to module filter, so set module footer route
-      this.transactionModuleFooterParams = {
-          scope: this.scope,
-          league: 'league'
-      }
     } //getTransactionsData
 
 

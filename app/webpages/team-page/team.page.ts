@@ -429,6 +429,8 @@ export class TeamPage implements OnInit {
               }
             }
 
+            this.transactionModuleFooterParams = ['/'+this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
+
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
