@@ -12,18 +12,21 @@ declare var jQuery:any;
 export class WidgetCarouselModule {
     @Input() aiSidekick:boolean;
     widgetPadding:string = '0px';
-
+    private _elRef: any;
+    constructor(elementRef: ElementRef){
+      this._elRef = elementRef;
+    }
     ngOnInit() {
     }
 
     // Page is being scrolled
     onScroll(event) {
         var scrollTop = event.srcElement.body.scrollTop; //find the current scroll of window from top of page
-        var header = document.getElementById('pageHeader'); // grab the height of the entire header
-        var headerbottom = document.getElementById('header-bottom'); // grab the bottom piece of the header that sticks on scroll
-        var widgetContainer = document.getElementById('widgetContainer');// grab the container that the widget lives in
-        var widget = document.getElementById('widget');// grab the actual widget so we can add the fixed classed to it
-        let widgetFixed = document.getElementsByClassName('fixedWidget')[0]; // if the fixedWidget class exist grab it to be used
+        var header = this._elRef.nativeElement.ownerDocument.getElementById('pageHeader'); // grab the height of the entire header
+        var headerbottom = this._elRef.nativeElement.ownerDocument.getElementById('header-bottom'); // grab the bottom piece of the header that sticks on scroll
+        var widgetContainer = this._elRef.nativeElement.ownerDocument.getElementById('widgetContainer');// grab the container that the widget lives in
+        var widget = this._elRef.nativeElement.ownerDocument.getElementById('widget');// grab the actual widget so we can add the fixed classed to it
+        let widgetFixed = this._elRef.nativeElement.ownerDocument.getElementsByClassName('fixedWidget')[0]; // if the fixedWidget class exist grab it to be used
 
         //set the scroll height that the widget needs to meet before sticking
         let scrollAmount = widgetContainer.getBoundingClientRect().top;
