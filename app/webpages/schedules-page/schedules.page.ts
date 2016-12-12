@@ -61,7 +61,7 @@ export class SchedulesPage implements OnInit {
     private _title: Title,
     private _seoService: SeoService
   ) {
-    this.isFirstRun = 0;
+  //  this.isFirstRun = 0;
 
     this.paramsub = this.activateRoute.params.subscribe(
       (param :any)=> {
