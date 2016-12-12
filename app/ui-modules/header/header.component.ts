@@ -14,7 +14,9 @@ declare var jQuery: any;
 })
 export class HeaderComponent {
     @Input() partnerID: string;
+    @Input() partnerScript: any;
     @Output() tabSelected = new EventEmitter();
+    @Output() scrollPadding = new EventEmitter();
     public scope: string;
     public routeSubscription: any;
     public logoUrl: string;
@@ -54,70 +56,36 @@ export class HeaderComponent {
     }
     // Page is being scrolled
     onScrollStick(event) {
-        var header = document.getElementById('pageHeader');
-        var stickyItem = document.getElementById('header-bottom');
-        var scrollTop = event.srcElement.body.scrollTop;
-        // var saladBar = document.getElementById('header-bottom');
-        //check if partner header exist and the sticky header shall stay and not partner header
-        let heightBeforeStick = header.offsetHeight - stickyItem.offsetHeight;
+        var document = this.elementRef.nativeElement.ownerDocument;
+        if (document) {
+            var header = document.getElementById('pageHeader');
+            var stickyItem = document.getElementById('header-bottom'); //
+            var scrollTop = event.srcElement.body.scrollTop; // pixels from top of page to current scroll view
+            let heightBeforeStick = header.offsetHeight - stickyItem.offsetHeight; // used to send back to page container to determin the padding of when the header turns from a block to a position fixed and scroll height changes
+            let scrollPadding = 0; // used to send back to page container to determin the padding of when the header turns from a block to a position fixed and scroll height changes
+            let scrollPolarity = scrollTop - this.scrollTopPrev; // positive (+) return will be scroll down and negative (-) return will be scroll up
 
-        let scrollPolarity = scrollTop - this.scrollTopPrev;
-
-        if (scrollPolarity > 0 || scrollTop == 0) {// scrollUp is true scrollPolarity is negative which will add the header back
-            this.scrollUp = false;
-        } else {
-            this.scrollUp = true;
-        }
-        this.scrollTopPrev = scrollTop;
-
-        if (scrollTop > heightBeforeStick) {// if body scrollTop is greater than height before sticky header then add fix header class
-            stickyItem.classList.add('fixedHeader');
-
-            //
-            if (this.scrollUp) {
-                stickyItem.classList.remove('fixedHeader');
+            if (scrollPolarity > 0 || scrollTop == 0) {// scrollUp is true scrollPolarity is negative which will add the header back
+                scrollPadding = 0;
+                this.scrollUp = false;
             } else {
-                stickyItem.classList.add('fixedHeader');
+                scrollPadding = header.offsetHeight;
+                this.scrollUp = true;
             }
-        } else {
-            stickyItem.classList.remove('fixedHeader');
+            this.scrollTopPrev = scrollTop;
+            if (scrollTop > heightBeforeStick) {// if body scrollTop is greater than height before sticky header then add fix header class
+                stickyItem.classList.add('fixedHeader');
+                if (this.scrollUp) {
+                    this.scrollPadding.next(scrollPadding);
+                    stickyItem.classList.remove('fixedHeader');
+                } else {
+                    stickyItem.classList.add('fixedHeader');
+                }
+            } else {
+                stickyItem.classList.remove('fixedHeader');
+            }
+            this.scrollPadding.next(scrollPadding);
         }
-
-        //BELOW ARE UNUSED ATM but commenting out since it was there before this was modified at 12/4/2016
-
-        // if (document.getElementById('partner') != null) {
-        //     var partner = document.getElementById('partner');
-        //     var partnerHeight = document.getElementById('partner').offsetHeight;
-        //     let stickyHeader = partnerHeight ? partnerHeight : 0;
-        //     let maxScroll = stickyHeader - scrollTop;
-        //
-        //     if (maxScroll <= 0) {
-        //         maxScroll = 0;
-        //     }
-        //
-        //     this._stickyHeader = (maxScroll) + "px";
-        //     // if (scrollTop == 0 || scrollTop < this.scrollTopPrev || scrollTop < (header.offsetHeight + saladBar.offsetHeight + partnerHeight)) {
-        //     if (scrollTop == 0 || scrollTop < this.scrollTopPrev || scrollTop < (header.offsetHeight + partnerHeight)) {
-        //         this._stickyHeader = "unset";
-        //         header.classList.add('fixedHeader');
-        //         partner.classList.add('fixedHeader');
-        //     } else {
-        //         this._stickyHeader = (maxScroll) + "px";
-        //         header.classList.remove('fixedHeader');
-        //         partner.classList.remove('fixedHeader');
-        //     }
-        // } else {
-        //     // if (scrollTop == 0 || scrollTop < this.scrollTopPrev || scrollTop < (header.offsetHeight + saladBar.offsetHeight)) {
-        //     if (scrollTop == 0 || scrollTop < this.scrollTopPrev || scrollTop < header.offsetHeight) {
-        //         this._stickyHeader = "unset";
-        //         header.classList.add('fixedHeader');
-        //     }
-        //     else {
-        //         this._stickyHeader = "0px";
-        //         header.classList.remove('fixedHeader');
-        //     }
-        // }
-        // this.scrollTopPrev = scrollTop;
     }//onScrollStick ends
 
     public getMenu(event): void {
@@ -134,6 +102,7 @@ export class HeaderComponent {
         }
     }
     ngOnInit() {
+        var document = this.elementRef.nativeElement.ownerDocument;
         //wait 1 second to make sure the router scope changes before running the global settings getScopeNow and grab correct scope
         setTimeout(() => {
             this.scope = GlobalSettings.getScopeNow();
@@ -149,13 +118,15 @@ export class HeaderComponent {
         stButtons.locateElements();
         this._renderer.listenGlobal('document', 'click', (event) => {
             var element = document.elementFromPoint(event.clientX, event.clientY);
-            let menuCheck = element.className.indexOf("menucheck");
-            let searchCheck = element.className.indexOf("searchcheck");
-            if (this.isOpened && menuCheck < 0) {
-                this.isOpened = false;
-            }
-            if (this.isSearchOpened && searchCheck < 0) {
-                this.isSearchOpened = false;
+            if (element) {
+                let menuCheck = element.className.indexOf("menucheck");
+                let searchCheck = element.className.indexOf("searchcheck");
+                if (this.isOpened && menuCheck < 0) {
+                    this.isOpened = false;
+                }
+                if (this.isSearchOpened && searchCheck < 0) {
+                    this.isSearchOpened = false;
+                }
             }
         });
         this.logoUrl = 'app/public/icon-t-d-l.svg';

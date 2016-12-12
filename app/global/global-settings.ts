@@ -9,6 +9,7 @@ export class GlobalSettings {
     private static _proto = window.location.protocol;
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
+    private static _partnerId:string;
 
     private static _apiUrl:string = '-touchdownloyal-api.synapsys.us';
     private static _articleDataUrl:string = "-touchdownloyal-ai.synapsys.us/";
@@ -58,8 +59,6 @@ export class GlobalSettings {
 
     private static _currentRouteParams: any;
     private static _router: any;
-
-    public static _partnerId:string;
 
     static getEnv(env:string):string {
       if (env == "localhost"){
@@ -164,6 +163,13 @@ export class GlobalSettings {
 
     static setRouter(router){
       this._router = router;
+    }
+
+    static storedPartnerId(partnerId?) {
+      if(partnerId != null){
+        this._partnerId = partnerId;
+      }
+      return this._partnerId;
     }
 
     static getRouteFullParams():any {
