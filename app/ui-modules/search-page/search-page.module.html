@@ -1,0 +1,55 @@
+<section class="search-page-container" *ngIf="searchPageInput">
+    <!-- Back Tab Component -->
+    <backtab-component></backtab-component>
+    <!-- Hero Search Component -->
+    <div class="search-page-header" [ngStyle]="{'background-image': 'url(' + searchPageInput.heroImage + ')'}">
+        <h1 class="search-page-header-heading">
+            {{searchPageInput.headerText}}
+        </h1>
+        <h2 class="search-page-header-sub-heading">
+            {{searchPageInput.subHeaderText}}
+        </h2>
+        <div class="search-page-header-input">
+            <search [searchInput]="searchPageInput.searchComponent" ></search>
+        </div>
+    </div>
+    <!-- Tabs Component -->
+    <tabs (tabSelected)="tabSelected($event)">
+        <tab *ngFor="let outerItem of searchPageInput.tabData; let i = index; let isLast = last" [tabTitle]="outerItem.tabName" [active]="outerItem.isTabDefault">
+            <!-- Results -->
+            <ul class="search-page-results">
+              <div class="search-page-filter">
+                <div class="search-page-total">Showing: <span class="text-heavy">{{currentShowing}}</span> of <span class="text-heavy">{{totalResults}}</span> results:</div>
+                <div *ngIf="dropdownFilter" class="filter"><span class="filter-text">Sorted By:</span>
+                  <div class="col-xs-6 filter-dropdown">
+                    <dropdown
+                        [list]="dropdownFilter"
+                        [selectedKey]="selectedKey"
+                        [icon]="'fa-caret-down'"
+                        (selectionChanged)="filterSwitch($event)"></dropdown>
+                  </div>
+                </div>
+              </div>
+              <template ngFor let-innerItem [ngForOf]="outerItem.results[pageNumber-1]" let-i="index" >
+                <li class="search-page-results-item">
+                  <a class="search-page-results-item-title" [routerLink]="innerItem.url" [innerHtml]="innerItem.title"></a>
+                  <a class="search-page-results-item-link" [routerLink]="innerItem.url" [innerHtml]="innerItem.urlText"></a>
+                  <span class="search-page-results-item-description" [innerHtml]="innerItem.description"></span>
+                </li>
+                <div *ngIf="!((i + 1) % 5) && ((i + 1) % 10) && (outerItem.results[pageNumber-1].length > 5)" class="search-widget">
+                  <responsive-widget  embedPlace="widgetForPage"></responsive-widget>
+                </div>
+              </template>
+                <!-- No Results Found -->
+              <div class="no-results">
+                <no-data-box *ngIf="outerItem.results.length == 0 || outerItem.totalResults == 0" [data]="outerItem.error.message" [icon]="outerItem.error.icon"></no-data-box>
+              </div>
+            </ul>
+            <pagination-footer *ngIf="outerItem.paginationParameters" [paginationParameters]="outerItem.paginationParameters" (newIndex)="newIndex($event)"></pagination-footer>
+            <div class="search-widget">
+              <responsive-widget embedPlace="widgetForPage"></responsive-widget>
+            </div>
+        </tab>
+    </tabs>
+
+</section>

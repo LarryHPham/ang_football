@@ -83,7 +83,7 @@ const relativeChildRoutes = [
         component: SchedulesPage
     },
     {
-        path: ':scope/schedules/:teamName/:year/:tab/:pageNum',
+        path: ':scope/schedules/:teamName/:teamID/:year/:pageNum',
         component: SchedulesPage
     },
     {
@@ -122,38 +122,28 @@ const relativeChildRoutes = [
         path: ':scope/draft-history/:teamName/:teamID',
         component: DraftHistoryPage
     },
-    // {
-    //     path: ':scope/:type/:teamName/:teamId/:limit/:pageNum',
-    //     name: 'Transactions-page',
-    //     component: TransactionsPage
-    // },
-    // {
-    //     path: ':scope/:type/league/:limit/:pageNum',
-    //     name: 'Transactions-tdl-page',
-    //     component: TransactionsPage
-    // },
     {
-        path: ':scope/Transactions/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/transactions/:teamName/:teamId/:limit/:pageNum',
         component: TransactionsPage
     },
     {
-        path: ':scope/Suspensions/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/suspensions/:teamName/:teamId/:limit/:pageNum',
         component: TransactionsPage
     },
     {
-        path: ':scope/Injuries/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/injuries/:teamName/:teamId/:limit/:pageNum',
         component: TransactionsPage
     },
     {
-        path: ':scope/Transactions/league/:limit/:pageNum',
+        path: ':scope/transactions/league/:limit/:pageNum',
         component: TransactionsPage
     },
     {
-        path: ':scope/Suspensions/league/:limit/:pageNum',
+        path: ':scope/suspensions/league/:limit/:pageNum',
         component: TransactionsPage
     },
     {
-        path: ':scope/Injuries/league/:limit/:pageNum',
+        path: ':scope/injuries/league/:limit/:pageNum',
         component: TransactionsPage
     },
     {
@@ -194,10 +184,10 @@ const relativeChildRoutes = [
         redirectTo: 'home',
         pathMatch: 'full'
     },
-    // {
-    //     path: '/*path',
-    //     redirectTo: ['home']
-    // }
+    {
+        path: '/**',
+        redirectTo: 'home'
+    }
 ];
 
 const appRoutes: Routes = [

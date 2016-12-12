@@ -235,7 +235,6 @@ export class ListPage {
     getPage(){
       this._profileService.getLeagueProfile()
           .subscribe(data => {
-            console.log(data);
               this.getListPage(this.pageParams);
           }, err => {
               console.log("Error loading profile");

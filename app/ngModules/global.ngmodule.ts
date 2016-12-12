@@ -18,7 +18,7 @@ import { HamburgerDeliveryService } from '../services/hamburger-delivery.service
 import { FooterService } from '../services/footer.service';
 import { BoxScoresService } from "../services/box-scores.service";
 import { SchedulesService } from "../services/schedules.service";
-import { GeoLocation, PartnerHeader } from "../global/global-service";
+import { GeoLocation } from "../global/global-service";
 import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
 import { SeoService } from "../seo.service";
@@ -50,7 +50,7 @@ import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-list
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
-import { SearchPageModule } from "../fe-core/modules/search-page/search-page.module";
+import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -312,7 +312,6 @@ import { ScoreBoard } from "../fe-core/components/score-board/score-board.compon
       BoxScoresService,
       SchedulesService,
       GeoLocation,
-      PartnerHeader,
       VerticalGlobalFunctions,
       HamburgerDeliveryService,
       ImagesService,
