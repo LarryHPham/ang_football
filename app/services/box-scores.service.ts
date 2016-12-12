@@ -1,13 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import {Http, Headers} from '@angular/http';
-import {GlobalFunctions} from '../global/global-functions';
-import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
-import {GlobalSettings} from '../global/global-settings';
-import {Gradient} from '../global/global-gradient';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { Http, Headers } from '@angular/http';
+import { GlobalFunctions } from '../global/global-functions';
+import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
+import { GlobalSettings } from '../global/global-settings';
+import { Gradient } from '../global/global-gradient';
 
 //Interfaces
-import {CircleImageData} from '../fe-core/components/images/image-data';
+import { CircleImageData } from '../fe-core/components/images/image-data';
+import { gameAiArticle, gameAiImageConfig } from '../fe-core/components/game-article/game-article.component';
+
 export interface GameInfoInput {
   gameHappened: boolean;
   segment:string;
@@ -420,7 +422,8 @@ export class BoxScoresService {
 
         let homeLink = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
         let awayLink = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
-        var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+        var aiContent = [];
+        aiContent[0] = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data) : null;
 
         if(teamId != null && profile == 'team'){//if league then both items will link
           if(homeData.id == teamId){//if not league then check current team they are one
@@ -433,7 +436,8 @@ export class BoxScoresService {
             var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
           }
         }else{
-          var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+          aiContent[0] = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+
           var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
           var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
         }
@@ -532,7 +536,8 @@ export class BoxScoresService {
 
         let homeLink = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
         let awayLink = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
-        var aiContent = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
+        var aiContent = [];
+        aiContent[0] = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data):null;
 
         if(teamId != null && profile == 'team'){//if league then both items will link
           if(homeData.id == teamId){//if not league then check current team they are one
@@ -545,10 +550,11 @@ export class BoxScoresService {
             var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
           }
         }else{
-          var aiContent = data.aiContent != null ? self.formatArticle(data):null;
+          aiContent[0] = data.aiContent != null ? self.formatArticle(data):null;
           var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
           var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
         }
+
 
         let gameDate = data.gameInfo;
 
@@ -618,28 +624,60 @@ export class BoxScoresService {
   formatArticle(data){
     let gameInfo = data.gameInfo;
     let aiContent = data.aiContent;
-    var gameArticle = {};
-    for(var report in aiContent.featuredReport){
+    var gameArticle = <gameAiArticle> {}
+    for ( var report in aiContent.featuredReport ) {
       gameArticle['report'] = "Read The Report";
-      gameArticle['headline'] = aiContent.featuredReport[report].title;
-      gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
-      var i = aiContent.featuredReport[report].image_url;
-      if(i != null){
-        var random1 = Math.floor(Math.random() * i.length);
-        var random2 = Math.floor(Math.random() * i.length);
-        gameArticle['images'] = [];
-        gameArticle['images'].push(GlobalSettings.getImageUrl(i));
-        // if(random1 == random2){
-        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-        // }else{
-        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
-        //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
-        // }
-      }else{
-        gameArticle['images'] = [];
-        gameArticle['images'].push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null));
+      gameArticle['title'] = aiContent.featuredReport[report].title ? aiContent.featuredReport[report].title : null;
+      gameArticle['date'] = aiContent.featuredReport[report].date ? aiContent.featuredReport[report].date : null;
+      gameArticle['eventId'] = aiContent.featuredReport[report].event_id ? aiContent.featuredReport[report].event_id : null;
+      gameArticle['eventType'] = {
+        commentHeader: aiContent.featuredReport[report].commentHeader ? aiContent.featuredReport[report].commentHeader : null,
+        dateline: aiContent.featuredReport[report].dateline ? aiContent.featuredReport[report].dateline : null,
+        displayHeaderline: aiContent.featuredReport[report].title ? aiContent.featuredReport[report].title : null,
+        images: aiContent.featuredReport[report].images ?  aiContent.featuredReport[report].images : null,
+        metaHeadline: aiContent.featuredReport[report].metaHeadline ? aiContent.featuredReport[report].metaHeadline : null,
+        metadata: aiContent.featuredReport[report].metadata ? aiContent.featuredReport[report].metadata : null,
+        teamId: aiContent.featuredReport[report].team_id ? aiContent.featuredReport[report].team_id : null
       }
+      gameArticle['imageConfig'] = <gameAiImageConfig> {
+        hoverText: 'View Article',
+        imageClass: aiContent.featuredReport[report].imageClass ? aiContent.featuredReport[report].imageClass : null,
+        imageUrl: aiContent.featuredReport[report].image_url ? GlobalSettings.getImageUrl(aiContent.featuredReport[report].image_url) : null,
+        urlRouteArray: aiContent.featuredReport[report].article_url ? aiContent.featuredReport[report].article_url : null
+      }
+      gameArticle['keyword'] = aiContent.featuredReport[report].subcategory ? aiContent.featuredReport[report].subcategory : null,
+      gameArticle['teaser'] = aiContent.featuredReport[report].title ? aiContent.featuredReport[report].title : null,
+      gameArticle['url'] = [
+        'Article-pages',
+        {
+          eventId: aiContent.featuredReport[report].eventId ? aiContent.featuredReport[report].eventId : null,
+          eventType: aiContent.featuredReport[report] ? aiContent.featuredReport[report] : null
+        }
+      ],
+      gameArticle['urlRouteArray'] = aiContent.featuredReport[report].article_url ? aiContent.featuredReport[report].article_url : null
     }
+
+    // for(var report in aiContent.featuredReport){
+    //   gameArticle['report'] = "Read The Report";
+    //   gameArticle['headline'] = aiContent.featuredReport[report].title;
+    //   gameArticle['articleLink'] = ['Article-pages',{eventType:report,eventID:aiContent.event}];
+    //   var i = aiContent.featuredReport[report].image_url;
+    //   if(i != null){
+    //     var random1 = Math.floor(Math.random() * i.length);
+    //     var random2 = Math.floor(Math.random() * i.length);
+    //     gameArticle['images'] = [];
+    //     gameArticle['images'].push(GlobalSettings.getImageUrl(i));
+    //     // if(random1 == random2){
+    //     //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+    //     // }else{
+    //     //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random1].image_url));
+    //     //   gameArticle['images'].push(GlobalSettings.getImageUrl(i[random2].image_url));
+    //     // }
+    //   }else{
+    //     gameArticle['images'] = [];
+    //     gameArticle['images'].push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null));
+    //   }
+    // }
     return gameArticle;
   }
 
