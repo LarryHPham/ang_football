@@ -708,7 +708,7 @@ export class ArticlePages implements OnInit {
           this._seoService.setAuthor(data.author);
           this._seoService.setPublisher(data.publisher);
           this._seoService.setImageUrl(image);
-          this._seoService.setArticleTeaser(data.teaser);
+          this._seoService.setArticleTeaser(data.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''));
           this._seoService.setArticleUrl(link);
           this._seoService.setArticleType(data.article_type);
           this._seoService.setSearchString(searchString);
