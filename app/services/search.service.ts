@@ -74,7 +74,6 @@ export class SearchService{
     getSearchJSON(){
 
       //this.newSearchAPI = this.newSearchAPI+scope;
-
         return this.http.get(this.searchAPI, {
             })
             .map(
@@ -109,7 +108,7 @@ export class SearchService{
      */
 
     //Function used by search input to get suggestions dropdown
-    getSearchDropdownData(router:Router, term: string){
+    getSearchDropdownData(term: string){
         //TODO: Wrap in async
         let data = this.searchJSON;
         let dataSearch = {
@@ -131,7 +130,7 @@ export class SearchService{
         let playerResults = this.searchPlayers(term, null, dataSearch.players);
         let teamResults = this.searchTeams(term, null, dataSearch.teams);
         //Transform data to useable format
-        let searchResults = this.resultsToDropdown(router, playerResults, teamResults);
+        let searchResults = this.resultsToDropdown(playerResults, teamResults);
         //Build output to send to search component
         let searchOutput: SearchComponentData = {
             term: term,
@@ -141,7 +140,7 @@ export class SearchService{
     }
 
     //Convert players and teams to needed dropdown array format
-    resultsToDropdown(router, playerResults, teamResults){
+    resultsToDropdown(playerResults, teamResults){
         let searchArray: Array<SearchComponentResult> = [];
         let partnerScope = GlobalSettings.getHomeInfo();
         let count = 0, max = 4;
@@ -155,11 +154,6 @@ export class SearchService{
 
             //generate route for team
             let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
-            if(partnerScope.isPartner && item.scope != null && !partnerScope.isSubdomainPartner){
-              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partner_id:partnerScope.partnerName});
-            }else{
-              route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
-            }
             count++;
             searchArray.push({
                 title: teamName,
@@ -186,11 +180,6 @@ export class SearchService{
             let item = playerResults[i];
             let playerName = item.playerName;
             let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
-            if(partnerScope.isPartner && item.scope != null){
-              route.unshift(this.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
-            }else{
-              route.unshift(this.getRelativePath(router)+'Default-home',{scope:item.scope});
-            }
             searchArray.push({
                 title: '<span class="text-heavy">' + playerName + '</span> - ' + item.teamName,
                 value: playerName,
@@ -224,7 +213,7 @@ export class SearchService{
     /*
      * Functions for search page
      */
-    getSearchPageData(router: Router, partnerId: string, query: string, scope, data){
+    getSearchPageData(partnerId: string, query: string, scope, data){
         let dataSearch = {
           players: [],
           teams: []
@@ -260,8 +249,7 @@ export class SearchService{
         let playerResults = this.searchPlayers(query, scope, dataSearch.players);
         let teamResults = this.searchTeams(query, scope, dataSearch.teams);
 
-        let searchResults = this.resultsToTabs(router, partnerId, query, playerResults, teamResults);
-
+        let searchResults = this.resultsToTabs(partnerId, query, playerResults, teamResults);
         return {
           results: searchResults,
           filters: this.filterDropdown()
@@ -283,7 +271,7 @@ export class SearchService{
     }
 
     //Convert players and teams to tabs format
-    resultsToTabs(router: Router, partnerId: string, query, playerResults, teamResults){
+    resultsToTabs(partnerId: string, query, playerResults, teamResults){
       let self = this;
       let partnerScope = GlobalSettings.getHomeInfo();
 
@@ -340,20 +328,9 @@ export class SearchService{
         playerResults.forEach(function(item){
             let playerName = item.playerName;
             let title = GlobalFunctions.convertToPossessive(playerName) + " Player Profile";
-            //TODO: use router functions to get URL
-            // let urlText = 'http://www.homerunloyal.com/';
-            // urlText += '<span class="text-heavy">player/' + GlobalFunctions.toLowerKebab(item.teamName) + '/' + GlobalFunctions.toLowerKebab(playerName) + '/' + item.playerId + '</span>';
             let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
-            if(partnerScope.isPartner && item.scope != null){
-              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
-            }else{
-              route.unshift(self.getRelativePath(router)+'Default-home',{scope:item.scope});
-            }
-            let relativePath = router.generate(route).toUrlPath();
-            if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
-                relativePath = item.scope+ '/' + relativePath.substr(1);
-            }
-            let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '/<b>' + relativePath + '</b></p>';
+            let relRoute = route.join('/');
+            let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '<b>' + relRoute + '</b></p>';
             let regExp = new RegExp(playerName, 'g');
             let description = item.playerDescription.replace(regExp, ('<span class="text-heavy">' + playerName + '</span>'));
 
@@ -386,22 +363,11 @@ export class SearchService{
         teamResults.forEach(function(item){
             let teamName = item.teamName;
             let title = GlobalFunctions.convertToPossessive(teamName) + " Team Profile";
-            //TODO: use router functions to get URL
-            // let urlText = 'http://www.homerunloyal.com/';
-            // urlText += '<span class="text-heavy">team/' + GlobalFunctions.toLowerKebab(teamName) + '/' + item.teamId;
             let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
-            if(partnerScope.isPartner && item.scope != null){
-              route.unshift(self.getRelativePath(router)+'Partner-home',{scope:item.scope,partnerId:partnerScope.partnerName});
-            }else{
-              route.unshift(self.getRelativePath(router)+'Default-home',{scope:item.scope});
-            }
-            let relativePath = router.generate(route).toUrlPath();
-            if ( relativePath.length > 0 && relativePath.charAt(0) == '/' ) {
-                relativePath = item.scope + '/' + relativePath.substr(1);
-            }
-            let urlText = GlobalSettings.getHomePage(partnerId, false) + '/<span class="text-heavy">' + relativePath + '</span>';
+            let relRoute = route.join('/');
+            let urlText = GlobalSettings.getHomePage(partnerId, false) + '<b>' + relRoute + '</b>';
             let regExp = new RegExp(teamName, 'g');
-            let description = item.teamDescription.replace(regExp, ('<span class="text-heavy">' + teamName + '</span>'));
+            let description = item.teamDescription.replace(regExp, ('<b>' + teamName + '</b>'));
 
             if(typeof objData2[objCounter] == 'undefined' || objData2[objCounter] === null){//create paginated objData.  if objData array does not exist then create new obj array
               objData2[objCounter] = [];
@@ -484,24 +450,4 @@ export class SearchService{
       });
       return fuse.search(term);
     }
-
-    getRelativePath(router:Router){
-      let counter = 0;
-      let hasParent = true;
-      let route = router;
-      for (var i = 0; hasParent == true; i++){
-        // if(route.parent != null){
-        //   counter++;
-        //   route = route.parent;
-        // }else{
-        //   hasParent = false;
-        //   let relPath = '';
-        //   for(var c = 1 ; c <= counter; c++){
-        //     relPath += '../';
-        //   }
-        //   return relPath;
-        // }
-      }
-    }
-
 }

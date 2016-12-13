@@ -21,7 +21,7 @@ interface SearchPageParams {
     templateUrl: './app/webpages/search-page/search.page.html'
 })
 
-export class SearchPage implements OnInit {
+export class SearchPage{
     public pageParams: SearchPageParams;
     public partnerID: string;
     public scope: string;
@@ -40,35 +40,30 @@ export class SearchPage implements OnInit {
         //VerticalGlobalFunctions.scopeRedirect(_router, _params);
         this.activatedRoute.params.subscribe(
           (param :any)=> {
+            this.pageParams = param;
             this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-            this.query = param['query'];
 
             if (!GlobalSettings.getHomeInfo().isSubdomainPartner) {
               this.partnerID = param['partnerID'];
             }
+            this.configureSearchPageData();
           }
         )
 
         _title.setTitle(GlobalSettings.getPageTitle("Search"));
-        let query = decodeURIComponent(this.query);
-        this.pageParams = {
-            query: query
-        }
+
     } //constructor
-
-
 
     configureSearchPageData(filter?) {
         let self = this;
-        let query = self.pageParams.query;
-
+        let query = this.pageParams.query;
         if (typeof filter == 'undefined') {
             filter = null;
         }
-        self._searchService.getSearch()
+        this._searchService.getSearch()
             .subscribe(
             data => {
-                let searchData = self._searchService.getSearchPageData(this._router, this.partnerID, query, filter, data);
+                let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);
                 self.searchPageInput = searchData.results;
                 if (self.searchPageFilters == null) {
                     self.searchPageFilters = searchData.filters;
@@ -76,12 +71,10 @@ export class SearchPage implements OnInit {
             }
             );
     } //configureSearchPageData
-
+    //
     filterSwitch(event) {
         this.configureSearchPageData(event.key);
     }
-    ngOnInit() {
-        this.configureSearchPageData();
-    }
 
+    //
 }

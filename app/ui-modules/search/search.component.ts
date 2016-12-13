@@ -55,17 +55,17 @@ export interface SearchInput {
 @Component({
     selector: 'search',
     host: {
-      '(document:click)': 'handleClick($event)'
+        '(document:click)': 'handleClick($event)'
     },
     templateUrl: './app/ui-modules/search/search.component.html',
 
 })
 
-export class Search{
+export class Search {
     @Input() searchInput: SearchInput;
 
     //NgControl of input
-    public term:any = new FormControl();
+    public term: any = new FormControl();
     //Array of suggestions dropdown
     public dropdownList: Array<SearchComponentResult> = [];
     public elementRef;
@@ -84,37 +84,36 @@ export class Search{
     //Boolean used to determine if input has text and results have been searched for
     public hasInputText: boolean;
 
-    constructor(_elementRef: ElementRef, private _searchService: SearchService, private _router: Router){
+    constructor(_elementRef: ElementRef, private _searchService: SearchService, private _router: Router) {
         this.elementRef = _elementRef;
     }
 
     //Function to detect if user clicks inside the component
-    handleClick(event){
+    handleClick(event) {
         let target = event.target;
         let clickedInside = false;
-        do{
-            if(target === this.elementRef.nativeElement){
+        do {
+            if (target === this.elementRef.nativeElement) {
                 clickedInside = true;
                 //Exit do while loop
                 target = false;
             }
             target = target.parentNode;
-        }while(target);
+        } while (target);
         //If the user clicks in the component, show results else hide results
-        if(clickedInside){
+        if (clickedInside) {
             //Clicked inside
             this.dropdownIsFocused = true;
-        }else{
+        } else {
             //Clicked outside
             this.dropdownIsFocused = false;
         }
     }
 
     //Function to detect arrow key presses
-    searchKeydown(event){
+    searchKeydown(event) {
         //If search input has suggestions, allow for arrow key functionality
-        if(this.searchInput.hasSuggestions === true) {
-
+        if (this.searchInput.hasSuggestions === true) {
             if (event.keyCode === 40) {
                 //Down Arrow Keystroke
                 if (this.dropdownList.length > 0) {
@@ -154,8 +153,8 @@ export class Search{
                 }
                 //Prevents unwanted cursor jumping when up and down arrows are selected
                 event.preventDefault();
-            } else if(event.keyCode == 13){
-              //do nothing and let the form submit route to necessary area
+            } else if (event.keyCode == 13) {
+                //do nothing and let the form submit route to necessary area
             } else {
                 //If other key is pressed unsuppress search
                 this.isSuppressed = false;
@@ -165,36 +164,36 @@ export class Search{
     }
 
     //Get value that is
-    getSelectedValue(index: number){
+    getSelectedValue(index: number) {
         return this.dropdownList[index].value;
     }
 
     //Prevent search subscription from firing. This is needed to prevent the search from firing when a user selects a dropdown option with the arrow keys
-    suppressSearch(value: string){
+    suppressSearch(value: string) {
         this.isSuppressed = true;
-        this.term.updateValue(value);
+        this.term.setValue(value);
     }
 
     //Allow search subscription to fire again
-    unsuppressSearch(){
-        this.term.updateValue(this.storedSearchTerm);
+    unsuppressSearch() {
+        this.term.setValue(this.storedSearchTerm);
         this.isSuppressed = false;
     }
 
     //Function to reset the dropdown item selected by arrow keys to default (-1: input selected)
-    resetSelected(){
+    resetSelected() {
         this.selectedIndex = -1;
     }
 
     //Function to make dropdown item active when hovered
-    itemHovered(index: number){
+    itemHovered(index: number) {
         this.selectedIndex = index;
     }
 
     //Function to check if autocomplete text should be displayed or hidden
-    compareAutoComplete(text: string){
-      this.dropdownIsFocused = true;
-        if(this.dropdownList.length > 0){
+    compareAutoComplete(text: string) {
+        this.dropdownIsFocused = true;
+        if (this.dropdownList.length > 0) {
             //If dropdown suggestions exists, determine if autocomplete text should be shown
             let suggestionText = this.dropdownList[0].value;
             //Sanitize values to compare. This is to match different case values
@@ -203,39 +202,39 @@ export class Search{
             //Check to see if input text is a substring of suggestion Text
             let indexOf = tempCompare.indexOf(tempText);
             //If input is a substring of the suggestion text, display suggestion text
-            if(indexOf === 0 && text !== ''){
+            if (indexOf === 0 && text !== '') {
                 //Rebuild auto complete text to display
                 let autoCompleteText = text + suggestionText.substring(text.length);
                 this.autoCompleteText = autoCompleteText;
-            }else{
+            } else {
                 //Else remove autocomplete text
                 this.autoCompleteText = '';
             }
-        }else{
+        } else {
             //Else remove autocomplete text
             this.autoCompleteText = '';
         }
     }
 
     //On submit function for input
-    onSubmit(){
+    onSubmit() {
         //Encode input to safely push to URL
         let term = this.term.value ? encodeURIComponent(this.term.value) : '';
         //If input is empty exit submit
-        if(term == ''){
+        if (term == '') {
             return false;
         }
         let searchRoute: Array<any>;
-        if( this.selectedIndex < 0 && (this.dropdownList.length > 1 || this.dropdownList.length == 0) ){//no dropdown selected and if there are multiple results or 0 go to search page with query
-          // searchRoute = this._searchService.getSearchRoute(term);
-        }else if(this.dropdownList.length == 1 ){// if there is a selected dropdown and only one item available to to that route
-          searchRoute = this.dropdownList[0].routerLink;
-        }else{
-          /*let dropdownLink = this.dropdownList[this.selectedIndex].routerLink;
-          searchRoute = dropdownLink;*/
+        if (this.selectedIndex < 0 && (this.dropdownList.length > 1 || this.dropdownList.length == 0)) {//no dropdown selected and if there are multiple results or 0 go to search page with query
+            // searchRoute = this._searchService.getSearchRoute(term);
+        } else if (this.dropdownList.length == 1) {// if there is a selected dropdown and only one item available to to that route
+            searchRoute = this.dropdownList[0].routerLink;
+        } else {
+            /*let dropdownLink = this.dropdownList[this.selectedIndex].routerLink;
+            searchRoute = dropdownLink;*/
 
         }
-        this._router.navigate(['/deep-dive','search','articles',term ]);
+        this._router.navigate(['/deep-dive', 'search', 'articles', term]);
         // this._router.navigate(searchRoute);
 
         //Clear out autocomplete text and close dropdown when search occurs
@@ -244,17 +243,17 @@ export class Search{
 
     }
 
-    unFocus(){
-      this.dropdownIsFocused = false;
+    unFocus() {
+        this.dropdownIsFocused = false;
     }
 
-    ngOnInit(){
+    ngOnInit() {
         let self = this;
         let input = this.searchInput;
 
         //If initial text exists
-        if(typeof input.initialText !== 'undefined'){
-            this.term.updateValue(input.initialText);
+        if (typeof input.initialText !== 'undefined') {
+            this.term.setValue(input.initialText);
         }
         //Subscription for function call to service
         this.subscription = this.term.valueChanges
@@ -270,7 +269,7 @@ export class Search{
             //Only continue stream if the input value has changed from the last iteration
             .distinctUntilChanged()
             // Cancel any previous iterations if they have not completed their cycle. Also used to empty dropdown list if input is blank
-            .switchMap((term: string) => term.length > 0 ? self._searchService.getSearchDropdownData(this._router, term) : Observable.of({term: term, searchResults: []}))
+            .switchMap((term: string) => term.length > 0 ? self._searchService.getSearchDropdownData(term) : Observable.of({ term: term, searchResults: [] }))
             .subscribe(data => {
                 let term = data.term;
                 let searchResults = data.searchResults;
@@ -283,11 +282,10 @@ export class Search{
                 self.storedSearchTerm = term;
                 self.compareAutoComplete(term);
             });
-
     }
 
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         //Unsubscribe to observable to avoid memory leak
         this.subscription.unsubscribe();
     }

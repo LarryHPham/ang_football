@@ -30,12 +30,12 @@ export interface SearchPageInput {
             urlText: string;
             description: string;
         }>;
-        error:{
-          message:string;
-          icon:string;
+        error: {
+            message: string;
+            icon: string;
         };
-        pageMax:any;
-        totalResults:any;
+        pageMax: any;
+        totalResults: any;
         paginationParameters: PaginationParameters;
     }>
 }
@@ -45,10 +45,10 @@ export interface SearchPageInput {
     templateUrl: './app/ui-modules/search-page/search-page.module.html'
 })
 
-export class SearchPageModule implements OnChanges{
+export class SearchPageModule implements OnChanges {
     @Input() searchPageInput: SearchPageInput;
-    @Input() dropdownFilter: Array<{key:string, value:string}> = [];
-    @Output() selectedKeyFilter =  new EventEmitter();
+    @Input() dropdownFilter: Array<{ key: string, value: string }> = [];
+    @Output() selectedKeyFilter = new EventEmitter();
 
     public partnerID: string;
     public scope: string;
@@ -60,86 +60,65 @@ export class SearchPageModule implements OnChanges{
     currentFilter: any;
     selectedKey: string;
 
-    constructor(
-      private activatedRoute: ActivatedRoute
-    ) {
-      this.activatedRoute.params.subscribe(
-            (param :any)=> {
-              this.partnerID = param['partnerID'];
-              this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-              this.pageNum = param['pageNum'];
-            }
-      )
-      if(typeof this.pageNum != 'undefined') {
-        this.pageNumber = Number(this.pageNum);
-      } else {
-        this.pageNumber = 1;// if nothing is in route params then default to first piece of obj array
-      }
+    constructor() {
+      this.pageNumber = 1;
     } //constructor
 
-
-
-    ngOnChanges(){
+    ngOnChanges() {
         this.configureSearchPageModule();
         this.getShowResults(this.searchPageInput);
     } //ngOnChanges
 
-
-
-    configureSearchPageModule(){
+    configureSearchPageModule() {
         let input = this.searchPageInput;
     } //configureSearchPageModule
 
-
-
-    filterSwitch($event){
-      this.pageNumber = 1;
-      this.selectedKey = $event;
-      this.selectedKeyFilter.next({
-          dropdownIndex: 0,
-          key: $event
-      });
+    filterSwitch($event) {
+        this.pageNumber = 1;
+        this.selectedKey = $event;
+        this.selectedKeyFilter.next({
+            dropdownIndex: 0,
+            key: $event
+        });
     }
 
-    newIndex(index){
+    newIndex(index) {
         this.pageNumber = index;
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         this.getShowResults(this.searchPageInput);
     }
 
-    getShowResults(data){
-      let self = this;
-      data.tabData.forEach(function(val, index){
-        if(val.isTabDefault){//Optimize
-          if(val.results[self.pageNumber - 1] == null){
-            val.results[self.pageNumber - 1] = [];
-          }
-          var pageMax = Number(val.pageMax);
-          var currPage = Number(self.pageNumber);
-          var totalItemsOnPage = val.results[self.pageNumber - 1].length;
-          var rangeStart = (currPage - 1) * pageMax + 1;
-          var rangeEnd = rangeStart + totalItemsOnPage - 1;
-          if(val.results[self.pageNumber - 1].length > 0){
-            self.currentShowing = rangeStart + ' - ' + rangeEnd;
-          }else{
-            self.currentShowing = '0 - 0';
-          }
-          self.totalResults = Number(val.totalResults);
-        }
-      })
+    getShowResults(data) {
+        let self = this;
+        data.tabData.forEach(function(val, index) {
+            if (val.isTabDefault) {//Optimize
+                if (val.results[self.pageNumber - 1] == null) {
+                    val.results[self.pageNumber - 1] = [];
+                }
+                var pageMax = Number(val.pageMax);
+                var currPage = Number(self.pageNumber);
+                var totalItemsOnPage = val.results[self.pageNumber - 1].length;
+                var rangeStart = (currPage - 1) * pageMax + 1;
+                var rangeEnd = rangeStart + totalItemsOnPage - 1;
+                if (val.results[self.pageNumber - 1].length > 0) {
+                    self.currentShowing = rangeStart + ' - ' + rangeEnd;
+                } else {
+                    self.currentShowing = '0 - 0';
+                }
+                self.totalResults = Number(val.totalResults);
+            }
+        })
     }
 
-
-
-    tabSelected(event){
-      this.pageNumber = 1;
-      this.searchPageInput.tabData.forEach(function(val,index){
-        if(val.tabName == event){//Optimize
-          val.isTabDefault = true;
-        }else{
-          val.isTabDefault = false;
-        }
-      })
-      this.getShowResults(this.searchPageInput);
+    tabSelected(event) {
+        this.pageNumber = 1;
+        this.searchPageInput.tabData.forEach(function(val, index) {
+            if (val.tabName == event) {//Optimize
+                val.isTabDefault = true;
+            } else {
+                val.isTabDefault = false;
+            }
+        })
+        this.getShowResults(this.searchPageInput);
     }
 }
