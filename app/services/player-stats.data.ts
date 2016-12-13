@@ -224,9 +224,9 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
     }
 
     convertToCarouselItem(item: PlayerStatsData, index: number, tabName): SliderCarouselInput {
-
         var description: Array<Link | string> = [];
         var tense = " has";
+        var league = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : item.leagueAbbreviation.toLowerCase();
         var temporalInfo = "";
         var subHeaderYear = "Current ";
         if ( item.seasonId != this.seasonIds[0].key ) {
@@ -236,14 +236,14 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
         }
         let teamFullName = item.teamMarket + ' ' + item.teamName;
         let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
-        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(teamFullName, playerFullName, item.playerId.toString());
+        var playerRoute = VerticalGlobalFunctions.formatPlayerRoute(league, teamFullName, playerFullName, item.playerId.toString());
         var playerLinkText = {
             route: playerRoute,
             text: item.playerFirstName+" "+item.playerLastName,
             class: 'text-heavy'
 
         }
-        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(teamFullName, item.teamId.toString());
+        var teamRoute =this.isTeamProfilePage ? null : VerticalGlobalFunctions.formatTeamRoute(league, teamFullName, item.teamId.toString());
         var teamLinkText = {
             route: teamRoute,
             text: teamFullName
@@ -388,7 +388,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
     }
 
     getCellData(item:PlayerStatsData, column:TableColumn):CellData {
-
+        var league = item.leagueAbbreviation.toLowerCase() == 'fbs' ? 'ncaaf' : item.leagueAbbreviation.toLowerCase();
         var display=null;
         var sort: any = null;
         var link: Array<any> = null;
@@ -407,7 +407,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                 "name":{
                     display : item.playerFirstName + " " + item.playerLastName,
                     sort : item.playerLastName + ', ' + item.playerFirstName,
-                    link : VerticalGlobalFunctions.formatPlayerRoute(teamFullName, playerFullName, item.playerId),
+                    link : VerticalGlobalFunctions.formatPlayerRoute(league, teamFullName, playerFullName, item.playerId),
                     imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
                     bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
                     bottomStat2:item.stat8 != null ? item.stat8: 'N/A',
