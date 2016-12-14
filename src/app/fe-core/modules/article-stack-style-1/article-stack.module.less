@@ -1,0 +1,22 @@
+.article-stack-container {
+  min-width: 320px;
+  margin: 0 auto;
+  display: block;
+  width: 100%;
+  @media @mobile {
+    .stacktop-desc{margin-bottom: 15px;}
+  }
+  @media @tablet{
+    .stacktop-desc{margin-bottom: 15px;}
+  }
+
+  @media @desktop-m{
+    .flexDisplay;
+    &-main{
+      .stacktop-desc{
+        margin-bottom: 0;
+      }
+    }
+    .stackSmall:hover ~ .stackSmall-text-teaser{color: @masterBrandColor}
+  }
+}
