@@ -22,7 +22,7 @@ import { createEngine } from 'angular2-express-engine';
 import { MainModule } from './node.module';
 
 // Routes
-import { routes } from './server.routes';
+import { appRoutes } from './app/router/app.routing';
 
 // enable prod for faster renders
 // enableProdMode();
@@ -70,6 +70,7 @@ app.get('/data.json', serverApi);
 app.use('/api', createTodoApi());
 
 function ngApp(req, res) {
+  console.log('ngApp', req);
   res.render('index', {
     req,
     res,
@@ -85,9 +86,10 @@ function ngApp(req, res) {
  * use universal for specific routes
  */
 app.get('/', ngApp);
-routes.forEach(route => {
-  app.get(`/${route}`, ngApp);
-  app.get(`/${route}/*`, ngApp);
+appRoutes.forEach(route => {
+  console.log('server =>',route.path);
+  app.get(`/${route.path}`, ngApp);
+  app.get(`/${route.path}/*`, ngApp);
 });
 
 app.get('*', function(req, res) {

@@ -187,7 +187,7 @@ const relativeChildRoutes = [
     }
 ];
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
         component: AppComponent,
