@@ -1,6 +1,6 @@
 import { AppComponent }  from '../app-component/app.component';
 import { CommonModule } from "@angular/common";
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -99,207 +99,156 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 // import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
 
+const MODULES = [
+  // put modules here
+  CommonModule,
+  HttpModule,
+  routing,
+  FormsModule,
+  ReactiveFormsModule
+];
+
+const PAGEMODULES = [
+  // put page modules here
+  // AboutUsPage,
+  // ContactUsPage,
+  DisclaimerPage,
+  // DirectoryPage,
+  // ErrorPage,
+  // SearchPage,
+]
+
+const COREMODULES = [
+  // put core modules here
+  // WidgetModule,
+  // BoxScoresModule,
+  // BillboardModule,
+  // DeepDiveRecommendation,
+  // WidgetCarouselModule,
+  // BillboardModule,
+  // ListOfListsModule,
+  // CommentModule,
+  // DirectoryModule,
+  // SearchPageModule,
+]
+
+const COMPONENTS = [
+  // put shared components here
+  AppComponent,
+  // CircleImage,
+  // HoverImage,
+  // ScrollableContent,
+  // ErrorComponent,
+  // LoadingComponent,
+  // SidekickWrapper,
+  // ModuleHeader,
+  // ModuleFooter,
+  // VideoStackComponent,
+  // CalendarCarousel,
+  // GameInfo,
+  // GameArticle,
+  // BoxArticleComponent,
+  // DatePicker,
+  // ResponsiveWidget,
+  // DropdownComponent,
+  // CustomTable,
+  // Tab,
+  // Tabs,
+  // Carousel,
+  // TableHeader,
+  // TableCell,
+  // NoDataBox,
+  // CircleButton,
+  // RectangleImage,
+  // ArticleBlockComponent,
+  // ResponsiveWidget,
+  // SliderCarousel,
+  // ComplexInnerHtml,
+  // PaginationFooter,
+  // HeaderComponent,
+  // FooterComponent,
+  // DropdownDirectoryComponent,
+  // Larousel,
+  // NewsBox,
+  // LineChartComponent,
+  // ArticleBlockComponent,
+  // DeepDiveRecommendation,
+  // ResponsiveWidget,
+  // SideScroll,
+  // ImagesMedia,
+  // ListOfListsItem,
+  // BackTabComponent,
+  // TitleComponent,
+  // ContactUsComponent,
+  // DirectoryPagination,
+  // Search,
+  // ArticleScheduleComponent,
+  // ScoreBoard,
+];
+
+const PIPES = [
+  // put pipes here
+  NaValuePipe,
+  SanitizeHtml,
+  NaValuePipe,
+  SanitizeHtml,
+  SanitizeRUrl,
+  SanitizeStyle,
+  SanitizeScript,
+  StatHyphenValuePipe,
+  // HamburgerMenuComponent,
+  // RectangleImage,
+  // WidgetCarouselModule,
+  PossessivePipe
+];
+
+const PROVIDERS = [
+  // put providers components here
+  SanitizeScript,
+  GlobalSettings,
+  GlobalFunctions,
+  // FooterService,
+  // ScrollerFunctions,
+  // BoxScoresService,
+  // SchedulesService,
+  // GeoLocation,
+  VerticalGlobalFunctions,
+  // HamburgerDeliveryService,
+  ImagesService,
+  // ListOfListsService,
+  // SeoService,
+  // DirectoryService,
+  // SearchService,
+  // AboutUsService
+]
+
 @NgModule({
     imports: [
-      CommonModule,
-      HttpModule,
-      routing,
-      FormsModule,
-      ReactiveFormsModule
+      ...MODULES
     ],
     declarations: [
-      //pages
-      // AboutUsPage,
-      // ContactUsPage,
-      DisclaimerPage,
-      // DirectoryPage,
-      // ErrorPage,
-      // SearchPage,
-
-      //modules
-      // WidgetModule,
-      // BoxScoresModule,
-      // BillboardModule,
-      // DeepDiveRecommendation,
-      // WidgetCarouselModule,
-      // BillboardModule,
-      // ListOfListsModule,
-      // CommentModule,
-      // DirectoryModule,
-      // SearchPageModule,
-
-      //components
-      AppComponent,
-      // CircleImage,
-      // HoverImage,
-      // ScrollableContent,
-      // ErrorComponent,
-      // LoadingComponent,
-      // SidekickWrapper,
-      // ModuleHeader,
-      // ModuleFooter,
-      // VideoStackComponent,
-      // CalendarCarousel,
-      // GameInfo,
-      // GameArticle,
-      // BoxArticleComponent,
-      // DatePicker,
-      // ResponsiveWidget,
-      // DropdownComponent,
-      // CustomTable,
-      // Tab,
-      // Tabs,
-      // Carousel,
-      // TableHeader,
-      // TableCell,
-      // NoDataBox,
-      // CircleButton,
-      // RectangleImage,
-      // ArticleBlockComponent,
-      // ResponsiveWidget,
-      // SliderCarousel,
-      // ComplexInnerHtml,
-      // PaginationFooter,
-      // HeaderComponent,
-      // FooterComponent,
-      // DropdownDirectoryComponent,
-      // Larousel,
-      // NewsBox,
-      // LineChartComponent,
-      // ArticleBlockComponent,
-      // DeepDiveRecommendation,
-      // ResponsiveWidget,
-      // SideScroll,
-      // ImagesMedia,
-      // ListOfListsItem,
-      // BackTabComponent,
-      // TitleComponent,
-      // ContactUsComponent,
-      // DirectoryPagination,
-      // Search,
-      // ArticleScheduleComponent,
-      // ScoreBoard,
-
-      //pipes
-      NaValuePipe,
-      SanitizeHtml,
-      NaValuePipe,
-      SanitizeHtml,
-      SanitizeRUrl,
-      SanitizeStyle,
-      SanitizeScript,
-      StatHyphenValuePipe,
-      // HamburgerMenuComponent,
-      // RectangleImage,
-      // WidgetCarouselModule,
-      PossessivePipe
-
+      ...PAGEMODULES,
+      ...COREMODULES,
+      ...COMPONENTS,
+      ...PIPES
     ],
     exports: [
-      //pages
-      // AboutUsPage,
-      // ContactUsPage,
-      DisclaimerPage,
-      // DirectoryPage,
-      // ErrorPage,
-      // SearchPage,
-
-      //modules
-      // WidgetModule,
-      // BoxScoresModule,
-      // WidgetCarouselModule,
-      // BillboardModule,
-      // DeepDiveRecommendation,
-      // WidgetCarouselModule,
-      // BillboardModule,
-      // ListOfListsModule,
-      // CommentModule,
-      // DirectoryModule,
-      // SearchPageModule,
-
-      //components
-      // CircleImage,
-      // HoverImage,
-      // ScrollableContent,
-      // ErrorComponent,
-      // LoadingComponent,
-      // SidekickWrapper,
-      // ModuleHeader,
-      // ModuleFooter,
-      // VideoStackComponent,
-      // SidekickWrapper,
-      // CalendarCarousel,
-      // GameInfo,
-      // GameArticle,
-      // BoxArticleComponent,
-      // DatePicker,
-      // ResponsiveWidget,
-      // DropdownComponent,
-      // CustomTable,
-      // Tab,
-      // Tabs,
-      // Carousel,
-      // TableHeader,
-      // TableCell,
-      // NoDataBox,
-      // CircleButton,
-      // RectangleImage,
-      // ArticleBlockComponent,
-      // ResponsiveWidget,
-      // SliderCarousel,
-      // ComplexInnerHtml,
-      // PaginationFooter,
-      // RectangleImage,
-      // HeaderComponent,
-      // FooterComponent,
-      // DropdownDirectoryComponent,
-      // HamburgerMenuComponent,
-      // Larousel,
-      // NewsBox,
-      // LineChartComponent,
-      // ArticleBlockComponent,
-      // DeepDiveRecommendation,
-      // ResponsiveWidget,
-      // SideScroll,
-      // ImagesMedia,
-      // ListOfListsItem,
-      // BackTabComponent,
-      // TitleComponent,
-      // ContactUsComponent,
-      // DirectoryPagination,
-      // Search,
-      // ArticleScheduleComponent,
-      // ScoreBoard,
-
-      //pipes
-      NaValuePipe,
-      SanitizeHtml,
-      NaValuePipe,
-      SanitizeHtml,
-      SanitizeRUrl,
-      SanitizeStyle,
-      SanitizeScript,
-      StatHyphenValuePipe,
-      PossessivePipe
-
+      ...PAGEMODULES,
+      ...COREMODULES,
+      ...COMPONENTS,
+      ...PIPES
     ],
     providers: [
-      SanitizeScript,
-      GlobalSettings,
-      GlobalFunctions,
-      // FooterService,
-      // ScrollerFunctions,
-      // BoxScoresService,
-      // SchedulesService,
-      // GeoLocation,
-      VerticalGlobalFunctions,
-      // HamburgerDeliveryService,
-      ImagesService,
-      // ListOfListsService,
-      // SeoService,
-      // DirectoryService,
-      // SearchService,
-      // AboutUsService
+      ...PROVIDERS
     ]
 })
-export class GlobalModule { }
+export class GlobalModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: GlobalModule,
+      providers: [
+        ...PROVIDERS
+      ]
+    };
+  }
+}

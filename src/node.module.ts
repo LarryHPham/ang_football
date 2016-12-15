@@ -4,8 +4,7 @@ import { RouterModule } from '@angular/router';
 import { UniversalModule, isBrowser, isNode } from 'angular2-universal/node'; // for AoT we need to manually split universal packages
 
 // import { AppModule, AppComponent } from './+app/app.module'; //TODO
-import { AppModule, AppDomain } from './app/ngModules/app.ngmodule'; //TODO
-import { SharedModule } from './+app/shared/shared.module';
+import { AppModule, AppDomain } from './app/ngModules/app.ngmodule';
 import { CacheService } from './+app/shared/cache.service';
 
 // Will be merged into @angular/platform-browser in a later release
@@ -34,7 +33,6 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
     FormsModule,
     RouterModule.forRoot([], { useHash: false }),
 
-    SharedModule.forRoot(),
     AppModule, //TODO
   ],
   providers: [
