@@ -201,4 +201,4 @@ export const appRoutes: Routes = [
 
 ];
 
-export const routing = RouterModule.forRoot(appRoutes);
+export const routing = RouterModule.forChild(appRoutes);

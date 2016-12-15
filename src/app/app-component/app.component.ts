@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from "../global/global-settings";
 // import { GeoLocation } from "../global/global-service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
+  encapsulation: ViewEncapsulation.Emulated,
   selector: 'my-app',
   templateUrl: './app.component.html'
 })

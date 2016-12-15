@@ -7,6 +7,8 @@ import { IdlePreload, IdlePreloadModule } from '@angularclass/idle-preload';
 // import { AppModule, AppComponent } from './+app/app.module'; //TODO
 import { AppModule, AppDomain } from './app/ngModules/app.ngmodule'; //TODO
 import { CacheService } from './+app/shared/cache.service';
+import { GlobalModule } from './app/ngModules/global.ngmodule';
+
 // Will be merged into @angular/platform-browser in a later release
 // see https://github.com/angular/angular/pull/12322
 import { Meta } from './angular2-meta';
@@ -39,6 +41,7 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 
     FormsModule,
     RouterModule.forRoot([], { useHash: false, preloadingStrategy: IdlePreload }),
+    GlobalModule.forRoot(),
 
     IdlePreloadModule.forRoot(),
     AppModule,

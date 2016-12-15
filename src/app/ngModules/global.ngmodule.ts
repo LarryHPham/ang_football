@@ -19,7 +19,7 @@ import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { BoxScoresService } from "../services/box-scores.service";
 // import { SchedulesService } from "../services/schedules.service";
 // import { GeoLocation } from "../global/global-service";
-import { ImagesService } from "../services/carousel.service";
+// import { ImagesService } from "../services/carousel.service";
 // import { ListOfListsService } from "../services/list-of-lists.service";
 // import { SeoService } from "../seo.service";
 // import { DirectoryService } from "../services/directory.service";
@@ -214,7 +214,7 @@ const PROVIDERS = [
   // GeoLocation,
   VerticalGlobalFunctions,
   // HamburgerDeliveryService,
-  ImagesService,
+  // ImagesService,
   // ListOfListsService,
   // SeoService,
   // DirectoryService,

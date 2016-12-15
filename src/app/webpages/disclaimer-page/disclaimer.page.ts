@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Injector } from '@angular/core';
+import { Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { TitleInputData } from "../../fe-core/components/title/title.component";
@@ -24,7 +24,8 @@ export class DisclaimerPage {
     constructor(
       private _title: Title,
       // private _seoService: SeoService,
-      public activatedRoute: ActivatedRoute
+      public activatedRoute: ActivatedRoute,
+      @Inject('req') req: any
     ) {
       //check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, _params);

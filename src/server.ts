@@ -70,7 +70,6 @@ app.get('/data.json', serverApi);
 app.use('/api', createTodoApi());
 
 function ngApp(req, res) {
-  console.log('ngApp', req);
   res.render('index', {
     req,
     res,

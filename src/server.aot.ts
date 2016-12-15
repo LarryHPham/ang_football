@@ -77,7 +77,6 @@ app.get('/data.json', serverApi);
 app.use('/api', createTodoApi());
 
 function ngApp(req, res) {
-  console.log('ngApp', req);
   res.render('index', {
     req,
     res,
@@ -94,7 +93,6 @@ function ngApp(req, res) {
  */
 app.get('/', ngApp);
 appRoutes.forEach(route => {
-  console.log('server.aot =>',route.path);
   app.get(`/${route.path}`, ngApp);
   app.get(`/${route.path}/*`, ngApp);
 });
