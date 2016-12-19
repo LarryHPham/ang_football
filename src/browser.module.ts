@@ -6,7 +6,7 @@ import { IdlePreload, IdlePreloadModule } from '@angularclass/idle-preload';
 
 // import { AppModule, AppComponent } from './+app/app.module'; //TODO
 import { AppModule, AppDomain } from './app/ngModules/app.ngmodule'; //TODO
-import { CacheService } from './+app/shared/cache.service';
+import { CacheService } from './app/shared/cache.service';
 import { GlobalModule } from './app/ngModules/global.ngmodule';
 
 // Will be merged into @angular/platform-browser in a later release

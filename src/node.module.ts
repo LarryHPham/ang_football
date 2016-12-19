@@ -5,7 +5,6 @@ import { UniversalModule, isBrowser, isNode } from 'angular2-universal/node'; //
 
 // import { AppModule, AppComponent } from './+app/app.module'; //TODO
 import { AppModule, AppDomain } from './app/ngModules/app.ngmodule';
-import { CacheService } from './+app/shared/cache.service';
 import { GlobalModule } from './app/ngModules/global.ngmodule';
 
 // Will be merged into @angular/platform-browser in a later release
@@ -21,9 +20,6 @@ export function getRequest() {
 export function getResponse() {
   return Zone.current.get('res') || {};
 }
-
-// TODO(gdi2290): refactor into Universal
-export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 
 @NgModule({
   bootstrap: [ AppDomain ],
@@ -46,29 +42,9 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 
     { provide: 'LRU', useFactory: getLRU, deps: [] },
 
-    CacheService,
-
     Meta,
   ]
 })
 export class MainModule {
-  constructor(public cache: CacheService) {
 
-  }
-
-  /**
-   * We need to use the arrow function here to bind the context as this is a gotcha
-   * in Universal for now until it's fixed
-   */
-  universalDoDehydrate = (universalCache) => {
-    universalCache[CacheService.KEY] = JSON.stringify(this.cache.dehydrate());
-  }
-
- /**
-  * Clear the cache after it's rendered
-  */
-  universalAfterDehydrate = () => {
-    // comment out if LRU provided at platform level to be shared between each user
-    this.cache.clear();
-  }
 }

@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
 import {Http} from '@angular/http';
+import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/map';
 
 import {TitleInputData} from "../fe-core/components/title/title.component";
 import {GlobalFunctions} from "../global/global-functions";
@@ -39,12 +41,15 @@ export class AboutUsService {
 
   constructor(public http: Http){}
 
-  getData(partnerID: string, scope: string): Observable<AboutUsModel> {
+  getData(partnerID: string, scope: string): any {
+    scope = scope.toLowerCase() == this.collegeDivisionFullAbbrv.toLowerCase() ? this.collegeDivisionAbbrv.toLowerCase() : scope.toLowerCase();
     let url = GlobalSettings.getApiUrl() + "/aboutUs/" + scope.toLowerCase();
-
+    console.log(url);
     return this.http.get(url)
       .map( res => res.json() )
-      .map( data => this.formatData(data.data, partnerID, scope) )
+      .map( data => {
+        return this.formatData(data.data, partnerID, scope)
+      })
   }
 
   formatDate(date) {
@@ -66,7 +71,7 @@ export class AboutUsService {
     let championshipTeamMarket = data[0].championshipTeamMarket;
     let championshipTeamName = data[0].championshipTeamName;
     let imageUrl = data[0].imageUrl;
-    let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(championshipTeamName, championshipTeamId);
+    let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(scope, championshipTeamName, championshipTeamId);
     let lastUpdated = this.formatDate(data[0].unixTimestamp);
 
     // Set auBlocks vars based on divisionScope

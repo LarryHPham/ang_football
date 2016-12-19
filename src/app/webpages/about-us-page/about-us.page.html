@@ -1,7 +1,7 @@
-<sidekick-wrapper>
+<!-- <sidekick-wrapper> -->
     <section class="page page-container">
-        <backtab-component></backtab-component>
-        <title-component [titleData]="titleData"></title-component>
+        <!-- <backtab-component></backtab-component> -->
+        <!-- <title-component [titleData]="titleData"></title-component> -->
         <h2 class="au-heading" [innerHtml]="auHeaderTitle"></h2>
         <div class="au-content">
             <div class="au-desc">
@@ -14,7 +14,7 @@
                 <a *ngIf="auBlock.link" [routerLink]="auBlock.link.route">
                     <div class="au-blocks-block-content">
                         <div class="au-blocks-block-image">
-                            <circle-image [data]="auBlock.link.imageConfig"></circle-image>
+                            <!-- <circle-image [data]="auBlock.link.imageConfig"></circle-image> -->
                         </div>
                         <div class="au-blocks-block-title">{{auBlock.titleText}}</div>
                         <div class="au-blocks-block-data">{{auBlock.dataText}}</div>
@@ -33,8 +33,8 @@
             </div>
         </div>
         <!--Blocks End-->
-        <div class="list-widget">
+        <!-- <div class="list-widget">
           <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
-        </div>
+        </div> -->
     </section>
-</sidekick-wrapper>
+<!-- </sidekick-wrapper> -->

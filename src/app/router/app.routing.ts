@@ -15,7 +15,7 @@ import { AppComponent }  from '../app-component/app.component';
 // import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 // import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 // import { ArticlePages } from "../webpages/article-pages/article-pages.page";
-// import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
+import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 // import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
@@ -36,10 +36,10 @@ const relativeChildRoutes = [
         path: 'disclaimer',
         component: DisclaimerPage,
     },
-    // {
-    //     path: ':scope/about-us',
-    //     component: AboutUsPage,
-    // },
+    {
+        path: ':scope/about-us',
+        component: AboutUsPage,
+    },
     // {
     //     path: ':scope/pick-a-team',
     //     component: PickTeamPage,
@@ -198,7 +198,6 @@ export const appRoutes: Routes = [
         component: AppComponent,
         children: relativeChildRoutes
     },
-
 ];
 
 export const routing = RouterModule.forChild(appRoutes);

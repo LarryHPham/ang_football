@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Inject } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
 import { TitleInputData } from "../../fe-core/components/title/title.component";
 import { GlobalSettings } from '../../global/global-settings';
@@ -22,7 +21,6 @@ export class DisclaimerPage {
     public titleData: any;
 
     constructor(
-      private _title: Title,
       // private _seoService: SeoService,
       public activatedRoute: ActivatedRoute,
       @Inject('req') req: any

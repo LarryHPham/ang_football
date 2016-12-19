@@ -24,7 +24,7 @@ import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 // import { SeoService } from "../seo.service";
 // import { DirectoryService } from "../services/directory.service";
 // import { SearchService } from "../services/search.service";
-// import { AboutUsService } from "../services/about-us.service";
+import { AboutUsService } from "../services/about-us.service";
 
 //pipes
 import { NaValuePipe } from "../fe-core/pipes/na.pipe";
@@ -33,7 +33,7 @@ import { StatHyphenValuePipe } from "../fe-core/pipes/stat-hyphen.pipe";
 import { PossessivePipe } from "../fe-core/pipes/possessive.pipe";
 
 //pages
-// import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
+import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 // import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { DirectoryPage } from "../webpages/directory-page/directory.page";
@@ -110,7 +110,7 @@ const MODULES = [
 
 const PAGEMODULES = [
   // put page modules here
-  // AboutUsPage,
+  AboutUsPage,
   // ContactUsPage,
   DisclaimerPage,
   // DirectoryPage,
@@ -219,7 +219,7 @@ const PROVIDERS = [
   // SeoService,
   // DirectoryService,
   // SearchService,
-  // AboutUsService
+  AboutUsService
 ]
 
 @NgModule({

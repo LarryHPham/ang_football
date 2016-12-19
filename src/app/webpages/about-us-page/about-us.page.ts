@@ -1,14 +1,19 @@
-import {Component, Injector} from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {Title} from '@angular/platform-browser';
 
-import {AboutUsService} from '../../services/about-us.service';
-import {CircleImageData} from "../../fe-core/components/images/image-data";
-import {GlobalSettings} from '../../global/global-settings';
-import {GlobalFunctions} from '../../global/global-functions';
-import {TitleInputData} from "../../fe-core/components/title/title.component";
-import { SeoService } from "../../seo.service";
-import {VerticalGlobalFunctions} from "../../global/vertical-global-functions";
+//globals
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
+import { GlobalSettings } from '../../global/global-settings';
+import { GlobalFunctions } from '../../global/global-functions';
+
+//services
+// import { SeoService } from "../../seo.service";
+import { AboutUsService } from '../../services/about-us.service';
+
+//interfaces
+import { SportPageParameters } from "../../fe-core/interfaces/global-interface";
+import { CircleImageData } from "../../fe-core/components/images/image-data";
+import { TitleInputData } from "../../fe-core/components/title/title.component";
 
 export interface AuBlockData {
   iconClass?: string;
@@ -29,10 +34,13 @@ export interface AboutUsModel {
 
 @Component({
     selector: 'About-us-page',
-    templateUrl: './app/webpages/about-us-page/about-us.page.html',
+    templateUrl: './about-us.page.html',
 })
 
 export class AboutUsPage {
+    public scope: string;
+    public storedPartnerParam: string;
+
     public widgetPlace: string = "widgetForPage";
     public auHeaderTitle: string = "What is the site about?";
 
@@ -57,15 +65,21 @@ export class AboutUsPage {
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(
+      private activatedRoute: ActivatedRoute,
       private _service: AboutUsService,
-      private _seoService: SeoService
+      // private _seoService: SeoService
     ) {
-      //check to see if scope is correct and redirect
-      // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-      //   GlobalSettings.getParentParams(_router, parentParams =>{
-      //     this.loadData(parentParams.partnerID, parentParams.scope)
-      //   });
-    }
+      this.activatedRoute.params.subscribe(
+            (param :any)=> {
+              console.log(param);
+              this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+              // this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+              this.loadData(this.storedPartnerParam, this.scope)
+            }
+      );
+    } //constructor
+
+
 
     ngAfterViewInit(){
       this.metaTags();
@@ -76,15 +90,15 @@ export class AboutUsPage {
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle('About Us');
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage('./app/public/mainLogo.png');
-      this._seoService.setTitle('About Us');
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle('About Us');
+      // this._seoService.setOgDesc(metaDesc);
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage('./app/public/mainLogo.png');
+      // this._seoService.setTitle('About Us');
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('INDEX, FOLLOW');
     } //metaTags
 
 
@@ -96,14 +110,17 @@ export class AboutUsPage {
             console.log("Error getting About Us data: " + err);
           }
         );
-    }
+    } //loadData
+
+
 
     setupAboutUsData(data:AboutUsModel) {
+      console.log(data);
       if ( data !== undefined && data !== null ) {
         this.auBlocks = data.blocks;
         this.auHeaderTitle = data.headerTitle;
         this.titleData = data.titleData;
         this.auContent = data.content;
       }
-    }
+    } //setupAboutUsData
 }
