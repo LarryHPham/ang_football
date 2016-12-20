@@ -114,7 +114,6 @@ export class AboutUsPage {
 
 
     setupAboutUsData(data:AboutUsModel) {
-      console.log(data);
       if ( data !== undefined && data !== null ) {
         this.auBlocks = data.blocks;
         this.auHeaderTitle = data.headerTitle;

@@ -37,7 +37,6 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
   bootstrap: [ AppDomain ],
   imports: [
     // MaterialModule.forRoot() should be included first
-    UniversalModule, // BrowserModule, HttpModule, and JsonpModule are included
 
     FormsModule,
     RouterModule.forRoot([], { useHash: false, preloadingStrategy: IdlePreload }),
@@ -45,6 +44,7 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 
     IdlePreloadModule.forRoot(),
     AppModule,
+    UniversalModule, // BrowserModule, HttpModule, and JsonpModule are included
   ],
   providers: [
     { provide: 'isBrowser', useValue: isBrowser },

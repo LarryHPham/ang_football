@@ -41,16 +41,10 @@ export class AboutUsService {
   getData(partnerID: string, scope: string): any {
     scope = scope.toLowerCase() == this.collegeDivisionFullAbbrv.toLowerCase() ? this.collegeDivisionAbbrv.toLowerCase() : scope.toLowerCase();
     let url = GlobalSettings.getApiUrl() + "/aboutUs/" + scope.toLowerCase();
-    console.log(url);
     return this.model.get(url)
       .map( data => {
         return this.formatData(data.data, partnerID, scope)
       })
-  }
-
-  formatDate(date) {
-    var newDate = GlobalFunctions.sntGlobalDateFormatting(date,"defaultDate");
-    return newDate;
   }
 
   private formatData(data: AboutUsInterface, partnerID: string, scope?: string): AboutUsModel {
@@ -68,7 +62,7 @@ export class AboutUsService {
     let championshipTeamName = data[0].championshipTeamName;
     let imageUrl = data[0].imageUrl;
     let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(scope, championshipTeamName, championshipTeamId);
-    let lastUpdated = this.formatDate(data[0].unixTimestamp);
+    let lastUpdated = GlobalFunctions.sntGlobalDateFormatting(data[0].unixTimestamp,"defaultDate");
 
     // Set auBlocks vars based on divisionScope
     let activeDivision;
@@ -90,7 +84,7 @@ export class AboutUsService {
       headerTitle: "What is " + pageName + "?",
       titleData: {
           imageURL : GlobalSettings.getSiteLogoUrl(),
-          text1: 'Last Updated: '+ lastUpdated, //+ GlobalFunctions.formatUpdatedDate(data.lastUpdated), todo
+          text1: 'Last Updated: '+ lastUpdated,
           text2: 'United States',
           text3: "Want to learn more about " + pageName + "?",
           text4: '',
