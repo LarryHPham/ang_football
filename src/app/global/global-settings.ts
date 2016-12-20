@@ -8,7 +8,7 @@ export class GlobalSettings {
   // private static _env = window.location.hostname.split('.')[0];
     private static _env = 'dev';//TODO
     // private static _proto = window.location.protocol;
-    private static _proto = 'http';//TODO
+    private static _proto = 'http:';//TODO
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
     private static _partnerId:string;

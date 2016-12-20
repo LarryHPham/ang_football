@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
 
-declare var moment:any;
 declare var jQuery: any; //used for scroll event
+import * as moment from 'moment';
+// import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2010-2020.min'; // Adds ~503kb
 
 @Injectable()
 
@@ -10,7 +11,7 @@ export class GlobalFunctions {
 
     //return rel path position
     static routerRelPath(router) {
-        //create relative path for the redirect
+        //create relative path for the sredirect
         // let counter = 0;
         // let hasParent = true;
         // let route = router;

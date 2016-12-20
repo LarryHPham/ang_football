@@ -1,8 +1,9 @@
-import { AppComponent }  from '../app-component/app.component';
-import { CommonModule } from "@angular/common";
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { CommonModule } from "@angular/common";
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { AppComponent }  from '../app-component/app.component';
 
 //router
 import { routing } from '../router/app.routing';
@@ -12,6 +13,9 @@ import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from "../global/global-settings";
 import { ScrollerFunctions } from '../global/scroller-functions';
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
+import { ApiService } from '../global/shared/api.service';
+import { CacheService } from '../global/shared/cache.service';
+import { ModelService } from '../global/shared/model/model.service';
 
 //services
 // import { HamburgerDeliveryService } from '../services/hamburger-delivery.service';
@@ -105,7 +109,7 @@ const MODULES = [
   HttpModule,
   routing,
   FormsModule,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 ];
 
 const PAGEMODULES = [
@@ -207,6 +211,9 @@ const PROVIDERS = [
   SanitizeScript,
   GlobalSettings,
   GlobalFunctions,
+  ModelService,
+  ApiService,
+  CacheService,
   // FooterService,
   // ScrollerFunctions,
   // BoxScoresService,

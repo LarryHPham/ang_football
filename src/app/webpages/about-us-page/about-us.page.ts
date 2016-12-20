@@ -71,7 +71,6 @@ export class AboutUsPage {
     ) {
       this.activatedRoute.params.subscribe(
             (param :any)=> {
-              console.log(param);
               this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
               // this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
               this.loadData(this.storedPartnerParam, this.scope)

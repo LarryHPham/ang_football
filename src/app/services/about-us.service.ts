@@ -1,14 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import {Http} from '@angular/http';
-import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 
-import {TitleInputData} from "../fe-core/components/title/title.component";
-import {GlobalFunctions} from "../global/global-functions";
-import {GlobalSettings} from "../global/global-settings";
-import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
-import {AuBlockData, AboutUsModel} from "../webpages/about-us-page/about-us.page";
+import { TitleInputData } from "../fe-core/components/title/title.component";
+import { GlobalFunctions } from "../global/global-functions";
+import { GlobalSettings } from "../global/global-settings";
+import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
+import { AuBlockData, AboutUsModel } from "../webpages/about-us-page/about-us.page";
+import { ModelService } from '../global/shared/model/model.service';
 
 export interface AboutUsInterface {
     numTeams: number;
@@ -24,7 +22,6 @@ export interface AboutUsInterface {
     lastUpdated: string;
 }
 
-declare var moment;
 @Injectable()
 export class AboutUsService {
 
@@ -39,14 +36,13 @@ export class AboutUsService {
   public collegeDivisionChampionship: string = GlobalSettings.getCollegeDivisionChampionship();
   public collegeDivisionSegments: string = GlobalSettings.getCollegeDivisionSegments();
 
-  constructor(public http: Http){}
+  constructor(public model: ModelService){}
 
   getData(partnerID: string, scope: string): any {
     scope = scope.toLowerCase() == this.collegeDivisionFullAbbrv.toLowerCase() ? this.collegeDivisionAbbrv.toLowerCase() : scope.toLowerCase();
     let url = GlobalSettings.getApiUrl() + "/aboutUs/" + scope.toLowerCase();
     console.log(url);
-    return this.http.get(url)
-      .map( res => res.json() )
+    return this.model.get(url)
       .map( data => {
         return this.formatData(data.data, partnerID, scope)
       })
