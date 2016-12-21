@@ -63,7 +63,6 @@ export class AboutUsService {
     let imageUrl = data[0].imageUrl;
     let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(scope, championshipTeamName, championshipTeamId);
     let lastUpdated = GlobalFunctions.sntGlobalDateFormatting(data[0].unixTimestamp,"defaultDate");
-    console.log(lastUpdated);
     // Set auBlocks vars based on divisionScope
     let activeDivision;
     let activeDivisionSegments;
