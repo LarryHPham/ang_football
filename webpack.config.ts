@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var clone = require('js.clone');
 var webpackMerge = require('webpack-merge');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 export var commonPlugins = [
   new webpack.ContextReplacementPlugin(
@@ -17,6 +18,16 @@ export var commonPlugins = [
   new webpack.LoaderOptionsPlugin({
 
   }),
+
+  //provide third pary plugins
+  new webpack.ProvidePlugin({
+    moment: "moment-timezone",
+  }),
+
+  new CopyWebpackPlugin([
+    {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
+    {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')}
+  ])
 
 ];
 export var commonConfig = {
@@ -37,7 +48,7 @@ export var commonConfig = {
       { test: /\.ts$/,   use: ['awesome-typescript-loader', 'angular2-template-loader'] },
       { test: /\.html$/, use: 'raw-loader' },
       { test: /\.css$/,  use: 'raw-loader' },
-      { test: /\.json$/, use: 'json-loader' }
+      { test: /\.json$/, loader: 'json-loader' }
     ],
   },
   plugins: [
@@ -85,7 +96,7 @@ export var serverConfig = {
     ],
   },
   externals: includeClientPackages(
-    /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng/
+    /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020/
   ),
   node: {
     global: true,

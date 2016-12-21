@@ -3,9 +3,6 @@ import {Link} from './global-interface';
 
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
-// import * as moment from 'moment';
-// import * as moment from 'moment-timezone/builds/moment-timezone-with-data-2010-2020.min'; // Adds ~503kb
-
 @Injectable()
 
 export class GlobalFunctions {
@@ -524,6 +521,7 @@ export class GlobalFunctions {
           return value;
         }
       }
+      console.log(value);
       return value; // if original input is Unix to begin with
     }
 
