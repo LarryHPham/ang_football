@@ -74,7 +74,7 @@ import { RectangleImage } from "../fe-core/components/images/rectangle-image/rec
 // import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 // import { HeaderComponent } from "../ui-modules/header/header.component";
 // import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
-// import { FooterComponent } from "../ui-modules/footer/footer.component";
+// import { FooterComponent } from "..s/ui-modules/footer/footer.component";
 // import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
 // import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 // import { GameArticle } from "../fe-core/components/game-article/game-article.component";

@@ -4,7 +4,7 @@ import { AppComponent }  from '../app-component/app.component';
 
 //pages
 // import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
-// import { PickTeamPage } from "../webpages/home-page/home-page.page";
+import { PickTeamPage } from "../webpages/home-page/home-page.page";
 // import { LeaguePage } from "../webpages/league-page/league.page";
 // import { TeamPage } from "../webpages/team-page/team.page";
 // import { PlayerPage } from "../webpages/player-page/player.page";
@@ -40,10 +40,10 @@ const relativeChildRoutes = [
         path: ':scope/about-us',
         component: AboutUsPage,
     },
-    // {
-    //     path: ':scope/pick-a-team',
-    //     component: PickTeamPage,
-    // },
+    {
+        path: ':scope/pick-a-team',
+        component: PickTeamPage,
+    },
     // {
     //     path: ':scope/team/:teamName/:teamID',
     //     component: TeamPage,

@@ -30,7 +30,8 @@ export class GeoLocation{
 
 
     getPartnerData(partner_id) {
-      let env = window.location.hostname.split('.')[0];
+      // let env = window.location.hostname.split('.')[0];
+      let env = 'localhost';
       if(env == 'localhost'){
         var partnerID = partner_id.split('-');
 

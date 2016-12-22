@@ -7,7 +7,7 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
 //services
-import { SeoService } from "../../seo.service";
+// import { SeoService } from "../../seo.service";
 import {GeoLocation} from "../../global/global-service";
 import {LandingPageService} from '../../services/landing-page';
 
@@ -32,7 +32,7 @@ export interface newsCarouselData {
 
 @Component({
     selector: 'home-page',
-    templateUrl: './app/webpages/home-page/home-page.page.html',
+    templateUrl: './home-page.page.html',
 })
 
 export class PickTeamPage{
@@ -93,7 +93,7 @@ export class PickTeamPage{
       private _landingPageService: LandingPageService,
       private _geoLocation:GeoLocation,
       private activateRoute: ActivatedRoute,
-      private _seoService: SeoService
+      // private _seoService: SeoService
     ) {
       this._routeSubscription = this.activateRoute.params.subscribe(
         (param :any)=> {
@@ -131,18 +131,18 @@ export class PickTeamPage{
 
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
-      let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
-      let link = window.location.href;
-
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle('Pick A Team');
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage('./app/public/mainLogo.png');
-      this._seoService.setTitle('Pick A Team');
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('Index, Follow');
+      // let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
+      // let link = window.location.href;
+      //
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle('Pick A Team');
+      // this._seoService.setOgDesc(metaDesc);
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage('./app/public/mainLogo.png');
+      // this._seoService.setTitle('Pick A Team');
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('Index, Follow');
     } //metaTags
 
 

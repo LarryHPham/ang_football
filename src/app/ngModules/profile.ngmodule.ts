@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { routing } from '../router/app.routing';
 import { FormsModule } from '@angular/forms';
@@ -41,7 +41,7 @@ import { GlobalModule } from './global.ngmodule';
 // import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 // import { ListPage } from "../webpages/list-page/list.page";
 // import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
-// import { PickTeamPage } from "../webpages/home-page/home-page.page";
+import { PickTeamPage } from "../webpages/home-page/home-page.page";
 
 //modules
 // import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
@@ -84,158 +84,133 @@ import { GlobalModule } from './global.ngmodule';
 // import { RosterComponent } from "../fe-core/components/roster/roster.component";
 // import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-stats.component";
 
+const MODULES = [
+  // put modules here
+  GlobalModule,
+  // ArticlesModule,
+  // ProfileHeaderModule,
+  // VideoModule,
+  // StandingsModule,
+  // SchedulesModule,
+  // TransactionsModule,
+  // DraftHistoryModule,
+  // MVPModule,
+  // ComparisonModule,
+  // DYKModule,
+  // FAQModule,
+  // NewsModule,
+  // TwitterModule,
+  // DailyUpdateModule,
+  // TeamRosterModule,
+  // PlayerStatsModule,
+  // FantasyModule,
+  // SeasonStatsModule,
+];
+
+const PAGEMODULES = [
+  // put page modules here
+  // LeaguePage,
+  // TeamPage,
+  // PlayerPage,
+  // SchedulesPage,
+  // DraftHistoryPage,
+  // StandingsPage,
+  // TeamRosterPage,
+  // TransactionsPage,
+  // SeasonStatsPage,
+  // DraftHistoryPage,
+  // MVPListPage,
+  // PlayerStatsPage,
+  // ListPage,
+  // ListOfListsPage,
+  PickTeamPage,
+]
+
+const COREMODULES = [
+  // put core modules here
+
+]
+
+const COMPONENTS = [
+  // put shared components here
+  // StandingsComponent,
+  // SchedulesComponent,
+  // SchedulesCarousel,
+  // TransactionsComponent,
+  // TransactionsListItem,
+  // DraftHistoryComponent,
+  // DetailedListItem,
+  // MVPListComponent,
+  // ComparisonTile,
+  // ComparisonLegend,
+  // ComparisonBar,
+  // ArticleMainComponent,
+  // ArticleSubComponent,
+  // ProfileVideoStackComponent,
+  // BarChartComponent,
+  // PlayerStatsComponent,
+  // GlossaryComponent,
+  // RosterComponent,
+  // PlayerStatsComponent,
+  // SeasonStatsComponent,
+  // MVPListComponent
+];
+
+const PIPES = [
+  // put pipes here
+
+];
+
+const PROVIDERS = [
+  // put providers components here
+  // ProfileHeaderService,
+  // VideoService,
+  // StandingsService,
+  // TransactionsService,
+  // DraftHistoryService,
+  // ListPageService,
+  // ComparisonStatsService,
+  // DykService,
+  // FaqService,
+  // NewsService,
+  // TwitterService,
+  // RosterService,
+  // DailyUpdateService,
+  // FantasyService,
+  // SeasonStatsService,
+  // SeasonStatsPageService,
+  // PlayerStatsService,
+  // DynamicWidgetCall,
+  // LandingPageService
+]
+
 @NgModule({
-  imports: [
-    CommonModule,
-    routing,
-    FormsModule,
-    GlobalModule
-  ],
-
-  declarations: [
-    //pages
-    // LeaguePage,
-    // TeamPage,
-    // PlayerPage,
-    // SchedulesPage,
-    // DraftHistoryPage,
-    // StandingsPage,
-    // TeamRosterPage,
-    // TransactionsPage,
-    // SeasonStatsPage,
-    // DraftHistoryPage,
-    // MVPListPage,
-    // PlayerStatsPage,
-    // ListPage,
-    // ListOfListsPage,
-    // PickTeamPage,
-
-    //modules
-    // ArticlesModule,
-    // ProfileHeaderModule,
-    // VideoModule,
-    // StandingsModule,
-    // SchedulesModule,
-    // TransactionsModule,
-    // DraftHistoryModule,
-    // MVPModule,
-    // ComparisonModule,
-    // DYKModule,
-    // FAQModule,
-    // NewsModule,
-    // TwitterModule,
-    // DailyUpdateModule,
-    // TeamRosterModule,
-    // PlayerStatsModule,
-    // FantasyModule,
-    // SeasonStatsModule,
-
-    //component
-    // StandingsComponent,
-    // SchedulesComponent,
-    // SchedulesCarousel,
-    // TransactionsComponent,
-    // TransactionsListItem,
-    // DraftHistoryComponent,
-    // DetailedListItem,
-    // MVPListComponent,
-    // ComparisonTile,
-    // ComparisonLegend,
-    // ComparisonBar,
-    // ArticleMainComponent,
-    // ArticleSubComponent,
-    // ProfileVideoStackComponent,
-    // BarChartComponent,
-    // GlossaryComponent,
-    // RosterComponent,
-    // PlayerStatsComponent,
-    // SeasonStatsComponent,
-    // MVPListComponent
-  ],
-
-  exports: [
-    //pages
-    // LeaguePage,
-    // TeamPage,
-    // PlayerPage,
-    // SchedulesPage,
-    // DraftHistoryPage,
-    // StandingsPage,
-    // TeamRosterPage,
-    // TransactionsPage,
-    // SeasonStatsPage,
-    // DraftHistoryPage,
-    // MVPListPage,
-    // PlayerStatsPage,
-    // ListPage,
-    // ListOfListsPage,
-    // PickTeamPage,
-
-    //modules
-    // ArticlesModule,
-    // ProfileHeaderModule,
-    // VideoModule,
-    // StandingsModule,
-    // SchedulesModule,
-    // TransactionsModule,
-    // DraftHistoryModule,
-    // MVPModule,
-    // ComparisonModule,
-    // DYKModule,
-    // FAQModule,
-    // NewsModule,
-    // TwitterModule,
-    // DailyUpdateModule,
-    // TeamRosterModule,
-    // PlayerStatsModule,
-    // FantasyModule,
-    // SeasonStatsModule,
-
-    //component
-    // StandingsComponent,
-    // SchedulesComponent,
-    // SchedulesCarousel,
-    // TransactionsComponent,
-    // TransactionsListItem,
-    // DraftHistoryComponent,
-    // DetailedListItem,
-    // MVPListComponent,
-    // ComparisonTile,
-    // ComparisonLegend,
-    // ComparisonBar,
-    // ArticleMainComponent,
-    // ArticleSubComponent,
-    // ProfileVideoStackComponent,
-    // BarChartComponent,
-    // PlayerStatsComponent,
-    // GlossaryComponent,
-    // RosterComponent,
-    // PlayerStatsComponent,
-    // SeasonStatsComponent,
-    // MVPListComponent
-  ],
-
-  providers: [
-    // ProfileHeaderService,
-    // VideoService,
-    // StandingsService,
-    // TransactionsService,
-    // DraftHistoryService,
-    // ListPageService,
-    // ComparisonStatsService,
-    // DykService,
-    // FaqService,
-    // NewsService,
-    // TwitterService,
-    // RosterService,
-    // DailyUpdateService,
-    // FantasyService,
-    // SeasonStatsService,
-    // SeasonStatsPageService,
-    // PlayerStatsService,
-    // DynamicWidgetCall,
-    // LandingPageService
-  ]
+    imports: [
+      ...MODULES
+    ],
+    declarations: [
+      ...PAGEMODULES,
+      ...COREMODULES,
+      ...COMPONENTS,
+      ...PIPES
+    ],
+    exports: [
+      ...PAGEMODULES,
+      ...COREMODULES,
+      ...COMPONENTS,
+      ...PIPES
+    ],
+    providers: [
+      ...PROVIDERS
+    ]
 })
-
-export class ProfileNgModule {}
+export class ProfileNgModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: GlobalModule,
+      providers: [
+        ...PROVIDERS
+      ]
+    };
+  }
+}
