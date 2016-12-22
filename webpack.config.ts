@@ -7,6 +7,7 @@ var lessLoader = require("less-loader");
 var styleLoader = require("style-loader");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var uglifyJS = require('webpack-uglify-js-plugin');
 
 export var commonPlugins = [
   new webpack.ContextReplacementPlugin(
@@ -19,9 +20,16 @@ export var commonPlugins = [
   ),
   // Loader options
   new webpack.LoaderOptionsPlugin({}),
+
+  //Compiled .less file
   new ExtractTextPlugin({
     filename: 'stylesheets/[name].css',
     allChunks: true
+  }),
+
+  //minify JS
+  new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
   }),
 
   //provide third pary plugins
@@ -53,7 +61,8 @@ export var commonConfig = {
       { test: /\.html$/, use: 'raw-loader' },
       { test: /\.json$/, use: 'json-loader' },
       { test: /\.css$/, loader: ExtractTextPlugin.extract({ loader: "css-loader" }) },
-      { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader!less-loader" }) }
+      { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader!less-loader" }) },
+      { test: /\.(png|jpg)$/, loader: 'file-loader' }
     ]
   }
 };

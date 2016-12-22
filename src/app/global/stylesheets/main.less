@@ -1,11 +1,55 @@
-
 /*--GLOBALS--*/
-@import "base.less";
-@import "bootstrap.less";
-// @import "components.less";
-// @import "modules.less";
+@import 'gFont.css';
 @import "tdl-font.css";
+@import "libraries.less";
+@import "bootstrap.less";
+@import "base.less";
+@import "components.less";
+@import "modules.less";
 /*--END GLOBALS--*/
 
+
+
 /*--PAGES--*/
-@import "../../webpages/disclaimer-page/disclaimer.page.less";
+@webpagePath: "../../webpages";
+@import "@{webpagePath}/about-us-page/about-us.page.less";
+@import "@{webpagePath}/article-pages/article-pages.page.less";
+@import "@{webpagePath}/deep-dive-page/deep-dive.page.less";
+@import "@{webpagePath}/directory-page/directory.page.less";
+@import "@{webpagePath}/disclaimer-page/disclaimer.page.less";
+@import "@{webpagePath}/disclaimer-page/disclaimer.page.less";
+@import "@{webpagePath}/draft-history-page/draft-history.page.less";
+@import "@{webpagePath}/error-page/error-page.page.less";
+@import "@{webpagePath}/home-page/home-page.page.less";
+@import "@{webpagePath}/league-page/league.page.less";
+@import "@{webpagePath}/list-page/list.page.less";
+@import "@{webpagePath}/mvp-list-page/mvp-list.page.less";
+@import "@{webpagePath}/partner-home-page/partner-home.page.less";
+@import "@{webpagePath}/player-page/player.page.less";
+@import "@{webpagePath}/player-stats-page/player-stats.page.less";
+@import "@{webpagePath}/standings-page/standings.page.less";
+@import "@{webpagePath}/team-page/team.page.less";
+@import "@{webpagePath}/transactions-page/transactions.page.less";
+/*--END PAGES--*/
+
+
+
+/*--MODULES---*/
+@modulePath: "../../fe-core/modules";
+@import "@{modulePath}/article-stack/article-stack.module.less";
+@import "@{modulePath}/article-stack-style-1/article-stack.module.less";
+@import "@{modulePath}/article-stack-style-2/article-stack.module.less";
+@import "@{modulePath}/articles/articles.module.less";
+@import "@{modulePath}/box-scores/box-scores.module.less";
+@import "@{modulePath}/carousel-dive/carousel-dive.module.less";
+@import "@{modulePath}/comment/comment.module.less";
+@import "@{modulePath}/comparison/comparison.module.less";
+@import "@{modulePath}/daily-update/daily-update.module.less";
+@import "@{modulePath}/deep-dive-recommendation/deep-dive-recommendation.module.less";
+@import "@{modulePath}/directory/directory.module.less";
+@import "@{modulePath}/draft-history/draft-history.module.less";
+@import "@{modulePath}/dyk/dyk.module.less";
+@import "@{modulePath}/fantasy/fantasy.module.less";
+@import "@{modulePath}/faq/faq.module.less";
+@import "@{modulePath}/list-of-lists/list-of-lists.module.less";
+/*--END MODULES--*/
