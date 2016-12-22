@@ -9,7 +9,7 @@ declare var jQuery: any;
 
 @Component({
     selector: 'header-component',
-    templateUrl: './app/ui-modules/header/header.component.html',
+    templateUrl: './header.component.html',
     providers: [],
 })
 export class HeaderComponent {

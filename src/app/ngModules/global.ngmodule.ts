@@ -73,8 +73,8 @@ import { RectangleImage } from "../fe-core/components/images/rectangle-image/rec
 // import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 // import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 // import { HeaderComponent } from "../ui-modules/header/header.component";
-// import { FooterComponent } from "../ui-modules/footer/footer.component";
 // import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
+// import { FooterComponent } from "../ui-modules/footer/footer.component";
 // import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
 // import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 // import { GameArticle } from "../fe-core/components/game-article/game-article.component";
@@ -171,6 +171,7 @@ const COMPONENTS = [
   // ComplexInnerHtml,
   // PaginationFooter,
   // HeaderComponent,
+  // HamburgerMenuComponent,
   // FooterComponent,
   // DropdownDirectoryComponent,
   // Larousel,
@@ -202,9 +203,6 @@ const PIPES = [
   SanitizeStyle,
   SanitizeScript,
   StatHyphenValuePipe,
-  // HamburgerMenuComponent,
-  // RectangleImage,
-  // WidgetCarouselModule,
   PossessivePipe
 ];
 
