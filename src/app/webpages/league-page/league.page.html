@@ -27,6 +27,7 @@
             [filter2]="scheduleFilter2"
             [dropdownKey1]="selectedFilter1"
             [dropdownKey2]="selectedFilter2"
+            [storedPartnerParam]="storedPartnerParam"
             (tabSelected)="scheduleTab($event)"
             (selectedKeyFilter)="filterDropdown($event)">
           </schedules>
@@ -34,7 +35,12 @@
         </div> <!--loadBatch2-->
 
         <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
-          <standings-module [data]="standingsData" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope"></standings-module>
+          <standings-module
+            [data]="standingsData"
+            [storedPartnerParam]="storedPartnerParam"
+            (tabSelected)="standingsTabSelected($event)"
+            (filterSelected)="standingsFilterSelected($event)" [scope]="scope">
+          </standings-module>
           <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <transactions-module
             *ngIf="scope == 'nfl' && transactionsData"
@@ -43,10 +49,14 @@
             [transactionFilter1]="transactionFilter1"
             [dropdownKey1]="dropdownKey1"
             (tabSwitched)="transactionsTab($event)"
-            (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
+            (transactionKeyFilter)="transactionsFilterDropdown($event)">
+          </transactions-module>
           <draft-history-module
             *ngIf="scope == 'nfl' && profileData && pageParams"
-            [profileData]="profileData" [footerData]="pageParams"></draft-history-module>
+            [profileData]="profileData"
+            [storedPartnerParam]="storedPartnerParam"
+            [footerData]="pageParams">
+          </draft-history-module>
           <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace"></responsive-widget>
         </div> <!--loadBatch3-->
 
@@ -60,6 +70,7 @@
             [mvpData]="positionData"
             [query]="positionParams"
             [filter1]="filter1"
+            [storedPartnerParam]="storedPartnerParam"
             (tabSelectedListener)="positionDropdown($event)"
             (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
           <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
@@ -78,7 +89,14 @@
           <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
           <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
           <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" ></responsive-widget>
-          <list-of-lists  *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType" [scope]="scope"></list-of-lists>
+          <list-of-lists
+            *ngIf="listOfListsData"
+            [profileHeaderData]="profileHeaderData"
+            [listOfListsData]="listOfListsData"
+            [profileType]="profileType"
+            [scope]="scope"
+            [storedPartnerParam]="storedPartnerParam">
+          </list-of-lists>
         </div> <!--loadBatch5-->
 
         <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">

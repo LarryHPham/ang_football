@@ -20,7 +20,7 @@ export class HeadlineDataService {
             count = 10;
         }
         var fullUrl = GlobalSettings.getArticleUrl();
-        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&scope="+scope+"&articleType=pregame-report")
+        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&scope="+scope+"&articleType=postgame-report")
             .map(res => res.json())
             .map(data => data);
     }
@@ -30,7 +30,7 @@ export class HeadlineDataService {
             count = 10;
         }
         var fullUrl = GlobalSettings.getTrendingUrl();
-        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&scope="+scope+"&articleType=pregame-report")
+        return this.http.get(fullUrl + "articles?page=1&count=" + count + "&scope="+scope+"&articleType=postgame-report")
             .map(res => res.json())
             .map(data => data);
     }

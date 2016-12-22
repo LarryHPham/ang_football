@@ -60,6 +60,7 @@ export class TeamPage implements OnInit {
   public teamID: number;
   public pageParams:SportPageParameters;
   public dateParam:any;
+  public storedPartnerParam: string;
 
   public imageConfig: any;
 
@@ -148,30 +149,48 @@ export class TeamPage implements OnInit {
 
     this.paramsub = this.activateRoute.params.subscribe(
       (param :any)=> {
+        this.routeChangeResets();
+
         this.teamID = param['teamID'];
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
 
-        this.setupProfileData(this.partnerID, this.scope, this.teamID);
-      }
-    ) //this.paramsub
+        this.dateParam = {
+          scope: 'team',//current profile page
+          teamId: this.teamID, // teamId if it exists
+          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+        } //this.dateParam
 
-    this.dateParam = {
-      scope: 'team',//current profile page
-      teamId: this.teamID, // teamId if it exists
-      date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-    } //this.dateParam
-  }
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
+      }
+    ); //this.paramsub
+  } //constructor
+
+
 
   ngOnInit() {
     this.ptabName="Passing";
-  }
+  } //ngOnInit
+
+
+
+  // This function contains values that need to be manually reset when navigatiing from team page to team page
+  routeChangeResets() {
+    this.profileHeaderData = null;
+    this.boxScoresData = null
+    this.batchLoadIndex = 1;
+    window.scrollTo(0, 0);
+  } //routeChangeResets
+
+
 
   private setupProfileData(partnerID, scope, teamID?) {
     this._profileService.getTeamProfile(this.teamID).subscribe(
       data => {
         this.metaTags(data);
         this.pageParams = data.pageParams;
+        this.pageParams['partnerRoute'] = this.storedPartnerParam;
         this.pageParams['scope'] = this.scope;
         this.pageParams['teamName'] = GlobalFunctions.toLowerKebab(this.pageParams['teamName']);
         this.pageParams['teamID'] = this.teamID;
@@ -195,8 +214,8 @@ export class TeamPage implements OnInit {
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
           this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
-          this.rosterData = this._rosterService.loadAllTabsForModule(this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.pageParams.teamId, this.profileName, true);
+          this.rosterData = this._rosterService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, true);
 
           //--Batch 4--//
           this.activeTransactionsTab = "Transactions"; // default tab is Transactions
@@ -205,7 +224,7 @@ export class TeamPage implements OnInit {
           //--Batch 5--//
           this.setupComparisonData();
           this.getImages(this.imageData);
-          this.getTeamVideoBatch(7, 1, 1, 0, scope,this.pageParams.teamId);
+          this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
           this.getDykService();
 
           //--Batch 6--//
@@ -213,7 +232,6 @@ export class TeamPage implements OnInit {
           this.setupListOfListsModule();
           this.getNewsService();
           this.getTwitterService();
-
         }, 2000);
       }
     )
@@ -428,9 +446,7 @@ export class TeamPage implements OnInit {
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
-
-            this.transactionModuleFooterParams = ['/'+this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
-
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
@@ -439,10 +455,11 @@ export class TeamPage implements OnInit {
       );
 
       // pass transaction page route params to module filter, so set module footer route
-      this.transactionModuleFooterParams = {
-        scope: this.scope,
-        league: 'league'
-      }
+      this.transactionModuleFooterParams = [
+        this.storedPartnerParam,
+        this.scope,
+        'league'
+      ]
     } //private getTransactionsData
 
 
@@ -537,7 +554,8 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         id : this.pageParams.teamId
       }
-      this._newsService.getNewsService(this.scope,params, "team", "module")
+      let scope = GlobalSettings.getScope(this.scope);
+      this._newsService.getNewsService(scope, params, "team", "module")
         .subscribe(data => {
           this.newsDataArray = data.news;
         },

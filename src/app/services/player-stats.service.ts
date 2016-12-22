@@ -22,11 +22,14 @@ export class PlayerStatsService implements OnDestroy{
 
     constructor(public http: Http){}
 
-    private getLinkToPage(teamId: number, teamName: string): Array<any> {
-        return ["Player-stats-page", {
-            teamId: teamId,
-            teamName: GlobalFunctions.toLowerKebab(teamName)
-        }];
+    private getLinkToPage(partnerRoute:string, scope:string, teamId: number, teamName: string): Array<any> {
+        return [
+            partnerRoute,
+            scope,
+            "player-stats",
+            GlobalFunctions.toLowerKebab(teamName),
+            teamId
+        ];
     }
 
     private getModuleTitle(teamName: string): string {
@@ -37,10 +40,10 @@ export class PlayerStatsService implements OnDestroy{
         return teamName ? "Player Stats - " + teamName : "Player Stats";
     }
 
-    loadAllTabsForModule(teamId: number, teamName: string, isTeamProfilePage: boolean) {
+    loadAllTabsForModule(partnerRoute: string, scope:string, teamId: number, teamName: string, isTeamProfilePage: boolean) {
         return {
             moduleTitle: this.getModuleTitle(teamName),
-            pageRouterLink: this.getLinkToPage(teamId, teamName),
+            pageRouterLink: this.getLinkToPage(partnerRoute, scope, teamId, teamName),
             tabs: this.initializeAllTabs(teamName, isTeamProfilePage)
         };
     }

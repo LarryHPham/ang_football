@@ -32,6 +32,7 @@ export class MVPListPage implements OnInit {
     tabs: Array<positionMVPTabData>;
     profileHeaderData: TitleInputData;
     paginationParameters: PaginationParameters;
+    storedPartnerParam: string;
     listType: string;
     position: string;
     tab: string;
@@ -109,11 +110,16 @@ export class MVPListPage implements OnInit {
             season: season
         };
 
-    }
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+    } //constructor
+
+
 
     ngOnInit() {
         this.position = this.listType;
     }
+
+
 
     startUp() {
         if (this.scope == this.collegeDivisionAbbrv.toLowerCase()) {
@@ -255,7 +261,7 @@ export class MVPListPage implements OnInit {
 
         //actually redirect the page on tab change to update the URL for deep linking and to fix the pagination bug
         if (tabNameTo !== tabNameFrom) {
-            tabRoute = [this.scope, 'mvp-list', event.position, event.tab.tabDataKey, this.pageNum];
+            tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, event.tab.tabDataKey, this.pageNum];
             this.router.navigate(tabRoute);
         }
         this.tabs = this.checkToResetTabs(event);
@@ -265,14 +271,15 @@ export class MVPListPage implements OnInit {
             this.globalMVPPosition = event.position;
 
             if (matches != null) {
-                tabRoute = [this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
+                tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
                 this.router.navigate(tabRoute);
             }
         }
     } //tabSelected(tab: positionMVPTabData)
 
-    private positionDropdown(event) {
 
+
+    private positionDropdown(event) {
         var pageRoute;
         this.tabs = this.checkToResetTabs(event);
 
@@ -295,10 +302,12 @@ export class MVPListPage implements OnInit {
                 }
                 this.getStandardList(matches);
             }
-            pageRoute = [this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
+            pageRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
             this.router.navigate(pageRoute);
         }
-    }
+    } //positionDropdown
+
+
 
     private checkToResetTabs(event) {
         let localPosition = event.position;
@@ -309,6 +318,8 @@ export class MVPListPage implements OnInit {
             return this.tabs;
         } //private checkToResetTabs
     } //private checkToResetTabs
+
+
 
     private checkMatchingTabs(event) {
         let tabRoute;

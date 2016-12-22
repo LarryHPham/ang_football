@@ -49,6 +49,7 @@ export class LeaguePage{
     public partnerID: string;
     public scope: string;
     public paramsub: any;
+    public storedPartnerParam: string;
 
     private headlineData:HeadlineData;
     private pageParams:SportPageParameters = {};
@@ -148,6 +149,7 @@ export class LeaguePage{
       }
 
       this.setupProfileData(this.partnerID, this.scope);
+      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
     }
 
     private setupProfileData(partnerID, scope) {
@@ -164,7 +166,7 @@ export class LeaguePage{
           setTimeout(() => { // defer loading everything below the fold
 
             //---Batch 2 Load---//
-            this.getLeagueVideoBatch(7,1,1,0,this.scope);
+            this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
             this.getBoxScores(this.dateParam);
             this.eventStatus = 'pregame';
             this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
@@ -337,11 +339,11 @@ export class LeaguePage{
 
 
     private standingsTabSelected(tabData: Array<any>) {
-        //only show 5 rows in the module
-        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile);
+      //only show 5 rows in the module
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile);
     } //standingsTabSelected
     private standingsFilterSelected(tabData: Array<any>) {
-      this.pageParams.scope = this.scope;
+      this.scope = this.scope;
       this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
       }, 5 , this.dateParam.profile);
     } //standingsFilterSelected
@@ -364,21 +366,19 @@ export class LeaguePage{
       .subscribe(
           transactionsData => {
             //create footer call to action (CTA) link
-
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
               if(this.dropdownKey1 == null){
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
-            this.transactionModuleFooterParams = ['/'+this.scope, transactionsData.tabDataKey, 'league', 20, 1];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, 'league', 20, 1];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
           console.log('Error: transactionsData API: ', err);
           }
       );
-
       // pass transaction page route params to module filter, so set module footer route
     } //getTransactionsData
 
@@ -538,7 +538,8 @@ export class LeaguePage{
         pageNum : 1,
         id: ''
       }
-      this._newsService.getNewsService(this.scope,params, "league", "module")
+      let scope = GlobalSettings.getScope(this.scope);
+      this._newsService.getNewsService(scope, params, "league", "module")
         .subscribe(data => {
           this.newsDataArray = data.news;
         },

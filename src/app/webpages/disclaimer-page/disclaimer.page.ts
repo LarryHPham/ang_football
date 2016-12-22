@@ -1,33 +1,42 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Inject } from '@angular/core';
+import { Injector } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { TitleInputData } from "../../fe-core/components/title/title.component";
 import { GlobalSettings } from '../../global/global-settings';
 import { GlobalFunctions } from '../../global/global-functions';
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 @Component({
     selector: 'Disclaimer-page',
-    templateUrl: './disclaimer.page.html',
+    templateUrl: './app/webpages/disclaimer-page/disclaimer.page.html',
 })
 
 export class DisclaimerPage {
+    public scope: string;
+    public storedPartnerParam: string;
+
     public widgetPlace: string = "widgetForPage";
     public pageName: string;
     public pageLinkName: string;
+    public contactLink: Array<any>;
     public contactUsLinkName: string;
-    public titleData: any;
+    public titleData: TitleInputData;
 
     constructor(
-      // private _seoService: SeoService,
-      public activatedRoute: ActivatedRoute,
-      @Inject('req') req: any
+      private _title: Title,
+      private _seoService: SeoService,
+      public activatedRoute: ActivatedRoute
     ) {
-      //check to see if scope is correct and redirect
-      // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-      // GlobalSettings.getParentParams(_router, parentParams => this.loadData(parentParams.partnerID));
+      this.activatedRoute.params.subscribe(
+        (param :any)=> {
+          this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+        }
+      );
+      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+      this.loadData(this.storedPartnerParam);
       this.metaTags();
     }
 
@@ -37,17 +46,17 @@ export class DisclaimerPage {
 
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
-      // let metaDesc = 'Disclaimer page to disclose any information';
-      // let link = window.location.href;
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle('Disclaimer');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('Disclaimer');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+      let metaDesc = 'Disclaimer page to disclose any information';
+      let link = window.location.href;
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle('Disclaimer');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('Disclaimer');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('NOINDEX, FOLLOW');
     } //metaTags
 
 
@@ -55,7 +64,7 @@ export class DisclaimerPage {
     loadData(partnerID:string) {
       this.pageLinkName = GlobalSettings.getHomePage(partnerID).replace(/https?:\/\//, "");
 
-      this.pageName = partnerID ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
+      this.pageName = partnerID != '/' ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
           text1: 'Last Updated: Friday, Oct. 28 2016.',
@@ -65,7 +74,8 @@ export class DisclaimerPage {
           icon: 'fa fa-map-marker'
       };
 
-      // var subpath = this.activatedRoute.pathFromRoot;
-      // this.contactUsLinkName = this.pageLinkName + (subpath.charAt(0) == "/" ? "" : "/") + subpath;
+      var subpath = this.activatedRoute.pathFromRoot;
+      this.contactLink = [partnerID, this.scope, 'contact-us'];
+      this.contactUsLinkName = this.pageLinkName + '/' + this.scope + '/contact-us';
     }
 }

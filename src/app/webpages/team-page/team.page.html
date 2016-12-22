@@ -38,12 +38,14 @@
       </div> <!--loadBatch2-->
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
-        <schedules *ngIf="schedulesData"
+        <schedules
+          *ngIf="schedulesData"
           [footerParams]="scheduleParams"
           [profHeader]="profileHeaderData"
           [data]="schedulesData"
           [filter1]="scheduleFilter1"
           [dropdownKey1]="selectedFilter1"
+          [storedPartnerParam]="storedPartnerParam"
           (tabSelected)="scheduleTab($event)"
           (selectedKeyFilter)="filterDropdown($event)"></schedules>
         <standings-module
@@ -56,7 +58,9 @@
           *ngIf="standingsData"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'1024'"></responsive-widget>
-        <team-roster-module *ngIf="rosterData" [data]="rosterData"></team-roster-module>
+        <team-roster-module
+          *ngIf="rosterData"
+          [data]="rosterData"></team-roster-module>
         <player-stats-module
           *ngIf="playerStatsData"
           [data]="playerStatsData"
@@ -84,7 +88,8 @@
         <draft-history-module
           *ngIf="scope == 'nfl' && profileData"
           [footerData]="pageParams"
-          [profileData]="profileData"></draft-history-module>
+          [profileData]="profileData"
+          [storedPartnerParam]="storedPartnerParam"></draft-history-module>
         <responsive-widget
           *ngIf="profileData"
           [embedPlace]="widgetPlace"
@@ -127,7 +132,8 @@
           [listOfListsData]="listOfListsData"
           [profileType]="profileType"
           [teamId]="pageParams.teamId"
-          [scope]="scope"></list-of-lists>
+          [scope]="scope"
+          [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
         <news-module
           *ngIf="newsDataArray"

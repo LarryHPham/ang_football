@@ -1,5 +1,6 @@
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 //globals
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
@@ -7,7 +8,7 @@ import { GlobalSettings } from '../../global/global-settings';
 import { GlobalFunctions } from '../../global/global-functions';
 
 //services
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 import { AboutUsService } from '../../services/about-us.service';
 
 //interfaces
@@ -34,7 +35,7 @@ export interface AboutUsModel {
 
 @Component({
     selector: 'About-us-page',
-    templateUrl: './about-us.page.html',
+    templateUrl: './app/webpages/about-us-page/about-us.page.html',
 })
 
 export class AboutUsPage {
@@ -67,14 +68,15 @@ export class AboutUsPage {
     constructor(
       private activatedRoute: ActivatedRoute,
       private _service: AboutUsService,
-      // private _seoService: SeoService
+      private _seoService: SeoService
     ) {
       this.activatedRoute.params.subscribe(
-            (param :any)=> {
-              this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-              // this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
-              this.loadData(this.storedPartnerParam, this.scope)
-            }
+          (param :any)=> {
+            this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+
+            this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+            this.loadData(this.storedPartnerParam, this.scope)
+          }
       );
     } //constructor
 
@@ -89,15 +91,15 @@ export class AboutUsPage {
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle('About Us');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('About Us');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgTitle('About Us');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage('./app/public/mainLogo.png');
+      this._seoService.setTitle('About Us');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
     } //metaTags
 
 

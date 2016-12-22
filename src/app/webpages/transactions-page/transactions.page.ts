@@ -37,6 +37,7 @@ export class TransactionsPage{
   public pageNumParam: string;
   public transactionTypeParam: string;
   public paramsub: any;
+  public storedPartnerParam: string;
 
   profileHeaderData: TitleInputData;
   pageParams: any;
@@ -70,10 +71,12 @@ export class TransactionsPage{
         private _title: Title,
         private _seoService: SeoService
     ) {
+      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+
       this.paramsub = this.activateRoute.params.subscribe(
         (param :any)=> {
           let route = this.router.url.split('/');
-          if(param.partnerID){
+          if(this.storedPartnerParam != '/'){
             this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[3]);
           }else{
             this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[2]);

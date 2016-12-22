@@ -46,6 +46,5 @@ export class WidgetCarouselModule {
           this.widgetPadding = '0px';
           widget.classList.remove('fixedWidget');
         }
-
     }
 }
