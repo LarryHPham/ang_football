@@ -10,7 +10,7 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 
 @Component({
     selector: 'Disclaimer-page',
-    templateUrl: './disclaimer.page.html',
+    templateUrl: './disclaimer.page.html'
 })
 
 export class DisclaimerPage {

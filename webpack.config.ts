@@ -2,6 +2,10 @@ var webpack = require('webpack');
 var path = require('path');
 var clone = require('js.clone');
 var webpackMerge = require('webpack-merge');
+var cssLoader = require("css-loader");
+var lessLoader = require("less-loader");
+var styleLoader = require("style-loader");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 export var commonPlugins = [
   new webpack.ContextReplacementPlugin(
@@ -12,21 +16,20 @@ export var commonPlugins = [
       // your Angular Async Route paths relative to this root directory
     }
   ),
-
   // Loader options
-  new webpack.LoaderOptionsPlugin({
-
-  }),
-
+  new webpack.LoaderOptionsPlugin({}),
+  new ExtractTextPlugin({
+    filename: 'stylesheets/[name].css',
+    allChunks: true
+  })
 ];
 export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
   devtool: 'source-map',
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.ts', '.js', '.json', '.less'],
     modules: [ root('node_modules') ]
   },
-  context: __dirname,
   output: {
     publicPath: '',
     filename: '[name].bundle.js'
@@ -36,20 +39,16 @@ export var commonConfig = {
       // TypeScript
       { test: /\.ts$/,   use: ['awesome-typescript-loader', 'angular2-template-loader'] },
       { test: /\.html$/, use: 'raw-loader' },
-      { test: /\.css$/,  use: 'raw-loader' },
-      { test: /\.json$/, use: 'json-loader' }
-    ],
-  },
-  plugins: [
-    // Use commonPlugins.
-  ]
-
+      { test: /\.json$/, use: 'json-loader' },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract({ loader: "css-loader" }) },
+      { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader!less-loader" }) }
+    ]
+  }
 };
 
 // Client.
-export var clientPlugins = [
+export var clientPlugins = [];
 
-];
 export var clientConfig = {
   target: 'web',
   entry: './src/client',
@@ -73,7 +72,9 @@ export var serverPlugins = [
 ];
 export var serverConfig = {
   target: 'node',
-  entry: './src/server', // use the entry file of the node server if everything is ts rather than es5
+  entry: [
+    './src/server', // use the entry file of the node server if everything is ts rather than es5
+  ],
   output: {
     filename: 'index.js',
     path: root('dist/server'),
@@ -82,7 +83,7 @@ export var serverConfig = {
   module: {
     rules: [
       { test: /@angular(\\|\/)material/, use: "imports-loader?window=>global" }
-    ],
+    ]
   },
   externals: includeClientPackages(
     /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng/

@@ -7,7 +7,8 @@ import { GlobalSettings } from "../global/global-settings";
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.Emulated,
   selector: 'my-app',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styles: [require('../global/stylesheets/main.less').toString()]
 })
 export class AppComponent {
   public partnerID:string;
