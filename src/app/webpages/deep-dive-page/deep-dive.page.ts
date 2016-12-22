@@ -67,7 +67,7 @@ export class DeepDivePage{
               this.isLoading = false;
               this.carouselData = null;
               this.blockIndex = 1;
-              this.scope = params.scope;
+              this.scope = params['scope'] != null ? params['scope'].toLowerCase() : 'nfl';
               this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
@@ -193,19 +193,25 @@ export class DeepDivePage{
       }
     }
 
+
+
     changeScope(event) {
       event = event.toLowerCase();
       this.scopeNameDisplay(event);
+      let route = VerticalGlobalFunctions.getWhiteLabel();
+      this._route.navigate([route, event.toLowerCase()]);
+    } //changeScope
 
-      this._route.navigate(['/'+event.toLowerCase()]);
-    }
+
 
     private scrollCheck(event){
       let maxScroll = this.sideScrollData.length;
       if(event >= (maxScroll - this.ssMax)){
        this.getSideScroll();
       }
-    }
+    } //scrollCheck
+
+
 
     private getDeepDiveVideoBatch(){
         this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(

@@ -13,6 +13,7 @@ import { FooterService } from '../../services/footer.service';
 })
 export class FooterComponent implements OnInit {
     @Input() partnerID: string;
+    @Input() scopeParam: string;
     public pageName: string;
     public homePageLinkName: string;
     public linkName: string;
@@ -28,7 +29,6 @@ export class FooterComponent implements OnInit {
     public contactUs: string = "Contact Us";
     public disc: string = "Disclaimer";
     public au: string = "About Us";
-    public scope: string;
 
     image:string = 'app/public/icon-t-d-l.svg';
     teamDirectoryListings: Array<Link>;

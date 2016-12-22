@@ -17,12 +17,13 @@ export class StandingsService {
 
   private getLinkToPage(pageParams, profile: string): Array<any> {
     var linkToPage = [];
+    let partnerParam = VerticalGlobalFunctions.getWhiteLabel();
     let pageName = 'standings';
     var pageValues = {};
 
     let routeScope = pageParams.scope != null ? pageParams.scope : 'nfl';
 
-    linkToPage.push('/' + routeScope, pageName, profile);
+    linkToPage.push(partnerParam, routeScope, pageName, profile);
 
     if(profile != 'league'){
       linkToPage.push(GlobalFunctions.toLowerKebab(pageParams.teamName), pageParams.teamId);
@@ -91,13 +92,14 @@ export class StandingsService {
       tabs.push(this.createTab(false, currentTeamId, pageParams.conference));
       tabs.push(this.createTab(false, currentTeamId));
     }
-
     return tabs;
   }
 
   getStandingsTabData(tabData: Array<any>, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number, page?:string) {
     var newParams: any;
     var season: any = null;
+    let scope = GlobalSettings.getScope(pageParams.scope);
+
     if (maxRows == null) {
       maxRows = 999999999999999;
     }
@@ -131,12 +133,12 @@ export class StandingsService {
     //http://dev-touchdownloyal-api.synapsys.us/standings/league/nfl/2015
     if ( standingsTab && (!standingsTab.sections || standingsTab.sections.length == 0) ) {
       let url = GlobalSettings.getApiUrl() + "/standings";
-      url += "/" + pageParams.scope + "/" + season;
+      url += "/" + scope + "/" + season;
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
       this.http.get(url)
         .map(res => res.json())
-        .map(data => this.createData(standingsTab, pageParams.scope, data.data.standings, data.data.seasons, maxRows, newParams, page))
+        .map(data => this.createData(standingsTab, scope, data.data.standings, data.data.seasons, maxRows, newParams, page))
         .subscribe(data => {
           standingsTab.isLoaded = true;
           standingsTab.hasError = false;
@@ -155,10 +157,10 @@ export class StandingsService {
     }
     else if (standingsTab && newParams != null) {
       let url = GlobalSettings.getApiUrl() + "/standings";
-      url += "/" + pageParams.scope + "/" + season;
+      url += "/" + scope + "/" + season;
       this.http.get(url)
         .map(res => res.json())
-        .map(data => this.createData(standingsTab, pageParams.scope, data.data.standings, data.data.seasons, maxRows, newParams, page))
+        .map(data => this.createData(standingsTab, scope, data.data.standings, data.data.seasons, maxRows, newParams, page))
         .subscribe(data => {
 
           standingsTab.sections = data;

@@ -77,7 +77,8 @@ export class SeasonStatsService {
   }
 
   private getLinkToPage(playerId: number, playerName: string): Array<any> {
-    return ['/'+this._scope ,"season-stats", GlobalFunctions.toLowerKebab(playerName), playerId];
+    let partnerRoute = GlobalSettings.storedPartnerId() ? '/'+GlobalSettings.storedPartnerId() : '';
+    return [partnerRoute+'/'+this._scope ,"season-stats", GlobalFunctions.toLowerKebab(playerName), playerId];
   }
 
   getPlayerStats(playerId: number, scope?: string){

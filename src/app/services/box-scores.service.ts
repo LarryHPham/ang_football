@@ -65,7 +65,7 @@ export class BoxScoresService {
     date += '/addAi'
   }
   //date needs to be the date coming in AS EST and come back as UTC
-  var callURL = this._apiUrl+'/boxScores/'+profile+'/'+teamId+'/'+ date;
+  var callURL = this._apiUrl+'/boxScores/'+GlobalSettings.getScope(profile)+'/'+teamId+'/'+ date;
   return this.http.get(callURL, {headers: headers})
     .map(res => res.json())
     .map(data => {
@@ -245,7 +245,7 @@ export class BoxScoresService {
       let aiContent = boxScores[dates].aiContent;
       //Converts data to what is neccessary for each of the formatting functions for each component of box scores
         if(boxScores[dates]){
-          let isNCAA = boxScores[dates].leagueAbbreviation.toLowerCase() == 'nfl' ? false:true;
+          let isNCAA = boxScores[dates].leagueAbbreviation && boxScores[dates].leagueAbbreviation.toLowerCase() == 'nfl' ? false:true;
           boxScoreObj[dates] = {};
           boxScoreObj[dates]['gameInfo']= {
             isNCAA:isNCAA,
@@ -624,7 +624,9 @@ export class BoxScoresService {
   formatArticle(data){
     let gameInfo = data.gameInfo;
     let aiContent = data.aiContent;
-    var gameArticle = <gameAiArticle> {}
+    let partnerRoute = GlobalSettings.storedPartnerId() ? GlobalSettings.storedPartnerId() : '';
+    var gameArticle = <gameAiArticle> {};
+
     for ( var report in aiContent.featuredReport ) {
       gameArticle['report'] = "Read The Report";
       gameArticle['title'] = aiContent.featuredReport[report].title ? aiContent.featuredReport[report].title : null;
@@ -654,7 +656,7 @@ export class BoxScoresService {
           eventType: aiContent.featuredReport[report] ? aiContent.featuredReport[report] : null
         }
       ],
-      gameArticle['urlRouteArray'] = aiContent.featuredReport[report].article_url ? aiContent.featuredReport[report].article_url : null
+      gameArticle['urlRouteArray'] = aiContent.featuredReport[report].article_url ? partnerRoute+aiContent.featuredReport[report].article_url : null
     }
 
     // for(var report in aiContent.featuredReport){

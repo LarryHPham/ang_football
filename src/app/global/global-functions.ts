@@ -521,7 +521,6 @@ export class GlobalFunctions {
           return value;
         }
       }
-      console.log(value);
       return value; // if original input is Unix to begin with
     }
 

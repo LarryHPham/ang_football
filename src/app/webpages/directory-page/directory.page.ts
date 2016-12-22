@@ -67,47 +67,51 @@ export class DirectoryPage {
         this.page = param['page'];
 
         this.currentPage = Number(this.page);
+
+        this.pageParams = {
+          scope: this.scope,
+          type: this.type,
+          startsWith: this.startsWith,
+          page: this.page
+        } //pageParams
+
+        if (this.scope == 'fbs') {
+          this._sportLeagueAbbrv = GlobalSettings.getCollegeDivisionFullAbbrv();
+        } else {
+          this._sportLeagueAbbrv = GlobalSettings.getSportLeagueAbbrv();
+        }
+
+        switch ( this.type ) {
+          case "players":
+          this.pageType = DirectoryType.players;
+          this.getNav(this._sportLeagueAbbrv, "player");
+          break;
+
+          case "teams":
+          this.pageType = DirectoryType.teams;
+          this.getNav(this._sportLeagueAbbrv, "team");
+          break;
+
+          default:
+          this.pageType = DirectoryType.none;
+          break;
+        }
+
+        if ( this.startsWith !== undefined && this.startsWith !== null ) {
+          this.newlyAdded = this.startsWith.toLowerCase() === "new";
+          this.startsWith = !this.newlyAdded && this.startsWith.length > 0 ? this.startsWith[0] : undefined;
+        }
+
+        if ( this.currentPage === 0 ) {
+          this.currentPage = 1; //page index starts at one
+        }
       }
     )
 
-    this.pageParams = {
-      scope: this.scope,
-      type: this.type,
-      startsWith: this.startsWith,
-      page: this.page
-    }
 
-    if (this.scope == 'fbs') {
-      this._sportLeagueAbbrv = GlobalSettings.getCollegeDivisionFullAbbrv();
-    } else {
-      this._sportLeagueAbbrv = GlobalSettings.getSportLeagueAbbrv();
-    }
 
-    switch ( this.type ) {
-      case "players":
-      this.pageType = DirectoryType.players;
-      this.getNav(this._sportLeagueAbbrv, "player");
-      break;
 
-      case "teams":
-      this.pageType = DirectoryType.teams;
-      this.getNav(this._sportLeagueAbbrv, "team");
-      break;
 
-      default:
-      this.pageType = DirectoryType.none;
-      break;
-    }
-
-    if ( this.startsWith !== undefined && this.startsWith !== null ) {
-      this.newlyAdded = this.startsWith.toLowerCase() === "new";
-      this.startsWith = !this.newlyAdded && this.startsWith.length > 0 ? this.startsWith[0] : undefined;
-    }
-
-    if ( this.currentPage === 0 ) {
-      this.currentPage = 1; //page index starts at one
-    }
-    
     this.metaTags();
     this.constructorControl = false;
   } //constructor
@@ -167,10 +171,10 @@ export class DirectoryPage {
       var navigationParams = {
         type: params['type'],
         startsWith:this.startsWith,
-        page: this.currentPage,
+        page: 'page'
       };
 
-      var navigationPage = this.data ? "Directory-page-starts-with" : "Error-page";
+      var navigationPage = '/' + this.scope + '/directory';
       let max = Math.ceil(info.totalItems/this.listingsLimit);
       this.paginationParameters = {
         index: params['page'] != null ? Number(params['page']) : null,
@@ -178,7 +182,7 @@ export class DirectoryPage {
         paginationType: 'page',
         navigationPage: navigationPage,
         navigationParams: navigationParams,
-        indexKey: 'page'
+        indexKey: 'pageNumber'
       };
   } //setPaginationParams
 

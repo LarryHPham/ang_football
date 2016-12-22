@@ -73,7 +73,7 @@
           </div>
           <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <dyk-module
-            *ngIf="dykData"
+            *ngIf="dykData && dykData.length > 0"
             [profileName]="profileHeaderData.profileName"
             [dykData]="dykData"></dyk-module>
           <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>

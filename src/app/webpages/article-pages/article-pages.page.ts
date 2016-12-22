@@ -30,6 +30,7 @@ declare var moment;
 export class ArticlePages implements OnInit {
     public params;
     public trendingData:any;
+    public isArticle:boolean = false;
     article:Article;
     articleData:any;
     subRec:any;
@@ -61,7 +62,6 @@ export class ArticlePages implements OnInit {
     content:string;
     eventID:string;
     date:string;
-    isArticle:string;
     pageIndex:string;
     partnerId:string;
     rawUrl:string;
@@ -99,18 +99,13 @@ export class ArticlePages implements OnInit {
                         this.eventType = param['eventType'];
                     }
                 );
-                if (this.eventType == "story") {
-                    this.isArticle = 'false';
-                    this.getDeepDiveArticle(this.eventID);
-                    this.getGeoLocation();
-                }
-                if (this.eventType == "video") {
-                    this.isArticle = 'false';
-                    this.getDeepDiveVideo(this.eventID);
+                if (this.eventType == "story" || this.eventType == "video") {
+                    this.isArticle = false;
+                    this.eventType == "story" ? this.getDeepDiveArticle(this.eventID) : this.getDeepDiveVideo(this.eventID);
                     this.getGeoLocation();
                 }
                 if (this.eventType != 'story' && this.eventType != 'video') {
-                    this.isArticle = 'true';
+                    this.isArticle = true;
                     this.scope = params.scope;
                     this.type = this.eventType;
                     this.eventType = GlobalFunctions.getApiArticleType(this.eventType);
@@ -124,8 +119,6 @@ export class ArticlePages implements OnInit {
             }
         );
     }
-
-
 
     getArticles() {
         this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport)
@@ -147,17 +140,11 @@ export class ArticlePages implements OnInit {
                             this.title = Article['data'][0]['article_data'].title;
                             this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date * 1000, "timeZone");
                             this.articleData = Article['data'][0]['article_data'];
-                            if (this.eventType != "articleType=player-fantasy" || Article['data'][0].team_id != null) {
-                                this.teamId = Article['data'][0].team_id;
-                            } else {
-                                this.teamId = Article['data'][0]['article_data']['metadata'].team_id;
-                            }
+                            this.teamId = (this.eventType != "articleType=player-fantasy" || Article['data'][0].team_id != null) ?
+                                Article['data'][0].team_id : Article['data'][0]['article_data']['metadata'].team_id;
                             this.metaTags(Article['data'][0]);
-                            if (Article['data'][0]['article_data']['images'] != null) {
-                                this.getCarouselImages(Article['data'][0]['article_data']['images']);
-                            } else {
-                                this.hasImages = false;
-                            }
+                            Article['data'][0]['article_data']['images'] != null ?
+                                this.getCarouselImages(Article['data'][0]['article_data']['images']) : this.hasImages = false;
                             this.imageLinks = this.getImageLinks(Article['data'][0]['article_data']);
                             if (this.hasEventId) {
                                 this.getRecommendedArticles();
@@ -189,6 +176,16 @@ export class ArticlePages implements OnInit {
             );
     }
 
+    static complexArraySetup(arrayData, type):any {
+        if (type == 'empty') {
+            return [{text: "empty"}]
+        } else if (type == 'basic') {
+            return [{text: arrayData}, {text: "<br><br>", class: "line-break"}]
+        } else if (type == 'route') {
+            return [arrayData.length == 3 ? {text: arrayData[2],} : '', {text: arrayData[0], route: arrayData[1]}]
+        }
+    }
+
     parseLinks(routeData, articleData) {
         var placeHolder = null;
         var routes;
@@ -199,21 +196,12 @@ export class ArticlePages implements OnInit {
         var self = this;
         if (routeData) {
             routeData.forEach(function (val) {
-                if (val.route_type == "tdl_team") {
-                    routes = {
-                        index: val.paragraph_index,
-                        name: val.display,
-                        route: VerticalGlobalFunctions.formatTeamRoute(self.scope, val.display, val.id),
-                        searchParameter: "<ng2-route>" + val.display + "<\s*/?ng2-route>",
-                    };
-                } else {
-                    routes = {
-                        index: val.paragraph_index,
-                        name: val.display,
-                        route: VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.display, val.id),
-                        searchParameter: "<ng2-route>" + val.display + "<\s*/?ng2-route>",
-                    };
-                }
+                routes = {
+                    index: val.paragraph_index,
+                    name: val.display,
+                    route: val.route_type == "tdl_team" ? VerticalGlobalFunctions.formatTeamRoute(self.scope, val.display, val.id) : VerticalGlobalFunctions.formatPlayerRoute(self.scope, val.team_name, val.display, val.id),
+                    searchParameter: "<ng2-route>" + val.display + "<\s*/?ng2-route>",
+                };
                 fullRoutes.push(routes);
             });
             this.routeList = fullRoutes;
@@ -223,15 +211,10 @@ export class ArticlePages implements OnInit {
         articleData.forEach(function (val, index) {
             if (typeof val != "object") {
                 if (val == "") {
-                    complexArray = [
-                        {text: "empty"}
-                    ];
+                    complexArray = ArticlePages.complexArraySetup(null, 'empty');
                     articleData[index] = newParagraph.concat(complexArray);
                 } else {
-                    complexArray = [
-                        {text: val},
-                        {text: "<br><br>", class: "line-break"}
-                    ];
+                    complexArray = ArticlePages.complexArraySetup(val, 'basic');
                     articleData[index] = complexArray;
                     for (var i = 0; i < self.routeList.length; i++) {
                         if (index == self.routeList[i].index) {
@@ -243,51 +226,28 @@ export class ArticlePages implements OnInit {
                             }
                             if (paragraph.split(stringSearch)[1]) {
                                 if (paragraph.split(stringSearch)[0] != "") {
-                                    complexArray = [
-                                        {text: paragraph.split(stringSearch)[0]},
-                                        {
-                                            text: self.routeList[i].name,
-                                            route: self.routeList[i].route
-                                        }
-                                    ];
+                                    complexArray = ArticlePages.complexArraySetup([self.routeList[i].name, self.routeList[i].route, paragraph.split(stringSearch)[0]], 'route');
                                 } else {
-                                    complexArray = [
-                                        {
-                                            text: self.routeList[i].name,
-                                            route: self.routeList[i].route
-                                        }
-                                    ];
+                                    complexArray = ArticlePages.complexArraySetup([self.routeList[i].name, self.routeList[i].route], 'route');
                                 }
                                 placeHolder = paragraph.split(stringSearch)[1];
                                 newParagraph = newParagraph.concat(complexArray);
                                 if (i == self.routeList.length - 1) {
-                                    complexArray = [
-                                        {text: placeHolder},
-                                        {text: "<br><br>", class: "line-break"}
-                                    ];
+                                    complexArray = ArticlePages.complexArraySetup(placeHolder, 'basic');
                                     articleData[index] = newParagraph.concat(complexArray);
                                     newParagraph = [];
                                     placeHolder = null;
                                 }
                             } else if (i == self.routeList.length - 1) {
-                                complexArray = [
-                                    {text: placeHolder},
-                                    {text: "<br><br>", class: "line-break"}
-                                ];
+                                complexArray = ArticlePages.complexArraySetup(placeHolder, 'basic');
                                 articleData[index] = newParagraph.concat(complexArray);
                                 newParagraph = [];
                                 placeHolder = null;
                             } else {
-                                complexArray = [
-                                    {text: placeHolder},
-                                    {text: "<br><br>", class: "line-break"}
-                                ];
+                                complexArray = ArticlePages.complexArraySetup(placeHolder, 'basic');
                             }
                             if (complexArray[0].text == null) {
-                                complexArray = [
-                                    {text: val},
-                                    {text: "<br><br>", class: "line-break"}
-                                ];
+                                complexArray = ArticlePages.complexArraySetup(val, 'basic');
                                 articleData[index] = newParagraph.concat(complexArray);
                                 newParagraph = [];
                                 placeHolder = null;
@@ -295,15 +255,9 @@ export class ArticlePages implements OnInit {
                         } else {
                             if (placeHolder != null) {
                                 if (placeHolder.charAt(0) != "," && placeHolder.charAt(0) != "." && placeHolder.charAt(0) != "'") {
-                                    complexArray = [
-                                        {text: placeHolder},
-                                        {text: "<br><br>", class: "line-break"}
-                                    ];
+                                    complexArray = ArticlePages.complexArraySetup(placeHolder, 'basic');
                                 } else {
-                                    complexArray = [
-                                        {specialText: placeHolder},
-                                        {text: "<br><br>", class: "line-break"}
-                                    ];
+                                    complexArray = ArticlePages.complexArraySetup(placeHolder, 'basic');
                                 }
                                 articleData[index] = newParagraph.concat(complexArray);
                                 newParagraph = [];
@@ -354,7 +308,6 @@ export class ArticlePages implements OnInit {
         var imageArray = [];
         var copyArray = [];
         var titleArray = [];
-
         if (this.articleType == "game-module" || this.articleType == "team-record") {
             images = data['home_images'].concat(data['away_images']);
         } else if (this.articleType == "playerRoster") {
@@ -368,20 +321,20 @@ export class ArticlePages implements OnInit {
             return 0.5 - Math.random()
         });
         try {
-            data.forEach(function (val) {
-                imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
-                copyArray.push(val['image_copyright']);
-                titleArray.push(val['image_title']);
+            data.forEach(function (val, index) {
+                if (!~val.image_url.indexOf('stock_images')) {
+                    imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
+                    copyArray.push(val['image_copyright']);
+                    titleArray.push(val['image_title']);
+                } else if (~val.image_url.indexOf('stock_images') && index == 0) {
+                    imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
+                    copyArray.push(val['image_copyright']);
+                    titleArray.push(val['image_title']);
+                }
             });
-            if (imageArray) {
-                this.imageData = imageArray;
-                this.copyright = copyArray;
-                this.imageTitle = titleArray;
-            } else {
-                this.imageData = null;
-                this.copyright = null;
-                this.imageTitle = null;
-            }
+            this.imageData = imageArray ? imageArray : null;
+            this.copyright = imageArray ? copyArray : null;
+            this.imageTitle = imageArray ? titleArray : null;
             this.hasImages = true;
         } catch (err) {
             this.hasImages = false;
@@ -487,38 +440,22 @@ export class ArticlePages implements OnInit {
     }
 
     private getTrendingArticles(currentArticleId) {
-        if (this.eventType != "story" && this.eventType != "video") {
-            this.trendingArticles = this._headlineDataService.getAiTrendingData(this.trendingLength, this.scope).subscribe(
-                data => {
-                    if (!this.hasRun) {
-                        this.hasRun = true;
-                        this.trendingData = this.transformTrending(data['data'], currentArticleId);
-                        if (data.article_count % 10 == 0 && this.trendingData) {
-                            this.trendingLength = this.trendingLength + 10;
-                        } else {
-                            this.isTrendingMax = true;
-                            this.showLoading = false;
-                        }
+        var getData = this.isArticle ? this._headlineDataService.getAiTrendingData(this.trendingLength, this.scope) :
+            this._deepDiveService.getDeepDiveBatchService(this.scope, this.trendingLength, 1, this.geoLocation);
+        this.trendingArticles = getData.subscribe(
+            data => {
+                if (!this.hasRun) {
+                    this.hasRun = true;
+                    this.trendingData = this.isArticle ? this.transformTrending(data['data'], currentArticleId) :
+                        this.transformTrending(data, currentArticleId);
+                    if ((data.article_count % 10 == 0 || data.length % 10 == 0) && this.trendingData) {
+                        this.trendingLength = this.trendingLength + 10;
+                    } else {
+                        this.isTrendingMax = true;
+                        this.showLoading = false;
                     }
                 }
-            )
-        }
-        else {
-            this.trendingArticles = this._deepDiveService.getDeepDiveBatchService(this.scope, this.trendingLength, 1, this.geoLocation).subscribe(
-                data => {
-                    if (!this.hasRun) {
-                        this.hasRun = true;
-                        this.trendingData = this.transformTrending(data, currentArticleId);
-                        if (data.article_count % 10 == 0 && this.trendingData) {
-                            this.trendingLength = this.trendingLength + 10;
-                        } else {
-                            this.isTrendingMax = true;
-                            this.showLoading = false;
-                        }
-                    }
-                }
-            )
-        }
+            });
     }
 
     transformTrending(data, currentArticleId) {
@@ -526,41 +463,27 @@ export class ArticlePages implements OnInit {
         var self = this;
         data.forEach(function (val) {
             var articleData;
-            if (self.eventType != "story" && self.eventType != "video") {
-                if (val.event_id != currentArticleId) {
-                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone");
-                    articleData = {
-                        author: val['author'],
-                        publisher: val['publisher'],
-                        title: val.title,
-                        date: val["date"],
-                        teaser: val.teaser,
-                        eventId: val.event_id,
-                        eventType: "pregame-report",
-                        image: GlobalSettings.getImageUrl(val.image_url),
-                        url: VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id),
-                        rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/pregame-report/" + val.event_id
-                    };
+            if (val.event_id != currentArticleId) {
+                val["date"] = self.isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
+                    GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
+                articleData = {
+                    author: val['author'],
+                    publisher: val['publisher'],
+                    title: val.title,
+                    date: val["date"],
+                    teaser: val.teaser,
+                    eventId: self.isArticle ? val.event_id : val.id,
+                    eventType: self.isArticle ? "postgame-report" : "story",
+                    image: self.isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
+                    url: self.isArticle ? VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id) :
+                        VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
+                    rawUrl: self.isArticle ?
+                    window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/postgame-report/" + val.event_id :
+                    window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
+                };
+                if (articleData != null) {
+                    articles.push(articleData);
                 }
-            } else {
-                if (val.id != currentArticleId) {
-                    val["date"] = GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
-                    articleData = {
-                        author: val['author'],
-                        publisher: val['publisher'],
-                        title: val.title,
-                        date: val["date"],
-                        teaser: val.teaser,
-                        eventId: val.id,
-                        eventType: "story",
-                        image: GlobalSettings.getImageUrl(val.imagePath),
-                        url: VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
-                        rawUrl: window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
-                    };
-                }
-            }
-            if (articleData != null) {
-                articles.push(articleData);
             }
         });
         return articles;
@@ -631,6 +554,7 @@ export class ArticlePages implements OnInit {
 
                 this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
                 this.getRecommendedArticles();
+                this.getTrendingArticles(this.eventID);
             }
         )
     }
@@ -648,126 +572,70 @@ export class ArticlePages implements OnInit {
     }
 
     private metaTags(data) {
-      //create meta description that is below 160 characters otherwise will be truncated
-      if (this.isArticle == 'true') {
-          let teams = [];
-          let players = [];
-          let searchString;
-          let searchArray = [];
-          let headerData = data['article_data']['metadata'];
-          let metaDesc = data['article_data'].meta_headline;
-          let link = window.location.href;
-          if (data['keywords'] && data['keywords'].constructor === Array) {
-              data['keywords'].forEach(function (val) {
-                  searchArray.push(val);
-              });
-          }
-          if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
-              headerData['team_name'].forEach(function (val) {
-                  searchArray.push(val);
-                  teams.push(val);
-              });
-          }
-          if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
-              headerData['player_name'].forEach(function (val) {
-                  searchArray.push(val);
-                  players.push(val);
-              });
-          }
-          searchString = searchArray.join(',');
-          let image;
-          if (this.imageData != null) {
-              image = this.imageData[0];
-          } else {
-              image = data.image_url;
-          }
-          let title = data.title;
-          let relevancyStart = headerData['relevancy_start_date'];
-          let relevancyEnd = headerData['relevancy_end_date'];
-
-          this._seoService.setCanonicalLink();
-          this._seoService.setOgTitle(title);
-          this._seoService.setOgDesc(metaDesc);
-          this._seoService.setOgType('Website');
-          this._seoService.setOgUrl();
-          this._seoService.setOgImage(image);
-          this._seoService.setTitle(title);
-          this._seoService.setMetaDescription(metaDesc);
-          this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-
-          //Elastic Search meta tags
-          this._seoService.setStartDate(relevancyStart);
-          this._seoService.setEndDate(relevancyEnd);
-          this._seoService.setIsArticle(this.isArticle);
-          this._seoService.setSearchType("article");
-          this._seoService.setSource(data.source);
-          this._seoService.setArticleId(this.eventID);
-          this._seoService.setArticleTitle(title);
-          this._seoService.setKeyword(data['keywords']);
-          this._seoService.setPublishedDate(data['article_data'].publication_date);
-          this._seoService.setAuthor(data.author);
-          this._seoService.setPublisher(data.publisher);
-          this._seoService.setImageUrl(image);
-          this._seoService.setArticleTeaser(data.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''));
-          this._seoService.setArticleUrl(link);
-          this._seoService.setArticleType(data.article_type);
-          this._seoService.setSearchString(searchString);
-      } else {
-          let searchString;
-          let searchArray = [];
-          if (data.data['keyword'] && data.data['keyword'].constructor === Array) {
-              data['keyword'].forEach(function (val) {
-                  searchArray.push(val);
-              });
-              searchString = searchArray.join(',');
-          } else {
-              searchString = data.data['keyword'];
-          }
-          let metaDesc;
-          if (data.data.teaser != null) {
-              metaDesc = data.data.teaser;
-          } else {
-              metaDesc = data.data.description;
-          }
-          let link = window.location.href;
-          let image;
-          if (this.imageData != null) {
-              image = this.imageData[0];
-          } else {
-              image = data.data.thumbnail;
-          }
-          let isArticle;
-          isArticle = this.eventType == "story";
-          this._seoService.setCanonicalLink();
-          this._seoService.setOgTitle(data.data.title);
-          this._seoService.setOgDesc(metaDesc);
-          this._seoService.setOgType('Website');
-          this._seoService.setOgUrl();
-          this._seoService.setOgImage(image);
-          this._seoService.setTitle(data.data.title);
-          this._seoService.setMetaDescription(metaDesc);
-          this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-
-          //Elastic Search meta tags
-          this._seoService.setStartDate(data.data.publishedDate);
-          this._seoService.setEndDate(data.data.publishedDate);
-          this._seoService.setIsArticle(isArticle.toString());
-          this._seoService.setSearchType("article");
-          this._seoService.setSource("TCA");
-          this._seoService.setArticleId(this.eventID);
-          this._seoService.setArticleTitle(data.data.title);
-          this._seoService.setKeyword(data.data.keyword);
-          this._seoService.setPublishedDate(data.data.publishedDate);
-          this._seoService.setAuthor(data.data.author);
-          this._seoService.setPublisher(data.data.publisher);
-          this._seoService.setImageUrl(image);
-          this._seoService.setArticleTeaser(data.data.teaser);
-          this._seoService.setArticleUrl(link);
-          this._seoService.setArticleType(this.scope);
-          this._seoService.setSearchString(searchString);
-      }
-    } //metTags
-
+        //create meta description that is below 160 characters otherwise will be truncated
+        var metaData = this.isArticle ? data : data.data;
+        let image;
+        var keyword = this.isArticle ? "keywords" : "keyword";
+        var link = window.location.href;
+        var teams = [];
+        var players = [];
+        var searchString;
+        var searchArray = [];
+        if (this.isArticle) {
+            var headerData = data['article_data']['metadata'];
+            var metaDesc = data['article_data'].meta_headline;
+            if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
+                headerData['team_name'].forEach(function (val) {
+                    searchArray.push(val);
+                    teams.push(val);
+                });
+            }
+            if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
+                headerData['player_name'].forEach(function (val) {
+                    searchArray.push(val);
+                    players.push(val);
+                });
+            }
+        }
+        if (metaData[keyword] && metaData[keyword].constructor === Array) {
+            metaData[keyword].forEach(function (val) {
+                searchArray.push(val);
+            });
+            searchString = searchArray.join(',');
+        } else {
+            searchString = metaData[keyword];
+        }
+        if (this.imageData != null) {
+            image = this.imageData[0];
+        } else {
+            image = this.isArticle ? metaData.image_url : metaData.thumbnail;
+        }
+        this._seoService.setCanonicalLink();
+        this._seoService.setOgTitle(metaData.title);
+        this._seoService.setOgDesc(metaDesc);
+        this._seoService.setOgType('Website');
+        this._seoService.setOgUrl();
+        this._seoService.setOgImage(image);
+        this._seoService.setTitle(metaData.title);
+        this._seoService.setMetaDescription(metaDesc);
+        this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+        this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'] : metaData.publishedDate);
+        this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
+        this._seoService.setIsArticle(this.isArticle.toString());
+        this._seoService.setSearchType("article");
+        this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
+        this._seoService.setArticleId(this.eventID);
+        this._seoService.setArticleTitle(metaData.title);
+        this._seoService.setKeyword(this.isArticle ? metaData['keywords'] : metaData.keyword);
+        this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date : metaData.publishedDate);
+        this._seoService.setAuthor(metaData.author);
+        this._seoService.setPublisher(metaData.publisher);
+        this._seoService.setImageUrl(image);
+        this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
+        this._seoService.setArticleUrl(link);
+        this._seoService.setArticleType(this.isArticle ? metaData.article_type : this.scope);
+        this._seoService.setSearchString(searchString);
+    } //metaTags
 
     getGeoLocation() {
         var defaultState = 'ca';
@@ -783,7 +651,9 @@ export class ArticlePages implements OnInit {
     } //getGeoLocation
 
     ngOnDestroy() {
-        this.subRec.unsubscribe();
-        this.trendingArticles.unsubscribe();
+        if (!this.error) {
+            this.subRec.unsubscribe();
+            this.trendingArticles.unsubscribe();
+        }
     }
 }

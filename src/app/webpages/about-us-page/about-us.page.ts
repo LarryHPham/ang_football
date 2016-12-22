@@ -70,11 +70,12 @@ export class AboutUsPage {
       // private _seoService: SeoService
     ) {
       this.activatedRoute.params.subscribe(
-            (param :any)=> {
-              this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-              // this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
-              this.loadData(this.storedPartnerParam, this.scope)
-            }
+          (param :any)=> {
+            this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+
+            this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+            this.loadData(this.storedPartnerParam, this.scope)
+          }
       );
     } //constructor
 

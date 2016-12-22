@@ -209,7 +209,7 @@ export class ComparisonStatsService {
 
       //Routes
       data.playerOne['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(this.scope, data.playerOne.teamName, playerName1, data.playerOne.playerId);
-      data.playerTwo['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(this.scope, data.playerOne.teamName, playerName2, data.playerOne.playerId);
+      data.playerTwo['playerRoute'] = VerticalGlobalFunctions.formatPlayerRoute(this.scope, data.playerOne.teamName, playerName2, data.playerTwo.playerId);
       data.playerOne['teamRoute'] = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.playerOne.teamName, data.playerOne.teamId);
       data.playerTwo['teamRoute'] = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.playerTwo.teamName, data.playerTwo.teamId);
 
@@ -218,6 +218,7 @@ export class ComparisonStatsService {
 
       data.playerOne['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerOne.playerHeadshot);
       data.playerTwo['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerTwo.playerHeadshot);
+
 
       var team1Data = {
         teamId: data.playerOne.teamId,
@@ -249,10 +250,12 @@ export class ComparisonStatsService {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
       if(apiData.playerOne != null){
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot);
         existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
       }else{
         apiData.playerOne = {};
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
+        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot);
         existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
       }
       if ( index == 0 ) {

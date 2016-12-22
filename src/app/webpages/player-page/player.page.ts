@@ -51,6 +51,7 @@ export class PlayerPage{
   public currentUnixDate = new Date().getTime();
   private constructorControl:boolean = true;
   public partnerID: string;
+  public storedPartnerParam: string;
   public scope: any;
   private teamName: any;
   private fullName: string;
@@ -125,6 +126,8 @@ export class PlayerPage{
   ) {
     this.paramsub = this.activateRoute.params.subscribe(
       (param: any) => {
+        this.routeChangeResets();
+
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
         this.teamName = param['teamName'];
         this.fullName = param['fullName'];
@@ -132,10 +135,20 @@ export class PlayerPage{
 
         this.pageParams = { playerId: this.playerID }
 
+        this.storedPartnerParam = GlobalSettings.storedPartnerId();
         this.setupPlayerProfileData();
       }
     )
+
   } //constructor
+
+
+  // This function contains values that need to be manually reset when navigatiing from player page to player page
+  routeChangeResets() {
+    this.profileHeaderData = null;
+    this.batchLoadIndex = 1;
+    window.scrollTo(0, 0);
+  } //routeChangeResets
 
 
 
@@ -144,6 +157,8 @@ export class PlayerPage{
       data => {
         this.metaTags(data);
         this.pageParams = data.pageParams;
+        this.pageParams['partnerRoute'] = this.storedPartnerParam;
+        this.pageParams['scope'] = this.scope;
         this.profileName = data.headerData.playerFullName;
         this.teamName = data.headerData.teamFullName;
         this.teamID = data.headerData.teamId;
@@ -180,7 +195,6 @@ export class PlayerPage{
           this.setupListOfListsModule();
           this.getNewsService();
           this.getTwitterService();
-
         }, 2000);
       },
       err => {

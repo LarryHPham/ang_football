@@ -18,6 +18,26 @@ export class VerticalGlobalFunctions {
     return replacedText
   }
 
+
+
+  //Function to detmerine if relative route should include partnerID
+  static getWhiteLabel() {
+    let partner = GlobalSettings.storedPartnerId();
+    let route;
+    if(partner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+      route = '/' +partner;
+    }
+    else if (partner && GlobalSettings.getHomeInfo().isSubdomainPartner) {
+      route = '/';
+    }
+    else {
+      route = '/';
+    }
+    return route;
+  } //getWhiteLabel
+
+
+
   /**
    * - Pass in datapoints to required parameters and formats
    * them into a single route that is in lowerCase Kebab.
@@ -34,7 +54,13 @@ export class VerticalGlobalFunctions {
    * @returns the teamName => boston-red-sox,  teamId => ##, routeName => 'Team-page'
    */
   static formatTeamRoute(scope: string, teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
+    scope =
+      scope == GlobalSettings.getCollegeDivisionAbbrv().toLowerCase() ?
+      GlobalSettings.getCollegeDivisionFullAbbrv().toLowerCase() :
+      'nfl';
+
     var teamRoute: Array<any>;
+    let route = this.getWhiteLabel();
 
     // var relPath = GlobalSettings.getRouteFullParams().relPath;
     let domainHostName;
@@ -44,11 +70,10 @@ export class VerticalGlobalFunctions {
       if(typeof teamName != 'undefined' && teamName != null){
         teamName = this.RegExpSpecialCharacters(teamName);
         teamName = GlobalFunctions.toLowerKebab(teamName);
-        teamRoute = ['/'+scope, 'team', teamName, teamId];//NOTE: if Team-page is on the same level as the rest of the route-outlets
+        teamRoute = [route, scope, 'team', teamName, teamId];//NOTE: if Team-page is on the same level as the rest of the route-outlets
       } else{
         teamRoute = null;
       }
-
     return teamRoute ? teamRoute : ['Error-page'];
   }
 
@@ -70,7 +95,7 @@ export class VerticalGlobalFunctions {
    */
   static formatPlayerRoute(scope: string, teamName: string, playerFullName:string, playerId: string, ignoreRelPath?:boolean):Array<any> {
     var playerRoute: Array<any>;
-    var relPath = GlobalSettings.getRouteFullParams().relPath;
+    let route = this.getWhiteLabel();
     let domainHostName;
     let urlRouteArray;
     let domainParams = {}
@@ -79,11 +104,12 @@ export class VerticalGlobalFunctions {
       teamName = this.RegExpSpecialCharacters(teamName);
       teamName = GlobalFunctions.toLowerKebab(teamName);
       playerFullName = GlobalFunctions.toLowerKebab(playerFullName);
-      playerRoute = ['/'+scope,'player', teamName, playerFullName, playerId];//NOTE: if Player-page is on the same level as the rest of the route-outlets
+      playerRoute = [route, scope, 'player', teamName, playerFullName, playerId];//NOTE: if Player-page is on the same level as the rest of the route-outlets
     }else{
       playerRoute = null;
     }
 
+    // var relPath = GlobalSettings.getRouteFullParams().relPath;
     // if(!ignoreRelPath){
     //   domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
     //   if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
@@ -129,13 +155,17 @@ export class VerticalGlobalFunctions {
    */
   static formatArticleRoute(scope: string, eventType: string, eventID: string): Array<any> {
     var articleRoute: Array<any>;
+    let route = this.getWhiteLabel();
+
     if(typeof eventType != 'undefined' && eventType != null){
-      articleRoute = ['/'+scope, 'articles', eventType, eventID];
+      articleRoute = [route, scope, 'articles', eventType, eventID];
     } else{
-      articleRoute = ['/home'];
+      articleRoute = [route, 'home'];
     }
     return articleRoute;
-  }
+  } //formatArticleRoute
+
+
 
   static scopeRedirect(router, params?) {
     var domainHostName, domainParams, pageHostName, pageParams;
@@ -146,7 +176,6 @@ export class VerticalGlobalFunctions {
     pageParams = GlobalSettings.getRouteFullParams().pageParams;
 
     //create relative path for the redirect
-    var relPath = '/';
     if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf' || domainParams.scope === 'home'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
       // let routeArray = [(relPath+domainHostName), domainParams];
       // if(pageHostName && pageParams){
@@ -158,7 +187,7 @@ export class VerticalGlobalFunctions {
       // router.navigate(routeArray);
     }else{// else scope does not match nfl or ncaaf then redirect to homepage
       domainParams.scope = 'home';
-      router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
+      router.navigate('home');
     }
 
     return;//do nothing if scope is returning correctly
@@ -330,21 +359,20 @@ export class VerticalGlobalFunctions {
   }
 
 
-  /**
-   * TODO-JVW
-   * @param urlArr
-   * @returns {any}
-   */
+
   //path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
   static formatListRoute(urlArr: Array<any>, scope): Array<any> {
     for(var arg in urlArr) {
       if (arg == null) return ['Error-page'];
     }
     // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
-
-    let listRoute = ['/'+scope, 'list', urlArr[0], urlArr[1], urlArr[2], urlArr[3], urlArr[4], urlArr[5]];
+    let route = this.getWhiteLabel();
+    let listRoute = [route, scope, 'list', urlArr[0], urlArr[1], urlArr[2], urlArr[3], urlArr[4], urlArr[5]];
     return listRoute;
-  }
+  } //formatListRoute
+
+
+
   // static formatModuleListRoute(modUrlArr: Array<any>): Array<any> {
   //   for(var arg in modUrlArr) {
   //     if (arg == null) return ['Error-page'];

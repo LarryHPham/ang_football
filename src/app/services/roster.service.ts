@@ -12,6 +12,7 @@ import {Conference, Division} from '../global/global-interface';
 export class RosterService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _tabTypes = ['full', 'offense', 'defense', 'special'];
+  public storedPartnerParam: string;
 
   public fullRoster: { [type:string]:Array<TeamRosterData> };
 
@@ -43,11 +44,11 @@ export class RosterService {
       });
   }//getRosterService ends
 
-  loadAllTabsForModule(scope:string, teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
+  loadAllTabsForModule(partnerRoute: string, scope:string, teamId: number, teamName: string, conference: Conference, isTeamProfilePage: boolean, fullTeam): RosterModuleData<TeamRosterData> {
     return {
         moduleTitle: "Team Roster",
         moduleIdentifier: " - " + teamName,
-        pageRouterLink: this.getLinkToPage(scope, teamId, teamName),
+        pageRouterLink: this.getLinkToPage(partnerRoute, scope, teamId, teamName),
         tabs: this.initializeAllTabs(scope, teamId.toString(), conference, 5, isTeamProfilePage)
     };
   }
@@ -68,9 +69,9 @@ export class RosterService {
     return pageTitle;
   }
 
-  getLinkToPage(scope, teamId: number, teamName: string): Array<any> {
+  getLinkToPage(partnerRoute: string, scope, teamId: number, teamName: string): Array<any> {
     var pageName = "team-roster";
-    return [ '/'+scope, pageName, GlobalFunctions.toLowerKebab(teamName), teamId];
+    return [partnerRoute, scope, pageName, GlobalFunctions.toLowerKebab(teamName), teamId];
   }
 
 }

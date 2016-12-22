@@ -5,11 +5,21 @@ import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
+
+
+//libraries
+declare var moment;
+
+
+
 @Injectable()
 export class HamburgerDeliveryService {
   static createMenu(division?, partner?){ //TODO
     var params;
     var divisionUrl;
+    let route = VerticalGlobalFunctions.getWhiteLabel();
+    let currentYear = moment().year();
+
     if (division != null) {
       divisionUrl = division.toLowerCase();
     }
@@ -17,11 +27,13 @@ export class HamburgerDeliveryService {
       params = '/' + divisionUrl;
     }
     else {
-      params = '/' + divisionUrl +'/'+ partner;
+      params = '/' + partner + '/' + divisionUrl;
     }
-    var menuData = [{
+
+    var menuData = [
+      {
         menuTitle: "Home",
-        url: [params]
+        url: [route, 'home']
       },
       {
         menuTitle: division + " Standings",
@@ -29,7 +41,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Schedule",
-        url: [params ,'schedules','league','all','1']
+        url: [params ,'schedules','league', currentYear, 'all', '1'] //TODO - hard coded year
       },
       {
         menuTitle: division + " League",
@@ -43,18 +55,19 @@ export class HamburgerDeliveryService {
         menuTitle: division + " Player Directory",
         url: [params ,'directory','players','a','page','1']
       }
-      ];
+    ];
+
     var menuInfo = [{
         menuTitle: "About Us",
-        url: ['/about-us']
+        url: [params, 'about-us']
       },
       {
         menuTitle: "Contact Us",
-        url: ['/contact-us']
+        url: [params, 'contact-us']
       },
       {
         menuTitle: "Disclaimer",
-        url: ['/disclaimer']
+        url: [params, 'disclaimer']
     }];
 
     return {menuData: menuData, menuInfo: menuInfo};
