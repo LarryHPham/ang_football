@@ -57,17 +57,8 @@ function cacheControl(req, res, next) {
   next();
 }
 // Serve static files
-app.use('/assets', cacheControl, express.static(path.join(__dirname, 'assets'), {maxAge: 30}));
+app.use('/lib', cacheControl, express.static(path.join(__dirname, 'lib'), {maxAge: 30}));
 app.use(cacheControl, express.static(path.join(ROOT, 'dist/client'), {index: false}));
-
-//
-/////////////////////////
-// ** Example API
-// Notice API should be in aseparate process
-import { serverApi, createTodoApi } from './backend/api';
-// Our API for demos only
-app.get('/data.json', serverApi);
-app.use('/api', createTodoApi());
 
 function ngApp(req, res) {
   res.render('index', {
