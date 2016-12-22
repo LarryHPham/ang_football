@@ -2,7 +2,12 @@ var webpack = require('webpack');
 var path = require('path');
 var clone = require('js.clone');
 var webpackMerge = require('webpack-merge');
+var cssLoader = require("css-loader");
+var lessLoader = require("less-loader");
+var styleLoader = require("style-loader");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var uglifyJS = require('webpack-uglify-js-plugin');
 
 export var commonPlugins = [
   new webpack.ContextReplacementPlugin(
@@ -13,10 +18,18 @@ export var commonPlugins = [
       // your Angular Async Route paths relative to this root directory
     }
   ),
-
   // Loader options
-  new webpack.LoaderOptionsPlugin({
+  new webpack.LoaderOptionsPlugin({}),
 
+  //Compiled .less file
+  new ExtractTextPlugin({
+    filename: 'stylesheets/[name].css',
+    allChunks: true
+  }),
+
+  //minify JS
+  new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
   }),
 
   //provide third pary plugins
@@ -29,16 +42,14 @@ export var commonPlugins = [
     {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
     {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')}
   ])
-
 ];
 export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
   devtool: 'source-map',
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.ts', '.js', '.json', '.less'],
     modules: [ root('node_modules') ]
   },
-  context: __dirname,
   output: {
     publicPath: '',
     filename: '[name].bundle.js'
@@ -48,20 +59,17 @@ export var commonConfig = {
       // TypeScript
       { test: /\.ts$/,   use: ['awesome-typescript-loader', 'angular2-template-loader'] },
       { test: /\.html$/, use: 'raw-loader' },
-      { test: /\.css$/,  use: 'raw-loader' },
-      { test: /\.json$/, loader: 'json-loader' }
-    ],
-  },
-  plugins: [
-    // Use commonPlugins.
-  ]
-
+      { test: /\.json$/, use: 'json-loader' },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract({ loader: "css-loader" }) },
+      { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader!less-loader" }) },
+      { test: /\.(png|jpg)$/, loader: 'file-loader' }
+    ]
+  }
 };
 
 // Client.
-export var clientPlugins = [
+export var clientPlugins = [];
 
-];
 export var clientConfig = {
   target: 'web',
   entry: './src/client',
@@ -85,7 +93,9 @@ export var serverPlugins = [
 ];
 export var serverConfig = {
   target: 'node',
-  entry: './src/server', // use the entry file of the node server if everything is ts rather than es5
+  entry: [
+    './src/server', // use the entry file of the node server if everything is ts rather than es5
+  ],
   output: {
     filename: 'index.js',
     path: root('dist/server'),
@@ -94,7 +104,7 @@ export var serverConfig = {
   module: {
     rules: [
       { test: /@angular(\\|\/)material/, use: "imports-loader?window=>global" }
-    ],
+    ]
   },
   externals: includeClientPackages(
     /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020/
