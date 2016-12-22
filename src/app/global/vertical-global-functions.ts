@@ -176,7 +176,6 @@ export class VerticalGlobalFunctions {
     pageParams = GlobalSettings.getRouteFullParams().pageParams;
 
     //create relative path for the redirect
-    var relPath = GlobalFunctions.routerRelPath(router);
     if(domainParams.scope === 'nfl' || domainParams.scope === 'ncaaf' || domainParams.scope === 'home'){ //if scope matches then dont do anything and let the page load normally (NOTE: below could cause issues with re-navigating to same url and breaking contructor codes in component views)
       // let routeArray = [(relPath+domainHostName), domainParams];
       // if(pageHostName && pageParams){
@@ -188,7 +187,7 @@ export class VerticalGlobalFunctions {
       // router.navigate(routeArray);
     }else{// else scope does not match nfl or ncaaf then redirect to homepage
       domainParams.scope = 'home';
-      router.navigate([(relPath+domainHostName), domainParams, 'Home-page']);
+      router.navigate('home');
     }
 
     return;//do nothing if scope is returning correctly

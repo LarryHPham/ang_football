@@ -17,7 +17,8 @@ export class AppComponent {
   constructor(
     private _router: Router,
     private _activatedRoute:ActivatedRoute,
-    private _geoLocation: GeoLocation) {
+    // private _geoLocation: GeoLocation
+  ) {
       this._activatedRoute.firstChild.params.subscribe(
         (params:any) => {
           this.scopeParam = '/'+params.scope;

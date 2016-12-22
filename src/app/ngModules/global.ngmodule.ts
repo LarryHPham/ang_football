@@ -102,6 +102,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { Search } from "../ui-modules/search/search.component";
 // import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 // import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
+// import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/load-more-button.component";
 
 const MODULES = [
   // put modules here
@@ -188,6 +189,7 @@ const COMPONENTS = [
   // Search,
   // ArticleScheduleComponent,
   // ScoreBoard,
+  // LoadMoreButtonComponent
 ];
 
 const PIPES = [
