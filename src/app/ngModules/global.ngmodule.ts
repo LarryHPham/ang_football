@@ -61,8 +61,9 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { Tab } from "../fe-core/components/tabs/tab.component";
 // import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
 // import { Carousel } from "../fe-core/components/carousels/carousel.component";
-// import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
-// import { HoverImage } from "../fe-core/components/images/hover-image";
+import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
+import { HoverImage } from "../fe-core/components/images/hover-image";
+import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ErrorComponent } from "../fe-core/components/error/error.component";
 // import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 // import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
@@ -89,15 +90,14 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
 // import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
 // import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
-// import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 // import { Larousel } from '../fe-core/components/larousel/larousel';
 // import { NewsBox } from '../fe-core/components/news-box/news-box';
 // import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
-// import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
-// import { TitleComponent } from "../fe-core/components/title/title.component";
+import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
+import { TitleComponent } from "../fe-core/components/title/title.component";
 // import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 // import { Search } from "../ui-modules/search/search.component";
 // import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
@@ -140,8 +140,9 @@ const COREMODULES = [
 const COMPONENTS = [
   // put shared components here
   AppComponent,
-  // CircleImage,
-  // HoverImage,
+  CircleImage,
+  HoverImage,
+  RectangleImage,
   // ScrollableContent,
   // ErrorComponent,
   // LoadingComponent,
@@ -164,7 +165,6 @@ const COMPONENTS = [
   // TableCell,
   // NoDataBox,
   // CircleButton,
-  // RectangleImage,
   // ArticleBlockComponent,
   // ResponsiveWidget,
   // SliderCarousel,
@@ -182,8 +182,8 @@ const COMPONENTS = [
   // SideScroll,
   // ImagesMedia,
   // ListOfListsItem,
-  // BackTabComponent,
-  // TitleComponent,
+  BackTabComponent,
+  TitleComponent,
   // ContactUsComponent,
   // DirectoryPagination,
   // Search,
