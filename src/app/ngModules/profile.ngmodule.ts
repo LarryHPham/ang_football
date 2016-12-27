@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { routing } from '../router/app.routing';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 //ngModules
 import { GlobalModule } from './global.ngmodule';
@@ -87,6 +88,8 @@ import { PickTeamPage } from "../webpages/home-page/home-page.page";
 const MODULES = [
   // put modules here
   GlobalModule,
+  CommonModule,
+  RouterModule,
   // ArticlesModule,
   // ProfileHeaderModule,
   // VideoModule,
