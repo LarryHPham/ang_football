@@ -3,7 +3,6 @@
     <div class="col-xs-12">
       <div class="row">
         <div class="home-hero col-xs-12" [ngStyle]="{ 'background-image': 'url(' + imgHero1 + ')'}">
-          <!-- <img class="home-hero-img" src='{{}}' /> -->
           <div class="home-hero-info">
             <h1>{{homeHeading1}}</h1>
             <h4>{{homeSubHeading1}}</h4>
@@ -15,9 +14,7 @@
       </div>
       <h2 class="home-mlbhdr"><span class="home-main-h2" [innerHtml]="homeHeading2"></span></h2>
       <span class="home-mlbhdr-location" *ngIf="homeLocationHeading" [innerHtml]="homeLocationHeading"></span>
-      <!-- <div class="home-main col-xs-10"> -->
       <div class="home-main {{gridLMain}}">
-        <!--Extra span is needed to restrict width of top/bottom header border-->
         <!-- ngFor here for league -->
         <div class="home-league" *ngFor="let league of teams">
           <h3 [innerHtml]="league.displayName"></h3>

@@ -55,6 +55,9 @@ export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
   devtool: 'source-map',
   resolve: {
+    alias: {
+      highcharts: "../node_modules/highcharts/highstock.src.js"
+    },
     extensions: ['.ts', '.js', '.json', '.less'],
     modules: [ root('node_modules') ]
   },

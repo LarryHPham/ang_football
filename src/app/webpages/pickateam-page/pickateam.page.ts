@@ -9,7 +9,7 @@ import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 //services
 // import { SeoService } from "../../seo.service";
 import {GeoLocation} from "../../global/global-service";
-import {LandingPageService} from '../../services/landing-page';
+import {PickateamPageService} from '../../services/pickateam.service';
 
 //interfaces
 import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
@@ -20,7 +20,6 @@ export interface homePageData {
   location: string;
   divisionName: string;
   teamName: string;
-
   geoLocation:string;
 }
 
@@ -31,8 +30,8 @@ export interface newsCarouselData {
 }
 
 @Component({
-    selector: 'home-page',
-    templateUrl: './home-page.page.html',
+    selector: 'pickateam-page',
+    templateUrl: './pickateam.page.html',
 })
 
 export class PickTeamPage{
@@ -90,7 +89,7 @@ export class PickTeamPage{
     private _routeSubscription: any;
 
     constructor(
-      private _landingPageService: LandingPageService,
+      private _pickateamPageService: PickateamPageService,
       private _geoLocation:GeoLocation,
       private activateRoute: ActivatedRoute,
       // private _seoService: SeoService
@@ -200,7 +199,6 @@ export class PickTeamPage{
             this.geoLocationCity = res.city;
 
             this.setLocationHeaderString(this.geoLocationState);
-
             this.getData(scope, this.geoLocationState);
           },
           err => {
@@ -210,7 +208,7 @@ export class PickTeamPage{
     } //getGeoLocation
 
     getData(scope, geoLocation?){
-      this._landingPageService.getLandingPageService(scope, geoLocation)
+      this._pickateamPageService.getLandingPageService(scope, geoLocation)
         .subscribe(data => {
           this.teams = data.league;
         })

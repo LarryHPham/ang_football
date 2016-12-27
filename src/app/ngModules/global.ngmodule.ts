@@ -21,7 +21,7 @@ import { ModelService } from '../global/shared/model/model.service';
 // import { FooterService } from '../services/footer.service';
 // import { BoxScoresService } from "../services/box-scores.service";
 // import { SchedulesService } from "../services/schedules.service";
-// import { GeoLocation } from "../global/global-service";
+import { GeoLocation } from "../global/global-service";
 // import { ImagesService } from "../services/carousel.service";
 // import { ListOfListsService } from "../services/list-of-lists.service";
 // import { SeoService } from "../seo.service";
@@ -65,11 +65,11 @@ import { HoverImage } from "../fe-core/components/images/hover-image";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 // import { ErrorComponent } from "../fe-core/components/error/error.component";
 // import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
-// import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
-// import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
+import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
+import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 // import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
 // import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
-// import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
+import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 // import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 // import { HeaderComponent } from "../ui-modules/header/header.component";
 // import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
@@ -142,12 +142,12 @@ const COMPONENTS = [
   CircleImage,
   HoverImage,
   RectangleImage,
-  // ScrollableContent,
+  ScrollableContent,
   // ErrorComponent,
   // LoadingComponent,
   // SidekickWrapper,
-  // ModuleHeader,
-  // ModuleFooter,
+  ModuleHeader,
+  ModuleFooter,
   // VideoStackComponent,
   // CalendarCarousel,
   // GameInfo,
@@ -217,7 +217,7 @@ const PROVIDERS = [
   // ScrollerFunctions,
   // BoxScoresService,
   // SchedulesService,
-  // GeoLocation,
+  GeoLocation,
   VerticalGlobalFunctions,
   // HamburgerDeliveryService,
   // ImagesService,

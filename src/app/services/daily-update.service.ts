@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import { GlobalFunctions } from "../global/global-functions";
 import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
+import { ModelService } from '../global/shared/model/model.service';
 
 //interfaces
 import { DailyUpdateData, DailyUpdateChart, DataSeries, APIDailyUpdateData, APIGameData, PostGameArticleData } from "../fe-core/modules/daily-update/daily-update.module";
@@ -22,7 +23,7 @@ export class DailyUpdateService {
   private postGameArticleData: PostGameArticleData;
   public imageConfig: CircleImageData;
 
-  constructor(public http: Http) {}
+  constructor(public http: Http, public model: ModelService) {}
 
   getErrorData(): DailyUpdateData {
     return {
@@ -41,8 +42,7 @@ export class DailyUpdateService {
     // let url = GlobalSettings.getApiUrl() + '/team/dailyUpdate/' + teamId;
   //  let url = "http://dev-homerunloyal-api.synapsys.us/team/dailyUpdate/2800"; //place holder data for QA review
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/team/' + teamId;
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => this.formatTeamData(data.data, teamId));
   }
 

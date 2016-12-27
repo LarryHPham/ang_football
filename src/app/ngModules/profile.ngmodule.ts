@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { GlobalModule } from './global.ngmodule';
 
 //services
-// import { ProfileHeaderService } from '../services/profile-header.service';
+import { ProfileHeaderService } from '../services/profile-header.service';
 // import { VideoService } from "../services/video.service";
 // import { StandingsService } from "../services/standings.service";
 // import { TransactionsService } from "../services/transactions.service";
@@ -19,18 +19,18 @@ import { GlobalModule } from './global.ngmodule';
 // import { FaqService } from "../services/faq.service";
 // import { NewsService } from "../services/news.service";
 // import { TwitterService } from "../services/twitter.service";
-// import { DailyUpdateService } from "../services/daily-update.service";
+import { DailyUpdateService } from "../services/daily-update.service";
 // import { RosterService } from '../services/roster.service';
 // import { HeadlineDataService } from "../global/global-ai-headline-module-service";
 // import { FantasyService } from '../services/fantasy.service';
 // import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 // import { PlayerStatsService } from "../services/player-stats.service";
 // import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
-// import { LandingPageService } from '../services/landing-page';
+import { PickateamPageService } from '../services/pickateam.service';
 
 //pages
 // import { LeaguePage } from "../webpages/league-page/league.page";
-// import { TeamPage } from "../webpages/team-page/team.page";
+import { TeamPage } from "../webpages/team-page/team.page";
 // import { PlayerPage } from "../webpages/player-page/player.page";
 // import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 // import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
@@ -42,10 +42,10 @@ import { GlobalModule } from './global.ngmodule';
 // import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 // import { ListPage } from "../webpages/list-page/list.page";
 // import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
-import { PickTeamPage } from "../webpages/home-page/home-page.page";
+import { PickTeamPage } from "../webpages/pickateam-page/pickateam.page";
 
 //modules
-// import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
+import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-header.module";
 // import { VideoModule } from "../fe-core/modules/video/video.module";
 // import { StandingsModule } from "../fe-core/modules/standings/standings.module";
 // import { SchedulesModule } from "../fe-core/modules/schedules/schedules.module";
@@ -57,7 +57,7 @@ import { PickTeamPage } from "../webpages/home-page/home-page.page";
 // import { FAQModule } from "../fe-core/modules/faq/faq.module";
 // import { NewsModule } from "../fe-core/modules/news/news.module";
 // import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
-// import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
+import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
 // import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
 // import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
 // import { FantasyModule } from "../fe-core/modules/fantasy/fantasy.module";
@@ -79,7 +79,7 @@ import { PickTeamPage } from "../webpages/home-page/home-page.page";
 // import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
 // import { ComparisonBar } from "../fe-core/components/comparison-bar/comparison-bar.component";
 // import { ProfileVideoStackComponent } from "../ui-modules/profile-video-stack/profile-video-stack.component";
-// import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.component";
+import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.component";
 // import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
 // import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 // import { RosterComponent } from "../fe-core/components/roster/roster.component";
@@ -90,30 +90,12 @@ const MODULES = [
   GlobalModule,
   CommonModule,
   RouterModule,
-  // ArticlesModule,
-  // ProfileHeaderModule,
-  // VideoModule,
-  // StandingsModule,
-  // SchedulesModule,
-  // TransactionsModule,
-  // DraftHistoryModule,
-  // MVPModule,
-  // ComparisonModule,
-  // DYKModule,
-  // FAQModule,
-  // NewsModule,
-  // TwitterModule,
-  // DailyUpdateModule,
-  // TeamRosterModule,
-  // PlayerStatsModule,
-  // FantasyModule,
-  // SeasonStatsModule,
 ];
 
 const PAGEMODULES = [
   // put page modules here
   // LeaguePage,
-  // TeamPage,
+  TeamPage,
   // PlayerPage,
   // SchedulesPage,
   // DraftHistoryPage,
@@ -131,7 +113,24 @@ const PAGEMODULES = [
 
 const COREMODULES = [
   // put core modules here
-
+  // ArticlesModule,
+  ProfileHeaderModule,
+  // VideoModule,
+  // StandingsModule,
+  // SchedulesModule,
+  // TransactionsModule,
+  // DraftHistoryModule,
+  // MVPModule,
+  // ComparisonModule,
+  // DYKModule,
+  // FAQModule,
+  // NewsModule,
+  // TwitterModule,
+  DailyUpdateModule,
+  // TeamRosterModule,
+  // PlayerStatsModule,
+  // FantasyModule,
+  // SeasonStatsModule,
 ]
 
 const COMPONENTS = [
@@ -150,7 +149,7 @@ const COMPONENTS = [
   // ArticleMainComponent,
   // ArticleSubComponent,
   // ProfileVideoStackComponent,
-  // BarChartComponent,
+  BarChartComponent,
   // PlayerStatsComponent,
   // GlossaryComponent,
   // RosterComponent,
@@ -166,7 +165,7 @@ const PIPES = [
 
 const PROVIDERS = [
   // put providers components here
-  // ProfileHeaderService,
+  ProfileHeaderService,
   // VideoService,
   // StandingsService,
   // TransactionsService,
@@ -178,13 +177,13 @@ const PROVIDERS = [
   // NewsService,
   // TwitterService,
   // RosterService,
-  // DailyUpdateService,
+  DailyUpdateService,
   // FantasyService,
   // SeasonStatsService,
   // SeasonStatsPageService,
   // PlayerStatsService,
   // DynamicWidgetCall,
-  // LandingPageService
+  PickateamPageService
 ]
 
 @NgModule({
