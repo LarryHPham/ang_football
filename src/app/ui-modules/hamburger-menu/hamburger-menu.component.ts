@@ -9,7 +9,7 @@ export interface MenuData{
 
 @Component({
     selector: 'hamburger-menu-component',
-    templateUrl: './app/ui-modules/hamburger-menu/hamburger-menu.component.html',
+    templateUrl: './hamburger-menu.component.html',
 })
 
 export class HamburgerMenuComponent implements OnInit {

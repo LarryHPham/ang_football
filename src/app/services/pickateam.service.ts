@@ -4,17 +4,16 @@ import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
+import { ModelService } from '../global/shared/model/model.service';
 
 @Injectable()
-export class LandingPageService {
+export class PickateamPageService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
   public partnerID: string;
   public scope: string;
 
-  constructor(
-    public http: Http
-  ){
+  constructor( public http: Http, public model: ModelService ){
 
   }
 
@@ -34,12 +33,7 @@ export class LandingPageService {
     else {
       var newFullUrl = this._apiUrl+'/landingPage/'+urlScope; //TODO
     }
-    return this.http.get(newFullUrl, {
-      headers: headers
-    })
-    .map(
-      res => res.json()
-    )
+    return this.model.get(newFullUrl)
     .map(
       data => {
         return {

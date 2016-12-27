@@ -7,9 +7,9 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
 //services
-import { SeoService } from "../../seo.service";
+// import { SeoService } from "../../seo.service";
 import {GeoLocation} from "../../global/global-service";
-import {LandingPageService} from '../../services/landing-page';
+import {PickateamPageService} from '../../services/pickateam.service';
 
 //interfaces
 import {ImageData,CircleImageData} from '../../fe-core/components/images/image-data';
@@ -20,7 +20,6 @@ export interface homePageData {
   location: string;
   divisionName: string;
   teamName: string;
-
   geoLocation:string;
 }
 
@@ -31,8 +30,8 @@ export interface newsCarouselData {
 }
 
 @Component({
-    selector: 'home-page',
-    templateUrl: './app/webpages/home-page/home-page.page.html',
+    selector: 'pickateam-page',
+    templateUrl: './pickateam.page.html',
 })
 
 export class PickTeamPage{
@@ -90,10 +89,10 @@ export class PickTeamPage{
     private _routeSubscription: any;
 
     constructor(
-      private _landingPageService: LandingPageService,
+      private _pickateamPageService: PickateamPageService,
       private _geoLocation:GeoLocation,
       private activateRoute: ActivatedRoute,
-      private _seoService: SeoService
+      // private _seoService: SeoService
     ) {
       this._routeSubscription = this.activateRoute.params.subscribe(
         (param :any)=> {
@@ -131,18 +130,18 @@ export class PickTeamPage{
 
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
-      let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
-      let link = window.location.href;
-
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle('Pick A Team');
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage('./app/public/mainLogo.png');
-      this._seoService.setTitle('Pick A Team');
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('Index, Follow');
+      // let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
+      // let link = window.location.href;
+      //
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle('Pick A Team');
+      // this._seoService.setOgDesc(metaDesc);
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage('./app/public/mainLogo.png');
+      // this._seoService.setTitle('Pick A Team');
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('Index, Follow');
     } //metaTags
 
 
@@ -200,7 +199,6 @@ export class PickTeamPage{
             this.geoLocationCity = res.city;
 
             this.setLocationHeaderString(this.geoLocationState);
-
             this.getData(scope, this.geoLocationState);
           },
           err => {
@@ -210,7 +208,7 @@ export class PickTeamPage{
     } //getGeoLocation
 
     getData(scope, geoLocation?){
-      this._landingPageService.getLandingPageService(scope, geoLocation)
+      this._pickateamPageService.getLandingPageService(scope, geoLocation)
         .subscribe(data => {
           this.teams = data.league;
         })
