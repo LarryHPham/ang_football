@@ -1,6 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {GlobalFunctions} from './global-functions';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { GlobalFunctions } from './global-functions';
+import { isBrowser } from 'angular2-universal';
 
 @Injectable()
 
@@ -109,8 +110,10 @@ export class GlobalSettings {
     }
 
     static getImageUrl(relativePath):string {
+      if(isBrowser){
         var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: '/app/public/no-image.svg';
         return relPath;
+      }
     }
 
     static getBackgroundImageUrl(relativePath):string {
