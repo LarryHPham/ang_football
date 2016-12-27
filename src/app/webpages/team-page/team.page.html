@@ -1,10 +1,9 @@
 <!-- <sidekick-wrapper> -->
   <section class="page profile-container team-page" (window:scroll)="onScroll($event)">
-    <!-- <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component> -->
-     <!-- <error-component *ngIf="hasError"></error-component> -->
+     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
+      <error-component *ngIf="hasError"></error-component>
 
     <div *ngIf="profileHeaderData && pageParams">
-    <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
 
       <div class="loadBatch1">
         <profile-header [profileHeaderData]="profileHeaderData" [profileType]="'team'"></profile-header>
@@ -21,10 +20,10 @@
           *ngIf="dailyUpdateData"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget> -->
-        <articles-module
-          *ngIf="headlineData"
-          [headlineData]="headlineData"
-          [isLeague]="false"></articles-module>
+        <!--<articles-module-->
+          <!--*ngif="headlinedata"-->
+          <!--[headlinedata]="headlinedata"-->
+          <!--[isleague]="false"></articles-module>-->
         <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
         <!-- <box-scores
           *ngIf="dateParam"
@@ -121,10 +120,10 @@
       </div> <!--loadBatch5-->
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
-        <!-- <faq-module
+        <faq-module
           *ngIf="faqData"
           [profileName]="profileHeaderData.profileName"
-          [faqData]="faqData"></faq-module> -->
+          [faqData]="faqData"></faq-module>
         <!-- <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget> -->
         <!-- <list-of-lists
           *ngIf="listOfListsData"

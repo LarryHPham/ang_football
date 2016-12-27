@@ -16,7 +16,7 @@ import { ProfileHeaderService } from '../services/profile-header.service';
 // import { ListPageService } from '../services/list-page.service';
 // import { ComparisonStatsService } from '../services/comparison-stats.service';
 // import { DykService } from '../services/dyk.service';
-// import { FaqService } from "../services/faq.service";
+import { FaqService } from "../services/faq.service";
 // import { NewsService } from "../services/news.service";
 // import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
@@ -54,7 +54,7 @@ import { ProfileHeaderModule } from "../fe-core/modules/profile-header/profile-h
 // import { MVPModule } from "../fe-core/modules/mvp/mvp.module";
 // import { ComparisonModule } from "../fe-core/modules/comparison/comparison.module";
 // import { DYKModule } from "../fe-core/modules/dyk/dyk.module";
-// import { FAQModule } from "../fe-core/modules/faq/faq.module";
+import { FAQModule } from "../fe-core/modules/faq/faq.module";
 // import { NewsModule } from "../fe-core/modules/news/news.module";
 // import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
 import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
@@ -123,7 +123,7 @@ const COREMODULES = [
   // MVPModule,
   // ComparisonModule,
   // DYKModule,
-  // FAQModule,
+  FAQModule,
   // NewsModule,
   // TwitterModule,
   DailyUpdateModule,
@@ -173,7 +173,7 @@ const PROVIDERS = [
   // ListPageService,
   // ComparisonStatsService,
   // DykService,
-  // FaqService,
+  FaqService,
   // NewsService,
   // TwitterService,
   // RosterService,

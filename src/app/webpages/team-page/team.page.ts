@@ -19,7 +19,7 @@ import { DailyUpdateService } from "../../services/daily-update.service";
 // import { ImagesService } from "../../services/carousel.service";
 // import { VideoService } from "../../services/video.service";
 // import { DykService } from '../../services/dyk.service';
-// import { FaqService } from '../../services/faq.service';
+import { FaqService } from '../../services/faq.service';
 // import { ListOfListsService } from "../../services/list-of-lists.service";
 // import { NewsService } from "../../services/news.service";
 // import { TwitterService } from "../../services/twitter.service";
@@ -135,7 +135,7 @@ export class TeamPage implements OnInit {
     // private _imagesService: ImagesService,
     // private _videoBatchService: VideoService,
     // private _dykService: DykService,
-    // private _faqService: FaqService,
+    private _faqService: FaqService,
     // private _lolService: ListOfListsService,
     // private _newsService: NewsService,
     // private _twitterService: TwitterService,
@@ -228,7 +228,7 @@ export class TeamPage implements OnInit {
           // this.getDykService();
 
           //--Batch 6--//
-          // this.getFaqService();
+          this.getFaqService();
           // this.setupListOfListsModule();
           // this.getNewsService();
           // this.getTwitterService();
@@ -514,13 +514,13 @@ export class TeamPage implements OnInit {
 
 
     private getFaqService() {
-      // this._faqService.getFaqService(this.profileType, this.pageParams.teamId)
-      //   .subscribe(data => {
-      //     this.faqData = data;
-      //   },
-      //   err => {
-      //     console.log("Error getting faq data for team", err);
-      // });
+       this._faqService.getFaqService(this.profileType, this.pageParams.teamId)
+         .subscribe(data => {
+           this.faqData = data;
+         },
+         err => {
+           console.log("Error getting faq data for team", err);
+       });
     } //getFaqService
 
 

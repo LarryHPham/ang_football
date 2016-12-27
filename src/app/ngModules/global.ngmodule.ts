@@ -63,7 +63,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
-// import { ErrorComponent } from "../fe-core/components/error/error.component";
+import { ErrorComponent } from "../fe-core/components/error/error.component";
 // import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
@@ -143,7 +143,7 @@ const COMPONENTS = [
   HoverImage,
   RectangleImage,
   ScrollableContent,
-  // ErrorComponent,
+  ErrorComponent,
   LoadingComponent,
   // SidekickWrapper,
   ModuleHeader,
