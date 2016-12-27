@@ -71,8 +71,8 @@ import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.
 // import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
-// import { HeaderComponent } from "../ui-modules/header/header.component";
-// import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
+import { HeaderComponent } from "../ui-modules/header/header.component";
+import { HamburgerMenuComponent } from "../ui-modules/hamburger-menu/hamburger-menu.component";
 // import { FooterComponent } from "..s/ui-modules/footer/footer.component";
 // import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
 // import { GameInfo } from "../fe-core/components/game-info/game-info.component";
@@ -90,8 +90,8 @@ import { LoadingComponent } from "../fe-core/components/loading/loading.componen
 // import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
 // import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
-// import { Larousel } from '../fe-core/components/larousel/larousel';
-// import { NewsBox } from '../fe-core/components/news-box/news-box';
+import { Larousel } from '../fe-core/components/larousel/larousel';
+import { NewsBox } from '../fe-core/components/news-box/news-box';
 // import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
 // import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
 // import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
@@ -169,12 +169,12 @@ const COMPONENTS = [
   // SliderCarousel,
   // ComplexInnerHtml,
   // PaginationFooter,
-  // HeaderComponent,
-  // HamburgerMenuComponent,
+  HeaderComponent,
+  HamburgerMenuComponent,
   // FooterComponent,
   // DropdownDirectoryComponent,
-  // Larousel,
-  // NewsBox,
+  Larousel,
+  NewsBox,
   // LineChartComponent,
   // ArticleBlockComponent,
   // DeepDiveRecommendation,
@@ -214,7 +214,7 @@ const PROVIDERS = [
   ApiService,
   CacheService,
   // FooterService,
-  // ScrollerFunctions,
+  ScrollerFunctions,
   // BoxScoresService,
   // SchedulesService,
   GeoLocation,

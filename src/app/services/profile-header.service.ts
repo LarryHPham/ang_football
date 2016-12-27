@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Http } from '@angular/http';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 
@@ -23,7 +22,7 @@ export class ProfileHeaderService {
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   public scope: string;
 
-  constructor(public http: Http, private _router:Router,  public model: ModelService){
+  constructor(private _router:Router,  public model: ModelService){
     GlobalSettings.getParentParams(_router, parentParams =>
       this.scope = parentParams.scope
     );

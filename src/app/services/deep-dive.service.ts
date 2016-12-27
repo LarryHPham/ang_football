@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
+import { ModelService } from '../global/shared/model/model.service';
 
 declare var moment;
 
@@ -14,35 +14,25 @@ export class DeepDiveService {
   private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
 
   constructor(
-    public http: Http
+    public model: ModelService
   ){}
 
-  //Function to set custom headers
-  setToken(){
-      var headers = new Headers();
-      //headers.append(this.headerName, this.apiToken);
-      return headers;
-  }
 
   getDeepDiveArticleService(articleID){
   //Configure HTTP Headers
-  var headers = this.setToken();
   var callURL = this._apiUrl + '/article/' + articleID;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
+  return this.model.get(callURL)
     .map(data => {
       return data;
     })
   }
   getDeepDiveVideoService(articleID){
     //Configure HTTP Headers
-    var headers = this.setToken();
     var callURL = this._apiUrl + '/videoSingle/' + articleID;
-    return this.http.get(callURL, {headers: headers})
-        .map(res => res.json())
-        .map(data => {
-            return data;
-        })
+    return this.model.get(callURL)
+      .map(data => {
+          return data;
+      })
   }
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
@@ -51,8 +41,7 @@ export class DeepDiveService {
       startNum = startNum == null ? 1 : startNum;
       state = state === null || typeof state == 'undefined' ? 'CA' : state;
 
-      var headers = this.setToken();
-      // http://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
+      // model://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
       var callURL = this._apiUrl + '/articleBatch/';
 
       scope = scope == 'home' ? 'football' : scope;
@@ -63,8 +52,7 @@ export class DeepDiveService {
           callURL += scope + '/' + limit + '/' + startNum ;
       }
 
-      return this.http.get(callURL, {headers: headers})
-        .map(res => res.json())
+      return this.model.get(callURL)
         .map(data => {
           return data.data;
         })
@@ -73,7 +61,6 @@ export class DeepDiveService {
 
     getDeepDiveVideoBatchService(scope, limit, startNum, state?){
     //Configure HTTP Headers
-    var headers = this.setToken();
     if(startNum == null){
       startNum = 1;
     }
@@ -91,8 +78,7 @@ export class DeepDiveService {
     if(state != null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
       callURL += '/' + state;
     }
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get(callURL)
       .map(data => {
         return data;
       })
@@ -100,31 +86,26 @@ export class DeepDiveService {
 
     getDeepDiveAiBatchService(scope, key?, page?, count?, state?){
       //Configure HTTP Headers
-      var headers = this.setToken();
       scope = scope === null || scope == 'home' ? 'nfl' : scope;
       key = key === null || typeof key == 'undefined' ? 'postgame-report' : key;
       var callURL = this._tcxArticleUrl + 'articles?articleType=' + key + '&scope=' + scope;
       callURL += '&page=' + page + '&count=' + count + '&state=' + state + '&metaDataOnly=1';
-      return this.http.get(callURL, {headers: headers})
-        .map(res => res.json())
+      return this.model.get(callURL)
         .map(data => {
           return data;
         })
     }
 
     getAiArticleData(state){
-      var headers = this.setToken();
       //this is the sidkeick url
       var callURL = this._articleUrl + "sidekick-regional/"+ state +"/1/1";
-      return this.http.get(callURL, {headers: headers})
-        .map(res => res.json())
+      return this.model.get(callURL)
         .map(data => {
           return data;
         });
     }
 
     getRecArticleData(scope, state, batch, limit){
-      var headers = this.setToken();
       if(scope == null || scope == 'home'){
         scope = 'NFL';
       }
@@ -137,11 +118,10 @@ export class DeepDiveService {
       }
       //this is the sidkeick url
       var callURL = this._articleUrl + "sidekick-regional?scope=" + scope + "&region=" + state + "&index=" + batch + "&count=" + limit;
-      return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
-      .map(data => {
-        return data;
-      });
+      return this.model.get(callURL)
+        .map(data => {
+          return data;
+        });
     }
 
     getCarouselData(scope, data, limit, batch, state, callback:Function) {
@@ -224,7 +204,7 @@ export class DeepDiveService {
     }
 
     transformToArticleStack(articles){
-      var sampleImage = "https://images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";
+      var sampleImage = "models://images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";
       var articleArray = [];
       articles.forEach(function(val){
         let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
