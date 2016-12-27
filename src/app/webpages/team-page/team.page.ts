@@ -10,11 +10,11 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 import { ProfileHeaderService} from '../../services/profile-header.service';
 import { DailyUpdateService } from "../../services/daily-update.service";
 // import { HeadlineDataService } from "../../services/headline-module-service";
-// import { BoxScoresService } from "../../services/box-scores.service";
-// import { SchedulesService } from '../../services/schedules.service';
-// import { StandingsService } from "../../services/standings.service";
-// import { RosterService } from '../../services/roster.service';
-// import { TransactionsService } from "../../services/transactions.service";
+import { BoxScoresService } from "../../services/box-scores.service";
+import { SchedulesService } from '../../services/schedules.service';
+import { StandingsService } from "../../services/standings.service";
+import { RosterService } from '../../services/roster.service';
+import { TransactionsService } from "../../services/transactions.service";
 // import { ComparisonStatsService } from '../../services/comparison-stats.service';
 // import { ImagesService } from "../../services/carousel.service";
 // import { VideoService } from "../../services/video.service";
@@ -24,7 +24,7 @@ import { FaqService } from '../../services/faq.service';
 // import { NewsService } from "../../services/news.service";
 // import { TwitterService } from "../../services/twitter.service";
 // import { SeoService } from "../../seo.service";
-// import { PlayerStatsService } from "../../services/player-stats.service";
+import { PlayerStatsService } from "../../services/player-stats.service";
 
 //interfaces
 import { Division, Conference, SportPageParameters } from '../../global/global-interface';
@@ -126,11 +126,11 @@ export class TeamPage implements OnInit {
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
     // private _headlineDataService:HeadlineDataService,
-    // private _boxScores: BoxScoresService,
-    // private _schedulesService:SchedulesService,
-    // private _standingsService:StandingsService,
-    // private _rosterService: RosterService,
-    // private _transactionsService: TransactionsService,
+    private _boxScores: BoxScoresService,
+    private _schedulesService:SchedulesService,
+    private _standingsService:StandingsService,
+    private _rosterService: RosterService,
+    private _transactionsService: TransactionsService,
     // private _comparisonService: ComparisonStatsService,
     // private _imagesService: ImagesService,
     // private _videoBatchService: VideoService,
@@ -140,7 +140,7 @@ export class TeamPage implements OnInit {
     // private _newsService: NewsService,
     // private _twitterService: TwitterService,
     // private _seoService: SeoService,
-    // private _playerStatsService: PlayerStatsService
+    private _playerStatsService: PlayerStatsService
   ) {
     var currDate = new Date();
     var currentUnixDate = new Date().getTime();
@@ -207,19 +207,19 @@ export class TeamPage implements OnInit {
 
         setTimeout(() => { // defer loading everything below the fold
           //---Batch 2---//
-          // this.getHeadlines();
-          // this.getBoxScores(this.dateParam);
+          this.getHeadlines();
+          this.getBoxScores(this.dateParam);
 
           //---Batch 3---//
-          // this.eventStatus = 'pregame';
-          // this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-          // this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
-          // this.rosterData = this._rosterService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          // this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, true);
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
+          this.rosterData = this._rosterService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, true);
 
           //--Batch 4--//
-          // this.activeTransactionsTab = "Transactions"; // default tab is Transactions
-          // this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
+          this.activeTransactionsTab = "Transactions"; // default tab is Transactions
+          this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
 
           //--Batch 5--//
           // this.setupComparisonData();
@@ -348,13 +348,13 @@ export class TeamPage implements OnInit {
 
 
   private getBoxScores(dateParams?) {
-    // if ( dateParams != null ) {
-    //   this.dateParam = dateParams;
-    // }
-    // this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-    //   this.boxScoresData = boxScoresData;
-    //   this.currentBoxScores = currentBoxScores;
-    // })
+     if ( dateParams != null ) {
+       this.dateParam = dateParams;
+     }
+     this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+       this.boxScoresData = boxScoresData;
+       this.currentBoxScores = currentBoxScores;
+     })
   } //getBoxScores
 
 
@@ -388,25 +388,25 @@ export class TeamPage implements OnInit {
       if(status == 'pregame'){
         this.selectedFilter1 = null;
       }
-      // this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-      //   if(status == 'pregame'){
-      //     this.scheduleFilter1=null;
-      //   }else{
-      //     if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-      //       this.scheduleFilter1 = schedulesData.seasons;
-      //     }
-      //   }
-      //   this.schedulesData = schedulesData;
-      //
-      //   this.scheduleParams = {
-      //     scope: this.scope,
-      //     teamName: 'league',
-      //     teamID: null,
-      //     year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
-      //     tab : status == 'pregame' ? 'pregame' : 'postgame',
-      //     pageNum: 1,
-      //   }
-      // }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
+      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+        if(status == 'pregame'){
+          this.scheduleFilter1=null;
+        }else{
+          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+            this.scheduleFilter1 = schedulesData.seasons;
+          }
+        }
+        this.schedulesData = schedulesData;
+
+        this.scheduleParams = {
+          scope: this.scope,
+          teamName: 'league',
+          teamID: null,
+          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
+          tab : status == 'pregame' ? 'pregame' : 'postgame',
+          pageNum: 1,
+        }
+      }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
 
 
@@ -414,12 +414,13 @@ export class TeamPage implements OnInit {
     private standingsTabSelected(tabData: Array<any>) {
         //only show 5 rows in the module
         this.pageParams.scope = this.scope;
-        // this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
+        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
     } //standingsTabSelected
+
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
-      // this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      // }, 5);
+      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      }, 5);
     } //standingsFilterSelected
 
 
@@ -436,22 +437,22 @@ export class TeamPage implements OnInit {
       this.getTransactionsData();
     } //transactionsFilterDropdown
     private getTransactionsData() {
-      // this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
-      //   .subscribe(
-      //     transactionsData => {
-      //       if ( this.transactionFilter1 == undefined ) {
-      //         this.transactionFilter1 = transactionsData.yearArray;
-      //         if(this.dropdownKey1 == null){
-      //           this.dropdownKey1 = this.transactionFilter1[0].key;
-      //         }
-      //       }
-      //       this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
-      //       this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
-      //     },
-      //     err => {
-      //       console.log('Error: transactionsData API: ', err);
-      //     }
-      // );
+      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
+        .subscribe(
+          transactionsData => {
+            if ( this.transactionFilter1 == undefined ) {
+              this.transactionFilter1 = transactionsData.yearArray;
+              if(this.dropdownKey1 == null){
+                this.dropdownKey1 = this.transactionFilter1[0].key;
+              }
+            }
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
+            this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
+          },
+          err => {
+            console.log('Error: transactionsData API: ', err);
+          }
+      );
 
       // pass transaction page route params to module filter, so set module footer route
       this.transactionModuleFooterParams = [
@@ -565,7 +566,7 @@ export class TeamPage implements OnInit {
 
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
-        // this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
+        this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
         var seasonArray = tabData[0];
         var seasonIds = seasonArray.seasonIds;
         var seasonTab = seasonIds.find(function (e) {

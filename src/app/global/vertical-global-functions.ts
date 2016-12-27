@@ -7,7 +7,7 @@ import {GlobalSettings} from "./global-settings";
 
 export class VerticalGlobalFunctions {
   // private static _proto = window.location.protocol;
-  private static _proto = 'https';
+  private static _proto = 'https:';
 
   constructor() {
 
