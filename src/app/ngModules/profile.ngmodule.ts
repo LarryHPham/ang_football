@@ -71,9 +71,9 @@ import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.
 // import { TransactionsListItem } from "../fe-core/components/transactions-list-item/transactions-list-item.component";
 // import { DraftHistoryComponent } from "../ui-modules/draft-history/draft-history.component";
 // import { DetailedListItem } from "../fe-core/components/detailed-list-item/detailed-list-item.component";
-// import { ArticlesModule } from "../fe-core/modules/articles/articles.module";
-// import { ArticleSubComponent } from "../fe-core/components/articles/sub-article/sub-article.component";
-// import { ArticleMainComponent } from "../fe-core/components/articles/main-article/main-article.component";
+import { ArticlesModule } from "../fe-core/modules/articles/articles.module";
+import { ArticleSubComponent } from "../fe-core/components/articles/sub-article/sub-article.component";
+import { ArticleMainComponent } from "../fe-core/components/articles/main-article/main-article.component";
 // import { MVPListComponent } from "../fe-core/components/mvp-list/mvp-list.component";
 // import { ComparisonTile } from "../fe-core/components/comparison-tile/comparison-tile.component";
 // import { ComparisonLegend } from "../fe-core/components/comparison-legend/comparison-legend.component";
@@ -113,7 +113,7 @@ const PAGEMODULES = [
 
 const COREMODULES = [
   // put core modules here
-  // ArticlesModule,
+  ArticlesModule,
   ProfileHeaderModule,
   // VideoModule,
   // StandingsModule,
@@ -146,8 +146,8 @@ const COMPONENTS = [
   // ComparisonTile,
   // ComparisonLegend,
   // ComparisonBar,
-  // ArticleMainComponent,
-  // ArticleSubComponent,
+  ArticleMainComponent,
+  ArticleSubComponent,
   // ProfileVideoStackComponent,
   BarChartComponent,
   // PlayerStatsComponent,

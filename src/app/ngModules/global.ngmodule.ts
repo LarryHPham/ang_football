@@ -70,7 +70,7 @@ import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.
 // import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
 // import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
-// import { LoadingComponent } from "../fe-core/components/loading/loading.component";
+import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 // import { HeaderComponent } from "../ui-modules/header/header.component";
 // import { HamburgerMenuComponent, MenuData } from "../ui-modules/hamburger-menu/hamburger-menu.component";
 // import { FooterComponent } from "..s/ui-modules/footer/footer.component";
@@ -99,7 +99,7 @@ import { BackTabComponent } from "../fe-core/components/backtab/backtab.componen
 import { TitleComponent } from "../fe-core/components/title/title.component";
 // import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 // import { Search } from "../ui-modules/search/search.component";
-// import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
+import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 // import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
 // import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/load-more-button.component";
 
@@ -144,7 +144,7 @@ const COMPONENTS = [
   RectangleImage,
   ScrollableContent,
   // ErrorComponent,
-  // LoadingComponent,
+  LoadingComponent,
   // SidekickWrapper,
   ModuleHeader,
   ModuleFooter,
@@ -187,7 +187,7 @@ const COMPONENTS = [
   // ContactUsComponent,
   // DirectoryPagination,
   // Search,
-  // ArticleScheduleComponent,
+  ArticleScheduleComponent,
   // ScoreBoard,
   // LoadMoreButtonComponent
 ];
