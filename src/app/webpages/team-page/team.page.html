@@ -20,10 +20,10 @@
           *ngIf="dailyUpdateData"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget> -->
-        <!--<articles-module-->
-          <!--*ngif="headlinedata"-->
-          <!--[headlinedata]="headlinedata"-->
-          <!--[isleague]="false"></articles-module>-->
+        <articles-module
+          *ngif="headlinedata"
+          [headlinedata]="headlinedata"
+          [isleague]="false"></articles-module>
         <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
         <box-scores
           *ngIf="dateParam"
