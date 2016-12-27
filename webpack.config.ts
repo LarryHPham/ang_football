@@ -2,9 +2,15 @@ var webpack = require('webpack');
 var path = require('path');
 var clone = require('js.clone');
 var webpackMerge = require('webpack-merge');
+
+//loaders
 var cssLoader = require("css-loader");
 var lessLoader = require("less-loader");
 var styleLoader = require("style-loader");
+var fileLoader = require("file-loader");
+var urlLoader = require("url-loader");
+
+//plugins
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var uglifyJS = require('webpack-uglify-js-plugin');
@@ -64,7 +70,8 @@ export var commonConfig = {
       { test: /\.json$/, use: 'json-loader' },
       { test: /\.css$/, loader: ExtractTextPlugin.extract({ loader: "css-loader" }) },
       { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader!less-loader" }) },
-      { test: /\.(png|jpg)$/, loader: 'file-loader' }
+      { test: /\.(png|jpg|ttf|eot|woff|woff2)$/, loader: 'file-loader' },
+      { test: /\.(woff|ttf|eot|svg)(\?v=[a-z0-9]\.[a-z0-9]\.[a-z0-9])?$/, loader: "url-loader" }
     ]
   }
 };
