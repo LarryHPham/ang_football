@@ -3,7 +3,7 @@ import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AppComponent }  from '../app-component/app.component';
 
 //pages
-// import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
+import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { PickTeamPage } from "../webpages/pickateam-page/pickateam.page";
 // import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
@@ -172,10 +172,10 @@ const relativeChildRoutes = [
     //     path: ':scope/league',
     //     component: LeaguePage,
     // },
-    // {
-    //     path: ':scope',
-    //     component: DeepDivePage,
-    // },
+    {
+        path: ':scope',
+        component: DeepDivePage,
+    },
     {
         path: '',
         redirectTo: 'disclaimer',

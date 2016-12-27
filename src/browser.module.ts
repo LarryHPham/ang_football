@@ -9,6 +9,7 @@ import { AppModule, AppDomain } from './app/ngModules/app.ngmodule'; //TODO
 import { CacheService } from './app/global/shared/cache.service';
 import { GlobalModule } from './app/ngModules/global.ngmodule';
 import { ProfileNgModule } from './app/ngModules/profile.ngmodule';
+import { DeepDiveNgModule } from './app/ngModules/deep-dive.ngmodule';
 
 // Will be merged into @angular/platform-browser in a later release
 // see https://github.com/angular/angular/pull/12322
@@ -43,7 +44,8 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
     RouterModule.forRoot([], { useHash: false, preloadingStrategy: IdlePreload }),
     GlobalModule.forRoot(),
     ProfileNgModule.forRoot(),
-
+    DeepDiveNgModule.forRoot(),
+    
     IdlePreloadModule.forRoot(),
     AppModule,
     UniversalModule, // BrowserModule, HttpModule, and JsonpModule are included

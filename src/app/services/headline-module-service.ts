@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http } from "@angular/http";
 import { GlobalSettings } from "../global/global-settings";
 import { ModelService } from '../global/shared/model/model.service';
 
@@ -7,7 +6,7 @@ import { ModelService } from '../global/shared/model/model.service';
 
 export class HeadlineDataService {
 
-    constructor(public http:Http, public model: ModelService) {}
+    constructor(public model: ModelService) {}
 
     getAiHeadlineData(scope, teamID) {
         var fullUrl = GlobalSettings.getHeadlineUrl();

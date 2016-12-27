@@ -42,7 +42,6 @@ export var commonPlugins = [
   new webpack.ProvidePlugin({
     moment: "moment-timezone",
     jQuery: "jQuery",
-    "window.stButtons": "stButtons",
   }),
 
   //takes source files in node_modules and copies them into directory for use.
