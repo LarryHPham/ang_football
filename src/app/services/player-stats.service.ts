@@ -1,11 +1,11 @@
 import {Injectable, Input, OnDestroy} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Http} from '@angular/http';
 import {SportPageParameters} from '../global/global-interface';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from './player-stats.data';
+import { ModelService } from '../global/shared/model/model.service';
 
 
 
@@ -20,7 +20,7 @@ export class PlayerStatsService implements OnDestroy{
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
     public allStatistics: Array<PlayerStatsData>;
 
-    constructor(public http: Http){}
+    constructor(public model: ModelService){}
 
     private getLinkToPage(partnerRoute:string, scope:string, teamId: number, teamName: string): Array<any> {
         return [
@@ -122,8 +122,7 @@ export class PlayerStatsService implements OnDestroy{
 
 
         let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
-        this.http.get(url)
-            .map(res => res.json())
+        this.model.get(url)
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {
                     standingsTab.isLoaded = true;

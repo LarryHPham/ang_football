@@ -19,8 +19,8 @@ import { ModelService } from '../global/shared/model/model.service';
 //services
 // import { HamburgerDeliveryService } from '../services/hamburger-delivery.service';
 // import { FooterService } from '../services/footer.service';
-// import { BoxScoresService } from "../services/box-scores.service";
-// import { SchedulesService } from "../services/schedules.service";
+import { BoxScoresService } from "../services/box-scores.service";
+import { SchedulesService } from "../services/schedules.service";
 import { GeoLocation } from "../global/global-service";
 // import { ImagesService } from "../services/carousel.service";
 // import { ListOfListsService } from "../services/list-of-lists.service";
@@ -45,7 +45,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 
 //modules
 // import { WidgetModule } from "../ui-modules/widget/widget.module";
-// import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
+ import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 // import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
 // import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
@@ -56,36 +56,36 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
 
 //components
-// import { Tabs } from "../fe-core/components/tabs/tabs.component";
-// import { Tab } from "../fe-core/components/tabs/tab.component";
-// import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
-// import { Carousel } from "../fe-core/components/carousels/carousel.component";
+import { Tabs } from "../fe-core/components/tabs/tabs.component";
+import { Tab } from "../fe-core/components/tabs/tab.component";
+import { CircleButton } from "../fe-core/components/buttons/circle/circle.button";
+import { Carousel } from "../fe-core/components/carousels/carousel.component";
 import { CircleImage } from "../fe-core/components/images/circle-image/circle-image";
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
-// import { ErrorComponent } from "../fe-core/components/error/error.component";
+import { ErrorComponent } from "../fe-core/components/error/error.component";
 // import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 // import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
-// import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
+import { ResponsiveWidget } from "../ui-modules/responsive-widget/responsive-widget.component";
 import { ScrollableContent } from "../fe-core/components/scrollable-content/scrollable-content.component";
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { HamburgerMenuComponent } from "../ui-modules/hamburger-menu/hamburger-menu.component";
 // import { FooterComponent } from "..s/ui-modules/footer/footer.component";
-// import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
-// import { GameInfo } from "../fe-core/components/game-info/game-info.component";
-// import { GameArticle } from "../fe-core/components/game-article/game-article.component";
+import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
+import { GameInfo } from "../fe-core/components/game-info/game-info.component";
+import { GameArticle } from "../fe-core/components/game-article/game-article.component";
 // import { BoxArticleComponent } from "../fe-core/components/box-article/box-article.component";
-// import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
-// import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
-// import { CustomTable } from "../fe-core/components/custom-table/custom-table.component";
-// import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
-// import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
-// import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
-// import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
-// import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
+import { DatePicker } from "../fe-core/components/date-picker/date-picker.component";
+import { DropdownComponent } from "../fe-core/components/dropdown/dropdown.component";
+import { CustomTable } from "../fe-core/components/custom-table/custom-table.component";
+import { TableHeader } from '../fe-core/components/custom-table/table-header.component';
+import { TableCell } from '../fe-core/components/custom-table/table-cell.component';
+import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
+import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
+import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 // import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
 // import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
 // import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
@@ -100,7 +100,7 @@ import { TitleComponent } from "../fe-core/components/title/title.component";
 // import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 // import { Search } from "../ui-modules/search/search.component";
 import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
-// import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
+import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
 // import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/load-more-button.component";
 
 const MODULES = [
@@ -125,7 +125,7 @@ const PAGEMODULES = [
 const COREMODULES = [
   // put core modules here
   // WidgetModule,
-  // BoxScoresModule,
+   BoxScoresModule
   // BillboardModule,
   // DeepDiveRecommendation,
   // WidgetCarouselModule,
@@ -143,31 +143,30 @@ const COMPONENTS = [
   HoverImage,
   RectangleImage,
   ScrollableContent,
-  // ErrorComponent,
+  ErrorComponent,
   LoadingComponent,
   // SidekickWrapper,
   ModuleHeader,
   ModuleFooter,
   // VideoStackComponent,
-  // CalendarCarousel,
-  // GameInfo,
-  // GameArticle,
+  CalendarCarousel,
+  GameInfo,
+  GameArticle,
   // BoxArticleComponent,
-  // DatePicker,
-  // ResponsiveWidget,
-  // DropdownComponent,
-  // CustomTable,
-  // Tab,
-  // Tabs,
-  // Carousel,
-  // TableHeader,
-  // TableCell,
-  // NoDataBox,
-  // CircleButton,
+  DatePicker,
+  ResponsiveWidget,
+  DropdownComponent,
+  CustomTable,
+  Tab,
+  Tabs,
+  Carousel,
+  TableHeader,
+  TableCell,
+  NoDataBox,
+  CircleButton,
   // ArticleBlockComponent,
-  // ResponsiveWidget,
-  // SliderCarousel,
-  // ComplexInnerHtml,
+  SliderCarousel,
+  ComplexInnerHtml,
   // PaginationFooter,
   HeaderComponent,
   HamburgerMenuComponent,
@@ -178,7 +177,6 @@ const COMPONENTS = [
   // LineChartComponent,
   // ArticleBlockComponent,
   // DeepDiveRecommendation,
-  // ResponsiveWidget,
   // SideScroll,
   // ImagesMedia,
   // ListOfListsItem,
@@ -188,7 +186,7 @@ const COMPONENTS = [
   // DirectoryPagination,
   // Search,
   ArticleScheduleComponent,
-  // ScoreBoard,
+  ScoreBoard
   // LoadMoreButtonComponent
 ];
 
@@ -215,8 +213,8 @@ const PROVIDERS = [
   CacheService,
   // FooterService,
   ScrollerFunctions,
-  // BoxScoresService,
-  // SchedulesService,
+  BoxScoresService,
+  SchedulesService,
   GeoLocation,
   VerticalGlobalFunctions,
   // HamburgerDeliveryService,

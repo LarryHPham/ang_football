@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Http, Headers} from '@angular/http';
 import {GlobalFunctions} from '../global/global-functions';
 import {CircleImageData} from '../fe-core/components/images/image-data';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
@@ -9,6 +8,7 @@ import {Conference, Division, SportPageParameters} from '../global/global-interf
 import {SchedulesCarouselInput} from '../fe-core/components/carousels/schedules-carousel/schedules-carousel.component';
 import {SchedulesData, SchedulesTableModel, SchedulesTableData, ScheduleTabData} from './schedules.data';
 import {scheduleBoxInput} from '../fe-core/components/schedule-box/schedule-box.component';
+import { ModelService } from '../global/shared/model/model.service';
 
 declare var moment: any;
 
@@ -16,7 +16,7 @@ declare var moment: any;
 export class SchedulesService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
-  constructor(public http: Http){}
+  constructor(public model: ModelService){}
 
   getLinkToPage(pageParams: SportPageParameters, teamName?: string): Array<any> {
     var pageName = "Schedules-page";
@@ -56,17 +56,8 @@ export class SchedulesService {
     return pageTitle;
   }// Sets the title of the Page with data returne by shedules
 
-  //Function to set custom headers
-  setToken(){
-      var headers = new Headers();
-      //headers.append(this.headerName, this.apiToken);
-      return headers;
-  }
-
   //possibly simpler version of getting schedules api call
   getSchedule(scope, profile, eventStatus, limit, pageNum, id?, year?, week?){
-    //Configure HTTP Headers
-    var headers = this.setToken();
     profile = profile == 'league'? 'league':'team';// since player profile is the same call as team
     var callURL = this._apiUrl+'/schedule/'+profile;
     if(typeof year == 'undefined'){
@@ -88,8 +79,7 @@ export class SchedulesService {
     if( week != null){
       callURL += '/'+week;
     }
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get(callURL)
       .map(data => {
         return data;
       });
@@ -97,9 +87,6 @@ export class SchedulesService {
 
   //Call made for slider carousel using BoxScore scheduler
   getBoxSchedule(scope, profile, eventStatus, limit, pageNum, id?){
-    //Configure HTTP Headers
-    var headers = this.setToken();
-
     var callURL = this._apiUrl+'/boxScores/schedule/'+profile;
 
     if(profile == 'league'){//if league call then add scope
@@ -113,8 +100,7 @@ export class SchedulesService {
     callURL += '/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
 
     //optional week parameters
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get(callURL)
       .map(data => {
         return data;
       });
