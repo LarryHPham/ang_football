@@ -178,12 +178,12 @@ const relativeChildRoutes = [
     },
     {
         path: '',
-        redirectTo: 'disclaimer',
+        redirectTo: 'home',
         pathMatch: 'full'
     },
     {
         path: '/**',
-        redirectTo: 'disclaimer'
+        redirectTo: 'home'
     }
 ];
 

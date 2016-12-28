@@ -21,7 +21,6 @@ import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
-import { HeadlineDataService } from "../services/headline-module-service";
 // import { FantasyService } from '../services/fantasy.service';
 // import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 import { PlayerStatsService } from "../services/player-stats.service";
@@ -162,8 +161,7 @@ const PIPES = [
 
 const PROVIDERS = [
   // put providers components here
-  ProfileHeaderService,
-  HeadlineDataService,
+  ProfileHeaderService, 
   VideoService,
   StandingsService,
   TransactionsService,
