@@ -14,7 +14,7 @@ import { TeamPage } from "../webpages/team-page/team.page";
 // import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 // import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 // import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
-// import { ArticlePages } from "../webpages/article-pages/article-pages.page";
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 // import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
@@ -151,10 +151,10 @@ const relativeChildRoutes = [
     //     path: ':scope/player-stats/:teamName/:teamID',
     //     component: PlayerStatsPage
     // },
-    // {
-    //     path: ':scope/articles/:eventType/:eventID',
-    //     component: ArticlePages
-    // },
+    {
+        path: ':scope/articles/:eventType/:eventID',
+        component: ArticlePages
+    },
     // {
     //     path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
     //     component: ListOfListsPage

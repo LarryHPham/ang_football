@@ -102,7 +102,7 @@ import { TitleComponent } from "../fe-core/components/title/title.component";
 // import { Search } from "../ui-modules/search/search.component";
 import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
-// import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/load-more-button.component";
+import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/load-more-button.component";
 
 const MODULES = [
   // put modules here
@@ -185,8 +185,8 @@ const COMPONENTS = [
   // DirectoryPagination,
   // Search,
   ArticleScheduleComponent,
-  ScoreBoard
-  // LoadMoreButtonComponent
+  ScoreBoard,
+  LoadMoreButtonComponent
 ];
 
 const PIPES = [

@@ -31,15 +31,15 @@ import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.
 // import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 
 //article page blocks
-// import { ArticlePages } from "../webpages/article-pages/article-pages.page";
-// import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
+import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
-// import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
+import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
 import { RecommendationsComponent } from "../fe-core/components/articles/recommendations/recommendations.component";
-// import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
-// import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
+import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
+import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
 // import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
-// import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
+import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
 import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
 
 const MODULES = [
@@ -53,7 +53,7 @@ const MODULES = [
 const PAGEMODULES = [
   // put page modules here
   DeepDivePage,
-  // ArticlePages,
+  ArticlePages,
 ]
 
 const COREMODULES = [
@@ -76,14 +76,14 @@ const COMPONENTS = [
   // put shared components here
   StackRowsComponent,
   ArticleStacktopComponent,
-  // ShareLinksComponent,
+  ShareLinksComponent,
   // SidekickWrapperAI,
-  // ArticleContentComponent,
+  ArticleContentComponent,
   RecommendationsComponent,
-  // DisqusComponent,
-  // TrendingComponent,
+  DisqusComponent,
+  TrendingComponent,
   // SidekickContainerComponent,
-  // ProfileDataComponent,
+  ProfileDataComponent,
   BillboardComponent
 ];
 
