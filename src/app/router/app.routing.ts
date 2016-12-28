@@ -3,10 +3,10 @@ import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { AppComponent }  from '../app-component/app.component';
 
 //pages
-// import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
-// import { PickTeamPage } from "../webpages/home-page/home-page.page";
+import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
+import { PickTeamPage } from "../webpages/pickateam-page/pickateam.page";
 // import { LeaguePage } from "../webpages/league-page/league.page";
-// import { TeamPage } from "../webpages/team-page/team.page";
+import { TeamPage } from "../webpages/team-page/team.page";
 // import { PlayerPage } from "../webpages/player-page/player.page";
 // import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 // import { StandingsPage } from "../webpages/standings-page/standings.page";
@@ -40,14 +40,14 @@ const relativeChildRoutes = [
         path: ':scope/about-us',
         component: AboutUsPage,
     },
-    // {
-    //     path: ':scope/pick-a-team',
-    //     component: PickTeamPage,
-    // },
-    // {
-    //     path: ':scope/team/:teamName/:teamID',
-    //     component: TeamPage,
-    // },
+    {
+        path: ':scope/pick-a-team',
+        component: PickTeamPage,
+    },
+    {
+        path: ':scope/team/:teamName/:teamID',
+        component: TeamPage,
+    },
     // {
     //     path: ':scope/player/:teamName/:fullName/:playerID',
     //     component: PlayerPage,
@@ -172,10 +172,10 @@ const relativeChildRoutes = [
     //     path: ':scope/league',
     //     component: LeaguePage,
     // },
-    // {
-    //     path: ':scope',
-    //     component: DeepDivePage,
-    // },
+    {
+        path: ':scope',
+        component: DeepDivePage,
+    },
     {
         path: '',
         redirectTo: 'disclaimer',
@@ -200,4 +200,4 @@ export const appRoutes: Routes = [
     },
 ];
 
-export const routing = RouterModule.forChild(appRoutes);
+export const routing = RouterModule.forRoot(appRoutes);

@@ -10,6 +10,7 @@ import {Http, Headers} from '@angular/http';
 import {Observable} from "rxjs/Observable";
 import { GlobalFunctions } from "../global/global-functions";
 import { GlobalSettings } from "../global/global-settings";
+import { ModelService } from '../global/shared/model/model.service';
 
 export interface geoLocate {
     partner_id?: string;
@@ -26,11 +27,12 @@ export class GeoLocation{
 
     geoObservable: Observable<any>
 
-    constructor(public http: Http) { }
+    constructor( public http: Http, public model: ModelService ) { }
 
 
     getPartnerData(partner_id) {
-      let env = window.location.hostname.split('.')[0];
+      // let env = window.location.hostname.split('.')[0];
+      let env = 'localhost';
       if(env == 'localhost'){
         var partnerID = partner_id.split('-');
 
@@ -49,11 +51,7 @@ export class GeoLocation{
       }
 
         var fullUrl = GlobalSettings.getPartnerApiUrl(partner_id);
-        return this.http.get(fullUrl, {
-        })
-            .map(
-            res => res.json()
-            )
+        return this.model.get(fullUrl)
             .flatMap(
             data => {
                 if (data['results'] != null) {
@@ -84,8 +82,7 @@ export class GeoLocation{
     //api to get geo location
     getGeoLocation() {
         var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
-        return this.http.get(getGeoLocation, {})
-            .map(res => res.json())
+        return this.model.get(getGeoLocation)
             .map(
             data => {
                 data[0].state = data[0].state == null ? "us" : data[0].state;

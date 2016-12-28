@@ -15,8 +15,6 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var uglifyJS = require('webpack-uglify-js-plugin');
 
-
-
 export var commonPlugins = [
   new webpack.ContextReplacementPlugin(
     // The (\\|\/) piece accounts for path separators in *nix and Windows
@@ -36,27 +34,21 @@ export var commonPlugins = [
   }),
 
   //minify JS
-  new webpack.optimize.UglifyJsPlugin({
-    mangle: true,
-      compress: {
-        warnings: true, // Suppress uglification warnings
-        screw_ie8: true,
-        unused: true
-      },
-      output: {
-        comments: false,
-      }
-  }),
+  // new webpack.optimize.UglifyJsPlugin({
+  //   compressor: { warnings: false }
+  // }),
 
   //provide third pary plugins
   new webpack.ProvidePlugin({
     moment: "moment-timezone",
+    jQuery: "jQuery",
   }),
 
   //takes source files in node_modules and copies them into directory for use.
   new CopyWebpackPlugin([
     {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
-    {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')}
+    {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')},
+    {from: './node_modules/highcharts/highcharts.js', to: root('src/lib/highcharts.js')}
   ])
 ]; //commonPlugins
 
@@ -66,6 +58,9 @@ export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
   devtool: 'source-map',
   resolve: {
+    alias: {
+      highcharts: "../node_modules/highcharts/highstock.src.js"
+    },
     extensions: ['.ts', '.js', '.json', '.less'],
     modules: [ root('node_modules') ]
   },

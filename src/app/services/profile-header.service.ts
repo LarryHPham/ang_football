@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Http } from '@angular/http';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 
@@ -8,6 +7,7 @@ import 'rxjs/add/operator/map';
 import { GlobalSettings } from '../global/global-settings';
 import { GlobalFunctions } from '../global/global-functions';
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
+import { ModelService } from '../global/shared/model/model.service';
 
 //interfaces
 import { TitleInputData } from '../fe-core/components/title/title.component';
@@ -22,7 +22,7 @@ export class ProfileHeaderService {
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   public scope: string;
 
-  constructor(public http: Http, private _router:Router){
+  constructor(private _router:Router,  public model: ModelService){
     GlobalSettings.getParentParams(_router, parentParams =>
       this.scope = parentParams.scope
     );
@@ -31,8 +31,7 @@ export class ProfileHeaderService {
   getPlayerProfile(playerId: number) {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/player/' + playerId;
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => {
           var headerData = data.data[0];
 
@@ -63,8 +62,7 @@ export class ProfileHeaderService {
     let url = GlobalSettings.getApiUrl();
     url = url + '/profileHeader/team/' + teamId;
 
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => {
           var headerData = data.data[0];
           return {
@@ -92,8 +90,7 @@ export class ProfileHeaderService {
     }
     url = url + '/profileHeader/league/' + scope;
 
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => {
           var headerData: LeagueProfileHeaderData = data.data[0];
 

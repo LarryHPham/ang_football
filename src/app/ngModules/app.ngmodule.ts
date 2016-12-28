@@ -1,6 +1,7 @@
 import { NgModule }      from '@angular/core';
 import { FormsModule }   from '@angular/forms';
 import { routing } from '../router/app.routing';
+import { RouterModule } from '@angular/router';
 //Root Component
 import { AppDomain }  from '../app-domain/app.domain';
 
@@ -16,10 +17,11 @@ import {HttpModule} from "@angular/http";
 @NgModule({
   imports: [
     FormsModule,
+    RouterModule,
     routing,
     GlobalModule,
     // DeepDiveNgModule,
-    // ProfileNgModule
+    ProfileNgModule
   ],
   declarations: [
     AppDomain

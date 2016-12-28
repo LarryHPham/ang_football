@@ -1,3 +1,7 @@
+import { Inject, ElementRef } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
+import { isBrowser } from 'angular2-universal';
+
 export class Scroller{
   public scrollContentWrapper: any;
   public scrollContent: any;
@@ -14,7 +18,10 @@ export class Scroller{
   contentPosition: number;
   public scrollerBeingDragged: boolean;
 
-  constructor(scrollContainer) {
+  private _document:Document;
+
+  constructor(scrollContainer, @Inject(DOCUMENT) private document: Document) {
+    this._document = document;
     this.construct(scrollContainer);
   }
 
@@ -49,7 +56,7 @@ export class Scroller{
 
   setup() {
     if ( !this.scrollerElement ) {
-      this.scrollerElement = document.createElement("div");
+      this.scrollerElement = this._document.createElement("div");
     }
 
     this.scrollerElement.className = 'scrollable-item-scroller';
@@ -134,16 +141,18 @@ export class Scroller{
 }
 
 export class ScrollerFunctions {
-
   static initializeScroller(nativeElement: any, document: HTMLDocument): Scroller {
-    var scrollContainers = nativeElement.getElementsByClassName('scrollable-item');
-    var container = scrollContainers.length > 0 ? scrollContainers[0] : null;
-    if ( !container ) {
-      return null;
+    if(isBrowser){
+      var scrollContainers = nativeElement.getElementsByClassName('scrollable-item');
+      var container = scrollContainers.length > 0 ? scrollContainers[0] : null;
+      if ( !container ) {
+        return null;
+      }
+
+      var scroller = new Scroller(container, document);
+      scroller.setup();
+      return scroller;
     }
 
-    var scroller = new Scroller(container);
-    scroller.setup();
-    return scroller;
   }
 }

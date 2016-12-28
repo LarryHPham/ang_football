@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Inject} from '@angular/core';
 import {GlobalSettings} from "../../global/global-settings";
 import {HamburgerDeliveryService} from '../../services/hamburger-delivery.service';
+import { DOCUMENT } from '@angular/platform-browser';
 
 export interface MenuData{
   menuTitle: string,
@@ -9,7 +10,7 @@ export interface MenuData{
 
 @Component({
     selector: 'hamburger-menu-component',
-    templateUrl: './app/ui-modules/hamburger-menu/hamburger-menu.component.html',
+    templateUrl: './hamburger-menu.component.html',
 })
 
 export class HamburgerMenuComponent implements OnInit {
@@ -22,7 +23,7 @@ export class HamburgerMenuComponent implements OnInit {
   public _collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv().toUpperCase();
   public menuInfoHeader: string = "Company Info";
   public isHome:any;
-  constructor(){
+  constructor(@Inject(DOCUMENT) private document: Document){
     this.isHome = GlobalSettings.getHomeInfo().isHome;
   }
   ngOnInit(){

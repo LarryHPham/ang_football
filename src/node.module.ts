@@ -6,6 +6,8 @@ import { UniversalModule, isBrowser, isNode } from 'angular2-universal/node'; //
 // import { AppModule, AppComponent } from './+app/app.module'; //TODO
 import { AppModule, AppDomain } from './app/ngModules/app.ngmodule';
 import { GlobalModule } from './app/ngModules/global.ngmodule';
+import { ProfileNgModule } from './app/ngModules/profile.ngmodule';
+import { DeepDiveNgModule } from './app/ngModules/deep-dive.ngmodule';
 
 // Will be merged into @angular/platform-browser in a later release
 // see https://github.com/angular/angular/pull/12322
@@ -29,6 +31,8 @@ export function getResponse() {
     FormsModule,
     RouterModule.forRoot([], { useHash: false }),
     GlobalModule.forRoot(),
+    ProfileNgModule.forRoot(),
+    DeepDiveNgModule.forRoot(),
 
     AppModule,
     UniversalModule, // BrowserModule, HttpModule, and JsonpModule are included

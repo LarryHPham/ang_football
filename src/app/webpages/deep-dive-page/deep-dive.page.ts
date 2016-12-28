@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, NgZone } from '@angular/core';
+import { Component, OnInit, Input, NgZone, Renderer } from '@angular/core';
 import { DeepDiveService } from '../../services/deep-dive.service';
-import { SchedulesService } from '../../services/schedules.service';
+// import { SchedulesService } from '../../services/schedules.service';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
-import { ArticleStackModule } from '../../fe-core/modules/article-stack/article-stack.module';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { SeoService } from '../../seo.service';
+// import { SeoService } from '../../seo.service';
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
@@ -16,7 +15,7 @@ declare var moment;
 
 @Component({
     selector: 'deep-dive-page',
-    templateUrl: './app/webpages/deep-dive-page/deep-dive.page.html'
+    templateUrl: './deep-dive.page.html'
 })
 
 export class DeepDivePage{
@@ -54,11 +53,12 @@ export class DeepDivePage{
     private _routeSubscription: any;
 
     constructor(
+      public renderer:Renderer,
       private _activatedRoute:ActivatedRoute,
       private _deepDiveData: DeepDiveService,
-      private _schedulesService:SchedulesService,
+      // private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
-      private _seoService: SeoService,
+      // private _seoService: SeoService,
       public ngZone:NgZone,
       private _route:Router
     ){
@@ -130,17 +130,17 @@ export class DeepDivePage{
     private metaTags(){
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
-      let link = window.location.href;
-
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle('Deep Dive');
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage('./app/public/mainLogo.png');
-      this._seoService.setTitle('Deep Dive');
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('Index, Follow');
+      // let link = window.location.href;
+      //
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle('Deep Dive');
+      // this._seoService.setOgDesc(metaDesc);
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage('./app/public/mainLogo.png');
+      // this._seoService.setTitle('Deep Dive');
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('Index, Follow');
     } //metaTags
 
 
@@ -177,19 +177,19 @@ export class DeepDivePage{
         this.safeCall = false;
         this.scope = this.scope.toLowerCase();
         let changeScope = this.scope == 'ncaaf'?'fbs':this.scope;
-        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-          if(this.sideScrollData == null){
-            this.sideScrollData = sideScrollData;
-          }
-          else{
-            sideScrollData.forEach(function(val,i){
-              self.sideScrollData.push(val);
-            })
-          }
-          this.safeCall = true;
-          this.callCount++;
-          this.scrollLength = this.sideScrollData.length;
-        }, null, null)
+        // this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+        //   if(this.sideScrollData == null){
+        //     this.sideScrollData = sideScrollData;
+        //   }
+        //   else{
+        //     sideScrollData.forEach(function(val,i){
+        //       self.sideScrollData.push(val);
+        //     })
+        //   }
+        //   this.safeCall = true;
+        //   this.callCount++;
+        //   this.scrollLength = this.sideScrollData.length;
+        // }, null, null)
       }
     }
 
@@ -214,13 +214,13 @@ export class DeepDivePage{
 
 
     private getDeepDiveVideoBatch(){
-        this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
-          data => {
-            if(data.data != null){
-              this.videoData = this._deepDiveData.transformVideoStack(data.data);
-            }
-          }
-        )
+        // this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
+        //   data => {
+        //     if(data.data != null){
+        //       this.videoData = this._deepDiveData.transformVideoStack(data.data);
+        //     }
+        //   }
+        // )
       }
 
     private getDataCarousel() {
@@ -230,20 +230,20 @@ export class DeepDivePage{
     }
 
     getFirstArticleStackData(){
-      this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
-          .subscribe(data => {
-            this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]]);
-          },
-          err => {
-                console.log("Error getting first article stack data");
-          });
-      this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
-          .subscribe(data => {
-            this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
-          },
-          err => {
-              console.log("Error getting first AI article batch data");
-          });
+      // this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
+      //     .subscribe(data => {
+      //       this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]]);
+      //     },
+      //     err => {
+      //           console.log("Error getting first article stack data");
+      //     });
+      // this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+      //     .subscribe(data => {
+      //       this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
+      //     },
+      //     err => {
+      //         console.log("Error getting first AI article batch data");
+      //     });
     }
 
     callModules(){
