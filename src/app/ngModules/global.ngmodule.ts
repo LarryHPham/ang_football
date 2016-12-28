@@ -44,7 +44,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { SearchPage } from "../webpages/search-page/search.page";
 
 //modules
-// import { WidgetModule } from "../ui-modules/widget/widget.module";
+import { WidgetModule } from "../ui-modules/widget/widget.module";
  import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 // import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
@@ -64,7 +64,7 @@ import { CircleImage } from "../fe-core/components/images/circle-image/circle-im
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 import { ErrorComponent } from "../fe-core/components/error/error.component";
-// import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 // import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
@@ -124,8 +124,8 @@ const PAGEMODULES = [
 
 const COREMODULES = [
   // put core modules here
-  // WidgetModule,
-   BoxScoresModule,
+  WidgetModule,
+  BoxScoresModule,
   // BillboardModule,
   // DeepDiveRecommendation,
   // WidgetCarouselModule,
@@ -145,7 +145,7 @@ const COMPONENTS = [
   ScrollableContent,
   ErrorComponent,
   LoadingComponent,
-  // SidekickWrapper,
+  SidekickWrapper,
   ModuleHeader,
   ModuleFooter,
   // VideoStackComponent,

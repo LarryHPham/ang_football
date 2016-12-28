@@ -50,7 +50,10 @@ export var commonPlugins = [
     {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')},
     {from: './node_modules/highcharts/highcharts.js', to: root('src/lib/highcharts.js')}
   ])
-];
+]; //commonPlugins
+
+
+
 export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
   devtool: 'source-map',
@@ -71,16 +74,19 @@ export var commonConfig = {
       { test: /\.ts$/,   use: ['awesome-typescript-loader', 'angular2-template-loader'] },
       { test: /\.html$/, use: 'raw-loader' },
       { test: /\.json$/, use: 'json-loader' },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract({ loader: "css-loader" }) },
-      { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader!less-loader" }) },
+      { test: /\.less$/, loader: ExtractTextPlugin.extract({ loader: "css-loader?minimize!less-loader?minimizecss" }) },
       { test: /\.(png|jpg|ttf|eot|woff|woff2)$/, loader: 'file-loader' },
       { test: /\.(woff|ttf|eot|svg)(\?v=[a-z0-9]\.[a-z0-9]\.[a-z0-9])?$/, loader: "url-loader" }
     ]
   }
-};
+}; //commonConfig
+
+
 
 // Client.
 export var clientPlugins = [];
+
+
 
 export var clientConfig = {
   target: 'web',
@@ -96,13 +102,14 @@ export var clientConfig = {
     process: true,
     Buffer: false
   }
-};
+}; //clientConfig
 
 
 // Server.
-export var serverPlugins = [
+export var serverPlugins = [];
 
-];
+
+
 export var serverConfig = {
   target: 'node',
   entry: [
@@ -129,16 +136,16 @@ export var serverConfig = {
     process: true,
     Buffer: true
   }
-};
+}; //serverConfig
+
+
 
 export default [
   // Client
   webpackMerge(clone(commonConfig), clientConfig, { plugins: clientPlugins.concat(commonPlugins) }),
-
   // Server
   webpackMerge(clone(commonConfig), serverConfig, { plugins: serverPlugins.concat(commonPlugins) })
 ];
-
 
 
 
