@@ -1,4 +1,4 @@
-import {Component, Input, Injector, OnChanges} from '@angular/core';
+import {Component, Input, Injector, OnChanges, HostListener} from '@angular/core';
 import { BoxScoresService } from '../../../services/box-scores.service';
 import { DeepDiveService } from '../../../services/deep-dive.service';
 import { ArticleStackData, VideoStackData } from "../../../fe-core/interfaces/deep-dive.data";
@@ -9,7 +9,7 @@ declare var moment;
 
 @Component({
   selector: 'deep-dive-block-1',
-  templateUrl: './app/ui-modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module.html',
+  templateUrl: './deep-dive-block-1.module.html',
 })
 
 export class DeepDiveBlock1{
@@ -30,13 +30,22 @@ export class DeepDiveBlock1{
   @Input() geoLocation: any;
   @Input() profileName: any;
   @Input() scope: string;
-  constructor(private _boxScores:BoxScoresService, private _deepDiveData: DeepDiveService){
-      window.onresize = (e) =>
-      {
-        // current use is box scores
-        this.checkSize();
-      }
+  constructor(private _boxScores:BoxScoresService, private _deepDiveData: DeepDiveService){}
+
+  @HostListener('window:resize', ['$event'])
+
+  onResize(event) {
+    var width = event.outerWidth;
+    var height = event.outerHeight;
+    if(width < 640){
+      this.scroll = false;
+      this.maxHeight = 'auto';
+    }else if(width >= 640){
+      this.scroll = true;
+      this.maxHeight = 650;
     }
+  }
+
 
   ngOnInit() {
     var currentUnixDate = new Date().getTime();
@@ -76,7 +85,7 @@ export class DeepDiveBlock1{
         });
   }
 
-  private getDeepDiveVideoBatch(scope, region, numItems, startNum){
+  getDeepDiveVideoBatch(scope, region, numItems, startNum){
     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, numItems, startNum, region).subscribe(
       data => {
         this.videoData = this._deepDiveData.transformVideoStack(data.data);
@@ -87,7 +96,7 @@ export class DeepDiveBlock1{
   }
 
   //api for BOX SCORES
-  private getBoxScores(dateParams?) {
+  getBoxScores(dateParams?) {
     if(this.scope != 'home'){
       if (dateParams != null) {
         this.dateParam = dateParams;
@@ -100,17 +109,7 @@ export class DeepDiveBlock1{
       this.dateParam = null;
     }
   }
-  checkSize(){
-    var width = window.outerWidth;
-    var height = window.outerHeight;
-    if(width < 640){
-      this.scroll = false;
-      this.maxHeight = 'auto';
-    }else if(width >= 640){
-      this.scroll = true;
-      this.maxHeight = 650;
-    }
-  }
+
   callModules(){
     setTimeout(() => { // wait to load the rest of the page below the fold
       this.getBoxScores(this.dateParam);

@@ -13,9 +13,7 @@ export class DeepDiveService {
   private _articleUrl: string = GlobalSettings.getArticleDataUrl();
   private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
 
-  constructor(
-    public model: ModelService
-  ){}
+  constructor( public model: ModelService ){}
 
 
   getDeepDiveArticleService(articleID){
