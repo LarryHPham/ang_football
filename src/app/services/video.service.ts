@@ -4,7 +4,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { Observable } from "rxjs/Observable";
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
 import { ModelService } from '../global/shared/model/model.service';
-
+ 
 @Injectable()
 
 export class VideoService {

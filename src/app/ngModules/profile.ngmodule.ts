@@ -161,7 +161,7 @@ const PIPES = [
 
 const PROVIDERS = [
   // put providers components here
-  ProfileHeaderService,
+  ProfileHeaderService, 
   VideoService,
   StandingsService,
   TransactionsService,

@@ -177,7 +177,7 @@ const COMPONENTS = [
   // LineChartComponent,
   ArticleBlockComponent,
   // DeepDiveRecommendation,
-  SideScroll,
+  SideScroll, 
   ImagesMedia,
   ListOfListsItem,
   BackTabComponent,
