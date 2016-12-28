@@ -30,7 +30,16 @@ export class DeepDiveBlock1{
   @Input() geoLocation: any;
   @Input() profileName: any;
   @Input() scope: string;
-  constructor(private _boxScores:BoxScoresService, private _deepDiveData: DeepDiveService){}
+  constructor(private _boxScores:BoxScoresService, private _deepDiveData: DeepDiveService){
+    var currentUnixDate = new Date().getTime();
+    //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
+    this.dateParam ={
+      teamId:this.scope == 'home' ? 'nfl' : this.scope,//current profile page
+      scope:'league',
+      date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+    }
+    console.log(this.dateParam);
+  }
 
   @HostListener('window:resize', ['$event'])
 
@@ -46,15 +55,7 @@ export class DeepDiveBlock1{
     }
   }
 
-
   ngOnInit() {
-    var currentUnixDate = new Date().getTime();
-    //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
-    this.dateParam ={
-      teamId:this.scope == 'home' ? 'nfl' : this.scope,//current profile page
-      scope:'league',
-      date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-    }
      this.callModules();
   }
 

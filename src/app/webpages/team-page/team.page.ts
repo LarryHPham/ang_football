@@ -15,14 +15,14 @@ import { SchedulesService } from '../../services/schedules.service';
 import { StandingsService } from "../../services/standings.service";
 import { RosterService } from '../../services/roster.service';
 import { TransactionsService } from "../../services/transactions.service";
-// import { ComparisonStatsService } from '../../services/comparison-stats.service';
-// import { ImagesService } from "../../services/carousel.service";
-// import { VideoService } from "../../services/video.service";
-// import { DykService } from '../../services/dyk.service';
+import { ComparisonStatsService } from '../../services/comparison-stats.service';
+import { ImagesService } from "../../services/carousel.service";
+import { VideoService } from "../../services/video.service";
+import { DykService } from '../../services/dyk.service';
 import { FaqService } from '../../services/faq.service';
-// import { ListOfListsService } from "../../services/list-of-lists.service";
+import { ListOfListsService } from "../../services/list-of-lists.service";
 // import { NewsService } from "../../services/news.service";
-// import { TwitterService } from "../../services/twitter.service";
+import { TwitterService } from "../../services/twitter.service";
 // import { SeoService } from "../../seo.service";
 import { PlayerStatsService } from "../../services/player-stats.service";
 
@@ -131,14 +131,14 @@ export class TeamPage implements OnInit {
     private _standingsService:StandingsService,
     private _rosterService: RosterService,
     private _transactionsService: TransactionsService,
-    // private _comparisonService: ComparisonStatsService,
-    // private _imagesService: ImagesService,
-    // private _videoBatchService: VideoService,
-    // private _dykService: DykService,
+    private _comparisonService: ComparisonStatsService,
+    private _imagesService: ImagesService,
+    private _videoBatchService: VideoService,
+    private _dykService: DykService,
     private _faqService: FaqService,
-    // private _lolService: ListOfListsService,
+    private _lolService: ListOfListsService,
     // private _newsService: NewsService,
-    // private _twitterService: TwitterService,
+    private _twitterService: TwitterService,
     // private _seoService: SeoService,
     private _playerStatsService: PlayerStatsService
   ) {
@@ -222,16 +222,16 @@ export class TeamPage implements OnInit {
           this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
 
           //--Batch 5--//
-          // this.setupComparisonData();
-          // this.getImages(this.imageData);
-          // this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
-          // this.getDykService();
+          this.setupComparisonData();
+          this.getImages(this.imageData);
+          this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+          this.getDykService();
 
           //--Batch 6--//
           this.getFaqService();
-          // this.setupListOfListsModule();
+          this.setupListOfListsModule();
           // this.getNewsService();
-          // this.getTwitterService();
+          this.getTwitterService();
         }, 2000);
       }
     )
@@ -465,51 +465,51 @@ export class TeamPage implements OnInit {
 
 
     private setupComparisonData() {
-      // this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
-      //   data => {
-      //     this.comparisonModuleData = data;
-      //   },
-      //   err => {
-      //     console.log("Error getting comparison data for "+ this.pageParams.teamId, err);
-      //   });
+      this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+        data => {
+          this.comparisonModuleData = data;
+        },
+        err => {
+          console.log("Error getting comparison data for "+ this.pageParams.teamId, err);
+        });
     } //setupComparisonData
 
 
 
     private getImages(imageData) {
-      // this._imagesService.getImages(this.profileType, this.pageParams.teamId)
-      // .subscribe(data => {
-      //   return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
-      // },
-      // err => {
-      //   console.log("Error getting image data" + err);
-      // });
+      this._imagesService.getImages(this.profileType, this.pageParams.teamId)
+      .subscribe(data => {
+        return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
+      },
+      err => {
+        console.log("Error getting image data" + err);
+      });
     } //getImages
 
 
 
     private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      // this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
-      //   .subscribe(data => {
-      //     this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
-      //     this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
-      //   },
-      //   err => {
-      //     console.log("Error getting video data");
-      //   }
-      // );
+      this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+        .subscribe(data => {
+          this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
+          this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+        },
+        err => {
+          console.log("Error getting video data");
+        }
+      );
     } //getTeamVideoBatch
 
 
 
     private getDykService() {
-      // this._dykService.getDykService(this.profileType, this.pageParams.teamId)
-      //   .subscribe(data => {
-      //     this.dykData = data;
-      //   },
-      //   err => {
-      //     console.log("Error getting did you know data");
-      // });
+      this._dykService.getDykService(this.profileType, this.pageParams.teamId)
+        .subscribe(data => {
+          this.dykData = data;
+        },
+        err => {
+          console.log("Error getting did you know data");
+      });
     } //getDykService
 
 
@@ -533,15 +533,15 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         scope : this.scope
       }
-      // this._lolService.getListOfListsService(params, "team", "module")
-      //   .subscribe(
-      //     listOfListsData => {
-      //       this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
-      //     },
-      //     err => {
-      //       console.log('Error: listOfListsData API: ', err);
-      //     }
-      // );
+      this._lolService.getListOfListsService(params, "team", "module")
+        .subscribe(
+          listOfListsData => {
+            this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
+          },
+          err => {
+            console.log('Error: listOfListsData API: ', err);
+          }
+      );
     } //setupListOfListsModule
 
 
@@ -590,13 +590,13 @@ export class TeamPage implements OnInit {
 
 
     private getTwitterService() {
-      // this._twitterService.getTwitterService(this.profileType, this.pageParams.teamId)
-      //   .subscribe(data => {
-      //     this.twitterData = data;
-      //   },
-      //   err => {
-      //     console.log("Error getting twitter data");
-      // });
+      this._twitterService.getTwitterService(this.profileType, this.pageParams.teamId)
+        .subscribe(data => {
+          this.twitterData = data;
+        },
+        err => {
+          console.log("Error getting twitter data");
+      });
     } //getTwitterService
 
 

@@ -84,11 +84,11 @@
           (tabSwitched)="transactionsTab($event)"
           (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
         <!-- <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
-        <!-- <draft-history-module
+        <draft-history-module
           *ngIf="scope == 'nfl' && profileData"
           [footerData]="pageParams"
           [profileData]="profileData"
-          [storedPartnerParam]="storedPartnerParam"></draft-history-module> -->
+          [storedPartnerParam]="storedPartnerParam"></draft-history-module>
         <!-- <responsive-widget
           *ngIf="profileData"
           [embedPlace]="widgetPlace"
@@ -96,27 +96,26 @@
       </div> <!--loadBatch4-->
 
       <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
-        <!-- <comparison-module
+        <comparison-module
           [modelData]="comparisonModuleData"
           [profileName]="profileHeaderData.profileName"
           [profileType]="'team'"
           [profileId]="pageParams.teamId"
-          [scope]="scope"></comparison-module> -->
-          <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
+          [scope]="scope"></comparison-module>
         <div class="profile-carousel-container">
-          <!-- <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel> -->
+           <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel>
         </div>
-        <!-- <video-module
+        <video-module
           *ngIf="videoData"
           [firstVideo]="firstVideo"
           [videoData]="videoData"
           [profileHeader]="profileHeaderData"
-          [isProfilePage]="isProfilePage"></video-module> -->
+          [isProfilePage]="isProfilePage"></video-module>
         <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
-        <!-- <dyk-module
+        <dyk-module
           *ngIf="dykData"
           [profileName]="profileHeaderData.profileName"
-          [dykData]="dykData"></dyk-module> -->
+          [dykData]="dykData"></dyk-module>
       </div> <!--loadBatch5-->
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
@@ -125,31 +124,31 @@
           [profileName]="profileHeaderData.profileName"
           [faqData]="faqData"></faq-module>
         <!-- <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget> -->
-        <!-- <list-of-lists
+        <list-of-lists
           *ngIf="listOfListsData"
           [profileHeaderData]="profileHeaderData"
           [listOfListsData]="listOfListsData"
           [profileType]="profileType"
           [teamId]="pageParams.teamId"
           [scope]="scope"
-          [storedPartnerParam]="storedPartnerParam"></list-of-lists> -->
+          [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <!-- <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
         <!-- <news-module
           *ngIf="newsDataArray"
           [newsDataArray]="newsDataArray"
           [profileName]="profileHeaderData.profileName"></news-module> -->
         <!-- <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget> -->
-        <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
-        <!-- <twitter-module
+        <twitter-module
           *ngIf="twitterData"
           [profileName]="profileHeaderData.profileName"
-          [twitterData]="twitterData"></twitter-module> -->
+          [twitterData]="twitterData"></twitter-module>
 
         <!--Like Us On FB Module, only display if not on partner page-->
-        <!-- <section *ngIf="!partnerID">
+        <section *ngIf="!partnerID">
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        </section> -->
+          <!--TODO Uncomment widget below-->
+          <!--<responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>-->
+        </section>
       </div> <!--loadBatch6-->
     </div>
   </section>

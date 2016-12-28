@@ -23,8 +23,8 @@ import { HeadlineDataService } from "../services/headline-module-service";
 import { BoxScoresService } from "../services/box-scores.service";
 import { SchedulesService } from "../services/schedules.service";
 import { GeoLocation } from "../global/global-service";
-// import { ImagesService } from "../services/carousel.service";
-// import { ListOfListsService } from "../services/list-of-lists.service";
+import { ImagesService } from "../services/carousel.service";
+import { ListOfListsService } from "../services/list-of-lists.service";
 // import { SeoService } from "../seo.service";
 // import { DirectoryService } from "../services/directory.service";
 // import { SearchService } from "../services/search.service";
@@ -45,13 +45,13 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 // import { SearchPage } from "../webpages/search-page/search.page";
 
 //modules
-// import { WidgetModule } from "../ui-modules/widget/widget.module";
+import { WidgetModule } from "../ui-modules/widget/widget.module";
  import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 // import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
 // import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
 // import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
-// import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
-// import { CommentModule } from "../fe-core/modules/comment/comment.module";
+import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
+import { CommentModule } from "../fe-core/modules/comment/comment.module";
 // import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 // import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
 // import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
@@ -65,7 +65,7 @@ import { CircleImage } from "../fe-core/components/images/circle-image/circle-im
 import { HoverImage } from "../fe-core/components/images/hover-image";
 import { RectangleImage } from "../fe-core/components/images/rectangle-image/rectangle-image";
 import { ErrorComponent } from "../fe-core/components/error/error.component";
-// import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
+import { SidekickWrapper } from "../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 import { ModuleHeader } from "../fe-core/components/module-header/module-header.component";
 import { ModuleFooter } from "../fe-core/components/module-footer/module-footer.component";
 import { VideoStackComponent } from "../fe-core/components/video-stack/video-stack.component";
@@ -87,15 +87,15 @@ import { TableCell } from '../fe-core/components/custom-table/table-cell.compone
 import { NoDataBox } from '../fe-core/components/error/data-box/data-box.component';
 import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
-// import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
+import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
 // import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
 import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 import { Larousel } from '../fe-core/components/larousel/larousel';
 import { NewsBox } from '../fe-core/components/news-box/news-box';
 // import { LineChartComponent } from '../fe-core/components/line-chart/line-chart.component';
-// import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
-// import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
+import { ImagesMedia } from "../fe-core/components/carousels/images-media-carousel/images-media-carousel.component";
+import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
 import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
 import { TitleComponent } from "../fe-core/components/title/title.component";
 // import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
@@ -125,14 +125,14 @@ const PAGEMODULES = [
 
 const COREMODULES = [
   // put core modules here
-  // WidgetModule,
-   BoxScoresModule
+  WidgetModule,
+  BoxScoresModule,
   // BillboardModule,
   // DeepDiveRecommendation,
   // WidgetCarouselModule,
   // BillboardModule,
-  // ListOfListsModule,
-  // CommentModule,
+  ListOfListsModule,
+  CommentModule
   // DirectoryModule,
   // SearchPageModule,
 ]
@@ -146,7 +146,7 @@ const COMPONENTS = [
   ScrollableContent,
   ErrorComponent,
   LoadingComponent,
-  // SidekickWrapper,
+  SidekickWrapper,
   ModuleHeader,
   ModuleFooter,
   VideoStackComponent,
@@ -167,7 +167,7 @@ const COMPONENTS = [
   CircleButton,
   SliderCarousel,
   ComplexInnerHtml,
-  // PaginationFooter,
+  PaginationFooter,
   HeaderComponent,
   HamburgerMenuComponent,
   // FooterComponent,
@@ -178,8 +178,8 @@ const COMPONENTS = [
   ArticleBlockComponent,
   // DeepDiveRecommendation,
   SideScroll,
-  // ImagesMedia,
-  // ListOfListsItem,
+  ImagesMedia,
+  ListOfListsItem,
   BackTabComponent,
   TitleComponent,
   // ContactUsComponent,
@@ -218,8 +218,8 @@ const PROVIDERS = [
   GeoLocation,
   VerticalGlobalFunctions,
   // HamburgerDeliveryService,
-  // ImagesService,
-  // ListOfListsService,
+  ImagesService,
+  ListOfListsService,
   // SeoService,
   // DirectoryService,
   // SearchService,

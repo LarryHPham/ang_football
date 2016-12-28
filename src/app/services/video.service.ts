@@ -8,10 +8,9 @@ import { ModelService } from '../global/shared/model/model.service';
 @Injectable()
 
 export class VideoService {
-    constructor(public model :ModelService) {};
+    constructor(public model:ModelService) {};
 
     getVideoBatchService(limit, startNum, pageNum, first,scope, teamID?, state?){
-        //Configure HTTP Headers
         let tdlURL;
         if(first==undefined || first==null){
             first=0;

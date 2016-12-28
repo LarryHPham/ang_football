@@ -22,7 +22,7 @@ import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
-import { SeoService } from "../../seo.service";
+// import { SeoService } from "../../seo.service";
 
 //interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
@@ -42,7 +42,7 @@ declare var moment;
 
 @Component({
     selector: 'League-page',
-    templateUrl: './app/webpages/league-page/league.page.html'
+    templateUrl: './league.page.html'
 })
 
 export class LeaguePage{
@@ -130,7 +130,7 @@ export class LeaguePage{
       private _headlineDataService:HeadlineDataService,
       private _newsService: NewsService,
       private _twitterService: TwitterService,
-      private _seoService: SeoService
+      // private _seoService: SeoService
     ) {
       var currentUnixDate = new Date().getTime();
 
@@ -208,20 +208,20 @@ export class LeaguePage{
 
     private metaTags(data){
       //create meta description that is below 160 characters otherwise will be truncated
-      let header = data.headerData;
-      let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
-      let link = window.location.href;
-      let title = header.leagueFullName;
-      let image = header.leagueLogo;
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
-      this._seoService.setTitle(title);
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('Index, Follow');
+      // let header = data.headerData;
+      // let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
+      // let link = window.location.href;
+      // let title = header.leagueFullName;
+      // let image = header.leagueLogo;
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle(title);
+      // this._seoService.setOgDesc(metaDesc);
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
+      // this._seoService.setTitle(title);
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('Index, Follow');
     } // metaTags
 
 

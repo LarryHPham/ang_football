@@ -88,7 +88,7 @@
           <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
           <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
-          <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" ></responsive-widget>
+          <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace"></responsive-widget>
           <list-of-lists
             *ngIf="listOfListsData"
             [profileHeaderData]="profileHeaderData"
@@ -110,6 +110,7 @@
             <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
           </section>
         </div> <!--loadBatch6-->
-    </div>
+      </div> <!--profileHeaderData-->
+    </div> <!--profileHeaderData-->
   </section> <!--profile-container-->
 </sidekick-wrapper>

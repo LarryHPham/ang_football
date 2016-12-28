@@ -5,8 +5,7 @@ import { GeoLocation } from "../global/global-service";
 
 @Component({
   selector: 'my-app',
-  templateUrl: './app.component.html',
-  styles: [require('../global/stylesheets/main.less').toString()]
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
   public scopeParam: any;
