@@ -1,13 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Http} from "@angular/http";
 import {GlobalSettings} from "../global/global-settings";
-
-import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
+import {ModelService} from "../global/shared/model/model.service";
 
 @Injectable()
 
 export class FantasyService {
-    constructor(public http:Http) {
+    constructor(public model:ModelService) {
     };
 
     getFantasyReport(playerId) {
@@ -15,8 +13,7 @@ export class FantasyService {
         if (playerId !== undefined) {
             fullUrl += playerId;
         }
-        return this.http.get(fullUrl)
-            .map(res => res.json())
+        return this.model.get(fullUrl)
             .map(data => data.data[0]);
     }
 }

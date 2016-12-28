@@ -21,8 +21,8 @@ import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
-// import { FantasyService } from '../services/fantasy.service';
-// import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
+import { FantasyService } from '../services/fantasy.service';
+import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 import { PlayerStatsService } from "../services/player-stats.service";
 // import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
 import { PickateamPageService } from '../services/pickateam.service';
@@ -30,7 +30,7 @@ import { PickateamPageService } from '../services/pickateam.service';
 //pages
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
-// import { PlayerPage } from "../webpages/player-page/player.page";
+import { PlayerPage } from "../webpages/player-page/player.page";
 // import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 // import { StandingsPage } from "../webpages/standings-page/standings.page";
@@ -59,8 +59,8 @@ import { TwitterModule } from "../fe-core/modules/twitter/twitter.module";
 import { DailyUpdateModule } from "../fe-core/modules/daily-update/daily-update.module";
 import { TeamRosterModule } from "../fe-core/modules/team-roster/team-roster.module";
 import { PlayerStatsModule } from "../fe-core/modules/player-stats/player-stats.module";
-// import { FantasyModule } from "../fe-core/modules/fantasy/fantasy.module";
-// import { SeasonStatsModule } from "../fe-core/modules/season-stats/season-stats.module";
+import { FantasyModule } from "../fe-core/modules/fantasy/fantasy.module";
+import { SeasonStatsModule } from "../fe-core/modules/season-stats/season-stats.module";
 
 //components
 import { StandingsComponent } from "../fe-core/components/standings/standings.component";
@@ -82,7 +82,7 @@ import { BarChartComponent } from "../fe-core/components/bar-chart/bar-chart.com
 import { PlayerStatsComponent } from "../fe-core/components/player-stats/player-stats.component";
 import { GlossaryComponent } from "../fe-core/components/glossary/glossary.component";
 import { RosterComponent } from "../fe-core/components/roster/roster.component";
-// import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-stats.component";
+import { SeasonStatsComponent } from "../fe-core/components/season-stats/season-stats.component";
 
 const MODULES = [
   // put modules here
@@ -95,7 +95,7 @@ const PAGEMODULES = [
   // put page modules here
   LeaguePage,
   TeamPage,
-  // PlayerPage,
+  PlayerPage,
   // SchedulesPage,
   // DraftHistoryPage,
   // StandingsPage,
@@ -127,8 +127,8 @@ const COREMODULES = [
   DailyUpdateModule,
   TeamRosterModule,
   PlayerStatsModule,
-  // FantasyModule,
-  // SeasonStatsModule,
+  FantasyModule,
+  SeasonStatsModule,
 ]
 
 const COMPONENTS = [
@@ -151,7 +151,7 @@ const COMPONENTS = [
   PlayerStatsComponent,
   GlossaryComponent,
   RosterComponent,
-  // SeasonStatsComponent,
+  SeasonStatsComponent,
 ];
 
 const PIPES = [
@@ -161,7 +161,7 @@ const PIPES = [
 
 const PROVIDERS = [
   // put providers components here
-  ProfileHeaderService, 
+  ProfileHeaderService,
   VideoService,
   StandingsService,
   TransactionsService,
@@ -174,9 +174,9 @@ const PROVIDERS = [
   TwitterService,
   RosterService,
   DailyUpdateService,
-  // FantasyService,
-  // SeasonStatsService,
-  // SeasonStatsPageService,
+  FantasyService,
+  SeasonStatsService,
+  SeasonStatsPageService,
   PlayerStatsService,
   // DynamicWidgetCall,
   PickateamPageService
