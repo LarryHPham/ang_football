@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, NgZone, Renderer } from '@angular/core';
 import { DeepDiveService } from '../../services/deep-dive.service';
-// import { SchedulesService } from '../../services/schedules.service';
+import { SchedulesService } from '../../services/schedules.service';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
@@ -56,7 +56,7 @@ export class DeepDivePage{
       public renderer:Renderer,
       private _activatedRoute:ActivatedRoute,
       private _deepDiveData: DeepDiveService,
-      // private _schedulesService:SchedulesService,
+      private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
       // private _seoService: SeoService,
       public ngZone:NgZone,
@@ -177,19 +177,19 @@ export class DeepDivePage{
         this.safeCall = false;
         this.scope = this.scope.toLowerCase();
         let changeScope = this.scope == 'ncaaf'?'fbs':this.scope;
-        // this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-        //   if(this.sideScrollData == null){
-        //     this.sideScrollData = sideScrollData;
-        //   }
-        //   else{
-        //     sideScrollData.forEach(function(val,i){
-        //       self.sideScrollData.push(val);
-        //     })
-        //   }
-        //   this.safeCall = true;
-        //   this.callCount++;
-        //   this.scrollLength = this.sideScrollData.length;
-        // }, null, null)
+        this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+          if(this.sideScrollData == null){
+            this.sideScrollData = sideScrollData;
+          }
+          else{
+            sideScrollData.forEach(function(val,i){
+              self.sideScrollData.push(val);
+            })
+          }
+          this.safeCall = true;
+          this.callCount++;
+          this.scrollLength = this.sideScrollData.length;
+        }, null, null)
       }
     }
 

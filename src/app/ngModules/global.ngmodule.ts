@@ -88,7 +88,7 @@ import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 // import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
 // import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
-// import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
+import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 // import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 import { Larousel } from '../fe-core/components/larousel/larousel';
 import { NewsBox } from '../fe-core/components/news-box/news-box';
@@ -177,7 +177,7 @@ const COMPONENTS = [
   // LineChartComponent,
   // ArticleBlockComponent,
   // DeepDiveRecommendation,
-  // SideScroll,
+  SideScroll,
   // ImagesMedia,
   // ListOfListsItem,
   BackTabComponent,

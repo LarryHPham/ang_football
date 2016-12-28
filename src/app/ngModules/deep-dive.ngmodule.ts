@@ -8,8 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { DeepDiveService } from '../services/deep-dive.service';
 // import { BoxScoresService } from '../services/box-scores.service';
 
-// import { SideScrollSchedule } from '../ui-modules/side-scroll-schedules/side-scroll-schedules.module';
-// import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.component';
+import { SideScrollSchedule } from '../ui-modules/side-scroll-schedules/side-scroll-schedules.module';
+import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.component';
 
 //deep-dive blocks
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
@@ -65,8 +65,8 @@ const COREMODULES = [
   // DeepDiveBlock2,
   // DeepDiveBlock3,
   // DeepDiveBlock4,
-  // SideScrollSchedule,
-  // ScheduleBox,
+  SideScrollSchedule,
+  ScheduleBox,
   // ArticleStackModule,
   // ArticleStack1Module,
   // ArticleStack2Module,
