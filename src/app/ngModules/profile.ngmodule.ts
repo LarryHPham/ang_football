@@ -29,7 +29,7 @@ import { HeadlineDataService } from "../services/headline-module-service";
 import { PickateamPageService } from '../services/pickateam.service';
 
 //pages
-// import { LeaguePage } from "../webpages/league-page/league.page";
+import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 // import { PlayerPage } from "../webpages/player-page/player.page";
 // import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
@@ -94,7 +94,7 @@ const MODULES = [
 
 const PAGEMODULES = [
   // put page modules here
-  // LeaguePage,
+  LeaguePage,
   TeamPage,
   // PlayerPage,
   // SchedulesPage,
