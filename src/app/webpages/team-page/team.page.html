@@ -1,10 +1,9 @@
 <!-- <sidekick-wrapper> -->
   <section class="page profile-container team-page" (window:scroll)="onScroll($event)">
-    <!-- <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component> -->
-     <!-- <error-component *ngIf="hasError"></error-component> -->
+     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
+      <error-component *ngIf="hasError"></error-component>
 
     <div *ngIf="profileHeaderData && pageParams">
-    <!-- <headline-component [title]="'About the ' + profileHeaderData.profileName"></headline-component> -->
 
       <div class="loadBatch1">
         <profile-header [profileHeaderData]="profileHeaderData" [profileType]="'team'"></profile-header>
@@ -26,11 +25,11 @@
           [headlineData]="headlineData"
           [isLeague]="false"></articles-module>
         <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
-        <!-- <box-scores
+        <box-scores
           *ngIf="dateParam"
           [boxScores]="currentBoxScores"
           [calendarParams]="dateParam"
-          (dateEmit)="getBoxScores($event)"></box-scores> -->
+          (dateEmit)="getBoxScores($event)"></box-scores>
         <!-- <responsive-widget
           *ngIf="dateParam"
           [embedPlace]="widgetPlace"
@@ -38,7 +37,7 @@
       </div> <!--loadBatch2-->
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
-        <!-- <schedules
+        <schedules
           *ngIf="schedulesData"
           [footerParams]="scheduleParams"
           [profHeader]="profileHeaderData"
@@ -47,28 +46,28 @@
           [dropdownKey1]="selectedFilter1"
           [storedPartnerParam]="storedPartnerParam"
           (tabSelected)="scheduleTab($event)"
-          (selectedKeyFilter)="filterDropdown($event)"></schedules> -->
-        <!-- <standings-module
+          (selectedKeyFilter)="filterDropdown($event)"></schedules>
+        <standings-module
           *ngIf="standingsData"
           [data]="standingsData"
           (tabSelected)="standingsTabSelected($event)"
           (filterSelected)="standingsFilterSelected($event)"
-          [scope]="scope"></standings-module> -->
+          [scope]="scope"></standings-module>
         <!-- <responsive-widget
           *ngIf="standingsData"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'1024'"></responsive-widget> -->
-        <!-- <team-roster-module
+        <team-roster-module
           *ngIf="rosterData"
-          [data]="rosterData"></team-roster-module> -->
-        <!-- <player-stats-module
+          [data]="rosterData"></team-roster-module>
+        <player-stats-module
           *ngIf="playerStatsData"
           [data]="playerStatsData"
           [profileHeader]="profileHeaderData"
           [isProfilePage]="isProfilePage"
           [profileData]="profileData"
           [tabName]="ptabName"
-          (tabSelected)="playerStatsTabSelected($event)"></player-stats-module> -->
+          (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
       </div> <!--loadBatch3-->
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
@@ -76,20 +75,20 @@
           *ngIf="playerStatsData"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget> -->
-        <!-- <transactions-module
+        <transactions-module
           *ngIf="scope == 'nfl' && transactionsData"
           [data]="transactionsData"
           [transactionModuleFooterParams]="transactionModuleFooterParams"
           [transactionFilter1]="transactionFilter1"
           [dropdownKey1]="dropdownKey1"
           (tabSwitched)="transactionsTab($event)"
-          (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module> -->
+          (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
         <!-- <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
-        <!-- <draft-history-module
+        <draft-history-module
           *ngIf="scope == 'nfl' && profileData"
           [footerData]="pageParams"
           [profileData]="profileData"
-          [storedPartnerParam]="storedPartnerParam"></draft-history-module> -->
+          [storedPartnerParam]="storedPartnerParam"></draft-history-module>
         <!-- <responsive-widget
           *ngIf="profileData"
           [embedPlace]="widgetPlace"
@@ -97,60 +96,59 @@
       </div> <!--loadBatch4-->
 
       <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
-        <!-- <comparison-module
+        <comparison-module
           [modelData]="comparisonModuleData"
           [profileName]="profileHeaderData.profileName"
           [profileType]="'team'"
           [profileId]="pageParams.teamId"
-          [scope]="scope"></comparison-module> -->
-          <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
+          [scope]="scope"></comparison-module>
         <div class="profile-carousel-container">
-          <!-- <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel> -->
+           <images-media-carousel [imageData]="imageData" [copyright]="copyright" [profHeader]="profileHeaderData" [imageTitle]="imageTitle" [isProfilePage]="isProfilePage"></images-media-carousel>
         </div>
-        <!-- <video-module
+        <video-module
           *ngIf="videoData"
           [firstVideo]="firstVideo"
           [videoData]="videoData"
           [profileHeader]="profileHeaderData"
-          [isProfilePage]="isProfilePage"></video-module> -->
+          [isProfilePage]="isProfilePage"></video-module>
         <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
-        <!-- <dyk-module
+        <dyk-module
           *ngIf="dykData"
           [profileName]="profileHeaderData.profileName"
-          [dykData]="dykData"></dyk-module> -->
+          [dykData]="dykData"></dyk-module>
       </div> <!--loadBatch5-->
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
-        <!-- <faq-module
+        <faq-module
           *ngIf="faqData"
           [profileName]="profileHeaderData.profileName"
-          [faqData]="faqData"></faq-module> -->
+          [faqData]="faqData"></faq-module>
         <!-- <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget> -->
-        <!-- <list-of-lists
+        <list-of-lists
           *ngIf="listOfListsData"
           [profileHeaderData]="profileHeaderData"
           [listOfListsData]="listOfListsData"
           [profileType]="profileType"
           [teamId]="pageParams.teamId"
           [scope]="scope"
-          [storedPartnerParam]="storedPartnerParam"></list-of-lists> -->
+          [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <!-- <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
         <!-- <news-module
           *ngIf="newsDataArray"
           [newsDataArray]="newsDataArray"
           [profileName]="profileHeaderData.profileName"></news-module> -->
         <!-- <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget> -->
-        <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
-        <!-- <twitter-module
+        <twitter-module
           *ngIf="twitterData"
           [profileName]="profileHeaderData.profileName"
-          [twitterData]="twitterData"></twitter-module> -->
+          [twitterData]="twitterData"></twitter-module>
 
         <!--Like Us On FB Module, only display if not on partner page-->
-        <!-- <section *ngIf="!partnerID">
+        <section *ngIf="!partnerID">
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        </section> -->
+          <!--TODO Uncomment widget below-->
+          <!--<responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>-->
+        </section>
       </div> <!--loadBatch6-->
     </div>
   </section>

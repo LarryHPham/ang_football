@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Http, Response, Headers} from "@angular/http";
 import { GlobalSettings } from "../global/global-settings";
 import { Observable } from "rxjs/Observable";
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
+import {ModelService} from "../global/shared/model/model.service";
 
 @Injectable()
 
 export class VideoService {
-    constructor(public http:Http) {};
+    constructor(public model:ModelService) {};
 
     getVideoBatchService(limit, startNum, pageNum, first,scope, teamID?, state?){
-        //Configure HTTP Headers
         let tdlURL;
         if(first==undefined || first==null){
             first=0;
@@ -22,8 +21,7 @@ export class VideoService {
         } else {
             tdlURL = GlobalSettings.getApiUrl() + "/videoBatch/" + scope +'/'+ limit + '/' +pageNum+ '/'+ state;
         }
-        return this.http.get(tdlURL)
-          .map(res => res.json())
+        return this.model.get(tdlURL)
           .map(data => {
               return data;
           })

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http } from '@angular/http';
 
 //globals
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
@@ -15,6 +14,7 @@ import { SportPageParameters } from '../global/global-interface';
 import { Gradient } from '../global/global-gradient';
 import { ComparisonModuleData } from '../fe-core/modules/comparison/comparison.module';
 import { ComparisonBarInput } from '../fe-core/components/comparison-bar/comparison-bar.component';
+import {ModelService} from "../global/shared/model/model.service";
 
 export interface ComparisonBarList {
   [year: string]: Array<ComparisonBarInput>;
@@ -187,7 +187,7 @@ export class ComparisonStatsService {
   private puntingFields = ["Total Punts", "Gross Punting Yards", "Gross Punting Average", "Net Punting Average", "Punts Inside the 20 Yard Line", "Longest Punt", "Blocked Punts"];
   private returningFields = ["Return Attempts", "Return Yards", "Return Average", "Longest Return", "Touchdowns", "Fair Catches"];
   private scope: string;
-  constructor(public http: Http) { }
+  constructor(public model: ModelService) { }
 
   getInitialPlayerStats(scope, pageParams: SportPageParameters): Observable<ComparisonModuleData> {
     this.scope = scope;
@@ -274,8 +274,7 @@ export class ComparisonStatsService {
   getPlayerList(teamId: string): Observable<Array<{key: string, value: string, class: string}>> {
     //http://dev-touchdownloyal-api.synapsys.us/comparisonRoster/team/135
     let playersUrl = this._apiUrl + "/comparisonRoster/team/" + teamId;
-    return this.http.get(playersUrl)
-      .map(res => res.json())
+    return this.model.get(playersUrl)
       .map(data => {
         return this.formatPlayerList(data.data);
     });
@@ -283,8 +282,7 @@ export class ComparisonStatsService {
 
   getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
     let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;
-    return this.http.get(teamsUrl)
-      .map(res => res.json())
+    return this.model.get(teamsUrl)
       .map(data => {
         return this.formatTeamList(data.data);
     });
@@ -301,8 +299,7 @@ export class ComparisonStatsService {
     else {
       url += "league/" + scope;
     }
-    return this.http.get(url)
-      .map(res => res.json())
+    return this.model.get(url)
       .map(data => {
         return dataLoaded(data.data);
       });

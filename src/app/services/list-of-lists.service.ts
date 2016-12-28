@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http, Headers } from '@angular/http';
 import { Router } from '@angular/router';
 
 //globals
@@ -10,31 +9,25 @@ import { GlobalSettings }  from '../global/global-settings';
 
 //interfaces
 import { SliderCarousel, SliderCarouselInput } from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
+import {ModelService} from "../global/shared/model/model.service";
 
 declare var moment: any;
 @Injectable()
 export class ListOfListsService {
   private _apiUrlTdl: string = GlobalSettings.getApiUrl();
-  private _proto = window.location.protocol;
+  // TODO determine protocol programmatically
+  // private _proto = window.location.protocol;
+  private _proto = "https";
   private _scope:string;
 
   // private _apiToken: string = 'BApA7KEfj';
   // private _headerName: string = 'X-SNT-TOKEN';
 
-  constructor(public http: Http){
-  }
-
-  //Function to set custom headers
-  setToken(){
-    var headers = new Headers();
-    //headers.append(this.headerName, this.apiToken);
-    return headers;
+  constructor(public model: ModelService){
   }
 
         //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
   getListOfListsService(urlParams, profileType: string, pageType: string){
-    // Configure HTTP Headers
-    var headers = this.setToken();
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
@@ -59,10 +52,7 @@ export class ListOfListsService {
 
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
-    return this.http.get( callURL, {
-        headers: headers
-      })
-      .map(res => res.json())
+    return this.model.get( callURL )
       .map(
         data => {
           if ( !data || !data.data ) {

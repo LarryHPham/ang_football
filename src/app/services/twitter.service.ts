@@ -1,24 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http, Headers } from '@angular/http';
 
 //globals
 import { GlobalSettings } from '../global/global-settings';
+import {ModelService} from "../global/shared/model/model.service";
 
 @Injectable()
 export class TwitterService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
-  constructor(public http: Http){}
-  setToken(){
-    var headers = new Headers();
-    return headers;
-  }
+
+  constructor(public model: ModelService){}
 
   // getTwitterService(profile, id){
   getTwitterService(profile, id?, scope?){
-    var headers = this.setToken();
-    var fullUrl = this._apiUrl;
-    fullUrl += "/"+profile+"/twitterInfo";
     var newUrl = GlobalSettings.getApiUrl() + "/twitter/" + profile;
 
     //if page is team/player or league
@@ -29,12 +22,7 @@ export class TwitterService {
       newUrl += "/" + scope
     }
 
-    return this.http.get( newUrl, {
-        headers: headers
-      })
-      .map(
-        res => res.json()
-      )
+    return this.model.get( newUrl )
       .map(
         data => {
           return data.data[0];

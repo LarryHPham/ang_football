@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Http, Headers} from '@angular/http';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
@@ -9,6 +8,7 @@ import {SliderCarousel, SliderCarouselInput} from '../fe-core/components/carouse
 import {TransactionModuleData} from '../fe-core/modules/transactions/transactions.module';
 import {TransactionTabData} from '../fe-core/components/transactions/transactions.component';
 import {TransactionsListInput} from '../fe-core/components/transactions-list-item/transactions-list-item.component';
+import { ModelService } from '../global/shared/model/model.service';
 
 declare var moment: any;
 
@@ -66,13 +66,7 @@ export class TransactionsService {
   public transactionsTotal: any;
   public activeTab: string;
 
-  constructor(public http: Http) {}
-
-  //Function to set custom headers
-  setToken(){
-      var headers = new Headers();
-      return headers;
-  }
+  constructor(public model: ModelService){}
 
   getTabs(errorMessagePrepend: string, isPage: boolean): Array<TransactionTabData> {
     var tabs: TransactionTabData[] = [
@@ -152,8 +146,6 @@ export class TransactionsService {
   }
 
   getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, sortOrder?, limit?, page?){
-    //Configure HTTP Headers
-    var headers = this.setToken();
     this.activeTab = tab.tabDataKey;
     if( limit == null ){ limit = 4 };
     if( page == null ){ page = 1 };
@@ -176,8 +168,7 @@ export class TransactionsService {
     // and MLB profile pages
     var currentTeam = type == "module" ? teamId : null;
 
-    return this.http.get( callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get( callURL)
       .map(
         data => {
           tab.yearArray=this.formatYearDropown(data.data.availableYears,data.data.availableSeasons);

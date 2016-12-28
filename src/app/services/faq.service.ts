@@ -1,34 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http, Headers } from '@angular/http';
 
 //globals
 import { GlobalSettings } from '../global/global-settings';
+import { ModelService } from '../global/shared/model/model.service';
 
 @Injectable()
 export class FaqService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
-  constructor(public http: Http){}
-
-  setToken(){
-    var headers = new Headers();
-    return headers;
-  }
+  constructor(public model: ModelService){}
 
   getFaqService(profile, id?){
-    var headers = this.setToken();
     var fullUrl = this._apiUrl;
     fullUrl += "/faq/" + profile;
 
     if(id !== undefined){
       fullUrl += "/" + id;
     }
-    return this.http.get( fullUrl, {
-        headers: headers
-      })
-      .map(
-        res => res.json()
-      )
+    return this.model.get(fullUrl)
       .map(
         data => {
           return this.faqData(data.data);

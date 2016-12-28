@@ -6,7 +6,7 @@ import { SanitizeHtml } from "../../fe-core/pipes/safe.pipe";
 
 @Component({
   selector: 'profile-video-stack-component',
-  templateUrl: './app/ui-modules/profile-video-stack/profile-video-stack.component.html'
+  templateUrl: './profile-video-stack.component.html'
 })
 
 export class ProfileVideoStackComponent implements OnInit{

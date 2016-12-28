@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http, Headers } from '@angular/http';
 import { GlobalFunctions } from '../global/global-functions';
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
 import { GlobalSettings } from '../global/global-settings';
 import { Gradient } from '../global/global-gradient';
+import {ModelService} from "../global/shared/model/model.service";
 
 //Interfaces
 import { CircleImageData } from '../fe-core/components/images/image-data';
 import { gameAiArticle, gameAiImageConfig } from '../fe-core/components/game-article/game-article.component';
+
 
 export interface GameInfoInput {
   gameHappened: boolean;
@@ -43,19 +44,10 @@ export class BoxScoresService {
   // private _apiToken: string = 'BApA7KEfj';
   // private _headerName: string = 'X-SNT-TOKEN';
 
-  constructor(public http: Http){
-  }
-
-  //Function to set custom headers
-  setToken(){
-      var headers = new Headers();
-      //headers.append(this.headerName, this.apiToken);
-      return headers;
-  }
+  constructor(public model: ModelService){}
 
   getBoxScoresService(profile, date, teamId?){//DATE
   //Configure HTTP Headers
-  var headers = this.setToken();
   let chosenDate = date;
 
   //player profile are treated as teams
@@ -66,8 +58,7 @@ export class BoxScoresService {
   }
   //date needs to be the date coming in AS EST and come back as UTC
   var callURL = this._apiUrl+'/boxScores/'+GlobalSettings.getScope(profile)+'/'+teamId+'/'+ date;
-  return this.http.get(callURL, {headers: headers})
-    .map(res => res.json())
+  return this.model.get(callURL)
     .map(data => {
       // transform the data to YYYY-MM-DD objects from unix
       var transformedDate = this.transformBoxScores(data);
@@ -200,7 +191,6 @@ export class BoxScoresService {
   */
   weekCarousel(profile, date, teamId?){
     //Configure HTTP Headers
-    var headers = this.setToken();
 
     //player profile are treated as teams
     if(profile == 'player'){
@@ -208,8 +198,7 @@ export class BoxScoresService {
     }
 
     var callURL = this._apiUrl+'/'+profile+'/gameDatesWeekly/'+teamId+'/'+ date;
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get(callURL)
       .map(data => {
         return data;
       })
@@ -221,7 +210,6 @@ export class BoxScoresService {
   */
   validateMonth(profile, date, teamId?){
     //Configure HTTP Headers
-    var headers = this.setToken();
 
     //player profile are treated as teams
     if(profile == 'player'){
@@ -229,8 +217,7 @@ export class BoxScoresService {
     }
 
     var callURL = this._apiUrl+'/'+profile+'/gameDates/'+teamId+'/'+ date;//localToEST needs tobe the date coming in AS UNIX
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get(callURL)
       .map(data => {
         return data;
       })
