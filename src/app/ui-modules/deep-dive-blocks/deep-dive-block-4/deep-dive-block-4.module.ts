@@ -6,7 +6,7 @@ import { ArticleStackModule } from '../../../fe-core/modules/article-stack/artic
 
 @Component({
     selector: 'deep-dive-block-4',
-    templateUrl: './app/ui-modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module.html',
+    templateUrl: './deep-dive-block-4.module.html',
 })
 export class DeepDiveBlock4{
   public widgetPlace: string = "widgetForPage";

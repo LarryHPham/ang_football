@@ -14,15 +14,16 @@ import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.com
 //deep-dive blocks
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { DeepDiveBlock1 } from '../ui-modules/deep-dive-blocks/deep-dive-block-1/deep-dive-block-1.module';
-// import { DeepDiveBlock2 } from '../ui-modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
-// import { DeepDiveBlock3 } from '../ui-modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
-// import { DeepDiveBlock4 } from '../ui-modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
+import { DeepDiveBlock2 } from '../ui-modules/deep-dive-blocks/deep-dive-block-2/deep-dive-block-2.module';
+import { DeepDiveBlock3 } from '../ui-modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module';
+import { DeepDiveBlock4 } from '../ui-modules/deep-dive-blocks/deep-dive-block-4/deep-dive-block-4.module';
 
 import { ArticleStackModule } from '../fe-core/modules/article-stack/article-stack.module';
 import { ArticleStack1Module } from '../fe-core/modules/article-stack-style-1/article-stack.module';
 import { ArticleStack2Module } from '../fe-core/modules/article-stack-style-2/article-stack.module';
 import { TileStackModule } from '../fe-core/modules/tile-stack/tile-stack.module';
 import { DeepDiveVideoModule } from '../fe-core/modules/video-deep-dive/video-deep-dive.module';
+import { DeepDiveRecommendation } from '../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module';
 import { ArticleStacktopComponent } from '../fe-core/components/article-stacktop/article-stacktop.component';
 import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.component';
 
@@ -30,16 +31,16 @@ import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.
 // import { StatHyphenValuePipe } from '../fe-core/pipes/stat-hyphen.pipe';
 
 //article page blocks
-// import { ArticlePages } from "../webpages/article-pages/article-pages.page";
-// import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
+import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
 // import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
-// import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
-// import { RecommendationsComponent } from "../fe-core/components/articles/recommendations/recommendations.component";
-// import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
-// import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
+import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
+import { RecommendationsComponent } from "../fe-core/components/articles/recommendations/recommendations.component";
+import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
+import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
 // import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
-// import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
-// import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
+import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
+import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
 
 const MODULES = [
   // put modules here
@@ -52,15 +53,15 @@ const MODULES = [
 const PAGEMODULES = [
   // put page modules here
   DeepDivePage,
-  // ArticlePages,
+  ArticlePages,
 ]
 
 const COREMODULES = [
   // put core modules here
   DeepDiveBlock1,
-  // DeepDiveBlock2,
-  // DeepDiveBlock3,
-  // DeepDiveBlock4,
+  DeepDiveBlock2,
+  DeepDiveBlock3,
+  DeepDiveBlock4,
   SideScrollSchedule,
   ScheduleBox,
   ArticleStackModule,
@@ -68,21 +69,22 @@ const COREMODULES = [
   ArticleStack2Module,
   TileStackModule,
   DeepDiveVideoModule,
+  DeepDiveRecommendation
 ]
 
 const COMPONENTS = [
   // put shared components here
   StackRowsComponent,
   ArticleStacktopComponent,
-  // ShareLinksComponent,
+  ShareLinksComponent,
   // SidekickWrapperAI,
-  // ArticleContentComponent,
-  // RecommendationsComponent,
-  // DisqusComponent,
-  // TrendingComponent,
+  ArticleContentComponent,
+  RecommendationsComponent,
+  DisqusComponent,
+  TrendingComponent,
   // SidekickContainerComponent,
-  // ProfileDataComponent,
-  // BillboardComponent
+  ProfileDataComponent,
+  BillboardComponent
 ];
 
 const PIPES = [
