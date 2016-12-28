@@ -7,7 +7,7 @@ import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { PickTeamPage } from "../webpages/pickateam-page/pickateam.page";
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
-// import { PlayerPage } from "../webpages/player-page/player.page";
+import { PlayerPage } from "../webpages/player-page/player.page";
 // import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 // import { StandingsPage } from "../webpages/standings-page/standings.page";
 // import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
@@ -48,10 +48,10 @@ const relativeChildRoutes = [
         path: ':scope/team/:teamName/:teamID',
         component: TeamPage,
     },
-    // {
-    //     path: ':scope/player/:teamName/:fullName/:playerID',
-    //     component: PlayerPage,
-    // },
+    {
+        path: ':scope/player/:teamName/:fullName/:playerID',
+        component: PlayerPage,
+    },
     // // //Misc. Pages
     // {
     //     path: ':scope/directory/:type/:startsWith/page/:page',

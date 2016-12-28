@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { Http, Headers } from '@angular/http';
 
 //globals
 import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
 import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from '../global/global-settings';
+import { ModelService } from "../global/shared/model/model.service";
 
 //interfaces
 import { SliderCarousel, SliderCarouselInput } from '../fe-core/components/carousels/slider-carousel/slider-carousel.component';
@@ -69,12 +68,7 @@ interface SimplePlayerData {
 export class SeasonStatsService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _scope: string;
-  constructor(public http: Http) { }
-
-  setToken(){
-    var headers = new Headers();
-    return headers;
-  }
+  constructor(public model: ModelService) { }
 
   private getLinkToPage(playerId: number, playerName: string): Array<any> {
     let partnerRoute = GlobalSettings.storedPartnerId() ? '/'+GlobalSettings.storedPartnerId() : '';
@@ -87,8 +81,7 @@ export class SeasonStatsService {
     if(scope != null){
       this._scope = scope;
     }
-    return this.http.get(url)
-      .map(res => res.json())
+    return this.model.get(url)
       .map(data => this.formatData(data.data, scope));
   }
 
@@ -392,7 +385,7 @@ export class SeasonStatsService {
 
 @Injectable()
 export class SeasonStatsPageService {
-  constructor(public http: Http, private _mlbFunctions: VerticalGlobalFunctions){}
+  constructor(public model: ModelService, private _mlbFunctions: VerticalGlobalFunctions){}
 
   getPageTitle( pageParams: SportPageParameters, playerName: string): string {
     let pageTitle = "Season Stats";
@@ -428,8 +421,7 @@ export class SeasonStatsPageService {
       let url = GlobalSettings.getApiUrl() + "/seasonStats/page/player/" + playerId;
       seasonStatsTab.isLoaded = false;
       seasonStatsTab.hasError = false;
-      this.http.get(url)
-          .map(res => res.json())
+      this.model.get(url)
           .map(data => this.setupTabData(seasonStatsTab, data.data, pageParams.teamId, maxRows, pageParams.scope))
           .subscribe(data => {
             seasonStatsTab.isLoaded = true;
