@@ -98,7 +98,7 @@ export class SchedulesService {
     }
 
     callURL += '/'+limit+'/'+ pageNum;  //default pagination limit: 5; page: 1
-
+    console.log(callURL);
     //optional week parameters
     return this.model.get(callURL)
       .map(data => {

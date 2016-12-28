@@ -46,8 +46,8 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
- import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
-// import { BillboardModule } from "../fe-core/modules/billboard/billboard.module";
+import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
+import { BillboardModule } from "../ui-modules/billboard/billboard.module";
 // import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
 // import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
@@ -127,10 +127,9 @@ const COREMODULES = [
   // put core modules here
   WidgetModule,
   BoxScoresModule,
-  // BillboardModule,
+  BillboardModule,
   // DeepDiveRecommendation,
   // WidgetCarouselModule,
-  // BillboardModule,
   ListOfListsModule,
   CommentModule
   // DirectoryModule,
@@ -177,7 +176,7 @@ const COMPONENTS = [
   // LineChartComponent,
   ArticleBlockComponent,
   // DeepDiveRecommendation,
-  SideScroll, 
+  SideScroll,
   ImagesMedia,
   ListOfListsItem,
   BackTabComponent,

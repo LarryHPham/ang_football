@@ -5,7 +5,7 @@ declare var moment;
 
 @Component({
   selector: 'deep-dive-block-3',
-  templateUrl: './app/ui-modules/deep-dive-blocks/deep-dive-block-3/deep-dive-block-3.module.html',
+  templateUrl: './deep-dive-block-3.module.html',
 })
 
 export class DeepDiveBlock3{
