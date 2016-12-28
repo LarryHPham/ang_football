@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Http} from '@angular/http';
 
 //globals
 import {Conference, Division, SportPageParameters} from '../global/global-interface';
@@ -10,10 +9,11 @@ import {GlobalSettings} from '../global/global-settings';
 
 import {TeamStandingsData, TDLStandingsTabdata, VerticalStandingsTableModel, VerticalStandingsTableData} from './standings.data';
 import {StandingsTableTabData} from '../fe-core/components/standings/standings.component';
+import { ModelService } from '../global/shared/model/model.service';
 
 @Injectable()
 export class StandingsService {
-  constructor(public http: Http){}
+  constructor(public model: ModelService){}
 
   private getLinkToPage(pageParams, profile: string): Array<any> {
     var linkToPage = [];
@@ -136,8 +136,7 @@ export class StandingsService {
       url += "/" + scope + "/" + season;
       standingsTab.isLoaded = false;
       standingsTab.hasError = false;
-      this.http.get(url)
-        .map(res => res.json())
+      this.model.get(url)
         .map(data => this.createData(standingsTab, scope, data.data.standings, data.data.seasons, maxRows, newParams, page))
         .subscribe(data => {
           standingsTab.isLoaded = true;
@@ -158,8 +157,7 @@ export class StandingsService {
     else if (standingsTab && newParams != null) {
       let url = GlobalSettings.getApiUrl() + "/standings";
       url += "/" + scope + "/" + season;
-      this.http.get(url)
-        .map(res => res.json())
+      this.model.get(url)
         .map(data => this.createData(standingsTab, scope, data.data.standings, data.data.seasons, maxRows, newParams, page))
         .subscribe(data => {
 

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Rx';
-import {Http, Headers} from '@angular/http';
 
 //globals
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
@@ -16,6 +15,7 @@ import {PaginationParameters} from "../fe-core/interfaces/pagination.data";
 
 //services
 import {ListPageService} from './list-page.service';
+import {ModelService} from "../global/shared/model/model.service";
 
 export interface DraftHistoryTab {
   tabTitle: string;
@@ -61,7 +61,7 @@ export interface PlayerDraftData {
 export class DraftHistoryService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _scope: string;
-  constructor(public http: Http){}
+  constructor(public model: ModelService){}
 
   getDraftHistoryTabs(profileData: IProfileData) {
     let errorMessage; // {0} is for the season name
@@ -130,8 +130,7 @@ export class DraftHistoryService {
       callURL = this._apiUrl + '/draftHistory/'+profileData.profileType+'/'+year+ "/999/1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
-    return this.http.get(callURL)
-    .map(res => res.json())
+    return this.model.get(callURL)
     .map(data => {
         if(type == 'module'){
           if(data.data.length > 1) {

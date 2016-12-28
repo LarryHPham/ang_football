@@ -1,24 +1,22 @@
 import {Injectable, Injector} from '@angular/core';
 import {Router} from '@angular/router';
-import {Http, Headers} from "@angular/http";
 import {GlobalSettings} from "../global/global-settings";
 import {Observable} from "rxjs/Observable";
 
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
+import {ModelService} from "../global/shared/model/model.service";
 
 @Injectable()
 
 export class ImagesService {
-    constructor(public http:Http) {
-    };
+    constructor(public model: ModelService){}
 
     getImages(profileType, profileId?) {
         var fullUrl = GlobalSettings.getApiUrl() + "/images/" + profileType.toLowerCase();
         if (profileId !== undefined) {
             fullUrl += "/" + profileId;
         }
-        return this.http.get(fullUrl)
-            .map(res => res.json())
+        return this.model.get(fullUrl)
             .map(data => this.getImageArray(data.data));
     }
 

@@ -3,7 +3,7 @@ import {Component, Input, Output, ChangeDetectorRef, OnInit} from '@angular/core
 
 @Component({
   selector: 'responsive-widget',
-  templateUrl: './app/ui-modules/responsive-widget/responsive-widget.component.html',
+  templateUrl: './responsive-widget.component.html',
 })
 
 export class ResponsiveWidget implements OnInit {
@@ -16,7 +16,8 @@ export class ResponsiveWidget implements OnInit {
 
   ngOnInit() {
     this.displayAtRes = "_" + this.displayAtRes + "only";
-    var windowWidth = window.innerWidth;
+    // TODO var windowWidth = window.innerWidth;
+    var windowWidth = 960;
     if(windowWidth < 640){
       this.widgetSml = true;
       this.widgetMed = false;

@@ -8,7 +8,7 @@ import { SliderCarouselInput } from '../../fe-core/components/carousels/slider-c
 
 @Component({
     selector: 'draft-history',
-    templateUrl: './app/ui-modules/draft-history/draft-history.component.html'
+    templateUrl: './draft-history.component.html'
 })
 
 export class DraftHistoryComponent implements OnInit {
