@@ -16,7 +16,7 @@ import { TitleInputData } from '../../fe-core/components/title/title.component';
 
 @Component({
     selector: 'draft-history-page',
-    templateUrl: './app/webpages/draft-history-page/draft-history.page.html'
+    templateUrl: './draft-history.page.html'
 })
 
 export class DraftHistoryPage implements OnInit {
@@ -97,7 +97,6 @@ export class DraftHistoryPage implements OnInit {
       let text4 = data.text4 != null ? '. '+data.text4: '';
       let title = text3 + ' ' + text4;
       let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
-      let link = window.location.href;
       let imageUrl;
       if(data.imageURL != null && data.imageURL != ""){
          imageUrl = data.imageURL;

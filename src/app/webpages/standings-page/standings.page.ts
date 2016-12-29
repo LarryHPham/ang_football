@@ -18,13 +18,16 @@ import { GlossaryData } from "../../fe-core/components/glossary/glossary.compone
 import { TitleInputData } from "../../fe-core/components/title/title.component";
 import { CircleImageData, ImageData } from "../../fe-core/components/images/image-data";
 import { TDLStandingsTabdata, VerticalStandingsTableData } from '../../services/standings.data';
+import {isNode} from "angular2-universal";
 
 
 
 declare var moment;
+declare var Zone: any;
+
 @Component({
     selector: 'Standings-page',
-    templateUrl: './app/webpages/standings-page/standings.page.html',
+    templateUrl: './standings.page.html',
 })
 
 export class StandingsPage {
@@ -204,26 +207,33 @@ export class StandingsPage {
         title = titleName + ' Standings';
         ogTitle = titleName;
         metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
-        link = window.location.href;
         image = GlobalSettings.getImageUrl(header.backgroundUrl);
 
-        this._seoService.setCanonicalLink();
-        this._seoService.setOgTitle(ogTitle);
-        this._seoService.setOgDesc(metaDesc);
-        this._seoService.setOgType('Website');
-        this._seoService.setOgUrl();
-        this._seoService.setOgImage(image);
-        this._seoService.setTitleNoBase(title);
-        this._seoService.setMetaDescription(metaDesc);
-        this._seoService.setMetaRobots('Index, Follow');
+        // this._seoService.setCanonicalLink();
+        // this._seoService.setOgTitle(ogTitle);
+        // this._seoService.setOgDesc(metaDesc);
+        // this._seoService.setOgType('Website');
+        // this._seoService.setOgUrl();
+        // this._seoService.setOgImage(image);
+        // this._seoService.setTitleNoBase(title);
+        // this._seoService.setMetaDescription(metaDesc);
+        // this._seoService.setMetaRobots('Index, Follow');
 
         if (header.teamId != null) {
             //grab domain for json schema
             let domainSite;
             if (GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
+              if(isNode){
+                domainSite = "https://" + Zone.current.get("originUrl") + '/' + GlobalSettings.getHomeInfo().partnerName;
+              }else{
                 domainSite = "https://" + window.location.hostname + '/' + GlobalSettings.getHomeInfo().partnerName;
+              }
             } else {
-                domainSite = "https://" + window.location.hostname;
+                if(isNode){
+                  domainSite = "https://" + Zone.current.get("originUrl");
+                }else{
+                  domainSite = "https://" + window.location.hostname;
+                }
             }
 
             //manually generate team schema for team page until global funcation can be created
@@ -250,7 +260,7 @@ export class StandingsPage {
           "@type": "ListItem",
           "position": 2,
           "item": {
-            "@id": "`+ window.location.href + `",
+            "@id": "`+ isNode ? Zone.current.get("originUrl") : window.location.href + `",
             "name": "`+ titleName + 'Standings' + `"
           }
         }]

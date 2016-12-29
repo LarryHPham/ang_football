@@ -17,12 +17,13 @@ import { PaginationParameters } from '../../fe-core/components/pagination-footer
 import { DirectoryService, DirectoryType, DirectorySearchParams } from '../../services/directory.service';
 import { FooterService } from '../../services/footer.service';
 import { SeoService } from "../../seo.service";
+import {isBrowser} from "angular2-universal";
 
 
 
 @Component({
     selector: 'Directory-page',
-    templateUrl: './app/webpages/directory-page/directory.page.html'
+    templateUrl: './directory.page.html'
 })
 
 export class DirectoryPage {
@@ -127,24 +128,25 @@ export class DirectoryPage {
 
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
-    let link = window.location.href;
     let title = this.type.charAt(0).toUpperCase() + this.type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
 
-    this._seoService.setCanonicalLink();
-    this._seoService.setOgTitle(title);
-    this._seoService.setOgDesc(metaDesc);
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage('https://touchdownloyal.com/app/public/mainLogo.jpg');
-    this._seoService.setTitle(title);
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setMetaRobots('INDEX, FOLLOW');
+    // this._seoService.setCanonicalLink();
+    // this._seoService.setOgTitle(title);
+    // this._seoService.setOgDesc(metaDesc);
+    // this._seoService.setOgType('Website');
+    // this._seoService.setOgUrl();
+    // this._seoService.setOgImage('https://touchdownloyal.com/app/public/mainLogo.jpg');
+    // this._seoService.setTitle(title);
+    // this._seoService.setMetaDescription(metaDesc);
+    // this._seoService.setMetaRobots('INDEX, FOLLOW');
   } //metaTags
 
 
 
   getDirectoryData() {
-    window.scrollTo(0, 0);
+    if(isBrowser) {
+      window.scrollTo(0, 0);
+    }
 
     let params: DirectorySearchParams = {
       page: this.currentPage,
@@ -190,7 +192,9 @@ export class DirectoryPage {
 
   newIndex(index){
     this.currentPage = index;
-    window.scrollTo(0, 0);
+    if(isBrowser) {
+      window.scrollTo(0, 0);
+    }
   } //newIndex
 
 

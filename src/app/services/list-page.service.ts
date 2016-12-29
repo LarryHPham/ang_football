@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http, Headers } from '@angular/http';
 
 //globals
 import { GlobalFunctions } from '../global/global-functions';
@@ -14,6 +13,7 @@ import { SliderCarousel,SliderCarouselInput } from '../fe-core/components/carous
 import { CircleImageData, ImageData } from '../fe-core/components/images/image-data';
 import { Link } from '../global/global-interface';
 import { TitleInputData } from '../fe-core/components/title/title.component';
+import {ModelService} from "../global/shared/model/model.service";
 
 declare var moment;
 
@@ -84,13 +84,9 @@ export class ListPageService {
 
   private _apiUrl: string = GlobalSettings.getApiUrl();
 
-  constructor(public http: Http) {}
+  constructor(public model: ModelService) {}
 
   //Function to set custom headers
-  setToken(){
-      var headers = new Headers();
-      return headers;
-  }
 
   /*
     query:{
@@ -105,9 +101,6 @@ export class ListPageService {
   */
 
   getListPageService(query, errorMessage: string, scope, season?){
-  //Configure HTTP Headers
-  var headers = this.setToken();
-
   var callURL = this._apiUrl+'/list';
   if (season == null || season == undefined || season == "null") {
     var date = new Date;
@@ -117,8 +110,7 @@ export class ListPageService {
     callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
   }
 
-  return this.http.get( callURL, {headers: headers})
-    .map(res => res.json())
+  return this.model.get( callURL )
     .map(
       data => {
         data.data['query'] = query;
@@ -222,8 +214,6 @@ export class ListPageService {
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
   getListModuleService(tab: positionMVPTabData, query: Array<any>): Observable<positionMVPTabData> {
-    //Configure HTTP Headers
-    var headers = this.setToken();
 
     var callURL = this._apiUrl+'/list';
 
@@ -234,8 +224,7 @@ export class ListPageService {
         callURL += '&' + q +'='+ query[q];
       }
     }
-    return this.http.get(callURL, {headers: headers})
-      .map(res => res.json())
+    return this.model.get(callURL)
       .map(
         data => {
           data.data['query'] = query;//used in some functions below
