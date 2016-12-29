@@ -1,6 +1,7 @@
 import {Component, AfterViewInit, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router, ActivatedRoute} from '@angular/router';
+import { isBrowser } from 'angular2-universal';
 
 //globals
 import {GlobalFunctions} from "../../global/global-functions";
@@ -84,7 +85,10 @@ export class ArticlePages implements OnInit {
                 private _headlineDataService:HeadlineDataService) {
         this.subRec = this._activateRoute.params.subscribe(
             (params:any) => {
+              if(isBrowser){
                 window.scrollTo(0, 0);
+                this.rawUrl = window.location.href;
+              }
                 this.articleData = null;
                 this.trendingData = null;
                 this.trendingLength = 10;
@@ -115,7 +119,6 @@ export class ArticlePages implements OnInit {
                     this.getArticles();
                 }
                 this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-                this.rawUrl = window.location.href;
             }
         );
     }
@@ -459,43 +462,47 @@ export class ArticlePages implements OnInit {
     }
 
     transformTrending(data, currentArticleId) {
+      if(isBrowser){
         var articles = [];
         var self = this;
         data.forEach(function (val) {
-            var articleData;
-            if (val.event_id != currentArticleId) {
-                val["date"] = self.isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
-                    GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
-                articleData = {
-                    author: val['author'],
-                    publisher: val['publisher'],
-                    title: val.title,
-                    date: val["date"],
-                    teaser: val.teaser,
-                    eventId: self.isArticle ? val.event_id : val.id,
-                    eventType: self.isArticle ? "postgame-report" : "story",
-                    image: self.isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
-                    url: self.isArticle ? VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id) :
-                        VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
-                    rawUrl: self.isArticle ?
-                    window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/postgame-report/" + val.event_id :
-                    window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
-                };
-                if (articleData != null) {
-                    articles.push(articleData);
-                }
+          var articleData;
+          if (val.event_id != currentArticleId) {
+            val["date"] = self.isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
+            GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
+            articleData = {
+              author: val['author'],
+              publisher: val['publisher'],
+              title: val.title,
+              date: val["date"],
+              teaser: val.teaser,
+              eventId: self.isArticle ? val.event_id : val.id,
+              eventType: self.isArticle ? "postgame-report" : "story",
+              image: self.isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
+              url: self.isArticle ? VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id) :
+              VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
+              rawUrl: self.isArticle ?
+              window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/postgame-report/" + val.event_id :
+              window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
+            };
+            if (articleData != null) {
+              articles.push(articleData);
             }
+          }
         });
         return articles;
+      }
     }
 
     private trendingScroll(event) {
         if (!this.isTrendingMax) {
             this.hasRun = false;
-            if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+            if(isBrowser){
+              if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
                 this.showLoading = true;
                 this.batch = this.batch + 1;
                 this.getTrendingArticles(this.eventID);
+              }
             }
         }
     }
@@ -514,27 +521,31 @@ export class ArticlePages implements OnInit {
     }
 
     ngOnInit() {
+      if(isBrowser){
         //This has to be resize to trigger the takeover update
         try {
-            window.dispatchEvent(new Event('resize'));
+          window.dispatchEvent(new Event('resize'));
         } catch (e) {
-            //to run resize event on IE
-            var resizeEvent = document.createEvent('UIEvents');
-            resizeEvent.initUIEvent('resize', true, false, window, 0);
-            window.dispatchEvent(resizeEvent);
+          //to run resize event on IE
+          var resizeEvent = document.createEvent('UIEvents');
+          resizeEvent.initUIEvent('resize', true, false, window, 0);
+          window.dispatchEvent(resizeEvent);
         }
+      }
     }
 
     ngAfterViewInit() {
+      if(isBrowser){
         // to run the resize event on load
         try {
-            window.dispatchEvent(new Event('load'));
+          window.dispatchEvent(new Event('load'));
         } catch (e) {
-            //to run resize event on IE
-            var resizeEvent = document.createEvent('UIEvents');
-            resizeEvent.initUIEvent('load', true, false, window, 0);
-            window.dispatchEvent(resizeEvent);
+          //to run resize event on IE
+          var resizeEvent = document.createEvent('UIEvents');
+          resizeEvent.initUIEvent('load', true, false, window, 0);
+          window.dispatchEvent(resizeEvent);
         }
+      }
     }
 
     private getDeepDiveArticle(articleID) {
