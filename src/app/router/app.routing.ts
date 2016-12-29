@@ -18,7 +18,7 @@ import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 // import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
-// import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
+import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 // import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 // import { ListPage } from "../webpages/list-page/list.page";
 // import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
@@ -63,14 +63,14 @@ const relativeChildRoutes = [
     // },
     //
     // // //Module Pages
-    // {
-    //     path: ':scope/mvp-list/:type/:pageNum',
-    //     component: MVPListPage
-    // },
-    // {
-    //     path: ':scope/mvp-list/:type/:tab/:pageNum',
-    //     component: MVPListPage
-    // },
+    {
+        path: ':scope/mvp-list/:type/:pageNum',
+        component: MVPListPage
+    },
+    {
+        path: ':scope/mvp-list/:type/:tab/:pageNum',
+        component: MVPListPage
+    },
     // {
     //     path: ':scope/schedules/league/:year/:pageNum',
     //     component: SchedulesPage

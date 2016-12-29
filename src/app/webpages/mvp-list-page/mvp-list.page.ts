@@ -1,6 +1,9 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Title } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/platform-browser';
+import {Location} from '@angular/common';
+
+
 
 //globals
 import { VerticalGlobalFunctions } from '../../global/vertical-global-functions';
@@ -10,7 +13,7 @@ import { GlobalSettings } from "../../global/global-settings";
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { ListPageService } from '../../services/list-page.service';
-import { SeoService } from "../../seo.service";
+// import { SeoService } from "../../seo.service";
 
 //interfaces
 import { TitleInputData } from '../../fe-core/components/title/title.component';
@@ -18,10 +21,12 @@ import { positionMVPTabData } from '../../services/list-page.service';
 import { PaginationParameters } from '../../fe-core/components/pagination-footer/pagination-footer.component';
 import { MVPTabData } from '../../fe-core/components/mvp-list/mvp-list.component';
 import { FooterStyle } from '../../fe-core/components/module-footer/module-footer.component';
+import {isNode} from "angular2-universal";
+
 
 @Component({
     selector: 'mvp-list-page',
-    templateUrl: './app/webpages/mvp-list-page/mvp-list.page.html'
+    templateUrl: './mvp-list.page.html'
 })
 
 export class MVPListPage implements OnInit {
@@ -47,6 +52,7 @@ export class MVPListPage implements OnInit {
 
     displayPosition: string;
 
+
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
     public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
@@ -58,12 +64,13 @@ export class MVPListPage implements OnInit {
     };
 
     constructor(
+      private _location: Location,
       private router: Router,
       private activateRoute: ActivatedRoute,
       private _service: ListPageService,
       private _profileService: ProfileHeaderService,
-      private _title: Title,
-      private _seoService: SeoService
+      // private _seoService: SeoService,
+      @Inject(DOCUMENT) private _document: any
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
@@ -162,22 +169,30 @@ export class MVPListPage implements OnInit {
       let text4 = data.text4 != null ? '. '+data.text4: '';
       let title = text3 + ' ' + text4;
       let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
-      let link = window.location.href;
+      // TODO
+      // this._document.title = "testing";
+      // console.log("title:::",this._document.title);
+      let link = "";
+      if(isNode) {
+        link = Zone.current.get('originUrl') + this._location.path(false);
+      }else{
+        link = window.location.href;
+      }
       let imageUrl;
       if(data.imageURL != null && data.imageURL != ""){
          imageUrl = data.imageURL;
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc +". Know more about football.");
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(imageUrl);
-      this._seoService.setTitle(title);
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle(title);
+      // this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage(imageUrl);
+      // this._seoService.setTitle(title);
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('INDEX, FOLLOW');
     } //metaTags
 
 
