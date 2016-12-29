@@ -31,16 +31,16 @@ import { PickateamPageService } from '../services/pickateam.service';
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
 import { PlayerPage } from "../webpages/player-page/player.page";
-// import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
+import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
-// import { StandingsPage } from "../webpages/standings-page/standings.page";
-// import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
-// import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
-// import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
+import { StandingsPage } from "../webpages/standings-page/standings.page";
+import { TeamRosterPage } from "../webpages/team-roster-page/team-roster.page";
+import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
+import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
-// import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
-// import { ListPage } from "../webpages/list-page/list.page";
-// import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
+import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
+import { ListPage } from "../webpages/list-page/list.page";
+import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 import { PickTeamPage } from "../webpages/pickateam-page/pickateam.page";
 
 //modules
@@ -96,16 +96,16 @@ const PAGEMODULES = [
   LeaguePage,
   TeamPage,
   PlayerPage,
-  // SchedulesPage,
-  // DraftHistoryPage,
-  // StandingsPage,
-  // TeamRosterPage,
-  // TransactionsPage,
-  // SeasonStatsPage,
+  SchedulesPage,
+  DraftHistoryPage,
+  StandingsPage,
+  TeamRosterPage,
+  TransactionsPage,
+  SeasonStatsPage,
   MVPListPage,
-  // PlayerStatsPage,
-  // ListPage,
-  // ListOfListsPage,
+  PlayerStatsPage,
+  ListPage,
+  ListOfListsPage,
   PickTeamPage,
 ]
 

@@ -4,11 +4,8 @@ import { Title } from '@angular/platform-browser';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
-import { VerticalGlobalFunctions } from '../../global/vertical-global-functions';
 
 //services
-import { DraftHistoryService } from '../../services/draft-history.service';
-import { ListPageService } from '../../services/list-page.service';
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { SchedulesService } from '../../services/schedules.service';
 import { SeoService } from "../../seo.service";
@@ -28,7 +25,7 @@ declare var moment;
 
 @Component({
     selector: 'schedules-page',
-    templateUrl: './app/webpages/schedules-page/schedules.page.html',
+    templateUrl: './schedules.page.html',
 })
 
 export class SchedulesPage implements OnInit {
@@ -114,22 +111,21 @@ export class SchedulesPage implements OnInit {
     let text4 = data.text4 != null ? '. '+data.text4: '';
     let title = text3 + ' ' + text4;
     let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
-    let link = window.location.href;
     let imageUrl;
     if(data.imageURL != null && data.imageURL != ""){
        imageUrl = data.imageURL;
     }else{
        imageUrl = GlobalSettings.getmainLogoUrl();
     }
-    this._seoService.setCanonicalLink();
-    this._seoService.setOgTitle(title);
-    this._seoService.setOgDesc(metaDesc +". Know more about football.");
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage(imageUrl);
-    this._seoService.setTitle(title);
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setMetaRobots('INDEX, FOLLOW');
+    // this._seoService.setCanonicalLink();
+    // this._seoService.setOgTitle(title);
+    // this._seoService.setOgDesc(metaDesc +". Know more about football.");
+    // this._seoService.setOgType('Website');
+    // this._seoService.setOgUrl();
+    // this._seoService.setOgImage(imageUrl);
+    // this._seoService.setTitle(title);
+    // this._seoService.setMetaDescription(metaDesc);
+    // this._seoService.setMetaRobots('INDEX, FOLLOW');
   } //metaTags
 
 

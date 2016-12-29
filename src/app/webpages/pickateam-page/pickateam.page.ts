@@ -7,7 +7,7 @@ import {GlobalFunctions} from '../../global/global-functions';
 import {VerticalGlobalFunctions} from '../../global/vertical-global-functions';
 
 //services
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 import {GeoLocation} from "../../global/global-service";
 import {PickateamPageService} from '../../services/pickateam.service';
 
@@ -92,7 +92,7 @@ export class PickTeamPage{
       private _pickateamPageService: PickateamPageService,
       private _geoLocation:GeoLocation,
       private activateRoute: ActivatedRoute,
-      // private _seoService: SeoService
+      private _seoService: SeoService
     ) {
       this._routeSubscription = this.activateRoute.params.subscribe(
         (param :any)=> {
@@ -130,18 +130,18 @@ export class PickTeamPage{
 
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
-      // let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
-      // let link = window.location.href;
-      //
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle('Pick A Team');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('Pick A Team');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('Index, Follow');
+      let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
+      let title = 'Pick A Team';
+      let image = 'http://www.touchdownloyal.com/app/public/mainLogo.png';
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('Index, Follow');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(image);
     } //metaTags
 
 
