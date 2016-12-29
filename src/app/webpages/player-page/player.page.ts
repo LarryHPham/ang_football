@@ -11,11 +11,11 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { DailyUpdateService } from "../../services/daily-update.service";
-// import { FantasyService } from "../../services/fantasy.service";
+import { FantasyService } from "../../services/fantasy.service";
 import { BoxScoresService } from '../../services/box-scores.service';
 import { SchedulesService } from '../../services/schedules.service';
 import { StandingsService } from '../../services/standings.service';
-import { SeasonStatsService } from '../../services/season-stats.service';
+// import { SeasonStatsService } from '../../services/season-stats.service';
 import { ComparisonStatsService } from '../../services/comparison-stats.service';
 import { ImagesService } from "../../services/carousel.service";
 import { DykService } from '../../services/dyk.service';
@@ -108,13 +108,13 @@ export class PlayerPage{
 
   constructor(
     private activateRoute: ActivatedRoute,
-    // private _profileService: ProfileHeaderService,
+    private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
-    // private _fantasyService: FantasyService,
+    private _fantasyService: FantasyService,
     private _boxScores: BoxScoresService,
     private _schedulesService: SchedulesService,
     private _standingsService: StandingsService,
-    private _seasonStatsService: SeasonStatsService,
+    // private _seasonStatsService: SeasonStatsService,
     private _comparisonService: ComparisonStatsService,
     private _imagesService: ImagesService,
     private _dykService: DykService,
@@ -147,61 +147,61 @@ export class PlayerPage{
   routeChangeResets() {
     this.profileHeaderData = null;
     this.batchLoadIndex = 1;
-    window.scrollTo(0, 0);
+    // TODO // window.scrollTo(0, 0);
   } //routeChangeResets
 
 
 
   private setupPlayerProfileData() {
-    // this._profileService.getPlayerProfile(this.playerID).subscribe(
-    //   data => {
-    //     this.metaTags(data);
-    //     this.pageParams = data.pageParams;
-    //     this.pageParams['partnerRoute'] = this.storedPartnerParam;
-    //     this.pageParams['scope'] = this.scope;
-    //     this.profileName = data.headerData.playerFullName;
-    //     this.teamName = data.headerData.teamFullName;
-    //     this.teamID = data.headerData.teamId;
-    //     this.pageParams['teamID'] = this.teamID;
-    //     this.dateParam = {
-    //       scope: 'player',
-    //       teamId: this.teamID, // teamId if it exists
-    //       date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
-    //       // date: '2015-09-11'
-    //     } //this.dateParam
-    //
-    //     this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
-    //     this.dailyUpdateModule(this.playerID);
-    //
-    //     setTimeout(() => {  // defer loading everything below the fold
-    //       //--Batch 2--//
-    //       if (this.scope.toLocaleLowerCase() == "nfl") {
-    //         this.getFantasyData(this.pageParams.playerId);
-    //       }
-    //       this.getBoxScores(this.dateParam);
-    //       this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-    //
-    //       //--Batch 3--//
-    //       this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
-    //       this.setupSeasonstatsData();
-    //       this.setupComparisonData();
-    //
-    //       //--Batch 4--//
-    //       this.getImages(this.imageData);
-    //       this.getDykService();
-    //       this.getFaqService();
-    //
-    //       //--Batch 5--//
-    //       this.setupListOfListsModule();
-    //       this.getNewsService();
-    //       this.getTwitterService();
-    //     }, 2000);
-    //   },
-    //   err => {
-    //     this.hasError = true;
-    //     console.log("Error getting player profile data for " + this.playerID + ": " + err);
-    //   }
-    // );
+    this._profileService.getPlayerProfile(this.playerID).subscribe(
+      data => {
+        this.metaTags(data);
+        this.pageParams = data.pageParams;
+        this.pageParams['partnerRoute'] = this.storedPartnerParam;
+        this.pageParams['scope'] = this.scope;
+        this.profileName = data.headerData.playerFullName;
+        this.teamName = data.headerData.teamFullName;
+        this.teamID = data.headerData.teamId;
+        this.pageParams['teamID'] = this.teamID;
+        this.dateParam = {
+          scope: 'player',
+          teamId: this.teamID, // teamId if it exists
+          date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
+          // date: '2015-09-11'
+        } //this.dateParam
+
+        this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
+        this.dailyUpdateModule(this.playerID);
+
+        setTimeout(() => {  // defer loading everything below the fold
+          //--Batch 2--//
+          if (this.scope.toLocaleLowerCase() == "nfl") {
+            this.getFantasyData(this.pageParams.playerId);
+          }
+          this.getBoxScores(this.dateParam);
+          this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+
+          //--Batch 3--//
+          this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
+          this.setupSeasonstatsData();
+          this.setupComparisonData();
+
+          //--Batch 4--//
+          this.getImages(this.imageData);
+          this.getDykService();
+          this.getFaqService();
+
+          //--Batch 5--//
+          this.setupListOfListsModule();
+          this.getNewsService();
+          this.getTwitterService();
+        }, 2000);
+      },
+      err => {
+        this.hasError = true;
+        console.log("Error getting player profile data for " + this.playerID + ": " + err);
+      }
+    );
   } //setupPlayerProfileData
 
 
@@ -301,17 +301,17 @@ export class PlayerPage{
 
 
   private getFantasyData(playerId) {
-    // this._fantasyService.getFantasyReport(playerId)
-    //   .subscribe(data => {
-    //     if (playerId == data['player_id']) {
-    //       this.fantasyData = data;
-    //       var date = moment.unix(this.fantasyData['last_updated']).format();
-    //       this.fantasyDate = moment.tz(date, "America/New_York").fromNow();
-    //     }
-    //   },
-    //   err => {
-    //     console.log("Error getting fantasy report data", err);
-    //   });
+    this._fantasyService.getFantasyReport(playerId)
+      .subscribe(data => {
+        if (playerId == data['player_id']) {
+          this.fantasyData = data;
+          var date = moment.unix(this.fantasyData['last_updated']).format();
+          this.fantasyDate = moment.tz(date, "America/New_York").fromNow();
+        }
+      },
+      err => {
+        console.log("Error getting fantasy report data", err);
+      });
   } //getFantasyData
 
 
@@ -381,14 +381,14 @@ export class PlayerPage{
 
 
   private setupSeasonstatsData() {
-    this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope)
-      .subscribe(
-        data => {
-          this.seasonStatsData = data;
-        },
-        err => {
-          console.log("Error getting season stats data for " + this.pageParams.playerId, err);
-        });
+    // this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope)
+    //   .subscribe(
+    //     data => {
+    //       this.seasonStatsData = data;
+    //     },
+    //     err => {
+    //       console.log("Error getting season stats data for " + this.pageParams.playerId, err);
+    //     });
   } //setupSeasonstatsData
 
 

@@ -7,18 +7,18 @@ import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
 import { PickTeamPage } from "../webpages/pickateam-page/pickateam.page";
 import { LeaguePage } from "../webpages/league-page/league.page";
 import { TeamPage } from "../webpages/team-page/team.page";
-// import { PlayerPage } from "../webpages/player-page/player.page";
+import { PlayerPage } from "../webpages/player-page/player.page";
 // import { SchedulesPage } from "../webpages/schedules-page/schedules.page";
 // import { StandingsPage } from "../webpages/standings-page/standings.page";
 // import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 // import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 // import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
 // import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
-// import { ArticlePages } from "../webpages/article-pages/article-pages.page";
+import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 // import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
-// import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
+import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 // import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 // import { ListPage } from "../webpages/list-page/list.page";
 // import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
@@ -48,10 +48,10 @@ const relativeChildRoutes = [
         path: ':scope/team/:teamName/:teamID',
         component: TeamPage,
     },
-    // {
-    //     path: ':scope/player/:teamName/:fullName/:playerID',
-    //     component: PlayerPage,
-    // },
+    {
+        path: ':scope/player/:teamName/:fullName/:playerID',
+        component: PlayerPage,
+    },
     // // //Misc. Pages
     // {
     //     path: ':scope/directory/:type/:startsWith/page/:page',
@@ -63,14 +63,14 @@ const relativeChildRoutes = [
     // },
     //
     // // //Module Pages
-    // {
-    //     path: ':scope/mvp-list/:type/:pageNum',
-    //     component: MVPListPage
-    // },
-    // {
-    //     path: ':scope/mvp-list/:type/:tab/:pageNum',
-    //     component: MVPListPage
-    // },
+    {
+        path: ':scope/mvp-list/:type/:pageNum',
+        component: MVPListPage
+    },
+    {
+        path: ':scope/mvp-list/:type/:tab/:pageNum',
+        component: MVPListPage
+    },
     // {
     //     path: ':scope/schedules/league/:year/:pageNum',
     //     component: SchedulesPage
@@ -151,10 +151,10 @@ const relativeChildRoutes = [
     //     path: ':scope/player-stats/:teamName/:teamID',
     //     component: PlayerStatsPage
     // },
-    // {
-    //     path: ':scope/articles/:eventType/:eventID',
-    //     component: ArticlePages
-    // },
+    {
+        path: ':scope/articles/:eventType/:eventID',
+        component: ArticlePages
+    },
     // {
     //     path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
     //     component: ListOfListsPage
@@ -178,12 +178,12 @@ const relativeChildRoutes = [
     },
     {
         path: '',
-        redirectTo: 'disclaimer',
+        redirectTo: 'home',
         pathMatch: 'full'
     },
     {
         path: '/**',
-        redirectTo: 'disclaimer'
+        redirectTo: 'home'
     }
 ];
 

@@ -1,18 +1,18 @@
 <div id="deep-dive-block-1" class="deep-dive-block">
   <div class="deep-dive-widget res640" *ngIf="firstStackRow">
-    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget>
+    <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget> -->
   </div>
   <div class="deep-dive-module" *ngIf = "tilestackData">
     <tile-stack-module [tilestackData] = "tilestackData"></tile-stack-module>
   </div>
   <div class="deep-dive-widget res1024" *ngIf = "tilestackData">
-    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget>
+    <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget> -->
   </div>
   <div class="deep-dive-module" *ngIf="videoData">
     <deep-dive-video-module [videoData]="videoData"></deep-dive-video-module>
   </div>
   <div class="deep-dive-widget res640" *ngIf="videoData">
-    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget>
+    <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="640"></responsive-widget> -->
   </div>
   <div class="deep-dive-module" *ngIf="dateParam">
     <div class="deep-dive-boxScore">
@@ -21,6 +21,6 @@
     </div>
   </div>
   <div class="deep-dive-widget res1024">
-    <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget>
+    <!-- <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget> -->
   </div>
 </div>

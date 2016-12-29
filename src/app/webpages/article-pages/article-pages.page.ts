@@ -1,6 +1,7 @@
 import {Component, AfterViewInit, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router, ActivatedRoute} from '@angular/router';
+import { isBrowser } from 'angular2-universal';
 
 //globals
 import {GlobalFunctions} from "../../global/global-functions";
@@ -24,7 +25,7 @@ declare var moment;
 
 @Component({
     selector: 'article-pages',
-    templateUrl: './app/webpages/article-pages/article-pages.page.html'
+    templateUrl: './article-pages.page.html'
 })
 
 export class ArticlePages implements OnInit {
@@ -78,13 +79,16 @@ export class ArticlePages implements OnInit {
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
-                private _seoService:SeoService,
+                // private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
                 private _headlineDataService:HeadlineDataService) {
         this.subRec = this._activateRoute.params.subscribe(
             (params:any) => {
+              if(isBrowser){
                 window.scrollTo(0, 0);
+                this.rawUrl = window.location.href;
+              }
                 this.articleData = null;
                 this.trendingData = null;
                 this.trendingLength = 10;
@@ -115,7 +119,6 @@ export class ArticlePages implements OnInit {
                     this.getArticles();
                 }
                 this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-                this.rawUrl = window.location.href;
             }
         );
     }
@@ -134,8 +137,10 @@ export class ArticlePages implements OnInit {
                             var articleType = GlobalFunctions.getArticleType(this.type);
                             this.articleType = articleType[1];
                             this.articleSubType = articleType[2];
-                            this.isSmall = window.innerWidth < 640;
-                            this.rawUrl = window.location.href;
+                            if(isBrowser){
+                              this.isSmall = window.innerWidth < 640;
+                              this.rawUrl = window.location.href;
+                            }
                             this.pageIndex = articleType[0];
                             this.title = Article['data'][0]['article_data'].title;
                             this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date * 1000, "timeZone");
@@ -459,43 +464,47 @@ export class ArticlePages implements OnInit {
     }
 
     transformTrending(data, currentArticleId) {
+      if(isBrowser){
         var articles = [];
         var self = this;
         data.forEach(function (val) {
-            var articleData;
-            if (val.event_id != currentArticleId) {
-                val["date"] = self.isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
-                    GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
-                articleData = {
-                    author: val['author'],
-                    publisher: val['publisher'],
-                    title: val.title,
-                    date: val["date"],
-                    teaser: val.teaser,
-                    eventId: self.isArticle ? val.event_id : val.id,
-                    eventType: self.isArticle ? "postgame-report" : "story",
-                    image: self.isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
-                    url: self.isArticle ? VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id) :
-                        VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
-                    rawUrl: self.isArticle ?
-                    window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/postgame-report/" + val.event_id :
-                    window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
-                };
-                if (articleData != null) {
-                    articles.push(articleData);
-                }
+          var articleData;
+          if (val.event_id != currentArticleId) {
+            val["date"] = self.isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
+            GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
+            articleData = {
+              author: val['author'],
+              publisher: val['publisher'],
+              title: val.title,
+              date: val["date"],
+              teaser: val.teaser,
+              eventId: self.isArticle ? val.event_id : val.id,
+              eventType: self.isArticle ? "postgame-report" : "story",
+              image: self.isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
+              url: self.isArticle ? VerticalGlobalFunctions.formatArticleRoute(self.scope, val.article_type, val.event_id) :
+              VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
+              rawUrl: self.isArticle ?
+              window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/postgame-report/" + val.event_id :
+              window.location.protocol + "//" + window.location.host + "/" + self.scope + "/articles/story/" + val.id
+            };
+            if (articleData != null) {
+              articles.push(articleData);
             }
+          }
         });
         return articles;
+      }
     }
 
     private trendingScroll(event) {
         if (!this.isTrendingMax) {
             this.hasRun = false;
-            if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+            if(isBrowser){
+              if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
                 this.showLoading = true;
                 this.batch = this.batch + 1;
                 this.getTrendingArticles(this.eventID);
+              }
             }
         }
     }
@@ -514,27 +523,31 @@ export class ArticlePages implements OnInit {
     }
 
     ngOnInit() {
+      if(isBrowser){
         //This has to be resize to trigger the takeover update
         try {
-            window.dispatchEvent(new Event('resize'));
+          window.dispatchEvent(new Event('resize'));
         } catch (e) {
-            //to run resize event on IE
-            var resizeEvent = document.createEvent('UIEvents');
-            resizeEvent.initUIEvent('resize', true, false, window, 0);
-            window.dispatchEvent(resizeEvent);
+          //to run resize event on IE
+          var resizeEvent = document.createEvent('UIEvents');
+          resizeEvent.initUIEvent('resize', true, false, window, 0);
+          window.dispatchEvent(resizeEvent);
         }
+      }
     }
 
     ngAfterViewInit() {
+      if(isBrowser){
         // to run the resize event on load
         try {
-            window.dispatchEvent(new Event('load'));
+          window.dispatchEvent(new Event('load'));
         } catch (e) {
-            //to run resize event on IE
-            var resizeEvent = document.createEvent('UIEvents');
-            resizeEvent.initUIEvent('load', true, false, window, 0);
-            window.dispatchEvent(resizeEvent);
+          //to run resize event on IE
+          var resizeEvent = document.createEvent('UIEvents');
+          resizeEvent.initUIEvent('load', true, false, window, 0);
+          window.dispatchEvent(resizeEvent);
         }
+      }
     }
 
     private getDeepDiveArticle(articleID) {
@@ -572,69 +585,69 @@ export class ArticlePages implements OnInit {
     }
 
     private metaTags(data) {
-        //create meta description that is below 160 characters otherwise will be truncated
-        var metaData = this.isArticle ? data : data.data;
-        let image;
-        var keyword = this.isArticle ? "keywords" : "keyword";
-        var link = window.location.href;
-        var teams = [];
-        var players = [];
-        var searchString;
-        var searchArray = [];
-        if (this.isArticle) {
-            var headerData = data['article_data']['metadata'];
-            var metaDesc = data['article_data'].meta_headline;
-            if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
-                headerData['team_name'].forEach(function (val) {
-                    searchArray.push(val);
-                    teams.push(val);
-                });
-            }
-            if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
-                headerData['player_name'].forEach(function (val) {
-                    searchArray.push(val);
-                    players.push(val);
-                });
-            }
-        }
-        if (metaData[keyword] && metaData[keyword].constructor === Array) {
-            metaData[keyword].forEach(function (val) {
-                searchArray.push(val);
-            });
-            searchString = searchArray.join(',');
-        } else {
-            searchString = metaData[keyword];
-        }
-        if (this.imageData != null) {
-            image = this.imageData[0];
-        } else {
-            image = this.isArticle ? metaData.image_url : metaData.thumbnail;
-        }
-        this._seoService.setCanonicalLink();
-        this._seoService.setOgTitle(metaData.title);
-        this._seoService.setOgDesc(metaDesc);
-        this._seoService.setOgType('Website');
-        this._seoService.setOgUrl();
-        this._seoService.setOgImage(image);
-        this._seoService.setTitle(metaData.title);
-        this._seoService.setMetaDescription(metaDesc);
-        this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-        this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'] : metaData.publishedDate);
-        this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
-        this._seoService.setIsArticle(this.isArticle.toString());
-        this._seoService.setSearchType("article");
-        this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
-        this._seoService.setArticleId(this.eventID);
-        this._seoService.setArticleTitle(metaData.title);
-        this._seoService.setKeyword(this.isArticle ? metaData['keywords'] : metaData.keyword);
-        this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date : metaData.publishedDate);
-        this._seoService.setAuthor(metaData.author);
-        this._seoService.setPublisher(metaData.publisher);
-        this._seoService.setImageUrl(image);
-        this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
-        this._seoService.setArticleUrl(link);
-        this._seoService.setArticleType(this.isArticle ? metaData.article_type : this.scope);
-        this._seoService.setSearchString(searchString);
+        // //create meta description that is below 160 characters otherwise will be truncated
+        // var metaData = this.isArticle ? data : data.data;
+        // let image;
+        // var keyword = this.isArticle ? "keywords" : "keyword";
+        // var link = window.location.href;
+        // var teams = [];
+        // var players = [];
+        // var searchString;
+        // var searchArray = [];
+        // if (this.isArticle) {
+        //     var headerData = data['article_data']['metadata'];
+        //     var metaDesc = data['article_data'].meta_headline;
+        //     if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
+        //         headerData['team_name'].forEach(function (val) {
+        //             searchArray.push(val);
+        //             teams.push(val);
+        //         });
+        //     }
+        //     if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
+        //         headerData['player_name'].forEach(function (val) {
+        //             searchArray.push(val);
+        //             players.push(val);
+        //         });
+        //     }
+        // }
+        // if (metaData[keyword] && metaData[keyword].constructor === Array) {
+        //     metaData[keyword].forEach(function (val) {
+        //         searchArray.push(val);
+        //     });
+        //     searchString = searchArray.join(',');
+        // } else {
+        //     searchString = metaData[keyword];
+        // }
+        // if (this.imageData != null) {
+        //     image = this.imageData[0];
+        // } else {
+        //     image = this.isArticle ? metaData.image_url : metaData.thumbnail;
+        // }
+        // this._seoService.setCanonicalLink();
+        // this._seoService.setOgTitle(metaData.title);
+        // this._seoService.setOgDesc(metaDesc);
+        // this._seoService.setOgType('Website');
+        // this._seoService.setOgUrl();
+        // this._seoService.setOgImage(image);
+        // this._seoService.setTitle(metaData.title);
+        // this._seoService.setMetaDescription(metaDesc);
+        // this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+        // this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'] : metaData.publishedDate);
+        // this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
+        // this._seoService.setIsArticle(this.isArticle.toString());
+        // this._seoService.setSearchType("article");
+        // this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
+        // this._seoService.setArticleId(this.eventID);
+        // this._seoService.setArticleTitle(metaData.title);
+        // this._seoService.setKeyword(this.isArticle ? metaData['keywords'] : metaData.keyword);
+        // this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date : metaData.publishedDate);
+        // this._seoService.setAuthor(metaData.author);
+        // this._seoService.setPublisher(metaData.publisher);
+        // this._seoService.setImageUrl(image);
+        // this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
+        // this._seoService.setArticleUrl(link);
+        // this._seoService.setArticleType(this.isArticle ? metaData.article_type : this.scope);
+        // this._seoService.setSearchString(searchString);
     } //metaTags
 
     getGeoLocation() {
