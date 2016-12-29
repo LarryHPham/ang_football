@@ -137,8 +137,10 @@ export class ArticlePages implements OnInit {
                             var articleType = GlobalFunctions.getArticleType(this.type);
                             this.articleType = articleType[1];
                             this.articleSubType = articleType[2];
-                            this.isSmall = window.innerWidth < 640;
-                            this.rawUrl = window.location.href;
+                            if(isBrowser){
+                              this.isSmall = window.innerWidth < 640;
+                              this.rawUrl = window.location.href;
+                            }
                             this.pageIndex = articleType[0];
                             this.title = Article['data'][0]['article_data'].title;
                             this.date = GlobalFunctions.sntGlobalDateFormatting(Article['data'][0]['article_data'].publication_date * 1000, "timeZone");
