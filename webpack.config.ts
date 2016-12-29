@@ -48,6 +48,7 @@ export var commonPlugins = [
   //takes source files in node_modules and copies them into directory for use.
   new CopyWebpackPlugin([
     {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
+    {from: './node_modules/jquery/dist/jquery.min.js', to:  root('src/lib/jquery.min.js')},
     {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')},
     {from: './node_modules/highcharts/highcharts.js', to: root('src/lib/highcharts.js')}
   ])
