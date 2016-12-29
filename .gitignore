@@ -5,8 +5,6 @@
 /tsd_typings/
 npm-debug.log
 
-/dist/
-
 .idea
 *.ngfactory.ts
 *.css.shim.ts
