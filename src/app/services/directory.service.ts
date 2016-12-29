@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http } from '@angular/http';
 
 //globals
 import { GlobalSettings } from '../global/global-settings';
@@ -9,6 +8,7 @@ import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
 
 //interfaces
 import { DirectoryProfileItem, DirectoryItems } from '../fe-core/modules/directory/directory.data';
+import {ModelService} from "../global/shared/model/model.service";
 
 declare var moment: any;
 
@@ -78,7 +78,7 @@ interface MLBPlayerDirectoryData {
 
 @Injectable()
 export class DirectoryService {
-  constructor(public http: Http, private _globalFunc: GlobalFunctions){}
+  constructor(public model: ModelService, private _globalFunc: GlobalFunctions){}
 
   getData(scope: string, pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
     switch ( pageType ) {
@@ -103,8 +103,7 @@ export class DirectoryService {
       url += "/" + searchParams.startsWith;
     }
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => {
           var items = data.data;
           var firstItem = items.length > 0 ? items[0] : null;
@@ -127,8 +126,7 @@ export class DirectoryService {
       url += "/" + searchParams.startsWith;
     }
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
-    return this.http.get(url)
-      .map(res => res.json())
+    return this.model.get(url)
       .map(data => {
         var items = data.data;
         var firstItem = items.length > 0 ? items[0] : null;
