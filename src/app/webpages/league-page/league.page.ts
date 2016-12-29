@@ -22,7 +22,7 @@ import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
@@ -34,8 +34,6 @@ import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { HeadlineData } from "../../global/global-interface";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
-
-
 
 // Libraries
 declare var moment;
@@ -130,8 +128,9 @@ export class LeaguePage{
       private _headlineDataService:HeadlineDataService,
       private _newsService: NewsService,
       private _twitterService: TwitterService,
-      // private _seoService: SeoService
+      private _seoService: SeoService
     ) {
+
       var currentUnixDate = new Date().getTime();
 
       this.paramsub = this.activatedRoute.params.subscribe(
@@ -153,6 +152,7 @@ export class LeaguePage{
     }
 
     private setupProfileData(partnerID, scope) {
+
       this._profileService.getLeagueProfile(scope).subscribe(
         data => {
 
@@ -164,7 +164,6 @@ export class LeaguePage{
           this.getLeagueHeadlines();
 
           setTimeout(() => { // defer loading everything below the fold
-
             //---Batch 2 Load---//
             this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
             this.getBoxScores(this.dateParam);
@@ -208,20 +207,19 @@ export class LeaguePage{
 
     private metaTags(data){
       //create meta description that is below 160 characters otherwise will be truncated
-      // let header = data.headerData;
-      // let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
-      // let link = window.location.href;
-      // let title = header.leagueFullName;
-      // let image = header.leagueLogo;
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle(title);
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
-      // this._seoService.setTitle(title);
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('Index, Follow');
+      let header = data.headerData;
+      let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
+      let title = header.leagueFullName;
+      let image = GlobalSettings.getImageUrl(header.leagueLogo) ? GlobalSettings.getImageUrl(header.leagueLogo) : 'http://images.synapsys.us'+header.leagueLogo;
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('Index, Follow');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(image);
     } // metaTags
 
 
