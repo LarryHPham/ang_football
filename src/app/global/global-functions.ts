@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
-
+import { isBrowser } from 'angular2-universal';
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
 @Injectable()
@@ -910,10 +910,12 @@ export class GlobalFunctions {
     }
 
     static lazyLoadOnScroll(event, batchLoadIndex) {
-      if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
-        //fire when scrolled into footer
-        batchLoadIndex = batchLoadIndex + 1;
+      if(isBrowser){
+        if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+          //fire when scrolled into footer
+          batchLoadIndex = batchLoadIndex + 1;
+        }
+        return batchLoadIndex;
       }
-      return batchLoadIndex;
     } //onScroll
 }

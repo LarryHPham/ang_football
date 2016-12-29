@@ -20,7 +20,7 @@ import { HeadlineDataService } from "../services/headline-module-service";
 
 //services
 // import { HamburgerDeliveryService } from '../services/hamburger-delivery.service';
-// import { FooterService } from '../services/footer.service';
+import { FooterService } from '../services/footer.service';
 import { BoxScoresService } from "../services/box-scores.service";
 import { SchedulesService } from "../services/schedules.service";
 import { GeoLocation } from "../global/global-service";
@@ -75,7 +75,7 @@ import { ScrollableContent } from "../fe-core/components/scrollable-content/scro
 import { LoadingComponent } from "../fe-core/components/loading/loading.component";
 import { HeaderComponent } from "../ui-modules/header/header.component";
 import { HamburgerMenuComponent } from "../ui-modules/hamburger-menu/hamburger-menu.component";
-// import { FooterComponent } from "..s/ui-modules/footer/footer.component";
+import { FooterComponent } from "../ui-modules/footer/footer.component";
 import { CalendarCarousel } from "../fe-core/components/carousels/calendar/calendar-carousel.component";
 import { GameInfo } from "../fe-core/components/game-info/game-info.component";
 import { GameArticle } from "../fe-core/components/game-article/game-article.component";
@@ -89,7 +89,7 @@ import { NoDataBox } from '../fe-core/components/error/data-box/data-box.compone
 import { SliderCarousel } from "../fe-core/components/carousels/slider-carousel/slider-carousel.component";
 import { ComplexInnerHtml } from "../fe-core/components/complex-inner-html/complex-inner-html.component";
 import { PaginationFooter } from "../fe-core/components/pagination-footer/pagination-footer.component";
-// import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
+import { DropdownDirectoryComponent } from '../fe-core/components/dropdown-directory/dropdown-directory.component';
 import { SideScroll } from '../fe-core/components/carousels/side-scroll/side-scroll.component';
 import { ArticleBlockComponent } from "../fe-core/components/article-block/article-block.component";
 import { Larousel } from '../fe-core/components/larousel/larousel';
@@ -170,8 +170,8 @@ const COMPONENTS = [
   PaginationFooter,
   HeaderComponent,
   HamburgerMenuComponent,
-  // FooterComponent,
-  // DropdownDirectoryComponent,
+  FooterComponent,
+  DropdownDirectoryComponent,
   Larousel,
   NewsBox,
   // LineChartComponent,
@@ -211,7 +211,7 @@ const PROVIDERS = [
   ModelService,
   ApiService,
   CacheService,
-  // FooterService,
+  FooterService,
   ScrollerFunctions,
   BoxScoresService,
   SchedulesService,

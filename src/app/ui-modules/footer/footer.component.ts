@@ -1,14 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GlobalFunctions } from '../../global/global-functions';
-// import {VerticalGlobalFunctions} from '../../../global/vertical-global-functions';
 import { Link, NavigationData } from '../../global/global-interface';
 import { GlobalSettings } from "../../global/global-settings";
-// import {DropdownDirectoryComponent} from '../dropdown-directory/dropdown-directory.component';
 import { FooterService } from '../../services/footer.service';
+import { isBrowser } from 'angular2-universal';
 
 @Component({
     selector: 'footer-component',
-    templateUrl: './app/ui-modules/footer/footer.component.html',
+    templateUrl: './footer.component.html',
     inputs: [],
 })
 export class FooterComponent implements OnInit {
@@ -17,7 +16,7 @@ export class FooterComponent implements OnInit {
     public pageName: string;
     public homePageLinkName: string;
     public linkName: string;
-    public currentUrl: string = window.location.href;
+    public currentUrl: string;
     public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public _copyrightInfo: string = "<i>Images Provided By: </i><b> " + GlobalSettings.getCopyrightInfo() + "</b>";
     public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
@@ -36,6 +35,9 @@ export class FooterComponent implements OnInit {
     playerDirectoryListings: Array<Link>;
 
     constructor(private _service: FooterService, private _globalFunc: GlobalFunctions){//TODO
+      if(isBrowser){
+        this.currentUrl = window.location.href;
+      }
       this.teamDirectory();
       this.playerDirectory();
     }
