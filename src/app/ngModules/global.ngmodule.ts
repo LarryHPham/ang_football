@@ -130,7 +130,7 @@ const COREMODULES = [
   BillboardModule,
   // WidgetCarouselModule,
   ListOfListsModule,
-  CommentModule
+  CommentModule,
   DirectoryModule,
   // SearchPageModule,
 ]
