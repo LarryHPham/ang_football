@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent }  from '../app-component/app.component';
+import { Title, DOCUMENT } from '@angular/platform-browser';
 
 //router
 import { routing } from '../router/app.routing';
@@ -25,7 +26,7 @@ import { SchedulesService } from "../services/schedules.service";
 import { GeoLocation } from "../global/global-service";
 import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
-// import { SeoService } from "../seo.service";
+import { SeoService } from "../seo.service";
 // import { DirectoryService } from "../services/directory.service";
 // import { SearchService } from "../services/search.service";
 import { AboutUsService } from "../services/about-us.service";
@@ -219,10 +220,11 @@ const PROVIDERS = [
   // HamburgerDeliveryService,
   ImagesService,
   ListOfListsService,
-  // SeoService,
+  SeoService,
   // DirectoryService,
   // SearchService,
-  AboutUsService
+  AboutUsService,
+  Title,
 ]
 
 @NgModule({

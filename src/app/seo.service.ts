@@ -8,7 +8,11 @@
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { __platform_browser_private__ } from '@angular/platform-browser'
+import {Location} from '@angular/common';
 import {GlobalSettings} from "./global/global-settings";
+import {isNode} from "angular2-universal";
+
+declare var Zone: any;
 
 @Injectable()
 
@@ -55,7 +59,10 @@ export class SeoService {
      * Inject the Angular 2 Title Service
      * @param titleService
      */
-    constructor(titleService:Title) {
+    constructor(
+      titleService:Title,
+      private _location: Location
+    ) {
         this.titleService = titleService;
         this.DOM = __platform_browser_private__.getDOM();
         /**
@@ -258,10 +265,14 @@ export class SeoService {
     }
 
     public setCanonicalLink(): HTMLElement {
-        let relPath = window.location.href;
+        let canonicalLink = "";
+        if(isNode) {
+          canonicalLink = Zone.current.get('originUrl') + this._location.path(false);
+        }else{
+          canonicalLink = window.location.href;
+        }
         let el:HTMLElement;
         el = this.DOM.query("link[rel='canonical']");
-        let canonicalLink = window.location.href;
         if (el === null) {
             el = this.DOM.createElement('link');
             el.setAttribute('rel', 'canonical');

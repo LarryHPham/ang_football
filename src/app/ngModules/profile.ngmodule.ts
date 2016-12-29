@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import {NgModule, ModuleWithProviders, ValueProvider} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { routing } from '../router/app.routing';
 import { FormsModule } from '@angular/forms';
@@ -37,7 +37,7 @@ import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.p
 // import { TeamRosterPage } from "../webpages/team-roster/team-roster.page";
 // import { TransactionsPage } from "../webpages/transactions-page/transactions.page";
 // import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page";
-// import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
+import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 // import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
 // import { ListPage } from "../webpages/list-page/list.page";
 // import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
@@ -102,7 +102,7 @@ const PAGEMODULES = [
   // TeamRosterPage,
   // TransactionsPage,
   // SeasonStatsPage,
-  // MVPListPage,
+  MVPListPage,
   // PlayerStatsPage,
   // ListPage,
   // ListOfListsPage,
