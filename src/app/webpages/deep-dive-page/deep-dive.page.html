@@ -3,10 +3,10 @@
                   <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" (changeScope)="toggleRoute($event)">
                   </news-box>
                   <div class="spacer" id="deep-dive-blueBar">
-                    <!-- <section class="deep-dive-adWrap">
-                      <iframe *ngIf="scope == 'nfl' || scope == 'home'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
-                      <iframe *ngIf="scope == 'ncaaf'" frameborder="0" scrolling="no" allowtransparency="true" src="/app/fe-core/ads/ncaafbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
-                    </section> -->
+                    <section class="deep-dive-adWrap">
+                      <iframe *ngIf="scope == 'nfl' || scope == 'home'" frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
+                      <iframe *ngIf="scope == 'ncaaf'" frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/ncaafbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
+                    </section>
                   </div>
                 </section>
                 <section *ngIf="carouselData" class="deep-dive-container2">
