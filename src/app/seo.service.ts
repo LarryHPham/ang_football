@@ -71,7 +71,6 @@ export class SeoService {
         //  * @type {any}
         //  */
         this.metaDescription = this.getOrCreateElement('name', 'description', 'meta');
-        // this.themeColor = this.getOrCreateElement('name', 'theme-color', 'meta');
         this.canonicalLink = this.getOrCreateElement('rel', 'canonical', 'link');
         this.robots = this.getOrCreateElement('name', 'robots', 'meta');
         this.ogTitle = this.getOrCreateElement('property', 'og:title', 'meta');
@@ -80,6 +79,7 @@ export class SeoService {
         this.ogUrl = this.getOrCreateElement('property', 'og:url', 'meta');
         this.ogImage = this.getOrCreateElement('property', 'og:image', 'meta');
 
+        // article page specific
         this.startDate = this.getOrCreateElement('name', 'start_date', 'meta');
         this.endDate = this.getOrCreateElement('name', 'end_date', 'meta');
         this.isArticle = this.getOrCreateElement('name', 'is_article', 'meta');
@@ -126,8 +126,8 @@ export class SeoService {
 
     // //incase we dont want the base title to be in head title tag
     // public setTitleNoBase(title:string) {
-    //     this.titleService.setTitle(title);
-    // }}
+    //     this.setTitle(title);
+    // };
 
     public setMetaDescription(description:string) {
       let truncatedDescription = description;

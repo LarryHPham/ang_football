@@ -627,11 +627,13 @@ export class ArticlePages implements OnInit {
         this._seoService.setMetaDescription(metaDesc);
         this._seoService.setCanonicalLink();
         this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+      
         this._seoService.setOgTitle(metaData.title);
         this._seoService.setOgDesc(metaDesc);
         this._seoService.setOgType('Website');
         this._seoService.setOgUrl();
         this._seoService.setOgImage(image);
+
         this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'].toString() : metaData.publishedDate.toString());
         this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'].toString() : metaData.publishedDate.toString());
         this._seoService.setIsArticle(this.isArticle.toString());

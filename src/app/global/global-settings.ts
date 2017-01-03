@@ -109,15 +109,16 @@ export class GlobalSettings {
         return this._proto + "//" + this._mainPageUrl + this._mainLogo;
     }
 
-    static getImageUrl(relativePath):string {
-      if(isBrowser){
-        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: '/app/public/no-image.svg';
+    //include bypass parameter if you want the image to be served on server side (meta tag images)
+    static getImageUrl(relativePath, bypass?:boolean):string {
+      if(isBrowser || bypass == true){
+        var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: './app/public/no-image.svg';
         return relPath;
       }
     }
 
     static getBackgroundImageUrl(relativePath):string {
-        var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: '/app/public/drk-linen.png';
+        var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: './app/public/drk-linen.png';
         return relPath;
     }
 
