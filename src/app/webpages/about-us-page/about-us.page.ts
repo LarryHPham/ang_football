@@ -7,7 +7,7 @@ import { GlobalSettings } from '../../global/global-settings';
 import { GlobalFunctions } from '../../global/global-functions';
 
 //services
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 import { AboutUsService } from '../../services/about-us.service';
 
 //interfaces
@@ -67,7 +67,7 @@ export class AboutUsPage {
     constructor(
       private activatedRoute: ActivatedRoute,
       private _service: AboutUsService,
-      // private _seoService: SeoService
+      private _seoService: SeoService
     ) {
       this.activatedRoute.params.subscribe(
           (param :any)=> {
@@ -89,16 +89,18 @@ export class AboutUsPage {
 
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
+      let title = 'About Us';
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle('About Us');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('About Us');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('INDEX, FOLLOW');
+      let image = 'http://www.touchdownloyal.com/app/public/mainLogo.png';
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(image);
     } //metaTags
 
 
