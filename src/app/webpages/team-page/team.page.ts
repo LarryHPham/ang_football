@@ -272,7 +272,6 @@ export class TeamPage implements OnInit {
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
-    this._seoService.setThemeColor(color);
 
     //manually generate team schema for team page until global funcation can be created
     let teamSchema = `

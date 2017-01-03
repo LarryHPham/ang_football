@@ -13,7 +13,7 @@ import { GlobalSettings } from "../../global/global-settings";
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { ListPageService } from '../../services/list-page.service';
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { TitleInputData } from '../../fe-core/components/title/title.component';

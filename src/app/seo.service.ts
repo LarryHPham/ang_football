@@ -71,7 +71,7 @@ export class SeoService {
         //  * @type {any}
         //  */
         this.metaDescription = this.getOrCreateElement('name', 'description', 'meta');
-        this.themeColor = this.getOrCreateElement('name', 'theme-color', 'meta');
+        // this.themeColor = this.getOrCreateElement('name', 'theme-color', 'meta');
         this.canonicalLink = this.getOrCreateElement('rel', 'canonical', 'link');
         this.robots = this.getOrCreateElement('name', 'robots', 'meta');
         this.ogTitle = this.getOrCreateElement('property', 'og:title', 'meta');
