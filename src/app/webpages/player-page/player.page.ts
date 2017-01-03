@@ -211,7 +211,7 @@ export class PlayerPage{
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = GlobalSettings.getImageUrl(header.leagueLogo) ? GlobalSettings.getImageUrl(header.leagueLogo) : 'http://images.synapsys.us'+header.teamLogo;
+    let image = header.playerHeadshotUrl;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
@@ -228,16 +228,15 @@ export class PlayerPage{
     }
 
     title = title  + ' ' + record;
+    this._seoService.setTitle(title);
+    this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
+    this._seoService.setMetaRobots('Index, Follow');
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
-    this._seoService.setTitle(title);
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setMetaRobots('Index, Follow');
-    this._seoService.setThemeColor(color);
 
     //manually generate team schema for team page until global funcation can be created
     let teamSchema = `

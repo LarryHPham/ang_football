@@ -16,7 +16,7 @@ import { SeasonStatsPage } from "../webpages/season-stats-page/season-stats.page
 import { DraftHistoryPage } from "../webpages/draft-history-page/draft-history.page";
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
-// import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
+import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { MVPListPage } from "../webpages/mvp-list-page/mvp-list.page";
 import { PlayerStatsPage } from "../webpages/player-stats-page/player-stats.page";
@@ -28,10 +28,10 @@ import { ErrorPage } from "../webpages/error-page/error-page.page";
 // import { SearchPage } from "../webpages/search-page/search.page";
 
 const relativeChildRoutes = [
-    // {
-    //     path: 'contact-us',
-    //     component: ContactUsPage,
-    // },
+    {
+        path: 'contact-us',
+        component: ContactUsPage,
+    },
     {
         path: 'disclaimer',
         component: DisclaimerPage,

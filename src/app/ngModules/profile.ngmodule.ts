@@ -24,7 +24,7 @@ import { RosterService } from '../services/roster.service';
 import { FantasyService } from '../services/fantasy.service';
 import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 import { PlayerStatsService } from "../services/player-stats.service";
-// import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
+import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
 import { PickateamPageService } from '../services/pickateam.service';
 
 //pages
@@ -178,7 +178,7 @@ const PROVIDERS = [
   SeasonStatsService,
   SeasonStatsPageService,
   PlayerStatsService,
-  // DynamicWidgetCall,
+  DynamicWidgetCall,
   PickateamPageService
 ]
 

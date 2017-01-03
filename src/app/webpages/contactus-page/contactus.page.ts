@@ -17,7 +17,7 @@ import { SidekickWrapper } from "../../fe-core/components/sidekick-wrapper/sidek
 declare var moment;
 @Component({
     selector: 'contactus-page',
-    templateUrl: './app/webpages/contactus-page/contactus.page.html',
+    templateUrl: './contactus.page.html',
 })
 export class ContactUsPage {
     public scope: string;
@@ -118,16 +118,14 @@ export class ContactUsPage {
     metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
-      let link = window.location.href;
-
+      this._seoService.setTitle('Contact Us');
+      this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle('Contact Us');
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(GlobalSettings.getmainLogoUrl());
-      this._seoService.setTitle('Contact Us');
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('INDEX, FOLLOW');
     } //metaTags
 }

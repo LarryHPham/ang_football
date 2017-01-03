@@ -91,7 +91,7 @@ export class AboutUsPage {
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'About Us';
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
-      let image = 'http://www.touchdownloyal.com/app/public/mainLogo.png';
+      let image = GlobalSettings.getmainLogoUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();

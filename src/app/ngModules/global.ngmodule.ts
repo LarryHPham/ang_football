@@ -39,7 +39,7 @@ import { PossessivePipe } from "../fe-core/pipes/possessive.pipe";
 
 //pages
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
-// import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
+import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
@@ -98,7 +98,7 @@ import { ImagesMedia } from "../fe-core/components/carousels/images-media-carous
 import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-of-lists-item.component";
 import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
 import { TitleComponent } from "../fe-core/components/title/title.component";
-// import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
+import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
 // import { Search } from "../ui-modules/search/search.component";
 import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
@@ -116,7 +116,7 @@ const MODULES = [
 const PAGEMODULES = [
   // put page modules here
   AboutUsPage,
-  // ContactUsPage,
+  ContactUsPage,
   DisclaimerPage,
   DirectoryPage,
   ErrorPage,
@@ -179,7 +179,7 @@ const COMPONENTS = [
   ListOfListsItem,
   BackTabComponent,
   TitleComponent,
-  // ContactUsComponent,
+  ContactUsComponent,
   DirectoryPagination,
   // Search,
   ArticleScheduleComponent,

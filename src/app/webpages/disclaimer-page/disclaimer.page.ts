@@ -46,7 +46,7 @@ export class DisclaimerPage {
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'Disclaimer';
       let metaDesc = 'Disclaimer page to disclose any information';
-      let image = 'http://www.touchdownloyal.com/app/public/mainLogo.png';
+      let image = GlobalSettings.getmainLogoUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();

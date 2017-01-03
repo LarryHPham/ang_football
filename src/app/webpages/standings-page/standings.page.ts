@@ -54,6 +54,7 @@ export class StandingsPage {
       private _standingsService: StandingsService,
       private _seoService: SeoService
     ) {
+      console.log('test');
       this.paramsub = this.activateRoute.params.subscribe(
         (param :any)=> {
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
@@ -198,80 +199,82 @@ export class StandingsPage {
 
 
     private metaTags(data) {
-        let header, metaDesc, link, title, ogTitle, image, titleName;
+      let header, metaDesc, link, title, ogTitle, image, titleName;
 
-        //create meta description that is below 160 characters otherwise will be truncated
-        header = data.headerData;
-        titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName : header.teamMarket;
-        titleName = titleName.replace(/FBS/g, "NCAAF");
-        title = titleName + ' Standings';
-        ogTitle = titleName;
-        metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
-        image = GlobalSettings.getImageUrl(header.backgroundUrl);
+      //create meta description that is below 160 characters otherwise will be truncated
+      header = data.headerData;
+      titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName : header.teamMarket;
+      titleName = titleName.replace(/FBS/g, "NCAAF");
+      title = titleName + ' Standings';
+      ogTitle = titleName;
+      metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
+      image = GlobalSettings.getImageUrl(header.backgroundUrl, true);
 
-        // this._seoService.setCanonicalLink();
-        // this._seoService.setOgTitle(ogTitle);
-        // this._seoService.setOgDesc(metaDesc);
-        // this._seoService.setOgType('Website');
-        // this._seoService.setOgUrl();
-        // this._seoService.setOgImage(image);
-        // this._seoService.setTitleNoBase(title);
-        // this._seoService.setMetaDescription(metaDesc);
-        // this._seoService.setMetaRobots('Index, Follow');
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('Index, Follow');
+      this._seoService.setOgTitle(ogTitle);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(image);
 
-        if (header.teamId != null) {
-            //grab domain for json schema
-            let domainSite;
-            if (GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
-              if(isNode){
-                domainSite = "https://" + Zone.current.get("originUrl") + '/' + GlobalSettings.getHomeInfo().partnerName;
-              }else{
-                domainSite = "https://" + window.location.hostname + '/' + GlobalSettings.getHomeInfo().partnerName;
-              }
-            } else {
-                if(isNode){
-                  domainSite = "https://" + Zone.current.get("originUrl");
-                }else{
-                  domainSite = "https://" + window.location.hostname;
-                }
-            }
-
-            //manually generate team schema for team page until global funcation can be created
-            let teamSchema = `
-      {
-        "@context": "http://schema.org",
-        "@type": "SportsTeam",
-        "name": "`+ titleName + `",
-      }`;
-
-            //manually generate json schema for BreadcrumbList
-            let jsonSchema = `
-      {
-        "@context": "http://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [{
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@id": "`+ domainSite + "/" + this.scope.toLowerCase() + "/pick-a-team" + `",
-            "name": "`+ this.scope.toUpperCase() + `"
+      if (header.teamId != null) {
+        //grab domain for json schema
+        let domainSite;
+        if (GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
+          if(isNode) {
+            domainSite = "https://" + Zone.current.get("originUrl") + '/' + GlobalSettings.getHomeInfo().partnerName;
+          } else {
+            domainSite = "https://" + window.location.hostname + '/' + GlobalSettings.getHomeInfo().partnerName;
           }
-        },{
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@id": "`+ isNode ? Zone.current.get("originUrl") : window.location.href + `",
-            "name": "`+ titleName + 'Standings' + `"
+        } else {
+          if(isNode) {
+          domainSite = "https://" + Zone.current.get("originUrl");
+          } else {
+            domainSite = "https://" + window.location.hostname;
           }
-        }]
-      }`;
-            this._seoService.setApplicationJSON(teamSchema, 'page');
-            this._seoService.setApplicationJSON(jsonSchema, 'json');
         }
+        //manually generate team schema for team page until global funcation can be created
+        let teamSchema = `
+          {
+            "@context": "http://schema.org",
+            "@type": "SportsTeam",
+            "name": "`+ titleName + `",
+          }`;
+
+        //manually generate json schema for BreadcrumbList
+        let jsonSchema = `
+          {
+            "@context": "http://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "item": {
+                "@id": "`+ domainSite + "/" + this.scope.toLowerCase() + "/pick-a-team" + `",
+                "name": "`+ this.scope.toUpperCase() + `"
+              }
+            },{
+              "@type": "ListItem",
+              "position": 2,
+              "item": {
+                "@id": "`+ isNode ? Zone.current.get("originUrl") : window.location.href + `",
+                "name": "`+ titleName + 'Standings' + `"
+              }
+            }]
+          }`;
+        this._seoService.setApplicationJSON(teamSchema, 'page');
+        this._seoService.setApplicationJSON(jsonSchema, 'json');
+      }
     } //metaTags
+
+
+
     ngOnDestroy() {
-        this._seoService.removeApplicationJSON('page');
-        this._seoService.removeApplicationJSON('json');
+        // this._seoService.removeApplicationJSON('page');
+        // this._seoService.removeApplicationJSON('json');
     }
 
 
