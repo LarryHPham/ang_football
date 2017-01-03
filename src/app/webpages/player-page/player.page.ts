@@ -23,7 +23,7 @@ import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
 // import { NewsService } from '../../services/news.service';
 import { TwitterService } from '../../services/twitter.service';
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 
 //interfaces
 import { Division, Conference, SportPageParameters } from '../../global/global-interface';
@@ -122,7 +122,7 @@ export class PlayerPage{
     private _lolService: ListOfListsService,
     // private _newsService: NewsService,
     private _twitterService: TwitterService,
-    // private _seoService: SeoService
+    private _seoService: SeoService
   ) {
     this.paramsub = this.activateRoute.params.subscribe(
       (param: any) => {
@@ -208,78 +208,78 @@ export class PlayerPage{
 
   private metaTags(data) {
     // //create meta description that is below 160 characters otherwise will be truncated
-  //   let header = data.headerData;
-  //   let metaDesc =  header.description;
-  //   let link = window.location.href;
-  //   let title = header.teamMarket + ' ' + header.teamName;
-  //   let image = header.teamLogo;
-  //   let record = '';
-  //   if (header.leagueRecord != null) {
-  //     record = header.leagueRecord;
-  //   let recordArr = record.split('-');
-  //     record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
-  //   }
-  //   title = title  + ' ' + record;
-  //   this._seoService.setCanonicalLink();
-  //   this._seoService.setOgTitle(title);
-  //   this._seoService.setOgDesc(metaDesc);
-  //   this._seoService.setOgType('Website');
-  //   this._seoService.setOgUrl();
-  //   this._seoService.setOgImage(GlobalSettings.getImageUrl(image));
-  //   this._seoService.setTitle(title);
-  //   this._seoService.setMetaDescription(metaDesc);
-  //   this._seoService.setMetaRobots('Index, Follow');
-  //
-  //   let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
-  //   this._seoService.setThemeColor(color);
-  //   //grab domain for json schema
-  //   let domainSite;
-  //   if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
-  //     domainSite = "https://"+window.location.hostname+'/'+GlobalSettings.getHomeInfo().partnerName;
-  //   }else{
-  //     domainSite = "https://"+window.location.hostname;
-  //   }
-  //
-  //   //manually generate team schema for team page until global funcation can be created
-  //   let teamSchema = `
-  //   {
-  //     "@context": "http://schema.org",
-  //     "@type": "SportsTeam",
-  //     "name": "`+header.teamMarket + ' ' + header.teamName+`",
-  //   }`;
-  //
-  //   //manually generate json schema for BreadcrumbList
-  //   let jsonSchema = `
-  //   {
-  //     "@context": "http://schema.org",
-  //     "@type": "BreadcrumbList",
-  //     "itemListElement": [{
-  //     "@type": "ListItem",
-  //     "position": 1,
-  //     "item": {
-  //       "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
-  //       "name": "`+this.scope.toUpperCase()+`"
-  //     }
-  //   },{
-  //     "@type": "ListItem",
-  //     "position": 2,
-  //     "item": {
-  //       "@id": "`+window.location.href+"?league="+header.divisionName+`",
-  //       "name": "`+header.divisionName+`"
-  //     }
-  //   },{
-  //     "@type": "ListItem",
-  //     "position": 3,
-  //     "item": {
-  //       "@id": "`+window.location.href+`",
-  //       "name": "`+header.teamMarket + ' ' + header.teamName+`"
-  //       }
-  //     }]
-  //   }`;
-  //   this._seoService.setApplicationJSON(teamSchema, 'page');
-  //   this._seoService.setApplicationJSON(jsonSchema, 'json');
-  // } //metaTags
-  // ngOnDestroy(){
+    let header = data.headerData;
+    let metaDesc =  header.description;
+    let title = header.teamMarket + ' ' + header.teamName;
+    let image = GlobalSettings.getImageUrl(header.leagueLogo) ? GlobalSettings.getImageUrl(header.leagueLogo) : 'http://images.synapsys.us'+header.teamLogo;
+    let record = '';
+    if (header.leagueRecord != null) {
+      record = header.leagueRecord;
+    let recordArr = record.split('-');
+      record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
+    }
+    let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+    //grab domain for json schema
+    let domainSite;
+    if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+      domainSite = Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+    }else{
+      domainSite = Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+    }
+
+    title = title  + ' ' + record;
+    this._seoService.setCanonicalLink();
+    this._seoService.setOgTitle(title);
+    this._seoService.setOgDesc(metaDesc);
+    this._seoService.setOgType('Website');
+    this._seoService.setOgUrl();
+    this._seoService.setOgImage(image);
+    this._seoService.setTitle(title);
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setMetaRobots('Index, Follow');
+    this._seoService.setThemeColor(color);
+
+    //manually generate team schema for team page until global funcation can be created
+    let teamSchema = `
+    {
+      "@context": "http://schema.org",
+      "@type": "SportsTeam",
+      "name": "`+header.teamMarket + ' ' + header.teamName+`",
+    }`;
+
+    //manually generate json schema for BreadcrumbList
+    let jsonSchema = `
+    {
+      "@context": "http://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
+        "name": "`+this.scope.toUpperCase()+`"
+      }
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@id": "`+domainSite+"?league="+header.divisionName+`",
+        "name": "`+header.divisionName+`"
+      }
+    },{
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@id": "`+domainSite+`",
+        "name": "`+header.teamMarket + ' ' + header.teamName+`"
+        }
+      }]
+    }`;
+    this._seoService.setApplicationJSON(teamSchema, 'page');
+    this._seoService.setApplicationJSON(jsonSchema, 'json');
+  } //metaTags
+
+  ngOnDestroy(){
   //   this._seoService.removeApplicationJSON('page');
   //   this._seoService.removeApplicationJSON('json');
   } //ngOnDestroy

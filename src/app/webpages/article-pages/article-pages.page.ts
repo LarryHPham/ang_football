@@ -79,7 +79,7 @@ export class ArticlePages implements OnInit {
                 private _router:Router,
                 private _articleDataService:ArticleDataService,
                 private _location:Location,
-                // private _seoService:SeoService,
+                private _seoService:SeoService,
                 private _deepDiveService:DeepDiveService,
                 private _geoLocation:GeoLocation,
                 private _headlineDataService:HeadlineDataService) {
@@ -586,68 +586,68 @@ export class ArticlePages implements OnInit {
 
     private metaTags(data) {
         // //create meta description that is below 160 characters otherwise will be truncated
-        // var metaData = this.isArticle ? data : data.data;
-        // let image;
-        // var keyword = this.isArticle ? "keywords" : "keyword";
-        // var link = window.location.href;
-        // var teams = [];
-        // var players = [];
-        // var searchString;
-        // var searchArray = [];
-        // if (this.isArticle) {
-        //     var headerData = data['article_data']['metadata'];
-        //     var metaDesc = data['article_data'].meta_headline;
-        //     if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
-        //         headerData['team_name'].forEach(function (val) {
-        //             searchArray.push(val);
-        //             teams.push(val);
-        //         });
-        //     }
-        //     if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
-        //         headerData['player_name'].forEach(function (val) {
-        //             searchArray.push(val);
-        //             players.push(val);
-        //         });
-        //     }
-        // }
-        // if (metaData[keyword] && metaData[keyword].constructor === Array) {
-        //     metaData[keyword].forEach(function (val) {
-        //         searchArray.push(val);
-        //     });
-        //     searchString = searchArray.join(',');
-        // } else {
-        //     searchString = metaData[keyword];
-        // }
-        // if (this.imageData != null) {
-        //     image = this.imageData[0];
-        // } else {
-        //     image = this.isArticle ? metaData.image_url : metaData.thumbnail;
-        // }
-        // this._seoService.setCanonicalLink();
-        // this._seoService.setOgTitle(metaData.title);
-        // this._seoService.setOgDesc(metaDesc);
-        // this._seoService.setOgType('Website');
-        // this._seoService.setOgUrl();
-        // this._seoService.setOgImage(image);
-        // this._seoService.setTitle(metaData.title);
-        // this._seoService.setMetaDescription(metaDesc);
-        // this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-        // this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'] : metaData.publishedDate);
-        // this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
-        // this._seoService.setIsArticle(this.isArticle.toString());
-        // this._seoService.setSearchType("article");
-        // this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
-        // this._seoService.setArticleId(this.eventID);
-        // this._seoService.setArticleTitle(metaData.title);
-        // this._seoService.setKeyword(this.isArticle ? metaData['keywords'] : metaData.keyword);
-        // this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date : metaData.publishedDate);
-        // this._seoService.setAuthor(metaData.author);
-        // this._seoService.setPublisher(metaData.publisher);
-        // this._seoService.setImageUrl(image);
-        // this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
-        // this._seoService.setArticleUrl(link);
-        // this._seoService.setArticleType(this.isArticle ? metaData.article_type : this.scope);
-        // this._seoService.setSearchString(searchString);
+        var metaData = this.isArticle ? data : data.data;
+        let image;
+        var keyword = this.isArticle ? "keywords" : "keyword";
+        var teams = [];
+        var players = [];
+        var searchString;
+        var searchArray = [];
+        // let link = window.location.href;
+        if (this.isArticle) {
+            var headerData = data['article_data']['metadata'];
+            var metaDesc = data['article_data'].meta_headline;
+            if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
+                headerData['team_name'].forEach(function (val) {
+                    searchArray.push(val);
+                    teams.push(val);
+                });
+            }
+            if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
+                headerData['player_name'].forEach(function (val) {
+                    searchArray.push(val);
+                    players.push(val);
+                });
+            }
+        }
+        if (metaData[keyword] && metaData[keyword].constructor === Array) {
+            metaData[keyword].forEach(function (val) {
+                searchArray.push(val);
+            });
+            searchString = searchArray.join(',');
+        } else {
+            searchString = metaData[keyword];
+        }
+        if (this.imageData != null) {
+            image = this.imageData[0];
+        } else {
+            image = this.isArticle ? metaData.image_url : metaData.thumbnail;
+        }
+        this._seoService.setTitle(metaData.title);
+        this._seoService.setMetaDescription(metaDesc);
+        this._seoService.setCanonicalLink();
+        this._seoService.setMetaRobots('INDEX, NOFOLLOW');
+        this._seoService.setOgTitle(metaData.title);
+        this._seoService.setOgDesc(metaDesc);
+        this._seoService.setOgType('Website');
+        this._seoService.setOgUrl();
+        this._seoService.setOgImage(image);
+        this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'].toString() : metaData.publishedDate.toString());
+        this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'].toString() : metaData.publishedDate.toString());
+        this._seoService.setIsArticle(this.isArticle.toString());
+        this._seoService.setSearchType("article");
+        this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
+        this._seoService.setArticleId(this.eventID);
+        this._seoService.setArticleTitle(metaData.title);
+        this._seoService.setKeyword(this.isArticle ? metaData['keywords'].toString() : metaData.keyword.toString());
+        this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date.toString() : metaData.publishedDate.toString());
+        this._seoService.setAuthor(metaData.author);
+        this._seoService.setPublisher(metaData.publisher);
+        this._seoService.setImageUrl(image);
+        this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '').toString() : metaData.teaser.toString());
+        this._seoService.setArticleUrl();
+        this._seoService.setArticleType(this.isArticle ? metaData.article_type.toString() : this.scope.toString());
+        this._seoService.setSearchString(searchString);
     } //metaTags
 
     getGeoLocation() {

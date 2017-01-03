@@ -5,7 +5,7 @@ import { Injector } from '@angular/core';
 import { TitleInputData } from "../../fe-core/components/title/title.component";
 import { GlobalSettings } from '../../global/global-settings';
 import { GlobalFunctions } from '../../global/global-functions';
-// import { SeoService } from "../../seo.service";
+import { SeoService } from "../../seo.service";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 @Component({
@@ -25,7 +25,7 @@ export class DisclaimerPage {
     public titleData: TitleInputData;
 
     constructor(
-      // private _seoService: SeoService,
+      private _seoService: SeoService,
       public activatedRoute: ActivatedRoute
     ) {
       this.activatedRoute.params.subscribe(
@@ -44,17 +44,18 @@ export class DisclaimerPage {
 
     private metaTags() {
       //create meta description that is below 160 characters otherwise will be truncated
+      let title = 'Disclaimer';
       let metaDesc = 'Disclaimer page to disclose any information';
-      // let link = window.location.href;
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle('Disclaimer');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('Disclaimer');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+      let image = 'http://www.touchdownloyal.com/app/public/mainLogo.png';
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(image);
     } //metaTags
 
 
