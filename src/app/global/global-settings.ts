@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalFunctions } from './global-functions';
-import { isBrowser } from 'angular2-universal';
+import { isBrowser, isNode } from 'angular2-universal';
 
+declare var Zone;
 @Injectable()
 
 export class GlobalSettings {
-    // private static _env = window.location.hostname.split('.')[0];
-    private static _env = 'dev';//TODO
-    // private static _proto = window.location.protocol;
-    private static _proto = 'http:';//TODO
+    // hardCoded for ServerSide (isNode);
+    private static _env = isNode ? 'dev' : window.location.hostname.split('.')[0];//TODO
+    private static _proto = isNode ? 'http:' : window.location.protocol;//TODO
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
     private static _partnerId:string;
@@ -25,7 +25,6 @@ export class GlobalSettings {
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
     public static _imageUrl:string = 'images.synapsys.us';
-    private static _recUrl:string = '-homerunloyal-ai.synapsys.us/sidekick-regional';
     private static _homepageUrl:string = '.touchdownloyal.com';
     private static _homepageLinkName:string = 'touchdownloyal';
     private static _partnerHomepageUrl:string = '.mytouchdownzone.com';
@@ -140,9 +139,6 @@ export class GlobalSettings {
     static getTrendingUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
     }
-    static getRecUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._recUrl;
-    }
 
     static getHeadlineUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
@@ -224,12 +220,9 @@ export class GlobalSettings {
       var partner = false;
       var isHome = false;
       var hide = false;
-      // var hostname = window.location.hostname;//TODO
-      var hostname = 'www.touchdownloyal.com';//TODO
+      var hostname = isNode ? Zone.current.get('originUrl') : window.location.hostname;
       var partnerPage = /mytouchdownzone/.test(hostname) || /^football\./.test(hostname);
-      var TODO = '/deep-dive/';
-      // var name = window.location.pathname.split('/')[1];//TODO
-      var name = TODO.split('/')[1];//TODO
+      var name = isNode ? Zone.current.get('requestUrl') : window.location.pathname.split('/')[1];
       var isSubdomainPartner = /^football\./.test(hostname);
       //PLEASE REVISIT and change
       if(partnerPage && (name == '' || name == 'deep-dive')){
@@ -260,8 +253,8 @@ export class GlobalSettings {
     }
 
     static getScopeNow() {
+      var url = isNode ? Zone.current.get('requestUrl') : window.location.pathname;
       // var url = window.top.location.pathname; //TODO
-      var url = '/nfl'; //TODO
       var scope = this._sportLeagueAbbrv;
       var majorLeague = this._sportLeagueAbbrv.toLowerCase();
       var minorLeagueFull = this._collegeDivisionFullAbbrv.toLowerCase();
