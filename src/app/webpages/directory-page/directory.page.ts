@@ -129,16 +129,16 @@ export class DirectoryPage {
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
     let title = this.type.charAt(0).toUpperCase() + this.type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
-
-    // this._seoService.setCanonicalLink();
-    // this._seoService.setOgTitle(title);
-    // this._seoService.setOgDesc(metaDesc);
-    // this._seoService.setOgType('Website');
-    // this._seoService.setOgUrl();
-    // this._seoService.setOgImage('https://touchdownloyal.com/app/public/mainLogo.jpg');
-    // this._seoService.setTitle(title);
-    // this._seoService.setMetaDescription(metaDesc);
-    // this._seoService.setMetaRobots('INDEX, FOLLOW');
+    let image = GlobalSettings.getmainLogoUrl();
+    this._seoService.setTitle(title);
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setCanonicalLink();
+    this._seoService.setMetaRobots('INDEX, FOLLOW');
+    this._seoService.setOgTitle(title);
+    this._seoService.setOgDesc(metaDesc);
+    this._seoService.setOgType('Website');
+    this._seoService.setOgUrl();
+    this._seoService.setOgImage(image);
   } //metaTags
 
 

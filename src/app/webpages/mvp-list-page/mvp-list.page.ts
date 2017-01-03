@@ -69,7 +69,7 @@ export class MVPListPage implements OnInit {
       private activateRoute: ActivatedRoute,
       private _service: ListPageService,
       private _profileService: ProfileHeaderService,
-      // private _seoService: SeoService,
+      private _seoService: SeoService,
       @Inject(DOCUMENT) private _document: any
     ) {
         // check to see if scope is correct and redirect
@@ -123,7 +123,7 @@ export class MVPListPage implements OnInit {
 
 
     ngOnInit() {
-        this.position = this.listType;
+      this.position = this.listType;
     }
 
 
@@ -184,15 +184,15 @@ export class MVPListPage implements OnInit {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle(title);
-      // this._seoService.setOgDesc(metaDesc +". Know more about football.");
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage(imageUrl);
-      // this._seoService.setTitle(title);
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
     } //metaTags
 
 

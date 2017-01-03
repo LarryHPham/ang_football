@@ -6,7 +6,7 @@ import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
 
 import { ActivatedRoute, Router } from '@angular/router';
-// import { SeoService } from '../../seo.service';
+import { SeoService } from '../../seo.service';
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //window declarions of global functions from library scripts
@@ -58,7 +58,7 @@ export class DeepDivePage{
       private _deepDiveData: DeepDiveService,
       private _schedulesService:SchedulesService,
       private _geoLocation:GeoLocation,
-      // private _seoService: SeoService,
+      private _seoService: SeoService,
       public ngZone:NgZone,
       private _route:Router
     ){
@@ -130,17 +130,15 @@ export class DeepDivePage{
     private metaTags(){
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
-      // let link = window.location.href;
-      //
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle('Deep Dive');
-      // this._seoService.setOgDesc(metaDesc);
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage('./app/public/mainLogo.png');
-      // this._seoService.setTitle('Deep Dive');
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('Index, Follow');
+      this._seoService.setTitle('Deep Dive');
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('Index, Follow');
+      this._seoService.setOgTitle('Deep Dive');
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage('./app/public/mainLogo.png');
     } //metaTags
 
 

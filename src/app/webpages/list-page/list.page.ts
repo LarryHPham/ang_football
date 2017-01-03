@@ -17,7 +17,7 @@ import { PaginationParameters } from '../../fe-core/components/pagination-footer
 //services
 import { ListPageService } from '../../services/list-page.service';
 import { ProfileHeaderService } from '../../services/profile-header.service';
-import { DynamicWidgetCall } from "../../services/dynamic-list-page.service";
+// import { DynamicWidgetCall } from "../../services/dynamic-list-page.service";
 import { SeoService } from "../../seo.service";
 
 
@@ -55,7 +55,7 @@ export class ListPage {
         private activatedRoute: ActivatedRoute,
         private listService: ListPageService,
         private _profileService: ProfileHeaderService,
-        private dynamicWidget: DynamicWidgetCall,
+        // private dynamicWidget: DynamicWidgetCall,
         private _title: Title,
         private _seoService: SeoService
     ) {
@@ -173,30 +173,30 @@ export class ListPage {
 
 
     getDynamicList() {
-        if (!this.tw) {
-            // Not enough parameter : display error message
-            this.isError = true;
-            return;
-        }
-        this.dynamicWidget.getWidgetData(this.tw, this.sw, this.input)
-            .subscribe(
-            list => {
-                this.profileHeaderData = list.profHeader;
-                this.metaTags(this.profileHeaderData);
-                if (list.listData.length == 0) {//makes sure it only runs once
-                    this.detailedDataArray = null;
-                } else {
-                    this.detailedDataArray = list.listData;
-                }
-                this.setDynamicPagination(list.pagination);
-                this.carouselDataArray = list.carData;
-            },
-
-            err => {
-                this.isError = true;
-                console.log(err);
-            }
-            );
+        // if (!this.tw) {
+        //     // Not enough parameter : display error message
+        //     this.isError = true;
+        //     return;
+        // }
+        // this.dynamicWidget.getWidgetData(this.tw, this.sw, this.input)
+        //     .subscribe(
+        //     list => {
+        //         this.profileHeaderData = list.profHeader;
+        //         this.metaTags(this.profileHeaderData);
+        //         if (list.listData.length == 0) {//makes sure it only runs once
+        //             this.detailedDataArray = null;
+        //         } else {
+        //             this.detailedDataArray = list.listData;
+        //         }
+        //         this.setDynamicPagination(list.pagination);
+        //         this.carouselDataArray = list.carData;
+        //     },
+        //
+        //     err => {
+        //         this.isError = true;
+        //         console.log(err);
+        //     }
+        //     );
     } //getDynamicList
 
 
@@ -213,15 +213,15 @@ export class ListPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      // this._seoService.setCanonicalLink();
-      // this._seoService.setOgTitle(title);
-      // this._seoService.setOgDesc(metaDesc +". Know more about football.");
-      // this._seoService.setOgType('Website');
-      // this._seoService.setOgUrl();
-      // this._seoService.setOgImage(imageUrl);
-      // this._seoService.setTitle(title);
-      // this._seoService.setMetaDescription(metaDesc);
-      // this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      this._seoService.setOgType('Website');
+      this._seoService.setOgUrl();
+      this._seoService.setOgImage(imageUrl);
     } //metaTags
 
 
@@ -230,6 +230,8 @@ export class ListPage {
         this.pageParams.pageNumber = index;
         window.scrollTo(0, 0);
     } //newIndex
+
+
 
     getPage(){
       this._profileService.getLeagueProfile()
