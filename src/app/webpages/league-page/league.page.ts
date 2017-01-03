@@ -208,8 +208,8 @@ export class LeaguePage{
     private metaTags(data){
       //create meta description that is below 160 characters otherwise will be truncated
       let header = data.headerData;
-      let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let title = header.leagueFullName;
+      let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let image = GlobalSettings.getImageUrl(header.leagueLogo) ? GlobalSettings.getImageUrl(header.leagueLogo) : 'http://images.synapsys.us'+header.leagueLogo;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
