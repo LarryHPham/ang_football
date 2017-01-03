@@ -25,7 +25,7 @@ import { MainModule } from './node.module';
 import { appRoutes } from './app/router/app.routing';
 
 // enable prod for faster renders
-// enableProdMode();
+enableProdMode();
 
 const app = express();
 const ROOT = path.join(path.resolve(__dirname, '..'));
@@ -78,7 +78,6 @@ function ngApp(req, res) {
  */
 app.get('/', ngApp);
 appRoutes.forEach(route => {
-  console.log('server =>',route.path);
   app.get(`/${route.path}`, ngApp);
   app.get(`/${route.path}/*`, ngApp);
 });
