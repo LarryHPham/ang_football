@@ -41,8 +41,8 @@ export var commonPlugins = [
   //provide third pary plugins
   new webpack.ProvidePlugin({
     moment: "moment-timezone",
-    jQuery: "jQuery",
-    'window.jQuery': "jQuery",
+    jQuery: "jquery",
+    'jquery': "jquery",
   }),
 
   //takes source files in node_modules and copies them into directory for use.

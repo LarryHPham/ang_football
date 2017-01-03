@@ -13,7 +13,7 @@ import { SeoService } from "../../seo.service";
 
 @Component({
     selector: 'Error-page',
-    templateUrl: './app/webpages/error-page/error-page.page.html'
+    templateUrl: './error-page.page.html'
 })
 
 export class ErrorPage {

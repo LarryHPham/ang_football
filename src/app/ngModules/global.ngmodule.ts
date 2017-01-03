@@ -27,7 +27,7 @@ import { GeoLocation } from "../global/global-service";
 import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
 import { SeoService } from "../seo.service";
-// import { DirectoryService } from "../services/directory.service";
+import { DirectoryService } from "../services/directory.service";
 // import { SearchService } from "../services/search.service";
 import { AboutUsService } from "../services/about-us.service";
 
@@ -41,8 +41,8 @@ import { PossessivePipe } from "../fe-core/pipes/possessive.pipe";
 import { AboutUsPage } from "../webpages/about-us-page/about-us.page";
 // import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
-// import { DirectoryPage } from "../webpages/directory-page/directory.page";
-// import { ErrorPage } from "../webpages/error-page/error-page.page";
+import { DirectoryPage } from "../webpages/directory-page/directory.page";
+import { ErrorPage } from "../webpages/error-page/error-page.page";
 // import { SearchPage } from "../webpages/search-page/search.page";
 
 //modules
@@ -50,11 +50,10 @@ import { WidgetModule } from "../ui-modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 import { BillboardModule } from "../ui-modules/billboard/billboard.module";
 // import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
-// import { DeepDiveRecommendation } from "../fe-core/modules/deep-dive-recommendation/deep-dive-recommendation.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
-// import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
-// import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
+import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
+import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
 // import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
 
 //components
@@ -119,8 +118,8 @@ const PAGEMODULES = [
   AboutUsPage,
   // ContactUsPage,
   DisclaimerPage,
-  // DirectoryPage,
-  // ErrorPage,
+  DirectoryPage,
+  ErrorPage,
   // SearchPage,
 ]
 
@@ -129,11 +128,10 @@ const COREMODULES = [
   WidgetModule,
   BoxScoresModule,
   BillboardModule,
-  // DeepDiveRecommendation,
   // WidgetCarouselModule,
   ListOfListsModule,
-  CommentModule
-  // DirectoryModule,
+  CommentModule,
+  DirectoryModule,
   // SearchPageModule,
 ]
 
@@ -176,14 +174,13 @@ const COMPONENTS = [
   NewsBox,
   // LineChartComponent,
   ArticleBlockComponent,
-  // DeepDiveRecommendation,
   SideScroll,
   ImagesMedia,
   ListOfListsItem,
   BackTabComponent,
   TitleComponent,
   // ContactUsComponent,
-  // DirectoryPagination,
+  DirectoryPagination,
   // Search,
   ArticleScheduleComponent,
   ScoreBoard,
@@ -221,7 +218,7 @@ const PROVIDERS = [
   ImagesService,
   ListOfListsService,
   SeoService,
-  // DirectoryService,
+  DirectoryService,
   // SearchService,
   AboutUsService,
   Title,

@@ -21,7 +21,7 @@ import { SeoService } from "../../seo.service";
 
 @Component({
   selector: 'Player-stats-page',
-  templateUrl: './app/webpages/player-stats-page/player-stats.page.html'
+  templateUrl: './player-stats.page.html'
 })
 
 export class PlayerStatsPage implements OnInit {
@@ -111,22 +111,21 @@ export class PlayerStatsPage implements OnInit {
       let text4 = data.text4 != null ? '. '+data.text4: '';
       let title = text3 + ' ' + text4;
       let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
-      let link = window.location.href;
       let imageUrl;
       if(data.imageURL != null && data.imageURL != ""){
          imageUrl = data.imageURL;
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      this._seoService.setCanonicalLink();
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc +". Know more about football.");
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(imageUrl);
-      this._seoService.setTitle(title);
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      // this._seoService.setCanonicalLink();
+      // this._seoService.setOgTitle(title);
+      // this._seoService.setOgDesc(metaDesc +". Know more about football.");
+      // this._seoService.setOgType('Website');
+      // this._seoService.setOgUrl();
+      // this._seoService.setOgImage(imageUrl);
+      // this._seoService.setTitle(title);
+      // this._seoService.setMetaDescription(metaDesc);
+      // this._seoService.setMetaRobots('INDEX, FOLLOW');
     } //metaTags
 
 
