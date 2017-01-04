@@ -21,6 +21,8 @@ export class SideScrollSchedule{
   _collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
   _collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
 
+ngOnInit(){}
+
   counter(event){
     this.curCount = event;
     this.count.emit(event);

@@ -68,6 +68,8 @@ export class DeepDivePage{
               this.carouselData = null;
               this.blockIndex = 1;
               this.scope = params['scope'] != null ? params['scope'].toLowerCase() : 'nfl';
+
+              this.profileName = this.scope == 'home' ? 'Football' : this.scope.toUpperCase();
               this.scopeNameDisplay(this.scope);
               this.toggleData = this.scope == 'home' ? [this.getToggleInfo()] : null;
               // GlobalSettings.storePartnerId(params.partner_id);
