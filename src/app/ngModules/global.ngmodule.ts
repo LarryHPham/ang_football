@@ -49,7 +49,7 @@ import { ErrorPage } from "../webpages/error-page/error-page.page";
 import { WidgetModule } from "../ui-modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 import { BillboardModule } from "../ui-modules/billboard/billboard.module";
-// import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
+import { WidgetCarouselModule } from "../ui-modules/widget/widget-carousel.module";
 import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-lists.module";
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
@@ -128,7 +128,7 @@ const COREMODULES = [
   WidgetModule,
   BoxScoresModule,
   BillboardModule,
-  // WidgetCarouselModule,
+  WidgetCarouselModule,
   ListOfListsModule,
   CommentModule,
   DirectoryModule,

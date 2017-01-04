@@ -59,7 +59,7 @@ export class GlobalSettings {
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     public static _mainPageUrl: string = "touchdownloyal.com";
 
-    public static _defaultStockImage: string = "https://images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";
+    public static _defaultStockImage: string = GlobalSettings._proto + "//images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";// default stock image on the server for FOOTBALL
 
     private static _currentRouteParams: any;
     private static _router: any;
