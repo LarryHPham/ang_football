@@ -1,11 +1,10 @@
-<!--<sidekick-wrapper>-->
+<sidekick-wrapper>
   <section class="page page-module-container">
     <div class="ps-page">
       <backtab-component></backtab-component>
       <title-component *ngIf="titleData" [titleData]="titleData"></title-component>
       <loading-component *ngIf="!profileLoaded && !hasError && !tabs"></loading-component>
       <error-component *ngIf="hasError"></error-component>
-
       <player-stats-component *ngIf="tabs"
           [tabs]="tabs"
           [showGlossary]="true"
@@ -13,4 +12,4 @@
       </player-stats-component>
     </div>
   </section>
-<!--</sidekick-wrapper>-->
+</sidekick-wrapper>

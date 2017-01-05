@@ -614,6 +614,8 @@ export class BoxScoresService {
     let partnerRoute = GlobalSettings.storedPartnerId() ? GlobalSettings.storedPartnerId() : '';
     var gameArticle = <gameAiArticle> {};
 
+    console.log('data - ',data);
+
     for ( var report in aiContent.featuredReport ) {
       gameArticle['report'] = "Read The Report";
       gameArticle['title'] = aiContent.featuredReport[report].title ? aiContent.featuredReport[report].title : null;

@@ -43,12 +43,14 @@ export var commonPlugins = [
     moment: "moment-timezone",
     jQuery: "jquery",
     'jquery': "jquery",
+    Fuse: "Fuse"
   }),
 
   //takes source files in node_modules and copies them into directory for use.
   new CopyWebpackPlugin([
     {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
     {from: './node_modules/jquery/dist/jquery.min.js', to:  root('src/lib/jquery.min.js')},
+    {from: './node_modules/fuse/lib/fuse.js', to:  root('src/lib/fuse.min.js')},
     {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')},
     {from: './node_modules/highcharts/highcharts.js', to: root('src/lib/highcharts.js')}
   ])
@@ -102,7 +104,8 @@ export var clientConfig = {
     __dirname: true,
     __filename: true,
     process: true,
-    Buffer: false
+    Buffer: false,
+    fs: 'empty' //added for fuse.js
   }
 }; //clientConfig
 
@@ -128,7 +131,7 @@ export var serverConfig = {
     ]
   },
   externals: includeClientPackages(
-    /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020/
+    /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020|Fuse/
   ),
   node: {
     global: true,

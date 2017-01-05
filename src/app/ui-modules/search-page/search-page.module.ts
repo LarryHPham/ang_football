@@ -42,7 +42,7 @@ export interface SearchPageInput {
 
 @Component({
     selector: 'search-page-module',
-    templateUrl: './app/ui-modules/search-page/search-page.module.html'
+    templateUrl: './search-page.module.html'
 })
 
 export class SearchPageModule implements OnChanges {

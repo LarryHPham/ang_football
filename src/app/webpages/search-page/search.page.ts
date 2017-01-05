@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { isBrowser } from 'angular2-universal';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -18,7 +19,7 @@ interface SearchPageParams {
 
 @Component({
     selector: 'search-page',
-    templateUrl: './app/webpages/search-page/search.page.html'
+    templateUrl: './search.page.html'
 })
 
 export class SearchPage{
@@ -46,34 +47,34 @@ export class SearchPage{
             if (!GlobalSettings.getHomeInfo().isSubdomainPartner) {
               this.partnerID = param['partnerID'];
             }
-            this.configureSearchPageData();
+              this.configureSearchPageData();
           }
         )
 
-        _title.setTitle(GlobalSettings.getPageTitle("Search"));
+        // _title.setTitle(GlobalSettings.getPageTitle("Search"));
 
     } //constructor
 
     configureSearchPageData(filter?) {
-        let self = this;
-        let query = this.pageParams.query;
-        if (typeof filter == 'undefined') {
-            filter = null;
-        }
-        this._searchService.getSearch()
-            .subscribe(
-            data => {
-                let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);
-                self.searchPageInput = searchData.results;
-                if (self.searchPageFilters == null) {
-                    self.searchPageFilters = searchData.filters;
-                }
-            }
-            );
+        // let self = this;
+        // let query = this.pageParams.query;
+        // if (typeof filter == 'undefined') {
+        //     filter = null;
+        // }
+        // this._searchService.getSearch()
+        //     .subscribe(
+        //     data => {
+        //         let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);
+        //         self.searchPageInput = searchData.results;
+        //         if (self.searchPageFilters == null) {
+        //             self.searchPageFilters = searchData.filters;
+        //         }
+        //     }
+        //     );
     } //configureSearchPageData
     //
     filterSwitch(event) {
-        this.configureSearchPageData(event.key);
+        // this.configureSearchPageData(event.key);
     }
 
     //

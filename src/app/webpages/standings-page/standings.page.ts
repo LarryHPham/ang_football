@@ -54,7 +54,6 @@ export class StandingsPage {
       private _standingsService: StandingsService,
       private _seoService: SeoService
     ) {
-      console.log('test');
       this.paramsub = this.activateRoute.params.subscribe(
         (param :any)=> {
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';

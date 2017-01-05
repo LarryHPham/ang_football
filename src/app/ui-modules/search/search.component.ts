@@ -57,7 +57,7 @@ export interface SearchInput {
     host: {
         '(document:click)': 'handleClick($event)'
     },
-    templateUrl: './app/ui-modules/search/search.component.html',
+    templateUrl: './search.component.html',
 
 })
 
