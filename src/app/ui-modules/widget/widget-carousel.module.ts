@@ -6,7 +6,7 @@ declare var jQuery:any;
 
 @Component({
     selector: 'widget-carousel-module',
-    templateUrl: './app/ui-modules/widget/widget.module.html',
+    templateUrl: './widget.module.html',
 })
 
 export class WidgetCarouselModule {
