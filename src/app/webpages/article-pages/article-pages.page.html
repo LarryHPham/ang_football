@@ -15,7 +15,7 @@
                                                 [innerHTML]="title | safeHtml"></span><span
                   *ngIf="eventType == 'story' || eventType == 'video'"
                   [innerHTML]="articleData.title | safeHtml"></span></h1>
-          <!-- <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope"> -->
+          <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
               <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
               <section *ngIf="eventType != 'video'">
                   <div *ngIf="imageData && imageTitle" class="carousel-container">
@@ -59,7 +59,7 @@
                           <div [ngStyle]="{width: '100%', height:'5px','display':'block'}"></div>
                       </section>
                       <!-- RESPONSIVE WIDGET -->
-                      <!-- <sidekick-container-component></sidekick-container-component> -->
+                      <sidekick-container-component></sidekick-container-component>
                       <disqus-component *ngIf="!checkPartner"></disqus-component>
                       <recommendations-component *ngIf="randomHeadlines" [randomHeadlines]="randomHeadlines"
                                                  [images]="images"></recommendations-component>
@@ -74,11 +74,10 @@
                   </div>
 
                   <div class="vertical-widget col-lg-3">
-                      <!-- <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated"
-                                     [scope]="scope"></widget-module> -->
+                  <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
                   </div>
               </section>
-          <!-- </sidekick-wrapper-ai> -->
+          </sidekick-wrapper-ai>
       </span>
     </div>
 </div>

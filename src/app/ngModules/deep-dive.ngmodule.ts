@@ -33,12 +33,12 @@ import { StackRowsComponent } from '../fe-core/components/stack-rows/stack-rows.
 //article page blocks
 import { ArticlePages } from "../webpages/article-pages/article-pages.page";
 import { ShareLinksComponent } from "../fe-core/components/articles/share-links/share-links.component";
-// import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
+import { SidekickWrapperAI } from "../fe-core/components/sidekick-wrapper-ai/sidekick-wrapper-ai.component";
 import { ArticleContentComponent } from "../fe-core/components/articles/article-content/article-content.component";
 import { RecommendationsComponent } from "../fe-core/components/articles/recommendations/recommendations.component";
 import { DisqusComponent } from "../fe-core/components/articles/disqus/disqus.component";
 import { TrendingComponent } from "../fe-core/components/articles/trending/trending.component";
-// import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
+import { SidekickContainerComponent } from "../fe-core/components/articles/sidekick-container/sidekick-container.component";
 import { ProfileDataComponent } from "../fe-core/components/articles/profile-data/profile-data.component";
 import { BillboardComponent } from "../fe-core/components/articles/billboard/billboard.component";
 
@@ -77,12 +77,12 @@ const COMPONENTS = [
   StackRowsComponent,
   ArticleStacktopComponent,
   ShareLinksComponent,
-  // SidekickWrapperAI,
+  SidekickWrapperAI,
   ArticleContentComponent,
   RecommendationsComponent,
   DisqusComponent,
   TrendingComponent,
-  // SidekickContainerComponent,
+  SidekickContainerComponent,
   ProfileDataComponent,
   BillboardComponent
 ];
