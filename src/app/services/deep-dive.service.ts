@@ -162,7 +162,7 @@ export class DeepDiveService {
 
     transformToAiArticleRow(data){
       data = data.data;
-      var sampleImage = "/app/public/placeholder_XL.png";
+      var sampleImage = GlobalSettings._defaultStockImage;
       var articleStackArray = [];
 
       if ( data ) {
@@ -179,7 +179,9 @@ export class DeepDiveService {
           }else{
             urlRouteArray = [val.article_url];
           }
+
           var s = {
+            extUrl: false,
               articleUrl: urlRouteArray,
               keyword: val.article_type.replace('-', ' ').toUpperCase(),
               timeStamp: val.last_updated ? date : null,
@@ -189,7 +191,9 @@ export class DeepDiveService {
               teaser: val.title,
               keyUrl: urlRouteArray,
               imageConfig: {
+                extUrl: false,
                 imageClass: "embed-responsive embed-responsive-16by9",
+                imageDesc: "Article Sports Image",
                 imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
                 urlRouteArray: urlRouteArray
               }
@@ -202,7 +206,7 @@ export class DeepDiveService {
     }
 
     transformToArticleStack(articles){
-      var sampleImage = "models://images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";
+      var sampleImage = GlobalSettings._defaultStockImage;
       var articleArray = [];
       articles.forEach(function(val){
         let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
@@ -234,7 +238,7 @@ export class DeepDiveService {
 
     transformToRecArticles(data){
       data = data.data;
-      var sampleImage = "/app/public/placeholder_XL.png";
+      var sampleImage = GlobalSettings._defaultStockImage;
 
       var articleStackArray = [];
       var articles = [];

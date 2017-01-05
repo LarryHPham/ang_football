@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Http, Headers} from '@angular/http';
+import { Component, Input, OnInit } from '@angular/core';
+import { Http, Headers } from '@angular/http';
 import { GlobalSettings } from "../../global/global-settings";
+import { isBrowser } from 'angular2-universal';
 
 @Component({
     selector: 'billboard-module',
@@ -13,15 +14,15 @@ export class BillboardModule implements OnInit{
     @Input() subCategory: string;
 
     getData(){
-
       this.subCategory;
-
-      this.srcLink = "/app/ads/billboard.html?category=sports&sub_category=" + 'nfl';
+      this.srcLink = "app/ads/billboard.html?category=sports&sub_category=" + 'nfl';
     }
 
     ngOnInit() {
-      this.getData();
-      this.isSmall = window.innerWidth <= 814;
+      if( isBrowser ){
+        this.getData();
+        this.isSmall = window.innerWidth <= 814;
+      }
     }
 
     ngOnChanges(){
