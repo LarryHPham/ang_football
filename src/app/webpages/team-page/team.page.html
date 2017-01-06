@@ -1,7 +1,7 @@
 <sidekick-wrapper>
   <section class="page profile-container team-page" (window:scroll)="onScroll($event)">
-     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
-      <error-component *ngIf="hasError"></error-component>
+    <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
+    <error-component *ngIf="hasError"></error-component>
 
     <div *ngIf="profileHeaderData && pageParams">
 
@@ -13,7 +13,7 @@
           [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart"
           [data]="dailyUpdateData">
         </daily-update-module>
-      </div><!--loadBatch1-->
+      </div>
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
         <responsive-widget
@@ -34,7 +34,7 @@
           *ngIf="dateParam"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget>
-      </div> <!--loadBatch2-->
+      </div>
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
         <schedules
@@ -68,7 +68,7 @@
           [profileData]="profileData"
           [tabName]="ptabName"
           (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
-      </div> <!--loadBatch3-->
+      </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
         <responsive-widget
@@ -93,7 +93,7 @@
           *ngIf="profileData"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget>
-      </div> <!--loadBatch4-->
+      </div>
 
       <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
         <comparison-module
@@ -116,7 +116,7 @@
           *ngIf="dykData"
           [profileName]="profileHeaderData.profileName"
           [dykData]="dykData"></dyk-module>
-      </div> <!--loadBatch5-->
+      </div>
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
         <faq-module
@@ -133,23 +133,25 @@
           [scope]="scope"
           [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
-        <!-- <news-module
+
+        <news-module
           *ngIf="newsDataArray"
           [newsDataArray]="newsDataArray"
-          [profileName]="profileHeaderData.profileName"></news-module> -->
+          [profileName]="profileHeaderData.profileName"></news-module>
+
         <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        <!--<twitter-module-->
-          <!--*ngIf="twitterData"-->
-          <!--[profileName]="profileHeaderData.profileName"-->
-          <!--[twitterData]="twitterData"></twitter-module>-->
+
+        <twitter-module
+          *ngIf="twitterData"
+          [profileName]="profileHeaderData.profileName"
+          [twitterData]="twitterData"></twitter-module>
 
         <!--Like Us On FB Module, only display if not on partner page-->
         <section *ngIf="!partnerID">
-          <!--<comment-module [profileName]="profileHeaderData.profileName"></comment-module>-->
-          <!--TODO Uncomment widget below-->
+          <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
           <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         </section>
-      </div> <!--loadBatch6-->
+      </div>
     </div>
   </section>
 </sidekick-wrapper>
