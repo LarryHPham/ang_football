@@ -627,7 +627,7 @@ export class ArticlePages implements OnInit {
         this._seoService.setMetaDescription(metaDesc);
         this._seoService.setCanonicalLink();
         this._seoService.setMetaRobots('INDEX, NOFOLLOW');
-      
+
         this._seoService.setOgTitle(metaData.title);
         this._seoService.setOgDesc(metaDesc);
         this._seoService.setOgType('Website');
