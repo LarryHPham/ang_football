@@ -246,7 +246,7 @@ export class TeamPage implements OnInit {
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings._proto+'://images.synapsys.us'+header.teamLogo;
+    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.getImageUrl(header.leagueLogo);
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
