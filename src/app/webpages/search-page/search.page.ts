@@ -50,32 +50,33 @@ export class SearchPage{
               this.configureSearchPageData();
           }
         )
-
         // _title.setTitle(GlobalSettings.getPageTitle("Search"));
-
     } //constructor
 
-    configureSearchPageData(filter?) {
-        // let self = this;
-        // let query = this.pageParams.query;
-        // if (typeof filter == 'undefined') {
-        //     filter = null;
-        // }
-        // this._searchService.getSearch()
-        //     .subscribe(
-        //     data => {
-        //         let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);
-        //         self.searchPageInput = searchData.results;
-        //         if (self.searchPageFilters == null) {
-        //             self.searchPageFilters = searchData.filters;
-        //         }
-        //     }
-        //     );
-    } //configureSearchPageData
-    //
-    filterSwitch(event) {
-        // this.configureSearchPageData(event.key);
-    }
 
-    //
+
+    configureSearchPageData(filter?) {
+        let self = this;
+        let query = this.pageParams.query;
+        if (typeof filter == 'undefined') {
+            filter = null;
+        }
+
+        this._searchService.getSearch()
+          .subscribe(
+            data => {
+            let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);
+              self.searchPageInput = searchData.results;
+              if (self.searchPageFilters == null) {
+                  self.searchPageFilters = searchData.filters;
+                 }
+            }
+          );
+    } //configureSearchPageData
+
+
+
+    filterSwitch(event) {
+        this.configureSearchPageData(event.key);
+    }
 }
