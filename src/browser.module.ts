@@ -45,7 +45,7 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
     GlobalModule.forRoot(),
     ProfileNgModule.forRoot(),
     DeepDiveNgModule.forRoot(),
-    
+
     IdlePreloadModule.forRoot(),
     AppModule,
     UniversalModule, // BrowserModule, HttpModule, and JsonpModule are included
@@ -69,7 +69,7 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 export class MainModule {
   constructor(public cache: CacheService) {
     // TODO(gdi2290): refactor into a lifecycle hook
-    this.doRehydrate();
+    // this.doRehydrate();
   }
 
   doRehydrate() {

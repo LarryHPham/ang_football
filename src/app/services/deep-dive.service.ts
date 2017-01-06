@@ -143,6 +143,7 @@ export class DeepDiveService {
           urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id);
 
           let carData = {
+            extUrl: false,
             image_url: GlobalSettings.getImageUrl(val['imagePath']),
             title:  "<span> Today's News </span>",
             headline: val['title'],
@@ -181,7 +182,7 @@ export class DeepDiveService {
           }
 
           var s = {
-            extUrl: false,
+              extUrl: false,
               articleUrl: urlRouteArray,
               keyword: val.article_type.replace('-', ' ').toUpperCase(),
               timeStamp: val.last_updated ? date : null,
@@ -216,6 +217,7 @@ export class DeepDiveService {
         let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'story', val.id);//TODO PARTNER
 
         var articleStackData = {
+            extUrl: false,
             articleUrl: urlRouteArray,
             keyword: val.keyword.replace('-', ' '),
             timeStamp: date,
@@ -261,6 +263,7 @@ export class DeepDiveService {
           var date = GlobalFunctions.sntGlobalDateFormatting(Number(info.last_updated) * 1000, "dayOfWeek");
           let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.subCategory,val.keyword, info.event_id);//TODO PARTNER
           var s = {
+              extUrl: false,
               urlRouteArray: urlRouteArray ? urlRouteArray : null,
               eventID: info.event_id,
               eventType: val.keyword,
@@ -278,6 +281,7 @@ export class DeepDiveService {
     transformTrending (data, currentArticleId) {
       data.forEach(function(val,index){
         //if (val.id != currentArticleId) {
+        val['extUrl'] = false,
         val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"timeZone");
         val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
         val["newsRoute"] = VerticalGlobalFunctions.formatArticleRoute('nfl',"story", val.id);//TODO
@@ -290,6 +294,7 @@ export class DeepDiveService {
       if ( data != null ) {
         data.forEach(function(val, i){
           var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute('nfl',"video", val.id);//TODO PARTNER
+          val['extUrl'] = false,
           val['keyword'] = val.league.toUpperCase();
           val['video_thumbnail'] = val.thumbnail;
           val['embed_url'] = val.videoLink;

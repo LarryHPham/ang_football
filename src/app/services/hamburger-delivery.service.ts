@@ -18,7 +18,6 @@ export class HamburgerDeliveryService {
     var params;
     var divisionUrl;
     let route = VerticalGlobalFunctions.getWhiteLabel();
-    let currentYear = moment().year();
 
     if (division != null) {
       divisionUrl = division.toLowerCase();
@@ -41,7 +40,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Schedule",
-        url: [params ,'schedules','league', currentYear, 'all', '1'] //TODO - hard coded year
+        url: [params ,'schedules','league', 'all', '1'] //TODO - hard coded year
       },
       {
         menuTitle: division + " League",
