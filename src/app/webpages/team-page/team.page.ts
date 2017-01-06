@@ -324,7 +324,6 @@ export class TeamPage implements OnInit {
     this._dailyUpdateService.getTeamDailyUpdate(teamId)
       .subscribe(data => {
         this.dailyUpdateData = data;
-        this.getBoxScores(this.dateParam);
       },
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
