@@ -1,38 +1,520 @@
 import {Injectable} from '@angular/core';
-import {Http} from "@angular/http";
 import {GlobalSettings} from "../global/global-settings";
+import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
+import {GlobalFunctions} from "../global/global-functions";
+import {ModelService} from "../global/shared/model/model.service";
+
+declare var moment;
 
 @Injectable()
-
 export class ArticleDataService {
+  public collegeDivisionAbbrv:string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv:string = GlobalSettings.getCollegeDivisionFullAbbrv();
 
-    constructor(public http:Http) {
+  constructor(public model:ModelService) {
+  }
+
+  //AI article data processing
+  getArticle(eventID, eventType, partnerId, scope, isFantasyReport, rawType) {
+    var fullUrl = GlobalSettings.getArticleUrl();
+    if (!isFantasyReport) {
+      return this.model.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
+        .map(data => ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID));
+    } else {
+      return this.model.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
+        .map(data => ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID
+        ));
     }
+  }
 
-    getArticle(eventID, eventType, partnerId, scope, isFantasyReport) {
-        var fullUrl = GlobalSettings.getArticleUrl();
-        //having the query string is only temporary until the partner site link issue is figured out.
-        if (!isFantasyReport) {
-            return this.http.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
-                .map(res => res.json())
-                .map(data => data);
-        } else {
-            return this.http.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
-                .map(res => res.json())
-                .map(data => data);
+  static formatArticleData(data, scope, eventType, isFantasyReport, eventId) {
+    if (data['data'].length > 0) {
+      var hasEventID = true;
+      var hasImages = true;
+      var carouselImages;
+      if (isFantasyReport) {
+        eventId = data['data'][0].event_id;
+        hasEventID = eventId != null;
+      }
+      let articleType = ArticleDataService.getArticleType(eventType);
+      ArticleDataService.parseLinks(data['data'][0]['article_data']['route_config'], data['data'][0]['article_data']['article'], scope);
+      if (data['data'][0]['article_data']['images'] != null) {
+        carouselImages = ArticleDataService.getCarouselImages(data['data'][0]['article_data']['images'], articleType, isFantasyReport);
+        hasImages = false;
+      }
+      return {
+        eventID: eventId,
+        hasEventId: hasEventID,
+        articleType: articleType[1],
+        articleSubType: articleType[2],
+        isSmall: window.innerWidth < 640,
+        rawUrl: window.location.href,
+        pageIndex: articleType[0],
+        title: data['data'][0]['article_data'].title,
+        date: GlobalFunctions.sntGlobalDateFormatting(data['data'][0]['article_data'].publication_date * 1000, "timeZone"),
+        articleContent: data['data'][0]['article_data'],
+        teamId: (isFantasyReport || data['data'][0].team_id != null) ?
+          data['data'][0].team_id : data['data'][0]['article_data']['metadata'].team_id,
+        images: carouselImages,
+        imageLinks: ArticleDataService.getImageLinks(data['data'][0]['article_data'], articleType[1], scope),
+        hasImages: hasImages
+      }
+    }
+  }
+
+  static getCarouselImages(data, articleType, isFantasyReport) {
+    var images = [];
+    var imageArray = [];
+    var copyArray = [];
+    var titleArray = [];
+    if (articleType == "game-module" || articleType == "team-record") {
+      images = data['home_images'].concat(data['away_images']);
+    } else if (articleType == "playerRoster") {
+      images = data['home_images'];
+    } else if (isFantasyReport) {
+      images = data['images'];
+    } else {
+      images = data['away_images'];
+    }
+    data.sort(function () {
+      return 0.5 - Math.random()
+    });
+    data.forEach(function (val, index) {
+      if (!~val.image_url.indexOf('stock_images')) {
+        imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
+        copyArray.push(val['image_copyright']);
+        titleArray.push(val['image_title']);
+      } else if (~val.image_url.indexOf('stock_images') && index == 0) {
+        imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
+        copyArray.push(val['image_copyright']);
+        titleArray.push(val['image_title']);
+      }
+    });
+    return {
+      imageData: imageArray ? imageArray : null,
+      copyright: imageArray ? copyArray : null,
+      imageTitle: imageArray ? titleArray : null,
+      hasImages: true
+    }
+  }
+
+  static getImageLinks(data, articleType, scope) {
+    switch (articleType) {
+      case "playerRoster":
+        return ArticleDataService.processLinks(data['article'], 'player_roster_module', 'roster', scope);
+      case "playerComparison":
+        return ArticleDataService.processLinks(data['article'][2]['player_comparison_module'], 'player_comparison_module', 'compare', scope);
+      case "teamRecord":
+        return ArticleDataService.processLinks(data['article'], 'team_record_module', 'teamRecord', scope);
+      case "game_module":
+        return ArticleDataService.processLinks(data['article'], 'game_module', 'game_module', scope);
+    }
+  }
+
+  static getProfileImages(routeArray, url, size) {
+    return {
+      imageClass: size,
+      mainImage: {
+        imageUrl: url,
+        urlRouteArray: routeArray,
+        hoverText: "<i class='fa fa-mail-forward'></i>",
+        imageClass: "border-logo"
+      }
+    };
+  }
+
+  static processLinks(imageData, dataType, type, scope) {
+    var isFirstTeam = true;
+    var imageLinkArray = [];
+    imageData.forEach(function (val, index) {
+      if (type == 'roster') {
+        if (val[dataType]) {
+          var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val[dataType].team_name, val[dataType].name, val[dataType].id);
+          var url = GlobalSettings.getImageUrl(val[dataType]['headshot']);
+          val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
+          val['image2'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
+          imageLinkArray.push(val['image1'], val['image2']);
         }
-    }
+      }
+      if (type == 'compare' || type == 'teamRecord' || type == 'game_module') {
+        let topCondition = (type == 'compare') ? index == 0 : (type == 'teamRecord') ? val[dataType] && isFirstTeam : index == 1 && val[dataType];
+        let bottomCondition = (type == 'compare') ? index == 1 : (type == 'teamRecord') ? val[dataType] && !isFirstTeam : index == 4 && val[dataType];
+        if (topCondition) {
+          if (type == 'compare' || type == 'teamRecord') {
+            if (type == 'compare') {
+              var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val.team_name, val.name, val.id);
+              var url = GlobalSettings.getImageUrl(val['headshot']);
+            } else if (type == 'teamRecord') {
+              var routeArray = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].name, val[dataType].id);
+              var url = GlobalSettings.getImageUrl(val[dataType].logo);
+            }
+            val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
+            val['image2'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
+            imageLinkArray.push(val['image1'], val['image2']);
+            isFirstTeam = false;
+          } else {
+            var shortDate = val[dataType].event_date.substr(val[dataType].event_date.indexOf(",") + 1);
+            var urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].home_team_name, val[dataType].home_team_id);
+            var urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].away_team_name, val[dataType].away_team_id);
+            var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo);
+            var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo);
+            val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-122");
+            val['image2'] = ArticleDataService.getProfileImages(urlTeamRightTop, awayUrl, "image-122");
+            val['image3'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-71");
+            val['image4'] = ArticleDataService.getProfileImages(urlTeamRightTop, awayUrl, "image-71");
+            imageLinkArray.push(val['image1'], val['image2'], val['image3'], val['image4'], shortDate);
+          }
+        }
+        if (bottomCondition) {
+          if (type == 'compare' || type == 'teamRecord') {
+            if (type == 'compare') {
+              var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val.team_name, val.name, val.id);
+              var url = GlobalSettings.getImageUrl(val['headshot']);
+            } else {
+              var routeArray = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].name, val[dataType].id);
+              var url = GlobalSettings.getImageUrl(val[dataType].logo);
+            }
+            val['image3'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
+            val['image4'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
+            imageLinkArray.push(val['image3'], val['image4']);
+          } else {
+            var shortDate = val[dataType].event_date.substr(val[dataType].event_date.indexOf(",") + 1);
+            var urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].home_team_name, val[dataType].home_team_id);
+            var urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].away_team_name, val[dataType].away_team_id);
+            var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo);
+            var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo);
+            val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-122");
+            val['image2'] = ArticleDataService.getProfileImages(urlTeamRightBottom, awayUrl, "image-122");
+            val['image3'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-71");
+            val['image4'] = ArticleDataService.getProfileImages(urlTeamRightBottom, awayUrl, "image-71");
+            imageLinkArray.push(val['image1'], val['image2'], val['image3'], val['image4'], shortDate);
+          }
+        }
+      }
+    });
+    return imageLinkArray
+  }
 
-    getArticleData(url) {
-        return this.http.get(url)
-            .map(res => res.json())
-            .map(data => data);
+  static complexArraySetup(arrayData, type):any {
+    if (type == 'empty') {
+      return [{text: "empty"}]
+    } else if (type == 'basic') {
+      return [{text: arrayData}, {text: "<br><br>", class: "line-break"}]
+    } else if (type == 'route') {
+      return [arrayData.length == 3 ? {text: arrayData[2],} : '', {text: arrayData[0], route: arrayData[1]}]
     }
+  }
 
-    getRecommendationsData(eventID, scope) {
-        var fullUrl = GlobalSettings.getRecommendUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10&readyToPublish=all";
-        return this.http.get(fullUrl)
-            .map(res => res.json())
-            .map(data => data);
+  static parseLinks(routeData, articleData, scope) {
+    var placeHolder = null;
+    var routes;
+    var fullRoutes = [];
+    var newParagraph = [];
+    var paragraph;
+    var complexArray = [];
+    var routeList = [];
+    if (routeData) {
+      routeData.forEach(function (val) {
+        routes = {
+          index: val.paragraph_index,
+          name: val.display,
+          route: val.route_type == "tdl_team" ? VerticalGlobalFunctions.formatTeamRoute(scope, val.display, val.id) : VerticalGlobalFunctions.formatPlayerRoute(scope, val.team_name, val.display, val.id),
+          searchParameter: "<ng2-route>" + val.display + "<\s*/?ng2-route>",
+        };
+        fullRoutes.push(routes);
+      });
+      routeList = fullRoutes;
+    } else {
+      routeList = [];
     }
+    articleData.forEach(function (val, index) {
+      if (typeof val != "object") {
+        if (val == "") {
+          complexArray = ArticleDataService.complexArraySetup(null, 'empty');
+          articleData[index] = newParagraph.concat(complexArray);
+        } else {
+          complexArray = ArticleDataService.complexArraySetup(val, 'basic');
+          articleData[index] = complexArray;
+          for (var i = 0; i < routeList.length; i++) {
+            if (index == routeList[i].index) {
+              var stringSearch = new RegExp(routeList[i].searchParameter);
+              if (placeHolder == null) {
+                paragraph = val;
+              } else {
+                paragraph = placeHolder;
+              }
+              if (paragraph.split(stringSearch)[1]) {
+                if (paragraph.split(stringSearch)[0] != "") {
+                  complexArray = ArticleDataService.complexArraySetup([routeList[i].name, routeList[i].route, paragraph.split(stringSearch)[0]], 'route');
+                } else {
+                  complexArray = ArticleDataService.complexArraySetup([routeList[i].name, routeList[i].route], 'route');
+                }
+                placeHolder = paragraph.split(stringSearch)[1];
+                newParagraph = newParagraph.concat(complexArray);
+                if (i == routeList.length - 1) {
+                  complexArray = ArticleDataService.complexArraySetup(placeHolder, 'basic');
+                  articleData[index] = newParagraph.concat(complexArray);
+                  newParagraph = [];
+                  placeHolder = null;
+                }
+              } else if (i == routeList.length - 1) {
+                complexArray = ArticleDataService.complexArraySetup(placeHolder, 'basic');
+                articleData[index] = newParagraph.concat(complexArray);
+                newParagraph = [];
+                placeHolder = null;
+              } else {
+                complexArray = ArticleDataService.complexArraySetup(placeHolder, 'basic');
+              }
+              if (complexArray[0].text == null) {
+                complexArray = ArticleDataService.complexArraySetup(val, 'basic');
+                articleData[index] = newParagraph.concat(complexArray);
+                newParagraph = [];
+                placeHolder = null;
+              }
+            } else {
+              if (placeHolder != null) {
+                if (placeHolder.charAt(0) != "," && placeHolder.charAt(0) != "." && placeHolder.charAt(0) != "'") {
+                  complexArray = ArticleDataService.complexArraySetup(placeHolder, 'basic');
+                } else {
+                  complexArray = ArticleDataService.complexArraySetup(placeHolder, 'basic');
+                }
+                articleData[index] = newParagraph.concat(complexArray);
+                newParagraph = [];
+                placeHolder = null;
+              }
+            }
+          }
+        }
+      }
+    });
+  }// end main article data processing
+
+  //recommendations data processing
+  getRecommendationsData(eventID, scope) {
+    var fullUrl = GlobalSettings.getRecommendUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10&readyToPublish=all&random=1";
+    return this.model.get(fullUrl)
+      .map(data => ArticleDataService.formatRecommendedData(data.data, scope));
+  }
+
+  static formatRecommendedData(data, scope) {
+    var result = [];
+    var headlineData = data;
+    if (headlineData) {
+      for (var i = 3; i > result.length && headlineData.length;) {
+        let j = headlineData.length;
+        let rand = Math.floor(Math.random() * j);
+        if (headlineData[rand].article_data != null) {
+          var eventType = headlineData[rand]['article_data'].report_type;
+          var eventId = eventType != "player-fantasy" ? headlineData[rand].event_id.toString() : headlineData[rand].article_id.toString();
+          result.push(ArticleDataService.getRandomArticles(headlineData[rand], eventType, eventId, scope));
+          headlineData.splice(rand, 1);
+        }
+      }
+    }
+    return result;
+  }
+
+  static getRandomArticles(recommendations, pageIndex, eventID, scope) {
+    return {
+      title: recommendations.title,
+      eventType: pageIndex,
+      eventID: eventID,
+      images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
+      date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated * 1000, "dayOfWeek"),
+      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, eventID),
+      keyword: recommendations.keywords[0].toUpperCase()
+    };
+  }//end recommendations data processing
+
+  //trending data processing
+  getAiTrendingData(count, scope) {
+    if (count == null) {
+      count = 10;
+    }
+    var fullUrl = GlobalSettings.getTrendingUrl();
+    return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
+     .map(data => data);
+  }
+
+  transformTrending(data, currentArticleId, scope, isArticle) {
+    var articles = [];
+    data.forEach(function (val) {
+      var articleData;
+      if (val.event_id != currentArticleId) {
+        val["date"] = isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
+          GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
+        articleData = {
+          author: val['author'],
+          publisher: val['publisher'],
+          title: val.title,
+          date: val["date"],
+          teaser: val.teaser,
+          eventId: isArticle ? val.event_id : val.id,
+          eventType: isArticle ? "postgame-report" : "story",
+          image: isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
+          url: isArticle ? VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
+            VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
+          rawUrl: isArticle ?
+          window.location.protocol + "//" + window.location.host + "/" + scope + "/articles/postgame-report/" + val.event_id :
+          window.location.protocol + "//" + window.location.host + "/" + scope + "/articles/story/" + val.id
+        };
+        if (articleData != null) {
+          articles.push(articleData);
+        }
+      }
+    });
+    return articles;
+  }//end trending data processing
+
+  //headline data processing
+  getAiHeadlineData(scope, teamID) {
+    var fullUrl = GlobalSettings.getHeadlineUrl();
+    return this.model.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
+      .map(data => data);
+  }
+
+  getAiHeadlineDataLeague(count, scope) {
+    if (count == null) {
+      count = 10;
+    }
+    var fullUrl = GlobalSettings.getArticleUrl();
+    return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
+      .map(data => data);
+  }
+
+  getRandomArticles(articles, scope, type) {
+    articles = [
+      'pregame-report',
+      'upcoming-games',
+      'about-the-teams',
+      'historical-team-statistics',
+      'last-matchup',
+      'starting-roster-home-offense',
+      'starting-roster-home-defense',
+      'starting-roster-home-special-teams',
+      'starting-roster-away-offense',
+      'starting-roster-away-defense',
+      'starting-roster-away-special-teams',
+      'quarterback-player-comparison',
+      'running-back-player-comparison',
+      'wide-receiver-player-comparison',
+      'tight-end-player-comparison',
+      'defense-player-comparison',
+      'player-fantasy'
+    ];
+    if (scope == "nfl") {
+      articles.push('injuries-home', 'injuries-away');
+    }
+    var findCurrent = articles.indexOf(type);
+    articles.splice(findCurrent, 1);
+    articles.sort(function () {
+      return 0.5 - Math.random()
+    });
+    return articles;
+  }
+
+  getApiArticleType(type) {
+    var articleType;
+    switch (type) {
+      case "pregame-report":
+        return articleType = "articleType=pregame-report";
+      case "in-game-report":
+        return articleType = "articleType=in-game-report";
+      case "postgame-report":
+        return articleType = "articleType=postgame-report";
+      case "upcoming-games":
+        return articleType = "articleType=upcoming-games";
+      case "about-the-teams":
+        return articleType = "articleType=about-the-teams";
+      case "historical-team-statistics":
+        return articleType = "articleType=historical-team-statistics";
+      case "last-matchup":
+        return articleType = "articleType=last-matchup";
+      case "rosters":
+        return articleType = "articleType=player-fantasy";
+      case "injuries":
+        return articleType = "articleType=player-fantasy";
+      case "player-comparisons":
+        return articleType = "articleType=player-fantasy";
+      case "player-daily-udate":
+        return articleType = "articleType=player-fantasy";
+      case "player-fantasy":
+        return articleType = "articleType=player-fantasy";
+      case "starting-roster-home-offense":
+        return articleType = "articleSubType=starting-roster-home-offense";
+      case "starting-roster-home-defense":
+        return articleType = "articleSubType=starting-roster-home-defense";
+      case "starting-roster-home-special-teams":
+        return articleType = "articleSubType=starting-roster-home-special-teams";
+      case "starting-roster-away-offense":
+        return articleType = "articleSubType=starting-roster-away-offense";
+      case "starting-roster-away-defense":
+        return articleType = "articleSubType=starting-roster-away-defense";
+      case "starting-roster-away-special-teams":
+        return articleType = "articleSubType=starting-roster-away-special-teams";
+      case "injuries-home":
+        return articleType = "articleSubType=injuries-home";
+      case "injuries-away":
+        return articleType = "articleSubType=injuries-away";
+      case "quarterback-player-comparison":
+        return articleType = "articleSubType=quarterback-player-comparison";
+      case "running-back-player-comparison":
+        return articleType = "articleSubType=running-back-player-comparison";
+      case "wide-receiver-player-comparison":
+        return articleType = "articleSubType=wide-receiver-player-comparison";
+      case "tight-end-player-comparison":
+        return articleType = "articleSubType=tight-end-player-comparison";
+      case "defense-player-comparison":
+        return articleType = "articleSubType=defense-player-comparison";
+    }
+  }
+
+  static getArticleType(articleType) {
+    var articleInformation = [];
+    switch (articleType) {
+      case "pregame-report":
+        return articleInformation = ["pregame-report", "gameReport", "null"];
+      case "in-game-report":
+        return articleInformation = ["in-game-report", "gameReport", "null"];
+      case "postgame-report":
+        return articleInformation = ["postgame-report", "gameReport", "null"];
+      case "upcoming-games":
+        return articleInformation = ["upcoming-games", "game_module", "null"];
+      case "about-the-teams":
+        return articleInformation = ["about-the-teams", "teamRecord", "about"];
+      case "historical-team-statistics":
+        return articleInformation = ["historical-team-statistics", "teamRecord", "history"];
+      case "last-matchup":
+        return articleInformation = ["last-matchup", "teamRecord", "last"];
+      case "player-fantasy":
+        return articleInformation = ["player-fantasy", "gameReport", "null"];
+      case "starting-roster-home-offense":
+        return articleInformation = ["starting-roster-home-offense", "playerRoster", "null"];
+      case "starting-roster-home-defense":
+        return articleInformation = ["starting-roster-home-defense", "playerRoster", "null"];
+      case "starting-roster-home-special-teams":
+        return articleInformation = ["starting-roster-home-special-teams", "playerRoster", "null"];
+      case "starting-roster-away-offense":
+        return articleInformation = ["starting-roster-away-offense", "playerRoster", "null"];
+      case "starting-roster-away-defense":
+        return articleInformation = ["starting-roster-away-defense", "playerRoster", "null"];
+      case "starting-roster-away-special-teams":
+        return articleInformation = ["starting-roster-away-special-teams", "playerRoster", "null"];
+      case "injuries-home":
+        return articleInformation = ["injuries-home", "playerRoster", "null"];
+      case "injuries-away":
+        return articleInformation = ["injuries-away", "playerRoster", "null"];
+      case "quarterback-player-comparison":
+        return articleInformation = ["quarterback-player-comparison", "playerComparison", "null"];
+      case "running-back-player-comparison":
+        return articleInformation = ["running-back-player-comparison", "playerComparison", "null"];
+      case "wide-receiver-player-comparison":
+        return articleInformation = ["wide-receiver-player-comparison", "playerComparison", "null"];
+      case "tight-end-player-comparison":
+        return articleInformation = ["tight-end-player-comparison", "playerComparison", "null"];
+      case "defense-player-comparison":
+        return articleInformation = ["defense-player-comparison", "playerComparison", "null"];
+    }
+  }
+
 }

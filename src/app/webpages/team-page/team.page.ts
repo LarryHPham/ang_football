@@ -10,7 +10,7 @@ import { isNode } from "angular2-universal";
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
 import { DailyUpdateService } from "../../services/daily-update.service";
-import { HeadlineDataService } from "../../services/headline-module-service";
+import { ArticleDataService } from "../../services/article-page-service";
 import { BoxScoresService } from "../../services/box-scores.service";
 import { SchedulesService } from '../../services/schedules.service';
 import { StandingsService } from "../../services/standings.service";
@@ -127,7 +127,7 @@ export class TeamPage implements OnInit {
     private activateRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
-    private _headlineDataService:HeadlineDataService,
+    private _articleDataService:ArticleDataService,
     private _boxScores: BoxScoresService,
     private _schedulesService:SchedulesService,
     private _standingsService:StandingsService,
@@ -335,7 +335,7 @@ export class TeamPage implements OnInit {
 
 
   private getHeadlines(){
-    this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId)
+    this._articleDataService.getAiHeadlineData(this.scope, this.pageParams.teamId)
       .subscribe(
         HeadlineData => {
           this.headlineData = HeadlineData.data;
