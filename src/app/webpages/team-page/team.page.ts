@@ -22,7 +22,7 @@ import { VideoService } from "../../services/video.service";
 import { DykService } from '../../services/dyk.service';
 import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
-// import { NewsService } from "../../services/news.service";
+import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
 import { SeoService } from "../../seo.service";
 import { PlayerStatsService } from "../../services/player-stats.service";
@@ -139,7 +139,7 @@ export class TeamPage implements OnInit {
     private _dykService: DykService,
     private _faqService: FaqService,
     private _lolService: ListOfListsService,
-    // private _newsService: NewsService,
+    private _newsService: NewsService,
     private _twitterService: TwitterService,
     private _seoService: SeoService,
     private _playerStatsService: PlayerStatsService
@@ -324,7 +324,6 @@ export class TeamPage implements OnInit {
     this._dailyUpdateService.getTeamDailyUpdate(teamId)
       .subscribe(data => {
         this.dailyUpdateData = data;
-        this.getBoxScores(this.dateParam);
       },
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
@@ -380,8 +379,10 @@ export class TeamPage implements OnInit {
         tabCheck = -1;
       }
       if(this.isFirstRun > tabCheck){
-        this.selectedFilter1 = filter.key;
-        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+        if(filter.key != this.selectedFilter1){
+          this.selectedFilter1 = filter.key;
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+        }
       }
       this.isFirstRun++;
     } //filterDropdown
@@ -555,13 +556,13 @@ export class TeamPage implements OnInit {
         id : this.pageParams.teamId
       }
       let scope = GlobalSettings.getScope(this.scope);
-      // this._newsService.getNewsService(scope, params, "team", "module")
-      //   .subscribe(data => {
-      //     this.newsDataArray = data.news;
-      //   },
-      //   err => {
-      //     console.log("Error getting news data");
-      // });
+      this._newsService.getNewsService(scope, params, "team", "module")
+        .subscribe(data => {
+          this.newsDataArray = data.news;
+        },
+        err => {
+          console.log("Error getting news data");
+      });
     } //getNewsService
 
 

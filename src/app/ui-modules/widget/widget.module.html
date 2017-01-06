@@ -1,5 +1,5 @@
 <div *ngIf="!aiSidekick" class="widget" id="widget"  (window:scroll)="onScroll($event)" [style.top]="widgetPadding">
-<iframe frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/widget1.html" [ngStyle]="{'display': 'block', 'height': '600px','width': '300px','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
+  <iframe frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/widget1.html" [ngStyle]="{'display': 'block', 'height': '600px','width': '300px','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>
 </div>
 <div *ngIf="aiSidekick" class="widget" id="widget"  (window:scroll)="onScroll($event)" [style.top]="widgetPadding">
   <iframe *ngIf="isProSport" frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/aiSidekickNFL.html" [ngStyle]="{'display': 'block', 'height': '600px','width': '300px','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0'}" ></iframe>

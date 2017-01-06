@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import {Http} from '@angular/http';
+import { Http } from '@angular/http';
+import { isBrowser } from 'angular2-universal';
 
 //globals
 import { GlobalFunctions } from '../global/global-functions';
@@ -11,6 +12,9 @@ import { GlobalSettings } from '../global/global-settings';
 //interfaces
 import { SearchComponentResult, SearchComponentData } from '../ui-modules/search/search.component';
 import { PaginationParameters } from '../fe-core/interfaces/pagination.data';
+
+
+
 
 //Interface for input of search component
 export interface SearchInput {
@@ -56,8 +60,7 @@ export interface SearchPageInput {
     }>
 }
 
-declare let Fuse: any;
-
+declare var Fuse: any;
 @Injectable()
 export class SearchService{
     public pageMax: number = 10;
@@ -65,15 +68,13 @@ export class SearchService{
 
     public searchAPI: string = GlobalSettings.getApiUrl() + '/landingPage/search';
     constructor(private http: Http, private _router:Router){
-
-        //Get initial search JSON data
-        this.getSearchJSON()
+      //Get initial search JSON data
+      this.getSearchJSON()
     }
 
     //Function get search JSON object
     getSearchJSON(){
-
-      //this.newSearchAPI = this.newSearchAPI+scope;
+      // this.newSearchAPI = this.newSearchAPI+scope;
         return this.http.get(this.searchAPI, {
             })
             .map(
@@ -90,17 +91,17 @@ export class SearchService{
     }
     //Function get search JSON object
     getSearch(){
-        return this.http.get(this.searchAPI, {})
-            .map(
-                res => res.json()
-            ).map(
-                data => {
-                    return data;
-                },
-                err => {
-                  console.log('ERROR search results');
-                }
-            )
+      return this.http.get(this.searchAPI, {})
+          .map(
+              res => res.json()
+          ).map(
+              data => {
+                  return data;
+              },
+              err => {
+                console.log('ERROR search results');
+              }
+          )
     }
 
     /*
@@ -220,7 +221,7 @@ export class SearchService{
         };
         //coming from router as possibly ncaaf and will need to change it to fbs for api then swap it back to ncaaf for display
         scope = scope == 'ncaaf'?'fbs':scope;
-
+        //
         if(scope !== null){
           data[scope]['players'].forEach(function(item){
             item['scope'] = scope == 'fbs' ? 'ncaaf': 'nfl';
@@ -244,7 +245,7 @@ export class SearchService{
         }
 
         //converts to usable scope for api calls null is default value for all
-        scope = scope != null ? GlobalSettings.getScope(scope):null;
+        scope = scope != null ? GlobalSettings.getScope(scope) : null;
         //Search for players and teams
         let playerResults = this.searchPlayers(query, scope, dataSearch.players);
         let teamResults = this.searchTeams(query, scope, dataSearch.teams);
@@ -281,7 +282,7 @@ export class SearchService{
                 hasSuggestions: true,
                 initialText: query
             },
-            heroImage: '/app/public/homePage_hero1.png',
+            heroImage: '',
             headerText: 'Discover The Latest In Football',
             subHeaderText: 'Find the Players and Teams you love.',
             query: query,
@@ -398,7 +399,7 @@ export class SearchService{
     /*
      *  Search Functions used by both component and page
      */
-     static _orderByComparatorPlayer(a:any, b:any):number{
+     static _orderByComparatorPlayer(a:any, b:any)/*--:number--*/{
        if ((a.score - b.score) == 0){
          if (a.item.playerName.toLowerCase() > b.item.playerName.toLowerCase()){return 1;} else {return -1;}
        }
@@ -406,7 +407,7 @@ export class SearchService{
          return a.score - b.score;
        }
      }
-     static _orderByComparatorTeam(a:any, b:any):number{
+     static _orderByComparatorTeam(a:any, b:any)/*--:number--*/{
        if ((a.score - b.score) == 0){
          if (a.item.teamName.toLowerCase() > b.item.teamName.toLowerCase()){return 1;} else {return -1;}
        }
@@ -414,40 +415,45 @@ export class SearchService{
          return a.score - b.score;
        }
      }
+
+
+
     //Function to search through players. Outputs array of players that match criteria
-    searchPlayers(term, scope, data){
-      let fuse = new Fuse(data, {
-          //Fields the search is based on
-          keys: [{
-            name: 'playerFirstName',
-            weight: 0.5
-          }, {
-            name: 'playerLastName',
-            weight: 0.3
-          }, {
-              name: 'playerName',
-              weight: 0.2
-          }],
-          //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location),
-          // a threshold of 1.0 would match anything.
-          threshold: 0.1,
-          distance: 10,
-          tokenize: false,
-          sortFn: SearchService._orderByComparatorPlayer
-      });
-      return fuse.search(term);
+    searchPlayers(term, scope, data) {
+        var fuse = new Fuse(data, {
+            //Fields the search is based on
+            keys: [{
+              name: 'playerFirstName',
+              weight: 0.5
+            }, {
+              name: 'playerLastName',
+              weight: 0.3
+            }, {
+                name: 'playerName',
+                weight: 0.2
+            }],
+            //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location),
+            // a threshold of 1.0 would match anything.
+            threshold: 0.1,
+            distance: 10,
+            tokenize: false,
+            sortFn: SearchService._orderByComparatorPlayer
+        });
+        return fuse.search(term);
     }
 
+
+
     //Function to search through teams. Outputs array of teams that match criteria
-    searchTeams(term, scope, data){
-      let fuse = new Fuse(data, {
-          //Fields the search is based on
-          keys: ['teamName'],
-          //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location), a threshold of 1.0 would match anything.
-          threshold: 0.2,
-          shouldSort: true,
-          sortFn: SearchService._orderByComparatorTeam
-      });
-      return fuse.search(term);
-    }
+    searchTeams(term, scope, data) {
+        var fuse = new Fuse(data, {
+            //Fields the search is based on
+            keys: ['teamName'],
+            //At what point does the match algorithm give up. A threshold of 0.0 requires a perfect match (of both letters and location), a threshold of 1.0 would match anything.
+            threshold: 0.2,
+            shouldSort: true,
+            sortFn: SearchService._orderByComparatorTeam
+        });
+        return fuse.search(term);
+      }
 }

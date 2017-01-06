@@ -27,7 +27,7 @@ import { ImagesService } from "../services/carousel.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
 import { SeoService } from "../seo.service";
 import { DirectoryService } from "../services/directory.service";
-// import { SearchService } from "../services/search.service";
+import { SearchService } from "../services/search.service";
 import { AboutUsService } from "../services/about-us.service";
 
 //pipes
@@ -42,7 +42,7 @@ import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
-// import { SearchPage } from "../webpages/search-page/search.page";
+import { SearchPage } from "../webpages/search-page/search.page";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
@@ -53,7 +53,7 @@ import { ListOfListsModule } from "../fe-core/modules/list-of-lists/list-of-list
 import { CommentModule } from "../fe-core/modules/comment/comment.module";
 import { DirectoryModule } from "../fe-core/modules/directory/directory.module";
 import { DirectoryPagination } from "../fe-core/modules/directory/directory-pagination.component";
-// import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
+import { SearchPageModule } from "../ui-modules/search-page/search-page.module";
 
 //components
 import { Tabs } from "../fe-core/components/tabs/tabs.component";
@@ -98,10 +98,13 @@ import { ListOfListsItem } from "../fe-core/components/list-of-lists-item/list-o
 import { BackTabComponent } from "../fe-core/components/backtab/backtab.component";
 import { TitleComponent } from "../fe-core/components/title/title.component";
 import { ContactUsComponent } from "../fe-core/components/contactus/contactus.component";
-// import { Search } from "../ui-modules/search/search.component";
+import { Search } from "../ui-modules/search/search.component";
 import { ArticleScheduleComponent } from "../fe-core/components/articles/article-schedule/article-schedule.component";
 import { ScoreBoard } from "../fe-core/components/score-board/score-board.component";
 import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/load-more-button.component";
+
+//Global custom Directives
+import {verticalWidgetScrollDirective} from "../fe-core/custom-directives/verticalWidgetScroll.directive";
 
 const MODULES = [
   // put modules here
@@ -119,7 +122,7 @@ const PAGEMODULES = [
   DisclaimerPage,
   DirectoryPage,
   ErrorPage,
-  // SearchPage,
+  SearchPage
 ]
 
 const COREMODULES = [
@@ -131,7 +134,7 @@ const COREMODULES = [
   ListOfListsModule,
   CommentModule,
   DirectoryModule,
-  // SearchPageModule,
+  SearchPageModule
 ]
 
 const COMPONENTS = [
@@ -180,7 +183,7 @@ const COMPONENTS = [
   TitleComponent,
   ContactUsComponent,
   DirectoryPagination,
-  // Search,
+  Search,
   ArticleScheduleComponent,
   ScoreBoard,
   LoadMoreButtonComponent
@@ -217,9 +220,13 @@ const PROVIDERS = [
   ListOfListsService,
   SeoService,
   DirectoryService,
-  // SearchService,
+  SearchService,
   AboutUsService,
   Title,
+]
+
+const CUSTOM_DIRECTIVES = [
+  verticalWidgetScrollDirective
 ]
 
 @NgModule({
@@ -230,7 +237,8 @@ const PROVIDERS = [
       ...PAGEMODULES,
       ...COREMODULES,
       ...COMPONENTS,
-      ...PIPES
+      ...PIPES,
+      ...CUSTOM_DIRECTIVES
     ],
     exports: [
       ...PAGEMODULES,

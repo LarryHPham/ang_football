@@ -14,20 +14,11 @@ import { load as loadWebFont } from 'webfontloader';
 enableProdMode();
 
 import { MainModule } from './browser.module';
-// import { AppModule } from './ngModules/app.ngmodule';
 
 export const platformRef = platformUniversalDynamic();
 
 // on document ready bootstrap Angular 2
 export function main() {
-  // Load fonts async
-  // https://github.com/typekit/webfontloader#configuration
-  // loadWebFont({
-  //   google: {
-  //     families: ['Droid Sans']
-  //   }
-  // });
-
   return platformRef.bootstrapModule(MainModule);
 }
 
