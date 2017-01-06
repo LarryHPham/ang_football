@@ -9,7 +9,7 @@ declare var Zone;
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
     private static _env = isNode ? 'dev' : window.location.hostname.split('.')[0];//TODO
-    private static _proto = isNode ? 'http:' : window.location.protocol;//TODO
+    public static _proto = isNode ? 'http:' : window.location.protocol;//TODO
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
     private static _partnerId:string;
@@ -250,7 +250,7 @@ export class GlobalSettings {
     }
 
     static getSiteLogoUrl():string {
-        return "/app/public/mainLogo.jpg";
+        return "app/public/mainLogo.jpg";
     }
 
     static getScopeNow() {

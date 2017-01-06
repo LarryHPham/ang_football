@@ -346,8 +346,10 @@ export class PlayerPage{
       tabCheck = -1;
     }
     if (this.isFirstRun > tabCheck) {
-      this.selectedFilter1 = filter.key;
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      if(filter.key != this.selectedFilter1){
+        this.selectedFilter1 = filter.key;
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+      }
     }
     this.isFirstRun++;
   } //filterDropdown

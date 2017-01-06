@@ -324,7 +324,6 @@ export class TeamPage implements OnInit {
     this._dailyUpdateService.getTeamDailyUpdate(teamId)
       .subscribe(data => {
         this.dailyUpdateData = data;
-        this.getBoxScores(this.dateParam);
       },
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
@@ -380,8 +379,10 @@ export class TeamPage implements OnInit {
         tabCheck = -1;
       }
       if(this.isFirstRun > tabCheck){
-        this.selectedFilter1 = filter.key;
-        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+        if(filter.key != this.selectedFilter1){
+          this.selectedFilter1 = filter.key;
+          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+        }
       }
       this.isFirstRun++;
     } //filterDropdown
