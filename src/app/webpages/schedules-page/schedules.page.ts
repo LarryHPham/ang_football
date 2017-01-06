@@ -158,7 +158,7 @@ export class SchedulesPage implements OnInit {
   private getSchedulesData(status, pageNum, year?, week?) {
     var teamId = this.teamID; //determines to call league page or team page for schedules-table
     if (typeof year == 'undefined' || year == null) {
-      year == new Date().getFullYear();
+      year = null;
       this.selectedFilter1 = year;
     }
     if (teamId) {
@@ -224,7 +224,7 @@ export class SchedulesPage implements OnInit {
         }
       );
       if (year == null || year == 'all') {
-        year = new Date().getFullYear();
+        year = null;
       }
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, this.limit, pageNum, null, (schedulesData) => {
       this.schedulesData = schedulesData;
