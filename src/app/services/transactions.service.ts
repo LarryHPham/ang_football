@@ -106,7 +106,7 @@ export class TransactionsService {
   }
 
   formatYearDropown(availableYears,availableSeasons) {
-    let currentYear = new Date().getFullYear();
+    let currentYear = availableYears[0] != null ? availableYears[0]: new Date().getFullYear();
     let yearArray = [];
     for ( var i = 0; i < availableYears.length; i++ ) {
       let displayYear = availableYears[i];

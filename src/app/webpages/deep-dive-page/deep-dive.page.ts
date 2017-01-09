@@ -4,6 +4,7 @@ import { SchedulesService } from '../../services/schedules.service';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
+import { isNode } from "angular2-universal";
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from '../../seo.service';
