@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
-import { isNode } from "angular2-universal";
+import { isBrowser, isNode } from "angular2-universal";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -44,10 +44,7 @@ import { PlayerStatsModule, PlayerStatsModuleData } from '../../fe-core/modules/
 
 //Libraries
 declare var moment;
-declare var jQuery: any; //used for scroll event
 declare var Zone: any;
-
-
 
 @Component({
     selector: 'Team-page',
@@ -172,8 +169,6 @@ export class TeamPage implements OnInit {
   ngOnInit() {
     this.ptabName="Passing";
   } //ngOnInit
-
-
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
