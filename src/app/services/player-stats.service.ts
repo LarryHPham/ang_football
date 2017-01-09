@@ -4,17 +4,17 @@ import {SportPageParameters} from '../global/global-interface';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalFunctions} from '../global/global-functions';
 import {GlobalSettings} from '../global/global-settings';
-import {PlayerStatsData, MLBPlayerStatsTableData, MLBPlayerStatsTableModel} from './player-stats.data';
+import {PlayerStatsData, SportsPlayerStatsTableData, MLBPlayerStatsTableModel} from './player-stats.data';
 import { ModelService } from '../global/shared/model/model.service';
 
 
 
 
 @Injectable()
-export class PlayerStatsService implements OnDestroy{
+export class PlayerStatsService{
 
     tabName:string;
-    seasonId:string= new Date().getFullYear().toString();
+    seasonId:string = new Date().getFullYear().toString();
     public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
@@ -40,11 +40,11 @@ export class PlayerStatsService implements OnDestroy{
         return teamName ? "Player Stats - " + teamName : "Player Stats";
     }
 
-    loadAllTabsForModule(partnerRoute: string, scope:string, teamId: number, teamName: string, isTeamProfilePage: boolean) {
+    loadAllTabsForModule(partnerRoute: string, scope:string, teamId: number, teamName: string, seasonBase: string, isTeamProfilePage: boolean) {
         return {
             moduleTitle: this.getModuleTitle(teamName),
             pageRouterLink: this.getLinkToPage(partnerRoute, scope, teamId, teamName),
-            tabs: this.initializeAllTabs(teamName, isTeamProfilePage)
+            tabs: this.initializeAllTabs(teamName, seasonBase, isTeamProfilePage)
         };
     }
 
@@ -55,7 +55,7 @@ export class PlayerStatsService implements OnDestroy{
         }
 
 
-        var standingsTab: MLBPlayerStatsTableData = tabData[0];
+        var standingsTab: SportsPlayerStatsTableData = tabData[0];
         var seasonArray=standingsTab.seasonIds;
         //console.log(seasonArray);
 
@@ -141,18 +141,15 @@ export class PlayerStatsService implements OnDestroy{
 
 
     }
-    ngOnDestroy(){
+
+
+    initializeAllTabs(teamName: string, seasonBase: string, isActive?:boolean, isTeamProfilePage?: boolean): Array<SportsPlayerStatsTableData> {
+
+        return this._allTabs.map(tabActive => new SportsPlayerStatsTableData(teamName, tabActive, tabActive=="Passing"?true:false , seasonBase, isTeamProfilePage));
 
     }
 
-
-    initializeAllTabs(teamName: string, isActive?:boolean, isTeamProfilePage?: boolean): Array<MLBPlayerStatsTableData> {
-
-        return this._allTabs.map(tabActive => new MLBPlayerStatsTableData(teamName, tabActive, tabActive=="Passing"?true:false , isTeamProfilePage));
-
-    }
-
-    private setupTableData(standingsTab: MLBPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
+    private setupTableData(standingsTab: SportsPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
         let table = new MLBPlayerStatsTableModel(data, standingsTab.tabActive);
         //Limit to maxRows, if necessary
         if ( maxRows !== undefined ) {

@@ -55,7 +55,7 @@ export interface PlayerStatsData {
     fullBackgroundImageUrl?: string;
 }
 
-export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsData> {
+export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStatsData> {
 
     tabTitle: string;
 
@@ -82,7 +82,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
     isTeamProfilePage: boolean;
     subTabs:Array<any>;
 
-    constructor(teamName: string, tabActive: string, isActive: boolean, isTeamProfilePage: boolean) {
+    constructor(teamName: string, tabActive: string, isActive: boolean, seasonBase: string, isTeamProfilePage: boolean) {
 
 
         this.tabActive = tabActive;
@@ -200,7 +200,7 @@ export class MLBPlayerStatsTableData implements StatsTableTabData<PlayerStatsDat
         this.glossary=getTabTitle(tabActive).glossary;
 
 
-        var currYear = new Date().getFullYear();
+        var currYear = Number(seasonBase);
         var year = currYear;
         for ( var i = 0; i < 4; i++ ) {
             this.seasonIds.push({
