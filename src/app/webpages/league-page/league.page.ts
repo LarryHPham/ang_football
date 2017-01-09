@@ -159,7 +159,6 @@ export class LeaguePage{
           //---Batch 1 Load---//
           this.metaTags(data);
           this.profileData = data;
-          console.log(data);
           this.seasonBase = data.headerData['seasonBase'];
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
@@ -366,7 +365,6 @@ export class LeaguePage{
         this.dropdownKey1 = this.seasonBase;
       }
 
-      console.log(this.dropdownKey1);
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {
