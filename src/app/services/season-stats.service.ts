@@ -81,7 +81,6 @@ export class SeasonStatsService {
     if(scope != null){
       this._scope = scope;
     }
-    console.log(url);
     return this.model.get(url)
       .map(data => this.formatData(data.data, scope, season));
   }
@@ -96,9 +95,6 @@ export class SeasonStatsService {
     //Check to see if the position list contains pitcher abbreviation
     //in order to select the appropriate fields
     //let isPitcher = playerInfo.position.filter(item => item == "P").length > 0;
-
-    console.log('season',season);
-    console.log('formatData',data);
 
     var seasonStatTabs = [];
     var curYear = season != null ? Number(season) : new Date().getFullYear();
@@ -205,8 +201,7 @@ export class SeasonStatsService {
 
     scopeName = scopeName != null ? scopeName.toUpperCase() : "League";
     scopeName = scopeName == "FBS" ? "NCAAF" : scopeName;
-    console.log(seasonId);
-    console.log(isCurrYear);
+
     if ( isCareer ) {
       tabTitle = "Career Stats";
       subTitle = tabTitle;
@@ -451,10 +446,7 @@ export class SeasonStatsPageService {
     var seasonKey = seasonStatsTab.year;
     var tableData = {};
     //run through each object in the api and set the title of only the needed season for the table regular and post season
-    console.log('seasonStatsTab',seasonStatsTab);
-    console.log('apiData',apiData);
     for(var season in apiData.stats){
-      console.log(season, seasonKey);
       if (season == seasonKey) {
       seasonTitle = "Regular Season";
       // we only care about the tables that meet the switch cases being regular and post season
