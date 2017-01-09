@@ -111,7 +111,7 @@ export class GlobalSettings {
     }
 
     //include bypass parameter if you want the image to be served on server side (meta tag images)
-    static getImageUrl(relativePath, bypass?:boolean):string {
+    static getImageUrl(relativePath):string {
       var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: './app/public/no-image.svg';
       return relPath;
     }
