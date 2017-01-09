@@ -130,10 +130,15 @@ export class SeoService {
     // };
 
     public setMetaDescription(description:string) {
-      let truncatedDescription = description;
-      if (truncatedDescription.length > 167) {
+      let truncatedDescription;
+      if(description){
+        truncatedDescription = description;
+        if (truncatedDescription.length > 167) {
           truncatedDescription = truncatedDescription.substring(0, 167);
           truncatedDescription += '...';
+        }
+      }else{
+        truncatedDescription = '';
       }
       this.setElementAttribute(this.metaDescription, 'content', truncatedDescription);
     }
