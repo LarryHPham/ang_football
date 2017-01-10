@@ -169,32 +169,32 @@ export class DeepDivePage {
         buttonText: 'Visit the College Section',
         buttonScope: 'ncaaf'
       },
-      'midImage': './app/public/icon-t-d-l.svg',
+      'midImage': GlobalSettings.mainIcon,
     }
     return toggleData;
   }
 
   //api for Schedules
   private getSideScroll() {
-    let self = this;
-    if (this.safeCall && this.scope != 'home') {
-      this.safeCall = false;
-      this.scope = this.scope.toLowerCase();
-      let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
-      this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-        if (this.sideScrollData == null) {
-          this.sideScrollData = sideScrollData;
-        }
-        else {
-          sideScrollData.forEach(function(val, i) {
-            self.sideScrollData.push(val);
-          })
-        }
-        this.safeCall = true;
-        this.callCount++;
-        this.scrollLength = this.sideScrollData.length;
-      }, null, null)
-    }
+    // let self = this;
+    // if (this.safeCall && this.scope != 'home') {
+    //   this.safeCall = false;
+    //   this.scope = this.scope.toLowerCase();
+    //   let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
+    //   this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+    //     if (this.sideScrollData == null) {
+    //       this.sideScrollData = sideScrollData;
+    //     }
+    //     else {
+    //       sideScrollData.forEach(function(val, i) {
+    //         self.sideScrollData.push(val);
+    //       })
+    //     }
+    //     this.safeCall = true;
+    //     this.callCount++;
+    //     this.scrollLength = this.sideScrollData.length;
+    //   }, null, null)
+    // }
   }
 
 
