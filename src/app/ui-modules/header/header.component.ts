@@ -90,26 +90,27 @@ export class HeaderComponent implements AfterContentChecked {
     // Page is being scrolled
     onScrollStick(event?) {
       if(isBrowser) {
-        var partnerHeader = document.getElementById('partner') ? document.getElementById('partner') : null;
-        var partnerHeaderHeight = partnerHeader ? partnerHeader.offsetHeight : null;
-        var headerTop = document.getElementById('header-top');
-        var headerTopHeight = headerTop.offsetHeight;
         var headerBottom = document.getElementById('header-bottom');
         var headerBottomHeight = headerBottom.offsetHeight;
         var scrollTop = event.srcElement.body.scrollTop;
-        var scrollPolarity = scrollTop - this.scrollTopPrev;
+        var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
         var headerHeight = this.getHeaderHeight() - headerBottomHeight;
 
-        if ( scrollPolarity > 0 && scrollTop <= headerHeight ) {
-          this.menuTransitionAmount = -scrollTop;
+        if ( scrollPolarity > 0 ) {
           this.scrollMenuUp = true;
+          if ( this.menuTransitionAmount >= -headerHeight ) {
+            this.menuTransitionAmount = this.menuTransitionAmount - scrollPolarity;
+            if (this.menuTransitionAmount < -headerHeight) { //if the value doesn't calculate quick enough based on scroll speed set it manually
+              this.menuTransitionAmount = -headerHeight;
+            }
+          }
         }
         else if ( scrollPolarity < 0 ) {
           this.scrollMenuUp = false;
           this.menuTransitionAmount = 0;
         }
 
-        this.scrollTopPrev = scrollTop; //defined scrollPolarity
+        this.scrollTopPrev = scrollTop; //defines scrollPolarity
       }
     }//onScrollStick ends
 
