@@ -33,17 +33,18 @@ export var commonPlugins = [
     allChunks: true
   }),
 
-  //minify JS
-  // new webpack.optimize.UglifyJsPlugin({
-  //   compressor: { warnings: false }
-  // }),
+  // minify JS
+  new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
+  }),
 
   //provide third pary plugins
   new webpack.ProvidePlugin({
     moment: "moment-timezone",
     jQuery: "jquery",
     'jquery': "jquery",
-    Fuse: "fuse.js"
+    Fuse: "fuse.js",
+    Highcharts: "Highcharts",
   }),
 
   //takes source files in node_modules and copies them into directory for use.
@@ -62,9 +63,6 @@ export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
   devtool: 'source-map',
   resolve: {
-    alias: {
-      highcharts: "../node_modules/highcharts/highstock.src.js"
-    },
     extensions: ['.ts', '.js', '.json', '.less'],
     modules: [ root('node_modules') ]
   },
