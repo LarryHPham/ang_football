@@ -14,7 +14,6 @@ export class WidgetModule {
 
     constructor(){
       this.isBrowser = isBrowser;
-      console.log('WidgetModule',this.isBrowser);
     }
 
 }
