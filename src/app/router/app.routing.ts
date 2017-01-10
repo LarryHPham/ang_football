@@ -29,11 +29,11 @@ import { SearchPage } from "../webpages/search-page/search.page";
 
 const relativeChildRoutes = [
     {
-        path: 'contact-us',
+        path: ':scope/contact-us',
         component: ContactUsPage,
     },
     {
-        path: 'disclaimer',
+        path: ':scope/disclaimer',
         component: DisclaimerPage,
     },
     {
