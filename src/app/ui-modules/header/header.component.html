@@ -1,6 +1,11 @@
-<header class="header container-fluid" id="pageHeader" [class.fixedHeader]="scrollUp" (window:scroll)="onScrollStick($event)" (window:resize)="menuCheck($event)">
+<header
+  class="header container-fluid fixedHeader" id="pageHeader"
+  [ngClass]="{'slide-up': scrollMenuUp, 'slide-down': !scrollMenuUp}"
+  [ngStyle]="{'top': menuTransitionAmount+'px'}"
+  (window:scroll)="onScrollStick($event)"
+  (window:resize)="menuCheck($event)">
   <div id="partner" *ngIf="partnerID && partnerScript" [innerHTML]="partnerScript | safeHtml"></div>
-  <section class="scrollUp && header-top" [class.header-partner]="partnerID">
+  <section class="scrollUp && header-top" id="header-top" [class.header-partner]="partnerID">
     <div class="header-left">
       <div class="header-hamburger" tabindex="999">
         <!-- menucheck class is for the document click funtion to determine to close it when in view -->

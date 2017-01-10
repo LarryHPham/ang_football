@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, OnChanges, Output, EventEmitter, ElementRef, Renderer} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, ElementRef, Renderer, AfterContentChecked } from '@angular/core';
 // import {Search, SearchInput} from '../components/search/search.component';
 import {GlobalSettings} from "../../global/global-settings";
 import {GlobalFunctions} from "../../global/global-functions";
@@ -13,11 +13,14 @@ declare var jQuery: any;
     templateUrl: './header.component.html',
     providers: [],
 })
-export class HeaderComponent {
+export class HeaderComponent implements AfterContentChecked {
     @Input() partnerID: string;
     @Input() partnerScript: any;
     @Output() tabSelected = new EventEmitter();
     @Output() scrollPadding = new EventEmitter();
+
+    private nativeElement: any;
+
     public scope: string;
     public routeSubscription: any;
     public logoUrl: string;
@@ -38,58 +41,79 @@ export class HeaderComponent {
     public _collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
     public _sportName: string = GlobalSettings.getSportName().toUpperCase();
     private elementRef: any;
-    scrollTopPrev: number = 0;
-    scrollUp: boolean = false;
+
+    public scrollTopPrev: number = 0;
+    public scrollMenuUp: boolean = false;
+    public menuTransitionAmount:number = 0;
+    public pageHeader:any;
+    public pageHeaderHeight:any;
 
     public linkHome: any;
 
     //deprecated
     private _router: any;
-    constructor(elementRef: ElementRef, private _renderer: Renderer) {
+    constructor(
+      elementRef: ElementRef,
+      private _renderer: Renderer) {
         this.elementRef = elementRef;
     }
-    openSearch(event) {
-        if (this.isSearchOpened == true) {
-            this.isSearchOpened = false;
-        } else {
-            this.isSearchOpened = true;
-        }
-    }
-    // Page is being scrolled
-    onScrollStick(event) {
-      if(isBrowser){
-        var document = this.elementRef.nativeElement.ownerDocument;
-        if (document) {
-          var header = document.getElementById('pageHeader');
-          var stickyItem = document.getElementById('header-bottom'); //
-          var scrollTop = event.srcElement.body.scrollTop; // pixels from top of page to current scroll view
-          let heightBeforeStick = header.offsetHeight - stickyItem.offsetHeight; // used to send back to page container to determin the padding of when the header turns from a block to a position fixed and scroll height changes
-          let scrollPadding = 0; // used to send back to page container to determin the padding of when the header turns from a block to a position fixed and scroll height changes
-          let scrollPolarity = scrollTop - this.scrollTopPrev; // positive (+) return will be scroll down and negative (-) return will be scroll up
 
-          if (scrollPolarity > 0 || scrollTop == 0) {// scrollUp is true scrollPolarity is negative which will add the header back
-            scrollPadding = 0;
-            this.scrollUp = false;
-          } else {
-            scrollPadding = header.offsetHeight;
-            this.scrollUp = true;
-          }
-          this.scrollTopPrev = scrollTop;
-          if (scrollTop > heightBeforeStick) {// if body scrollTop is greater than height before sticky header then add fix header class
-            stickyItem.classList.add('fixedHeader');
-            if (this.scrollUp) {
-              this.scrollPadding.next(scrollPadding);
-              stickyItem.classList.remove('fixedHeader');
-            } else {
-              stickyItem.classList.add('fixedHeader');
-            }
-          } else {
-            stickyItem.classList.remove('fixedHeader');
-          }
-          this.scrollPadding.next(scrollPadding);
+
+
+    ngAfterContentChecked() {
+      this.getHeaderHeight();
+    }
+
+
+
+    getHeaderHeight() {
+      if ( isBrowser ) {
+        this.pageHeader = document.getElementById('pageHeader');
+        this.pageHeaderHeight = this.pageHeader.offsetHeight;
+        this.scrollPadding.next(this.pageHeaderHeight);
+        return this.pageHeaderHeight;
+      }
+    } //getHeaderHeight
+
+
+
+    openSearch(event) {
+      if (this.isSearchOpened == true) {
+          this.isSearchOpened = false;
+      } else {
+          this.isSearchOpened = true;
+      }
+    } //openSearch
+
+
+
+    // Page is being scrolled
+    onScrollStick(event?) {
+      if(isBrowser) {
+        var partnerHeader = document.getElementById('partner') ? document.getElementById('partner') : null;
+        var partnerHeaderHeight = partnerHeader ? partnerHeader.offsetHeight : null;
+        var headerTop = document.getElementById('header-top');
+        var headerTopHeight = headerTop.offsetHeight;
+        var headerBottom = document.getElementById('header-bottom');
+        var headerBottomHeight = headerBottom.offsetHeight;
+        var scrollTop = event.srcElement.body.scrollTop;
+        var scrollPolarity = scrollTop - this.scrollTopPrev;
+        var headerHeight = this.getHeaderHeight() - headerBottomHeight;
+
+        if ( scrollPolarity > 0 && scrollTop <= headerHeight ) {
+          this.menuTransitionAmount = -scrollTop;
+          this.scrollMenuUp = true;
         }
+        else if ( scrollPolarity < 0 ) {
+          this.scrollMenuUp = false;
+          this.menuTransitionAmount = 0;
+        }
+
+        this.scrollTopPrev = scrollTop; //defined scrollPolarity
       }
     }//onScrollStick ends
+
+
 
     public getMenu(event): void {
         if (this.isOpened == true) {
@@ -157,6 +181,5 @@ export class HeaderComponent {
           }
         }, 1000);
       }
-
     }
 }
