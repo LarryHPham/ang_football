@@ -72,7 +72,7 @@ export class TeamPage implements OnInit {
   private profileType:string = "team";
   private isProfilePage:boolean = true;
 
-  private headlineData:HeadlineData;
+  private headlineData:any;
   private headlineError:boolean = false;
 
   private dailyUpdateData: DailyUpdateData;
@@ -127,7 +127,7 @@ export class TeamPage implements OnInit {
     private activateRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
-    private _articleDataService:ArticleDataService,
+    private _headlineDataService:ArticleDataService,
     private _boxScores: BoxScoresService,
     private _schedulesService:SchedulesService,
     private _standingsService:StandingsService,
@@ -334,11 +334,10 @@ export class TeamPage implements OnInit {
 
 
   private getHeadlines(){
-    this._articleDataService.getAiHeadlineData(this.scope, this.pageParams.teamId)
+    this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId, false)
       .subscribe(
         HeadlineData => {
-          this.headlineData = HeadlineData.data;
-          this.headlineError = HeadlineData.data.status != "Success";
+          this.headlineData = HeadlineData;
         },
         err => {
           console.log("Error loading AI headline data for " + this.pageParams.teamId, err);

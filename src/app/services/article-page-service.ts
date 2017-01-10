@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
-import {GlobalSettings} from "../global/global-settings";
-import {VerticalGlobalFunctions} from "../global/vertical-global-functions";
-import {GlobalFunctions} from "../global/global-functions";
-import {ModelService} from "../global/shared/model/model.service";
+import { Injectable } from '@angular/core';
+import { GlobalSettings } from "../global/global-settings";
+import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
+import { GlobalFunctions } from "../global/global-functions";
+import { ModelService } from "../global/shared/model/model.service";
+import { Gradient } from "../global/global-gradient";
 
 declare var moment;
 
@@ -291,7 +292,7 @@ export class ArticleDataService {
 
   //recommendations data processing
   getRecommendationsData(eventID, scope) {
-    var fullUrl = GlobalSettings.getRecommendUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10&readyToPublish=all&random=1";
+    var fullUrl = GlobalSettings.getArticleUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10&readyToPublish=all&random=1";
     return this.model.get(fullUrl)
       .map(data => ArticleDataService.formatRecommendedData(data.data, scope));
   }
@@ -311,7 +312,7 @@ export class ArticleDataService {
         }
       }
     }
-    return result;
+    return result.length == 3 ? result : null;
   }
 
   static getRandomArticles(recommendations, pageIndex, eventID, scope) {
@@ -331,9 +332,9 @@ export class ArticleDataService {
     if (count == null) {
       count = 10;
     }
-    var fullUrl = GlobalSettings.getTrendingUrl();
+    var fullUrl = GlobalSettings.getArticleUrl();
     return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
-     .map(data => data);
+      .map(data => data);
   }
 
   transformTrending(data, currentArticleId, scope, isArticle) {
@@ -367,19 +368,187 @@ export class ArticleDataService {
   }//end trending data processing
 
   //headline data processing
-  getAiHeadlineData(scope, teamID) {
-    var fullUrl = GlobalSettings.getHeadlineUrl();
+  getAiHeadlineData(scope, teamID, isLeague) {
+    var fullUrl = GlobalSettings.getArticleDataUrl();
     return this.model.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
-      .map(data => data);
+      .map(headlineData => ArticleDataService.processHeadlineData(headlineData.data, scope, teamID, isLeague));
   }
 
-  getAiHeadlineDataLeague(count, scope) {
+  getAiHeadlineDataLeague(count, scope, isLeague) {
     if (count == null) {
       count = 10;
     }
     var fullUrl = GlobalSettings.getArticleUrl();
     return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
-      .map(data => data);
+      .map(headlineData => ArticleDataService.processHeadlineData(headlineData.data, scope, null, isLeague));
+  }
+
+  static processHeadlineData(data, scope, teamID, isLeague) {
+    var scheduleData = !isLeague ? ArticleDataService.getScheduleData(data.home, data.away, scope, teamID) : null;
+    var mainArticleData = ArticleDataService.getMainArticle(data, scope, isLeague);
+    var subArticleData = ArticleDataService.getSubArticles(data, data.event, scope, isLeague);
+    return {
+      home: {
+        id: !isLeague ? data['home'].id : null,
+        name: !isLeague ? data['home'].name : null
+      },
+      away: {
+        id: !isLeague ? data['away'].id : null,
+        name: !isLeague ? data['away'].name : null
+      },
+      timestamp: data.timestamp,
+      scheduleData: scheduleData,
+      mainArticleData: mainArticleData,
+      subArticleData: subArticleData
+    }
+  }
+
+  static getScheduleData(home, away, scope, teamID) {
+    var homeData = [];
+    var awayData = [];
+    var val = [];
+    val['homeID'] = home.id;
+    val['homeName'] = home.name;
+    val['homeLocation'] = home.location;
+    val['homeHex'] = home.hex;
+    if (teamID == home.id) {
+      val['homeLogo'] = ArticleDataService.setImageLogo(home.logo, true);
+    } else {
+      let homeLink = VerticalGlobalFunctions.formatTeamRoute(scope, home.location + ' ' + home.name, home.id);
+      val['url'] = homeLink;
+      val['homeLogo'] = ArticleDataService.setImageLogo([home.logo, homeLink], false);
+    }
+    val['homeWins'] = home.wins;
+    val['homeLosses'] = home.losses;
+    homeData.push(val);
+    val = [];
+    val['awayID'] = away.id;
+    val['awayName'] = away.name;
+    val['awayLocation'] = away.location;
+    val['awayHex'] = away.hex;
+    if (teamID == away.id) {
+      val['awayLogo'] = ArticleDataService.setImageLogo(away.logo, true);
+    } else {
+      let awayLink = VerticalGlobalFunctions.formatTeamRoute(scope, away.location + ' ' + away.name, away.id);
+      val['url'] = awayLink;
+      val['awayLogo'] = ArticleDataService.setImageLogo([away.logo, awayLink], false);
+    }
+    val['awayWins'] = away.wins;
+    val['awayLosses'] = away.losses;
+    awayData.push(val);
+    var gradient = ArticleDataService.gradientSetup(awayData[0], homeData[0]);
+    return {
+      gradient: gradient,
+      awayData: awayData[0],
+      homeData: homeData[0]
+    }
+
+  }
+
+  static gradientSetup(away, home) {
+    if (typeof home != 'undefined' && typeof away != 'undefined') {
+      var fullGradient = Gradient.getGradientStyles([away.awayHex, home.homeHex], .75);
+      var gradient = fullGradient ? fullGradient : null;
+      var defaultGradient = fullGradient ? null : 'default-gradient';
+    } else {
+      var gradient = null;
+      var defaultGradient = 'default-gradient';
+    }
+    return {
+      fullGradient: gradient,
+      defaultGradient: defaultGradient
+    }
+  }
+
+  static getMainArticle(data, scope, isLeague) {
+    var pageIndex = !isLeague ? Object.keys(data['featuredReport'])[0] : "postgame-report";
+    var articleContent = !isLeague ? data['featuredReport'][pageIndex][0].teaser : data[0].teaser;
+    var trimmedArticle = articleContent.substring(0, 1000);
+    return {
+      keyword: !isLeague ? ArticleDataService.setFeatureType(pageIndex) : "POSTGAME",
+      mainTitle: !isLeague ? data['featuredReport'][pageIndex][0].title : data[0].title,
+      eventType: pageIndex,
+      mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
+      mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
+        data['featuredReport'][pageIndex][0].image_url : data[0].image_url),
+      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, !isLeague ?
+        data['featuredReport'][pageIndex][0].event_id : data[0].event_id),
+      mainHeadlineId: isLeague ? data[0].event_id : null
+    }
+  }
+
+  static getSubArticles(data, eventID, scope, isLeague) {
+    var articles;
+    var articleArr = [];
+    var dataSet = !isLeague ? Object.keys(data['otherReports']) : data;
+    dataSet.forEach(function (val) {
+      if (eventID != (isLeague ? val.event_id : 0)) {
+        articles = {
+          title: !isLeague ? data['otherReports'][val].title : val.title,
+          eventType: !isLeague ? val : "postgame-report",
+          eventID: !isLeague ? (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id,
+          images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ? data['otherReports'][val].image_url : val.image_url),
+          articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, !isLeague ? val : "postgame-report", !isLeague ?
+            (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id)
+        };
+        articleArr.push(articles);
+      }
+    });
+    articleArr.sort(function () {
+      return 0.5 - Math.random()
+    });
+    return articleArr;
+  }//end headline data processing
+
+  //fantasy module data processing
+  getFantasyReport(playerId) {
+    var fullUrl = GlobalSettings.getArticleUrl() + "articles?articleType=player-fantasy&scope=nfl&player[]=";
+    if (playerId !== undefined) {
+      fullUrl += playerId;
+    }
+    return this.model.get(fullUrl)
+      .map(fantasyData => ArticleDataService.formatFantasyData(fantasyData));
+  }// end fantasy module data processing
+
+  static formatFantasyData(data) {
+    if (data.data == null) {
+      return
+    }
+    data = data.data[0];
+    var date = moment.unix(data['last_updated']).format();
+    date = moment.tz(date, "America/New_York").fromNow();
+    return {
+      backgroundImage: GlobalSettings.getImageUrl(data['article_data']['images'][0].image_url),
+      profileImage: GlobalSettings.getImageUrl(data['article_data'].headshot_image),
+      articleUrl: VerticalGlobalFunctions.formatArticleRoute("nfl", "player-fantasy", data['article_id']),
+      fantasyDate: date,
+      title: data.title,
+      teaser: data.teaser,
+      playerId: data.player_id
+    }
+  }
+
+  //data configuring functions
+  static setImageLogo(data, isHome):any {
+    if (isHome) {
+      return {
+        imageClass: "image-66",
+        mainImage: {
+          imageUrl: GlobalSettings.getImageUrl(data),
+          imageClass: "border-logo"
+        }
+      }
+    } else {
+      return {
+        imageClass: "image-66",
+        mainImage: {
+          imageUrl: GlobalSettings.getImageUrl(data[0]),
+          urlRouteArray: data[1],
+          hoverText: "<i class='fa fa-mail-forward'></i>",
+          imageClass: "border-logo"
+        }
+      }
+    }
   }
 
   getRandomArticles(articles, scope, type) {
@@ -517,4 +686,18 @@ export class ArticleDataService {
     }
   }
 
+  static setFeatureType(pageIndex) {
+    switch (pageIndex) {
+      case'pregame-report':
+        return 'PREGAME';
+      case'postgame-report':
+        return 'POSTGAME';
+      default:
+        return 'LIVE';
+    }
+  }
+
+  static checkData(data) {
+    return data
+  }//end data configuring functions
 }

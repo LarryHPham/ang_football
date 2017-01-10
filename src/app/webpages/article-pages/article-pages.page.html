@@ -12,8 +12,8 @@
       <span *ngIf="articleData">
           <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
           <h1 class="articles-page-title col-xs-12"><span [innerHTML]="articleData.title | safeHtml"></span></h1>
-          <!--<sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">-->
-            <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
+        <!--<sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">-->
+        <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
             <section *ngIf="eventType != 'video'">
               <div *ngIf="eventType == 'story'" class="carousel-container">
                 <images-media-carousel [imageData]="imageData" [copyright]="copyright"
@@ -29,7 +29,7 @@
                     </div>
                   </span>
             </section>
-            <!-- IF ARTICLE TYPE IS VIDEO -->
+        <!-- IF ARTICLE TYPE IS VIDEO -->
             <section *ngIf="eventType == 'video'" class="videoFrame">
               <iframe *ngIf="iframeUrl" width="100%" height="100%" [src]="iframeUrl | safeRUrl" frameborder="0"
                       allowfullscreen></iframe>
@@ -84,7 +84,7 @@
                                [scope]="scope"></widget-module>
               </div>
             </section>
-          <!--</sidekick-wrapper-ai>-->
+        <!--</sidekick-wrapper-ai>-->
       </span>
   </div>
 </div>

@@ -11,7 +11,7 @@ import { VerticalGlobalFunctions } from "../../global/vertical-global-functions"
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
 import { DailyUpdateService } from "../../services/daily-update.service";
-import { FantasyService } from "../../services/fantasy.service";
+import { ArticleDataService } from "../../services/article-page-service";
 import { BoxScoresService } from '../../services/box-scores.service';
 import { SchedulesService } from '../../services/schedules.service';
 import { StandingsService } from '../../services/standings.service';
@@ -35,6 +35,7 @@ import { ComparisonModuleData } from '../../fe-core/modules/comparison/compariso
 import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
+import { ModuleHeaderData } from "../../fe-core/components/module-header/module-header.component";
 
 //Libraries
 declare var moment;
@@ -56,7 +57,7 @@ export class PlayerPage{
   private teamName: any;
   private fullName: string;
   private playerID: number;
-  private paramsub: any
+  private paramsub: any;
   public pageParams: SportPageParameters;
   private teamID: any;
   private dateParam: any;
@@ -71,8 +72,10 @@ export class PlayerPage{
 
   private dailyUpdateData: any;
 
-  private fantasyData: Array<any>;
-  private fantasyDate: any;
+  private modHeadData:ModuleHeaderData;
+  private footerData:any;
+  private fantasyData: any;
+  private isError: boolean = false;
 
   private boxScoresData:any;
   private currentBoxScores:any;
@@ -110,7 +113,7 @@ export class PlayerPage{
     private activateRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
-    private _fantasyService: FantasyService,
+    private _fantasyService: ArticleDataService,
     private _boxScores: BoxScoresService,
     private _schedulesService: SchedulesService,
     private _standingsService: StandingsService,
@@ -300,17 +303,32 @@ export class PlayerPage{
 
 
   private getFantasyData(playerId) {
-    this._fantasyService.getFantasyReport(playerId)
-      .subscribe(data => {
-        if (playerId == data['player_id']) {
-          this.fantasyData = data;
-          var date = moment.unix(this.fantasyData['last_updated']).format();
-          this.fantasyDate = moment.tz(date, "America/New_York").fromNow();
-        }
-      },
-      err => {
-        console.log("Error getting fantasy report data", err);
-      });
+    try {
+      this._fantasyService.getFantasyReport(playerId)
+        .subscribe(data => {
+          if (data != null) {
+            if (playerId == data.playerId) {
+              this.fantasyData = data;
+              this.modHeadData = {
+                moduleTitle: "Fantasy Report - " + this.profileHeaderData.profileName,
+                hasIcon: false,
+                iconClass: '',
+              };
+              this.footerData = {
+                infoDesc: 'Want to see more of the Fantasy Report?',
+                text: 'VIEW FANTASY REPORT',
+                url: data.articleUrl,
+                smalltext: 'READ MORE'
+              };
+            }
+          }
+          else {
+            this.isError = true;
+          }
+        });
+    } catch (e) {
+      this.isError = true;
+    }
   } //getFantasyData
 
 

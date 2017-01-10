@@ -49,7 +49,7 @@ export class LeaguePage{
     public paramsub: any;
     public storedPartnerParam: string;
 
-    private headlineData:HeadlineData;
+    private headlineData:any;
     private pageParams:SportPageParameters = {};
 
     private profileHeaderData:ProfileHeaderData;
@@ -256,7 +256,7 @@ export class LeaguePage{
         if (scope == "ncaa") {
             scope = "ncaaf";
         }
-        this._articleDataService.getAiHeadlineDataLeague(null, scope)
+        this._articleDataService.getAiHeadlineDataLeague(null, scope, true)
             .subscribe(
                 HeadlineData => {
                     this.headlineData = HeadlineData;
