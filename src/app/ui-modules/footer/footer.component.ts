@@ -29,7 +29,7 @@ export class FooterComponent implements OnInit {
     public disc: string = "Disclaimer";
     public au: string = "About Us";
 
-    image:string = 'app/public/icon-t-d-l.svg';
+    image:string = GlobalSettings.mainIcon;
     teamDirectoryListings: Array<Link>;
 
     playerDirectoryListings: Array<Link>;

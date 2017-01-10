@@ -169,7 +169,7 @@ export class DeepDivePage {
         buttonText: 'Visit the College Section',
         buttonScope: 'ncaaf'
       },
-      'midImage': './app/public/icon-t-d-l.svg',
+      'midImage': GlobalSettings.mainIcon,
     }
     return toggleData;
   }

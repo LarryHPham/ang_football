@@ -20,7 +20,7 @@ export class HeaderComponent {
     @Output() scrollPadding = new EventEmitter();
     public scope: string;
     public routeSubscription: any;
-    public logoUrl: string = 'app/public/icon-t-d-l.svg';
+    public logoUrl: string = GlobalSettings.mainIcon;
     public partnerLogoUrl: string = 'app/public/Football-DeepDive_Logo_Outlined-W.svg';
     private _stickyHeader: string;
     private _stickyHeaderPartner: string;
