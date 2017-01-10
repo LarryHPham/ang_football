@@ -63,7 +63,7 @@ export class DraftHistoryService {
   private _scope: string;
   constructor(public model: ModelService){}
 
-  getDraftHistoryTabs(profileData: IProfileData) {
+  getDraftHistoryTabs(profileData: any) {
     let errorMessage; // {0} is for the season name
     // if ( profileData.isLegit && year == currentYear ) {
       if ( profileData.profileType == "team" ) {
@@ -88,7 +88,8 @@ export class DraftHistoryService {
 
     //for MLB season starts and ends in the same year so return current season
     //get past 5 years for tabs
-    var currentYear = new Date().getFullYear();
+
+    var currentYear = profileData.headerData != null ? profileData.headerData['seasonBase'] : new Date().getFullYear();
     var year = currentYear;
     var tabArray = [];
     for(var i = 0; i <5; i++) {

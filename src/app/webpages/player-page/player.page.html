@@ -63,6 +63,7 @@
             [profileName]="profileHeaderData.profileName"
             [profileType]="'player'"
             [profileId]="pageParams.playerId"
+            [seasonBase]="seasonBase"
             [scope]="scope"></comparison-module>
         </div> <!--loadBatch3-->
 
@@ -97,10 +98,10 @@
             [newsDataArray]="newsDataArray"
             [profileName]="profileHeaderData.profileName"></news-module>
           <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace"></responsive-widget>
-          <!--<twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>-->
+          <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
           <!--Like Us On FB Module, only display if not on partner page-->
           <section *ngIf="!partnerID">
-            <!--<comment-module [profileName]="profileHeaderData.profileName"></comment-module>-->
+            <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
             <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace"></responsive-widget>
           </section>
         </div> <!--loadBatch5-->

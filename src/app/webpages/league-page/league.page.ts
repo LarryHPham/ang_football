@@ -51,6 +51,7 @@ export class LeaguePage{
 
     private headlineData:any;
     private pageParams:SportPageParameters = {};
+    public seasonBase: string;
 
     private profileHeaderData:ProfileHeaderData;
     private profileData:IProfileData;
@@ -131,24 +132,23 @@ export class LeaguePage{
       private _seoService: SeoService
     ) {
 
-      var currentUnixDate = new Date().getTime();
 
       this.paramsub = this.activatedRoute.params.subscribe(
             (param :any)=> {
               this.pageParams = param;
               this.partnerID = param['partnerID'];
               this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+              var currentUnixDate = new Date().getTime();
+              this.dateParam ={
+                scope:'league',//current profile page
+                teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
+                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
+              }
+              this.setupProfileData(this.partnerID, this.scope);
+              this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
             }
       );
 
-      this.dateParam ={
-        scope:'league',//current profile page
-        teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
-        date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
-      }
-
-      this.setupProfileData(this.partnerID, this.scope);
-      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
     }
 
     private setupProfileData(partnerID, scope) {
@@ -159,6 +159,7 @@ export class LeaguePage{
           //---Batch 1 Load---//
           this.metaTags(data);
           this.profileData = data;
+          this.seasonBase = data.headerData['seasonBase'];
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
           this.getLeagueHeadlines();
@@ -360,6 +361,10 @@ export class LeaguePage{
       this.getTransactionsData();
     } //transactionsFilterDropdown
     private getTransactionsData() {
+      if(this.dropdownKey1 == null){
+        this.dropdownKey1 = this.seasonBase;
+      }
+
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {

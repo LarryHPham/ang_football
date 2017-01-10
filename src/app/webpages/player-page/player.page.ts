@@ -15,13 +15,13 @@ import { ArticleDataService } from "../../services/article-page-service";
 import { BoxScoresService } from '../../services/box-scores.service';
 import { SchedulesService } from '../../services/schedules.service';
 import { StandingsService } from '../../services/standings.service';
-// import { SeasonStatsService } from '../../services/season-stats.service';
+import { SeasonStatsService } from '../../services/season-stats.service';
 import { ComparisonStatsService } from '../../services/comparison-stats.service';
 import { ImagesService } from "../../services/carousel.service";
 import { DykService } from '../../services/dyk.service';
 import { FaqService } from '../../services/faq.service';
 import { ListOfListsService } from "../../services/list-of-lists.service";
-// import { NewsService } from '../../services/news.service';
+import { NewsService } from '../../services/news.service';
 import { TwitterService } from '../../services/twitter.service';
 import { SeoService } from "../../seo.service";
 
@@ -61,6 +61,7 @@ export class PlayerPage{
   public pageParams: SportPageParameters;
   private teamID: any;
   private dateParam: any;
+  public seasonBase: string;
 
   public imageConfig: any;
 
@@ -117,13 +118,13 @@ export class PlayerPage{
     private _boxScores: BoxScoresService,
     private _schedulesService: SchedulesService,
     private _standingsService: StandingsService,
-    // private _seasonStatsService: SeasonStatsService,
+    private _seasonStatsService: SeasonStatsService,
     private _comparisonService: ComparisonStatsService,
     private _imagesService: ImagesService,
     private _dykService: DykService,
     private _faqService: FaqService,
     private _lolService: ListOfListsService,
-    // private _newsService: NewsService,
+    private _newsService: NewsService,
     private _twitterService: TwitterService,
     private _seoService: SeoService
   ) {
@@ -158,6 +159,7 @@ export class PlayerPage{
   private setupPlayerProfileData() {
     this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
+        this.seasonBase = data.headerData['seasonBase'];
         this.metaTags(data);
         this.pageParams = data.pageParams;
         this.pageParams['partnerRoute'] = this.storedPartnerParam;
@@ -400,14 +402,14 @@ export class PlayerPage{
 
 
   private setupSeasonstatsData() {
-    // this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope)
-    //   .subscribe(
-    //     data => {
-    //       this.seasonStatsData = data;
-    //     },
-    //     err => {
-    //       console.log("Error getting season stats data for " + this.pageParams.playerId, err);
-    //     });
+    this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
+      .subscribe(
+        data => {
+          this.seasonStatsData = data;
+        },
+        err => {
+          console.log("Error getting season stats data for " + this.pageParams.playerId, err);
+        });
   } //setupSeasonstatsData
 
 
@@ -489,18 +491,18 @@ export class PlayerPage{
 
 
     private getNewsService() {
-      // let params = {
-      //   limit: 10,
-      //   pageNum: 1,
-      //   id: this.pageParams.teamId
-      // }
-      // this._newsService.getNewsService(this.scope, params, 'player', 'module')
-      //   .subscribe(data => {
-      //     this.newsDataArray = data.news;
-      //   },
-      //   err => {
-      //     console.log("Error getting news data");
-      //   });
+      let params = {
+        limit: 10,
+        pageNum: 1,
+        id: this.pageParams.teamId
+      }
+      this._newsService.getNewsService(this.scope, params, 'player', 'module')
+        .subscribe(data => {
+          this.newsDataArray = data.news;
+        },
+        err => {
+          console.log("Error getting news data");
+        });
     } //getNewsService
 
 

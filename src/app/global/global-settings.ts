@@ -58,8 +58,9 @@ export class GlobalSettings {
 
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     public static _mainPageUrl: string = "touchdownloyal.com";
+    public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg");
+    public static _defaultStockImage: string = GlobalSettings.getImageUrl("/TDL/stock_images/TDL_Stock-3.png");// default stock image on the server for FOOTBALL
 
-    public static _defaultStockImage: string = GlobalSettings._proto + "//images.synapsys.us/TDL/stock_images/TDL_Stock-3.png";// default stock image on the server for FOOTBALL
 
     private static _currentRouteParams: any;
     private static _router: any;
@@ -112,7 +113,7 @@ export class GlobalSettings {
 
     //include bypass parameter if you want the image to be served on server side (meta tag images)
     static getImageUrl(relativePath):string {
-      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: './app/public/no-image.svg';
+      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: 'app/public/no-image.svg';
       return relPath;
     }
 
