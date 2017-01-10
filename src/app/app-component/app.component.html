@@ -1,4 +1,7 @@
-<header-component [partnerID]="partnerID" [partnerScript] ="partnerScript" (scrollPadding)="setScrollPadding($event)"></header-component>
+<header-component
+  [partnerID]="partnerID"
+  [partnerScript] ="partnerScript"
+  (scrollPadding)="setScrollPadding($event)"></header-component>
 <div class="container-fluid vertical" [style.padding-top]="scrollPadding">
   <div class="container-fluid">
     <router-outlet></router-outlet>

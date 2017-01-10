@@ -1,6 +1,5 @@
-.fixedHeader{
+.fixedHeader {
   position:fixed !important;
-  top:0 !important;
   z-index: 9999 !important;
 }
 
@@ -26,6 +25,10 @@
   .no-select;
   width:100%;
   height: auto;
+  top: 0px;
+  &.slide-down {
+    transition: top .5s ease-out;
+  }
   .ddb-parbutton {
     line-height: 2.5;
   }
