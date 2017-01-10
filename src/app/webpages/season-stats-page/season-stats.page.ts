@@ -69,7 +69,7 @@ export class SeasonStatsPage implements OnInit {
                     this.pageParams['scope'] = this.scope;
                     // this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
                     this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
-                    this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams);
+                    this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams, data.headerData['seasonBase']);
                 },
                 err => {
                     this.hasError = true;
@@ -97,7 +97,7 @@ export class SeasonStatsPage implements OnInit {
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
-      this._seoService.setMetaRobots('INDEX, FOLLOW');      
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc +". Know more about football.");
       this._seoService.setOgType('Website');

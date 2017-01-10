@@ -75,17 +75,17 @@ export class SeasonStatsService {
     return [partnerRoute+'/'+this._scope ,"season-stats", GlobalFunctions.toLowerKebab(playerName), playerId];
   }
 
-  getPlayerStats(playerId: number, scope?: string){
+  getPlayerStats(playerId: number, scope?: string, season?: string){
     // let url = this._apiUrl + "/player/seasonStats/" + playerId;
     let url = GlobalSettings.getApiUrl() + "/seasonStats/module/player/" + playerId;
     if(scope != null){
       this._scope = scope;
     }
     return this.model.get(url)
-      .map(data => this.formatData(data.data, scope));
+      .map(data => this.formatData(data.data, scope, season));
   }
 
-  private formatData(data: APISeasonStatsData, scope?: string) {
+  private formatData(data: APISeasonStatsData, scope?: string, season?: string) {
     if ( !data ) {
       return null;
     }
@@ -95,8 +95,9 @@ export class SeasonStatsService {
     //Check to see if the position list contains pitcher abbreviation
     //in order to select the appropriate fields
     //let isPitcher = playerInfo.position.filter(item => item == "P").length > 0;
+
     var seasonStatTabs = [];
-    var curYear = new Date().getFullYear();
+    var curYear = season != null ? Number(season) : new Date().getFullYear();
 
     //Load 4 years worth of data, starting from current year
     for ( var year = curYear; year > curYear-4; year-- ) {
@@ -211,6 +212,7 @@ export class SeasonStatsService {
       ];
     }
     else {
+
       if ( isCurrYear ) {
         tabTitle = "Current Season";
         subTitle = tabTitle;
@@ -395,9 +397,9 @@ export class SeasonStatsPageService {
     return pageTitle;
   }
 
-  initializeAllTabs(pageParams: SportPageParameters): Array<SportSeasonStatsTabData> {
+  initializeAllTabs(pageParams: SportPageParameters, season?:string): Array<SportSeasonStatsTabData> {
     let tabs: Array<SportSeasonStatsTabData> = [];
-    var curYear = new Date().getFullYear();
+    var curYear = season != null ? Number(season) : new Date().getFullYear();
     var year = curYear;
     var playerName = pageParams['playerName'];
     var possessivePlayer = GlobalFunctions.convertToPossessive(playerName);

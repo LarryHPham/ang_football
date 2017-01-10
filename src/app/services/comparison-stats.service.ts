@@ -103,7 +103,7 @@ export interface ComparisonStatsData {
   bars: ComparisonBarList;
 }
 
-export class MLBComparisonModuleData implements ComparisonModuleData {
+export class SportsComparisonModuleData implements ComparisonModuleData {
     data: ComparisonStatsData;
 
     teamList: Array<{key: string, value: string}>;
@@ -231,7 +231,7 @@ export class ComparisonStatsService {
       };
 
 
-      var moduleData = new MLBComparisonModuleData(this);
+      var moduleData = new SportsComparisonModuleData(this);
       moduleData.data = data;
       moduleData.teamList = [
           {key: data.playerOne.teamId, value: data.playerOne.teamName},
@@ -267,6 +267,7 @@ export class ComparisonStatsService {
       existingData.data = apiData.data;
       existingData.bestStatistics = this.formatPlayerData("statHigh", apiData.data);
       existingData.worstStatistics = this.formatPlayerData("statLow", apiData.data);
+
       return this.createComparisonBars(existingData);
     });
   }

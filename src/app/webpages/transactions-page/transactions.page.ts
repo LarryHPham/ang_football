@@ -38,6 +38,7 @@ export class TransactionsPage{
   public transactionTypeParam: string;
   public paramsub: any;
   public storedPartnerParam: string;
+  public seasonBase: string;
 
   profileHeaderData: TitleInputData;
   pageParams: any;
@@ -125,6 +126,7 @@ export class TransactionsPage{
           this._profileService.getTeamProfile(this.pageParams.teamId)
               .subscribe(
               data => {
+                this.seasonBase = data.headerData['seasonBase'];
                   //var stats = data.headerData.stats;
                   var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
                   this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
@@ -147,6 +149,7 @@ export class TransactionsPage{
           this._profileService.getLeagueProfile()
               .subscribe(
               data => {
+                  this.seasonBase = data.headerData['seasonBase'];
                   var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
                   this.profileName = this.pageParams.scope.toUpperCase();
                   // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
@@ -173,15 +176,14 @@ export class TransactionsPage{
         var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName);
         if (matchingTabs.length > 0) {
             var tab = matchingTabs[0];
-
+            if(this.dropdownKey1 == null){
+              this.dropdownKey1 = this.seasonBase;
+            }
             this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
                 .subscribe(
                 transactionsData => {
                     if (this.transactionFilter1 == undefined) {
                         this.transactionFilter1 = transactionsData.yearArray;
-                        if (this.dropdownKey1 == null) {
-                            this.dropdownKey1 = this.transactionFilter1[0].key;
-                        }
                     }
 
                     tab = transactionsData;

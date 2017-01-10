@@ -11,7 +11,7 @@ import { VerticalGlobalFunctions } from '../../global/vertical-global-functions'
 import { TitleInputData } from "../../fe-core/components/title/title.component";
 import { PlayerStatsService } from '../../services/player-stats.service';
 import { ProfileHeaderService } from '../../services/profile-header.service';
-import { MLBPlayerStatsTableData, MLBPlayerStatsTableModel } from '../../services/player-stats.data';
+import { SportsPlayerStatsTableData, MLBPlayerStatsTableModel } from '../../services/player-stats.data';
 import { SportPageParameters } from '../../global/global-interface';
 
 //services
@@ -33,7 +33,7 @@ export class PlayerStatsPage implements OnInit {
   public teamName: string;
   public pageParams: SportPageParameters = {}
 
-  public tabs: Array<MLBPlayerStatsTableData>;
+  public tabs: Array<SportsPlayerStatsTableData>;
 
   public titleData: TitleInputData = {
     imageURL: "/app/public/profile_placeholder.png",
@@ -87,10 +87,10 @@ export class PlayerStatsPage implements OnInit {
                 data => {
                     this.profileLoaded = true;
                     this.pageParams = data.pageParams;
-                    data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
+                    data.teamName = data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
                     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
                     this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
-                    this.tabs = this._statsService.initializeAllTabs(data.teamName, false);
+                    this.tabs = this._statsService.initializeAllTabs(data.teamName, data.headerData['seasonBase'], false);
                 },
                 err => {
                     this.hasError = true;

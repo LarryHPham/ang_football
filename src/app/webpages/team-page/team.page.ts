@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
-import { isNode } from "angular2-universal";
+import { isBrowser, isNode } from "angular2-universal";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -44,10 +44,7 @@ import { PlayerStatsModule, PlayerStatsModuleData } from '../../fe-core/modules/
 
 //Libraries
 declare var moment;
-declare var jQuery: any; //used for scroll event
 declare var Zone: any;
-
-
 
 @Component({
     selector: 'Team-page',
@@ -63,6 +60,7 @@ export class TeamPage implements OnInit {
   public pageParams:SportPageParameters;
   public dateParam:any;
   public storedPartnerParam: string;
+  public seasonBase: string;
 
   public imageConfig: any;
 
@@ -144,8 +142,6 @@ export class TeamPage implements OnInit {
     private _seoService: SeoService,
     private _playerStatsService: PlayerStatsService
   ) {
-    var currDate = new Date();
-    var currentUnixDate = new Date().getTime();
 
 
     this.paramsub = this.activateRoute.params.subscribe(
@@ -157,6 +153,7 @@ export class TeamPage implements OnInit {
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
 
+        var currentUnixDate = new Date().getTime();
         this.dateParam = {
           scope: 'team',//current profile page
           teamId: this.teamID, // teamId if it exists
@@ -169,13 +166,9 @@ export class TeamPage implements OnInit {
     ); //this.paramsub
   } //constructor
 
-
-
   ngOnInit() {
     this.ptabName="Passing";
   } //ngOnInit
-
-
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
@@ -184,7 +177,6 @@ export class TeamPage implements OnInit {
     this.batchLoadIndex = 1;
     // window.scrollTo(0, 0);
   } //routeChangeResets
-
 
 
   private setupProfileData(partnerID, scope, teamID?) {
@@ -198,6 +190,9 @@ export class TeamPage implements OnInit {
         this.pageParams['teamID'] = this.teamID;
         this.profileData = data;
         let headerData = data.headerData != null ? data.headerData : null;
+
+        this.seasonBase = headerData['seasonBase'];
+
         this.profileName = data.teamName;
         if(headerData.teamMarket != null){
           this.profileName = headerData.teamMarket;
@@ -217,7 +212,7 @@ export class TeamPage implements OnInit {
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
           this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
           this.rosterData = this._rosterService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, true);
+          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
           //--Batch 4--//
           this.activeTransactionsTab = "Transactions"; // default tab is Transactions
@@ -440,14 +435,14 @@ export class TeamPage implements OnInit {
       this.getTransactionsData();
     } //transactionsFilterDropdown
     private getTransactionsData() {
+      if(this.dropdownKey1 == null){
+        this.dropdownKey1 = this.seasonBase;
+      }
       this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
         .subscribe(
           transactionsData => {
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
-              if(this.dropdownKey1 == null){
-                this.dropdownKey1 = this.transactionFilter1[0].key;
-              }
             }
             this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
