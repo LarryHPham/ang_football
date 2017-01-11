@@ -65,12 +65,7 @@ export class DeepDivePage {
   ) {
     this._routeSubscription = this._activatedRoute.params.subscribe(
       (params: any) => {
-        this.callCount = 1;
-        this.blockIndex = 0;
-        this.sideScrollData = null;
-        this.isLoading = false;
-        this.carouselData = null;
-        this.blockIndex = 1;
+        this.resetScopedVariables();
         this.scope = params['scope'] != null ? params['scope'].toLowerCase() : 'nfl';
 
         this.profileName = this.scope == 'home' ? 'Football' : this.scope.toUpperCase();
@@ -81,6 +76,16 @@ export class DeepDivePage {
         this.getGeoLocation();
       }
     );
+  }
+
+  resetScopedVariables(){
+    this.safeCall = true;
+    this.callCount = 1;
+    this.blockIndex = 0;
+    this.sideScrollData = null;
+    this.isLoading = false;
+    this.carouselData = null;
+    this.blockIndex = 1;
   }
 
   //Subscribe to getGeoLocation in geo-location.service.ts. On Success call getNearByCities function.
@@ -176,25 +181,27 @@ export class DeepDivePage {
 
   //api for Schedules
   private getSideScroll() {
-    // let self = this;
-    // if (this.safeCall && this.scope != 'home') {
-    //   this.safeCall = false;
-    //   this.scope = this.scope.toLowerCase();
-    //   let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
-    //   this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-    //     if (this.sideScrollData == null) {
-    //       this.sideScrollData = sideScrollData;
-    //     }
-    //     else {
-    //       sideScrollData.forEach(function(val, i) {
-    //         self.sideScrollData.push(val);
-    //       })
-    //     }
-    //     this.safeCall = true;
-    //     this.callCount++;
-    //     this.scrollLength = this.sideScrollData.length;
-    //   }, null, null)
-    // }
+    let self = this;
+    if (this.safeCall && this.scope != 'home') {
+      this.safeCall = false;
+      this.scope = this.scope.toLowerCase();
+      let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
+      this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+        if (this.sideScrollData == null) {
+          this.sideScrollData = sideScrollData;
+        }
+        else {
+          sideScrollData.forEach(function(val, i) {
+            self.sideScrollData.push(val);
+          })
+        }
+        if(sideScrollData.length > 0){// if data returned is an emptry array then dont run this api call anymore.
+          this.safeCall = true;
+        }
+        this.callCount++;
+        this.scrollLength = this.sideScrollData.length;
+      }, null, null)
+    }
   }
 
 
