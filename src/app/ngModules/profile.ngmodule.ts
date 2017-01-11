@@ -21,7 +21,7 @@ import { NewsService } from "../services/news.service";
 import { TwitterService } from "../services/twitter.service";
 import { DailyUpdateService } from "../services/daily-update.service";
 import { RosterService } from '../services/roster.service';
-import { FantasyService } from '../services/fantasy.service';
+import { ArticleDataService } from "../services/article-page-service";
 import { SeasonStatsService, SeasonStatsPageService } from "../services/season-stats.service";
 import { PlayerStatsService } from "../services/player-stats.service";
 import { DynamicWidgetCall } from "../services/dynamic-list-page.service";
@@ -174,7 +174,7 @@ const PROVIDERS = [
   TwitterService,
   RosterService,
   DailyUpdateService,
-  FantasyService,
+  ArticleDataService,
   SeasonStatsService,
   SeasonStatsPageService,
   PlayerStatsService,

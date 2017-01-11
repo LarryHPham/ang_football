@@ -130,27 +130,6 @@ export class GlobalSettings {
         return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
     }
 
-    static getTcxArticleUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getRecommendUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getTrendingUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getHeadlineUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
-    }
-
-    static getFantasyUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl
-    }
-
-
     static getNewsUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;

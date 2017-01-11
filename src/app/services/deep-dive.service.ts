@@ -11,7 +11,7 @@ declare var moment;
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleDataUrl();
-  private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
+  private _tcxArticleUrl: string = GlobalSettings.getArticleUrl();
 
   constructor( public model: ModelService ){}
 

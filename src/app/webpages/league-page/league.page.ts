@@ -13,7 +13,7 @@ import { BoxScoresService } from "../../services/box-scores.service";
 import { SchedulesService } from "../../services/schedules.service";
 import { StandingsService } from "../../services/standings.service";
 import { TransactionsService } from "../../services/transactions.service";
-import { HeadlineDataService } from "../../services/headline-module-service";
+import { ArticleDataService } from "../../services/article-page-service";
 import { ListPageService, positionMVPTabData } from '../../services/list-page.service';
 import { ComparisonStatsService } from '../../services/comparison-stats.service';
 import { ImagesService } from "../../services/carousel.service";
@@ -49,7 +49,7 @@ export class LeaguePage{
     public paramsub: any;
     public storedPartnerParam: string;
 
-    private headlineData:HeadlineData;
+    private headlineData:any;
     private pageParams:SportPageParameters = {};
     public seasonBase: string;
 
@@ -126,7 +126,7 @@ export class LeaguePage{
       private _dykService: DykService,
       private _faqService: FaqService,
       private _lolService: ListOfListsService,
-      private _headlineDataService:HeadlineDataService,
+      private _articleDataService:ArticleDataService,
       private _newsService: NewsService,
       private _twitterService: TwitterService,
       private _seoService: SeoService
@@ -257,7 +257,7 @@ export class LeaguePage{
         if (scope == "ncaa") {
             scope = "ncaaf";
         }
-        this._headlineDataService.getAiHeadlineDataLeague(null, scope)
+        this._articleDataService.getAiHeadlineDataLeague(null, scope, true)
             .subscribe(
                 HeadlineData => {
                     this.headlineData = HeadlineData;
