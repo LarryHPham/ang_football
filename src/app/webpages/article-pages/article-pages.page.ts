@@ -178,7 +178,7 @@ export class ArticlePages implements OnInit {
   }
 
   private trendingScroll(event) {
-    if (!this.isTrendingMax) {
+    if (!this.isTrendingMax && isBrowser) {
       this.hasRun = false;
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
         this.showLoading = true;
@@ -189,26 +189,30 @@ export class ArticlePages implements OnInit {
   }
 
   ngOnInit() {
-    //This has to be resize to trigger the takeover update
-    try {
-      window.dispatchEvent(new Event('resize'));
-    } catch (e) {
-      //to run resize event on IE
-      var resizeEvent = document.createEvent('UIEvents');
-      resizeEvent.initUIEvent('resize', true, false, window, 0);
-      window.dispatchEvent(resizeEvent);
+    if(isBrowser){
+      //This has to be resize to trigger the takeover update
+      try {
+        window.dispatchEvent(new Event('resize'));
+      } catch (e) {
+        //to run resize event on IE
+        var resizeEvent = document.createEvent('UIEvents');
+        resizeEvent.initUIEvent('resize', true, false, window, 0);
+        window.dispatchEvent(resizeEvent);
+      }
     }
   }
 
   ngAfterViewInit() {
-    // to run the resize event on load
-    try {
-      window.dispatchEvent(new Event('load'));
-    } catch (e) {
-      //to run resize event on IE
-      var resizeEvent = document.createEvent('UIEvents');
-      resizeEvent.initUIEvent('load', true, false, window, 0);
-      window.dispatchEvent(resizeEvent);
+    if(isBrowser){
+      // to run the resize event on load
+      try {
+        window.dispatchEvent(new Event('load'));
+      } catch (e) {
+        //to run resize event on IE
+        var resizeEvent = document.createEvent('UIEvents');
+        resizeEvent.initUIEvent('load', true, false, window, 0);
+        window.dispatchEvent(resizeEvent);
+      }
     }
   }
 
