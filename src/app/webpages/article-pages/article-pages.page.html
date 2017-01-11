@@ -1,67 +1,59 @@
 <div class="articles-page">
-    <div class="articles-page-content">
-
-        <!-- ERROR MESSAGE HERE -->
-        <section *ngIf="error">
-            <div class="loading-container">
-                <span class="loading-text">The article you are trying to reach is unavailable. You will be redirected to your previous page shortly.</span>
-            </div>
-        </section>
-
-        <!-- LOADING ICON -->
-        <loading-component *ngIf="!articleData && !error"></loading-component>
-
-        <!-- ARTICLE PAGE BEGINS -->
-        <span *ngIf="articleData">
+  <div class="articles-page-content">
+    <!-- ERROR MESSAGE HERE -->
+    <section *ngIf="error">
+      <div class="loading-container">
+        <span class="loading-text">The article you are trying to reach is unavailable. You will be redirected to your previous page shortly.</span>
+      </div>
+    </section>
+    <!-- LOADING ICON -->
+    <loading-component *ngIf="!articleData && !error"></loading-component>
+    <!-- ARTICLE PAGE BEGINS -->
+      <span *ngIf="articleData">
           <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
-          <h1 class="articles-page-title col-xs-12">
-            <span *ngIf="eventType !='story' && eventType !='video'"
-                  [innerHTML]="title | safeHtml"></span>
-            <span *ngIf="eventType == 'story' || eventType == 'video'"
-                  [innerHTML]="articleData.title | safeHtml"></span>
-          </h1>
-
-          <sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">
-
-            <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
+          <h1 class="articles-page-title col-xs-12"><span [innerHTML]="articleData.title | safeHtml"></span></h1>
+        <!--<sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">-->
+        <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
             <section *ngIf="eventType != 'video'">
-                <div *ngIf="imageData && imageTitle" class="carousel-container">
-                    <images-media-carousel
-                      [isProfilePage]="false"
-                      [imageData]="imageData"
-                      [copyright]="copyright"
-                      [imageTitle]="imageTitle"></images-media-carousel>
-                </div>
+              <div *ngIf="eventType == 'story'" class="carousel-container">
+                <images-media-carousel [imageData]="imageData" [copyright]="copyright"
+                                       [imageTitle]="imageTitle"></images-media-carousel>
+              </div>
+                  <span *ngIf="eventType != 'story' && eventType != 'video'">
+                    <div *ngIf="articleData['images']['imageData']"
+                         class="carousel-container">
+                      <images-media-carousel [isProfilePage]="false"
+                                             [imageData]="articleData['images']['imageData']"
+                                             [copyright]="articleData['images']['copyright']"
+                                             [imageTitle]="articleData['images']['imageTitle']"></images-media-carousel>
+                    </div>
+                  </span>
             </section>
-
-            <!-- IF ARTICLE TYPE IS VIDEO -->
+        <!-- IF ARTICLE TYPE IS VIDEO -->
             <section *ngIf="eventType == 'video'" class="videoFrame">
-              <iframe *ngIf="iframeUrl" width="100%" height="100%" [src]="iframeUrl | safeRUrl" frameborder="0" allowfullscreen></iframe>
+              <iframe *ngIf="iframeUrl" width="100%" height="100%" [src]="iframeUrl | safeRUrl" frameborder="0"
+                      allowfullscreen></iframe>
             </section>
 
             <section class="articles-page-container row">
               <div class="arpt col-xs-12 col-xl-9">
-
                 <!-- ARTICLE INFORMATION -->
                 <section class="arpt-info">
-                    <div *ngIf="eventType == 'story' && articleData.publisher" class="arpt-author">Written By:
-                        <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
-                    <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
+                  <div *ngIf="eventType == 'story' && articleData.publisher" class="arpt-author">Written By:
+                    <span class="text-master" [innerHTML]="articleData.publisher | safeHtml"></span></div>
+                  <div class="arpt-date">Posted on: <span [innerHTML]="date | safeHtml"></span></div>
                 </section>
-
                 <!-- DISPLAY ARTICLE -->
-                <article-content-component
-                   *ngIf="eventType != 'story' && eventType != 'video'"
-                   class="articles-page-padding"
-                   [articleType]="articleType"
-                   [articleSubType]="articleSubType"
-                   [articleData]="articleData"
-                   [teamId]="teamId"
-                   [imageLinks]="imageLinks"
-                   [partnerId]="partnerId"
-                   [scope]="scope">
+                <article-content-component *ngIf="eventType != 'story' && eventType != 'video'"
+                                           class="articles-page-padding"
+                                           [articleType]="articleData.articleType"
+                                           [articleSubType]="articleData.articleSubType"
+                                           [articleData]="articleData['articleContent']"
+                                           [teamId]="articleData.teamId"
+                                           [imageLinks]="articleData.imageLinks"
+                                           [partnerId]="partnerId"
+                                           [scope]="scope">
                 </article-content-component>
-
                 <section *ngIf="eventType == 'story' || eventType == 'video'" class="arpt-main-article">
                   <div class="content-exerpt" *ngIf="eventType == 'story'"
                        [innerHTML]="articleData.teaser | safeHtml"></div>
@@ -72,30 +64,27 @@
                      target="_blank">Read the Full Article <i class="fa fa-arrow-right"></i></a>
                   <div [ngStyle]="{width: '100%', height:'5px','display':'block'}"></div>
                 </section>
-
                 <!-- RESPONSIVE WIDGET -->
-                <sidekick-container-component></sidekick-container-component>
+                <!--<sidekick-container-component></sidekick-container-component>-->
                 <disqus-component *ngIf="!checkPartner"></disqus-component>
-                <recommendations-component
-                  *ngIf="randomHeadlines"
-                  [randomHeadlines]="randomHeadlines"
-                  [images]="images"></recommendations-component>
-                <trending-component
-                  [scope]="scope"
-                  [currentArticleId]="eventID"
-                  [eventType]="eventType"
-                  [geoLocation]="geoLocation"
-                  [showLoading]="showLoading"
-                  [trendingData]="trendingData"
-                  (window:scroll)="trendingScroll($event)">
+                <recommendations-component *ngIf="randomHeadlines" [randomHeadlines]="randomHeadlines"
+                                           [images]="images"></recommendations-component>
+                <trending-component [scope]="scope"
+                                    [currentArticleId]="eventID"
+                                    [eventType]="eventType"
+                                    [geoLocation]="geoLocation"
+                                    [showLoading]="showLoading"
+                                    [trendingData]="trendingData"
+                                    (window:scroll)="trendingScroll($event)">
                 </trending-component>
               </div>
 
-            <div class="vertical-widget col-lg-3">
-              <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated" [scope]="scope"></widget-module>
-            </div>
-        </section>
-      </sidekick-wrapper-ai>
-    </span>
+              <div class="vertical-widget col-lg-3">
+                <widget-module [aiSidekick]="aiSidekick" [syndicated]="syndicated"
+                               [scope]="scope"></widget-module>
+              </div>
+            </section>
+        <!--</sidekick-wrapper-ai>-->
+      </span>
   </div>
 </div>
