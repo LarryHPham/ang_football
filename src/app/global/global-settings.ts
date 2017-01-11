@@ -66,7 +66,7 @@ export class GlobalSettings {
     private static _router: any;
 
     static getEnv(env:string):string {
-      if (env == "localhost"){
+      if (env == "localhost" || env == "render"){
           env = "dev";
       }
       if (env != "dev" && env !="qa"){
@@ -129,27 +129,6 @@ export class GlobalSettings {
     static getArticleDataUrl():string {
         return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
     }
-
-    static getTcxArticleUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getRecommendUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getTrendingUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getHeadlineUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
-    }
-
-    static getFantasyUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl
-    }
-
 
     static getNewsUrl():string {
         //[https:]//[prod]-homerunloyal-api.synapsys.us

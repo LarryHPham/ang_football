@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Rx';
-import {GlobalFunctions} from '../global/global-functions';
-import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
-import {GlobalSettings} from '../global/global-settings';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { GlobalFunctions } from '../global/global-functions';
+import { VerticalGlobalFunctions } from '../global/vertical-global-functions';
+import { GlobalSettings } from '../global/global-settings';
 import { ModelService } from '../global/shared/model/model.service';
 
 declare var moment;
@@ -11,7 +11,7 @@ declare var moment;
 export class DeepDiveService {
   private _apiUrl: string = GlobalSettings.getApiUrl();
   private _articleUrl: string = GlobalSettings.getArticleDataUrl();
-  private _tcxArticleUrl: string = GlobalSettings.getTcxArticleUrl();
+  private _tcxArticleUrl: string = GlobalSettings.getArticleUrl();
 
   constructor( public model: ModelService ){}
 
@@ -34,7 +34,6 @@ export class DeepDiveService {
   }
 
   getDeepDiveBatchService(scope, limit, startNum, state?){
-
     //Configure HTTP Headers
       startNum = startNum == null ? 1 : startNum;
       state = state === null || typeof state == 'undefined' ? 'CA' : state;
@@ -176,7 +175,7 @@ export class DeepDiveService {
           let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
           let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
           if(val.event_id){
-            urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);//TODO PARTNER
+            urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);
           }else{
             urlRouteArray = [val.article_url];
           }
@@ -214,7 +213,7 @@ export class DeepDiveService {
         let limitDesc = val.teaser.substring(0, 360);;
 
         let routeScope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
-        let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'story', val.id);//TODO PARTNER
+        let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'story', val.id);
 
         var articleStackData = {
             extUrl: false,
@@ -261,7 +260,8 @@ export class DeepDiveService {
       articles.forEach(function(val){
           var info = val.info;
           var date = GlobalFunctions.sntGlobalDateFormatting(Number(info.last_updated) * 1000, "dayOfWeek");
-          let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.subCategory,val.keyword, info.event_id);//TODO PARTNER
+          let scope = info.subcategory == 'nfl' || info.subcategory == 'football' ? 'nfl' : 'ncaaf';
+          let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope, val.keyword, info.article_id);
           var s = {
               extUrl: false,
               urlRouteArray: urlRouteArray ? urlRouteArray : null,
@@ -278,22 +278,11 @@ export class DeepDiveService {
       return articleStackArray;
     }
 
-    transformTrending (data, currentArticleId) {
-      data.forEach(function(val,index){
-        //if (val.id != currentArticleId) {
-        val['extUrl'] = false,
-        val["date"] = GlobalFunctions.sntGlobalDateFormatting(Number(val.dateline),"timeZone");
-        val["imagePath"] = GlobalSettings.getImageUrl(val.imagePath);
-        val["newsRoute"] = VerticalGlobalFunctions.formatArticleRoute('nfl',"story", val.id);//TODO
-        //}
-      })
-      return data;
-    }
-
     transformVideoStack(data){
       if ( data != null ) {
         data.forEach(function(val, i){
-          var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute('nfl',"video", val.id);//TODO PARTNER
+          let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
+          var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
           val['extUrl'] = false,
           val['keyword'] = val.league.toUpperCase();
           val['video_thumbnail'] = val.thumbnail;

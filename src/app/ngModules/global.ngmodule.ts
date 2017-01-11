@@ -16,7 +16,6 @@ import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 import { ApiService } from '../global/shared/api.service';
 import { CacheService } from '../global/shared/cache.service';
 import { ModelService } from '../global/shared/model/model.service';
-import { HeadlineDataService } from "../services/headline-module-service";
 
 //services
 // import { HamburgerDeliveryService } from '../services/hamburger-delivery.service';
@@ -203,7 +202,6 @@ const PIPES = [
 
 const PROVIDERS = [
   // put providers components here
-  HeadlineDataService,
   GlobalSettings,
   GlobalFunctions,
   ModelService,

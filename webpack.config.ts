@@ -45,6 +45,7 @@ export var commonPlugins = [
     'jquery': "jquery",
     Fuse: "fuse.js",
     Highcharts: "Highcharts",
+    highcharts: "highcharts",
   }),
 
   //takes source files in node_modules and copies them into directory for use.
