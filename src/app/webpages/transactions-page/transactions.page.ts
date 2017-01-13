@@ -124,7 +124,8 @@ export class TransactionsPage{
     getProfileInfo() {
       if (this.pageParams.teamId) {
           this._profileService.getTeamProfile(this.pageParams.teamId)
-              .subscribe(
+            .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+            .subscribe(
               data => {
                 this.seasonBase = data.headerData['seasonBase'];
                   //var stats = data.headerData.stats;
@@ -143,7 +144,7 @@ export class TransactionsPage{
                   console.error('Error: transactionsData Profile Header API: ', err);
                   // this.isError = true;
               }
-              );
+            );
       }
       else {
           this._profileService.getLeagueProfile()

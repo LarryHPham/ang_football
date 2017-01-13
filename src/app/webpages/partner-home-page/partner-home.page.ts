@@ -1,3 +1,4 @@
+import { GlobalFunctions } from "../../global/global-functions";
 import {Component, OnInit} from '@angular/core';
 
 @Component({
@@ -680,6 +681,8 @@ export class PartnerHomePage implements OnInit{
           partners[i].websites[j].url = "/"+partners[i].websites[j].partner_id;
         }
       }
+
+      GlobalFunctions.setPreboot();
       return partners;
     }
     ngOnInit() {

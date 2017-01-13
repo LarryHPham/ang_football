@@ -293,6 +293,7 @@ export class PlayerPage{
   private dailyUpdateModule(playerId: number) {
     this.imageConfig = this._dailyUpdateService.getImageConfig();
     this._dailyUpdateService.getPlayerDailyUpdate(playerId)
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
       },

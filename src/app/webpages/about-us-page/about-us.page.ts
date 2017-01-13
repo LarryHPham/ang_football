@@ -72,7 +72,6 @@ export class AboutUsPage {
       this.activatedRoute.params.subscribe(
           (param :any)=> {
             this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-
             this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
             this.loadData(this.storedPartnerParam, this.scope)
           }
@@ -106,11 +105,13 @@ export class AboutUsPage {
 
 
     loadData(partnerID?:string, scope?:string) {
-        this._service.getData(partnerID, scope).subscribe(
+        this._service.getData(partnerID, scope)
+        .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+        .subscribe(
           data => this.setupAboutUsData(data),
           err => {
             console.log("Error getting About Us data: " + err);
-          }
+          },
         );
     } //loadData
 

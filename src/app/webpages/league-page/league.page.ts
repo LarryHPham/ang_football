@@ -152,10 +152,8 @@ export class LeaguePage{
     }
 
     private setupProfileData(partnerID, scope) {
-
       this._profileService.getLeagueProfile(scope).subscribe(
         data => {
-
           //---Batch 1 Load---//
           this.metaTags(data);
           this.profileData = data;
@@ -258,15 +256,18 @@ export class LeaguePage{
             scope = "ncaaf";
         }
         this._articleDataService.getAiHeadlineDataLeague(null, scope, true)
-            .subscribe(
-                HeadlineData => {
-                    this.headlineData = HeadlineData;
-                },
-                err => {
-                    console.log("Error loading AI headline data for League Page", err);
-                }
-            )
-    }
+          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
+          .subscribe(
+              HeadlineData => {
+                  this.headlineData = HeadlineData;
+              },
+              err => {
+                  console.log("Error loading AI headline data for League Page", err);
+              }
+          )
+    } //getLeagueHeadlines
+
+
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
