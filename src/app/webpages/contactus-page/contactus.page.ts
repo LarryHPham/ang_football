@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 
 //globals
 import { GlobalSettings } from '../../global/global-settings';
+import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //services
@@ -111,6 +112,7 @@ export class ContactUsPage {
 
     ngAfterViewInit(){
       this.metaTags();
+      GlobalFunctions.setPreboot();
     }
 
 

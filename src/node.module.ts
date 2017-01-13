@@ -49,6 +49,5 @@ export function getResponse() {
     Meta,
   ]
 })
-export class MainModule {
 
-}
+export class MainModule {}

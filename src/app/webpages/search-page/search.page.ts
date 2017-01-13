@@ -5,6 +5,7 @@ import { isBrowser } from 'angular2-universal';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from '../../global/global-functions';
 import { VerticalGlobalFunctions } from '../../global/vertical-global-functions';
 
 //services
@@ -63,6 +64,7 @@ export class SearchPage{
         }
 
         this._searchService.getSearch()
+          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(
             data => {
             let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);

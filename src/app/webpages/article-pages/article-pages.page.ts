@@ -108,6 +108,7 @@ export class ArticlePages implements OnInit {
 
   getArticles() {
     this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport, this.type)
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(Article => {
           try {
             this.articleData = Article;

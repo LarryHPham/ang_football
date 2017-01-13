@@ -15,6 +15,8 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var uglifyJS = require('webpack-uglify-js-plugin');
 
+
+
 export var commonPlugins = [
   new webpack.ContextReplacementPlugin(
     // The (\\|\/) piece accounts for path separators in *nix and Windows
@@ -34,9 +36,9 @@ export var commonPlugins = [
   }),
 
   // minify JS
-  new webpack.optimize.UglifyJsPlugin({
-    compressor: { warnings: false }
-  }),
+  // new webpack.optimize.UglifyJsPlugin({
+  //   compressor: { warnings: false }
+  // }),
 
   //provide third pary plugins
   new webpack.ProvidePlugin({
@@ -44,7 +46,6 @@ export var commonPlugins = [
     jQuery: "jquery",
     'jquery': "jquery",
     Fuse: "fuse.js",
-    Highcharts: "Highcharts",
     highcharts: "highcharts",
   }),
 
@@ -103,7 +104,8 @@ export var clientConfig = {
     __dirname: true,
     __filename: true,
     process: true,
-    Buffer: false
+    Buffer: true,
+    time: true
   }
 }; //clientConfig
 
@@ -132,6 +134,7 @@ export var serverConfig = {
     /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020/
   ),
   node: {
+    time: true,
     global: true,
     crypto: true,
     __dirname: true,

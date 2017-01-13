@@ -190,6 +190,7 @@ export class PickTeamPage{
     }
 
 
+
     getGeoLocation(scope) {
       var defaultState = 'ca';
       this._geoLocation.grabLocation()
@@ -207,8 +208,11 @@ export class PickTeamPage{
       );
     } //getGeoLocation
 
+
+
     getData(scope, geoLocation?){
       this._pickateamPageService.getLandingPageService(scope, geoLocation)
+        .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
         .subscribe(data => {
           this.teams = data.league;
         })
