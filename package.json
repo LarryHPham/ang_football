@@ -1,10 +1,10 @@
 {
-  "name": "universal-starter",
+  "name": "TouchdownLoyal",
   "version": "2.0.0",
-  "description": "Angular 2 Universal starter kit by @AngularClass",
+  "description": "SNT MEDIA Football Vertical",
   "repository": {
     "type": "git",
-    "url": "https://github.com/angular/universal-starter.git"
+    "url": "https://github.com/passit/TouchdownLoyal-frontend.git"
   },
   "scripts": {
     "watch": "webpack --watch",
@@ -19,9 +19,14 @@
     "build:prod:json": "webpack --config webpack.prod.config.ts --json | webpack-bundle-size-analyzer",
     "ngc": "ngc -p tsconfig.aot.json",
     "prestart": "npm run build",
-    "server": "forever start -c nodemon --exitcrash dist/server/index.js",
+    
+    "server": "pm2 start ecosystem.json && pm2 logs",
+    "pm2": "pm2",
+    "start": "pm2 start ecosystem.json && pm2 logs",
+    "restart": "npm stop && npm start",
+    "stop": "pm2 delete ecosystem.json",
+
     "debug:server": "node-nightly --inspect --debug-brk dist/server/index.js",
-    "start": "npm run server",
     "debug:start": "npm run build && npm run debug:server",
     "predebug": "npm run build",
     "debug:build": "node-nightly --inspect --debug-brk node_modules/webpack/bin/webpack.js",
@@ -51,7 +56,6 @@
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.9.0",
-    "forever": "^0.15.3",
     "fuse.js": "^2.2.0",
     "hammerjs": "^2.0.8",
     "highcharts": "^4.2.3",
@@ -61,6 +65,7 @@
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.10",
     "morgan": "^1.7.0",
+    "pm2": "^2.2.3",
     "preboot": "~4.5.2",
     "rxjs": "5.0.0-beta.12",
     "underscore": "^1.8.3",
