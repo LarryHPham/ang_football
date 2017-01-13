@@ -86,6 +86,7 @@ export class ListOfListsPage implements OnInit {
 
     getListOfListsPage(urlParams, logoUrl?: string) {
         this.listService.getListOfListsService(urlParams, urlParams.target, "page")
+          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(
             list => {
                 if(list.listData.length == 0){//makes sure it only runs once
@@ -169,7 +170,7 @@ export class ListOfListsPage implements OnInit {
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
-      this._seoService.setMetaRobots('INDEX, FOLLOW');      
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc +". Know more about football.");
       this._seoService.setOgType('Website');

@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
-import { isBrowser } from 'angular2-universal';
+import { isBrowser, prebootComplete } from 'angular2-universal';
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
 @Injectable()
 
 export class GlobalFunctions {
+   private static prebootFired:boolean = false;
 
     /*convert from inches to ft-in format*/
     static inchesToFeet(inch):string {
@@ -918,4 +919,14 @@ export class GlobalFunctions {
         return batchLoadIndex;
       }
     } //onScroll
+
+    // this function is to fire preboot for angular universal, fires the transition of server-side view to client view
+    static setPreboot() {
+      if(isBrowser && !this.prebootFired) {
+        setTimeout(function () {
+          prebootComplete();
+          this.prebootFired = true;
+        }, 400);
+      }
+    } //setPreboot
 }

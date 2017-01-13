@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from '../../global/global-functions';
 
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
@@ -163,6 +164,7 @@ export class SchedulesPage implements OnInit {
     }
     if (teamId) {
       this.profHeadService.getTeamProfile(Number(teamId))
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
         data => {
           // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
@@ -203,6 +205,7 @@ export class SchedulesPage implements OnInit {
     } else {
     // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
     this.profHeadService.getLeagueProfile(this.scope)
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
         data => {
           var currentDate = new Date();// no stat for date so will grab current year client is on

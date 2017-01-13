@@ -63,7 +63,11 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
 
     Meta,
 
-    // { provide: AUTO_PREBOOT, useValue: false } // turn off auto preboot complete
+    //AUTO_PREBOOT is set to false so we can manually call the preboot function after all content is loaded per page to avoid page flicker when transitioning from server-sive view to client view
+    {
+      provide: AUTO_PREBOOT,
+      useValue: false
+    } // turn off auto preboot complete
   ]
 })
 export class MainModule {

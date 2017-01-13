@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 //globals
+import { GlobalFunctions } from '../../global/global-functions';
 import { GlobalSettings } from "../../global/global-settings";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
@@ -57,35 +58,37 @@ export class DraftHistoryPage implements OnInit {
 
         if (teamId) {
             this._profileService.getTeamProfile(teamId)
-                .subscribe(
-                data => {
-                    // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
-                    data.profileName = data.headerData.teamMarket ? data.headerData.teamMarket + " " + data.profileName : data.profileName;
-                    var pageNameForTitle = this.whatProfile + " - " + data.profileName;
-                    this.profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, pageNameForTitle);
-                    this.profileData = data;
-                    this.metaTags(this.profileHeaderData);
-                },
-                err => {
-                    this.isError = true;
-                    console.log('Error: draftData Profile Header API: ', err);
-                }
-                );
+              .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+              .subscribe(
+              data => {
+                  // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
+                  data.profileName = data.headerData.teamMarket ? data.headerData.teamMarket + " " + data.profileName : data.profileName;
+                  var pageNameForTitle = this.whatProfile + " - " + data.profileName;
+                  this.profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, pageNameForTitle);
+                  this.profileData = data;
+                  this.metaTags(this.profileHeaderData);
+              },
+              err => {
+                this.isError = true;
+                console.log('Error: draftData Profile Header API: ', err);
+              }
+            );
         }
         else {
             this._profileService.getLeagueProfile()
-                .subscribe(
-                data => {
-                    // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
-                    this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, data.headerData.leagueAbbreviatedName + ' ' + this.whatProfile);
-                    this.profileData = data;
-                    this.metaTags(this.profileHeaderData);
-                },
-                err => {
-                    this.isError = true;
-                    console.log('Error: draftData Profile Header API: ', err);
-                }
-                );
+              .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+              .subscribe(
+              data => {
+                  // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));
+                  this.profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, data.headerData.leagueAbbreviatedName + ' ' + this.whatProfile);
+                  this.profileData = data;
+                  this.metaTags(this.profileHeaderData);
+              },
+              err => {
+                  this.isError = true;
+                  console.log('Error: draftData Profile Header API: ', err);
+              }
+              );
         }
     } //ngOnInit
 

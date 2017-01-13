@@ -96,6 +96,7 @@ export class ListPage {
       } else {
         this.getStandardList(urlParams, urlParams.season);
       }
+      GlobalFunctions.setPreboot();
     } //getListPage
 
 

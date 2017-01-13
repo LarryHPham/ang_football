@@ -62,7 +62,9 @@ export class SeasonStatsPage implements OnInit {
 
     ngOnInit() {
         if (this.pageParams.playerId) {
-            this._profileService.getPlayerProfile(this.pageParams.playerId).subscribe(
+            this._profileService.getPlayerProfile(this.pageParams.playerId)
+              .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+              .subscribe(
                 data => {
                     this.profileLoaded = true;
                     this.pageParams = data.pageParams;
