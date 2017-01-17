@@ -75,6 +75,7 @@ export class ArticlePages implements OnInit {
         this.trendingData = null;
         this.trendingLength = 10;
         this.isTrendingMax = false;
+        this.isFantasyReport = false;
         this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
         if (params.partnerID != null) {
           this.partnerId = params.partnerID;
