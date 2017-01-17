@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 //globals
+import { GlobalFunctions } from '../../global/global-functions';
 import { GlobalSettings } from '../../global/global-settings';
 import { SidekickWrapper } from "../../fe-core/components/sidekick-wrapper/sidekick-wrapper.component";
 
@@ -44,5 +45,6 @@ export class ErrorPage {
   loadData(partnerID:string) {
     this.pageLink = GlobalSettings.getHomePage(partnerID);
     this.errorMessage = "Oops! That page doesn't exist! Try Refreshing or go to <a class='text-master' href='/'"+ this.pageLink +"'> our home page</a>!";
+    GlobalFunctions.setPreboot();
   } //loadData
 }

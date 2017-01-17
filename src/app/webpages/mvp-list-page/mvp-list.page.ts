@@ -145,20 +145,21 @@ export class MVPListPage implements OnInit {
         // };
 
         this._profileService.getLeagueProfile(this.scope)
-            .subscribe(data => {
-                this.profileHeaderData = {
-                    imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),
-                    imageRoute: ["League-page"],
-                    text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
-                    text2: 'United States',
-                    text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
-                    icon: 'fa fa-map-marker'
-                };
-                this.loadTabs();
-                this.metaTags(this.profileHeaderData);
-            }, err => {
-                console.log("Error loading profile");
-            });
+          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .subscribe(data => {
+              this.profileHeaderData = {
+                  imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),
+                  imageRoute: ["League-page"],
+                  text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
+                  text2: 'United States',
+                  text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
+                  icon: 'fa fa-map-marker'
+              };
+              this.loadTabs();
+              this.metaTags(this.profileHeaderData);
+          }, err => {
+              console.log("Error loading profile");
+          });
     } //startUp
 
 

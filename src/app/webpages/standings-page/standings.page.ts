@@ -145,6 +145,7 @@ export class StandingsPage {
                 }
             ]
         }
+        GlobalFunctions.setPreboot(); // call preboot after last piece of data is returned on page
         return this.glossary;
     } //getGlossaryValue
 
@@ -153,7 +154,8 @@ export class StandingsPage {
     getTabs() {
         this.getGlossaryValue();
         if (this.pageParams.teamId) {
-            this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
+            this._profileService.getTeamProfile(this.pageParams.teamId)
+            .subscribe(
                 data => {
                     this.profileLoaded = true;
                     this.pageParams = data.pageParams;

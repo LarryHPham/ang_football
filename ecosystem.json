@@ -1,0 +1,11 @@
+{
+  "name": "TouchdownLoyal",
+  "script": "dist/server/index.js",
+  "watch": ["dist"],
+  "ignore_watch" : ["node_modules", "logs"],
+  "log_date_format": "YYYY-MM-DD HH:mm Z",
+  "error_file": "/dev/null",
+  "out_file": "/dev/null",
+  "autorestart": true,
+  "env": {}
+}

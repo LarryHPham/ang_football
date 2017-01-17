@@ -10,7 +10,7 @@
 .main-logo{
   position: absolute;
   top:0;
-  left: 85px;
+  left: 20px;
   z-index: 9999;
   img{
     width: 82px;
@@ -21,13 +21,23 @@
     cursor: pointer;
   }
 }
+.header-logo{
+  position: absolute;
+  top:20px;
+  left: 20px;
+  z-index: 9999;
+  img{
+    width: 140px;
+    height: 27px;
+  }
+}
 .header{
   .no-select;
   width:100%;
   height: auto;
   top: 0px;
   &.slide-down {
-    transition: top .5s ease-out;
+    transition: top .35s ease-out;
   }
   .ddb-parbutton {
     line-height: 2.5;
@@ -41,6 +51,8 @@
   }
   &-bottom{
     width:100%;
+    background: @textEmphasisGrey;
+    height: 35px;
   }
   &-top{
     width:100%;
@@ -64,11 +76,6 @@
       .fa-bars {
         margin: 13px;
       }
-    }
-    .header-logo {
-      top: 20px !important;
-      left: 85px !important;
-      z-index: 9999;
     }
     .header-search {
       // height: 45px !important;
@@ -129,24 +136,10 @@
       }
     }
   }//header-hamburger ends
-  &-logo{
-    position: absolute;
-    left: ~"calc(50% - 70px)";
-    top: 10px;
-    .flexDisplay;
-    .flexAlignItems(center);
-    a{
-      pointer-events: auto;
-      cursor: pointer;
-    }
-    img{
-      width: 140px;
-      height: 27px;
-    }
-  }
   &-right{
     width:100%;
     height:100%;
+    position: relative;
     // .flexDisplay;
   }
   // modify search style begins
@@ -284,8 +277,6 @@
       height: 65px;
     }
     &-logo{
-      left: ~"calc(50% - 92px)";
-      top: 15px;
       img{
         width: 184px;
         height: 35px;

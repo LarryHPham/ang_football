@@ -97,20 +97,22 @@ export class TeamRosterPage implements OnInit {
 
     getData() {
       if ( this.pageParams.teamId ) {
-        this._profileService.getTeamProfile(this.pageParams.teamId).subscribe(
-          data => {
-            this.profileLoaded = true;
-            this.pageParams = data.pageParams;
-              data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
-            this.titleData = this._profileService.convertTeamPageHeader(this.scope, data, this._rosterService.getPageTitle(data.teamName));
-            this.metaTags(this.titleData);
-            this.setupRosterData();
-          },
-          err => {
-            this.hasError = true;
-            console.log("Error getting team profile data for " + this.pageParams.teamId, err);
-          }
-        );
+        this._profileService.getTeamProfile(this.pageParams.teamId)
+          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .subscribe(
+            data => {
+              this.profileLoaded = true;
+              this.pageParams = data.pageParams;
+                data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
+              this.titleData = this._profileService.convertTeamPageHeader(this.scope, data, this._rosterService.getPageTitle(data.teamName));
+              this.metaTags(this.titleData);
+              this.setupRosterData();
+            },
+            err => {
+              this.hasError = true;
+              console.log("Error getting team profile data for " + this.pageParams.teamId, err);
+            }
+          );
       }
       else {
         //TODO - Load error page since a team is required to show a roster?

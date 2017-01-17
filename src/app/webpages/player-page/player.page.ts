@@ -167,7 +167,9 @@ export class PlayerPage{
         this.profileName = data.headerData.playerFullName;
         this.teamName = data.headerData.teamFullName;
         this.teamID = data.headerData.teamId;
+
         this.pageParams['teamID'] = this.teamID;
+        this.pageParams['teamName'] = this.teamName;
         this.dateParam = {
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
@@ -293,6 +295,7 @@ export class PlayerPage{
   private dailyUpdateModule(playerId: number) {
     this.imageConfig = this._dailyUpdateService.getImageConfig();
     this._dailyUpdateService.getPlayerDailyUpdate(playerId)
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
       },

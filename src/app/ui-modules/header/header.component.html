@@ -17,15 +17,14 @@
           </div>
         </div>
       </div>
-
+    </div>
+    <div class="header-right">
       <div *ngIf="!partnerID" class="main-logo">
         <a [routerLink]="linkHome"><img src={{logoUrl}} alt="TouchdownLoyal Logo" /></a>
       </div>
       <div *ngIf="partnerID" class="header-logo">
         <a [routerLink]="linkHome"><img src={{partnerLogoUrl}} alt="Football Logo" /></a>
       </div>
-    </div>
-    <div class="header-right">
       <div class="header-share st_sharethis_large"><i class="fa fa-share-alt"></i></div>
       <!-- <div class="header-search searchcheck" [class.active]="isSearchOpened">
         <div class="header-search-searchBtn searchcheck" [class.active]="isSearchOpened" (keydown)="searchKeydown($event)" (click)="openSearch($event)">

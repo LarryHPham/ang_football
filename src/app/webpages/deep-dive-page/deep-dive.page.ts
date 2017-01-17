@@ -4,7 +4,7 @@ import { SchedulesService } from '../../services/schedules.service';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { GeoLocation } from "../../global/global-service";
-import { isNode } from "angular2-universal";
+import { isNode, isBrowser, prebootComplete } from "angular2-universal";
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { SeoService } from '../../seo.service';
@@ -53,6 +53,8 @@ export class DeepDivePage {
   private isPartnerZone: boolean = false;
   private _routeSubscription: any;
 
+  public prebootHasRun: boolean = false;
+
   constructor(
     public renderer: Renderer,
     private _activatedRoute: ActivatedRoute,
@@ -65,12 +67,7 @@ export class DeepDivePage {
   ) {
     this._routeSubscription = this._activatedRoute.params.subscribe(
       (params: any) => {
-        this.callCount = 1;
-        this.blockIndex = 0;
-        this.sideScrollData = null;
-        this.isLoading = false;
-        this.carouselData = null;
-        this.blockIndex = 1;
+        this.resetScopedVariables();
         this.scope = params['scope'] != null ? params['scope'].toLowerCase() : 'nfl';
 
         this.profileName = this.scope == 'home' ? 'Football' : this.scope.toUpperCase();
@@ -81,6 +78,16 @@ export class DeepDivePage {
         this.getGeoLocation();
       }
     );
+  }
+
+  resetScopedVariables(){
+    this.safeCall = true;
+    this.callCount = 1;
+    this.blockIndex = 0;
+    this.sideScrollData = null;
+    this.isLoading = false;
+    this.carouselData = null;
+    this.blockIndex = 1;
   }
 
   //Subscribe to getGeoLocation in geo-location.service.ts. On Success call getNearByCities function.
@@ -176,25 +183,27 @@ export class DeepDivePage {
 
   //api for Schedules
   private getSideScroll() {
-    // let self = this;
-    // if (this.safeCall && this.scope != 'home') {
-    //   this.safeCall = false;
-    //   this.scope = this.scope.toLowerCase();
-    //   let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
-    //   this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-    //     if (this.sideScrollData == null) {
-    //       this.sideScrollData = sideScrollData;
-    //     }
-    //     else {
-    //       sideScrollData.forEach(function(val, i) {
-    //         self.sideScrollData.push(val);
-    //       })
-    //     }
-    //     this.safeCall = true;
-    //     this.callCount++;
-    //     this.scrollLength = this.sideScrollData.length;
-    //   }, null, null)
-    // }
+    let self = this;
+    if (this.safeCall && this.scope != 'home') {
+      this.safeCall = false;
+      this.scope = this.scope.toLowerCase();
+      let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
+      this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
+        if (this.sideScrollData == null) {
+          this.sideScrollData = sideScrollData;
+        }
+        else {
+          sideScrollData.forEach(function(val, i) {
+            self.sideScrollData.push(val);
+          })
+        }
+        if(sideScrollData.length > 0){// if data returned is an emptry array then dont run this api call anymore.
+          this.safeCall = true;
+        }
+        this.callCount++;
+        this.scrollLength = this.sideScrollData.length;
+      }, null, null)
+    }
   }
 
 
@@ -242,12 +251,14 @@ export class DeepDivePage {
         console.log("Error getting first article stack data");
       });
     this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(data => {
         this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
       },
       err => {
         console.log("Error getting first AI article batch data");
-      });
+      }
+    );
   }
 
   callModules() {
