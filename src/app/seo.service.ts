@@ -100,11 +100,6 @@ export class SeoService {
 
     public getPageUrl() {
       this.pageUrl = "";
-      if(isNode){
-        console.log('REQUESTREQUESTREQUEST',Zone.current.get('req'));
-        console.log('RESPONSERESPONSERESPONSE',Zone.current.get('res'));
-        console.log('GRAB ORIGIN',Zone.current.get('originUrl'));
-      }
       if(isNode) {
         this.pageUrl = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
       }else{
