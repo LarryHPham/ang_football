@@ -201,7 +201,7 @@ export class GlobalSettings {
       var partner = false;
       var isHome = false;
       var hide = false;
-      var hostname = isNode ? Zone.current.get('originUrl') : window.location.hostname;
+      var hostname = isNode ? GlobalSettings._proto + "//" + Zone.current.get('originUrl') : window.location.hostname;
       var partnerPage = /mytouchdownzone/.test(hostname) || /^football\./.test(hostname);
       var name = isNode ? Zone.current.get('requestUrl') : window.location.pathname.split('/')[1];
       var isSubdomainPartner = /^football\./.test(hostname);

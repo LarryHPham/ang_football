@@ -70,7 +70,6 @@ function ngApp(req, res) {
     preboot: true,
     baseUrl: '/',
     requestUrl: req.originalUrl,
-    originUrl: `http://localhost:${ app.get('port') }`
   });
 }
 
