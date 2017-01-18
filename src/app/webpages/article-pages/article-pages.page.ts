@@ -75,6 +75,7 @@ export class ArticlePages implements OnInit {
         this.trendingData = null;
         this.trendingLength = 10;
         this.isTrendingMax = false;
+        this.isFantasyReport = false;
         this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
         if (params.partnerID != null) {
           this.partnerId = params.partnerID;
@@ -118,6 +119,7 @@ export class ArticlePages implements OnInit {
             }
             this.isTrendingMax = false;
             this.getTrendingArticles(this.eventID);
+            this.metaTags(this.articleData);
           } catch (e) {
             this.error = true;
             var self = this;
@@ -254,15 +256,14 @@ export class ArticlePages implements OnInit {
   private metaTags(data) {
     //create meta description that is below 160 characters otherwise will be truncated
     var metaData = this.isArticle ? data : data.data;
-    let image;
-    var keyword = this.isArticle ? "keywords" : "keyword";
+    let image, metaDesc;
     var teams = [];
     var players = [];
     var searchString;
     var searchArray = [];
     if (this.isArticle) {
-      var headerData = data['article_data']['metadata'];
-      var metaDesc = data['article_data'].meta_headline;
+      var headerData = data['articleContent']['metadata'];
+      metaDesc = data['articleContent'].meta_headline;
       if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
         headerData['team_name'].forEach(function (val) {
           searchArray.push(val);
@@ -275,19 +276,19 @@ export class ArticlePages implements OnInit {
           players.push(val);
         });
       }
-    }
-    if (metaData[keyword] && metaData[keyword].constructor === Array) {
-      metaData[keyword].forEach(function (val) {
-        searchArray.push(val);
-      });
-      searchString = searchArray.join(',');
+      if (data['articleContent']['keyword'] && data['articleContent']['keyword'].constructor === Array) {
+        data['articleContent']['keyword'].forEach(function (val) {
+          searchArray.push(val);
+        });
+        searchString = searchArray.join(',');
+      } else {
+        searchArray.push(data['articleContent']['keyword']);
+        searchString = searchArray.join(',');
+      }
+      image = metaData['images']['imageData'][0];
     } else {
-      searchString = metaData[keyword];
-    }
-    if (this.imageData != null) {
-      image = this.imageData[0];
-    } else {
-      image = this.isArticle ? metaData.image_url : metaData.thumbnail;
+      metaDesc = data.title;
+      image = GlobalSettings.getImageUrl(metaData.imagePath);
     }
     this._seoService.setCanonicalLink();
     this._seoService.setOgTitle(metaData.title);
@@ -299,17 +300,17 @@ export class ArticlePages implements OnInit {
     this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
     this._seoService.setIsArticle(this.isArticle.toString());
     this._seoService.setSearchType("article");
-    this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
+    this._seoService.setSource(this.isArticle ? "snt_ai" : "TCA");
     this._seoService.setArticleId(this.eventID);
     this._seoService.setArticleTitle(metaData.title);
-    this._seoService.setKeyword(this.isArticle ? metaData['keywords'] : metaData.keyword);
-    this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date : metaData.publishedDate);
-    this._seoService.setAuthor(metaData.author);
-    this._seoService.setPublisher(metaData.publisher);
+    this._seoService.setKeyword(this.isArticle ? metaData['articleContent']['keyword'] : metaData.keyword);
+    this._seoService.setPublishedDate(this.isArticle ? metaData['articleContent'].publication_date : metaData.publishedDate);
+    this._seoService.setAuthor(this.isArticle ? data['articleContent'].author : metaData.author);
+    this._seoService.setPublisher(this.isArticle ? data['articleContent'].publisher : metaData.publisher);
     this._seoService.setImageUrl(image);
     this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
     this._seoService.setArticleUrl();
-    this._seoService.setArticleType(this.isArticle ? metaData.article_type : this.scope);
+    this._seoService.setArticleType(this.isArticle ? metaData.articleType : this.scope);
     this._seoService.setSearchString(searchString);
   } //metaTags
 

@@ -52,6 +52,7 @@ export class ArticleDataService {
         rawUrl: window.location.href,
         pageIndex: articleType[0],
         title: data['data'][0]['article_data'].title,
+        teaser: data['data'][0].teaser,
         date: GlobalFunctions.sntGlobalDateFormatting(data['data'][0]['article_data'].publication_date * 1000, "timeZone"),
         articleContent: data['data'][0]['article_data'],
         teamId: (isFantasyReport || data['data'][0].team_id != null) ?
