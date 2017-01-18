@@ -26,9 +26,9 @@
     "server": "pm2 start ecosystem.json && pm2 logs",
     "pm2": "pm2",
     "start": "pm2 start ecosystem.json && pm2 logs",
-    "restart": "npm stop && npm start",
-    "refresh": "npm stop && npm run server",
-    "stop": "pm2 delete ecosystem.json",
+    "restart": "npm delete && npm start",
+    "refresh": "pm2 stop ecosystem.json && npm run server && pm2 logs",
+    "delete": "pm2 delete ecosystem.json",
 
     "predebug": "npm run build",
     "debug": "node --debug-brk dist/server/index.js",

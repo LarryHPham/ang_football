@@ -229,9 +229,9 @@ export class PlayerPage{
     //grab domain for json schema
     let domainSite;
     if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
-      domainSite = Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }else{
-      domainSite = Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
 
     title = title  + ' ' + record;
