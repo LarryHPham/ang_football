@@ -72,7 +72,8 @@ function ngApp(req, res) {
     req,
     res,
     // time: true, // use this to determine what part of your app is slow only in development
-    preboot: false,
+    preboot: true,
+    appRoot: 'app-domain',
     baseUrl: '/',
     requestUrl: req.originalUrl,
     originUrl: `http://localhost:${ app.get('port') }`

@@ -11,7 +11,7 @@
     </form>
     <div *ngIf="searchInput.hasSuggestions && dropdownIsFocused && hasInputText" class="search-dropdown searchcheck">
         <div class="search-dropdown-caret"></div>
-        <div class="search-dropdown-title">Suggestions</div>
+        <!-- <div class="search-dropdown-title">Suggestions</div> -->
         <div *ngIf="dropdownList.length === 0" class="autocomplete-error">
           <i class="fa fa-search-icon"></i>
           <span class="error-text">
@@ -21,9 +21,9 @@
         <ul *ngIf="dropdownList.length > 0" (click)="unFocus()" (mouseout)="resetSelected()">
           <li class="search-dropdown-items searchcheck" *ngFor="let item of dropdownList; let i = index;" (mouseover)="itemHovered(i)">
             <a [routerLink]="item.routerLink" class="search-dropdown-item searchcheck" [ngClass]="{active: (i === selectedIndex)}">
-              <!-- <span class="search-dropdown-item-img"><circle-image [data]="item.imageUrl"></circle-image></span> -->
+              <span class="search-dropdown-item-img"><circle-image [data]="item.imageUrl"></circle-image></span>
               <span class="search-dropdown-item-title" [innerHtml]="item.title"></span>
-              <!-- <i class="fa fa-angle-right"></i> -->
+              <i class="fa fa-angle-right"></i>
             </a>
           </li>
         </ul>
