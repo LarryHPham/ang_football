@@ -52,8 +52,8 @@ app.use(compression());
 app.use(morgan('dev'));
 
 function cacheControl(req, res, next) {
-  // instruct browser to revalidate in 60 seconds
-  res.header('Cache-Control', 'max-age=60');
+  // instruct browser to revalidate in 3600 seconds  (1 hour)
+  res.header('Cache-Control', 'max-age=3600');
   next();
 }
 // Serve static files
