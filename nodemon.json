@@ -1,7 +1,8 @@
 {
   "watch": [
     "dist",
-    "src/index.html"
+    "src/index.html",
+    "src/app"
   ],
   "ext" : "js ts json html"
 }

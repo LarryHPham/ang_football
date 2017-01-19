@@ -1,8 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
 import { isBrowser, prebootComplete } from 'angular2-universal';
+import { getInlineCode } from 'preboot';
+
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
+
 @Injectable()
 
 export class GlobalFunctions {
@@ -922,6 +925,11 @@ export class GlobalFunctions {
 
     // this function is to fire preboot for angular universal, fires the transition of server-side view to client view
     static setPreboot() {
+      /// current in dev, need to find the correct way to pass custom eventSelectors to preboot
+      // if (isNode) {
+      //   getInlineCode([{selector: 'span', events: ['click'], preventDefault: true, freeze: true}]);
+      // }
+
       if(isBrowser && !this.prebootFired) {
         setTimeout(function () {
           prebootComplete();
