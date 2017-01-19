@@ -148,7 +148,7 @@ export class GlobalSettings {
     }
 
     static storedPartnerId(partnerId?) {
-      if(partnerId != null){
+      if(partnerId != null && this._partnerId == null){
         this._partnerId = partnerId;
       }
       return this._partnerId;

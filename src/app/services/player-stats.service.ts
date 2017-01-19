@@ -66,7 +66,6 @@ export class PlayerStatsService{
         }
 
         });
-
         if(seasonTabClicked){
                this.seasonId = tabData[1];
 

@@ -100,29 +100,33 @@ export class PickTeamPage{
         this.isPartnerZone = partnerHome;
 
         this.scope = param.scope;
-        this.getGeoLocation(this.scope);
 
-        //set the active league variables based on scope
-        if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
-          this.activeDivision = this._collegeDivisonFullAbbrv;
-          this.activeDivisionSegments = this._collegeDivisionSegments;
-        }
-        else {
-          this.activeDivision = this._sportLeagueAbbrv;
-          this.activeDivisionSegments = this._sportLeagueSegments;
-        }
+        //check if there is a cached dataset available for geolocation
+        this._geoLocation.grabLocation().subscribe( res => {
+          this.setLocationHeaderString(res.state);
+          this.getData(this.scope, res.state);
+          //set the active league variables based on scope
+          if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
+            this.activeDivision = this._collegeDivisonFullAbbrv;
+            this.activeDivisionSegments = this._collegeDivisionSegments;
+          }
+          else {
+            this.activeDivision = this._sportLeagueAbbrv;
+            this.activeDivisionSegments = this._sportLeagueSegments;
+          }
 
-        this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
-        this.homeSubHeading1 = "Find the sports information you need to show your loyalty";
-        this.homeHeading2 = "PICK YOUR FAVORITE <span class='text-heavy'>" + this.activeDivision + " TEAM</span>";
-        this.homeFeaturesTile1 = this.activeDivision + " Standings";
-        this.homeFeaturesTile3 = this.activeDivision + " Scores";
-        this.homeFeaturesTile4 = this.activeDivision + " Schedules";
-        this.homeFeaturesButton1 = "View " + this.activeDivision + " Standings";
-        this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
-        this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
+          this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
+          this.homeSubHeading1 = "Find the sports information you need to show your loyalty";
+          this.homeHeading2 = "PICK YOUR FAVORITE <span class='text-heavy'>" + this.activeDivision + " TEAM</span>";
+          this.homeFeaturesTile1 = this.activeDivision + " Standings";
+          this.homeFeaturesTile3 = this.activeDivision + " Scores";
+          this.homeFeaturesTile4 = this.activeDivision + " Schedules";
+          this.homeFeaturesButton1 = "View " + this.activeDivision + " Standings";
+          this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
+          this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
 
-        this.metaTags();
+          this.metaTags();
+        })
       }); //GlobalSettings.getParentParams
     } //constructor
 
@@ -144,44 +148,6 @@ export class PickTeamPage{
       this._seoService.setOgImage(image);
     } //metaTags
 
-
-
-    ngOnDestroy(){
-      this._routeSubscription.unsubscribe();
-    }
-
-    left(){
-      var counter = this.counter;
-      counter--;
-
-      //make a check to see if the array is below 0 change the array to the top level
-      if(counter < 0){
-        this.counter = (this.max - 1);
-      }else{
-        this.counter = counter;
-      }
-      this.changeMain(this.counter);
-    }
-
-    right(){
-      var counter = this.counter;
-      counter++;
-      //check to see if the end of the obj array of images has reached the end and will go on the the next obj with new set of array
-      if(counter == this.max){
-        this.counter = 0;
-      }else{
-        this.counter = counter;
-      }
-      this.changeMain(this.counter);
-    }
-
-    //this is where the angular2 decides what is the main image
-    changeMain(num){
-      if ( num < this.listData.length ) {
-        this.displayData = this.listData[num];
-      }
-    }
-
     setLocationHeaderString(state) {
       //only set for NCAAF
       if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
@@ -189,33 +155,17 @@ export class PickTeamPage{
       }
     }
 
-
-
-    getGeoLocation(scope) {
-      var defaultState = 'ca';
-      this._geoLocation.grabLocation()
-        .subscribe(
-          res => {
-            this.geoLocationState = res.state;
-            this.geoLocationCity = res.city;
-
-            this.setLocationHeaderString(this.geoLocationState);
-            this.getData(scope, this.geoLocationState);
-          },
-          err => {
-            this.geoLocationState = defaultState;
-          }
-      );
-    } //getGeoLocation
-
-
-
     getData(scope, geoLocation?){
       this._pickateamPageService.getLandingPageService(scope, geoLocation)
-        .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
-        .subscribe(data => {
-          this.teams = data.league;
-        })
+      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .subscribe(data => {
+        this.teams = data.league;
+      })
       var sampleImage = "./app/public/placeholder-location.jpg";
     } //getData
+
+    ngOnDestroy(){
+      this._routeSubscription.unsubscribe();
+    }
+
 }
