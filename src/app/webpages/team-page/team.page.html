@@ -17,10 +17,10 @@
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
         <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-        <articles-module
+        <!-- <articles-module
           *ngIf="headlineData"
           [headlineData]="headlineData"
-          [isLeague]="false"></articles-module>
+          [isLeague]="false"></articles-module> -->
         <!-- <responsive-widget *ngIf="headlineData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
         <box-scores
           *ngIf="dateParam"

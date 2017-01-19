@@ -66,7 +66,7 @@ export class GlobalSettings {
     private static _router: any;
 
     static getEnv(env:string):string {
-      if (env == "localhost" || env == "render"){
+      if (env == "localhost" || env == "render" || env == "render2"){
           env = "dev";
       }
       if (env != "dev" && env !="qa"){
