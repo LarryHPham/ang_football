@@ -377,8 +377,9 @@ export class BoxScoresService {
       };
       // convert data given into format needed for the schedule banner on module
       return {
-        home:[right],
-        away:[left]
+        gradient:Gradient.getGradientStyles([left.awayHex, right.homeHex]),
+        home:right,
+        away:left
       };
     }else{
       return null

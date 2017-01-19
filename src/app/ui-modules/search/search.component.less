@@ -44,7 +44,6 @@
     transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
     -webkit-transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
     color: @black;
-    font-size: 14px;
     background-color: @white;
     @media @tablet{
       padding: 0px 10px;
@@ -123,7 +122,6 @@
     z-index: 5;
     border-radius: 2px;
     @media @desktop-m {
-      width: 300px;
       right:0;
     }
     .autocomplete-error {
@@ -201,7 +199,7 @@
       .flexDisplay;
       .flexAlignItems(center);
       .flexJustify(flex-start);
-      padding: 7px 5px;
+      padding: 7px 17px;
       &.active{
         color: @white;
         background-color: @masterBrandColor;
@@ -212,13 +210,9 @@
         .border-1 img{
           box-shadow: 0 0 0 2px @white;
         }
-
       }
-
-      &-title{
-        padding: 0;
-        font-size: 14px;
-        font-style: normal;
+      &-title {
+        padding-left: 15px;
       }
     }
   }
