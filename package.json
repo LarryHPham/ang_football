@@ -9,30 +9,24 @@
   "scripts": {
     "watch": "webpack --watch",
     "watch:dev": "npm run server & npm run watch",
-
     "clean:dist": "rimraf dist",
     "clean:ngc": "rimraf **/*.ngfactory.ts **/*.css.shim.ts",
-
     "prebuild": "npm run clean:dist",
     "build": "webpack  --progress",
     "build:prod:ngc": "npm run clean:ngc && npm run ngc && npm run clean:dist && npm run build:prod",
     "build:prod:ngc:json": "npm run clean:ngc && npm run ngc && npm run clean:dist && npm run build:prod:json",
     "build:prod": "webpack --config webpack.prod.config.ts",
     "build:prod:json": "webpack --config webpack.prod.config.ts --json | webpack-bundle-size-analyzer",
-
     "ngc": "ngc -p tsconfig.aot.json",
     "prestart": "npm run build",
-
     "server": "pm2 start ecosystem.json && pm2 logs",
     "pm2": "pm2",
     "start": "pm2 start ecosystem.json && pm2 logs",
     "restart": "npm delete && npm start",
     "refresh": "pm2 stop ecosystem.json && npm run server && pm2 logs",
     "delete": "pm2 delete ecosystem.json",
-
     "predebug": "npm run build",
     "debug": "node --debug-brk dist/server/index.js",
-
     "debug:server": "node-nightly --inspect --debug-brk dist/server/index.js",
     "debug:start": "npm run build && npm run debug:server",
     "debug:build": "node-nightly --inspect --debug-brk node_modules/webpack/bin/webpack.js",
@@ -98,8 +92,8 @@
     "autoprefixer-loader": "^2.0.0",
     "awesome-typescript-loader": "^2.2.4",
     "cookie-parser": "^1.4.3",
-    "css-loader": "^0.15.1",
     "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.15.1",
     "express-interceptor": "^1.2.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "iltorb": "^1.0.13",
@@ -122,6 +116,7 @@
     "webpack-bundle-analyzer": "1.4.1",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-dev-server": "2.1.0-beta.11",
-    "webpack-merge": "~0.16.0"
+    "webpack-merge": "~0.16.0",
+    "webpack-node-externals": "^1.5.4"
   }
 }
