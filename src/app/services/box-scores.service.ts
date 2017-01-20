@@ -58,6 +58,7 @@ export class BoxScoresService {
   }
   //date needs to be the date coming in AS EST and come back as UTC
   var callURL = this._apiUrl+'/boxScores/'+GlobalSettings.getScope(profile)+'/'+teamId+'/'+ date;
+  console.log(callURL);
   return this.model.get(callURL)
     .map(data => {
       // transform the data to YYYY-MM-DD objects from unix

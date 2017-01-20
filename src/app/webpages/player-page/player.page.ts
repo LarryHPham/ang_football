@@ -159,7 +159,7 @@ export class PlayerPage{
     this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
         this.seasonBase = data.headerData['seasonBase'];
-        this.metaTags(data);
+        // this.metaTags(data);
         this.pageParams = data.pageParams;
         this.pageParams['partnerRoute'] = this.storedPartnerParam;
         this.pageParams['scope'] = this.scope;
