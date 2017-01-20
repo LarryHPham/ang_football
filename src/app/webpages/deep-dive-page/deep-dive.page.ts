@@ -160,7 +160,10 @@ export class DeepDivePage {
         title: 'Loyal to the NFL?',
         subtext: 'Stay up to date with everything NFL.',
         scope: 'NFL',
-        image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl,
+        // This is image has been hardcoded to prevent from the server side rendering from selecting a different random image
+        // from the client side rendering. It allows for a smoother transition between the two views
+        image: 'http://images.synapsys.us/02/nfl/stock/2016/11/image-carousel-nfl-05.jpg',
+        // image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl, // random selection
         buttonClass: 'carousel_toggle-button',
         buttonText: 'Visit the NFL Section',
         buttonScope: 'nfl'
@@ -169,7 +172,10 @@ export class DeepDivePage {
         title: 'Loyal to the NCAA?',
         subtext: 'Stay up to date with everything NCAA.',
         scope: 'NCAA',
-        image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf,
+        // This is image has been hardcoded to prevent from the server side rendering from selecting a different random image
+        // from the client side rendering. It allows for a smoother transition between the two views
+        image: 'http://images.synapsys.us/02/ncaaf/stock/2016/11/image-carousel-ncaaf-01.jpg',
+        // image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf, // random selection
         buttonClass: 'carousel_toggle-button',
         buttonText: 'Visit the College Section',
         buttonScope: 'ncaaf'
