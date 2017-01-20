@@ -571,7 +571,6 @@ export class TeamPage implements OnInit {
             if( e.value === tabData[1]){
                 return true;
             }
-
         });
         if (tabData[0].tabActive=="Special"){
             this.ptabName="Kicking";
