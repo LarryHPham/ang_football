@@ -66,7 +66,7 @@ export class GlobalSettings {
     private static _router: any;
 
     static getEnv(env:string):string {
-      if (env == "localhost" || env == "render"){
+      if (env == "localhost" || env == "render" || env == "render2"){
           env = "dev";
       }
       if (env != "dev" && env !="qa"){
@@ -148,7 +148,7 @@ export class GlobalSettings {
     }
 
     static storedPartnerId(partnerId?) {
-      if(partnerId != null){
+      if(partnerId != null && this._partnerId == null){
         this._partnerId = partnerId;
       }
       return this._partnerId;

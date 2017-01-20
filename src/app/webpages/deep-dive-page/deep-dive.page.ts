@@ -30,7 +30,6 @@ export class DeepDivePage {
   partnerData: any;
   profileName: string;
   geoLocation: string;
-  isPartner: string = "";
 
   sideScrollIcon: string;
   sideScrollData: any;
@@ -50,7 +49,6 @@ export class DeepDivePage {
   firstStackTop: any;
   firstStackRow: any;
 
-  private isPartnerZone: boolean = false;
   private _routeSubscription: any;
 
   public prebootHasRun: boolean = false;

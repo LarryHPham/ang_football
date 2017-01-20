@@ -19,10 +19,6 @@ ToC
 @small-grid:  ~"(min-width: 576px) and (max-width: 640px)";
 @fluid:       ~"(max-width: 999px)";
 // @desktop-xl:  ~"only screen and (min-width: 1500px)";
-@new-mobile:      ~"(max-width: 767px)";  // < 768px   bootstrap: sm
-@new-tablet:      ~"(min-width: 768px)";  // > 768px   bootstrap: md
-@new-desktop-m:   ~"(min-width: 992px)";  // > 992px   bootstrap: lg
-@new-desktop-l:   ~"(min-width: 1280px)"; // > 1280px  bootstrap: xl
 /***********/
 /* @Colors */
 /***********/
@@ -288,17 +284,17 @@ img{
   }
 }
 .hide-new320{
-  @media @new-mobile{
+  @media @mobile{
     display: none!important;
   }
 }
 .hide-768{
-  @media @new-tablet{
+  @media @tablet{
     display: none!important;
   }
 }
 .hide-under-lg{
-  @media @new-desktop-l{
+  @media @desktop-l{
     display: none!important;
   }
 }
