@@ -64,6 +64,7 @@
           [isProfilePage]="isProfilePage"
           [profileData]="profileData"
           [tabName]="ptabName"
+          [seasonBase]="seasonBase"
           (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
       </div>
 
@@ -94,6 +95,7 @@
 
       <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
         <comparison-module
+          *ngIf="comparisonModuleData"
           [modelData]="comparisonModuleData"
           [profileName]="profileHeaderData.profileName"
           [profileType]="'team'"

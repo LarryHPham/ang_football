@@ -137,15 +137,15 @@ export class HeaderComponent implements AfterContentChecked {
       this.scope = GlobalSettings.getScopeNow();
     }, 1000);
 
-    // with router deprecated being able to navigate correctly on different layered router outlets
+    // close menu if it is open and user clicks outside the menu
     var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
     this.linkHome = [VerticalGlobalFunctions.getWhiteLabel(), 'home'];
     this._renderer.listenGlobal('document', 'click', (event) => {
       var element = document.elementFromPoint(event.clientX, event.clientY);
-      if (element) {
+      if (element && isBrowser) {
         let menuCheck = element.className.indexOf("menucheck");
         let searchCheck = element.className.indexOf("searchcheck");
-        if (this.isOpened && menuCheck < 0) {
+        if (this.isOpened) {
           this.isOpened = false;
         }
         if (this.isSearchOpened && searchCheck < 0) {

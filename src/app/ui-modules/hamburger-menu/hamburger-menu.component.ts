@@ -39,6 +39,7 @@ export class HamburgerMenuComponent implements OnInit {
     this.menuInfo = data.menuInfo;
   }//loadData ends
   changeActiveLeague(division){
+    this.scope = division;
     this.loadData(division);
     var buttons = document.getElementsByClassName("hamburger-division-select-button");
     var i;

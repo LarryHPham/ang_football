@@ -152,7 +152,6 @@ export class TeamPage implements OnInit {
         this.teamID = param['teamID'];
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-
         var currentUnixDate = new Date().getTime();
         this.dateParam = {
           scope: 'team',//current profile page
@@ -564,6 +563,9 @@ export class TeamPage implements OnInit {
 
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
+         if(tabData[1] == null){
+           tabData[1] = this.seasonBase;
+         }
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
         var seasonArray = tabData[0];
         var seasonIds = seasonArray.seasonIds;
@@ -571,7 +573,6 @@ export class TeamPage implements OnInit {
             if( e.value === tabData[1]){
                 return true;
             }
-
         });
         if (tabData[0].tabActive=="Special"){
             this.ptabName="Kicking";

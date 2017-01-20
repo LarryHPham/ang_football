@@ -55,11 +55,6 @@ export class VerticalGlobalFunctions {
    * @returns the teamName => boston-red-sox,  teamId => ##, routeName => 'Team-page'
    */
   static formatTeamRoute(scope: string, teamName: string, teamId: string, ignoreRelPath?:boolean): Array<any> {
-    scope =
-      scope == GlobalSettings.getCollegeDivisionAbbrv().toLowerCase() ?
-      GlobalSettings.getCollegeDivisionFullAbbrv().toLowerCase() :
-      'nfl';
-
     var teamRoute: Array<any>;
     let route = this.getWhiteLabel();
 

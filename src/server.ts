@@ -52,8 +52,8 @@ app.use(compression());
 app.use(morgan('dev'));
 
 function cacheControl(req, res, next) {
-  // instruct browser to revalidate in 60 seconds
-  res.header('Cache-Control', 'max-age=60');
+  // instruct browser to revalidate in 86400  seconds  (1 day)
+  res.header('Cache-Control', 'max-age=86400 ');
   next();
 }
 // Serve static files
@@ -62,15 +62,30 @@ app.use('/app/ads', cacheControl, express.static(path.join(__dirname, 'app/ads')
 app.use('/app/public', cacheControl, express.static(path.join(__dirname, 'app/public'), {maxAge: 30}));
 app.use(cacheControl, express.static(path.join(ROOT, 'dist/client'), {index: false}));
 
+process.on('uncaughtException', function (err) {
+  console.error('Catching uncaught errors to avoid process crash', err);
+});
+
 function ngApp(req, res) {
-  res.render('index', {
-    req,
-    res,
-    // time: true, // use this to determine what part of your app is slow only in development
-    preboot: true,
-    baseUrl: '/',
-    requestUrl: req.originalUrl,
+
+  function onHandleError(parentZoneDelegate, currentZone, targetZone, error)  {
+    console.warn('Error in SSR, serving for direct CSR');
+    res.sendFile('index.html', {root: './src'});
+    return false;
+  }
+
+  Zone.current.fork({ name: 'CSR fallback', onHandleError }).run(() => {
+    res.render('index', {
+      req,
+      res,
+      // time: true, // use this to determine what part of your app is slow only in development
+      preboot: true,
+      appRoot: 'app-domain',
+      baseUrl: '/',
+      requestUrl: req.originalUrl,
+    });
   });
+
 }
 
 /**
