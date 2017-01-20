@@ -147,7 +147,7 @@ export class PlayerPage{
   } //constructor
 
 
-  // This function contains values that need to be manually reset when navigatiing from player page to player page
+  //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
     this.profileHeaderData = null;
     this.batchLoadIndex = 1;
