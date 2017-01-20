@@ -4,6 +4,7 @@ import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 import { GlobalFunctions } from "../global/global-functions";
 import { ModelService } from "../global/shared/model/model.service";
 import { Gradient } from "../global/global-gradient";
+import { isBrowser } from 'angular2-universal';
 
 declare var moment;
 
@@ -48,8 +49,8 @@ export class ArticleDataService {
         hasEventId: hasEventID,
         articleType: articleType[1],
         articleSubType: articleType[2],
-        isSmall: window.innerWidth < 640,
-        rawUrl: window.location.href,
+        isSmall: isBrowser ? window.innerWidth < 640 : false,
+        rawUrl: isBrowser ? window.location.href : GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl'),
         pageIndex: articleType[0],
         title: data['data'][0]['article_data'].title,
         teaser: data['data'][0].teaser,
@@ -343,6 +344,7 @@ export class ArticleDataService {
     data.forEach(function (val) {
       var articleData;
       if (val.event_id != currentArticleId) {
+        let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + Zone.current.get('originUrl');
         val["date"] = isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
           GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
         articleData = {
@@ -357,8 +359,8 @@ export class ArticleDataService {
           url: isArticle ? VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
             VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
           rawUrl: isArticle ?
-          window.location.protocol + "//" + window.location.host + "/" + scope + "/articles/postgame-report/" + val.event_id :
-          window.location.protocol + "//" + window.location.host + "/" + scope + "/articles/story/" + val.id
+          rawUrl + "/" + scope + "/articles/postgame-report/" + val.event_id :
+          rawUrl + "/" + scope + "/articles/story/" + val.id
         };
         if (articleData != null) {
           articles.push(articleData);

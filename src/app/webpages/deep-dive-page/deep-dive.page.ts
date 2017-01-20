@@ -149,7 +149,7 @@ export class DeepDivePage {
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
-    this._seoService.setOgImage('./app/public/mainLogo.png');
+    this._seoService.setOgImage('//images.synapsys.us/01/logos/football/2017/01/logos_football_01.svg');
   } //metaTags
 
 

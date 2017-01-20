@@ -131,7 +131,6 @@ export class PlayerPage{
     this.paramsub = this.activateRoute.params.subscribe(
       (param: any) => {
         this.routeChangeResets();
-
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
         this.teamName = param['teamName'];
         this.fullName = param['fullName'];
@@ -160,7 +159,7 @@ export class PlayerPage{
     this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
         this.seasonBase = data.headerData['seasonBase'];
-        this.metaTags(data);
+        // this.metaTags(data);
         this.pageParams = data.pageParams;
         this.pageParams['partnerRoute'] = this.storedPartnerParam;
         this.pageParams['scope'] = this.scope;
@@ -177,7 +176,7 @@ export class PlayerPage{
           // date: '2015-09-11'
         } //this.dateParam
 
-        this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data);
+        this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
         this.dailyUpdateModule(this.playerID);
 
         setTimeout(() => {  // defer loading everything below the fold
@@ -186,6 +185,7 @@ export class PlayerPage{
             this.getFantasyData(this.pageParams.playerId);
           }
           this.getBoxScores(this.dateParam);
+          this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
 
           //--Batch 3--//
