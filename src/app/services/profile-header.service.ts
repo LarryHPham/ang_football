@@ -138,9 +138,12 @@ export class ProfileHeaderService {
       } else return headerData.stat4;
   }
 
-  convertToPlayerProfileHeader(data: PlayerProfileData): ProfileHeaderData {
+  convertToPlayerProfileHeader(data: PlayerProfileData, scope?:string): ProfileHeaderData {
     if (!data.headerData) {
       return null;
+    }
+    if(scope != null){
+      this.scope = scope;
     }
     var headerData = data.headerData;
 
@@ -194,7 +197,6 @@ export class ProfileHeaderService {
         //         return headerData.class;
         //     } else return headerData.stat4;
         // }
-
       var header: ProfileHeaderData = {
         profileName: headerData.playerFullName,
         profileImageUrl: GlobalSettings.getImageUrl(headerData.playerHeadshotUrl),

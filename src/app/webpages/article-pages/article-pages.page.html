@@ -10,7 +10,7 @@
     <loading-component *ngIf="!articleData && !error"></loading-component>
     <!-- ARTICLE PAGE BEGINS -->
       <span *ngIf="articleData">
-          <share-links-component class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
+          <share-links-component *ngIf="rawUrl" class="articles-page-padding" [shareUrl]="rawUrl"></share-links-component>
           <h1 class="articles-page-title col-xs-12"><span [innerHTML]="articleData.title | safeHtml"></span></h1>
         <!--<sidekick-wrapper-ai [aiSidekick]="aiSidekick" [scope]="scope">-->
         <!-- IF IMAGES ARE AVAILABLE AND NOT VIDEO -->
