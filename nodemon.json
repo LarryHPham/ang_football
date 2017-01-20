@@ -1,8 +1,8 @@
 {
   "watch": [
     "dist",
-    "src/index.html",
-    "src"
+    "src",
+    "src/index.html"
   ],
   "ext" : "js ts json html less"
 }
