@@ -254,6 +254,8 @@ export class ArticlePages implements OnInit {
   }
 
   private metaTags(data) {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     var metaData = this.isArticle ? data : data.data;
     let image, metaDesc;

@@ -118,6 +118,8 @@ export class ContactUsPage {
 
 
     metaTags() {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
       this._seoService.setTitle('Contact Us');

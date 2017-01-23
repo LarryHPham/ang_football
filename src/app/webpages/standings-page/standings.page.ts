@@ -200,6 +200,8 @@ export class StandingsPage {
 
 
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       let header, metaDesc, link, title, ogTitle, image, titleName;
 
       //create meta description that is below 160 characters otherwise will be truncated

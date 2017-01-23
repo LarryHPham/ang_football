@@ -139,6 +139,8 @@ export class DeepDivePage {
 
 
   private metaTags() {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
     this._seoService.setTitle('Deep Dive');
