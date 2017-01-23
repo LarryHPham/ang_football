@@ -39,9 +39,6 @@ import { ModuleHeaderData } from "../../fe-core/components/module-header/module-
 
 //Libraries
 declare var moment;
-declare var jQuery: any; //used for scroll event
-
-
 
 @Component({
   selector: 'Player-page',
@@ -159,7 +156,7 @@ export class PlayerPage{
     this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
         this.seasonBase = data.headerData['seasonBase'];
-        // this.metaTags(data);
+        this.metaTags(data);
         this.pageParams = data.pageParams;
         this.pageParams['partnerRoute'] = this.storedPartnerParam;
         this.pageParams['scope'] = this.scope;
