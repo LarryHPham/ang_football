@@ -308,10 +308,10 @@ export class SeoService {
   }
 
   public removeMetaTags() {
-    var element = this.DOM.getElementsByTagName(this.document, 'meta'), index;
-    for (index = element.length - 1; index >= 0; index--) {
-      element[index].parentNode.removeChild(element[index]);
-    }
+    // var element = this.DOM.getElementsByTagName(this.document, 'meta'), index;
+    // for (index = element.length - 1; index >= 0; index--) {
+    //   element[index].parentNode.removeChild(element[index]);
+    // }
   }
 
   static checkData(data) {
