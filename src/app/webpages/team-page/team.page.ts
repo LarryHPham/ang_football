@@ -236,6 +236,8 @@ export class TeamPage implements OnInit {
 
 
   private metaTags(data) {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     // //create meta description that is below 160 characters otherwise will be truncated
     let header = data.headerData;
     let metaDesc =  header.description;
