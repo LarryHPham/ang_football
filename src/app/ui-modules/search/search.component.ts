@@ -226,21 +226,19 @@ export class Search {
         }
         let searchRoute: Array<any>;
         if (this.selectedIndex < 0 && (this.dropdownList.length > 1 || this.dropdownList.length == 0)) {//no dropdown selected and if there are multiple results or 0 go to search page with query
-            // searchRoute = this._searchService.getSearchRoute(term);
+            searchRoute = this._searchService.getSearchRoute(term);
         } else if (this.dropdownList.length == 1) {// if there is a selected dropdown and only one item available to to that route
             searchRoute = this.dropdownList[0].routerLink;
         } else {
             /*let dropdownLink = this.dropdownList[this.selectedIndex].routerLink;
             searchRoute = dropdownLink;*/
-
         }
-        this._router.navigate(['/deep-dive', 'search', 'articles', term]);
-        // this._router.navigate(searchRoute);
+        searchRoute = this._searchService.getSearchRoute(term);
+        this._router.navigate(searchRoute);
 
         //Clear out autocomplete text and close dropdown when search occurs
         this.dropdownIsFocused = false;
         this.autoCompleteText = '';
-
     }
 
     unFocus() {

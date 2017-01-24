@@ -112,6 +112,7 @@ export class SearchPageModule implements OnChanges {
 
     tabSelected(event) {
         this.pageNumber = 1;
+
         this.searchPageInput.tabData.forEach(function(val, index) {
             if (val.tabName == event) {//Optimize
                 val.isTabDefault = true;
