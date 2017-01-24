@@ -1,8 +1,8 @@
 {
-  "name": "Angular 2 Universal Starter",
-  "description": "Angular 2 Universal starter kit by @AngularClass",
-  "repository": "https://github.com/angular/universal-starter",
-  "logo": "https://cloud.githubusercontent.com/assets/1016365/10639063/138338bc-7806-11e5-8057-d34c75f3cafc.png",
+  "name": "TouchdownLoyal",
+  "description": "Touchdownloyal build",
+  "repository": "https://github.com/passit/TouchdownLoyal-frontend",
+  "logo": "https://images.synapsys.us/01/logos/football/2017/01/logos_football_01.svg",
   "env": {
     "NPM_CONFIG_PRODUCTION": {
       "description": "Install `webpack` and other development modules when deploying to allow full builds.",

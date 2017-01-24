@@ -61,7 +61,14 @@ export class BoxScoresService {
   return this.model.get(callURL)
     .map(data => {
       // transform the data to YYYY-MM-DD objects from unix
-      var transformedDate = this.transformBoxScores(data);
+      var transformedDate;
+      try{
+        transformedDate = this.transformBoxScores(data);
+      } catch (e){
+        console.log('Error BoxScores', e);
+        transformedDate = {};
+        transformedDate[chosenDate] = null;
+      }
       return {
         transformedDate:transformedDate,
         aiArticle: profile == 'league' && data.aiContent != null ? data.aiContent : null,
@@ -91,6 +98,8 @@ export class BoxScoresService {
             };
             currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
             callback(data, currentBoxScores);
+          }else{
+            return null;
           }
         })
     }
@@ -106,6 +115,8 @@ export class BoxScoresService {
         };
         currentBoxScores = currentBoxScores.gameInfo != null ? currentBoxScores :null;
         callback(boxScoresData, currentBoxScores);
+      }else{
+        return null;
       }
     }
   }

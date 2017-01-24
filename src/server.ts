@@ -40,7 +40,7 @@ app.engine('.html', createEngine({
     // stateless providers only since it's shared
   ]
 }));
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 80);
 app.set('views', __dirname);
 app.set('view engine', 'html');
 app.set('json spaces', 2);
@@ -70,6 +70,7 @@ function ngApp(req, res) {
 
   function onHandleError(parentZoneDelegate, currentZone, targetZone, error)  {
     console.warn('Error in SSR, serving for direct CSR');
+    console.warn('SSR ERRORLOG:',error);
     res.sendFile('index.html', {root: './src'});
     return false;
   }
@@ -91,6 +92,7 @@ function ngApp(req, res) {
 /**
  * use universal for specific routes
  */
+
 app.get('/', ngApp);
 appRoutes.forEach(route => {
   app.get(`/${route.path}`, ngApp);
