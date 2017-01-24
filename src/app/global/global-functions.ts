@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
-import { isBrowser, prebootComplete } from 'angular2-universal';
-import { getInlineCode } from 'preboot';
+import { isBrowser, isNode, prebootComplete } from 'angular2-universal';
+var preboot = require('preboot'); //preboot needs to be included as a 'require' in order to set customSelectors
 
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
@@ -923,14 +923,31 @@ export class GlobalFunctions {
       }
     } //onScroll
 
-    // this function is to fire preboot for angular universal, fires the transition of server-side view to client view
-    static setPreboot() {
-      /// current in dev, need to find the correct way to pass custom eventSelectors to preboot
-      // if (isNode) {
-      //   getInlineCode([{selector: 'span', events: ['click'], preventDefault: true, freeze: true}]);
-      // }
 
-      if(isBrowser && !this.prebootFired) {
+
+    // function sets custom selectors for gap-events between SSR and CSR
+    static setCustomPrebootSelectors() {
+      var defaultSelectors = preboot.defaultOptions.eventSelectors; // default selectors include 'input,textarea, select, option, button'
+
+      var customSelectors = [
+        {
+          selector: 'div',
+          events: [ 'click' ]
+        },
+        {
+          selector: 'span',
+          events: [ 'click' ]
+        }
+      ];
+      defaultSelectors.push.apply(defaultSelectors, customSelectors);
+    }
+
+    // function is to fire preboot for angular universal, fires the transition of server-side view to client view
+    static setPreboot() {
+      if (isNode) {
+        this.setCustomPrebootSelectors();
+      }
+      else if(isBrowser && !this.prebootFired) {
         setTimeout(function () {
           prebootComplete();
           this.prebootFired = true;
