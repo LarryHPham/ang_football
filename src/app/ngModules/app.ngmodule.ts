@@ -27,7 +27,6 @@ import {HttpModule} from "@angular/http";
     AppDomain
   ],
   providers: [HttpModule],
-  // bootstrap: [ AppDomain ]
 })
 export class AppModule { }
 

@@ -202,13 +202,15 @@ export class SearchService{
     //Function to build search route
     getSearchRoute(term: string){
         let searchRoute: Array<any>;
+        let partnerId: string = VerticalGlobalFunctions.getWhiteLabel();
+        let scope: string = GlobalSettings.getScopeNow();
         //Build search Route
         if ( term ) {
-            searchRoute = ['Search-page', {query: term}];
+            searchRoute = [partnerId, scope, 'search', term];
         }else{
             searchRoute = null;
         }
-        return searchRoute !== null ? searchRoute : ['Error-page'];
+        return searchRoute !== null ? searchRoute : ['error'];
     }
 
     /*
@@ -329,7 +331,7 @@ export class SearchService{
         playerResults.forEach(function(item){
             let playerName = item.playerName;
             let title = GlobalFunctions.convertToPossessive(playerName) + " Player Profile";
-            let route = VerticalGlobalFunctions.formatPlayerRoute('nfl', item.teamName, playerName, item.playerId);
+            let route = VerticalGlobalFunctions.formatPlayerRoute(item.scope, item.teamName, playerName, item.playerId);
             let relRoute = route.join('/');
             let urlText = '<p>' + GlobalSettings.getHomePage(partnerId, false) + '<b>' + relRoute + '</b></p>';
             let regExp = new RegExp(playerName, 'g');
@@ -364,7 +366,7 @@ export class SearchService{
         teamResults.forEach(function(item){
             let teamName = item.teamName;
             let title = GlobalFunctions.convertToPossessive(teamName) + " Team Profile";
-            let route = VerticalGlobalFunctions.formatTeamRoute('nfl', teamName, item.teamId);
+            let route = VerticalGlobalFunctions.formatTeamRoute(item.scope, teamName, item.teamId);
             let relRoute = route.join('/');
             let urlText = GlobalSettings.getHomePage(partnerId, false) + '<b>' + relRoute + '</b>';
             let regExp = new RegExp(teamName, 'g');

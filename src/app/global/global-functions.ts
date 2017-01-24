@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
 import { isBrowser, isNode, prebootComplete } from 'angular2-universal';
-var preboot = require('preboot'); //preboot needs to be included as a 'require' in order to set customSelectors
+import { defaultOptions } from 'preboot';
+// var preboot = require('preboot'); //preboot needs to be included as a 'require' in order to set customSelectors
 
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
@@ -927,7 +928,7 @@ export class GlobalFunctions {
 
     // function sets custom selectors for gap-events between SSR and CSR
     static setCustomPrebootSelectors() {
-      var defaultSelectors = preboot.defaultOptions.eventSelectors; // default selectors include 'input,textarea, select, option, button'
+      var defaultSelectors = defaultOptions.eventSelectors; // default selectors include 'input,textarea, select, option, button'
 
       var customSelectors = [
         {
@@ -936,6 +937,10 @@ export class GlobalFunctions {
         },
         {
           selector: 'span',
+          events: [ 'click' ]
+        },
+        {
+          selector: 'a',
           events: [ 'click' ]
         }
       ];
