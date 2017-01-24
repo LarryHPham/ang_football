@@ -233,7 +233,7 @@ export class SchedulesService {
           reportText = 'PRE GAME REPORT'
         }
       }else{
-        if(val.eventStatus = 'pregame'){
+        if(val.eventStatus == 'pregame'){
           reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
           reportText = 'PRE GAME REPORT'
         }else if (val.eventStatus == 'postgame'){
