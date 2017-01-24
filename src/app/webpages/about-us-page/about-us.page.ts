@@ -1,7 +1,7 @@
 import { Component, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-//globals//
+//globals
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 import { GlobalSettings } from '../../global/global-settings';
 import { GlobalFunctions } from '../../global/global-functions';
