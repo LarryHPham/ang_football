@@ -19,7 +19,7 @@ import {Article} from "../../global/global-interface";
 import {ArticleData} from "../../global/global-interface";
 
 //libraries
-declare var jQuery: any;
+declare var jQuery:any;
 declare var moment;
 
 @Component({
@@ -29,47 +29,47 @@ declare var moment;
 
 export class ArticlePages implements OnInit {
   public params;
-  public trendingData: any;
-  public isArticle: boolean = false;
-  article: Article;
-  articleData: any;
-  subRec: any;
-  trendingArticles: any;
-  copyright: Array<any>;
-  imageData: Array<any>;
-  imageTitle: Array<any>;
-  randomArticles: Array<any>;
-  randomHeadlines: Array<any>;
-  aiSidekick: boolean = true;
-  checkPartner: boolean;
-  error: boolean = false;
-  hasRun: boolean = false;
-  isFantasyReport: boolean = false;
-  isTrendingMax: boolean = false;
-  showLoading: boolean = true;
-  trendingLength: number;
-  eventType: string;
-  eventID: string;
-  date: string;
-  partnerId: string;
-  rawUrl: string;
-  title: string;
-  type: string;
-  scope: string = null;
-  partnerID: string;
-  geoLocation: string;
-  iframeUrl: any;
-  batch: number = 1;
+  public trendingData:any;
+  public isArticle:boolean = false;
+  article:Article;
+  articleData:any;
+  subRec:any;
+  trendingArticles:any;
+  copyright:Array<any>;
+  imageData:Array<any>;
+  imageTitle:Array<any>;
+  randomArticles:Array<any>;
+  randomHeadlines:Array<any>;
+  aiSidekick:boolean = true;
+  checkPartner:boolean;
+  error:boolean = false;
+  hasRun:boolean = false;
+  isFantasyReport:boolean = false;
+  isTrendingMax:boolean = false;
+  showLoading:boolean = true;
+  trendingLength:number;
+  eventType:string;
+  eventID:string;
+  date:string;
+  partnerId:string;
+  rawUrl:string;
+  title:string;
+  type:string;
+  scope:string = null;
+  partnerID:string;
+  geoLocation:string;
+  iframeUrl:any;
+  batch:number = 1;
 
-  constructor(private _activateRoute: ActivatedRoute,
-    private _router: Router,
-    private _articleDataService: ArticleDataService,
-    private _location: Location,
-    private _seoService: SeoService,
-    private _deepDiveService: DeepDiveService,
-    private _geoLocation: GeoLocation) {
+  constructor(private _activateRoute:ActivatedRoute,
+              private _router:Router,
+              private _articleDataService:ArticleDataService,
+              private _location:Location,
+              private _seoService:SeoService,
+              private _deepDiveService:DeepDiveService,
+              private _geoLocation:GeoLocation) {
     this.subRec = this._activateRoute.params.subscribe(
-      (params: any) => {
+      (params:any) => {
         this.articleData = null;
         this.trendingData = null;
         this.trendingLength = 10;
@@ -111,37 +111,37 @@ export class ArticlePages implements OnInit {
     this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport, this.type)
       .finally(() => GlobalFunctions.setPreboot()) // call preboot after last piece of data is returned on page
       .subscribe(Article => {
-        try {
-          this.articleData = Article;
-          this.date = Article.date;
-          if (this.articleData.hasEventId) {
-            this.getRecommendedArticles(this.articleData.eventID);
+          try {
+            this.articleData = Article;
+            this.date = Article.date;
+            if (this.articleData.hasEventId) {
+              this.getRecommendedArticles(this.articleData.eventID);
+            }
+            this.isTrendingMax = false;
+            this.getTrendingArticles(this.eventID);
+            this.metaTags(this.articleData);
+          } catch (e) {
+            console.log('Error getArticles Function', e);
+            this.error = true;
+            var self = this;
+            setTimeout(function () {
+              //removes error page from browser history
+              self._location.replaceState('/');
+              //returns user to previous page
+              self._router.navigateByUrl('/home');
+            }, 5000);
           }
-          this.isTrendingMax = false;
-          this.getTrendingArticles(this.eventID);
-          this.metaTags(this.articleData);
-        } catch (e) {
-          console.log('Error getArticles Function', e);
+        },
+        err => {
           this.error = true;
           var self = this;
-          setTimeout(function() {
+          setTimeout(function () {
             //removes error page from browser history
             self._location.replaceState('/');
             //returns user to previous page
             self._router.navigateByUrl('/home');
           }, 5000);
         }
-      },
-      err => {
-        this.error = true;
-        var self = this;
-        setTimeout(function() {
-          //removes error page from browser history
-          self._location.replaceState('/');
-          //returns user to previous page
-          self._router.navigateByUrl('/home');
-        }, 5000);
-      }
       );
   }
 
@@ -231,7 +231,7 @@ export class ArticlePages implements OnInit {
           this.copyright = ["USA Today Sports Images"];
           this.imageTitle = [""];
         }
-        // this.metaTags(data);
+        this.metaTags(data);
         this.articleData = data.data;
 
         this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
@@ -246,7 +246,7 @@ export class ArticlePages implements OnInit {
       data => {
         this.articleData = data.data;
         this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
-        // this.metaTags(data);
+        this.metaTags(data);
         this.iframeUrl = this.articleData.videoLink;
         this.getRecommendedArticles(articleID);
       }
@@ -267,19 +267,19 @@ export class ArticlePages implements OnInit {
       var headerData = data['articleContent']['metadata'];
       metaDesc = data['articleContent'].meta_headline;
       if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
-        headerData['team_name'].forEach(function(val) {
+        headerData['team_name'].forEach(function (val) {
           searchArray.push(val);
           teams.push(val);
         });
       }
       if (headerData['player_name'] && headerData['player_name'].constructor === Array) {
-        headerData['player_name'].forEach(function(val) {
+        headerData['player_name'].forEach(function (val) {
           searchArray.push(val);
           players.push(val);
         });
       }
       if (data['articleContent']['keyword'] && data['articleContent']['keyword'].constructor === Array) {
-        data['articleContent']['keyword'].forEach(function(val) {
+        data['articleContent']['keyword'].forEach(function (val) {
           searchArray.push(val);
         });
         searchString = searchArray.join(',');
@@ -320,13 +320,13 @@ export class ArticlePages implements OnInit {
     var defaultState = 'ca';
     this._geoLocation.grabLocation()
       .subscribe(
-      res => {
-        this.geoLocation = res.state.toLowerCase();
-        this.geoLocation = this.geoLocation.toLowerCase();
-      },
-      err => {
-        this.geoLocation = defaultState;
-      });
+        res => {
+          this.geoLocation = res.state.toLowerCase();
+          this.geoLocation = this.geoLocation.toLowerCase();
+        },
+        err => {
+          this.geoLocation = defaultState;
+        });
   } //getGeoLocation
 
   ngOnDestroy() {

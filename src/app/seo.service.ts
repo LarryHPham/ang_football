@@ -9,7 +9,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter';
 import { DOCUMENT } from '@angular/platform-browser';
-import { isNode } from "angular2-universal";
+import { isNode, isBrowser } from "angular2-universal";
 
 import { GlobalSettings } from "./global/global-settings";
 
@@ -308,10 +308,12 @@ export class SeoService {
   }
 
   public removeMetaTags() {
-    // var element = this.DOM.getElementsByTagName(this.document, 'meta'), index;
-    // for (index = element.length - 1; index >= 0; index--) {
-    //   element[index].parentNode.removeChild(element[index]);
-    // }
+    if (isBrowser) {
+      var element = this.DOM.getElementsByTagName(this.document, 'meta'), index;
+      for (index = element.length - 1; index >= 0; index--) {
+        element[index].parentNode.removeChild(element[index]);
+      }
+    }
   }
 
   static checkData(data) {
