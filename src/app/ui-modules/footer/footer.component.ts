@@ -1,9 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { isBrowser } from 'angular2-universal';
+
+//globals
+import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from '../../global/global-functions';
 import { Link, NavigationData } from '../../global/global-interface';
-import { GlobalSettings } from "../../global/global-settings";
+
+//services
 import { FooterService } from '../../services/footer.service';
-import { isBrowser } from 'angular2-universal';
+
 
 @Component({
     selector: 'footer-component',
@@ -17,7 +22,6 @@ export class FooterComponent implements OnInit {
     public homePageLinkName: string;
     public linkName: string;
     public currentUrl: string;
-    public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public _copyrightInfo: string = "<i>Images Provided By: </i><b> " + GlobalSettings.getCopyrightInfo() + "</b>";
     public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
     public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
@@ -28,6 +32,7 @@ export class FooterComponent implements OnInit {
     public contactUs: string = "Contact Us";
     public disc: string = "Disclaimer";
     public au: string = "About Us";
+    public footerLinks: Object;
 
     image:string = GlobalSettings.mainIcon;
     teamDirectoryListings: Array<Link>;
@@ -76,5 +81,12 @@ export class FooterComponent implements OnInit {
 
     ngOnInit() {
         this.loadData(this.partnerID);
+        var baseFooterLink = this.partnerID ? '/' + this.partnerID + this.scopeParam : this.scopeParam;
+
+        this.footerLinks = {
+          aboutUs: baseFooterLink + '/about-us',
+          contactUs: baseFooterLink + '/contact-us',
+          disclaimer: baseFooterLink + '/disclaimer'
+        }
     }
 }

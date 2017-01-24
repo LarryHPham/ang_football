@@ -104,8 +104,7 @@ export var clientConfig = {
     __dirname: true,
     __filename: true,
     process: true,
-    Buffer: true,
-    time: true
+    Buffer: true
   }
 }; //clientConfig
 
@@ -140,7 +139,7 @@ export var serverConfig = {
     __dirname: true,
     __filename: true,
     process: true,
-    Buffer: true
+    Buffer: false
   }
 }; //serverConfig
 
