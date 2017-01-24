@@ -120,7 +120,9 @@ export class DirectoryPage {
 
 
   private metaTags() {
-    let startsWith = this.startsWith
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
+    let startsWith = this.startsWith;
     if ( startsWith !== undefined && startsWith !== null ) {
       this.newlyAdded = startsWith.toLowerCase() === "new";
       this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;

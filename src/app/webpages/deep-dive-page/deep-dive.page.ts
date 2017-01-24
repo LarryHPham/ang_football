@@ -139,6 +139,8 @@ export class DeepDivePage {
 
 
   private metaTags() {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
     this._seoService.setTitle('Deep Dive');
@@ -149,7 +151,7 @@ export class DeepDivePage {
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
-    this._seoService.setOgImage('./app/public/mainLogo.png');
+    this._seoService.setOgImage('//images.synapsys.us/01/logos/football/2017/01/logos_football_01.svg');
   } //metaTags
 
 
