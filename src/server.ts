@@ -57,9 +57,9 @@ function cacheControl(req, res, next) {
   next();
 }
 // Serve static files
-app.use('/lib', cacheControl, express.static(path.join(__dirname, 'lib'), {maxAge: 30}));
-app.use('/app/ads', cacheControl, express.static(path.join(__dirname, 'app/ads'), {maxAge: 30}));
-app.use('/app/public', cacheControl, express.static(path.join(__dirname, 'app/public'), {maxAge: 30}));
+app.use('/lib', cacheControl, express.static(path.join(__dirname, 'lib')));
+app.use('/app/ads', cacheControl, express.static(path.join(__dirname, 'app/ads')));
+app.use('/app/public', cacheControl, express.static(path.join(__dirname, 'app/public')));
 app.use(cacheControl, express.static(path.join(ROOT, 'dist/client'), {index: false}));
 
 process.on('uncaughtException', function (err) {

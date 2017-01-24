@@ -4,6 +4,7 @@ import { DeepDiveService } from '../../../services/deep-dive.service';
 import { ArticleStackData, VideoStackData } from "../../../fe-core/interfaces/deep-dive.data";
 import { GlobalSettings } from "../../../global/global-settings";
 import { GlobalFunctions } from '../../../global/global-functions';
+import { isNode } from "angular2-universal";
 
 declare var moment;
 
