@@ -298,8 +298,10 @@ export class SeoService {
     let el:HTMLElement;
     el = this.DOM.createElement(type);
     this.setElementAttribute(el, name, attr);
+    if (attr != "canonical") {
+      this.setElementAttribute(el, "rel", "tdl");
+    }
     this.DOM.insertBefore(this.document.head.lastChild, el);
-
     return el;
   }
 
@@ -311,7 +313,9 @@ export class SeoService {
     if (isBrowser) {
       var element = this.DOM.getElementsByTagName(this.document, 'meta'), index;
       for (index = element.length - 1; index >= 0; index--) {
-        element[index].parentNode.removeChild(element[index]);
+        if (element[index].getAttribute('rel') == 'tdl') {
+          element[index].parentNode.removeChild(element[index]);
+        }
       }
     }
   }
