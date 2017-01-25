@@ -58,7 +58,7 @@ export class DraftHistoryPage implements OnInit {
 
         if (teamId) {
             this._profileService.getTeamProfile(teamId)
-              .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+              .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
               .subscribe(
               data => {
                   // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.teamName));
@@ -76,7 +76,7 @@ export class DraftHistoryPage implements OnInit {
         }
         else {
             this._profileService.getLeagueProfile()
-              .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+              .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
               .subscribe(
               data => {
                   // this._title.setTitle(GlobalSettings.getPageTitle("Draft History", data.headerData.leagueAbbreviatedName));

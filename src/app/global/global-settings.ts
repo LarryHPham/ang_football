@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalFunctions } from './global-functions';
-import { isBrowser, isNode } from 'angular2-universal';
+import { isBrowser, isNode, prebootComplete } from 'angular2-universal';
+import { defaultOptions } from 'preboot';
+
+
 
 declare var Zone;
 @Injectable()
@@ -61,9 +64,10 @@ export class GlobalSettings {
     public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg");
     public static _defaultStockImage: string = GlobalSettings.getImageUrl("/TDL/stock_images/TDL_Stock-3.png");// default stock image on the server for FOOTBALL
 
-
     private static _currentRouteParams: any;
     private static _router: any;
+
+    private static prebootFired:boolean = false;
 
     static getEnv(env:string):string {
       if (env == "localhost" || env == "render" || env == "render2"){
@@ -367,5 +371,39 @@ export class GlobalSettings {
     static getEstYear() {
       return this._estYear;
     }
+
+    // function sets custom selectors for gap-events between SSR and CSR
+    static setCustomPrebootSelectors() {
+      var defaultSelectors = defaultOptions.eventSelectors; // default selectors include 'input,textarea, select, option, button'
+
+      var customSelectors = [
+        {
+          selector: 'div',
+          events: [ 'click' ]
+        },
+        {
+          selector: 'span',
+          events: [ 'click' ]
+        },
+        {
+          selector: 'a',
+          events: [ 'click' ]
+        }
+      ];
+      defaultSelectors.push.apply(defaultSelectors, customSelectors);
+    }
+
+    // function is to fire preboot for angular universal, fires the transition of server-side view to client view
+    static setPreboot() {
+      if (isNode) {
+        this.setCustomPrebootSelectors();
+      }
+      else if(isBrowser && !this.prebootFired) {
+        setTimeout(function () {
+          prebootComplete();
+          this.prebootFired = true;
+        }, 400);
+      }
+    } //setPreboot
 
 }

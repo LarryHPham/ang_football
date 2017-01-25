@@ -78,6 +78,6 @@ export class DisclaimerPage {
       var subpath = this.activatedRoute.pathFromRoot;
       this.contactLink = [partnerID, this.scope, 'contact-us'];
       this.contactUsLinkName = this.pageLinkName + '/' + this.scope + '/contact-us';
-      GlobalFunctions.setPreboot();
+      GlobalSettings.setPreboot();
     }
 }
