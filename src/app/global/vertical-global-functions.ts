@@ -29,10 +29,10 @@ export class VerticalGlobalFunctions {
       route = '/' +partner;
     }
     else if (partner && GlobalSettings.getHomeInfo().isSubdomainPartner) {
-      route = '/';
+      route = '';
     }
     else {
-      route = '/';
+      route = '';
     }
     return route;
   } //getWhiteLabel
