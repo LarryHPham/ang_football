@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+import {isBrowser} from 'angular2-universal';
 
 //globals
 import {GlobalSettings} from "../../global/global-settings";
@@ -106,13 +107,13 @@ export class PickTeamPage{
           this.setLocationHeaderString(res.state);
           this.getData(this.scope, res.state);
           //set the active league variables based on scope
-          if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
+          if ( this.scope == this._collegeDivisonFullAbbrv.toLowerCase() ) {
             this.activeDivision = this._collegeDivisonFullAbbrv;
-            this.activeDivisionSegments = this._collegeDivisionSegments;
+            this.activeDivisionSegments = this._sportLeagueSegments;
           }
           else {
             this.activeDivision = this._sportLeagueAbbrv;
-            this.activeDivisionSegments = this._sportLeagueSegments;
+            this.activeDivisionSegments = this._collegeDivisionSegments;
           }
 
           this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
@@ -150,12 +151,16 @@ export class PickTeamPage{
       this._seoService.setOgImage(image);
     } //metaTags
 
+
+
     setLocationHeaderString(state) {
       //only set for NCAAF
-      if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
-        this.homeLocationHeading = 'Showing '+this.activeDivision+ ' Football '+ this.activeDivisionSegments.toLowerCase() + '<span class="location-designation"> located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + '<span class="location-title">' + GlobalFunctions.fullstate(state) + '</span>';
+      if ( this.scope.toLowerCase() == this._collegeDivisonFullAbbrv.toLowerCase() ) {
+        this.homeLocationHeading = 'Showing '+this._collegeDivisonFullAbbrv+ ' Football '+ this._collegeDivisionSegments + '<span class="location-designation"> located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + '<span class="location-title">' + GlobalFunctions.fullstate(state) + '</span>';
       }
-    }
+    } //setLocationHeaderString
+
+
 
     getData(scope, geoLocation?){
       this._pickateamPageService.getLandingPageService(scope, geoLocation)
@@ -166,8 +171,9 @@ export class PickTeamPage{
       var sampleImage = "./app/public/placeholder-location.jpg";
     } //getData
 
+
+
     ngOnDestroy(){
       this._routeSubscription.unsubscribe();
     }
-
 }

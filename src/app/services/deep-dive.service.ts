@@ -312,7 +312,7 @@ export class DeepDiveService {
       domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
       let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
-      let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
+      let routeScope = scope.toLowerCase() == GlobalSettings.getCollegeDivisionFullAbbrv().toLowerCase() ? GlobalSettings.getCollegeDivisionFullAbbrv().toLowerCase() : GlobalSettings.getSportLeagueAbbrv().toLowerCase();
       var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
       let pickATeam = ['/'+routeScope,'pick-a-team'];
       let leaguePage = ['/'+routeScope,'league'];
