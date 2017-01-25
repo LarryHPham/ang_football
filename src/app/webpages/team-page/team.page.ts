@@ -322,9 +322,7 @@ export class TeamPage implements OnInit {
   private resetSubscription(){
     var numOfSubs = this.storeSubscriptions.length;
 
-    console.log(this.storeSubscriptions);
     for( var i = 0; i < numOfSubs; i++ ){
-      console.log(this.storeSubscriptions[i]);
       if(this.storeSubscriptions[i]){
         this.storeSubscriptions[i].unsubscribe();
       }
