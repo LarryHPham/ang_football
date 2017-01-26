@@ -54,8 +54,7 @@ export class PlayerPage{
   private teamName: any;
   private fullName: string;
   private playerID: number;
-  private storeSubscriptions: any = [];
-  public routeSubscriptions: any;
+  private paramsub: any;
   public pageParams: SportPageParameters;
   private teamID: any;
   private dateParam: any;
@@ -126,9 +125,8 @@ export class PlayerPage{
     private _twitterService: TwitterService,
     private _seoService: SeoService
   ) {
-    this.routeSubscriptions = this.activateRoute.params.subscribe(
+    this.paramsub = this.activateRoute.params.subscribe(
       (param: any) => {
-        this.resetSubscription();
         this.routeChangeResets();
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
         this.teamName = param['teamName'];
@@ -140,7 +138,7 @@ export class PlayerPage{
         this.storedPartnerParam = GlobalSettings.storedPartnerId();
         this.setupPlayerProfileData();
       }
-    );
+    )
 
   } //constructor
 
@@ -155,7 +153,7 @@ export class PlayerPage{
 
 
   private setupPlayerProfileData() {
-    this.storeSubscriptions.push(this._profileService.getPlayerProfile(this.playerID).subscribe(
+    this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
         this.seasonBase = data.headerData['seasonBase'];
         this.metaTags(data);
@@ -207,7 +205,7 @@ export class PlayerPage{
         this.hasError = true;
         console.log("Error getting player profile data for " + this.playerID + ": " + err);
       }
-    ));
+    );
   } //setupPlayerProfileData
 
 
@@ -287,26 +285,15 @@ export class PlayerPage{
   } //metaTags
 
   ngOnDestroy(){
-    this._seoService.removeApplicationJSON('page');
-    this._seoService.removeApplicationJSON('json');
-
-    this.routeSubscriptions.unsubscribe();
-    this.resetSubscription();
+  //   this._seoService.removeApplicationJSON('page');
+  //   this._seoService.removeApplicationJSON('json');
   } //ngOnDestroy
 
-  private resetSubscription(){
-    var numOfSubs = this.storeSubscriptions.length;
 
-    for( var i = 0; i < numOfSubs; i++ ){
-      if(this.storeSubscriptions[i]){
-        this.storeSubscriptions[i].unsubscribe();
-      }
-    }
-  }
 
   private dailyUpdateModule(playerId: number) {
     this.imageConfig = this._dailyUpdateService.getImageConfig();
-    this.storeSubscriptions.push(this._dailyUpdateService.getPlayerDailyUpdate(playerId)
+    this._dailyUpdateService.getPlayerDailyUpdate(playerId)
       .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
@@ -314,14 +301,14 @@ export class PlayerPage{
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
         console.log("Error getting daily update data", err);
-      }));
+      });
   } //dailyUpdateModule
 
 
 
   private getFantasyData(playerId) {
     try {
-      this.storeSubscriptions.push(this._fantasyService.getFantasyReport(playerId)
+      this._fantasyService.getFantasyReport(playerId)
         .subscribe(data => {
           if (data != null) {
             if (playerId == data.playerId) {
@@ -342,7 +329,7 @@ export class PlayerPage{
           else {
             this.isError = true;
           }
-        }));
+        });
     } catch (e) {
       this.isError = true;
     }
@@ -354,10 +341,10 @@ export class PlayerPage{
     if (dateParams != null) {
       this.dateParam = dateParams;
     }
-    this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+    this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
       this.boxScoresData = boxScoresData;
       this.currentBoxScores = currentBoxScores;
-    }))
+    })
   } //getBoxScores
 
 
@@ -390,14 +377,14 @@ export class PlayerPage{
   } //filterDropdown
   private getSchedulesData(status, year?) {
     var limit = 5;
-    this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'player', status, limit, 1, this.teamID, (schedulesData) => {
+    this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'player', status, limit, 1, this.teamID, (schedulesData) => {
       if (status == 'pregame') {
         this.scheduleFilter1 = null;
       } else {
         this.scheduleFilter1 = schedulesData.seasons;
       }
       this.schedulesData = schedulesData;
-    }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
+    }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
   } //getSchedulesData
 
 
@@ -417,32 +404,32 @@ export class PlayerPage{
 
 
   private setupSeasonstatsData() {
-    this.storeSubscriptions.push(this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
+    this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
       .subscribe(
         data => {
           this.seasonStatsData = data;
         },
         err => {
           console.log("Error getting season stats data for " + this.pageParams.playerId, err);
-        }));
+        });
   } //setupSeasonstatsData
 
 
 
   private setupComparisonData() {
-    this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+    this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
       data => {
         this.comparisonModuleData = data;
       },
       err => {
         console.log("Error getting comparison data for " + this.pageParams.playerId, err);
-      }));
+      });
   } //setupComparisonData
 
 
 
   private getImages(imageData) {
-    this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.pageParams.playerId)
+    this._imagesService.getImages(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
         if (data.imageArray.length <= 0) {
           return this.imageData = null;
@@ -452,31 +439,31 @@ export class PlayerPage{
       },
       err => {
         console.log("Error getting image data" + err);
-      }));
+      });
   } //getImages
 
 
 
   private getDykService() {
-    this.storeSubscriptions.push(this._dykService.getDykService(this.profileType, this.pageParams.playerId)
+    this._dykService.getDykService(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
         this.dykData = data;
       },
       err => {
         console.log("Error getting did you know data");
-      }));
+      });
   } //getDykService
 
 
 
   private getFaqService() {
-    this.storeSubscriptions.push(this._faqService.getFaqService(this.profileType, this.pageParams.playerId)
+    this._faqService.getFaqService(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
         this.faqData = data;
       },
       err => {
         console.log("Error getting faq data for player", err);
-      }));
+      });
   } //getFaqService
 
 
@@ -488,7 +475,7 @@ export class PlayerPage{
       pageNum: 1,
       scope: this.scope
     }
-    this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module")
+    this._lolService.getListOfListsService(params, "player", "module")
       .subscribe(
         listOfListsData => {
           if (listOfListsData != null) {
@@ -500,7 +487,7 @@ export class PlayerPage{
         err => {
           console.log('Error: listOfListsData API: ', err);
         }
-      ));
+      );
     } //setupListOfListsModule
 
 
@@ -511,26 +498,28 @@ export class PlayerPage{
         pageNum: 1,
         id: this.pageParams.teamId
       }
-      this.storeSubscriptions.push(this._newsService.getNewsService(this.scope, params, 'player', 'module')
+      this._newsService.getNewsService(this.scope, params, 'player', 'module')
         .subscribe(data => {
           this.newsDataArray = data.news;
         },
         err => {
           console.log("Error getting news data");
-        }));
+        });
     } //getNewsService
 
 
 
     private getTwitterService() {
-      this.storeSubscriptions.push(this._twitterService.getTwitterService("team", this.pageParams.teamId) //getting team twitter information for now
+      this._twitterService.getTwitterService("team", this.pageParams.teamId) //getting team twitter information for now
         .subscribe(data => {
           this.twitterData = data;
         },
         err => {
           console.log("Error getting twitter data");
-        }));
+        });
     } //getTwitterService
+
+
 
   // function to lazy load page sections
   private onScroll(event) {
