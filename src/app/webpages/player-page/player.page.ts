@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
+import { isBrowser, isNode } from "angular2-universal";
 
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
@@ -54,7 +55,8 @@ export class PlayerPage{
   private teamName: any;
   private fullName: string;
   private playerID: number;
-  private paramsub: any;
+  private storeSubscriptions: any = [];
+  public routeSubscriptions: any;
   public pageParams: SportPageParameters;
   private teamID: any;
   private dateParam: any;
@@ -125,35 +127,60 @@ export class PlayerPage{
     private _twitterService: TwitterService,
     private _seoService: SeoService
   ) {
-    this.paramsub = this.activateRoute.params.subscribe(
+    this.routeSubscriptions = this.activateRoute.params.subscribe(
       (param: any) => {
+        this.resetSubscription();
         this.routeChangeResets();
+
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
         this.teamName = param['teamName'];
         this.fullName = param['fullName'];
         this.playerID = param['playerID'];
-
         this.pageParams = { playerId: this.playerID }
 
         this.storedPartnerParam = GlobalSettings.storedPartnerId();
         this.setupPlayerProfileData();
       }
-    )
+    );
 
   } //constructor
 
-
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
+    this.dateParam = null;
     this.profileHeaderData = null;
+    this.boxScoresData = null;
+    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
-    // TODO // window.scrollTo(0, 0);
+    if(isBrowser){
+      window.scrollTo(0, 0);
+    }
   } //routeChangeResets
 
+  ngOnDestroy(){
+    this._seoService.removeApplicationJSON('page');
+    this._seoService.removeApplicationJSON('json');
 
+    if(this.routeSubscriptions){
+      this.routeSubscriptions.unsubscribe();
+    }
+    this.resetSubscription();
+  } //ngOnDestroy
+
+  private resetSubscription(){
+    if(this.storeSubscriptions){
+      var numOfSubs = this.storeSubscriptions.length;
+
+      for( var i = 0; i < numOfSubs; i++ ){
+        if(this.storeSubscriptions[i]){
+          this.storeSubscriptions[i].unsubscribe();
+        }
+      }
+    }
+  }
 
   private setupPlayerProfileData() {
-    this._profileService.getPlayerProfile(this.playerID).subscribe(
+    this.storeSubscriptions.push(this._profileService.getPlayerProfile(this.playerID).subscribe(
       data => {
         this.seasonBase = data.headerData['seasonBase'];
         this.metaTags(data);
@@ -170,7 +197,6 @@ export class PlayerPage{
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
           date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
-          // date: '2015-09-11'
         } //this.dateParam
 
         this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
@@ -205,10 +231,8 @@ export class PlayerPage{
         this.hasError = true;
         console.log("Error getting player profile data for " + this.playerID + ": " + err);
       }
-    );
+    ));
   } //setupPlayerProfileData
-
-
 
   private metaTags(data) {
     //This call will remove all meta tags from the head.
@@ -284,16 +308,9 @@ export class PlayerPage{
     this._seoService.setApplicationJSON(jsonSchema, 'json');
   } //metaTags
 
-  ngOnDestroy(){
-  //   this._seoService.removeApplicationJSON('page');
-  //   this._seoService.removeApplicationJSON('json');
-  } //ngOnDestroy
-
-
-
   private dailyUpdateModule(playerId: number) {
     this.imageConfig = this._dailyUpdateService.getImageConfig();
-    this._dailyUpdateService.getPlayerDailyUpdate(playerId)
+    this.storeSubscriptions.push(this._dailyUpdateService.getPlayerDailyUpdate(playerId)
       .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
@@ -301,14 +318,14 @@ export class PlayerPage{
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
         console.log("Error getting daily update data", err);
-      });
+      }));
   } //dailyUpdateModule
 
 
 
   private getFantasyData(playerId) {
     try {
-      this._fantasyService.getFantasyReport(playerId)
+      this.storeSubscriptions.push(this._fantasyService.getFantasyReport(playerId)
         .subscribe(data => {
           if (data != null) {
             if (playerId == data.playerId) {
@@ -329,7 +346,7 @@ export class PlayerPage{
           else {
             this.isError = true;
           }
-        });
+        }));
     } catch (e) {
       this.isError = true;
     }
@@ -341,10 +358,10 @@ export class PlayerPage{
     if (dateParams != null) {
       this.dateParam = dateParams;
     }
-    this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+    this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
       this.boxScoresData = boxScoresData;
       this.currentBoxScores = currentBoxScores;
-    })
+    }))
   } //getBoxScores
 
 
@@ -377,14 +394,14 @@ export class PlayerPage{
   } //filterDropdown
   private getSchedulesData(status, year?) {
     var limit = 5;
-    this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'player', status, limit, 1, this.teamID, (schedulesData) => {
+    this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'player', status, limit, 1, this.teamID, (schedulesData) => {
       if (status == 'pregame') {
         this.scheduleFilter1 = null;
       } else {
         this.scheduleFilter1 = schedulesData.seasons;
       }
       this.schedulesData = schedulesData;
-    }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
+    }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
   } //getSchedulesData
 
 
@@ -404,32 +421,32 @@ export class PlayerPage{
 
 
   private setupSeasonstatsData() {
-    this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
+    this.storeSubscriptions.push(this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
       .subscribe(
         data => {
           this.seasonStatsData = data;
         },
         err => {
           console.log("Error getting season stats data for " + this.pageParams.playerId, err);
-        });
+        }));
   } //setupSeasonstatsData
 
 
 
   private setupComparisonData() {
-    this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+    this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
       data => {
         this.comparisonModuleData = data;
       },
       err => {
         console.log("Error getting comparison data for " + this.pageParams.playerId, err);
-      });
+      }));
   } //setupComparisonData
 
 
 
   private getImages(imageData) {
-    this._imagesService.getImages(this.profileType, this.pageParams.playerId)
+    this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
         if (data.imageArray.length <= 0) {
           return this.imageData = null;
@@ -439,31 +456,31 @@ export class PlayerPage{
       },
       err => {
         console.log("Error getting image data" + err);
-      });
+      }));
   } //getImages
 
 
 
   private getDykService() {
-    this._dykService.getDykService(this.profileType, this.pageParams.playerId)
+    this.storeSubscriptions.push(this._dykService.getDykService(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
         this.dykData = data;
       },
       err => {
         console.log("Error getting did you know data");
-      });
+      }));
   } //getDykService
 
 
 
   private getFaqService() {
-    this._faqService.getFaqService(this.profileType, this.pageParams.playerId)
+    this.storeSubscriptions.push(this._faqService.getFaqService(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
         this.faqData = data;
       },
       err => {
         console.log("Error getting faq data for player", err);
-      });
+      }));
   } //getFaqService
 
 
@@ -475,7 +492,7 @@ export class PlayerPage{
       pageNum: 1,
       scope: this.scope
     }
-    this._lolService.getListOfListsService(params, "player", "module")
+    this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module")
       .subscribe(
         listOfListsData => {
           if (listOfListsData != null) {
@@ -487,7 +504,7 @@ export class PlayerPage{
         err => {
           console.log('Error: listOfListsData API: ', err);
         }
-      );
+      ));
     } //setupListOfListsModule
 
 
@@ -498,28 +515,26 @@ export class PlayerPage{
         pageNum: 1,
         id: this.pageParams.teamId
       }
-      this._newsService.getNewsService(this.scope, params, 'player', 'module')
+      this.storeSubscriptions.push(this._newsService.getNewsService(this.scope, params, 'player', 'module')
         .subscribe(data => {
           this.newsDataArray = data.news;
         },
         err => {
           console.log("Error getting news data");
-        });
+        }));
     } //getNewsService
 
 
 
     private getTwitterService() {
-      this._twitterService.getTwitterService("team", this.pageParams.teamId) //getting team twitter information for now
+      this.storeSubscriptions.push(this._twitterService.getTwitterService("team", this.pageParams.teamId) //getting team twitter information for now
         .subscribe(data => {
           this.twitterData = data;
         },
         err => {
           console.log("Error getting twitter data");
-        });
+        }));
     } //getTwitterService
-
-
 
   // function to lazy load page sections
   private onScroll(event) {

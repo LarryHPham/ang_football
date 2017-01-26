@@ -25,7 +25,6 @@
             *ngIf="dailyUpdateData"
             [embedPlace]="widgetPlace"
             [displayAtRes]="'640'"></responsive-widget>
-          <!-- <headline-component [title]="'Keep Up With Everything ' + profileHeaderData.profileName"></headline-component> -->
           <box-scores
             *ngIf="dateParam"
             [boxScores]="currentBoxScores"
@@ -68,7 +67,6 @@
         </div> <!--loadBatch3-->
 
         <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
-          <!-- <headline-component [title]="'Other MLB Content You May Love'"></headline-component> -->
           <div class="profile-carousel-container" *ngIf="imageData">
               <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
           </div>
