@@ -55,7 +55,8 @@ export class TeamPage implements OnInit {
   private constructorControl:boolean = true;
   public partnerID: string;
   public scope: string;
-  public paramsub: any;
+  public storeSubscriptions: any = [];
+  public routeSubscriptions: any;
   public teamID: number;
   public pageParams:SportPageParameters;
   public dateParam:any;
@@ -144,20 +145,15 @@ export class TeamPage implements OnInit {
   ) {
 
 
-    this.paramsub = this.activateRoute.params.subscribe(
+    this.routeSubscriptions = this.activateRoute.params.subscribe(
       (param :any)=> {
+        this.resetSubscription();
         this.routeChangeResets();
-        this.imageConfig = this._dailyUpdateService.getImageConfig();
 
+        this.imageConfig = this._dailyUpdateService.getImageConfig();
         this.teamID = param['teamID'];
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-        var currentUnixDate = new Date().getTime();
-        this.dateParam = {
-          scope: 'team',//current profile page
-          teamId: this.teamID, // teamId if it exists
-          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-        } //this.dateParam
 
         this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
         this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
@@ -171,15 +167,41 @@ export class TeamPage implements OnInit {
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
+    this.dateParam = null;
     this.profileHeaderData = null;
     this.boxScoresData = null
+    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
-    // window.scrollTo(0, 0);
+    if(isBrowser){
+      window.scrollTo(0, 0);
+    }
   } //routeChangeResets
 
 
+  ngOnDestroy(){
+    this._seoService.removeApplicationJSON('page');
+    this._seoService.removeApplicationJSON('json');
+
+    if(this.routeSubscriptions){
+      this.routeSubscriptions.unsubscribe();
+    }
+    this.resetSubscription();
+  } //ngOnDestroy
+
+  private resetSubscription(){
+    if(this.storeSubscriptions){
+      var numOfSubs = this.storeSubscriptions.length;
+
+      for( var i = 0; i < numOfSubs; i++ ){
+        if(this.storeSubscriptions[i]){
+          this.storeSubscriptions[i].unsubscribe();
+        }
+      }
+    }
+  }
+
   private setupProfileData(partnerID, scope, teamID?) {
-    this._profileService.getTeamProfile(this.teamID).subscribe(
+    this.storeSubscriptions.push(this._profileService.getTeamProfile(this.teamID).subscribe(
       data => {
         this.metaTags(data);
         this.pageParams = data.pageParams;
@@ -187,6 +209,14 @@ export class TeamPage implements OnInit {
         this.pageParams['scope'] = this.scope;
         this.pageParams['teamName'] = GlobalFunctions.toLowerKebab(this.pageParams['teamName']);
         this.pageParams['teamID'] = this.teamID;
+
+        var currentUnixDate = new Date().getTime();
+        this.dateParam = {
+          scope: 'team',//current profile page
+          teamId: this.teamID, // teamId if it exists
+          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+        } //this.dateParam
+
         this.profileData = data;
         let headerData = data.headerData != null ? data.headerData : null;
 
@@ -230,10 +260,8 @@ export class TeamPage implements OnInit {
           this.getTwitterService();
         }, 2000);
       }
-    )
+    ))
   } //setupProfileData
-
-
 
   private metaTags(data) {
     //This call will remove all meta tags from the head.
@@ -309,15 +337,8 @@ export class TeamPage implements OnInit {
     this._seoService.setApplicationJSON(jsonSchema, 'json');
   } //metaTags
 
-  ngOnDestroy(){
-    // this._seoService.removeApplicationJSON('page');
-    // this._seoService.removeApplicationJSON('json');
-  } //ngOnDestroy
-
-
-
   private dailyUpdateModule(teamId: number) {
-    this._dailyUpdateService.getTeamDailyUpdate(teamId)
+    this.storeSubscriptions.push(this._dailyUpdateService.getTeamDailyUpdate(teamId)
       .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
@@ -325,13 +346,13 @@ export class TeamPage implements OnInit {
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
         console.log("Error getting daily update data", err);
-    });
+    }));
   } //dailyUpdateModule
 
 
 
   private getHeadlines(){
-    this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId, false)
+    this.storeSubscriptions.push(this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId, false)
       .subscribe(
         HeadlineData => {
           this.headlineData = HeadlineData;
@@ -339,7 +360,7 @@ export class TeamPage implements OnInit {
         err => {
           console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
         }
-    )
+    ))
   } //getHeadlines
 
 
@@ -348,10 +369,10 @@ export class TeamPage implements OnInit {
      if ( dateParams != null ) {
        this.dateParam = dateParams;
      }
-     this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+     this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
        this.boxScoresData = boxScoresData;
        this.currentBoxScores = currentBoxScores;
-     })
+     }))
   } //getBoxScores
 
 
@@ -387,7 +408,7 @@ export class TeamPage implements OnInit {
       if(status == 'pregame'){
         this.selectedFilter1 = null;
       }
-      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+      this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
         }else{
@@ -405,7 +426,7 @@ export class TeamPage implements OnInit {
           tab : status == 'pregame' ? 'pregame' : 'postgame',
           pageNum: 1,
         }
-      }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
+      }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
 
 
@@ -439,7 +460,7 @@ export class TeamPage implements OnInit {
       if(this.dropdownKey1 == null){
         this.dropdownKey1 = this.seasonBase;
       }
-      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
+      this.storeSubscriptions.push(this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
         .subscribe(
           transactionsData => {
             if ( this.transactionFilter1 == undefined ) {
@@ -451,7 +472,7 @@ export class TeamPage implements OnInit {
           err => {
             console.log('Error: transactionsData API: ', err);
           }
-      );
+      ));
 
       // pass transaction page route params to module filter, so set module footer route
       this.transactionModuleFooterParams = [
@@ -464,31 +485,31 @@ export class TeamPage implements OnInit {
 
 
     private setupComparisonData() {
-      this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+      this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
         data => {
           this.comparisonModuleData = data;
         },
         err => {
           console.log("Error getting comparison data for "+ this.pageParams.teamId, err);
-        });
+        }));
     } //setupComparisonData
 
 
 
     private getImages(imageData) {
-      this._imagesService.getImages(this.profileType, this.pageParams.teamId)
+      this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.pageParams.teamId)
       .subscribe(data => {
         return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
       },
       err => {
         console.log("Error getting image data" + err);
-      });
+      }));
     } //getImages
 
 
 
     private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
         .subscribe(data => {
           this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
           this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
@@ -496,31 +517,31 @@ export class TeamPage implements OnInit {
         err => {
           console.log("Error getting video data");
         }
-      );
+      ));
     } //getTeamVideoBatch
 
 
 
     private getDykService() {
-      this._dykService.getDykService(this.profileType, this.pageParams.teamId)
+      this.storeSubscriptions.push(this._dykService.getDykService(this.profileType, this.pageParams.teamId)
         .subscribe(data => {
           this.dykData = data;
         },
         err => {
           console.log("Error getting did you know data");
-      });
+      }));
     } //getDykService
 
 
 
     private getFaqService() {
-       this._faqService.getFaqService(this.profileType, this.pageParams.teamId)
+       this.storeSubscriptions.push(this._faqService.getFaqService(this.profileType, this.pageParams.teamId)
          .subscribe(data => {
            this.faqData = data;
          },
          err => {
            console.log("Error getting faq data for team", err);
-       });
+       }));
     } //getFaqService
 
 
@@ -532,7 +553,7 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         scope : this.scope
       }
-      this._lolService.getListOfListsService(params, "team", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module")
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
@@ -540,7 +561,7 @@ export class TeamPage implements OnInit {
           err => {
             console.log('Error: listOfListsData API: ', err);
           }
-      );
+      ));
     } //setupListOfListsModule
 
 
@@ -552,13 +573,13 @@ export class TeamPage implements OnInit {
         id : this.pageParams.teamId
       }
       let scope = GlobalSettings.getScope(this.scope);
-      this._newsService.getNewsService(scope, params, "team", "module")
+      this.storeSubscriptions.push(this._newsService.getNewsService(scope, params, "team", "module")
         .subscribe(data => {
           this.newsDataArray = data.news;
         },
         err => {
           console.log("Error getting news data");
-      });
+      }));
     } //getNewsService
 
 
@@ -591,13 +612,13 @@ export class TeamPage implements OnInit {
 
 
     private getTwitterService() {
-      this._twitterService.getTwitterService(this.profileType, this.pageParams.teamId)
+      this.storeSubscriptions.push(this._twitterService.getTwitterService(this.profileType, this.pageParams.teamId)
         .subscribe(data => {
           this.twitterData = data;
         },
         err => {
           console.log("Error getting twitter data");
-      });
+      }));
     } //getTwitterService
 
 
