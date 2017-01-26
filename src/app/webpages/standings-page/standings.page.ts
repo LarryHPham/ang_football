@@ -145,7 +145,7 @@ export class StandingsPage {
                 }
             ]
         }
-        GlobalFunctions.setPreboot(); // call preboot after last piece of data is returned on page
+        GlobalSettings.setPreboot(); // call preboot after last piece of data is returned on page
         return this.glossary;
     } //getGlossaryValue
 

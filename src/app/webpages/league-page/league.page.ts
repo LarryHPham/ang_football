@@ -258,7 +258,7 @@ export class LeaguePage{
             scope = "ncaaf";
         }
         this._articleDataService.getAiHeadlineDataLeague(null, scope, true)
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
+          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
           .subscribe(
               HeadlineData => {
                   this.headlineData = HeadlineData;

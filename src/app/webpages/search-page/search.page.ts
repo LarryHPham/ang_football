@@ -64,7 +64,7 @@ export class SearchPage{
         }
 
         this._searchService.getSearch()
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(
             data => {
             let searchData = self._searchService.getSearchPageData(this.partnerID, query, filter, data);

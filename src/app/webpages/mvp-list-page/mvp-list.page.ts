@@ -145,7 +145,7 @@ export class MVPListPage implements OnInit {
         // };
 
         this._profileService.getLeagueProfile(this.scope)
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(data => {
               this.profileHeaderData = {
                   imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),

@@ -157,7 +157,7 @@ export class DirectoryPage {
       newlyAdded: this.newlyAdded
     }
     this._directoryService.getData(this.scope, this.pageType, params)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
           data => this.setupData(data),
           err => {
