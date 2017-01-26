@@ -112,7 +112,7 @@ export class ContactUsPage {
 
     ngAfterViewInit(){
       this.metaTags();
-      GlobalFunctions.setPreboot();
+      GlobalSettings.setPreboot();
     }
 
 
