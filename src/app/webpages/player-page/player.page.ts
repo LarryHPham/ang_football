@@ -7,6 +7,7 @@ import { Title } from '@angular/platform-browser';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
+import { isBrowser, isNode } from "angular2-universal";
 
 //services
 import { ProfileHeaderService } from '../../services/profile-header.service';
@@ -130,11 +131,11 @@ export class PlayerPage{
       (param: any) => {
         this.resetSubscription();
         this.routeChangeResets();
+
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
         this.teamName = param['teamName'];
         this.fullName = param['fullName'];
         this.playerID = param['playerID'];
-
         this.pageParams = { playerId: this.playerID }
 
         this.storedPartnerParam = GlobalSettings.storedPartnerId();
@@ -144,15 +145,39 @@ export class PlayerPage{
 
   } //constructor
 
-
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
+    this.dateParam = null;
     this.profileHeaderData = null;
+    this.boxScoresData = null;
+    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
-    // TODO // window.scrollTo(0, 0);
+    if(isBrowser){
+      window.scrollTo(0, 0);
+    }
   } //routeChangeResets
 
+  ngOnDestroy(){
+    this._seoService.removeApplicationJSON('page');
+    this._seoService.removeApplicationJSON('json');
 
+    if(this.routeSubscriptions){
+      this.routeSubscriptions.unsubscribe();
+    }
+    this.resetSubscription();
+  } //ngOnDestroy
+
+  private resetSubscription(){
+    if(this.storeSubscriptions){
+      var numOfSubs = this.storeSubscriptions.length;
+
+      for( var i = 0; i < numOfSubs; i++ ){
+        if(this.storeSubscriptions[i]){
+          this.storeSubscriptions[i].unsubscribe();
+        }
+      }
+    }
+  }
 
   private setupPlayerProfileData() {
     this.storeSubscriptions.push(this._profileService.getPlayerProfile(this.playerID).subscribe(
@@ -172,7 +197,6 @@ export class PlayerPage{
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
           date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
-          // date: '2015-09-11'
         } //this.dateParam
 
         this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
@@ -209,8 +233,6 @@ export class PlayerPage{
       }
     ));
   } //setupPlayerProfileData
-
-
 
   private metaTags(data) {
     //This call will remove all meta tags from the head.
@@ -285,24 +307,6 @@ export class PlayerPage{
     this._seoService.setApplicationJSON(teamSchema, 'page');
     this._seoService.setApplicationJSON(jsonSchema, 'json');
   } //metaTags
-
-  ngOnDestroy(){
-    this._seoService.removeApplicationJSON('page');
-    this._seoService.removeApplicationJSON('json');
-
-    this.routeSubscriptions.unsubscribe();
-    this.resetSubscription();
-  } //ngOnDestroy
-
-  private resetSubscription(){
-    var numOfSubs = this.storeSubscriptions.length;
-
-    for( var i = 0; i < numOfSubs; i++ ){
-      if(this.storeSubscriptions[i]){
-        this.storeSubscriptions[i].unsubscribe();
-      }
-    }
-  }
 
   private dailyUpdateModule(playerId: number) {
     this.imageConfig = this._dailyUpdateService.getImageConfig();

@@ -176,10 +176,12 @@ export class SeoService {
   }
 
   public removeApplicationJSON(id) {
-    let el:HTMLElement;
-    el = document.getElementById(id);
-    if (el != null) {
-      el.remove();
+    if(isBrowser){
+      let el:HTMLElement;
+      el = document.getElementById(id);
+      if (el != null) {
+        el.remove();
+      }
     }
   }
 
