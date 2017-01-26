@@ -137,10 +137,10 @@ export class SchedulesService {
           {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
         ];
         scheduleData = {
-          data:tableData,
-          tabs:tabData,
+          data: tableData ? tableData : null,
+          tabs: tabData ? tabData : null,
           carData: this.setupCarouselData(gamesData, tableData[0], limit),
-          pageInfo:{
+          pageInfo: {
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
           },
@@ -148,9 +148,11 @@ export class SchedulesService {
           weeks: data.data.info.weeks.length > 0 ? this.formatWeekDropdown(data.data.info.weeks):null
         }
         callback(scheduleData);
-      },
+    },
     err => callback(null))
-  }
+  } //getScheduleTable
+
+
 
   formatYearDropdown(data){
     let yearArray = [];
