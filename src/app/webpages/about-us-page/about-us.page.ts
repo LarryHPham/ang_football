@@ -108,7 +108,7 @@ export class AboutUsPage {
 
     loadData(partnerID?:string, scope?:string) {
         this._service.getData(partnerID, scope)
-        .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+        .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
         .subscribe(
           data => this.setupAboutUsData(data),
           err => {

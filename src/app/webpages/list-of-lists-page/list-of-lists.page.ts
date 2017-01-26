@@ -86,7 +86,7 @@ export class ListOfListsPage implements OnInit {
 
     getListOfListsPage(urlParams, logoUrl?: string) {
         this.listService.getListOfListsService(urlParams, urlParams.target, "page")
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(
             list => {
                 if(list.listData.length == 0){//makes sure it only runs once

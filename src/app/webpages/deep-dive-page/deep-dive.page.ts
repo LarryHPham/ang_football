@@ -257,7 +257,7 @@ export class DeepDivePage {
         console.log("Error getting first article stack data");
       });
     this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(data => {
         this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
       },

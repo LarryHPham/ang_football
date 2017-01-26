@@ -339,7 +339,7 @@ export class TeamPage implements OnInit {
 
   private dailyUpdateModule(teamId: number) {
     this.storeSubscriptions.push(this._dailyUpdateService.getTeamDailyUpdate(teamId)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
       },

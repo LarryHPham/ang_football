@@ -45,6 +45,6 @@ export class ErrorPage {
   loadData(partnerID:string) {
     this.pageLink = GlobalSettings.getHomePage(partnerID);
     this.errorMessage = "Oops! That page doesn't exist! Try Refreshing or go to <a class='text-master' href='/'"+ this.pageLink +"'> our home page</a>!";
-    GlobalFunctions.setPreboot();
+    GlobalSettings.setPreboot();
   } //loadData
 }
