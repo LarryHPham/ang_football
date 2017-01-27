@@ -387,22 +387,27 @@ export class ArticleDataService {
   }
 
   static processHeadlineData(data, scope, teamID, isLeague) {
-    var scheduleData = !isLeague ? ArticleDataService.getScheduleData(data.home, data.away, scope, teamID) : null;
-    var mainArticleData = ArticleDataService.getMainArticle(data, scope, isLeague);
-    var subArticleData = ArticleDataService.getSubArticles(data, data.event, scope, isLeague);
-    return {
-      home: {
-        id: !isLeague ? data['home'].id : null,
-        name: !isLeague ? data['home'].name : null
-      },
-      away: {
-        id: !isLeague ? data['away'].id : null,
-        name: !isLeague ? data['away'].name : null
-      },
-      timestamp: data.timestamp,
-      scheduleData: scheduleData,
-      mainArticleData: mainArticleData,
-      subArticleData: subArticleData
+    try{
+      var scheduleData = !isLeague ? ArticleDataService.getScheduleData(data.home, data.away, scope, teamID) : null;
+      var mainArticleData = ArticleDataService.getMainArticle(data, scope, isLeague);
+      var subArticleData = ArticleDataService.getSubArticles(data, data.event, scope, isLeague);
+      return {
+        home: {
+          id: !isLeague ? data['home'].id : null,
+          name: !isLeague ? data['home'].name : null
+        },
+        away: {
+          id: !isLeague ? data['away'].id : null,
+          name: !isLeague ? data['away'].name : null
+        },
+        timestamp: data.timestamp,
+        scheduleData: scheduleData,
+        mainArticleData: mainArticleData,
+        subArticleData: subArticleData
+      }
+    }catch(e){
+      console.warn('Invalid Error: Data provided does not match what was expected',e);
+      return null;
     }
   }
 
@@ -464,19 +469,24 @@ export class ArticleDataService {
   }
 
   static getMainArticle(data, scope, isLeague) {
-    var pageIndex = !isLeague ? Object.keys(data['featuredReport'])[0] : "postgame-report";
-    var articleContent = !isLeague ? data['featuredReport'][pageIndex][0].teaser : data[0].teaser;
-    var trimmedArticle = articleContent.substring(0, 1000);
-    return {
-      keyword: !isLeague ? ArticleDataService.setFeatureType(pageIndex) : "POSTGAME",
-      mainTitle: !isLeague ? data['featuredReport'][pageIndex][0].title : data[0].title,
-      eventType: pageIndex,
-      mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
-      mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
-        data['featuredReport'][pageIndex][0].image_url : data[0].image_url),
-      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, !isLeague ?
-        data['featuredReport'][pageIndex][0].event_id : data[0].event_id),
-      mainHeadlineId: isLeague ? data[0].event_id : null
+    try{
+      var pageIndex = !isLeague ? Object.keys(data['featuredReport'])[0] : "postgame-report";
+      var articleContent = !isLeague ? data['featuredReport'][pageIndex][0].teaser : data[0].teaser;
+      var trimmedArticle = articleContent.substring(0, 1000);
+      return {
+        keyword: !isLeague ? ArticleDataService.setFeatureType(pageIndex) : "POSTGAME",
+        mainTitle: !isLeague ? data['featuredReport'][pageIndex][0].title : data[0].title,
+        eventType: pageIndex,
+        mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
+        mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
+          data['featuredReport'][pageIndex][0].image_url : data[0].image_url),
+          articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, !isLeague ?
+            data['featuredReport'][pageIndex][0].event_id : data[0].event_id),
+            mainHeadlineId: isLeague ? data[0].event_id : null
+          }
+    }catch(e){
+      console.error(e);
+      return null;
     }
   }
 

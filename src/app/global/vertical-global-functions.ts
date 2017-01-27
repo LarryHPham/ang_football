@@ -34,6 +34,7 @@ export class VerticalGlobalFunctions {
     else {
       route = '';
     }
+    console.log('getWhiteLabel', partner, route);
     return route;
   } //getWhiteLabel
 
