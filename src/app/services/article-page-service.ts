@@ -5,6 +5,7 @@ import { GlobalFunctions } from "../global/global-functions";
 import { ModelService } from "../global/shared/model/model.service";
 import { Gradient } from "../global/global-gradient";
 import { isBrowser } from 'angular2-universal';
+import { Observable } from "rxjs/Observable";
 
 declare var moment;
 
@@ -374,7 +375,11 @@ export class ArticleDataService {
   getAiHeadlineData(scope, teamID, isLeague) {
     var fullUrl = GlobalSettings.getArticleDataUrl();
     return this.model.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
-      .map(headlineData => ArticleDataService.processHeadlineData(headlineData.data, scope, teamID, isLeague));
+      .map(headlineData => ArticleDataService.processHeadlineData(headlineData.data, scope, teamID, isLeague))
+      .catch(err=> {
+        console.log('Error', err);
+        return Observable.throw(err);
+      });
   }
 
   getAiHeadlineDataLeague(count, scope, isLeague) {
@@ -387,22 +392,27 @@ export class ArticleDataService {
   }
 
   static processHeadlineData(data, scope, teamID, isLeague) {
-    var scheduleData = !isLeague ? ArticleDataService.getScheduleData(data.home, data.away, scope, teamID) : null;
-    var mainArticleData = ArticleDataService.getMainArticle(data, scope, isLeague);
-    var subArticleData = ArticleDataService.getSubArticles(data, data.event, scope, isLeague);
-    return {
-      home: {
-        id: !isLeague ? data['home'].id : null,
-        name: !isLeague ? data['home'].name : null
-      },
-      away: {
-        id: !isLeague ? data['away'].id : null,
-        name: !isLeague ? data['away'].name : null
-      },
-      timestamp: data.timestamp,
-      scheduleData: scheduleData,
-      mainArticleData: mainArticleData,
-      subArticleData: subArticleData
+    try {
+      var scheduleData = !isLeague ? ArticleDataService.getScheduleData(data.home, data.away, scope, teamID) : null;
+      var mainArticleData = ArticleDataService.getMainArticle(data, scope, isLeague);
+      var subArticleData = ArticleDataService.getSubArticles(data, data.event, scope, isLeague);
+      return {
+        home: {
+          id: !isLeague ? data['home'].id : null,
+          name: !isLeague ? data['home'].name : null
+        },
+        away: {
+          id: !isLeague ? data['away'].id : null,
+          name: !isLeague ? data['away'].name : null
+        },
+        timestamp: data.timestamp,
+        scheduleData: scheduleData,
+        mainArticleData: mainArticleData,
+        subArticleData: subArticleData
+      }
+    } catch(err) {
+      console.log('Error', err);
+      return null
     }
   }
 
