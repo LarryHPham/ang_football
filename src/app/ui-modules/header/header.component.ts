@@ -112,7 +112,6 @@ export class HeaderComponent implements AfterContentChecked {
       }
       // fix for 'page overscroll' in safari
       if (scrollTop == 0) {
-        console.log('zero');
         this.menuTransitionAmount = 0;
       }
 
