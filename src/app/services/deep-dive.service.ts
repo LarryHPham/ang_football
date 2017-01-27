@@ -326,7 +326,7 @@ export class DeepDiveService {
     // remove duplicates from array
     var imagePaths = imagePaths.filter( function(item, index, inputArray) {
       return inputArray.indexOf(item) == index;
-    });
+    }); 
 
 
     for(var i = 0; i < 3; i++){
