@@ -356,9 +356,6 @@ export class TeamPage implements OnInit {
       .subscribe(
         HeadlineData => {
           this.headlineData = HeadlineData;
-        },
-        err => {
-          console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
         }
     ))
   } //getHeadlines

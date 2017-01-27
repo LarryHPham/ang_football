@@ -5,11 +5,13 @@ import { GlobalFunctions } from "../global/global-functions";
 import { ModelService } from "../global/shared/model/model.service";
 import { Gradient } from "../global/global-gradient";
 import { isBrowser } from 'angular2-universal';
+import { Observable } from "rxjs/Observable";
 
 declare var moment;
 
 @Injectable()
 export class ArticleDataService {
+  pageIndex:string;
   public collegeDivisionAbbrv:string = GlobalSettings.getCollegeDivisionAbbrv();
   public collegeDivisionFullAbbrv:string = GlobalSettings.getCollegeDivisionFullAbbrv();
 
@@ -374,8 +376,13 @@ export class ArticleDataService {
   getAiHeadlineData(scope, teamID, isLeague) {
     var fullUrl = GlobalSettings.getArticleDataUrl();
     return this.model.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
-      .map(headlineData => ArticleDataService.processHeadlineData(headlineData.data, scope, teamID, isLeague));
+      .map(headlineData => this.processHeadlineData(headlineData.data, scope, teamID, isLeague))
+      .catch(err=> {
+        console.log('Error', err);
+        return Observable.throw(err);
+      });
   }
+
 
   getAiHeadlineDataLeague(count, scope, isLeague) {
     if (count == null) {
@@ -383,13 +390,17 @@ export class ArticleDataService {
     }
     var fullUrl = GlobalSettings.getArticleUrl();
     return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
-      .map(headlineData => ArticleDataService.processHeadlineData(headlineData.data, scope, null, isLeague));
+      .map(headlineData => this.processHeadlineData(headlineData.data, scope, null, isLeague))
+      .catch(err=> {
+        console.log('Error', err);
+        return Observable.throw(err);
+      });
   }
 
-  static processHeadlineData(data, scope, teamID, isLeague) {
-    try{
+  processHeadlineData(data, scope, teamID, isLeague) {
+    try {
       var scheduleData = !isLeague ? ArticleDataService.getScheduleData(data.home, data.away, scope, teamID) : null;
-      var mainArticleData = ArticleDataService.getMainArticle(data, scope, isLeague);
+      var mainArticleData = this.getMainArticle(data, scope, isLeague);
       var subArticleData = ArticleDataService.getSubArticles(data, data.event, scope, isLeague);
       return {
         home: {
@@ -405,9 +416,9 @@ export class ArticleDataService {
         mainArticleData: mainArticleData,
         subArticleData: subArticleData
       }
-    }catch(e){
-      console.warn('Invalid Error: Data provided does not match what was expected',e);
-      return null;
+    } catch (err) {
+      console.log('Error', err);
+      return null
     }
   }
 
@@ -468,22 +479,33 @@ export class ArticleDataService {
     }
   }
 
-  static getMainArticle(data, scope, isLeague) {
-    try{
-      var pageIndex = !isLeague ? Object.keys(data['featuredReport'])[0] : "postgame-report";
-      var articleContent = !isLeague ? data['featuredReport'][pageIndex][0].teaser : data[0].teaser;
-      var trimmedArticle = articleContent.substring(0, 1000);
-      return {
-        keyword: !isLeague ? ArticleDataService.setFeatureType(pageIndex) : "POSTGAME",
-        mainTitle: !isLeague ? data['featuredReport'][pageIndex][0].title : data[0].title,
-        eventType: pageIndex,
-        mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
-        mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
-          data['featuredReport'][pageIndex][0].image_url : data[0].image_url),
-          articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, !isLeague ?
-            data['featuredReport'][pageIndex][0].event_id : data[0].event_id),
-            mainHeadlineId: isLeague ? data[0].event_id : null
-          }
+  getMainArticle(data, scope, isLeague) {
+  	try{
+		var fullIndex, articleContent;
+	    if (!isLeague && data['featuredReport'] != undefined) {
+	      this.pageIndex = Object.keys(data['featuredReport'])[0];
+	      fullIndex = data['featuredReport'][this.pageIndex][0];
+	      articleContent = fullIndex.teaser;
+	    } else if (!isLeague) {
+	      this.pageIndex = 'about-the-teams';
+	      fullIndex = data['otherReports'][this.pageIndex];
+	      articleContent = fullIndex.teaser;
+	    } else {
+	      this.pageIndex = "postgame-report";
+	      articleContent = data[0].teaser;
+	    }
+	    var trimmedArticle = articleContent.substring(0, 1000);
+	    return {
+	      keyword: !isLeague ? ArticleDataService.setFeatureType(this.pageIndex) : "POSTGAME",
+	      mainTitle: !isLeague ? fullIndex.title : data[0].title,
+	      eventType: this.pageIndex,
+	      mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
+	      mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
+	        fullIndex.image_url : data[0].image_url),
+	      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, this.pageIndex, !isLeague ?
+	        fullIndex.event_id : data[0].event_id),
+	      mainHeadlineId: isLeague ? data[0].event_id : null
+	    }
     }catch(e){
       console.error(e);
       return null;
@@ -705,6 +727,8 @@ export class ArticleDataService {
         return 'PREGAME';
       case'postgame-report':
         return 'POSTGAME';
+      case 'about-the-teams':
+        return 'ABOUT THE TEAMS';
       default:
         return 'LIVE';
     }

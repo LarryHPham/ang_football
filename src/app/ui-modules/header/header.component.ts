@@ -110,6 +110,10 @@ export class HeaderComponent implements AfterContentChecked {
         this.scrollMenuUp = false;
         this.menuTransitionAmount = 0;
       }
+      // fix for 'page overscroll' in safari
+      if (scrollTop == 0) {
+        this.menuTransitionAmount = 0;
+      }
 
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
     }
