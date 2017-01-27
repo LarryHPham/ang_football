@@ -348,50 +348,55 @@ export class BoxScoresService {
     //TO MATCH HTML the profile client is on will be detected by teamID and a left and right format will be made with the home and away team data
   formatSchedule(data, teamId?, profile?){
     if(data != null){
-      data = data[0];
-      let awayData = data.awayTeamInfo;
-      let homeData = data.homeTeamInfo;
-      let gameInfo = data.gameInfo;
-      var left, right;
+      try {
+        data = data[0];
+        let awayData = data.awayTeamInfo;
+        let homeData = data.homeTeamInfo;
+        let gameInfo = data.gameInfo;
+        var left, right;
 
-      let scope = gameInfo.isNCAA == true ? 'ncaaf' : 'nfl';
-      var homeRoute = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
-      var awayRoute = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
-      if(profile == 'team'){
-        if(teamId == homeData.id){
-          homeRoute = null;
-        }else{
-          awayRoute = null;
+        let scope = gameInfo.isNCAA == true ? 'ncaaf' : 'nfl';
+        var homeRoute = VerticalGlobalFunctions.formatTeamRoute(scope, homeData.name, homeData.id);
+        var awayRoute = VerticalGlobalFunctions.formatTeamRoute(scope, awayData.name, awayData.id);
+        if(profile == 'team'){
+          if(teamId == homeData.id){
+            homeRoute = null;
+          }else{
+            awayRoute = null;
+          }
         }
+        var homeLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(homeData.logo), homeRoute);
+        var awayLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(awayData.logo), awayRoute);
+        right = {
+          homeHex:homeData.colors.split(', ')[0], //parse out comma + space to grab only hex colors
+          homeID:homeData.id,
+          homeLocation:homeData.firstName, // first name of team usually represents the location
+          homeLogo:homeLogo,
+          url:homeRoute,
+          homeLosses:homeData.lossRecord,
+          homeName:homeData.lastName,
+          homeWins:homeData.winRecord
+        };
+        left = {
+          awayHex:awayData.colors.split(', ')[0],
+          awayID:awayData.id,
+          awayLocation:awayData.firstName,
+          awayLogo: awayLogo,
+          url:awayRoute,
+          awayLosses:awayData.lossRecord,
+          awayName:awayData.lastName,
+          awayWins:awayData.winRecord
+        };
+        // convert data given into format needed for the schedule banner on module
+        return {
+          gradient:Gradient.getGradientStyles([left.awayHex, right.homeHex]),
+          home:right,
+          away:left
+        };
       }
-      var homeLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(homeData.logo), homeRoute);
-      var awayLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(awayData.logo), awayRoute);
-      right = {
-        homeHex:homeData.colors.split(', ')[0], //parse out comma + space to grab only hex colors
-        homeID:homeData.id,
-        homeLocation:homeData.firstName, // first name of team usually represents the location
-        homeLogo:homeLogo,
-        url:homeRoute,
-        homeLosses:homeData.lossRecord,
-        homeName:homeData.lastName,
-        homeWins:homeData.winRecord
-      };
-      left = {
-        awayHex:awayData.colors.split(', ')[0],
-        awayID:awayData.id,
-        awayLocation:awayData.firstName,
-        awayLogo: awayLogo,
-        url:awayRoute,
-        awayLosses:awayData.lossRecord,
-        awayName:awayData.lastName,
-        awayWins:awayData.winRecord
-      };
-      // convert data given into format needed for the schedule banner on module
-      return {
-        gradient:Gradient.getGradientStyles([left.awayHex, right.homeHex]),
-        home:right,
-        away:left
-      };
+      catch(e) {
+        return null;
+      }
     }else{
       return null
     }
