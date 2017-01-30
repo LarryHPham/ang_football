@@ -264,9 +264,6 @@ export class LeaguePage{
           .subscribe(
               HeadlineData => {
                   this.headlineData = HeadlineData;
-              },
-              err => {
-                  console.log("Error loading AI headline data for League Page", err);
               }
           )
     } //getLeagueHeadlines
