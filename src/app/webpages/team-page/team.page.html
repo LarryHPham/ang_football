@@ -21,7 +21,7 @@
           *ngIf="headlineData"
           [headlineData]="headlineData"
           [isLeague]="false"></articles-module>
-        <!-- <responsive-widget *ngIf="headlineData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget> -->
+        <!-- <responsive-widget *ngIf="headlineData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget> -->
         <box-scores
           *ngIf="dateParam"
           [boxScores]="currentBoxScores"
@@ -53,7 +53,7 @@
         <responsive-widget
           *ngIf="standingsData"
           [embedPlace]="widgetPlace"
-          [displayAtRes]="'1024'"></responsive-widget>
+          [displayAtRes]="'992'"></responsive-widget>
         <team-roster-module
           *ngIf="rosterData"
           [data]="rosterData"></team-roster-module>
@@ -81,7 +81,7 @@
           [dropdownKey1]="dropdownKey1"
           (tabSwitched)="transactionsTab($event)"
           (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
-        <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+        <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
         <draft-history-module
           *ngIf="scope == 'nfl' && profileData"
           [footerData]="pageParams"
@@ -111,7 +111,7 @@
           [videoData]="videoData"
           [profileHeader]="profileHeaderData"
           [isProfilePage]="isProfilePage"></video-module>
-        <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+        <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
         <dyk-module
           *ngIf="dykData"
           [profileName]="profileHeaderData.profileName"
@@ -132,7 +132,7 @@
           [teamId]="pageParams.teamId"
           [scope]="scope"
           [storedPartnerParam]="storedPartnerParam"></list-of-lists>
-        <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+        <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
 
         <news-module
           *ngIf="newsDataArray"
