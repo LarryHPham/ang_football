@@ -126,8 +126,10 @@ export class SportsComparisonModuleData implements ComparisonModuleData {
       // teams in the list
       if ( !this.teamList || this.teamList.length <= 2 ) {
         this._service.getTeamList().subscribe(data => {
-          this.teamList = data;
-          listLoaded(this.teamList);
+          if(data){
+            this.teamList = data;
+            listLoaded(this.teamList);
+          }
         },
         err => {
           console.log("Error loading team list for comparison module", err);
@@ -282,10 +284,14 @@ export class ComparisonStatsService {
   }
 
   getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
+    scope = this.scope == 'ncaaf' ? 'fbs' : 'nfl';
     let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;
     return this.model.get(teamsUrl)
       .map(data => {
-        return this.formatTeamList(data.data);
+          if(data.data){
+            return this.formatTeamList(data.data);
+          }
+          return null;
     });
   }
 
@@ -315,10 +321,16 @@ export class ComparisonStatsService {
   }
   */
   private formatTeamList(teamList) {
-    return teamList.map(team => {
-      var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
-      return {key: team.id, value: teamName};
-    });
+    try{
+      if(teamList.data){
+        return teamList.map(team => {
+          var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
+          return {key: team.id, value: teamName};
+        });
+      }
+    }catch(e){
+      console.warn(e);
+    }
   }
 
   private formatPlayerList(playerList: TeamPlayers) {
