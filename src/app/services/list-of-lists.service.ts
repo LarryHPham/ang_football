@@ -52,6 +52,7 @@ export class ListOfListsService {
 
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
+    console.log(callURL);
     return this.model.get( callURL )
       .map(
         data => {

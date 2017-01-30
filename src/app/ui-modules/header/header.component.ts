@@ -93,7 +93,7 @@ export class HeaderComponent implements AfterContentChecked {
     if (isBrowser) {
       var headerBottom = document.getElementById('header-bottom');
       var headerBottomHeight = headerBottom.offsetHeight;
-      var scrollTop = event.srcElement.body.scrollTop;
+      var scrollTop = event.target != null ? event.target.body.scrollTop: 0;
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
 
