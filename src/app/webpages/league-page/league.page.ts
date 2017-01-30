@@ -44,6 +44,8 @@ declare var moment;
 })
 
 export class LeaguePage{
+    public widgetPlace: string = "widgetForModule";
+    
     public partnerID: string;
     public scope: string;
     public paramsub: any;

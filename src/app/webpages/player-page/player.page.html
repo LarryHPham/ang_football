@@ -30,7 +30,10 @@
             [boxScores]="currentBoxScores"
             [calendarParams]="dateParam"
             (dateEmit)="getBoxScores($event)"></box-scores>
-            <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+            <responsive-widget
+              *ngIf="dateParam"
+              [embedPlace]="widgetPlace"
+              [displayAtRes]="'992'"></responsive-widget>
             <schedules *ngIf="schedulesData"
               [footerParams]="scheduleParams"
               [profHeader]="profileHeaderData"
@@ -75,7 +78,7 @@
             *ngIf="dykData && dykData.length > 0"
             [profileName]="profileHeaderData.profileName"
             [dykData]="dykData"></dyk-module>
-          <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+          <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
           <faq-module
             *ngIf="faqData"
             [profileName]="profileHeaderData.profileName"
