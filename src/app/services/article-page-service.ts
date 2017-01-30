@@ -373,7 +373,6 @@ export class ArticleDataService {
   }//end trending data processing
 
   //headline data processing
-  //headline data processing
   getAiHeadlineData(scope, teamID, isLeague) {
     var fullUrl = GlobalSettings.getArticleDataUrl();
     return this.model.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
@@ -383,6 +382,7 @@ export class ArticleDataService {
         return Observable.throw(err);
       });
   }
+
 
   getAiHeadlineDataLeague(count, scope, isLeague) {
     if (count == null) {
@@ -480,30 +480,35 @@ export class ArticleDataService {
   }
 
   getMainArticle(data, scope, isLeague) {
-    var fullIndex, articleContent;
-    if (!isLeague && data['featuredReport'] != undefined) {
-      this.pageIndex = Object.keys(data['featuredReport'])[0];
-      fullIndex = data['featuredReport'][this.pageIndex][0];
-      articleContent = fullIndex.teaser;
-    } else if (!isLeague) {
-      this.pageIndex = 'about-the-teams';
-      fullIndex = data['otherReports'][this.pageIndex];
-      articleContent = fullIndex.teaser;
-    } else {
-      this.pageIndex = "postgame-report";
-      articleContent = data[0].teaser;
-    }
-    var trimmedArticle = articleContent.substring(0, 1000);
-    return {
-      keyword: !isLeague ? ArticleDataService.setFeatureType(this.pageIndex) : "POSTGAME",
-      mainTitle: !isLeague ? fullIndex.title : data[0].title,
-      eventType: this.pageIndex,
-      mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
-      mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
-        fullIndex.image_url : data[0].image_url),
-      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, this.pageIndex, !isLeague ?
-        fullIndex.event_id : data[0].event_id),
-      mainHeadlineId: isLeague ? data[0].event_id : null
+  	try{
+		var fullIndex, articleContent;
+	    if (!isLeague && data['featuredReport'] != undefined) {
+	      this.pageIndex = Object.keys(data['featuredReport'])[0];
+	      fullIndex = data['featuredReport'][this.pageIndex][0];
+	      articleContent = fullIndex.teaser;
+	    } else if (!isLeague) {
+	      this.pageIndex = 'about-the-teams';
+	      fullIndex = data['otherReports'][this.pageIndex];
+	      articleContent = fullIndex.teaser;
+	    } else {
+	      this.pageIndex = "postgame-report";
+	      articleContent = data[0].teaser;
+	    }
+	    var trimmedArticle = articleContent.substring(0, 1000);
+	    return {
+	      keyword: !isLeague ? ArticleDataService.setFeatureType(this.pageIndex) : "POSTGAME",
+	      mainTitle: !isLeague ? fullIndex.title : data[0].title,
+	      eventType: this.pageIndex,
+	      mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
+	      mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
+	        fullIndex.image_url : data[0].image_url),
+	      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, this.pageIndex, !isLeague ?
+	        fullIndex.event_id : data[0].event_id),
+	      mainHeadlineId: isLeague ? data[0].event_id : null
+	    }
+    }catch(e){
+      console.error(e);
+      return null;
     }
   }
 
