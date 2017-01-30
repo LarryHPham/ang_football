@@ -30,7 +30,10 @@
             [boxScores]="currentBoxScores"
             [calendarParams]="dateParam"
             (dateEmit)="getBoxScores($event)"></box-scores>
-            <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+            <responsive-widget
+              *ngIf="dateParam"
+              [embedPlace]="widgetPlace"
+              [displayAtRes]="'1024'"></responsive-widget>
             <schedules *ngIf="schedulesData"
               [footerParams]="scheduleParams"
               [profHeader]="profileHeaderData"

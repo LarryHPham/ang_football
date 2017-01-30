@@ -52,6 +52,8 @@ declare var Zone: any;
 })
 
 export class TeamPage implements OnInit {
+  public widgetPlace: string = "widgetForModule";
+
   private constructorControl:boolean = true;
   public partnerID: string;
   public scope: string;

@@ -47,6 +47,8 @@ declare var moment;
 })
 
 export class PlayerPage{
+  public widgetPlace: string = "widgetForModule";
+  
   public currentUnixDate = new Date().getTime();
   private constructorControl:boolean = true;
   public partnerID: string;
