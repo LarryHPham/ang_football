@@ -595,19 +595,18 @@ export class TeamPage implements OnInit {
         var seasonArray = tabData[0];
         var seasonIds = seasonArray.seasonIds;
         var seasonTab = seasonIds.find(function (e) {
-            if( e.value === tabData[1]){
-                return true;
-            }
+          if( e.value === tabData[1]){
+            return true;
+          }
         });
         if (tabData[0].tabActive=="Special"){
             this.ptabName="Kicking";
             if(seasonTab){
-
-            }else{
-                this.ptabName=tabData[1];
+            } else {
+              this.ptabName=tabData[1];
             }
-        }else{
-            this.ptabName=tabData[0].tabActive;
+        } else {
+          this.ptabName=tabData[0].tabActive;
         };
     }
 
