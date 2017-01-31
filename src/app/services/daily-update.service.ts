@@ -146,7 +146,6 @@ export class DailyUpdateService {
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/player/' + playerId;
 
     return this.model.get(url)
-        .map(res => res.json())
         .map(data => this.formatPlayerData(data.data, playerId));
   }
 
