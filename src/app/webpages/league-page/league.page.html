@@ -31,7 +31,7 @@
             (tabSelected)="scheduleTab($event)"
             (selectedKeyFilter)="filterDropdown($event)">
           </schedules>
-          <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+          <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
         </div> <!--loadBatch2-->
 
         <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
@@ -78,7 +78,7 @@
             [modelData]="comparisonModuleData"
             [profileName]="profileHeaderData.profileName"
             [scope]="scope"></comparison-module>
-          <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+          <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
           <div class="profile-carousel-container">
             <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
           </div>
@@ -104,7 +104,7 @@
           <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
           <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
-          <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [displayAtRes]="'1024'"></responsive-widget>
+          <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
           <!--Like Us On FB Module, only display if not on partner page-->
           <section *ngIf="!partnerID">
             <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
