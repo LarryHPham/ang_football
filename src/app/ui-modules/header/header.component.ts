@@ -93,7 +93,7 @@ export class HeaderComponent implements AfterContentChecked {
     if (isBrowser) {
       var headerBottom = document.getElementById('header-bottom');
       var headerBottomHeight = headerBottom.offsetHeight;
-      var scrollTop = event.target != null ? event.target.body.scrollTop: 0;
+      var scrollTop = event.srcElement ? event.srcElement.body.scrollTop : document.documentElement.scrollTop; //fallback for firefox scroll events
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
 
@@ -114,7 +114,6 @@ export class HeaderComponent implements AfterContentChecked {
       if (scrollTop == 0) {
         this.menuTransitionAmount = 0;
       }
-
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
     }
   }//onScrollStick ends
