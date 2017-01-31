@@ -72,7 +72,7 @@ export class PlayerStatsService{
 
             if(standingsTab.tabActive=="Special"){
                 //console.log(this.tabName);
-                this.tabName=this.tabName;
+                this.tabName='Kicking';
 
             }else {
                 this.tabName = standingsTab.tabTitle.toLowerCase();
@@ -121,6 +121,7 @@ export class PlayerStatsService{
 
 
         let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
+
         this.model.get(url)
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {

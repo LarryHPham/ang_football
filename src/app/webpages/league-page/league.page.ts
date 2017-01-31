@@ -45,7 +45,7 @@ declare var moment;
 
 export class LeaguePage{
     public widgetPlace: string = "widgetForModule";
-    
+
     public partnerID: string;
     public scope: string;
     public paramsub: any;
@@ -525,9 +525,9 @@ export class LeaguePage{
       this._lolService.getListOfListsService(params, "league", "module")
         .subscribe(
           listOfListsData => {
-            this.listOfListsData = listOfListsData.listData;
-            // this.listOfListsData["id"] = this.pageParams.teamId;
-            // this.listOfListsData["type"] = "league";
+            if(listOfListsData){
+              this.listOfListsData = listOfListsData.listData;
+            }
           },
           err => {
             console.log('Error: listOfListsData API: ', err);
