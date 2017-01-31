@@ -145,8 +145,7 @@ export class DailyUpdateService {
 
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/player/' + playerId;
 
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => this.formatPlayerData(data.data, playerId));
   }
 
@@ -256,28 +255,38 @@ export class DailyUpdateService {
       name: data.recentGames["gameStat2Type"] != null ? data.recentGames["gameStat2Type"] : "N/A",
       key: "gameStat2"
     };
-    data['recentGamesChartData'] =[
-      {
-        gameStat1: data.recentGames["game1Stat1"] != null ? data.recentGames["game1Stat1"] : "N/A",
-        gameStat2: data.recentGames["game1Stat2"] != null ? data.recentGames["game1Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game1AgainstNick"] != null ? data.recentGames["game1AgainstNick"] : "N/A"
-      },
-      {
-        gameStat1: data.recentGames["game2Stat1"] != null ? data.recentGames["game2Stat1"] : "N/A",
-        gameStat2: data.recentGames["game2Stat2"] != null ? data.recentGames["game2Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game2AgainstNick"] != null ? data.recentGames["game2AgainstNick"] : "N/A"
-      },
-      {
-        gameStat1: data.recentGames["game3Stat1"] != null ? data.recentGames["game3Stat1"] : "N/A",
-        gameStat2: data.recentGames["game3Stat2"] != null ? data.recentGames["game3Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game3AgainstNick"] != null ? data.recentGames["game3AgainstNick"] : "N/A"
-      },
-      {
-        gameStat1: data.recentGames["game4Stat1"] != null ? data.recentGames["game4Stat1"] : "N/A",
-        gameStat2: data.recentGames["game4Stat2"] != null ? data.recentGames["game4Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game4AgainstNick"] != null ? data.recentGames["game4AgainstNick"] : "N/A"
+    try{
+      if(data.recentGames["game1AgainstNick"] != null){
+        data['recentGamesChartData'] =[
+          {
+            gameStat1: data.recentGames["game1Stat1"] != null ? data.recentGames["game1Stat1"] : "N/A",
+            gameStat2: data.recentGames["game1Stat2"] != null ? data.recentGames["game1Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game1AgainstNick"] != null ? data.recentGames["game1AgainstNick"] : "N/A"
+          },
+          {
+            gameStat1: data.recentGames["game2Stat1"] != null ? data.recentGames["game2Stat1"] : "N/A",
+            gameStat2: data.recentGames["game2Stat2"] != null ? data.recentGames["game2Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game2AgainstNick"] != null ? data.recentGames["game2AgainstNick"] : "N/A"
+          },
+          {
+            gameStat1: data.recentGames["game3Stat1"] != null ? data.recentGames["game3Stat1"] : "N/A",
+            gameStat2: data.recentGames["game3Stat2"] != null ? data.recentGames["game3Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game3AgainstNick"] != null ? data.recentGames["game3AgainstNick"] : "N/A"
+          },
+          {
+            gameStat1: data.recentGames["game4Stat1"] != null ? data.recentGames["game4Stat1"] : "N/A",
+            gameStat2: data.recentGames["game4Stat2"] != null ? data.recentGames["game4Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game4AgainstNick"] != null ? data.recentGames["game4AgainstNick"] : "N/A"
+          }
+        ];
+      }else{
+        console.warn('Insufficient chart data');
+        data['recentGamesChartData'] =[];
       }
-    ];
+    }catch(e){
+      console.warn('Insufficient chart data');
+      data['recentGamesChartData'] =[];
+    }
 
     var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
     this.getPostGameArticle(data);
