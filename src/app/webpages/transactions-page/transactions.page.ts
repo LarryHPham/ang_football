@@ -60,6 +60,7 @@ export class TransactionsPage{
 
   paginationParameters: PaginationParameters;
   selectedTabName: string;
+  selectedTabName1: string;
 
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
@@ -77,12 +78,13 @@ export class TransactionsPage{
       this.paramsub = this.activateRoute.params.subscribe(
         (param :any)=> {
           let route = this.router.url.split('/');
-          if(this.storedPartnerParam != '/'){
+          if(this.storedPartnerParam != ''){
             this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[3]);
           }else{
             this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[2]);
           }
           //check to see if scope is correct and redirect
+
           this.pageParams = param;
 
           if (this.pageNum === 0) {
@@ -130,16 +132,19 @@ export class TransactionsPage{
             .subscribe(
               data => {
                 this.seasonBase = data.headerData['seasonBase'];
-                  //var stats = data.headerData.stats;
-                  var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
-                  this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
-                  // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
-                  this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-                  profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-                  this.profileHeaderData = profileHeaderData;
-                  this.metaTags(this.profileHeaderData);
+                if(this.dropdownKey1 == null){
+                  this.dropdownKey1 = this.seasonBase;
+                }
+                //var stats = data.headerData.stats;
+                var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
+                this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
+                // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
+                this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
+                profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+                this.profileHeaderData = profileHeaderData;
+                this.metaTags(this.profileHeaderData);
 
-                  var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.pageParams.teamId.toString());
+                var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.pageParams.teamId.toString());
               },
               err => {
                   this.isError = true;
@@ -150,45 +155,49 @@ export class TransactionsPage{
       }
       else {
           this._profileService.getLeagueProfile()
-              .subscribe(
+            .subscribe(
               data => {
-                  this.seasonBase = data.headerData['seasonBase'];
-                  var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
-                  this.profileName = this.pageParams.scope.toUpperCase();
-                  // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
+                this.seasonBase = data.headerData['seasonBase'];
+                if(this.dropdownKey1 == null){
+                  this.dropdownKey1 = this.seasonBase;
+                }
 
-                  this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-                  profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-                  this.profileHeaderData = profileHeaderData;
-                  this.metaTags(this.profileHeaderData);
+                var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
+                this.profileName = this.pageParams.scope.toUpperCase();
+                // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
 
-                  var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
+                this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
+                profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+                this.profileHeaderData = profileHeaderData;
+                this.metaTags(this.profileHeaderData);
+
+                var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
               },
               err => {
                   this.isError = true;
                   console.error('Error: transactionsData Profile Header API: ', err);
                   // this.isError = true;
               }
-              )
+            )
       }
     } //getProfileInfo()
 
 
 
     getTransactionsPage() { // Get data based on selected tab
-        var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName);
-        if (matchingTabs.length > 0) {
-            var tab = matchingTabs[0];
-            if(this.dropdownKey1 == null){
-              this.dropdownKey1 = this.seasonBase;
-            }
-            this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
+      var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName);
+
+      if (matchingTabs.length > 0) {
+        var tab = matchingTabs[0];
+        if(this.dropdownKey1 == null){
+          this.dropdownKey1 = this.seasonBase;
+        }
+        this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
                 .subscribe(
                 transactionsData => {
                     if (this.transactionFilter1 == undefined) {
                         this.transactionFilter1 = transactionsData.yearArray;
                     }
-
                     tab = transactionsData;
                     this.setPaginationParams(transactionsData);
                 }, err => {
@@ -200,23 +209,23 @@ export class TransactionsPage{
 
 
     transactionsTab(tab) { // set selected tab and route page if necessary
-        var tabRoute;
-        var tabNameFrom = this.selectedTabName; // capture previous value before changing it
-        var tabNameTo = tab.tabDisplay; // newly selected tab
+      var tabRoute;
+      var tabNameFrom = this.selectedTabName; // capture previous value before changing it
+      var tabNameTo = tab.tabDisplay; // newly selected tab
 
-        if (tabNameTo != tabNameFrom) { // check if clicked tab is already active
-          this.selectedTabName = tabNameTo;
-          this.transactionsActiveTab = tab;
-            if (this.pageParams.teamId) {
-                tabRoute = [this.pageParams.scope, tabNameTo.toLowerCase(), this.pageParams.teamName, this.pageParams.teamId, 20, 1];
-                this.router.navigate(tabRoute);
-            }
-            else {
-                tabRoute = [this.pageParams.scope, tabNameTo.toLowerCase(), 'league', 20, 1];
-                this.router.navigate(tabRoute);
-            }
-        }
-        this.getTransactionsPage();
+      if (tabNameTo != tabNameFrom) { // check if clicked tab is already active
+        this.selectedTabName = tabNameTo;
+        this.transactionsActiveTab = tab;
+          if (this.pageParams.teamId) {
+              tabRoute = [this.pageParams.scope, tabNameTo.toLowerCase(), this.pageParams.teamName, this.pageParams.teamId, 20, 1];
+              this.router.navigate(tabRoute);
+          }
+          else {
+              tabRoute = [this.pageParams.scope, tabNameTo.toLowerCase(), 'league', 20, 1];
+              this.router.navigate(tabRoute);
+          }
+      }
+      this.getTransactionsPage();
     } //transactionsTab(tab)
 
 
