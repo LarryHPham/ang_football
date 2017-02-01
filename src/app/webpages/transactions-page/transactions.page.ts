@@ -155,6 +155,7 @@ export class TransactionsPage{
       }
       else {
           this._profileService.getLeagueProfile()
+            .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
               data => {
                 this.seasonBase = data.headerData['seasonBase'];

@@ -179,7 +179,6 @@ export class TransactionsService {
             tab.dataArray = null;
           }
           tab.isLoaded = true;
-          console.log('tab - ',tab);
           return tab;
         },
         err => {
