@@ -264,8 +264,8 @@ export class ArticlePages implements OnInit {
     var searchString;
     var searchArray = [];
     if (this.isArticle) {
-      var headerData = data['articleContent']['metadata'];
-      metaDesc = data['articleContent'].meta_headline;
+      var headerData = metaData['articleContent']['metadata'];
+      metaDesc = metaData['articleContent'].meta_headline;
       if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
         headerData['team_name'].forEach(function (val) {
           searchArray.push(val);
@@ -278,43 +278,71 @@ export class ArticlePages implements OnInit {
           players.push(val);
         });
       }
-      if (data['articleContent']['keyword'] && data['articleContent']['keyword'].constructor === Array) {
-        data['articleContent']['keyword'].forEach(function (val) {
+      if (metaData['articleContent']['keyword'] && metaData['articleContent']['keyword'].constructor === Array) {
+        metaData['articleContent']['keyword'].forEach(function (val) {
           searchArray.push(val);
         });
         searchString = searchArray.join(',');
       } else {
-        searchArray.push(data['articleContent']['keyword']);
+        searchArray.push(metaData['articleContent']['keyword']);
         searchString = searchArray.join(',');
       }
       image = metaData['images']['imageData'][0];
     } else {
-      metaDesc = data.title;
+      metaDesc = metaData.title;
       image = GlobalSettings.getImageUrl(metaData.imagePath);
     }
+
+    let metaObjData;
+    if(this.isArticle){// done as if statement since SSR has issues with single line expressions on meta tags
+      metaObjData = {
+         startDate : headerData['relevancy_start_date'].toString(),
+         endDate : headerData['relevancy_end_date'].toString(),
+         source : "snt_ai",
+         keyword : metaData['articleContent']['keyword'],
+         publishedDate : metaData['articleContent'].publication_date.toString(),
+         author : metaData['articleContent'].author,
+         publisher : metaData['articleContent'].publisher,
+         articleTeaser : metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),
+         setArticleType : metaData.articleType,
+      }
+    }else{
+      metaObjData = {
+         startDate : metaData.publishedDate,
+         endDate : metaData.publishedDate,
+         source : "TCA",
+         keyword : metaData.keyword,
+         publishedDate : metaData.publishedDate,
+         author : metaData.author,
+         publisher : metaData.publisher,
+         articleTeaser : metaData.teaser,
+         setArticleType : this.scope,
+      }
+    }
+
     this._seoService.setCanonicalLink();
     this._seoService.setOgTitle(metaData.title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
-    this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'] : metaData.publishedDate);
-    this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
+    this._seoService.setStartDate(metaObjData.startDate);
+    this._seoService.setEndDate(metaObjData.endDate);
     this._seoService.setIsArticle(this.isArticle.toString());
     this._seoService.setSearchType("article");
-    this._seoService.setSource(this.isArticle ? "snt_ai" : "TCA");
+    this._seoService.setSource(metaObjData.source);
     this._seoService.setArticleId(this.eventID);
     this._seoService.setArticleTitle(metaData.title);
-    this._seoService.setKeyword(this.isArticle ? metaData['articleContent']['keyword'] : metaData.keyword);
-    this._seoService.setPublishedDate(this.isArticle ? metaData['articleContent'].publication_date : metaData.publishedDate);
-    this._seoService.setAuthor(this.isArticle ? data['articleContent'].author : metaData.author);
-    this._seoService.setPublisher(this.isArticle ? data['articleContent'].publisher : metaData.publisher);
+    this._seoService.setKeyword(metaObjData.keyword);
+    this._seoService.setPublishedDate(metaObjData.publishedDate);
+    this._seoService.setAuthor(metaObjData.author);
+    this._seoService.setPublisher(metaObjData.publisher);
     this._seoService.setImageUrl(image);
-    this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
+    this._seoService.setArticleTeaser(metaObjData.articleTeaser);
     this._seoService.setArticleUrl();
-    this._seoService.setArticleType(this.isArticle ? metaData.articleType : this.scope);
+    this._seoService.setArticleType(metaObjData.setArticleType);
     this._seoService.setSearchString(searchString);
-  } //metaTags
+  } //metaTags=
 
   getGeoLocation() {
     var defaultState = 'ca';

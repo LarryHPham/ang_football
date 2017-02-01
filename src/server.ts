@@ -57,6 +57,7 @@ function cacheControl(req, res, next) {
   next();
 }
 // Serve static files
+app.use('/favicon.ico', cacheControl, express.static(path.join(__dirname, '')));
 app.use('/lib', cacheControl, express.static(path.join(__dirname, 'lib')));
 app.use('/app/ads', cacheControl, express.static(path.join(__dirname, 'app/ads')));
 app.use('/app/public', cacheControl, express.static(path.join(__dirname, 'app/public')));
