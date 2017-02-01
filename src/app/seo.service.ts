@@ -71,7 +71,6 @@ export class SeoService {
     } else {
       this.pageUrl = window.location.href;
     }
-
     return this.pageUrl;
   } //getPageUrl
 
