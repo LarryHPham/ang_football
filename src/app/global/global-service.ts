@@ -81,7 +81,7 @@ export class GeoLocation{
 
     //api to get geo location
     getGeoLocation() {
-        var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
+      var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
         return this.model.get(getGeoLocation)
             .map(
             data => {
