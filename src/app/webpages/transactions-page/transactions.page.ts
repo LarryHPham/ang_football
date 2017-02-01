@@ -60,7 +60,6 @@ export class TransactionsPage{
 
   paginationParameters: PaginationParameters;
   selectedTabName: string;
-  selectedTabName1: string;
 
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
