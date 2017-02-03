@@ -73,11 +73,14 @@ interface MLBPlayerDirectoryData {
   dayOfWeek: string;
   playerCity: string;
   playerState: string;
-
 }
 
 @Injectable()
 export class DirectoryService {
+
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+
   constructor(public model: ModelService, private _globalFunc: GlobalFunctions){}
 
   getData(scope: string, pageType: DirectoryType, searchParams: DirectorySearchParams): Observable<DirectoryItems> {
@@ -141,12 +144,15 @@ export class DirectoryService {
     var date = moment(Number(data.lastUpdated) * 1000);
     var dayOfWeek = date.format('dddd, ');
     var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
+    let scopeLink = scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ?
+                    this.collegeDivisionFullAbbrv.toLowerCase() :
+                    scope.toLowerCase();
     return {
       dayOfWeek: dayOfWeek,
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: VerticalGlobalFunctions.formatTeamRoute(scope, data.listItemsProfileName, data.teamId),
+          route: VerticalGlobalFunctions.formatTeamRoute(scopeLink, data.listItemsProfileName, data.teamId),
           text: data.listItemsProfileName
         },
         {
@@ -172,16 +178,19 @@ export class DirectoryService {
     var date = moment(Number(data.lastUpdated) * 1000);
     var dayOfWeek = date.format('dddd, ');
     var lastUpdate = GlobalFunctions.formatAPMonth(date.month()) + date.format(' Do, YYYY') + ' | ' + date.format('hh:mm A') + ' ET';
+    let scopeLink = scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ?
+                    this.collegeDivisionFullAbbrv.toLowerCase() :
+                    scope.toLowerCase();
     return {
       dayOfWeek: dayOfWeek,
       lastUpdated: lastUpdate,
       mainDescription: [
         {
-          route: VerticalGlobalFunctions.formatPlayerRoute(scope, teamName, data.listItemsProfileName, data.playerId),
+          route: VerticalGlobalFunctions.formatPlayerRoute(scopeLink, teamName, data.listItemsProfileName, data.playerId),
           text: data.listItemsProfileName
         },
         {
-          route: VerticalGlobalFunctions.formatTeamRoute(scope, teamName, data.teamId),
+          route: VerticalGlobalFunctions.formatTeamRoute(scopeLink, teamName, data.teamId),
           text: 'Team: ' + teamName
         },
         {
