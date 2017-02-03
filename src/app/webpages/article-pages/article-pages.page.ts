@@ -60,6 +60,7 @@ export class ArticlePages implements OnInit {
   geoLocation:string;
   iframeUrl:any;
   batch:number = 1;
+  isBrowser: any;
 
   constructor(private _activateRoute:ActivatedRoute,
               private _router:Router,
@@ -70,6 +71,7 @@ export class ArticlePages implements OnInit {
               private _geoLocation:GeoLocation) {
     this.subRec = this._activateRoute.params.subscribe(
       (params:any) => {
+        this.isBrowser = isBrowser;
         this.articleData = null;
         this.trendingData = null;
         this.trendingLength = 10;

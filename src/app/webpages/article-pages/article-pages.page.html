@@ -60,7 +60,7 @@
                   <div class="content-exerpt" *ngIf="eventType == 'video'"
                        [innerHTML]="articleData.description | safeHtml"></div>
                   <div class="bottom-shader" *ngIf="eventType == 'story'"></div>
-                  <a *ngIf="eventType == 'story'" class="mod-page-btn readMore" [href]="articleData.articleUrl"
+                  <a *ngIf="eventType == 'story' && isBrowser" class="mod-page-btn readMore" [href]="articleData.articleUrl"
                      target="_blank">Read the Full Article <i class="fa fa-arrow-right"></i></a>
                   <div [ngStyle]="{width: '100%', height:'5px','display':'block'}"></div>
                 </section>
