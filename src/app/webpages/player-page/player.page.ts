@@ -48,7 +48,7 @@ declare var moment;
 
 export class PlayerPage{
   public widgetPlace: string = "widgetForModule";
-  
+
   public currentUnixDate = new Date().getTime();
   private constructorControl:boolean = true;
   public partnerID: string;
@@ -206,9 +206,9 @@ export class PlayerPage{
 
         setTimeout(() => {  // defer loading everything below the fold
           //--Batch 2--//
-          if (this.scope.toLocaleLowerCase() == "nfl") {
-            this.getFantasyData(this.pageParams.playerId);
-          }
+          // if (this.scope.toLocaleLowerCase() == "nfl") {
+          //   this.getFantasyData(this.pageParams.playerId);
+          // }
           this.getBoxScores(this.dateParam);
           this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
