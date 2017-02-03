@@ -480,33 +480,33 @@ export class ArticleDataService {
   }
 
   getMainArticle(data, scope, isLeague) {
-  	try{
-		var fullIndex, articleContent;
-	    if (!isLeague && data['featuredReport'] != undefined) {
-	      this.pageIndex = Object.keys(data['featuredReport'])[0];
-	      fullIndex = data['featuredReport'][this.pageIndex][0];
-	      articleContent = fullIndex.teaser;
-	    } else if (!isLeague) {
-	      this.pageIndex = 'about-the-teams';
-	      fullIndex = data['otherReports'][this.pageIndex];
-	      articleContent = fullIndex.teaser;
-	    } else {
-	      this.pageIndex = "postgame-report";
-	      articleContent = data[0].teaser;
-	    }
-	    var trimmedArticle = articleContent.substring(0, 1000);
-	    return {
-	      keyword: !isLeague ? ArticleDataService.setFeatureType(this.pageIndex) : "POSTGAME",
-	      mainTitle: !isLeague ? fullIndex.title : data[0].title,
-	      eventType: this.pageIndex,
-	      mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
-	      mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
-	        fullIndex.image_url : data[0].image_url),
-	      articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, this.pageIndex, !isLeague ?
-	        fullIndex.event_id : data[0].event_id),
-	      mainHeadlineId: isLeague ? data[0].event_id : null
-	    }
-    }catch(e){
+    try {
+      var fullIndex, articleContent;
+      if (!isLeague && data['featuredReport'] != undefined) {
+        this.pageIndex = Object.keys(data['featuredReport'])[0];
+        fullIndex = data['featuredReport'][this.pageIndex][0];
+        articleContent = fullIndex.teaser;
+      } else if (!isLeague) {
+        this.pageIndex = 'about-the-teams';
+        fullIndex = data['otherReports'][this.pageIndex];
+        articleContent = fullIndex.teaser;
+      } else {
+        this.pageIndex = "postgame-report";
+        articleContent = data[0].teaser;
+      }
+      var trimmedArticle = articleContent.substring(0, 1000);
+      return {
+        keyword: !isLeague ? ArticleDataService.setFeatureType(this.pageIndex) : "POSTGAME",
+        mainTitle: !isLeague ? fullIndex.title : data[0].title,
+        eventType: this.pageIndex,
+        mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
+        mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
+          fullIndex.image_url : data[0].image_url),
+        articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, this.pageIndex, !isLeague ?
+          fullIndex.event_id : data[0].event_id),
+        mainHeadlineId: isLeague ? data[0].event_id : null
+      }
+    } catch (e) {
       console.error(e);
       return null;
     }
@@ -543,13 +543,17 @@ export class ArticleDataService {
     }
     return this.model.get(fullUrl)
       .map(fantasyData => ArticleDataService.formatFantasyData(fantasyData))
+      .catch(err=> {
+        console.log('Error', err);
+        return Observable.throw(err);
+      });
   }// end fantasy module data processing
 
   static formatFantasyData(data) {
-    try{
-      if(data.data == null){
+    try {
+      if (data.data == null) {
         return null;
-      }else{
+      } else {
         data = data.data[0];
         var date = moment.unix(data['last_updated']).format();
         date = moment.tz(date, "America/New_York").fromNow();
@@ -563,7 +567,7 @@ export class ArticleDataService {
           playerId: data.player_id
         }
       }
-    }catch(e){
+    } catch (e) {
       console.warn('Insufficient data for Fantasy Report');
       return null;
     }
