@@ -284,11 +284,14 @@ export class LeaguePage{
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     } //scheduleTab
-    private filterDropdown(filter){
+
+    private filterDropdown(filter) {
         let filterChange = false;
-        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key && this.scheduleFilter1 != null){
+        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key) {
           this.selectedFilter1 = filter.key;
-          this.selectedFilter2 = this.scheduleFilter2['data'][0].key;//reset weeks to first in dropdown
+          if (this.selectedFilter2 != null) {
+              this.selectedFilter2 = this.scheduleFilter2['data'][0].key;//reset weeks to first in dropdown
+          }
           filterChange = true;
         }
         if(filter.value == 'filter2' && this.selectedFilter2 != filter.key && this.scheduleFilter2 != null){
@@ -296,7 +299,7 @@ export class LeaguePage{
           filterChange = true;
         }
         if(this.selectedFilter2 != null && this.selectedFilter1 == null){
-          this.selectedFilter1 = new Date().getFullYear().toString();
+          this.selectedFilter1 = this.seasonBase;
         }
         if(filterChange){
           this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
@@ -321,7 +324,7 @@ export class LeaguePage{
         if(schedulesData.carData.length > 0){
           this.scheduleFilter2 = schedulesData.weeks;
         }else{
-          this.scheduleFilter2 = null;
+          // this.scheduleFilter2 = null;
         }
         this.schedulesData = schedulesData;
 
