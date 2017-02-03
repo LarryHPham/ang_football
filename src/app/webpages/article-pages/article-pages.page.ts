@@ -60,7 +60,7 @@ export class ArticlePages implements OnInit {
   geoLocation:string;
   iframeUrl:any;
   batch:number = 1;
-  isBrowser: any;
+  isBrowser:any;
 
   constructor(private _activateRoute:ActivatedRoute,
               private _router:Router,
@@ -222,37 +222,39 @@ export class ArticlePages implements OnInit {
   }
 
   private getDeepDiveArticle(articleID) {
-    this._deepDiveService.getDeepDiveArticleService(articleID).subscribe(
-      data => {
-        if (data.data.imagePath == null || data.data.imagePath == undefined || data.data.imagePath == "") {
-          this.imageData = ["/app/public/stockphoto_bb_1.jpg", "/app/public/stockphoto_bb_2.jpg"];
-          this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
-          this.imageTitle = ["", ""];
-        } else {
-          this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath)];
-          this.copyright = ["USA Today Sports Images"];
-          this.imageTitle = [""];
-        }
-        this.metaTags(data);
-        this.articleData = data.data;
+    this._deepDiveService.getDeepDiveArticleService(articleID)
+      .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
+      .subscribe(data => {
+          if (data.data.imagePath == null || data.data.imagePath == undefined || data.data.imagePath == "") {
+            this.imageData = ["/app/public/stockphoto_bb_1.jpg", "/app/public/stockphoto_bb_2.jpg"];
+            this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
+            this.imageTitle = ["", ""];
+          } else {
+            this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath)];
+            this.copyright = ["USA Today Sports Images"];
+            this.imageTitle = [""];
+          }
+          this.metaTags(data);
+          this.articleData = data.data;
 
-        this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
-        this.getRecommendedArticles(articleID);
-        this.getTrendingArticles(this.eventID);
-      }
-    )
+          this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
+          this.getRecommendedArticles(articleID);
+          this.getTrendingArticles(this.eventID);
+        }
+      )
   }
 
   private getDeepDiveVideo(articleID) {
-    this._deepDiveService.getDeepDiveVideoService(articleID).subscribe(
-      data => {
-        this.articleData = data.data;
-        this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
-        this.metaTags(data);
-        this.iframeUrl = this.articleData.videoLink;
-        this.getRecommendedArticles(articleID);
-      }
-    )
+    this._deepDiveService.getDeepDiveVideoService(articleID)
+      .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
+      .subscribe(data => {
+          this.articleData = data.data;
+          this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
+          this.metaTags(data);
+          this.iframeUrl = this.articleData.videoLink;
+          this.getRecommendedArticles(articleID);
+        }
+      )
   }
 
   private metaTags(data) {
@@ -296,29 +298,29 @@ export class ArticlePages implements OnInit {
     }
 
     let metaObjData;
-    if(this.isArticle){// done as if statement since SSR has issues with single line expressions on meta tags
+    if (this.isArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
       metaObjData = {
-         startDate : headerData['relevancy_start_date'].toString(),
-         endDate : headerData['relevancy_end_date'].toString(),
-         source : "snt_ai",
-         keyword : metaData['articleContent']['keyword'],
-         publishedDate : metaData['articleContent'].publication_date.toString(),
-         author : metaData['articleContent'].author,
-         publisher : metaData['articleContent'].publisher,
-         articleTeaser : metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),
-         setArticleType : metaData.articleType,
+        startDate: headerData['relevancy_start_date'].toString(),
+        endDate: headerData['relevancy_end_date'].toString(),
+        source: "snt_ai",
+        keyword: metaData['articleContent']['keyword'],
+        publishedDate: metaData['articleContent'].publication_date.toString(),
+        author: metaData['articleContent'].author,
+        publisher: metaData['articleContent'].publisher,
+        articleTeaser: metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),
+        setArticleType: metaData.articleType,
       }
-    }else{
+    } else {
       metaObjData = {
-         startDate : metaData.publishedDate,
-         endDate : metaData.publishedDate,
-         source : "TCA",
-         keyword : metaData.keyword,
-         publishedDate : metaData.publishedDate,
-         author : metaData.author,
-         publisher : metaData.publisher,
-         articleTeaser : metaData.teaser,
-         setArticleType : this.scope,
+        startDate: metaData.publishedDate,
+        endDate: metaData.publishedDate,
+        source: "TCA",
+        keyword: metaData.keyword,
+        publishedDate: metaData.publishedDate,
+        author: metaData.author,
+        publisher: metaData.publisher,
+        articleTeaser: metaData.teaser,
+        setArticleType: this.scope,
       }
     }
 
