@@ -125,62 +125,56 @@ export class BoxScoresService {
   * modifies data to get header data for modules
   */
   aiHeadline(data){
-    var boxArray = [];
-    if (data == null || typeof data == 'undefined') {
-      return null;
-    }
-    if (data[0].featuredReport['article'].status != "Error") {
-      if (data[0].featuredReport['article'].data != null) {
-        data.forEach(function(val, index){
-          let aiContent = val.featuredReport['article']['data'];
-          if(aiContent){
-            for(var p in aiContent) {
-              var eventType = aiContent[p];
-              var teaser = eventType.title;
-              if (eventType.last_updated) {
-                var date = moment.unix(eventType.last_updated);
-                date = date.format('dddd') + ', ' + date.format('MMM') + date.format('. DD, YYYY');
-              }
-              if (eventType.image_url != null) {
-                var homeImage = GlobalSettings.getImageUrl(eventType.image_url);
-              } else {
-                var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
-              }
-            }
-
-            var relPath = GlobalSettings.getRouteFullParams().relPath;
-            let domainHostName;
-            let urlRouteArray;
-            let domainParams = {}
-
-            domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-            if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-              domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-            }
-            domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
-
-            urlRouteArray = [relPath+domainHostName,domainParams,'Article-pages', {eventType: p, eventID: eventType.event_id}];
-            var Box = {
-              keyword: p.replace('-', ' '),
-              date: date,
-              url: urlRouteArray,
-              teaser: teaser,
-              imageConfig:{
-                imageClass: "image-320x180-sm",
-                imageUrl: homeImage,
-                hoverText: "View Article",
-                urlRouteArray: urlRouteArray
-              }
-            }
-            boxArray.push(Box);
-          }
-        });
-      } else {
+    try{
+      var boxArray = [];
+      if (data == null || typeof data == 'undefined') {
         return null;
       }
-      return boxArray;
-    }else{
-      return null;
+      if (data[0].featuredReport['article'].status != "Error") {
+        if (data[0].featuredReport['article'].data != null) {
+          data.forEach(function(val, index){
+            let aiContent = val.featuredReport['article']['data'];
+            if(aiContent){
+              for(var p in aiContent) {
+                var eventType = aiContent[p];
+                var teaser = eventType.title;
+                if (eventType.last_updated) {
+                  var date = moment.unix(eventType.last_updated);
+                  date = date.format('dddd') + ', ' + date.format('MMM') + date.format('. DD, YYYY');
+                }
+                if (eventType.image_url != null) {
+                  var homeImage = GlobalSettings.getImageUrl(eventType.image_url);
+                } else {
+                  var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+                }
+              }
+              let urlRouteArray;
+
+              urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(eventType.scope, eventType.article_type, eventType.article_id);
+              var Box = {
+                keyword: p.replace('-', ' '),
+                date: date,
+                url: urlRouteArray,
+                teaser: teaser,
+                imageConfig:{
+                  imageClass: "image-320x180-sm",
+                  imageUrl: homeImage,
+                  hoverText: "View Article",
+                  urlRouteArray: urlRouteArray
+                }
+              }
+              boxArray.push(Box);
+            }
+          });
+        } else {
+          return null;
+        }
+        return boxArray;
+      }else{
+        return null;
+      }
+    }catch(e){
+        console.warn('aiHeadline Boxscores', e);
     }
 
   }
