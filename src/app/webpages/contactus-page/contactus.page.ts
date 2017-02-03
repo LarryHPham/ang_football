@@ -40,9 +40,9 @@ export class ContactUsPage {
           this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
         }
       );
-      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+      this.storedPartnerParam = GlobalSettings.storedPartnerId();
 
-      var domainTitle = this.storedPartnerParam != '/' ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
+      var domainTitle = this.storedPartnerParam != null ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.contactusInput = {
         subjects: [
           {

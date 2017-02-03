@@ -10,7 +10,6 @@ export class HamburgerDeliveryService {
   static createMenu(division?, partner?){ //TODO
     var params;
     var divisionUrl;
-    let route = VerticalGlobalFunctions.getWhiteLabel();
 
     if (division != null) {
       divisionUrl = division.toLowerCase();
@@ -26,7 +25,7 @@ export class HamburgerDeliveryService {
     var menuData = [
       {
         menuTitle: "Home",
-        url: [route, divisionUrl]
+        url: [params]
       },
       {
         menuTitle: division + " Standings",

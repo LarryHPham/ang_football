@@ -284,13 +284,14 @@ export class DeepDiveService {
         let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
         var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
         val['extUrl'] = false,
-          val['keyword'] = val.league.toUpperCase();
+        val['keyword'] = val.league.toUpperCase();
         val['video_thumbnail'] = val.thumbnail;
         val['embed_url'] = val.videoLink;
         val['teaser'] = val.description;
         val['time_stamp'] = GlobalFunctions.sntGlobalDateFormatting(moment(val.pubDate).unix()*1000,'timeZone');
         val['urlRoute'] = urlRouteArray;
         val['video_url'] = urlRouteArray;
+        val['keyUrl'] = ['/'+VerticalGlobalFunctions.getWhiteLabel(), scope.toLowerCase()]
       })
       return data;
     }
@@ -300,16 +301,6 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
-    var relPath = GlobalSettings.getRouteFullParams().relPath;
-    let domainHostName;
-    let urlRouteArray;
-    let domainParams = {}
-
-    domainHostName = GlobalSettings.getRouteFullParams().domainHostName;
-    if(GlobalSettings.getRouteFullParams().domainParams.partner_id != null){
-      domainParams['partner_id'] = GlobalSettings.getRouteFullParams().domainParams.partner_id;
-    }
-    domainParams['scope'] = GlobalSettings.getRouteFullParams().domainParams.scope == 'home' ? 'nfl' : GlobalSettings.getRouteFullParams().domainParams.scope;
 
     let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
     let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
@@ -326,7 +317,7 @@ export class DeepDiveService {
     // remove duplicates from array
     var imagePaths = imagePaths.filter( function(item, index, inputArray) {
       return inputArray.indexOf(item) == index;
-    }); 
+    });
 
 
     for(var i = 0; i < 3; i++){
