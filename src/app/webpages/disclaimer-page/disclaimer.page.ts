@@ -33,7 +33,7 @@ export class DisclaimerPage {
           this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
         }
       );
-      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+      this.storedPartnerParam = GlobalSettings.storedPartnerId();
       this.loadData(this.storedPartnerParam);
       this.metaTags();
     }
@@ -65,7 +65,7 @@ export class DisclaimerPage {
     loadData(partnerID:string) {
       this.pageLinkName = GlobalSettings.getHomePage(partnerID).replace(/https?:\/\//, "");
 
-      this.pageName = partnerID != '/' ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
+      this.pageName = partnerID != null ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
           text1: 'Last Updated: Friday, Oct. 28 2016.',

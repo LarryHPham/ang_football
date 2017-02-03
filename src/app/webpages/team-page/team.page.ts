@@ -157,7 +157,7 @@ export class TeamPage implements OnInit {
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
 
-        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.storedPartnerParam = GlobalSettings.storedPartnerId();
         this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
       }
     ); //this.paramsub
@@ -242,8 +242,8 @@ export class TeamPage implements OnInit {
           this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
           this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
-          this.rosterData = this._rosterService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
+          this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
           //--Batch 4--//
           this.activeTransactionsTab = "Transactions"; // default tab is Transactions
@@ -465,7 +465,7 @@ export class TeamPage implements OnInit {
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
             }
-            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
+            this.transactionModuleFooterParams = [VerticalGlobalFunctions.getWhiteLabel(), this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
@@ -475,7 +475,7 @@ export class TeamPage implements OnInit {
 
       // pass transaction page route params to module filter, so set module footer route
       this.transactionModuleFooterParams = [
-        this.storedPartnerParam,
+        VerticalGlobalFunctions.getWhiteLabel(),
         this.scope,
         'league'
       ]

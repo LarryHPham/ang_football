@@ -142,7 +142,7 @@ export class HeaderComponent implements AfterContentChecked {
 
     // close menu if it is open and user clicks outside the menu
     var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
-    this.linkHome = [VerticalGlobalFunctions.getWhiteLabel(), 'home'];
+    this.linkHome = [VerticalGlobalFunctions.getWhiteLabel() + '/home'];
     this._renderer.listenGlobal('document', 'click', (event) => {
       var element = document.elementFromPoint(event.clientX, event.clientY);
       if (element && isBrowser) {
