@@ -168,7 +168,7 @@ export class TransactionsService {
     // and MLB profile pages
     var currentTeam = type == "module" ? teamId : null;
 
-    return this.model.get( callURL)
+    return this.model.get(callURL)
       .map(
         data => {
           tab.yearArray=this.formatYearDropown(data.data.availableYears,data.data.availableSeasons);
