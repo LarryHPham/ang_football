@@ -82,6 +82,7 @@ export class GeoLocation{
     //api to get geo location
     getGeoLocation() {
       var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
+      // var getGeoLocation = '//dev-waldo.synapsys.us/ip2loc/69.178.104.1/2';
         return this.model.get(getGeoLocation)
             .map(
             data => {

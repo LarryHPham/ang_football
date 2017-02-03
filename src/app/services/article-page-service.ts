@@ -542,24 +542,30 @@ export class ArticleDataService {
       fullUrl += playerId;
     }
     return this.model.get(fullUrl)
-      .map(fantasyData => ArticleDataService.formatFantasyData(fantasyData));
+      .map(fantasyData => ArticleDataService.formatFantasyData(fantasyData))
   }// end fantasy module data processing
 
   static formatFantasyData(data) {
-    if (data.data == null) {
-      return
-    }
-    data = data.data[0];
-    var date = moment.unix(data['last_updated']).format();
-    date = moment.tz(date, "America/New_York").fromNow();
-    return {
-      backgroundImage: GlobalSettings.getImageUrl(data['article_data']['images'][0].image_url),
-      profileImage: GlobalSettings.getImageUrl(data['article_data'].headshot_image),
-      articleUrl: VerticalGlobalFunctions.formatArticleRoute("nfl", "player-fantasy", data['article_id']),
-      fantasyDate: date,
-      title: data.title,
-      teaser: data.teaser,
-      playerId: data.player_id
+    try{
+      if(data.data == null){
+        return null;
+      }else{
+        data = data.data[0];
+        var date = moment.unix(data['last_updated']).format();
+        date = moment.tz(date, "America/New_York").fromNow();
+        return {
+          backgroundImage: GlobalSettings.getImageUrl(data['article_data']['images'][0].image_url),
+          profileImage: GlobalSettings.getImageUrl(data['article_data'].headshot_image),
+          articleUrl: VerticalGlobalFunctions.formatArticleRoute("nfl", "player-fantasy", data['article_id']),
+          fantasyDate: date,
+          title: data.title,
+          teaser: data.teaser,
+          playerId: data.player_id
+        }
+      }
+    }catch(e){
+      console.warn('Insufficient data for Fantasy Report');
+      return null;
     }
   }
 
