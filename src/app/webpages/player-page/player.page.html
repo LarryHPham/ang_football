@@ -98,12 +98,12 @@
             *ngIf="newsDataArray"
             [newsDataArray]="newsDataArray"
             [profileName]="profileHeaderData.profileName"></news-module>
-          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace"></responsive-widget>
+          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
           <!--Like Us On FB Module, only display if not on partner page-->
           <section *ngIf="!partnerID">
             <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-            <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace"></responsive-widget>
+            <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
           </section>
         </div> <!--loadBatch5-->
 
