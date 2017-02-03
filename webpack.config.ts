@@ -31,7 +31,7 @@ export var commonPlugins = [
 
   //Compiled .less file
   new ExtractTextPlugin({
-    filename: 'stylesheets/[name].css',
+    filename: '[name].css',
     allChunks: true
   }),
 
