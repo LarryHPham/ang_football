@@ -244,7 +244,7 @@ export class SchedulesPage implements OnInit {
         if (schedulesData.carData.length > 0) {
           this.scheduleFilter2 = schedulesData.weeks;
         } else {
-          this.scheduleFilter2 = null;
+          // this.scheduleFilter2 = null; // setting this to null causes dropdown to disapear and does not let user res
         }
         this.schedulesData = schedulesData;
         this.tabData = schedulesData != null ? schedulesData.tabs : null;

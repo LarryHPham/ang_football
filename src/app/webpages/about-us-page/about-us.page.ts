@@ -72,7 +72,7 @@ export class AboutUsPage {
       this.activatedRoute.params.subscribe(
           (param :any)=> {
             this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-            this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+            this.storedPartnerParam = GlobalSettings.storedPartnerId();
             this.loadData(this.storedPartnerParam, this.scope)
           }
       );

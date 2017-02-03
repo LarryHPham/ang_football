@@ -176,7 +176,7 @@ export class DeepDivePage {
         scope: 'NCAA',
         // This is image has been hardcoded to prevent from the server side rendering from selecting a different random image
         // from the client side rendering. It allows for a smoother transition between the two views
-        image: 'http://images.synapsys.us/02/ncaaf/stock/2016/11/image-carousel-ncaaf-01.jpg',
+        image: '//images.synapsys.us/02/ncaaf/stock/2016/11/image-carousel-ncaaf-01.jpg',
         // image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf, // random selection
         buttonClass: 'carousel_toggle-button',
         buttonText: 'Visit the College Section',
