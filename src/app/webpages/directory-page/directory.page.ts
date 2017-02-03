@@ -44,6 +44,9 @@ export class DirectoryPage {
   public pageType: DirectoryType;
   public _sportLeagueAbbrv: string;
 
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+
   paginationParameters:PaginationParameters;
 
   navLists: Array<Link>;
@@ -178,8 +181,11 @@ export class DirectoryPage {
         startsWith:this.startsWith,
         page: 'page'
       };
+      let scopeLink = this.scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ?
+                      this.collegeDivisionFullAbbrv.toLowerCase() :
+                      this.scope.toLowerCase();
 
-      var navigationPage = '/' + this.scope + '/directory';
+      var navigationPage = '/' + scopeLink + '/directory';
       let max = Math.ceil(info.totalItems/this.listingsLimit);
       this.paginationParameters = {
         index: params['page'] != null ? Number(params['page']) : null,
@@ -253,7 +259,7 @@ export class DirectoryPage {
       pagingDescription: pagingDescription,
       pageParams: pageParams
     };
-    ;
+
     if(listings !== undefined && listings !== null ) {
       // this.setupPaginationParameters(data);
       data.hasListings = listings.items.length > 0;
