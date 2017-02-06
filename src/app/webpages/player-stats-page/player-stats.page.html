@@ -8,7 +8,9 @@
       <player-stats-component *ngIf="tabs"
           [tabs]="tabs"
           [showGlossary]="true"
-          (tabSelected)="playerStatsTabSelected($event)" [tabName]="tabName">
+          [tabName]="tabName"
+          [selectedSeasonId]="seasonBase"
+          (tabSelected)="playerStatsTabSelected($event)">
       </player-stats-component>
     </div>
   </section>

@@ -306,6 +306,9 @@ export class LeaguePage{
         }
     } //filterDropdown
     private getSchedulesData(status, year?, week?) {
+      let scopeLink = this.scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ?
+                      this.collegeDivisionFullAbbrv.toLowerCase() :
+                      this.scope.toLowerCase();
       var limit = 5;
       if(status == 'postgame'){
         limit = 3;
@@ -313,7 +316,7 @@ export class LeaguePage{
       if(typeof year == 'undefined'){
         year = new Date().getFullYear();
       }
-      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+      this._schedulesService.getScheduleTable(this.schedulesData, scopeLink, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame' || status == 'created'){
           this.scheduleFilter1 = null;
         }else{

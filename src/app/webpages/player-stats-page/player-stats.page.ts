@@ -32,6 +32,7 @@ export class PlayerStatsPage implements OnInit {
   public teamID: number;
   public teamName: string;
   public pageParams: SportPageParameters = {}
+  public seasonBase: string;
 
   public tabs: Array<SportsPlayerStatsTableData>;
 
@@ -92,6 +93,7 @@ export class PlayerStatsPage implements OnInit {
                     data.teamName = data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
                     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
                     this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
+                    this.seasonBase = data.headerData['seasonBase'];
                     this.tabs = this._statsService.initializeAllTabs(data.teamName, data.headerData['seasonBase'], false);
                 },
                 err => {
@@ -150,29 +152,28 @@ export class PlayerStatsPage implements OnInit {
 
 
     private playerStatsTabSelected(tabData: Array<any>) {
-        this._statsService.getStatsTabData(tabData, this.pageParams, data => {
-            this.getLastUpdatedDateForPage(data);
+      this._statsService.getStatsTabData(tabData, this.pageParams, data => {
+          this.getLastUpdatedDateForPage(data);
 
-            var seasonArray = tabData[0];
-            var seasonIds = seasonArray.seasonIds;
-            var seasonTab = seasonIds.find(function(e) {
-                if (e.value === tabData[1]) {
-                    return true;
-                }
+          var seasonArray = tabData[0];
+          var seasonIds = seasonArray.seasonIds;
+          var seasonTab = seasonIds.find(function(e) {
+              if (e.value === tabData[1]) {
+                  return true;
+              }
+          });
 
-            });
-
-            if (tabData[0].tabActive == "Special") {
-                if (seasonTab) {
-                    //console.log("year clicked");
-                } else {
-                    this.tabName = tabData[1];
-                }
-            } else {
-                this.tabName = tabData[0].tabActive;
-            };
-            //tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
-        });
+          if (tabData[0].tabActive == "Special") {
+              if (seasonTab) {
+                  //console.log("year clicked");
+              } else {
+                  this.tabName = tabData[1];
+              }
+          } else {
+              this.tabName = tabData[0].tabActive;
+          };
+          //tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
+      });
     } //playerStatsTabSelected
 
 
