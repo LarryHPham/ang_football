@@ -23,6 +23,7 @@ export class DisclaimerPage {
     public contactLink: Array<any>;
     public contactUsLinkName: string;
     public titleData: TitleInputData;
+    public partnerLink: string;
 
     constructor(
       private _seoService: SeoService,
@@ -64,7 +65,6 @@ export class DisclaimerPage {
 
     loadData(partnerID:string) {
       this.pageLinkName = GlobalSettings.getHomePage(partnerID).replace(/https?:\/\//, "");
-
       this.pageName = partnerID != null ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.titleData = {
           imageURL : GlobalSettings.getSiteLogoUrl(),
@@ -74,9 +74,8 @@ export class DisclaimerPage {
           text4 : '',
           icon: 'fa fa-map-marker'
       };
-
-      var subpath = this.activatedRoute.pathFromRoot;
-      this.contactLink = [partnerID, this.scope, 'contact-us'];
+      this.partnerLink = partnerID != null ? VerticalGlobalFunctions.getWhiteLabel() : "/" + VerticalGlobalFunctions.getWhiteLabel();
+      this.contactLink = [this.partnerLink, this.scope, 'contact-us'];
       this.contactUsLinkName = this.pageLinkName + '/' + this.scope + '/contact-us';
       GlobalSettings.setPreboot();
     }

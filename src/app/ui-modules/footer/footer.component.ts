@@ -5,6 +5,7 @@ import { isBrowser } from 'angular2-universal';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from '../../global/global-functions';
 import { Link, NavigationData } from '../../global/global-interface';
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
 
 //services
 import { FooterService } from '../../services/footer.service';
@@ -23,9 +24,9 @@ export class FooterComponent implements OnInit {
     public linkName: string;
     public currentUrl: string;
     public _copyrightInfo: string = "<i>Images Provided By: </i><b> " + GlobalSettings.getCopyrightInfo() + "</b>";
-    public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
-    public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
-    public _siteGoogleUrl: string = GlobalSettings.getSiteGoogleUrl(this.partnerID);
+    public _siteTwitterUrl: string;
+    public _siteFacebookUrl: string;
+    public _siteGoogleUrl: string;
     public _sportLeagueFull: string = GlobalSettings.getSportLeagueFull();
     public _lastUpdated: string;
     public advertise: string = "Advertise with ";
@@ -42,6 +43,9 @@ export class FooterComponent implements OnInit {
     constructor(private _service: FooterService, private _globalFunc: GlobalFunctions){//TODO
       if(isBrowser){
         this.currentUrl = window.location.href;
+        this._siteTwitterUrl = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
+        this._siteFacebookUrl = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
+        this._siteGoogleUrl = GlobalSettings.getSiteGoogleUrl(this.currentUrl);
       }
       this.teamDirectory();
       this.playerDirectory();
@@ -82,7 +86,8 @@ export class FooterComponent implements OnInit {
     ngOnInit() {
         this.loadData(this.partnerID);
         var scope = this.scopeParam == 'home' ? 'nfl' : this.scopeParam;
-        var baseFooterLink = this.partnerID ? '/' + this.partnerID + this.scopeParam : this.scopeParam;
+        let partnerLink = this.partnerID != null ? VerticalGlobalFunctions.getWhiteLabel() : "/" + VerticalGlobalFunctions.getWhiteLabel();
+        var baseFooterLink = partnerLink + this.scopeParam;
 
         this.footerLinks = {
           aboutUs: baseFooterLink + '/about-us',
