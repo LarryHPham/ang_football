@@ -76,6 +76,9 @@ export class GlobalSettings {
       if (env != "dev" && env !="qa"){
           env = "prod";
       }
+
+      // env = "prod"; //TODO remove only used for testing
+
       return env;
     }
 
@@ -161,7 +164,7 @@ export class GlobalSettings {
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
       var linkEnv = this._env != 'localhost' && this._env != "touchdownloyal" && this._env != "mytouchdownzone" && this._env != "football" ? this._env:'www';
         if ( partnerId ) {
-            return this._proto + "//" + linkEnv + this._partnerHomepageUrl + (includePartnerId ? "/" + partnerId : "");
+            return this._proto + "//" + linkEnv + this._partnerHomepageUrl + (partnerId || includePartnerId ? "/" + partnerId : "");
         }
         else {
             return this._proto + "//" + linkEnv + this._homepageUrl;
