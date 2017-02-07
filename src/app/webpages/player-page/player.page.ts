@@ -163,10 +163,10 @@ export class PlayerPage{
     this._seoService.removeApplicationJSON('page');
     this._seoService.removeApplicationJSON('json');
 
+    this.resetSubscription();
     if(this.routeSubscriptions){
       this.routeSubscriptions.unsubscribe();
     }
-    this.resetSubscription();
   } //ngOnDestroy
 
   private resetSubscription(){
@@ -195,7 +195,7 @@ export class PlayerPage{
 
         this.pageParams['teamID'] = this.teamID;
         this.pageParams['teamName'] = this.teamName;
-        this.dateParam = {
+        let dateParam = {
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
           date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
@@ -209,7 +209,7 @@ export class PlayerPage{
            if (this.scope.toLocaleLowerCase() == "nfl") {
              this.getFantasyData(this.pageParams.playerId);
            }
-          this.getBoxScores(this.dateParam);
+          this.getBoxScores(dateParam);
           this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
           this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
 
@@ -243,7 +243,7 @@ export class PlayerPage{
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.playerHeadshotUrl;
+    let image = header.playerHeadshotUrl ? header.playerHeadshotUrl : GlobalSettings.mainIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
@@ -354,16 +354,17 @@ export class PlayerPage{
     }
   } //getFantasyData
 
-
-
-  private getBoxScores(dateParams?) {
-    if (dateParams != null) {
-      this.dateParam = dateParams;
+  private getBoxScores(dateParams) {
+      let newDate;
+      if (dateParams != null && (newDate == null || dateParams.date != newDate.date)) {
+        newDate = dateParams;
+        this.dateParam = newDate;
+        this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, newDate, (boxScoresData, currentBoxScores) => {
+          this.boxScoresData = boxScoresData;
+          this.currentBoxScores = currentBoxScores;
+          this.dateParam = newDate;
+        }))
     }
-    this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-      this.boxScoresData = boxScoresData;
-      this.currentBoxScores = currentBoxScores;
-    }))
   } //getBoxScores
 
 
