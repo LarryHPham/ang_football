@@ -23,11 +23,14 @@ export class ArticleDataService {
     var fullUrl = GlobalSettings.getArticleUrl();
     if (!isFantasyReport) {
       return this.model.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
-        .map(data => ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID));
+        .map(data => {
+          return ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID)
+        });
     } else {
       return this.model.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
-        .map(data => ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID
-        ));
+        .map(data => {
+          return ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID)
+        });
     }
   }
 
