@@ -116,7 +116,7 @@ export class ListOfListsService {
             itemProfile       = itemTargetData.playerName;
             itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl);
             itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
-            itemSubImg        = VerticalGlobalFunctions.formatTeamLogo(itemTargetData.teamLogo);
+            itemSubImg        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
             itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
             profileLinkText   = {
               route: itemRoute,

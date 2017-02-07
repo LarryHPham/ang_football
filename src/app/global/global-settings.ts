@@ -11,7 +11,7 @@ declare var Zone;
 
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
-    private static _env = isNode ? 'prod' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
+    private static _env = isNode ? 'dev' : 'dev'//window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
     public static _proto = isNode ? 'http:' : window.location.protocol;//TODO currently server side is hardcoding protocol
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
@@ -34,12 +34,12 @@ export class GlobalSettings {
     private static _partnerHomepageLinkName:string = 'mytouchdownzone';
 
     //links from our share providers that do not change
-    private static _siteTwitterUrl:string = 'https://twitter.com/home?status=';
-    private static _siteFacebookUrl:string = 'https://www.facebook.com/sharer/sharer.php?u=';
-    private static _siteLinkedinUrl:string = 'https://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=&source=';
-    private static _siteGoogleUrl:string = 'https://plus.google.com/share?url=';
-    private static _verticalFacebook: string = 'https://www.facebook.com/TCX-382018522187919';
-    private static _verticalTwitter: string = 'https://twitter.com/tcxmedia';
+    private static _siteTwitterUrl:string = '//twitter.com/home?status=';
+    private static _siteFacebookUrl:string = '//www.facebook.com/sharer/sharer.php?u=';
+    private static _siteLinkedinUrl:string = '//www.linkedin.com/shareArticle?mini=true&url=&title=&summary=&source=';
+    private static _siteGoogleUrl:string = '//plus.google.com/share?url=';
+    private static _verticalFacebook: string = '//www.facebook.com/TCX-382018522187919';
+    private static _verticalTwitter: string = '//twitter.com/tcxmedia';
 
     private static _baseTitle: string = "Touchdown Loyal";
     private static _basePartnerTitle: string = "My Touchdown Zone";
@@ -120,7 +120,7 @@ export class GlobalSettings {
 
     //include bypass parameter if you want the image to be served on server side (meta tag images)
     static getImageUrl(relativePath):string {
-      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: 'app/public/no-image.svg';
+      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: GlobalSettings.mainIcon;
       return relPath;
     }
 
@@ -138,7 +138,7 @@ export class GlobalSettings {
     }
 
     static getNewsUrl():string {
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
+        //[]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;
     }
 

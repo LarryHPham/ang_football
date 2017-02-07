@@ -9,7 +9,7 @@ declare var moment: any;
 
 export class GlobalFunctions {
    private static prebootFired:boolean = false;
-
+   private static documentHeight:number = 0;
     /*convert from inches to ft-in format*/
     static inchesToFeet(inch):string {
         if (inch === undefined || inch === null) {
@@ -914,9 +914,15 @@ export class GlobalFunctions {
 
     static lazyLoadOnScroll(event, batchLoadIndex) {
       if(isBrowser){
+        if(batchLoadIndex == 1){
+          GlobalFunctions.documentHeight = 0;
+        }
         if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
           //fire when scrolled into footer
-          batchLoadIndex = batchLoadIndex + 1;
+          if(jQuery(document).height() > GlobalFunctions.documentHeight){
+            GlobalFunctions.documentHeight = jQuery(document).height();
+            batchLoadIndex = batchLoadIndex + 1;
+          }
         }
         return batchLoadIndex;
       }

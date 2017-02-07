@@ -184,10 +184,10 @@ export class TeamPage implements OnInit {
     this._seoService.removeApplicationJSON('page');
     this._seoService.removeApplicationJSON('json');
 
+    this.resetSubscription();
     if(this.routeSubscriptions){
       this.routeSubscriptions.unsubscribe();
     }
-    this.resetSubscription();
   } //ngOnDestroy
 
   private resetSubscription(){
@@ -213,7 +213,7 @@ export class TeamPage implements OnInit {
         this.pageParams['teamID'] = this.teamID;
 
         var currentUnixDate = new Date().getTime();
-        this.dateParam = {
+        let dateParam = {
           scope: 'team',//current profile page
           teamId: this.teamID, // teamId if it exists
           date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
@@ -236,7 +236,7 @@ export class TeamPage implements OnInit {
         setTimeout(() => { // defer loading everything below the fold
           //---Batch 2---//
           this.getHeadlines();
-          this.getBoxScores(this.dateParam);
+          this.getBoxScores(dateParam);
 
           //---Batch 3---//
           this.eventStatus = 'pregame';
@@ -364,14 +364,17 @@ export class TeamPage implements OnInit {
 
 
 
-  private getBoxScores(dateParams?) {
-     if ( dateParams != null ) {
+  private getBoxScores(dateParams) {
+     let newDate;
+     if ( dateParams != null && (newDate == null || dateParams.date != newDate.date) ) {
+       newDate = dateParams;
        this.dateParam = dateParams;
+       this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+         this.boxScoresData = boxScoresData;
+         this.currentBoxScores = currentBoxScores;
+         this.dateParam = newDate;
+       }))
      }
-     this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-       this.boxScoresData = boxScoresData;
-       this.currentBoxScores = currentBoxScores;
-     }))
   } //getBoxScores
 
 
