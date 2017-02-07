@@ -245,17 +245,17 @@ export class DailyUpdateService {
       lastUpdated: data.recentGames["lastUpdated"] ? GlobalFunctions.formatUpdatedDate(data.recentGames["lastUpdated"]) : "N/A",
     }
 
-    //Setting up chart info
-    // TODO add cases for other positions
-    var seriesOne = {
-      name: data.recentGames["gameStat1Type"] != null ? data.recentGames["gameStat1Type"] : "N/A",
-      key: "gameStat1"
-    };
-    var seriesTwo = {
-      name: data.recentGames["gameStat2Type"] != null ? data.recentGames["gameStat2Type"] : "N/A",
-      key: "gameStat2"
-    };
     try{
+      //Setting up chart info
+      // TODO add cases for other positions
+      var seriesOne = {
+        name: data.recentGames["gameStat1Type"] != null ? data.recentGames["gameStat1Type"] : "N/A",
+        key: "gameStat1"
+      };
+      var seriesTwo = {
+        name: data.recentGames["gameStat2Type"] != null ? data.recentGames["gameStat2Type"] : "N/A",
+        key: "gameStat2"
+      };
       if(data.recentGames["game1AgainstNick"] != null){
         data['recentGamesChartData'] =[
           {
@@ -283,35 +283,40 @@ export class DailyUpdateService {
         console.warn('Insufficient chart data');
         data['recentGamesChartData'] =[];
       }
+      var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
+      this.getPostGameArticle(data);
     }catch(e){
       console.warn('Insufficient chart data');
       data['recentGamesChartData'] =[];
     }
 
-    var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
-    this.getPostGameArticle(data);
+    try{
+      let tempText = "";
+      if(this.postGameArticleData.text && this.postGameArticleData.text.length>0 && typeof(this.postGameArticleData.text) == "object") {
+        tempText = this.postGameArticleData.text.join(" ");
+      }else{
+        tempText = <any>this.postGameArticleData.text;
+      }
+      this.postGameArticleData.text = [tempText];
 
-    let tempText = "";
-    if(this.postGameArticleData.text && this.postGameArticleData.text.length>0 && typeof(this.postGameArticleData.text) == "object") {
-      tempText = this.postGameArticleData.text.join(" ");
-    }else{
-      tempText = <any>this.postGameArticleData.text;
-    }
-    this.postGameArticleData.text = [tempText];
+      if ( chart ) {
+        return {
+          hasError: false,
+          lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
+          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null),
+          type: "Player",
+          wrapperStyle: {},
+          seasonStats: stats,
+          chart: chart,
+          postGameArticle: this.postGameArticleData
+        };
+      }
+      else {
+        return null;
+      }
 
-    if ( chart ) {
-      return {
-        hasError: false,
-        lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-        fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null),
-        type: "Player",
-        wrapperStyle: {},
-        seasonStats: stats,
-        chart: chart,
-        postGameArticle: this.postGameArticleData
-      };
-    }
-    else {
+    }catch(e){
+      console.warn('error in daily update post game article data');
       return null;
     }
   }

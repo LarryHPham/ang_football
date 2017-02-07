@@ -97,7 +97,7 @@ export class ArticlePages implements OnInit {
           if (this.eventType == "articleType=player-fantasy") {
             this.isFantasyReport = true;
           }
-          this.getArticles();
+          this.getAiArticles();
         }
         this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
 
@@ -109,7 +109,7 @@ export class ArticlePages implements OnInit {
     );
   }
 
-  getArticles() {
+  getAiArticles() {
     this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport, this.type)
       .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
       .subscribe(Article => {
@@ -121,9 +121,9 @@ export class ArticlePages implements OnInit {
             }
             this.isTrendingMax = false;
             this.getTrendingArticles(this.eventID);
-            this.metaTags(this.articleData);
+            this.metaTags(Article);
           } catch (e) {
-            console.log('Error getArticles Function', e);
+            console.log('Error getAiArticles Function', e);
             this.error = true;
             var self = this;
             setTimeout(function () {
@@ -234,6 +234,7 @@ export class ArticlePages implements OnInit {
             this.copyright = ["USA Today Sports Images"];
             this.imageTitle = [""];
           }
+
           this.metaTags(data);
           this.articleData = data.data;
 
