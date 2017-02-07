@@ -138,7 +138,6 @@ export class GlobalSettings {
     }
 
     static getNewsUrl():string {
-        //[]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;
     }
 
