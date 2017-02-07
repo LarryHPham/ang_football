@@ -251,7 +251,6 @@ export class ArticlePages implements OnInit {
       .subscribe(data => {
           this.articleData = data.data;
           this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
-          console.log('getDeepDiveVideo',data);
           this.metaTags(data);
           this.iframeUrl = this.articleData.videoLink;
           this.getRecommendedArticles(articleID);
