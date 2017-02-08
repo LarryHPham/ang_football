@@ -1,4 +1,4 @@
-<div class="articles-page">
+<div class="articles-page" (window:scroll)="trendingScroll($event)">
   <div class="articles-page-content">
     <!-- ERROR MESSAGE HERE -->
     <section *ngIf="error">
@@ -74,8 +74,7 @@
                                     [eventType]="eventType"
                                     [geoLocation]="geoLocation"
                                     [showLoading]="showLoading"
-                                    [trendingData]="trendingData"
-                                    (window:scroll)="trendingScroll($event)">
+                                    [trendingData]="trendingData">
                 </trending-component>
               </div>
 

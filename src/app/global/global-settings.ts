@@ -77,7 +77,7 @@ export class GlobalSettings {
           env = "prod";
       }
 
-      // env = "prod"; //TODO remove only used for testing
+      //env = "prod"; //TODO remove only used for testing
 
       return env;
     }
