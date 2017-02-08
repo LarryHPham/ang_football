@@ -22,6 +22,7 @@ export class AppComponent {
   ) {
       this._activatedRoute.firstChild.params.subscribe(
         (params:any) => {
+          console.log(params);
           this.scopeParam = '/'+params.scope;
         }
       )

@@ -233,34 +233,32 @@ export class TeamPage implements OnInit {
         this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.dailyUpdateModule(teamID);
 
-        setTimeout(() => { // defer loading everything below the fold
-          //---Batch 2---//
-          this.getHeadlines();
-          this.getBoxScores(dateParam);
+        //---Batch 2---//
+        this.getHeadlines();
+        this.getBoxScores(dateParam);
 
-          //---Batch 3---//
-          this.eventStatus = 'pregame';
-          this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
-          this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
+        //---Batch 3---//
+        this.eventStatus = 'pregame';
+        this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+        this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
+        this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+        this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
-          //--Batch 4--//
-          this.activeTransactionsTab = "Transactions"; // default tab is Transactions
-          this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
+        //--Batch 4--//
+        this.activeTransactionsTab = "Transactions"; // default tab is Transactions
+        this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
 
-          //--Batch 5--//
-          this.setupComparisonData();
-          this.getImages(this.imageData);
-          this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
-          this.getDykService();
+        //--Batch 5--//
+        this.setupComparisonData();
+        this.getImages(this.imageData);
+        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+        this.getDykService();
 
-          //--Batch 6--//
-          this.getFaqService();
-          this.setupListOfListsModule();
-          // this.getNewsService();
-          this.getTwitterService();
-        }, 2000);
+        //--Batch 6--//
+        this.getFaqService();
+        this.setupListOfListsModule();
+        // this.getNewsService();
+        this.getTwitterService();
       }
     ))
   } //setupProfileData
