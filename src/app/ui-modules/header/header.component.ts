@@ -1,13 +1,12 @@
-import {Component, Input, OnInit, Output, EventEmitter, ElementRef, Renderer, AfterContentChecked } from '@angular/core';
+import {Component, Input, AfterViewInit, OnInit, Output, EventEmitter, ElementRef, Renderer, AfterContentChecked } from '@angular/core';
 // import {Search, SearchInput} from '../components/search/search.component';
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
-import {GlobalSettings} from "../../global/global-settings";
-import {GlobalFunctions} from "../../global/global-functions";
-import {HamburgerMenuComponent, MenuData} from '../../ui-modules/hamburger-menu/hamburger-menu.component';
+import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from "../../global/global-functions";
+import { HamburgerMenuComponent, MenuData } from '../../ui-modules/hamburger-menu/hamburger-menu.component';
 import { isBrowser } from 'angular2-universal';
 
 declare var stButtons: any;
-declare var jQuery: any;
 
 @Component({
   selector: 'header-component',
@@ -158,10 +157,9 @@ export class HeaderComponent implements AfterContentChecked {
     });
 
     if (isBrowser) {
-      stButtons.locateElements();
       //insert salad bar
       var v = document.createElement('script');
-      v.src = 'http://w1.synapsys.us/widgets/deepdive/bar/bar.js?brandHex=234a66';
+      v.src = '//w1.synapsys.us/widgets/deepdive/bar/bar.js?brandHex=234a66';
       document.getElementById('header-bottom').insertBefore(v, document.getElementById('salad-bar'));
 
       var setPlaceholder = setInterval(function() { // keep checking for the existance of the salad bar until it loads in
@@ -179,6 +177,12 @@ export class HeaderComponent implements AfterContentChecked {
           clearInterval(setPlaceholder);
         }
       }, 1000);
+    }
+  }
+
+  ngAfterViewInit(){
+    if(isBrowser){
+      stButtons.locateElements();
     }
   }
 }
