@@ -64,10 +64,7 @@ function cacheControl(req, res, next) {
   next();
 }
 // Serve static files
-app.use('/favicon.ico', cacheControl, express.static(path.join(__dirname, '')));
-app.use('/lib', cacheControl, express.static(path.join(__dirname, 'lib')));
-app.use('/app/ads', cacheControl, express.static(path.join(__dirname, 'app/ads')));
-app.use('/app/public', cacheControl, express.static(path.join(__dirname, 'app/public')));
+app.use('/assets', cacheControl, express.static(path.join(__dirname, 'assets'), {maxAge: 30}));
 app.use(cacheControl, express.static(path.join(ROOT, 'dist/client'), {index: false}));
 
 process.on('uncaughtException', function (err) {
@@ -99,7 +96,7 @@ function ngApp(req, res) {
 /**
  * use universal for specific routes
  */
-// app.get('/', ngApp);
+app.get('/', ngApp);
 appRoutes.forEach(route => {
   app.get(`/${route.path}`, ngApp);
   app.get(`/${route.path}/*`, ngApp);
