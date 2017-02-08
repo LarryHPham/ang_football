@@ -335,12 +335,12 @@ export class ArticleDataService {
   }//end recommendations data processing
 
   //trending data processing
-  getAiTrendingData(count, scope) {
-    if (count == null) {
-      count = 10;
+  getAiTrendingData(batch, scope) {
+    if (batch == null) {
+      batch = 1;
     }
     var fullUrl = GlobalSettings.getArticleUrl();
-    return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
+    return this.model.get(fullUrl + "articles?page=" + batch + "&count=10&scope=" + scope + "&articleType=postgame-report")
       .map(data => data);
   }
 
