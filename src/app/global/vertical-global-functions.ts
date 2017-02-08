@@ -202,27 +202,6 @@ export class VerticalGlobalFunctions {
      }
    }
 
-
-  /**
-   * - Outputs a valid image url of a team logo given a valid team name input
-   *
-   * @example
-   * TODO-JVW
-   *
-   * @returns a url string that points to the inputted team's logo
-   */
-
-  static formatTeamLogo(inputTeamName: string):string {
-    if(inputTeamName != null) {
-      let teamName = inputTeamName.replace(" ", "_");
-      teamName = teamName.replace(".", "");
-      let teamLogo = GlobalSettings.getImageUrl("/mlb/logos/team/MLB_" + teamName + "_Logo.jpg");
-      return teamLogo;
-    }else{
-      return "";
-    }
-  }
-
   static getWeekDropdown(scope){
     let weekDropdown = []
     if(scope == 'nfl'){

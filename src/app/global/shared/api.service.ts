@@ -18,6 +18,7 @@ export class ApiService {
   * whatever domain/feature method name
   */
   get(url: string, options?: any) {
+    console.log(url);
     return this._http.get(url, options)
       .map(res => res.json())
       .catch(err => {

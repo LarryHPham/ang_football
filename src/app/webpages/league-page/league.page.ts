@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from "../../global/global-functions";
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
+import { isBrowser, isNode } from "angular2-universal";
 
 //services
 import { ProfileHeaderService} from '../../services/profile-header.service';
@@ -48,8 +49,9 @@ export class LeaguePage{
 
     public partnerID: string;
     public scope: string;
-    public paramsub: any;
     public storedPartnerParam: string;
+    public routeSubscriptions: any;
+    public storeSubscriptions: any = [];
 
     private headlineData:any;
     private pageParams:SportPageParameters = {};
@@ -135,17 +137,14 @@ export class LeaguePage{
     ) {
 
 
-      this.paramsub = this.activatedRoute.params.subscribe(
+      this.routeSubscriptions = this.activatedRoute.params.subscribe(
             (param :any)=> {
+              this.resetSubscription();
+              this.routeChangeResets();
+
               this.pageParams = param;
               this.partnerID = param['partnerID'];
               this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-              var currentUnixDate = new Date().getTime();
-              this.dateParam ={
-                scope:'league',//current profile page
-                teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
-                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
-              }
               this.setupProfileData(this.partnerID, this.scope);
               this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
             }
@@ -153,8 +152,40 @@ export class LeaguePage{
 
     }
 
+    // This function contains values that need to be manually reset when navigatiing from league page to league page
+    routeChangeResets() {
+      this.dateParam = null;
+      this.profileHeaderData = null;
+      this.boxScoresData = null
+      this.currentBoxScores = null;
+      this.batchLoadIndex = 1;
+      if(isBrowser){
+        window.scrollTo(0, 0);
+      }
+    } //routeChangeResets
+
+
+    ngOnDestroy(){
+      this.resetSubscription();
+      if(this.routeSubscriptions){
+        this.routeSubscriptions.unsubscribe();
+      }
+    } //ngOnDestroy
+
+    private resetSubscription(){
+      if(this.storeSubscriptions){
+        var numOfSubs = this.storeSubscriptions.length;
+
+        for( var i = 0; i < numOfSubs; i++ ){
+          if(this.storeSubscriptions[i]){
+            this.storeSubscriptions[i].unsubscribe();
+          }
+        }
+      }
+    }
+
     private setupProfileData(partnerID, scope) {
-      this._profileService.getLeagueProfile(scope).subscribe(
+      this.storeSubscriptions.push(this._profileService.getLeagueProfile(scope).subscribe(
         data => {
           //---Batch 1 Load---//
           this.metaTags(data);
@@ -163,11 +194,17 @@ export class LeaguePage{
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
           this.getLeagueHeadlines();
+          var currentUnixDate = new Date().getTime();
+          let dateParam ={
+            scope:'league',//current profile page
+            teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
+            date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
+          }
 
           setTimeout(() => { // defer loading everything below the fold
             //---Batch 2 Load---//
             this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
-            this.getBoxScores(this.dateParam);
+            this.getBoxScores(dateParam);
             this.eventStatus = 'pregame';
             this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
@@ -201,7 +238,7 @@ export class LeaguePage{
 
           }, 2000);
         }
-      )
+      ))
     } //setupProfileData
 
 
@@ -213,7 +250,7 @@ export class LeaguePage{
       let header = data.headerData;
       let title = header.leagueFullName;
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
-      let image = GlobalSettings.getImageUrl(header.leagueLogo) ? GlobalSettings.getImageUrl(header.leagueLogo) : 'http://images.synapsys.us'+header.leagueLogo;
+      let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.mainIcon;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -228,26 +265,29 @@ export class LeaguePage{
 
 
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
+      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
         .subscribe(data => {
             this.firstVideo = data.data[first].videoLink;
             this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
         },
         err => {
             console.log("Error getting video data");
-        });
+        }));
     } //getLeagueVideoBatch
 
 
 
-    private getBoxScores(dateParams?) {
-        if ( dateParams != null ) {
+    private getBoxScores(dateParams) {
+        let newDate;
+        if ( dateParams != null && (newDate == null || dateParams.date != newDate.date) ) {
+            newDate = dateParams;
             this.dateParam = dateParams;
+            this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+              this.boxScoresData = boxScoresData;
+              this.currentBoxScores = currentBoxScores;
+              this.dateParam = newDate;
+            }))
         }
-        this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-            this.boxScoresData = boxScoresData;
-            this.currentBoxScores = currentBoxScores;
-        })
     }
     //getBoxScores
 
@@ -259,13 +299,13 @@ export class LeaguePage{
         if (scope == "ncaa") {
             scope = "ncaaf";
         }
-        this._articleDataService.getAiHeadlineDataLeague(null, scope, true)
+        this.storeSubscriptions.push(this._articleDataService.getAiHeadlineDataLeague(null, scope, true)
           .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
           .subscribe(
               HeadlineData => {
                   this.headlineData = HeadlineData;
               }
-          )
+          ))
     } //getLeagueHeadlines
 
 
@@ -316,7 +356,7 @@ export class LeaguePage{
       if(typeof year == 'undefined'){
         year = new Date().getFullYear();
       }
-      this._schedulesService.getScheduleTable(this.schedulesData, scopeLink, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+      this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, scopeLink, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame' || status == 'created'){
           this.scheduleFilter1 = null;
         }else{
@@ -340,19 +380,19 @@ export class LeaguePage{
           pageNum: 1,
         }
 
-      }, year, week) // isTeamProfilePage = true
+      }, year, week)) // isTeamProfilePage = true
     } //getSchedulesData
 
 
 
     private standingsTabSelected(tabData: Array<any>) {
       //only show 5 rows in the module
-      this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile);
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile));
     } //standingsTabSelected
     private standingsFilterSelected(tabData: Array<any>) {
       this.scope = this.scope;
-      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      }, 5 , this.dateParam.profile);
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      }, 5 , this.dateParam.profile));
     } //standingsFilterSelected
 
 
@@ -373,7 +413,7 @@ export class LeaguePage{
         this.dropdownKey1 = this.seasonBase;
       }
 
-      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
+      this.storeSubscriptions.push(this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {
             //create footer call to action (CTA) link
@@ -389,7 +429,7 @@ export class LeaguePage{
           err => {
           console.log('Error: transactionsData API: ', err);
           }
-      );
+      ));
       // pass transaction page route params to module filter, so set module footer route
     } //getTransactionsData
 
@@ -458,7 +498,7 @@ export class LeaguePage{
     getMVPService(tab, params){
       if( this.isFirstRun ) {
         this.isFirstRun = false;
-        this._listService.getListModuleService(tab, params)
+        this.storeSubscriptions.push(this._listService.getListModuleService(tab, params)
           .subscribe(updatedTab => {
             //do nothing?
             var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
@@ -467,56 +507,56 @@ export class LeaguePage{
           }, err => {
             tab.isLoaded = true;
             console.log('Error: Loading MVP Pitchers: ', err);
-          })
+          }))
       }
     } //getMVPService
 
 
 
     private setupComparisonData() {
-      this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+      this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
         data => {
           this.comparisonModuleData = data;
         },
         err => {
           console.log("Error getting comparison data", err);
-        });
+        }));
     } //setupComparisonData
 
 
 
     private getImages(imageData) {
-      this._imagesService.getImages(this.profileType, this.scope)
+      this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.scope)
         .subscribe(data => {
           return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
         },
         err => {
           console.log("Error getting image data" + err);
-        });
+        }));
     } //getImages
 
 
 
     private getDykService(profileType) {
-      this._dykService.getDykService(this.profileType, this.scope)
+      this.storeSubscriptions.push(this._dykService.getDykService(this.profileType, this.scope)
         .subscribe(data => {
           this.dykData = data;
         },
         err => {
           console.log("Error getting did you know data");
-        });
+        }));
     } //getDykService
 
 
 
     private getFaqService(profileType) {
-      this._faqService.getFaqService(this.profileType, this.scope)
+      this.storeSubscriptions.push(this._faqService.getFaqService(this.profileType, this.scope)
         .subscribe(data => {
             this.faqData = data;
         },
         err => {
             console.log("Error getting faq data for mlb", err);
-        });
+        }));
    } //getFaqService
 
 
@@ -528,7 +568,7 @@ export class LeaguePage{
         pageNum : 1,
         scope: this.scope
       }
-      this._lolService.getListOfListsService(params, "league", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "league", "module")
         .subscribe(
           listOfListsData => {
             if(listOfListsData){
@@ -538,7 +578,7 @@ export class LeaguePage{
           err => {
             console.log('Error: listOfListsData API: ', err);
           }
-      );
+      ));
     } //setupListOfListsModule
 
 
@@ -550,13 +590,13 @@ export class LeaguePage{
         id: ''
       }
       let scope = GlobalSettings.getScope(this.scope);
-      this._newsService.getNewsService(scope, params, "league", "module")
+      this.storeSubscriptions.push(this._newsService.getNewsService(scope, params, "league", "module")
         .subscribe(data => {
           this.newsDataArray = data.news;
         },
         err => {
           console.log("Error getting news data");
-      });
+      }));
     } //getNewsService
 
 
@@ -567,13 +607,13 @@ export class LeaguePage{
       this.isProfilePage = true;
       this.profileType = 'league';
 
-      this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
+      this.storeSubscriptions.push(this._twitterService.getTwitterService(this.profileType, this.partnerID, this.scope)
         .subscribe(data => {
           this.twitterData = data;
         },
         err => {
           console.log("Error getting twitter data");
-        });
+        }));
     } //getTwitterService
 
 
