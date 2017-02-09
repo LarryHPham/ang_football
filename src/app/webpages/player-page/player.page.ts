@@ -198,7 +198,7 @@ export class PlayerPage{
          if (this.scope.toLocaleLowerCase() == "nfl") {
            this.getFantasyData(this.pageParams.playerId);
          }
-        this.getBoxScores(this.dateParam);
+        this.getBoxScores(null);
         this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
 
