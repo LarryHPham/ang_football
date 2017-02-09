@@ -22,10 +22,11 @@ export class AppComponent {
   ) {
       this._activatedRoute.params.subscribe(
         (params:any) => {
-          console.log(params);
           this._activatedRoute.firstChild.params.subscribe(
             (childParams:any) => {
-              console.log(childParams);
+              if(isNode){
+                console.log(params,childParams);
+              }
               this.scopeParam = '/'+childParams.scope;
               //function that grabs the designated location needed for the client and if a partnerID is sent through then it will also set the partnerID and partnerScript for their Header
               if(GlobalSettings.getHomeInfo().isSubdomainPartner) {

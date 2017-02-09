@@ -128,7 +128,7 @@ export class PickTeamPage{
 
           this.metaTags();
         })
-      }); //GlobalSettings.getParentParams
+      });
     } //constructor
 
 
