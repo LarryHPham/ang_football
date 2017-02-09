@@ -29,6 +29,7 @@ declare var moment;
 
 export class ArticlePages implements OnInit {
   public params;
+  public trendingContent:Array<any>;
   public trendingData:any;
   public isArticle:boolean = false;
   article:Article;
@@ -47,7 +48,6 @@ export class ArticlePages implements OnInit {
   isFantasyReport:boolean = false;
   isTrendingMax:boolean = false;
   showLoading:boolean = true;
-  trendingLength:number;
   eventType:string;
   eventID:string;
   date:string;
@@ -71,12 +71,7 @@ export class ArticlePages implements OnInit {
               private _geoLocation:GeoLocation) {
     this.subRec = this._activateRoute.params.subscribe(
       (params:any) => {
-        this.isBrowser = isBrowser;
-        this.articleData = null;
-        this.trendingData = null;
-        this.trendingLength = 10;
-        this.isTrendingMax = false;
-        this.isFantasyReport = false;
+        this.routeChangeResets();
         this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
         if (params.partnerID != null) {
           this.partnerId = params.partnerID;
@@ -100,14 +95,20 @@ export class ArticlePages implements OnInit {
           this.getAiArticles();
         }
         this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-
-        if (isBrowser) {
-          window.scrollTo(0, 0);
-          this.rawUrl = window.location.href;
-        }
       }
     );
   }
+
+  routeChangeResets() {
+    this.articleData = null;
+    this.trendingData = null;
+    this.isTrendingMax = false;
+    this.isFantasyReport = false;
+    this.trendingContent = [];
+    if (isBrowser) {
+      window.scrollTo(0, 0);
+    }
+  } //routeChangeResets
 
   getAiArticles() {
     this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport, this.type)
@@ -164,16 +165,17 @@ export class ArticlePages implements OnInit {
   }
 
   private getTrendingArticles(currentArticleId) {
-    var getData = this.isArticle ? this._articleDataService.getAiTrendingData(this.trendingLength, this.scope) :
-      this._deepDiveService.getDeepDiveBatchService(this.scope, this.trendingLength, 1, this.geoLocation);
-    this.trendingArticles = getData.subscribe(
-      data => {
+    var getData = this.isArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) :
+      this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
+    this.trendingArticles = getData
+      .subscribe(data => {
         if (!this.hasRun) {
+          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['data']) : this.trendingContent.concat(data);
           this.hasRun = true;
-          this.trendingData = this.isArticle ? this._articleDataService.transformTrending(data['data'], currentArticleId, this.scope, true) :
-            this._articleDataService.transformTrending(data, currentArticleId, this.scope, false);
+          this.trendingData = this.isArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
+            this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
           if ((data.article_count % 10 == 0 || data.length % 10 == 0) && this.trendingData) {
-            this.trendingLength = this.trendingLength + 10;
+            this.batch = this.batch + 1;
           } else {
             this.isTrendingMax = true;
             this.showLoading = false;
@@ -183,11 +185,10 @@ export class ArticlePages implements OnInit {
   }
 
   private trendingScroll(event) {
-    if (!this.isTrendingMax && isBrowser) {
-      this.hasRun = false;
+    if (!this.isTrendingMax) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+        this.hasRun = false;
         this.showLoading = true;
-        this.batch = this.batch + 1;
         this.getTrendingArticles(this.eventID);
       }
     }

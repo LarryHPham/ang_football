@@ -157,6 +157,13 @@ export class TeamPage implements OnInit {
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
 
+        var currentUnixDate = new Date().getTime();
+        this.dateParam = {
+          scope: 'team',//current profile page
+          teamId: param['teamID'], // teamId if it exists
+          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+        } //this.dateParam
+
         this.storedPartnerParam = GlobalSettings.storedPartnerId();
         this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
       }
@@ -169,10 +176,6 @@ export class TeamPage implements OnInit {
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
-    this.dateParam = null;
-    this.profileHeaderData = null;
-    this.boxScoresData = null
-    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -212,13 +215,6 @@ export class TeamPage implements OnInit {
         this.pageParams['teamName'] = GlobalFunctions.toLowerKebab(this.pageParams['teamName']);
         this.pageParams['teamID'] = this.teamID;
 
-        var currentUnixDate = new Date().getTime();
-        let dateParam = {
-          scope: 'team',//current profile page
-          teamId: this.teamID, // teamId if it exists
-          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-        } //this.dateParam
-
         this.profileData = data;
         let headerData = data.headerData != null ? data.headerData : null;
 
@@ -233,34 +229,32 @@ export class TeamPage implements OnInit {
         this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.dailyUpdateModule(teamID);
 
-        setTimeout(() => { // defer loading everything below the fold
-          //---Batch 2---//
-          this.getHeadlines();
-          this.getBoxScores(dateParam);
+        //---Batch 2---//
+        this.getHeadlines();
+        this.getBoxScores(this.dateParam);
 
-          //---Batch 3---//
-          this.eventStatus = 'pregame';
-          this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
-          this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
+        //---Batch 3---//
+        this.eventStatus = 'pregame';
+        this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+        this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
+        this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+        this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
-          //--Batch 4--//
-          this.activeTransactionsTab = "Transactions"; // default tab is Transactions
-          this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
+        //--Batch 4--//
+        this.activeTransactionsTab = "Transactions"; // default tab is Transactions
+        this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
 
-          //--Batch 5--//
-          this.setupComparisonData();
-          this.getImages(this.imageData);
-          this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
-          this.getDykService();
+        //--Batch 5--//
+        this.setupComparisonData();
+        this.getImages(this.imageData);
+        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+        this.getDykService();
 
-          //--Batch 6--//
-          this.getFaqService();
-          this.setupListOfListsModule();
-          // this.getNewsService();
-          this.getTwitterService();
-        }, 2000);
+        //--Batch 6--//
+        this.getFaqService();
+        this.setupListOfListsModule();
+        // this.getNewsService();
+        this.getTwitterService();
       }
     ))
   } //setupProfileData
@@ -361,8 +355,6 @@ export class TeamPage implements OnInit {
         }
     ))
   } //getHeadlines
-
-
 
   private getBoxScores(dateParams) {
      let newDate;
