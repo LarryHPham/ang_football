@@ -23,9 +23,6 @@ export class ProfileHeaderService {
   public scope: string;
 
   constructor(private _router:Router,  public model: ModelService){
-    GlobalSettings.getParentParams(_router, parentParams =>
-      this.scope = parentParams.scope
-    );
   }
 
   getPlayerProfile(playerId: number) {

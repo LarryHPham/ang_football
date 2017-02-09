@@ -149,10 +149,6 @@ export class PlayerPage{
 
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
-    this.dateParam = null;
-    this.profileHeaderData = null;
-    this.boxScoresData = null;
-    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -195,7 +191,7 @@ export class PlayerPage{
 
         this.pageParams['teamID'] = this.teamID;
         this.pageParams['teamName'] = this.teamName;
-        let dateParam = {
+        this.dateParam = {
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
           date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
@@ -208,7 +204,7 @@ export class PlayerPage{
          if (this.scope.toLocaleLowerCase() == "nfl") {
            this.getFantasyData(this.pageParams.playerId);
          }
-        this.getBoxScores(dateParam);
+        this.getBoxScores(this.dateParam);
         this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
 

@@ -157,6 +157,13 @@ export class TeamPage implements OnInit {
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
 
+        var currentUnixDate = new Date().getTime();
+        this.dateParam = {
+          scope: 'team',//current profile page
+          teamId: param['teamID'], // teamId if it exists
+          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+        } //this.dateParam
+
         this.storedPartnerParam = GlobalSettings.storedPartnerId();
         this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
       }
@@ -169,10 +176,6 @@ export class TeamPage implements OnInit {
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
-    this.dateParam = null;
-    this.profileHeaderData = null;
-    this.boxScoresData = null
-    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -212,13 +215,6 @@ export class TeamPage implements OnInit {
         this.pageParams['teamName'] = GlobalFunctions.toLowerKebab(this.pageParams['teamName']);
         this.pageParams['teamID'] = this.teamID;
 
-        var currentUnixDate = new Date().getTime();
-        let dateParam = {
-          scope: 'team',//current profile page
-          teamId: this.teamID, // teamId if it exists
-          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-        } //this.dateParam
-
         this.profileData = data;
         let headerData = data.headerData != null ? data.headerData : null;
 
@@ -235,7 +231,7 @@ export class TeamPage implements OnInit {
 
         //---Batch 2---//
         this.getHeadlines();
-        this.getBoxScores(dateParam);
+        this.getBoxScores(this.dateParam);
 
         //---Batch 3---//
         this.eventStatus = 'pregame';
@@ -359,8 +355,6 @@ export class TeamPage implements OnInit {
         }
     ))
   } //getHeadlines
-
-
 
   private getBoxScores(dateParams) {
      let newDate;
