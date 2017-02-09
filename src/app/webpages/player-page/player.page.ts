@@ -49,7 +49,6 @@ declare var moment;
 export class PlayerPage{
   public widgetPlace: string = "widgetForModule";
 
-  public currentUnixDate = new Date().getTime();
   private constructorControl:boolean = true;
   public partnerID: string;
   public storedPartnerParam: string;
@@ -191,11 +190,6 @@ export class PlayerPage{
 
         this.pageParams['teamID'] = this.teamID;
         this.pageParams['teamName'] = this.teamName;
-        this.dateParam = {
-          scope: 'player',
-          teamId: this.teamID, // teamId if it exists
-          date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
-        } //this.dateParam
 
         this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
         this.dailyUpdateModule(this.playerID);
@@ -349,15 +343,23 @@ export class PlayerPage{
   } //getFantasyData
 
   private getBoxScores(dateParams) {
-      let newDate;
-      if (dateParams != null && (newDate == null || dateParams.date != newDate.date)) {
-        newDate = dateParams;
+    if(this.dateParam){
+      var currentUnixDate = new Date().getTime();
+      this.dateParam = {
+        scope: 'player',
+        teamId: this.teamID, // teamId if it exists
+        date: moment.tz(currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
+      } //this.dateParam
+    }
+    let newDate;
+    if (dateParams != null && (newDate == null || dateParams.date != newDate.date)) {
+      newDate = dateParams;
+      this.dateParam = newDate;
+      this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, newDate, (boxScoresData, currentBoxScores) => {
+        this.boxScoresData = boxScoresData;
+        this.currentBoxScores = currentBoxScores;
         this.dateParam = newDate;
-        this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, newDate, (boxScoresData, currentBoxScores) => {
-          this.boxScoresData = boxScoresData;
-          this.currentBoxScores = currentBoxScores;
-          this.dateParam = newDate;
-        }))
+      }))
     }
   } //getBoxScores
 
