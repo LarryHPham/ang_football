@@ -149,10 +149,6 @@ export class PlayerPage{
 
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
-    this.dateParam = null;
-    this.profileHeaderData = null;
-    this.boxScoresData = null;
-    this.currentBoxScores = null;
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -195,7 +191,7 @@ export class PlayerPage{
 
         this.pageParams['teamID'] = this.teamID;
         this.pageParams['teamName'] = this.teamName;
-        let dateParam = {
+        this.dateParam = {
           scope: 'player',
           teamId: this.teamID, // teamId if it exists
           date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
@@ -204,30 +200,28 @@ export class PlayerPage{
         this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
         this.dailyUpdateModule(this.playerID);
 
-        setTimeout(() => {  // defer loading everything below the fold
-          //--Batch 2--//
-           if (this.scope.toLocaleLowerCase() == "nfl") {
-             this.getFantasyData(this.pageParams.playerId);
-           }
-          this.getBoxScores(dateParam);
-          this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
-          this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+        //--Batch 2--//
+         if (this.scope.toLocaleLowerCase() == "nfl") {
+           this.getFantasyData(this.pageParams.playerId);
+         }
+        this.getBoxScores(this.dateParam);
+        this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
+        this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
 
-          //--Batch 3--//
-          this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
-          this.setupSeasonstatsData();
-          this.setupComparisonData();
+        //--Batch 3--//
+        this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
+        this.setupSeasonstatsData();
+        this.setupComparisonData();
 
-          //--Batch 4--//
-          this.getImages(this.imageData);
-          this.getDykService();
-          this.getFaqService();
+        //--Batch 4--//
+        this.getImages(this.imageData);
+        this.getDykService();
+        this.getFaqService();
 
-          //--Batch 5--//
-          this.setupListOfListsModule();
-          this.getNewsService();
-          this.getTwitterService();
-        }, 2000);
+        //--Batch 5--//
+        this.setupListOfListsModule();
+        this.getNewsService();
+        this.getTwitterService();
       },
       err => {
         this.hasError = true;

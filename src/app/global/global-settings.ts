@@ -4,14 +4,13 @@ import { GlobalFunctions } from './global-functions';
 import { isBrowser, isNode, prebootComplete } from 'angular2-universal';
 import { defaultOptions } from 'preboot';
 
-
-
 declare var Zone;
+
 @Injectable()
 
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
-    private static _env = isNode ? 'dev' : 'dev'//window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
+    private static _env = isNode ? 'prod' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
     public static _proto = isNode ? 'http:' : window.location.protocol;//TODO currently server side is hardcoding protocol
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
@@ -223,37 +222,6 @@ export class GlobalSettings {
       return scope;
     }
 
-    /**
-     * This should be called by classes in their constructor function, so that the
-     * 'subscribe' function actually gets called and the partnerID and scope can be located from the route
-     *
-     * @param{Router} router
-     * @param {Function} subscribeListener - takes a single parameter that represents the partnerID: (partnerID) => {}
-     */
-
-    //static getPartnerID(router: Router, subscribeListener: Function)
-    static getParentParams(router, subscribeListener: Function) {
-        // if ( !subscribeListener ) return;
-        // return router.root.subscribe (
-        //     route => {
-        //         let partnerID = null;
-        //         let scope = route.instruction.params["scope"];
-        //         if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
-        //           partnerID = route.instruction.params["partner_id"];
-        //         }else if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
-        //           partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
-        //         }
-        //
-        //         if ( scope == null ) {
-        //           scope = this.getSportLeagueAbbrv();
-        //         }
-        //         subscribeListener({
-        //           partnerID: partnerID == '' ? null : partnerID,
-        //           scope: this.getScope(scope)
-        //         });
-        //     }
-        // );
-    }
 
     //converts URL route scope from NCAAF to FBS
     //NCAAF is for display purpose and returning FBS is for API requirements

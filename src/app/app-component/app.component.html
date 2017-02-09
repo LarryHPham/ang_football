@@ -7,4 +7,4 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-<footer-component [partnerID]="partnerID" [scopeParam]="scopeParam"></footer-component>
+<footer-component *ngIf="scopeParam" [partnerID]="partnerID" [scopeParam]="scopeParam"></footer-component>

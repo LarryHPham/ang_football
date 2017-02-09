@@ -145,6 +145,14 @@ export class LeaguePage{
               this.pageParams = param;
               this.partnerID = param['partnerID'];
               this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
+
+              var currentUnixDate = new Date().getTime();
+              this.dateParam ={
+                scope:'league',//current profile page
+                teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
+                date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
+              }
+
               this.setupProfileData(this.partnerID, this.scope);
               this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
             }
@@ -154,10 +162,6 @@ export class LeaguePage{
 
     // This function contains values that need to be manually reset when navigatiing from league page to league page
     routeChangeResets() {
-      this.dateParam = null;
-      this.profileHeaderData = null;
-      this.boxScoresData = null
-      this.currentBoxScores = null;
       this.batchLoadIndex = 1;
       if(isBrowser){
         window.scrollTo(0, 0);
@@ -194,49 +198,41 @@ export class LeaguePage{
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
           this.getLeagueHeadlines();
-          var currentUnixDate = new Date().getTime();
-          let dateParam ={
-            scope:'league',//current profile page
-            teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
-            date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
-          }
 
-          setTimeout(() => { // defer loading everything below the fold
-            //---Batch 2 Load---//
-            this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
-            this.getBoxScores(dateParam);
-            this.eventStatus = 'pregame';
-            this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
+          //---Batch 2 Load---//
+          this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
+          this.getBoxScores(this.dateParam);
+          this.eventStatus = 'pregame';
+          this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
-            //---Batch 3 Load---//
-            this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.profileType);
-            this.transactionsActiveTab = "Transactions";
-            this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
+          //---Batch 3 Load---//
+          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.profileType);
+          this.transactionsActiveTab = "Transactions";
+          this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
 
-            //---Batch 4 Load---//
-            this.globalMVPPosition = 'cb'; //Initial position to display in MVP
-            this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
-            this.positionData = this._listService.getMVPTabs(this.globalMVPPosition, 'module');
-            if ( this.positionData && this.positionData.length > 0 ) {
-              //default params
-              this.positionDropdown({
-                  tab: this.positionData[0],
-                  position: this.globalMVPPosition
-              });
-            };
-            this.setupComparisonData();
-            this.getImages(this.imageData);
+          //---Batch 4 Load---//
+          this.globalMVPPosition = 'cb'; //Initial position to display in MVP
+          this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
+          this.positionData = this._listService.getMVPTabs(this.globalMVPPosition, 'module');
+          if ( this.positionData && this.positionData.length > 0 ) {
+            //default params
+            this.positionDropdown({
+                tab: this.positionData[0],
+                position: this.globalMVPPosition
+            });
+          };
+          this.setupComparisonData();
+          this.getImages(this.imageData);
 
-            //---Batch 5 Load---//
-            this.getDykService(this.profileType);
-            this.getFaqService(this.profileType);
-            this.setupListOfListsModule();
+          //---Batch 5 Load---//
+          this.getDykService(this.profileType);
+          this.getFaqService(this.profileType);
+          this.setupListOfListsModule();
 
-            //---Batch 6 Load---//
-            this.getNewsService();
-            this.getTwitterService(this.profileType, partnerID, scope);
+          //---Batch 6 Load---//
+          this.getNewsService();
+          this.getTwitterService(this.profileType, partnerID, scope);
 
-          }, 2000);
         }
       ))
     } //setupProfileData
