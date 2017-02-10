@@ -164,7 +164,7 @@ export class TeamPage implements OnInit {
           date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
         } //this.dateParam
 
-        this.storedPartnerParam = GlobalSettings.storedPartnerId();
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
         this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
       }
     ); //this.paramsub

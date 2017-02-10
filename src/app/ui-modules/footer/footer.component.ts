@@ -86,13 +86,13 @@ export class FooterComponent implements OnInit {
     ngOnInit() {
         this.loadData(this.partnerID);
         var scope = this.scopeParam == 'home' ? 'nfl' : this.scopeParam;
-        let partnerLink = this.partnerID != null ? VerticalGlobalFunctions.getWhiteLabel() : "/" + VerticalGlobalFunctions.getWhiteLabel();
-        var baseFooterLink = partnerLink + this.scopeParam;
+        let partnerLink = VerticalGlobalFunctions.getWhiteLabel();
+        var baseFooterLink = partnerLink != '' ? [partnerLink, this.scopeParam] : [this.scopeParam];
 
         this.footerLinks = {
-          aboutUs: baseFooterLink + '/about-us',
-          contactUs: baseFooterLink + '/contact-us',
-          disclaimer: baseFooterLink + '/disclaimer'
+          aboutUs: baseFooterLink.concat(['about-us']),
+          contactUs: baseFooterLink.concat(['contact-us']),
+          disclaimer: baseFooterLink.concat(['disclaimer'])
         }
     }
 }
