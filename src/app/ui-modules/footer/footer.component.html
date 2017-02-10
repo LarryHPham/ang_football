@@ -26,9 +26,9 @@
           </dropdown-directory>
         </div>
         <ul>
-          <li><a href="{{footerLinks.aboutUs}}">{{au}}</a><i>|</i></li>
-          <li><a href="{{footerLinks.contactUs}}">{{contactUs}}</a><i>|</i></li>
-          <li><a href="{{footerLinks.disclaimer}}">{{disc}}</a></li>
+          <li><a [routerLink]="footerLinks.aboutUs">{{au}}</a><i>|</i></li>
+          <li><a [routerLink]="footerLinks.contactUs">{{contactUs}}</a><i>|</i></li>
+          <li><a [routerLink]="footerLinks.disclaimer">{{disc}}</a></li>
         </ul>
         <div class="footer-main-cit row">
           <p class="footer-main-citation" [innerHTML]="_copyrightInfo"></p><i class="footer-main-cit-pipe">|</i>
