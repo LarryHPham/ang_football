@@ -123,6 +123,7 @@ export class TeamPage implements OnInit {
   private batchLoadIndex: number = 1;
 
   private playerStatsData: PlayerStatsModuleData;
+  private isLoaded: boolean = false;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -176,6 +177,8 @@ export class TeamPage implements OnInit {
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
+    this.isLoaded = false;
+    console.log('route change',this.isLoaded);
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -187,6 +190,7 @@ export class TeamPage implements OnInit {
     this._seoService.removeApplicationJSON('page');
     this._seoService.removeApplicationJSON('json');
 
+    this.routeChangeResets();
     this.resetSubscription();
     if(this.routeSubscriptions){
       this.routeSubscriptions.unsubscribe();
@@ -228,29 +232,29 @@ export class TeamPage implements OnInit {
         data['scope'] = this.scope;
         this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.dailyUpdateModule(teamID);
-
-        //---Batch 2---//
         this.getHeadlines();
         this.getBoxScores(this.dateParam);
+        this.isLoaded = true;
+        console.log('is loaded');
 
-        //---Batch 3---//
+        //---Batch 2---//
         this.eventStatus = 'pregame';
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
         this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
         this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
         this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
-        //--Batch 4--//
+        //--Batch 3--//
         this.activeTransactionsTab = "Transactions"; // default tab is Transactions
         this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
 
-        //--Batch 5--//
+        //--Batch 4--//
         this.setupComparisonData();
         this.getImages(this.imageData);
         this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
         this.getDykService();
 
-        //--Batch 6--//
+        //--Batch 5--//
         this.getFaqService();
         this.setupListOfListsModule();
         // this.getNewsService();
@@ -423,21 +427,17 @@ export class TeamPage implements OnInit {
       }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
 
-
-
     private standingsTabSelected(tabData: Array<any>) {
-        //only show 5 rows in the module
-        this.pageParams.scope = this.scope;
-        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
+      //only show 5 rows in the module
+      this.pageParams.scope = this.scope;
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5));
     } //standingsTabSelected
 
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
-      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      }, 5);
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      }, 5));
     } //standingsFilterSelected
-
-
 
     private transactionsTab(tab) {
       this.transactionsActiveTab = tab;
