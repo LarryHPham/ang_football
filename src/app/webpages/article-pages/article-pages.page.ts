@@ -72,7 +72,7 @@ export class ArticlePages implements OnInit {
     this.subRec = this._activateRoute.params.subscribe(
       (params:any) => {
         this.routeChangeResets();
-        this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
+        this.scope = params.scope == "nfl" ? "nfl" : "ncaaf";
         if (params.partnerID != null) {
           this.partnerId = params.partnerID;
         }
