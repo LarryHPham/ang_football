@@ -74,7 +74,6 @@ export class MVPListPage implements OnInit {
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-
         this.activateRoute.params.subscribe(
           (param :any) => {
             this.paginationParameters = null;
@@ -202,21 +201,27 @@ export class MVPListPage implements OnInit {
 
     loadTabs() {
         this.tabs = this._service.getMVPTabs(this.listType, 'page');
-        if (this.tabs != null && this.tabs.length > 0) {
+        try {
+          if (this.tabs != null && this.tabs.length > 0 && this.queryParams) {
+              var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
+              if (this.queryParams.statName) {
+                  var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
 
-            var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
-            if (this.queryParams.statName) {
-                var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
+                  if (matchingTabs.length > 0) {
+                      selectedTab = matchingTabs[0];
+                  }
+              }
+              this.selectedTabName = selectedTab.tabDisplayTitle;
 
-                if (matchingTabs.length > 0) {
-                    selectedTab = matchingTabs[0];
-                }
-            }
-            this.selectedTabName = selectedTab.tabDisplayTitle;
-
-            this.getStandardList(selectedTab);
+              this.getStandardList(selectedTab);
+          }
         }
-    }
+        catch(e) {
+          console.log('Error loading MVP page tabs - ',e);
+        }
+    } //loadTabs
+
+
 
     //PAGINATION
     //sets the total pages for particular lists to allow client to

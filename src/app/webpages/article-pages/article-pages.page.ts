@@ -366,7 +366,9 @@ export class ArticlePages implements OnInit {
   ngOnDestroy() {
     if (!this.error) {
       this.subRec.unsubscribe();
-      this.trendingArticles.unsubscribe();
+      if ( this.trendingArticles ) {
+        this.trendingArticles.unsubscribe();
+      }
     }
   }
 }
