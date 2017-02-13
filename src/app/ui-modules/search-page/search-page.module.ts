@@ -84,7 +84,6 @@ export class SearchPageModule implements OnChanges {
 
     newIndex(index) {
         this.pageNumber = index;
-        window.scrollTo(0, 0);
         this.getShowResults(this.searchPageInput);
     }
 

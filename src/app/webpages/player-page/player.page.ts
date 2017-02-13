@@ -150,9 +150,6 @@ export class PlayerPage{
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
     this.batchLoadIndex = 1;
-    if(isBrowser){
-      window.scrollTo(0, 0);
-    }
   } //routeChangeResets
 
   ngOnDestroy(){

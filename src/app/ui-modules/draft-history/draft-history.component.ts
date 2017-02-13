@@ -76,7 +76,6 @@ export class DraftHistoryComponent implements OnInit {
   }
 
   newIndex(index) {
-    window.scrollTo(0,0);
     this.currentIndex = index - 1; //page index is 1-based, but we need 0-based to select correct array
   }
   dropdownChanged(event) {

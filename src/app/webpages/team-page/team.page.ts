@@ -177,9 +177,6 @@ export class TeamPage implements OnInit {
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
     this.batchLoadIndex = 1;
-    if(isBrowser){
-      window.scrollTo(0, 0);
-    }
   } //routeChangeResets
 
 
