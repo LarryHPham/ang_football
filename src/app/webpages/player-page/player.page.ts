@@ -430,7 +430,7 @@ export class PlayerPage{
           this.seasonStatsData = data;
         },
         err => {
-          console.log("Error getting season stats data for " + this.pageParams.playerId, err);
+          return;
         }));
   } //setupSeasonstatsData
 
