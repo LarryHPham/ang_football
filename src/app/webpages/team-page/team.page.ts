@@ -180,6 +180,10 @@ export class TeamPage implements OnInit {
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
     this.isLoaded = false;
+    this.standingsData = null;
+    this.rosterData = null;
+    this.playerStatsData = null;
+    this.transactionsData = null;
     this.batchLoadIndex = 1;
   } //routeChangeResets
 

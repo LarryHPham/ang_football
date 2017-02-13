@@ -153,6 +153,7 @@ export class PlayerPage{
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
     this.isLoaded = false;
+    this.standingsData = null;
     this.batchLoadIndex = 1;
   } //routeChangeResets
 
@@ -426,7 +427,7 @@ export class PlayerPage{
           this.seasonStatsData = data;
         },
         err => {
-          console.log("Error getting season stats data for " + this.pageParams.playerId, err);
+          return;
         }));
   } //setupSeasonstatsData
 
