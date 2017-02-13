@@ -1,5 +1,5 @@
 <sidekick-wrapper>
-  <section class="page profile-container team-page" (window:scroll)="onScroll($event)">
+  <section *ngIf="isLoaded" class="page profile-container team-page" (window:scroll)="onScroll($event)">
     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
     <error-component *ngIf="hasError"></error-component>
     <div *ngIf="profileHeaderData && pageParams">
