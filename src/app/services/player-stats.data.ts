@@ -91,7 +91,7 @@ export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStats
 
         this.isTeamProfilePage = isTeamProfilePage;
 
-        function getTabTitle(tabActive){
+        function getTabTitle(tabActive) {
             return {
                 Passing:{
                     title: "Passing",
@@ -266,7 +266,7 @@ export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStats
                 Special:{
                     description:[playerLinkText, " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
                 },
-                Kicking:{
+                kicking:{
                     description:[playerLinkText, " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
                 },
                 Punting:{
