@@ -234,10 +234,8 @@ export class DeepDivePage {
 
   private getDeepDiveVideoBatch() {
     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
-      data => {
-        if (data.data != null) {
-          this.videoData = this._deepDiveData.transformVideoStack(data.data);
-        }
+      data => {        
+        this.videoData = data.data != null ? this._deepDiveData.transformVideoStack(data.data) : null;
       }
     )
   }

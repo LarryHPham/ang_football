@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -133,7 +134,8 @@ export class LeaguePage{
       private _articleDataService:ArticleDataService,
       private _newsService: NewsService,
       private _twitterService: TwitterService,
-      private _seoService: SeoService
+      private _seoService: SeoService,
+      private _cdRef: ChangeDetectorRef
     ) {
 
 
@@ -279,6 +281,7 @@ export class LeaguePage{
               this.boxScoresData = boxScoresData;
               this.currentBoxScores = currentBoxScores;
               this.dateParam = newDate;
+              this._cdRef.detectChanges();
             }))
         }
     }
