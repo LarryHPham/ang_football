@@ -328,7 +328,6 @@ export class SchedulesPage implements OnInit {
 
 
   newIndex(newPage) {
-    window.scrollTo(0, 0);
     this.isFirstRun = 0;
     this.initialPage = newPage;
 

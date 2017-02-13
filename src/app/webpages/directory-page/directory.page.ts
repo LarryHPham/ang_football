@@ -149,10 +149,6 @@ export class DirectoryPage {
 
 
   getDirectoryData() {
-    if(isBrowser) {
-      window.scrollTo(0, 0);
-    }
-
     let params: DirectorySearchParams = {
       page: this.currentPage,
       listingsLimit: this.listingsLimit,
@@ -201,9 +197,6 @@ export class DirectoryPage {
 
   newIndex(index){
     this.currentPage = index;
-    if(isBrowser) {
-      window.scrollTo(0, 0);
-    }
   } //newIndex
 
 
