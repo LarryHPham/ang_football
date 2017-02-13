@@ -153,7 +153,6 @@ export class PlayerPage{
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
     this.isLoaded = false;
-    console.log('route change',this.isLoaded);
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -206,7 +205,6 @@ export class PlayerPage{
          }
         this.getBoxScores(this.dateParam);
         this.isLoaded = true;
-        console.log('is loaded');
 
         //--Batch 2--//
         this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
@@ -369,7 +367,6 @@ export class PlayerPage{
         this.boxScoresData = boxScoresData;
         this.currentBoxScores = currentBoxScores;
         this.dateParam = newDate;
-        console.log(this.currentBoxScores);
         this._cdRef.detectChanges();
       }))
     }

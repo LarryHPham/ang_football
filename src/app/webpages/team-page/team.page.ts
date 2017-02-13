@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -144,7 +145,8 @@ export class TeamPage implements OnInit {
     private _newsService: NewsService,
     private _twitterService: TwitterService,
     private _seoService: SeoService,
-    private _playerStatsService: PlayerStatsService
+    private _playerStatsService: PlayerStatsService,
+    private _cdRef: ChangeDetectorRef
   ) {
 
 
@@ -178,7 +180,6 @@ export class TeamPage implements OnInit {
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
     this.isLoaded = false;
-    console.log('route change',this.isLoaded);
     this.batchLoadIndex = 1;
     if(isBrowser){
       window.scrollTo(0, 0);
@@ -235,7 +236,6 @@ export class TeamPage implements OnInit {
         this.getHeadlines();
         this.getBoxScores(this.dateParam);
         this.isLoaded = true;
-        console.log('is loaded');
 
         //---Batch 2---//
         this.eventStatus = 'pregame';
@@ -369,6 +369,7 @@ export class TeamPage implements OnInit {
          this.boxScoresData = boxScoresData;
          this.currentBoxScores = currentBoxScores;
          this.dateParam = newDate;
+         this._cdRef.detectChanges();
        }))
      }
   } //getBoxScores
