@@ -361,11 +361,12 @@ export class ArticleDataService {
           eventId: isArticle ? val.event_id : val.id,
           eventType: isArticle ? "postgame-report" : "story",
           image: isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
-          url: isArticle ? VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
-            VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id),
-          rawUrl: isArticle ?
-          rawUrl + "/" + scope + "/articles/postgame-report/" + val.event_id :
-          rawUrl + "/" + scope + "/articles/story/" + val.id
+          url: isArticle ?
+               VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
+               VerticalGlobalFunctions.formatArticleRoute(scope, 'story', val.id),
+               rawUrl: isArticle ?
+                       rawUrl + "/" + scope + "/articles/postgame-report/" + val.event_id :
+                       rawUrl + "/" + scope + "/articles/story/" + val.id
         };
         if (articleData != null) {
           articles.push(articleData);
