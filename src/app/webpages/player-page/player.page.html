@@ -1,6 +1,6 @@
 <sidekick-wrapper>
-  <section class="page profile-container player-page" (window:scroll)="onScroll($event)">
-    <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
+  <section *ngIf="isLoaded" class="page profile-container player-page" (window:scroll)="onScroll($event)">
+    <!-- <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component> -->
     <error-component *ngIf="hasError"></error-component>
     <div *ngIf="profileHeaderData && pageParams">
       <div class="loadBatch1">

@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ChangeDetectorRef } from '@angular/core';
 
 //global functions
 import { GlobalSettings } from "../../global/global-settings";
@@ -110,6 +111,7 @@ export class PlayerPage{
 
   private batchLoadIndex:any;
   private hasError:any;
+  private isLoaded: boolean = false;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -127,7 +129,8 @@ export class PlayerPage{
     private _lolService: ListOfListsService,
     private _newsService: NewsService,
     private _twitterService: TwitterService,
-    private _seoService: SeoService
+    private _seoService: SeoService,
+    private _cdRef: ChangeDetectorRef
   ) {
     this.routeSubscriptions = this.activateRoute.params.subscribe(
       (param: any) => {
@@ -149,16 +152,16 @@ export class PlayerPage{
 
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
+    this.isLoaded = false;
+    this.standingsData = null;
     this.batchLoadIndex = 1;
-    if(isBrowser){
-      window.scrollTo(0, 0);
-    }
   } //routeChangeResets
 
   ngOnDestroy(){
     this._seoService.removeApplicationJSON('page');
     this._seoService.removeApplicationJSON('json');
 
+    this.routeChangeResets();
     this.resetSubscription();
     if(this.routeSubscriptions){
       this.routeSubscriptions.unsubscribe();
@@ -191,23 +194,19 @@ export class PlayerPage{
 
         this.pageParams['teamID'] = this.teamID;
         this.pageParams['teamName'] = this.teamName;
-        this.dateParam = {
-          scope: 'player',
-          teamId: this.teamID, // teamId if it exists
-          date: moment.tz(this.currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
-        } //this.dateParam
 
         this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
         this.dailyUpdateModule(this.playerID);
 
-        //--Batch 2--//
          if (this.scope.toLocaleLowerCase() == "nfl") {
            this.getFantasyData(this.pageParams.playerId);
          }
         this.getBoxScores(this.dateParam);
+        this.isLoaded = true;
+
+        //--Batch 2--//
         this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-
         //--Batch 3--//
         this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
         this.setupSeasonstatsData();
@@ -349,19 +348,27 @@ export class PlayerPage{
   } //getFantasyData
 
   private getBoxScores(dateParams) {
-      let newDate;
-      if (dateParams != null && (newDate == null || dateParams.date != newDate.date)) {
-        newDate = dateParams;
+    if(!this.dateParam || !dateParams){
+      var currentUnixDate = new Date().getTime();
+      dateParams = {
+        scope: 'player',
+        teamId: this.teamID, // teamId if it exists
+        date: moment.tz(currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
+      } //this.dateParam
+      this.dateParam = dateParams;
+    }
+    let newDate;
+    if ( (newDate == null || dateParams.date != newDate.date) ) {
+      newDate = dateParams;
+      this.dateParam = newDate;
+      this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, newDate, (boxScoresData, currentBoxScores) => {
+        this.boxScoresData = boxScoresData;
+        this.currentBoxScores = currentBoxScores;
         this.dateParam = newDate;
-        this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, newDate, (boxScoresData, currentBoxScores) => {
-          this.boxScoresData = boxScoresData;
-          this.currentBoxScores = currentBoxScores;
-          this.dateParam = newDate;
-        }))
+        this._cdRef.detectChanges();
+      }))
     }
   } //getBoxScores
-
-
 
   private scheduleTab(tab) {
     this.isFirstRun = 0;
@@ -401,21 +408,17 @@ export class PlayerPage{
     }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
   } //getSchedulesData
 
-
-
   private standingsTabSelected(tabData: Array<any>) {
     //only show 5 rows in the module;
     this.pageParams.scope = this.scope;
-    this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {
-    }, 5);
+    this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {
+    }, 5));
   } //standingsTabSelected
   private standingsFilterSelected(tabData: Array<any>) {
     this.pageParams.scope = this.scope;
-    this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-    }, 5);
+    this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+    }, 5));
   } //standingsFilterSelected
-
-
 
   private setupSeasonstatsData() {
     this.storeSubscriptions.push(this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
@@ -424,11 +427,9 @@ export class PlayerPage{
           this.seasonStatsData = data;
         },
         err => {
-          console.log("Error getting season stats data for " + this.pageParams.playerId, err);
+          return;
         }));
   } //setupSeasonstatsData
-
-
 
   private setupComparisonData() {
     this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
@@ -439,8 +440,6 @@ export class PlayerPage{
         console.log("Error getting comparison data for " + this.pageParams.playerId, err);
       }));
   } //setupComparisonData
-
-
 
   private getImages(imageData) {
     this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.pageParams.playerId)

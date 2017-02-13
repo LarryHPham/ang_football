@@ -10,7 +10,6 @@ import {Conference, Division} from '../global/global-interface';
 
 @Injectable()
 export class RosterService {
-  private _apiUrl: string = GlobalSettings.getApiUrl();
   private _tabTypes = ['full', 'offense', 'defense', 'special'];
   public storedPartnerParam: string;
 
@@ -24,6 +23,10 @@ export class RosterService {
   }
 
   initializeAllTabs(scope:string, teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
+    // with new route if route changes but using same page view then fullRoster from previous view still exists so we reset it here
+    if(this.fullRoster){
+      this.fullRoster = null;
+    }
     return this._tabTypes.map(type => new NFLRosterTabData(this, scope, teamId, type, conference, maxRows, isTeamProfilePage));
   }
 
@@ -34,7 +37,7 @@ export class RosterService {
     rosterTab.isLoaded = false;
     rosterTab.hasError = false;
 
-    var fullUrl = this._apiUrl + "/roster/" + teamId;
+    var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
     return this.http.get(fullUrl, {headers: this.setToken()})
       .map(res => res.json())
