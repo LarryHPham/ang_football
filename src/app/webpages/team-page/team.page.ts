@@ -181,9 +181,6 @@ export class TeamPage implements OnInit {
   routeChangeResets() {
     this.isLoaded = false;
     this.batchLoadIndex = 1;
-    if(isBrowser){
-      window.scrollTo(0, 0);
-    }
   } //routeChangeResets
 
 

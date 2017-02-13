@@ -165,9 +165,6 @@ export class LeaguePage{
     // This function contains values that need to be manually reset when navigatiing from league page to league page
     routeChangeResets() {
       this.batchLoadIndex = 1;
-      if(isBrowser){
-        window.scrollTo(0, 0);
-      }
     } //routeChangeResets
 
 

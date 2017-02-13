@@ -154,9 +154,6 @@ export class PlayerPage{
   routeChangeResets() {
     this.isLoaded = false;
     this.batchLoadIndex = 1;
-    if(isBrowser){
-      window.scrollTo(0, 0);
-    }
   } //routeChangeResets
 
   ngOnDestroy(){

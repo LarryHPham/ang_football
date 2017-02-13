@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { GlobalSettings } from "../global/global-settings";
 import { GeoLocation } from "../global/global-service";
 import { isBrowser, isNode } from 'angular2-universal';
@@ -8,7 +8,7 @@ import { isBrowser, isNode } from 'angular2-universal';
   selector: 'my-app',
   templateUrl: './app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public scopeParam: any;
   public partnerID:string;
   public partnerScript: string;
@@ -53,7 +53,16 @@ export class AppComponent {
       );
   } //constructor
 
-
+  ngOnInit() {
+    if (isBrowser) {
+      this._router.events.subscribe((navigation) => {
+        if (!(navigation instanceof NavigationEnd)) {
+          return;
+        }
+        window.scrollTo(0,0);
+      });
+    }
+  }
 
   setScrollPadding(event) {
     this.scrollPadding = event + 'px';

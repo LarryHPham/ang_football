@@ -231,7 +231,6 @@ export class ListPage {
 
     newIndex(index) {
         this.pageParams.pageNumber = index;
-        window.scrollTo(0, 0);
     } //newIndex
 
 

@@ -52,7 +52,6 @@ export class ArticlePages implements OnInit {
   eventID:string;
   date:string;
   partnerId:string;
-  rawUrl:string;
   title:string;
   type:string;
   scope:string = null;
@@ -105,9 +104,6 @@ export class ArticlePages implements OnInit {
     this.isTrendingMax = false;
     this.isFantasyReport = false;
     this.trendingContent = [];
-    if (isBrowser) {
-      window.scrollTo(0, 0);
-    }
   } //routeChangeResets
 
   getAiArticles() {
@@ -242,6 +238,16 @@ export class ArticlePages implements OnInit {
           this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
           this.getRecommendedArticles(articleID);
           this.getTrendingArticles(this.eventID);
+        },
+        err => {
+          this.error = true;
+          var self = this;
+          setTimeout(function () {
+            //removes error page from browser history
+            self._location.replaceState('/');
+            //returns user to previous page
+            self._router.navigateByUrl('/home');
+          }, 5000);
         }
       )
   }
@@ -255,6 +261,16 @@ export class ArticlePages implements OnInit {
           this.metaTags(data);
           this.iframeUrl = this.articleData.videoLink;
           this.getRecommendedArticles(articleID);
+        },
+        err => {
+          this.error = true;
+          var self = this;
+          setTimeout(function () {
+            //removes error page from browser history
+            self._location.replaceState('/');
+            //returns user to previous page
+            self._router.navigateByUrl('/home');
+          }, 5000);
         }
       )
   }
@@ -325,7 +341,6 @@ export class ArticlePages implements OnInit {
         setArticleType: this.scope,
       }
     }
-
     this._seoService.setCanonicalLink();
     this._seoService.setOgTitle(metaData.title);
     this._seoService.setOgDesc(metaDesc);
