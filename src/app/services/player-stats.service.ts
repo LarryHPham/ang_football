@@ -14,7 +14,6 @@ import { ModelService } from '../global/shared/model/model.service';
 @Injectable()
 export class PlayerStatsService{
     tabName:string;
-    seasonId:string;
     public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
@@ -64,35 +63,29 @@ export class PlayerStatsService{
         }
 
         });
-        if(seasonTabClicked){
-               this.seasonId = tabData[1];
+        var seasonId = seasonArray[0].key != null ?
+                     seasonArray[0].key :
+                     new Date().getFullYear().toString();
 
-
-            if(standingsTab.tabActive=="Special"){
-                this.tabName='Kicking';
-
-            }else {
-                this.tabName = standingsTab.tabTitle.toLowerCase();
-
-                this.GlossaryData=standingsTab.glossary;
-
-            }
-
-        }else{
-          this.seasonId = this.seasonId ? this.seasonId : seasonArray[0].key;// if somehow a season is not available then return the current year date using javascript new Date
-             columnTabType = tabData[1];
-
-            if(standingsTab.tabActive=="Special"){
-
-
-                this.tabName=columnTabType.toLowerCase();
-
-            }else {
-                this.tabName = standingsTab.tabTitle.toLowerCase();
-
-                this.GlossaryData=standingsTab.glossary;
-            }
+        if (seasonTabClicked) {
+            seasonId = tabData[1];
+        if (standingsTab.tabActive=="Special"){
+            this.tabName = 'kicking';
+        } else {
+            this.tabName = standingsTab.tabTitle.toLowerCase();
+            this.GlossaryData=standingsTab.glossary;
         }
+      }
+      else {
+        columnTabType = tabData[1];
+        if (standingsTab.tabActive == "Special") {
+          columnTabType = tabData[1] ? tabData[1] : 'kicking';
+          this.tabName = columnTabType.toLowerCase();
+        } else {
+          this.tabName = standingsTab.tabTitle.toLowerCase();
+          this.GlossaryData = standingsTab.glossary;
+        }
+      }
 
 
 
@@ -114,12 +107,7 @@ export class PlayerStatsService{
         standingsTab.tableData = null;
         // standingsTab.tabActive="Passing";
 
-        if(!this.seasonId){//if seasonId somehow returns null set to current date year
-          this.seasonId = new Date().getFullYear().toString();
-        }
-
-        let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
-        console.log(url);
+        let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ seasonId + "/" +pageParams.teamId +'/'+ this.tabName ;
         this.model.get(url)
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {

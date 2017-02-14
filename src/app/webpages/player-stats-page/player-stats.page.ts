@@ -162,13 +162,12 @@ export class PlayerStatsPage implements OnInit {
                 return true;
             }
           });
-
-          if (tabData[0].tabActive == "Special") {
-            this.tabName = 'kicking';
-          } else {
-              this.tabName = tabData[0].tabActive;
-          }
-          //tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
+        if (tabData[0].tabActive == "Special") {
+          this.tabName = 'kicking';
+        } else {
+          this.tabName = tabData[0].tabActive;
+        }
+        // tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
       });
     } //playerStatsTabSelected
 
