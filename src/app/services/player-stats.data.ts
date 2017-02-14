@@ -266,7 +266,7 @@ export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStats
                 Special:{
                     description:[playerLinkText, " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
                 },
-                kicking:{
+                Kicking:{
                     description:[playerLinkText, " has a total of " + item.stat1 + " Field Goals Made, "+ item.stat2 +" Field Goal Average Distance, " + item.stat3+ " Field Goal Percentage and " + item.stat4 + " Extra Points Made."],
                 },
                 Punting:{
