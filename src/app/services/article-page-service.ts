@@ -362,11 +362,11 @@ export class ArticleDataService {
           eventType: isArticle ? "postgame-report" : "story",
           image: isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
           url: isArticle ?
-               VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
-               VerticalGlobalFunctions.formatArticleRoute(scope, 'story', val.id),
-               rawUrl: isArticle ?
-                       rawUrl + "/" + scope + "/articles/postgame-report/" + val.event_id :
-                       rawUrl + "/" + scope + "/articles/story/" + val.id
+            VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
+            VerticalGlobalFunctions.formatArticleRoute(scope, 'story', val.id),
+          rawUrl: isArticle ?
+          rawUrl + "/" + scope + "/articles/postgame-report/" + val.event_id :
+          rawUrl + "/" + scope + "/articles/story/" + val.id
         };
         if (articleData != null) {
           articles.push(articleData);
@@ -386,7 +386,6 @@ export class ArticleDataService {
         return Observable.throw(err);
       });
   }
-
 
   getAiHeadlineDataLeague(count, scope, isLeague) {
     if (count == null) {
