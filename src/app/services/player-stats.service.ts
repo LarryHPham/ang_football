@@ -87,8 +87,6 @@ export class PlayerStatsService{
         }
       }
 
-
-
         /*if ( !seasonId && standingsTab.seasonIds.length > 0 ) {
             seasonId = standingsTab.seasonIds[0].key;
         }*/
