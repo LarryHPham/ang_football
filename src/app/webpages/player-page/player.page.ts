@@ -236,14 +236,14 @@ export class PlayerPage{
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.playerHeadshotUrl ? header.playerHeadshotUrl : GlobalSettings.mainIcon;
+    let image = header.playerHeadshotUrl ? GlobalSettings.getImageUrl(header.playerHeadshotUrl) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
     let recordArr = record.split('-');
       record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
     }
-    let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+    let color = '#2d3e50';
     //grab domain for json schema
     let domainSite;
     if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
@@ -254,6 +254,7 @@ export class PlayerPage{
 
     title = title  + ' ' + record;
     this._seoService.setTitle(title);
+    this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
