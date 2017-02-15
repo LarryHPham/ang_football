@@ -61,6 +61,7 @@ export class GlobalSettings {
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     public static _mainPageUrl: string = "touchdownloyal.com";
     public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg");
+    public static fallBackIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/02/logos_football_01.png");
     public static _defaultStockImage: string = GlobalSettings.getImageUrl("/TDL/stock_images/TDL_Stock-3.png");// default stock image on the server for FOOTBALL
 
     private static _currentRouteParams: any;
@@ -69,7 +70,7 @@ export class GlobalSettings {
     private static prebootFired:boolean = false;
 
     static getEnv(env:string):string {
-      if (env == "localhost" || env == "render" || env == "render2"){
+      if (env == "localhost"){
           env = "dev";
       }
       if (env != "dev" && env !="qa"){
@@ -119,7 +120,7 @@ export class GlobalSettings {
 
     //include bypass parameter if you want the image to be served on server side (meta tag images)
     static getImageUrl(relativePath):string {
-      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: GlobalSettings.mainIcon;
+      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: GlobalSettings.fallBackIcon;
       return relPath;
     }
 
