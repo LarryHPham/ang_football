@@ -194,7 +194,7 @@ export class DeepDiveService {
             extUrl: false,
             imageClass: "embed-responsive embed-responsive-16by9",
             imageDesc: "Article Sports Image",
-            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url) : sampleImage,
+            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url, GlobalSettings._deepDiveSm) : sampleImage,
             urlRouteArray: urlRouteArray
           }
         };
@@ -205,7 +205,7 @@ export class DeepDiveService {
     return articleStackArray;
   }
 
-  transformToArticleStack(articles){
+  transformToArticleStack(articles, width:number=750){
     var sampleImage = GlobalSettings._defaultStockImage;
     var articleArray = [];
     articles.forEach(function(val){
@@ -227,7 +227,7 @@ export class DeepDiveService {
         keyUrl: urlRouteArray,
         imageConfig: {
           imageClass: "embed-responsive embed-responsive-16by9",
-          imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath) : sampleImage,
+          imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath, width) : sampleImage,
           urlRouteArray: urlRouteArray
         }
       };
@@ -267,7 +267,7 @@ export class DeepDiveService {
         urlRouteArray: urlRouteArray ? urlRouteArray : null,
         eventID: info.event_id,
         eventType: val.keyword,
-        images: info.image_url != null ? GlobalSettings.getImageUrl(info.image_url) : sampleImage,
+        images: info.image_url != null ? GlobalSettings.getImageUrl(info.image_url, GlobalSettings._imgRecommend) : sampleImage,
         keyword: val.keyword.replace('-', ' ').toUpperCase(),
         date: date,
         title: info.title,
@@ -326,7 +326,7 @@ export class DeepDiveService {
       dataStack[i] = data[i];
       dataStack[i]['lines'] = lines[i];
       dataStack[i]['tileLink'] = tileLink[i];
-      dataStack[i]['image_url'] = GlobalSettings.getImageUrl(k) != null ? GlobalSettings.getImageUrl(k) : "/app/public/placeholder_XL.png";
+      dataStack[i]['image_url'] = GlobalSettings.getImageUrl(k) != null ? GlobalSettings.getImageUrl(k, GlobalSettings._deepDiveTileStack) : "/app/public/placeholder_XL.png";
       // remove appended image string from array
       imagePaths.splice(indexOfK,1);
     }

@@ -114,9 +114,9 @@ export class ListOfListsService {
           itemTargetData.playerName = itemTargetData.playerFirstName + ' ' + itemTargetData.playerLastName;
           if( itemTargetData.rankType == "player") {
             itemProfile       = itemTargetData.playerName;
-            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl);
+            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl, GlobalSettings._imgLgLogo);
             itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
-            itemSubImg        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
+            itemSubImg        = GlobalSettings.getImageUrl(itemTargetData.teamLogo, GlobalSettings._imgLgLogo);
             itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
             profileLinkText   = {
               route: itemRoute,
@@ -126,7 +126,7 @@ export class ListOfListsService {
             itemDescription   = [profileLinkText, " is currently ranked <b>"+ rankStr +"</b> in the "+ itemTargetData.rankScope +" with the most <b>" + itemStatName + "</b>."];
           } else if ( itemTargetData.rankType == "team" ) {
             itemProfile       = itemTargetData.teamName;
-            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
+            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo, GlobalSettings._imgLgLogo);
             itemRoute         = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
             profileLinkText   = {
               route: itemRoute,
@@ -138,7 +138,7 @@ export class ListOfListsService {
             itemTargetData.backgroundImage = "/app/public/Image-Placeholder-2.jpg";
           }
           else {
-            itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(itemTargetData.backgroundImage);
+            itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(itemTargetData.backgroundImage, VerticalGlobalFunctions._imgProfileMod);
           }
 
 
@@ -281,7 +281,7 @@ export class ListOfListsService {
           {
             imageClass : index > 0 ? "image-43" : "image-121",
             mainImage: {
-              imageUrl        : GlobalSettings.getImageUrl(itemTarget.teamLogo) != null ? GlobalSettings.getImageUrl(itemTarget.teamLogo) : GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl),
+              imageUrl        : GlobalSettings.getImageUrl(itemTarget.teamLogo, GlobalSettings._imgProfileLogo) != null ? GlobalSettings.getImageUrl(itemTarget.teamLogo, GlobalSettings._imgProfileLogo) : GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl, GlobalSettings._imgProfileLogo),
               urlRouteArray   : version == "page" || index > 0 ? itemUrlRouteArray : null,
               hoverText       : index > 0 ? "<i class='fa fa-mail-forward'></i>" : firstItemHover,
               imageClass      : index > 0 ? "border-1" : "border-2"

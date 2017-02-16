@@ -267,7 +267,7 @@ export class TeamPage implements OnInit {
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.getImageUrl(header.leagueLogo);
+    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;

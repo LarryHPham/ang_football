@@ -257,8 +257,8 @@ export class SchedulesService {
       newData = {
         eos: false,
         date: date,
-        awayImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id)),
-        homeImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team1Logo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id)),
+        awayImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team2Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id)),
+        homeImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team1Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id)),
         awayTeamName: scope =='fbs' ? val.team2Abbreviation: team2FullName.replace(val.team2Market+" ",''),
         homeTeamName: scope =='fbs' ? val.team1Abbreviation: team1FullName.replace(val.team1Market+" ",''),
         awayLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id),

@@ -60,13 +60,31 @@ export class GlobalSettings {
 
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     public static _mainPageUrl: string = "touchdownloyal.com";
-    public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg");
+    public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg", 85);
+    public static fallBackIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/02/logos_football_01.png", 85);
     public static _defaultStockImage: string = GlobalSettings.getImageUrl("/TDL/stock_images/TDL_Stock-3.png");// default stock image on the server for FOOTBALL
 
     private static _currentRouteParams: any;
     private static _router: any;
 
     private static prebootFired:boolean = false;
+
+    static _imgSmLogo: number = 45;
+    static _imgMdLogo: number = 70;
+    static _imgLgLogo: number = 150;
+    static _imgPickTeam: number = 100;
+    static _imgProfileLogo: number = 125;
+    static _imgAiBoxScore: number = 130;
+    static _imgTrending: number = 615;
+    static _imgRecommend: number = 750;
+    static _deepDiveSm: number = 85;
+    static _deepDiveRec: number = 360;
+    static _deepDiveTileStack: number = 365;
+    static _deepDiveBoxScore: number = 600;
+    static _deepDiveMd: number = 750;
+    static _deepDiveLg: number = 935;
+    static _imgPageLogo: number = 85;
+    static _carouselImg: number = 1240;
 
     static getEnv(env:string):string {
       if (env == "localhost" || env == "render" || env == "render2"){
@@ -117,9 +135,26 @@ export class GlobalSettings {
         return this._proto + "//" + this._mainPageUrl + this._mainLogo;
     }
 
+    static resizeImage(width:number){
+        var resizePath;
+        width = width > 1920 ? 1920 : width;//width limit to 1920 if larger
+        if (isBrowser) {
+          let r = window.devicePixelRatio;
+          width = width * r;
+        }
+        resizePath = "?width=" + width;
+        if (width < 100) {//increase quality if smaller than 100, default is set to 70
+          resizePath += "&quality=90";
+        }
+        return resizePath;
+    }
+
     //include bypass parameter if you want the image to be served on server side (meta tag images)
-    static getImageUrl(relativePath):string {
-      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: GlobalSettings.mainIcon;
+    static getImageUrl(relativePath, width:number=1920):string {
+      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: GlobalSettings.fallBackIcon;
+      if (relativePath != null && relativePath != "") {
+        relPath += this.resizeImage(width);
+      }
       return relPath;
     }
 

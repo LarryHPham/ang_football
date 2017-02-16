@@ -89,11 +89,11 @@ export class ArticleDataService {
     });
     data.forEach(function (val, index) {
       if (!~val.image_url.indexOf('stock_images')) {
-        imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
+        imageArray.push(VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val['image_url'], GlobalSettings._carouselImg));
         copyArray.push(val['image_copyright']);
         titleArray.push(val['image_title']);
       } else if (~val.image_url.indexOf('stock_images') && index == 0) {
-        imageArray.push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']));
+        imageArray.push(VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val['image_url'], GlobalSettings._carouselImg));
         copyArray.push(val['image_copyright']);
         titleArray.push(val['image_title']);
       }
@@ -138,7 +138,7 @@ export class ArticleDataService {
       if (type == 'roster') {
         if (val[dataType]) {
           var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val[dataType].team_name, val[dataType].name, val[dataType].id);
-          var url = GlobalSettings.getImageUrl(val[dataType]['headshot']);
+          var url = GlobalSettings.getImageUrl(val[dataType]['headshot'], GlobalSettings._imgProfileLogo);
           val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
           val['image2'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
           imageLinkArray.push(val['image1'], val['image2']);
@@ -151,10 +151,10 @@ export class ArticleDataService {
           if (type == 'compare' || type == 'teamRecord') {
             if (type == 'compare') {
               var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val.team_name, val.name, val.id);
-              var url = GlobalSettings.getImageUrl(val['headshot']);
+              var url = GlobalSettings.getImageUrl(val['headshot'], GlobalSettings._imgProfileLogo);
             } else if (type == 'teamRecord') {
               var routeArray = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].name, val[dataType].id);
-              var url = GlobalSettings.getImageUrl(val[dataType].logo);
+              var url = GlobalSettings.getImageUrl(val[dataType].logo, GlobalSettings._imgProfileLogo);
             }
             val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
             val['image2'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
@@ -164,8 +164,8 @@ export class ArticleDataService {
             var shortDate = val[dataType].event_date.substr(val[dataType].event_date.indexOf(",") + 1);
             var urlTeamLeftTop = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].home_team_name, val[dataType].home_team_id);
             var urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].away_team_name, val[dataType].away_team_id);
-            var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo);
-            var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo);
+            var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo, GlobalSettings._imgProfileLogo);
+            var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo, GlobalSettings._imgProfileLogo);
             val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-122");
             val['image2'] = ArticleDataService.getProfileImages(urlTeamRightTop, awayUrl, "image-122");
             val['image3'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-71");
@@ -177,10 +177,10 @@ export class ArticleDataService {
           if (type == 'compare' || type == 'teamRecord') {
             if (type == 'compare') {
               var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val.team_name, val.name, val.id);
-              var url = GlobalSettings.getImageUrl(val['headshot']);
+              var url = GlobalSettings.getImageUrl(val['headshot'], GlobalSettings._imgProfileLogo);
             } else {
               var routeArray = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].name, val[dataType].id);
-              var url = GlobalSettings.getImageUrl(val[dataType].logo);
+              var url = GlobalSettings.getImageUrl(val[dataType].logo, GlobalSettings._imgProfileLogo);
             }
             val['image3'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
             val['image4'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
@@ -189,8 +189,8 @@ export class ArticleDataService {
             var shortDate = val[dataType].event_date.substr(val[dataType].event_date.indexOf(",") + 1);
             var urlTeamLeftBottom = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].home_team_name, val[dataType].home_team_id);
             var urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].away_team_name, val[dataType].away_team_id);
-            var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo);
-            var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo);
+            var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo, GlobalSettings._imgProfileLogo);
+            var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo, GlobalSettings._imgProfileLogo);
             val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-122");
             val['image2'] = ArticleDataService.getProfileImages(urlTeamRightBottom, awayUrl, "image-122");
             val['image3'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-71");
@@ -327,7 +327,7 @@ export class ArticleDataService {
       title: recommendations.title,
       eventType: pageIndex,
       eventID: eventID,
-      images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(recommendations.image_url),
+      images: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(recommendations.image_url, GlobalSettings._imgRecommend),
       date: GlobalFunctions.sntGlobalDateFormatting(recommendations.last_updated * 1000, "dayOfWeek"),
       articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, pageIndex, eventID),
       keyword: recommendations.keywords[0].toUpperCase()
@@ -360,7 +360,7 @@ export class ArticleDataService {
           teaser: val.teaser,
           eventId: isArticle ? val.event_id : val.id,
           eventType: isArticle ? "postgame-report" : "story",
-          image: isArticle ? GlobalSettings.getImageUrl(val.image_url) : GlobalSettings.getImageUrl(val.imagePath),
+          image: isArticle ? GlobalSettings.getImageUrl(val.image_url, GlobalSettings._imgTrending) : GlobalSettings.getImageUrl(val.imagePath, GlobalSettings._imgTrending),
           url: isArticle ?
             VerticalGlobalFunctions.formatArticleRoute(scope, val.article_type, val.event_id) :
             VerticalGlobalFunctions.formatArticleRoute(scope, 'story', val.id),
@@ -503,8 +503,8 @@ export class ArticleDataService {
         mainTitle: !isLeague ? fullIndex.title : data[0].title,
         eventType: this.pageIndex,
         mainContent: trimmedArticle.substr(0, Math.min(trimmedArticle.length, trimmedArticle.lastIndexOf(" "))),
-        mainImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ?
-          fullIndex.image_url : data[0].image_url),
+        mainImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(!isLeague ?
+          fullIndex.image_url : data[0].image_url, VerticalGlobalFunctions._imgRecMd),
         articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, this.pageIndex, !isLeague ?
           fullIndex.event_id : data[0].event_id),
         mainHeadlineId: isLeague ? data[0].event_id : null
@@ -525,7 +525,7 @@ export class ArticleDataService {
           title: !isLeague ? data['otherReports'][val].title : val.title,
           eventType: !isLeague ? val : "postgame-report",
           eventID: !isLeague ? (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id,
-          images: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(!isLeague ? data['otherReports'][val].image_url : val.image_url),
+          images: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(!isLeague ? data['otherReports'][val].image_url : val.image_url, VerticalGlobalFunctions._imgRecSm),
           articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, !isLeague ? val : "postgame-report", !isLeague ?
             (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id)
         };
@@ -582,7 +582,7 @@ export class ArticleDataService {
       return {
         imageClass: "image-66",
         mainImage: {
-          imageUrl: GlobalSettings.getImageUrl(data),
+          imageUrl: GlobalSettings.getImageUrl(data, GlobalSettings._imgMdLogo),
           imageClass: "border-logo"
         }
       }
@@ -590,7 +590,7 @@ export class ArticleDataService {
       return {
         imageClass: "image-66",
         mainImage: {
-          imageUrl: GlobalSettings.getImageUrl(data[0]),
+          imageUrl: GlobalSettings.getImageUrl(data[0], GlobalSettings._imgMdLogo),
           urlRouteArray: data[1],
           hoverText: "<i class='fa fa-mail-forward'></i>",
           imageClass: "border-logo"
