@@ -10,6 +10,9 @@
     <div class="atborder" *ngIf="detailedDataArray.length > 0">
       <list-of-lists-item *ngFor="let itemData of detailedDataArray; let rowIndex = index" [item] = 'itemData' [rowIndex] = 'rowIndex'></list-of-lists-item>
     </div>
+    <div class="lol_loadmore">
+      <load-more-button *ngIf="showLoading"></load-more-button>
+    </div>
     <!-- <pagination-fos[paginationParameters]="paginationParameters"></pagination-footer> -->
     <no-data-box *ngIf="!detailedDataArray && errorData" [data]="errorData"></no-data-box>
     <responsive-widget *ngIf="paginationParameters" embedPlace="widgetForPage"></responsive-widget>

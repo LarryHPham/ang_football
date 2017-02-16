@@ -31,6 +31,7 @@ export class ListOfListsPage implements OnInit {
   public scope: string;
   public pageParams: any;
   private batchLoadIndex: number = 1;
+  private showLoading = true;
 
   errorData             : string;
   detailedDataArray     : Array<IListOfListsItem> = []; //variable that is just a list of the detailed DataArray
@@ -87,8 +88,12 @@ export class ListOfListsPage implements OnInit {
 
     getListOfListsPage(urlParams, pageNumber, logoUrl?: string) {
       let self = this;
+        this.showLoading = true;
         this.listService.getListOfListsService(urlParams, urlParams.target, "page", pageNumber)
-          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+          .finally(() => {
+            GlobalSettings.setPreboot();
+            this.showLoading = false;
+          } ) // call preboot after last piece of data is returned on page
           .subscribe(
             list => {
               if(list){
@@ -220,7 +225,6 @@ export class ListOfListsPage implements OnInit {
       let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
       if( num != this.batchLoadIndex ){
         this.batchLoadIndex = num;
-        console.log(this.batchLoadIndex);
         this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
       }
       return;
