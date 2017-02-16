@@ -547,7 +547,7 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         scope : this.scope
       }
-      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module", 1)
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData ? listOfListsData.listData : null;

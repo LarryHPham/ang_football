@@ -30,10 +30,12 @@ export class ListOfListsPage implements OnInit {
   public partnerID: string;
   public scope: string;
   public pageParams: any;
+  private batchLoadIndex: number = 1;
+  private showLoading = true;
 
   errorData             : string;
-  detailedDataArray     : Array<IListOfListsItem>; //variable that is just a list of the detailed DataArray
-  carouselDataArray     : Array<SliderCarouselInput>;
+  detailedDataArray     : Array<IListOfListsItem> = []; //variable that is just a list of the detailed DataArray
+  carouselDataArray     : Array<SliderCarouselInput> = [];
   profileName           : string;
   isError               : boolean = false;
   pageType              : string; // [player,team]
@@ -59,8 +61,8 @@ export class ListOfListsPage implements OnInit {
         (param :any)=> {
           //if the activated route changes then reset all important variables
           this.paginationParameters = null;
-          this.detailedDataArray = null;
-          this.carouselDataArray = null;
+          this.detailedDataArray = [];
+          this.carouselDataArray = [];
 
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
@@ -71,12 +73,12 @@ export class ListOfListsPage implements OnInit {
             this.pageParams.target = "league";
             this._profileService.getLeagueProfile()
             .subscribe(data => {
-              this.getListOfListsPage(this.pageParams, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
+              this.getListOfListsPage(this.pageParams, this.batchLoadIndex, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
             }, err => {
               console.log("Error loading profile");
             });
           } else{
-            this.getListOfListsPage(this.pageParams);
+            this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
           }
         }
       )
@@ -84,24 +86,32 @@ export class ListOfListsPage implements OnInit {
 
 
 
-    getListOfListsPage(urlParams, logoUrl?: string) {
-        this.listService.getListOfListsService(urlParams, urlParams.target, "page")
-          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+    getListOfListsPage(urlParams, pageNumber, logoUrl?: string) {
+      let self = this;
+        this.showLoading = true;
+        this.listService.getListOfListsService(urlParams, urlParams.target, "page", pageNumber)
+          .finally(() => {
+            GlobalSettings.setPreboot();
+            this.showLoading = false;
+          } ) // call preboot after last piece of data is returned on page
           .subscribe(
             list => {
-                if(list.listData.length == 0){//makes sure it only runs once
-                    this.detailedDataArray = null;
+              if(list){
+                if(list.listData.length == 0){
+                  this.detailedDataArray = [];
                 }else{
-                    this.detailedDataArray = list.listData;
+                  list.listData.forEach(function(val, i){
+                    self.detailedDataArray.push(val);
+                  })
+                  list.carData.forEach(function(val, i){
+                    self.carouselDataArray.push(val);
+                  })
                 }
-                this.setPaginationParams(list.pagination);
-                this.carouselDataArray = list.carData;
-
+                // this.setPaginationParams(list.pagination);
 
                 var profileName = "League";
                 var profileRoute = ['/' + urlParams.scope, 'league'];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
-
 
                 var listTargetData;
 
@@ -113,33 +123,33 @@ export class ListOfListsPage implements OnInit {
                 }
 
                 switch ( urlParams.target ) {
-                    case "player":
-                        profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
-                        profileRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, listTargetData.teamName, profileName, listTargetData.playerId);
-                        profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl);
-                        break;
+                  case "player":
+                  profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
+                  profileRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, listTargetData.teamName, profileName, listTargetData.playerId);
+                  profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl);
+                  break;
 
-                    case "team":
-                        profileName = listTargetData.teamName;
-                        profileRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, listTargetData.teamName, listTargetData.teamId);
-                        profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo);
-                        break;
+                  case "team":
+                  profileName = listTargetData.teamName;
+                  profileRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, listTargetData.teamName, listTargetData.teamId);
+                  profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo);
+                  break;
 
-                    default: break;
+                  default: break;
                 }
 
 
                 this.profileName = profileName
-
                 this.titleData = {
-                    imageURL : profileImage,
-                    imageRoute: profileRoute,
-                    text1 : 'Last Updated: ' + GlobalFunctions.sntGlobalDateFormatting(list.lastUpdated['lastUpdated'],'defaultDate'),
-                    text2 : ' United States',
-                    text3 : 'Top lists - ' + this.profileName,
-                    icon: 'fa fa-map-marker'
+                  imageURL : profileImage,
+                  imageRoute: profileRoute,
+                  text1 : 'Last Updated: ' + GlobalFunctions.sntGlobalDateFormatting(list.lastUpdated,'defaultDate'),
+                  text2 : ' United States',
+                  text3 : 'Top lists - ' + this.profileName,
+                  icon: 'fa fa-map-marker'
                 };
                 this.metaTags(this.titleData);
+              }
 
             },
             err => {
@@ -149,10 +159,7 @@ export class ListOfListsPage implements OnInit {
           );
     } //getListOfListsPage
 
-
-
     ngOnInit(){}
-
 
 
     private metaTags(data) {
@@ -213,6 +220,14 @@ export class ListOfListsPage implements OnInit {
         };
     } //setPaginationParams
 
-
+    // function to lazy load page sections
+    private onScroll(event) {
+      let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      if( num != this.batchLoadIndex ){
+        this.batchLoadIndex = num;
+        this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
+      }
+      return;
+    }
 
 }

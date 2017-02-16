@@ -26,8 +26,8 @@ export class ListOfListsService {
   constructor(public model: ModelService){
   }
 
-        //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
-  getListOfListsService(urlParams, profileType: string, pageType: string){
+  //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
+  getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
@@ -36,7 +36,7 @@ export class ListOfListsService {
       id = 'null';
     }
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
-    var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
+    var pageNum = pageNumber != null ? pageNumber : 1;
     var target =  profileType;
     let scope = urlParams.scope;
 
@@ -54,21 +54,22 @@ export class ListOfListsService {
     return this.model.get( callURL )
       .map(
         data => {
-          if ( !data || !data.data ) {
-            return null;
+          if(data && data.data.length != 0){
+            if ( !data || !data.data ) {
+              return null;
+            }
+            var lastUpdated = "";
+            if ( data && data.data && data.data.length > 0 && data.data != undefined) {
+              lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
+            }
+            return {
+              carData: this.carDataPage(data.data,target),
+              listData: this.detailedData(data.data, pageType,target),
+              targetData: this.getTargetData(data.data),
+              pagination: data.data[0].listInfo,
+              lastUpdated: lastUpdated
+            };
           }
-          var lastUpdated = "";
-          if ( data && data.data && data.data.length > 0 && data.data != undefined) {
-            lastUpdated = data.data[0].targetData;
-
-          }
-          return {
-            carData: this.carDataPage(data.data,target),
-            listData: this.detailedData(data.data, pageType,target),
-            targetData: this.getTargetData(data.data),
-            pagination: data.data[0].listInfo,
-            lastUpdated: lastUpdated
-          };
         }
       )
   }
