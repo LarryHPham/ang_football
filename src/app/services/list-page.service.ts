@@ -75,7 +75,7 @@ export class positionMVPTabData implements MVPTabData {
   }
 
   getCarouselData(): Array<SliderCarouselInput> {
-    return ListPageService.carDataPage(this.data, this.profileType, this.errorData.data);
+    return ListPageService.carDataPage(this.data, 1, this.profileType, this.errorData.data);
   }
 }
 
@@ -96,20 +96,18 @@ export class ListPageService {
     conference: //sort list by conference, but if sort by entire league then 'all' would be in place
     division: //sort list by division, but if sort by all divisions then 'all' would be in place. conference is required if 'all' is in place
     limit: // limit the amount of data points come back but a number amount
-    pageNum: //  determined by the limit as well detects what page to view based on the limit ex: limit: 10  page 1 holds 1-10 and page 2 holds 11-20
     }
   */
 
-  getListPageService(query, errorMessage: string, scope, season?){
+  getListPageService(query, errorMessage: string, scope, pageNum, season?){
   var callURL = this._apiUrl+'/list';
   if (season == null || season == undefined || season == "null") {
     var date = new Date;
-    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + pageNum + "&season=" + (Number(date.getFullYear()) - 1).toString();
   }
   else {
-    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + query.pageNumber + "&season=" + season;
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + pageNum + "&season=" + season;
   }
-
   return this.model.get( callURL )
     .map(
       data => {
@@ -117,9 +115,8 @@ export class ListPageService {
         this.formatData(data.data.listInfo.stat, data.data.listData);
         return {
           profHeader: ListPageService.profileHeader(data.data, scope),
-          carData: ListPageService.carDataPage(data.data, 'page', errorMessage),
-          listData: ListPageService.detailedData(data.data),
-          pagination: data.data.listInfo,
+          carData: ListPageService.carDataPage(data.data, pageNum, 'page', errorMessage),
+          listData: ListPageService.detailedData(data.data, pageNum),
           listDisplayName: data.data.listInfo.name,
           seasons: this.formatSeasons(data.data.listInfo.seasons)
         }
@@ -231,7 +228,7 @@ export class ListPageService {
           this.formatData(data.data.listData.stat, data.data.listData);
           tab.data = data.data;
           tab.isLoaded = true;
-          tab.listData = ListPageService.detailedData(data.data);
+          tab.listData = ListPageService.detailedData(data.data, 1);
           return tab;
         }
       );
@@ -257,7 +254,7 @@ export class ListPageService {
   }
 
   //BELOW ARE TRANSFORMING FUNCTIONS to allow the modules to match their corresponding components
-  static carDataPage(data: ListData, profileType: string, errorMessage: string){
+  static carDataPage(data: ListData, pageNum, profileType: string, errorMessage: string){
     var carouselArray = [];
     var currentYear = new Date().getFullYear();//TODO FOR POSSIBLE past season stats but for now we have lists for current year season
     var carData = data.listData;
@@ -269,7 +266,7 @@ export class ListPageService {
       carouselArray = carData.map(function(val, index){
         let routeScope = val.affiliation.toLowerCase() == 'fbs' ? 'ncaaf' : val.affiliation.toLowerCase();
         var carouselItem;
-        var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
+        var rank = ((Number(pageNum) - 1) * Number(pageNum)) + (index+1);
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
@@ -323,7 +320,7 @@ export class ListPageService {
     return carouselArray;
   }
 
-  static detailedData(data): DetailListInput[]{//TODO replace data points for list page
+  static detailedData(data, pageNum): DetailListInput[]{//TODO replace data points for list page
     let self = this;
     var currentYear = new Date().getFullYear();//TODO FOR POSSIBLE past season stats but for now we have lists for current year season
 
@@ -334,7 +331,7 @@ export class ListPageService {
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
-      var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
+      var rank = ((Number(pageNum) - 1) * Number(data.query.perPageCount)) + (index+1);
       var stat = GlobalFunctions.roundToDecimal(val.stat).toString();
       if(data.query.target == 'team'){
         return {
@@ -363,7 +360,7 @@ export class ListPageService {
         var position = val.playerPosition;
         var playerBirthplace = val.playerBirthplace != null ? val.playerBirthplace : "N/A";
         var stat = GlobalFunctions.commaSeparateNumber( GlobalFunctions.roundToDecimal(val.stat) );
-        var rank = ((Number(data.query.pageNumber) - 1) * Number(data.query.perPageCount)) + (index+1);
+        var rank = ((Number(pageNum) - 1) * Number(data.query.perPageCount)) + (index+1);
         var teamNickname = val.teamNickname != null ? val.teamNickname : val.teamName;
         return {
           dataPoints: ListPageService.detailsData(

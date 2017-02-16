@@ -26,7 +26,7 @@ declare var moment:any;
     templateUrl: './list-of-lists.page.html'
 })
 
-export class ListOfListsPage implements OnInit {
+export class ListOfListsPage {
   public partnerID: string;
   public scope: string;
   public pageParams: any;
@@ -43,7 +43,7 @@ export class ListOfListsPage implements OnInit {
   limit                 : string; // pagination limit
   pageNum               : string; // page of pages to show
 
-  paginationSize        : number = 10;
+  paginationSize        : number = 20;
   index                 : number = 0;
   paginationParameters  : PaginationParameters;
   titleData             : TitleInputData;
@@ -60,7 +60,6 @@ export class ListOfListsPage implements OnInit {
       this.activatedRoute.params.subscribe(
         (param :any)=> {
           //if the activated route changes then reset all important variables
-          this.paginationParameters = null;
           this.detailedDataArray = [];
           this.carouselDataArray = [];
 
@@ -84,8 +83,6 @@ export class ListOfListsPage implements OnInit {
       )
     } //constructor
 
-
-
     getListOfListsPage(urlParams, pageNumber, logoUrl?: string) {
       let self = this;
         this.showLoading = true;
@@ -97,9 +94,7 @@ export class ListOfListsPage implements OnInit {
           .subscribe(
             list => {
               if(list){
-                if(list.listData.length == 0){
-                  this.detailedDataArray = [];
-                }else{
+                if(list.listData.length != 0){
                   list.listData.forEach(function(val, i){
                     self.detailedDataArray.push(val);
                   })
@@ -138,7 +133,6 @@ export class ListOfListsPage implements OnInit {
                   default: break;
                 }
 
-
                 this.profileName = profileName
                 this.titleData = {
                   imageURL : profileImage,
@@ -158,9 +152,6 @@ export class ListOfListsPage implements OnInit {
             }
           );
     } //getListOfListsPage
-
-    ngOnInit(){}
-
 
     private metaTags(data) {
       //This call will remove all meta tags from the head.
@@ -187,43 +178,10 @@ export class ListOfListsPage implements OnInit {
       this._seoService.setOgImage(imageUrl);
     } //metaTags
 
-
-
-    //PAGINATION
-    //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
-    setPaginationParams(input) {
-        var params = {
-          target: this.pageParams.target,
-          targetId: this.pageParams.targetId,
-          perPageCount: this.pageParams.perPageCount,
-          pageNumber: this.pageParams.pageNumber,
-        };
-
-        if(params['targetId'] == null) {
-          params['targetId'] = 'null';
-        }
-
-        var navigationPage;
-        if ( !this.detailedDataArray ) {
-            navigationPage = "Error-page";
-        }
-        else if ( this.pageParams['scope'] ) {
-            navigationPage = '/'+this.pageParams['scope']+'/list-of-lists';
-        }
-        this.paginationParameters = {
-            index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
-            max: Number(input.listPageCount),
-            paginationType: 'page',
-            navigationPage: navigationPage,
-            navigationParams: params,
-            indexKey: 'pageNumber'
-        };
-    } //setPaginationParams
-
     // function to lazy load page sections
     private onScroll(event) {
       let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
-      if( num != this.batchLoadIndex ){
+      if( num != this.batchLoadIndex && !this.showLoading){
         this.batchLoadIndex = num;
         this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
       }
