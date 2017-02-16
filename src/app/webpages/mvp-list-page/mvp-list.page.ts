@@ -147,7 +147,7 @@ export class MVPListPage implements OnInit {
           .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(data => {
               this.profileHeaderData = {
-                  imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),
+                  imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgPageLogo),
                   imageRoute: ["League-page"],
                   text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
                   text2: 'United States',

@@ -73,7 +73,7 @@ export class ListOfListsPage implements OnInit {
             this.pageParams.target = "league";
             this._profileService.getLeagueProfile()
             .subscribe(data => {
-              this.getListOfListsPage(this.pageParams, this.batchLoadIndex, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
+              this.getListOfListsPage(this.pageParams, this.batchLoadIndex, GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgProfileLogo));
             }, err => {
               console.log("Error loading profile");
             });
@@ -126,13 +126,13 @@ export class ListOfListsPage implements OnInit {
                   case "player":
                   profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
                   profileRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, listTargetData.teamName, profileName, listTargetData.playerId);
-                  profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl);
+                  profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl, GlobalSettings._imgLgLogo);
                   break;
 
                   case "team":
                   profileName = listTargetData.teamName;
                   profileRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, listTargetData.teamName, listTargetData.teamId);
-                  profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo);
+                  profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo, GlobalSettings._imgLgLogo);
                   break;
 
                   default: break;

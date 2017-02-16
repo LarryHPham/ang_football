@@ -128,7 +128,7 @@ export class DailyUpdateService {
         return {
           hasError: false,
           lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null),
+          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
           type: "Team",
           wrapperStyle: {},
           seasonStats: stats,
@@ -303,7 +303,7 @@ export class DailyUpdateService {
         return {
           hasError: false,
           lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null),
+          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
           type: "Player",
           wrapperStyle: {},
           seasonStats: stats,
@@ -405,7 +405,7 @@ export class DailyUpdateService {
       articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? GlobalFunctions.formatUpdatedDate(data['postgame-report'].article.data[0].lastUpdated*1000, true, " " + moment().tz('America/New_York').format('z')) : null;
       articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
       articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;
-      articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].article.data[0].imageUrl): null;
+      articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].article.data[0].imageUrl, GlobalSettings._imgProfileLogo): null;
 
       this.postGameArticleData = <PostGameArticleData>articleData;
     }

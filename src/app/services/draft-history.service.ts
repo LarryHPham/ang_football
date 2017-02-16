@@ -227,13 +227,13 @@ export class DraftHistoryService {
         }
         var carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: false,
-          backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.playerBackground),
+          backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val.playerBackground, VerticalGlobalFunctions._imgProfileMod),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
           description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', collegeNickname],
           dataValue: ovPick + " Overall",
           dataLabel: "Draft Round " + dRound,
-          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
+          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot, GlobalSettings._imgLgLogo),
           circleImageRoute: playerRoute,
           rank: rank
         });
@@ -300,7 +300,7 @@ export class DraftHistoryService {
             {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + collegeNickname + '</span>'}
           ],
           'Draft Round '+dRound),
-        imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
+        imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot, GlobalSettings._imgProfileLogo), playerRoute, rank),
         hasCTA:true,
         ctaDesc: playerRoute ? 'Want more info about this player?' : 'This player is currently not active.',
         ctaBtn:'',

@@ -162,7 +162,7 @@ export class SearchService{
                 imageUrl: {
                     imageClass: "image-43",
                     mainImage: {
-                      imageUrl: GlobalSettings.getImageUrl(item.teamLogo),
+                      imageUrl: GlobalSettings.getImageUrl(item.teamLogo, GlobalSettings._imgSmLogo),
                       hoverText: "<i class='fa fa-mail-forward search-text'></i>",
                       imageClass: "border-1",
                       urlRouteArray: route,
@@ -187,7 +187,7 @@ export class SearchService{
                 imageUrl: {
                     imageClass: "image-43",
                     mainImage: {
-                      imageUrl: item.imageUrl != "No Image" ?GlobalSettings.getImageUrl(item.imageUrl): "/app/public/no-image.svg",
+                      imageUrl: item.imageUrl != "No Image" ?GlobalSettings.getImageUrl(item.imageUrl, GlobalSettings._imgSmLogo): "/app/public/no-image.svg",
                       urlRouteArray: route,
                       hoverText: "<i class='fa fa-mail-forward search-text'></i>",
                       imageClass: "border-1"

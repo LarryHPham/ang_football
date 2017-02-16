@@ -211,7 +211,7 @@ export class StandingsPage {
       title = titleName + ' Standings';
       ogTitle = titleName;
       metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
-      image = GlobalSettings.getImageUrl(header.backgroundUrl);
+      image = GlobalSettings.getImageUrl(header.backgroundUrl, GlobalSettings._imgPageLogo);
 
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
