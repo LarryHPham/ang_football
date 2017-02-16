@@ -342,7 +342,10 @@ export class ArticlePages implements OnInit {
         setArticleType: this.scope,
       }
     }
+
     this._seoService.setCanonicalLink();
+    this._seoService.setTitle(metaData.title);
+    this._seoService.setMetaDescription(metaDesc);
     this._seoService.setOgTitle(metaData.title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');

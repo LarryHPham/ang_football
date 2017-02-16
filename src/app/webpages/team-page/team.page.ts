@@ -180,6 +180,10 @@ export class TeamPage implements OnInit {
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
     this.isLoaded = false;
+    this.standingsData = null;
+    this.rosterData = null;
+    this.playerStatsData = null;
+    this.transactionsData = null;
     this.batchLoadIndex = 1;
   } //routeChangeResets
 
@@ -274,7 +278,7 @@ export class TeamPage implements OnInit {
     let recordArr = record.split('-');
       record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
     }
-    let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+    let color = header.teamColorsHex != null ? header.teamColorsHex.split(',')[0]:'#2d3e50';
     //grab domain for json schema
     let domainSite;
     if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
@@ -284,7 +288,9 @@ export class TeamPage implements OnInit {
     }
 
     title = title  + ' ' + record;
+
     this._seoService.setTitle(title);
+    this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
@@ -458,20 +464,13 @@ export class TeamPage implements OnInit {
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
             }
-            this.transactionModuleFooterParams = [VerticalGlobalFunctions.getWhiteLabel(), this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.dropdownKey1, this.pageParams['teamName'], this.pageParams['teamID'], 20];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
             console.log('Error: transactionsData API: ', err);
           }
       ));
-
-      // pass transaction page route params to module filter, so set module footer route
-      this.transactionModuleFooterParams = [
-        VerticalGlobalFunctions.getWhiteLabel(),
-        this.scope,
-        'league'
-      ]
     } //private getTransactionsData
 
 
@@ -548,7 +547,7 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         scope : this.scope
       }
-      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module", 1)
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData ? listOfListsData.listData : null;

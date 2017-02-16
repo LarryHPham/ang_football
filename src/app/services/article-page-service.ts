@@ -518,24 +518,28 @@ export class ArticleDataService {
   static getSubArticles(data, eventID, scope, isLeague) {
     var articles;
     var articleArr = [];
-    var dataSet = !isLeague ? Object.keys(data['otherReports']) : data;
-    dataSet.forEach(function (val) {
-      if (eventID != (isLeague ? val.event_id : 0)) {
-        articles = {
-          title: !isLeague ? data['otherReports'][val].title : val.title,
-          eventType: !isLeague ? val : "postgame-report",
-          eventID: !isLeague ? (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id,
-          images: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(!isLeague ? data['otherReports'][val].image_url : val.image_url, VerticalGlobalFunctions._imgRecSm),
-          articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, !isLeague ? val : "postgame-report", !isLeague ?
+    if(data['otherReports']){
+      var dataSet = !isLeague ? Object.keys(data['otherReports']) : data;
+      dataSet.forEach(function (val) {
+        if (eventID != (isLeague ? val.event_id : 0)) {
+          articles = {
+            title: !isLeague ? data['otherReports'][val].title : val.title,
+            eventType: !isLeague ? val : "postgame-report",
+            eventID: !isLeague ? (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id,
+            images: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(!isLeague ? data['otherReports'][val].image_url : val.image_url, VerticalGlobalFunctions._imgRecSm),
+            articleUrl: VerticalGlobalFunctions.formatArticleRoute(scope, !isLeague ? val : "postgame-report", !isLeague ?
             (val != "player-fantasy" ? eventID : data['otherReports'][val].article_id) : val.event_id)
-        };
-        articleArr.push(articles);
-      }
-    });
-    articleArr.sort(function () {
-      return 0.5 - Math.random()
-    });
-    return articleArr;
+          };
+          articleArr.push(articles);
+        }
+      });
+      articleArr.sort(function () {
+        return 0.5 - Math.random()
+      });
+      return articleArr;
+    }else{
+      return null;
+    }
   }//end headline data processing
 
   //fantasy module data processing

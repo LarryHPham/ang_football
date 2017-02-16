@@ -153,6 +153,7 @@ export class PlayerPage{
   //// This function contains values that need to be manually reset when navigatiing from player page to player page
   routeChangeResets() {
     this.isLoaded = false;
+    this.standingsData = null;
     this.batchLoadIndex = 1;
   } //routeChangeResets
 
@@ -235,14 +236,14 @@ export class PlayerPage{
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.playerHeadshotUrl ? header.playerHeadshotUrl : GlobalSettings.mainIcon;
+    let image = header.playerHeadshotUrl ? GlobalSettings.getImageUrl(header.playerHeadshotUrl) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
     let recordArr = record.split('-');
       record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
     }
-    let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+    let color = '#2d3e50';
     //grab domain for json schema
     let domainSite;
     if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
@@ -253,6 +254,7 @@ export class PlayerPage{
 
     title = title  + ' ' + record;
     this._seoService.setTitle(title);
+    this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
@@ -426,7 +428,7 @@ export class PlayerPage{
           this.seasonStatsData = data;
         },
         err => {
-          console.log("Error getting season stats data for " + this.pageParams.playerId, err);
+          return;
         }));
   } //setupSeasonstatsData
 
@@ -487,7 +489,7 @@ export class PlayerPage{
       pageNum: 1,
       scope: this.scope
     }
-    this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module")
+    this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module", 1)
       .subscribe(
         listOfListsData => {
           if (listOfListsData != null) {

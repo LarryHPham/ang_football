@@ -246,7 +246,9 @@ export class LeaguePage{
       let title = header.leagueFullName;
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
+      let color = '#2d3e50';
       this._seoService.setTitle(title);
+      this._seoService.setThemeColor(color);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
@@ -419,7 +421,7 @@ export class LeaguePage{
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
-            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, 'league', 20, 1];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.dropdownKey1, 'league', 20];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
@@ -564,7 +566,7 @@ export class LeaguePage{
         pageNum : 1,
         scope: this.scope
       }
-      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "league", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "league", "module", 1)
         .subscribe(
           listOfListsData => {
             if(listOfListsData){

@@ -120,27 +120,27 @@ const relativeChildRoutes = [
         component: DraftHistoryPage
     },
     {
-        path: ':scope/transactions/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/transactions/:filter1/:teamName/:teamId/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/suspensions/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/suspensions/:filter1/:teamName/:teamId/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/injuries/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/injuries/:filter1/:teamName/:teamId/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/transactions/league/:limit/:pageNum',
+        path: ':scope/transactions/:filter1/league/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/suspensions/league/:limit/:pageNum',
+        path: ':scope/suspensions/:filter1/league/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/injuries/league/:limit/:pageNum',
+        path: ':scope/injuries/:filter1/league/:limit',
         component: TransactionsPage
     },
     {
@@ -156,7 +156,7 @@ const relativeChildRoutes = [
         component: ArticlePages
     },
     {
-        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+        path: ':scope/list-of-lists/:target/:targetId/:perPageCount',
         component: ListOfListsPage
     },
     // // //Error pages and error handling

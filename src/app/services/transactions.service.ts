@@ -145,7 +145,7 @@ export class TransactionsService {
     }
   }
 
-  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, sortOrder?, limit?, page?){
+  getTransactionsService(tab:TransactionTabData, teamId: number, type: string, filter?, sortOrder?, limit?, page?) {
     this.activeTab = tab.tabDataKey;
     if( limit == null ){ limit = 4 };
     if( page == null ){ page = 1 };

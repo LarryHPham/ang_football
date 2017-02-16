@@ -332,10 +332,13 @@ export class ProfileHeaderService {
     if(location[location.length-1] === "."){//Check if period is at the end of string then remove it
       location = location.slice(0, -1);
     }
-    var description = "The " + fullTeamName +
+    //manually made description
+    var manualDescription = "The " + fullTeamName +
                       venueForDescription +
                       " located in " + location + ". The " + headerData.teamName +
                       " are a part of the " + division + ".";
+
+    var description = headerData.description ? headerData.description : manualDescription;
 
     var header: ProfileHeaderData = {
       profileName: fullTeamName,
