@@ -464,20 +464,13 @@ export class TeamPage implements OnInit {
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
             }
-            this.transactionModuleFooterParams = [VerticalGlobalFunctions.getWhiteLabel(), this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.dropdownKey1, this.pageParams['teamName'], this.pageParams['teamID'], 20];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
             console.log('Error: transactionsData API: ', err);
           }
       ));
-
-      // pass transaction page route params to module filter, so set module footer route
-      this.transactionModuleFooterParams = [
-        VerticalGlobalFunctions.getWhiteLabel(),
-        this.scope,
-        'league'
-      ]
     } //private getTransactionsData
 
 
