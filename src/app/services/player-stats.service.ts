@@ -9,8 +9,6 @@ import {PlayerStatsData, SportsPlayerStatsTableData, MLBPlayerStatsTableModel} f
 import { ModelService } from '../global/shared/model/model.service';
 
 
-
-
 @Injectable()
 export class PlayerStatsService{
     tabName:string;
