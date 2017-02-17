@@ -191,8 +191,8 @@ export class DraftHistoryPage {
         let tabNameTo = tab;
         if (tabNameTo != tabNameFrom) {
             newRoute = this.teamIdParam ?
-                        [this.pageParams.scope, this.pageType, tabNameTo.toLowerCase(), this.teamNameParam, this.teamIdParam, this.pageParams.filter1] :
-                        [this.pageParams.scope, this.pageType, tabNameTo.toLowerCase(), 'league', this.pageParams.filter1];
+                        [this.storedPartnerParam, this.pageParams.scope, this.pageType, tabNameTo.toLowerCase(), this.teamNameParam, this.teamIdParam, this.pageParams.filter1] :
+                        [this.storedPartnerParam, this.pageParams.scope, this.pageType, tabNameTo.toLowerCase(), 'league', this.pageParams.filter1];
             this.router.navigate(newRoute);
         }
     } //draftHistoryTab
@@ -206,8 +206,8 @@ export class DraftHistoryPage {
         let filterTo = activeFilter;
         if (filterTo != filterFrom) {
             newRoute = this.teamIdParam ?
-                        [this.pageParams.scope, this.pageType, this.tabParam, this.teamNameParam, this.teamIdParam, activeFilter] :
-                        [this.pageParams.scope, this.pageType, this.tabParam, 'league', activeFilter];
+                        [this.storedPartnerParam, this.pageParams.scope, this.pageType, this.tabParam, this.teamNameParam, this.teamIdParam, activeFilter] :
+                        [this.storedPartnerParam, this.pageParams.scope, this.pageType, this.tabParam, 'league', activeFilter];
             this.router.navigate(newRoute);
         }
     } //draftHistoryFilterDropdown
