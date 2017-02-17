@@ -87,10 +87,20 @@
           (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
         <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
         <draft-history-module
-          *ngIf="scope == 'nfl' && profileData"
-          [footerData]="pageParams"
-          [profileData]="profileData"
-          [storedPartnerParam]="storedPartnerParam"></draft-history-module>
+            *ngIf="scope == 'nfl' && profileData && pageParams"
+            [profileData]="profileData"
+            [type]="type"
+            [carouselDataArray]="draftHistoryCarouselData"
+            [data]="draftHistoryData"
+            [sortOptions]="draftHistorySortOptions"
+            [dropdownKey1]="draftHistoryFilter1"
+            [selectedTabName]="draftHistoryActiveTab"
+            [isError]="draftHistoryIsError"
+            [storedPartnerParam]="storedPartnerParam"
+            [pageParams]="pageParams"
+            (tabSelectedListener)="draftHistoryTab($event)"
+            (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
+        </draft-history-module>
         <responsive-widget
           *ngIf="profileData"
           [embedPlace]="widgetPlace"

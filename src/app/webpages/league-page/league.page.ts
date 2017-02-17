@@ -25,6 +25,7 @@ import { ListOfListsService } from "../../services/list-of-lists.service";
 import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
 import { SeoService } from "../../seo.service";
+import { DraftHistoryService } from '../../services/draft-history.service';
 
 //interfaces
 import { IProfileData, ProfileHeaderData, PlayerProfileHeaderData } from "../../fe-core/modules/profile-header/profile-header.module";
@@ -36,6 +37,7 @@ import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { HeadlineData } from "../../global/global-interface";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
+import { SliderCarouselInput } from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
 // Libraries
 declare var moment;
@@ -47,6 +49,7 @@ declare var moment;
 
 export class LeaguePage{
     public widgetPlace: string = "widgetForModule";
+    public type: string = 'module';
 
     public partnerID: string;
     public scope: string;
@@ -89,6 +92,15 @@ export class LeaguePage{
     private transactionModuleFooterParams: any;
     private dropdownKey1: string;
 
+    private draftHistoryData: any;
+    private draftHistoryActiveTab: string;
+    private draftHistoryFilter1: any = 1;
+    private draftHistoryModuleFooterParams: any;
+    private draftHistorySortOptions: Array<any> = [{key: '1', value: 'Ascending'}, {key: '2', value: 'Descending'}];
+    private draftHistoryCarouselData: Array<Array<SliderCarouselInput>>;
+    private draftHistoryDetailedDataArray: any;
+    private draftHistoryIsError: boolean = false;
+
     private positionParams: any;
     private positionData: Array<positionMVPTabData>;
     private globalMVPPosition:any;
@@ -125,6 +137,7 @@ export class LeaguePage{
       private _schedulesService: SchedulesService,
       private _standingsService:StandingsService,
       private _transactionsService: TransactionsService,
+      private _draftHistoryService: DraftHistoryService,
       private _listService: ListPageService,
       private _comparisonService: ComparisonStatsService,
       private _imagesService: ImagesService,
@@ -135,10 +148,8 @@ export class LeaguePage{
       private _newsService: NewsService,
       private _twitterService: TwitterService,
       private _seoService: SeoService,
-      private _cdRef: ChangeDetectorRef
+      private _cdRef: ChangeDetectorRef,
     ) {
-
-
       this.routeSubscriptions = this.activatedRoute.params.subscribe(
             (param :any)=> {
               this.resetSubscription();
@@ -159,8 +170,9 @@ export class LeaguePage{
               this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
             }
       );
-
     }
+
+
 
     // This function contains values that need to be manually reset when navigatiing from league page to league page
     routeChangeResets() {
@@ -208,6 +220,8 @@ export class LeaguePage{
           this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.profileType);
           this.transactionsActiveTab = "Transactions";
           this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
+          this.draftHistoryData = this._draftHistoryService.getDraftHistoryTabs(this.profileData);
+          this.getDraftHistoryData();
 
           //---Batch 4 Load---//
           this.globalMVPPosition = 'cb'; //Initial position to display in MVP
@@ -248,7 +262,6 @@ export class LeaguePage{
       let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
       let color = '#2d3e50';
       this._seoService.setTitle(title);
-      this._seoService.setThemeColor(color);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
@@ -421,7 +434,7 @@ export class LeaguePage{
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
-            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.dropdownKey1, 'league', 20];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, 'league', 20, 1];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
@@ -430,6 +443,46 @@ export class LeaguePage{
       ));
       // pass transaction page route params to module filter, so set module footer route
     } //getTransactionsData
+
+
+
+    private draftHistoryTab(tab) {
+        this.draftHistoryActiveTab = tab;
+        this.getDraftHistoryData();
+    }
+    private draftHistoryFilterDropdown(filter) {
+        this.draftHistoryFilter1 = filter;
+        this.getDraftHistoryData();
+    }
+    private getDraftHistoryData() {
+        this.draftHistoryActiveTab = this.draftHistoryActiveTab ? this.draftHistoryActiveTab : this.seasonBase;
+        var matchingTabs = this.draftHistoryActiveTab ?
+                        this.draftHistoryData.filter(tab => tab.tabKey == this.draftHistoryActiveTab) :
+                        null;
+        if ( matchingTabs ) {
+            var activeTab = matchingTabs[0];
+            var activeFilter = this.draftHistoryFilter1 ? this.draftHistoryFilter1 : 1;
+            this.storeSubscriptions.push(
+                this._draftHistoryService.getDraftHistoryService(this.profileData, activeTab, 0, 'page', activeFilter, 2)
+                    .subscribe(
+                        draftHistoryData => {
+                            activeTab.isLoaded = true;
+                            activeTab.detailedDataArray = draftHistoryData.detailedDataArray;
+                            activeTab.carouselDataArray = draftHistoryData.carouselDataArray;
+                            this.draftHistoryCarouselData = draftHistoryData.carouselDataArray
+                        },
+                        err => {
+                          activeTab.isLoaded = true;
+                          this.draftHistoryIsError = true;
+                          console.log('Error: draftData API: ', err);
+                        }
+                    )
+            )
+        }
+    } //getDraftHistoryData
+
+
+
 
 
 
