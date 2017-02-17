@@ -213,8 +213,8 @@ export class TransactionsPage {
             this.selectedTabName = tabNameTo;
             this.transactionsActiveTab = tab;
             newRoute = this.teamIdParam ?
-                        [this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, this.teamNameParam, this.teamIdParam, this.limitParam] :
-                        [this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, 'league', this.limitParam];
+                        [this.storedPartnerParam, this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, this.teamNameParam, this.teamIdParam, this.limitParam] :
+                        [this.storedPartnerParam, this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, 'league', this.limitParam];
             this.router.navigate(newRoute);
         }
     } //transactionsTab(tab)
@@ -229,8 +229,8 @@ export class TransactionsPage {
         if (filterTo != filterFrom) {
             this.dropdownKey1 = filter;
             newRoute = this.pageParams.teamId ?
-                        [this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, this.teamNameParam, this.teamIdParam, this.limitParam] :
-                        [this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, 'league', this.limitParam];
+                        [this.storedPartnerParam, this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, this.teamNameParam, this.teamIdParam, this.limitParam] :
+                        [this.storedPartnerParam, this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, 'league', this.limitParam];
             this.router.navigate(newRoute);
         }
     } //transactionsFilterDropdown(filter)
