@@ -261,15 +261,15 @@ export class SportSeasonStatsTabData implements TableTabData<TeamSeasonStatsData
     description = this.getDescription(item, playerData.position, playerRouteText, playerData.statScope);
 
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(playerData.backgroundUrl),
+      backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(playerData.backgroundUrl, VerticalGlobalFunctions._imgProfileMod),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [item.seasonId + " Season Stats Report"],
       profileNameLink: playerRouteText,
       description: description,
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerData.lastUpdated),
-      circleImageUrl: GlobalSettings.getImageUrl(playerData.playerHeadshot),
+      circleImageUrl: GlobalSettings.getImageUrl(playerData.playerHeadshot, GlobalSettings._imgLgLogo),
       circleImageRoute: playerRoute
-      // subImageUrl: GlobalSettings.getImageUrl(playerData.teamLogo),
+      // subImageUrl: GlobalSettings.getImageUrl(playerData.teamLogo, GlobalSettings._imgLgLogo),
       // subImageRoute: teamRoute
     });
   }

@@ -166,7 +166,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       imageConfig1:{//AWAY
         imageClass: "image-125",
         mainImage: {
-          imageUrl: GlobalSettings.getImageUrl(item.team2Logo),
+          imageUrl: GlobalSettings.getImageUrl(item.team2Logo, GlobalSettings._imgProfileLogo),
           urlRouteArray: item.team2Id == null ? null : teamRouteAway,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
@@ -175,7 +175,7 @@ export class SchedulesTableData implements TableComponentData<SchedulesData> {
       imageConfig2:{//HOME
         imageClass: "image-125",
         mainImage: {
-          imageUrl: GlobalSettings.getImageUrl(item.team1Logo),
+          imageUrl: GlobalSettings.getImageUrl(item.team1Logo, GlobalSettings._imgProfileLogo),
           urlRouteArray: item.team1Id == null ? null : teamRouteHome,
           hoverText: "<p>View</p><p>Profile</p>",
           imageClass: "border-5"
@@ -368,7 +368,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           display = item.team2Abbreviation + ' ' + item.team2Name;
         }
         sort = item.team2Name;
-        imageUrl = GlobalSettings.getImageUrl(item.team2Logo);
+        imageUrl = GlobalSettings.getImageUrl(item.team2Logo, GlobalSettings._imgSmLogo);
         let awayFullTeamName = item.team2Market + ' ' + item.team2Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team2Id) {
           if(item.team2Id != null){
@@ -389,7 +389,7 @@ export class SchedulesTableModel implements TableModel<SchedulesData> {
           display = item.team1Abbreviation + ' ' + item.team1Name;
         }
         sort = item.team1Name;
-        imageUrl = GlobalSettings.getImageUrl(item.team1Logo);
+        imageUrl = GlobalSettings.getImageUrl(item.team1Logo, GlobalSettings._imgSmLogo);
         let homeFullTeamName = item.team1Market + ' ' + item.team1Name;
         if ( !this.isTeamProfilePage || this.curTeam != item.team1Id ) {
           if(item.team1Id != null){

@@ -283,7 +283,7 @@ export class TeamPage implements OnInit {
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.fallBackIcon;
+    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
@@ -596,7 +596,7 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         scope : this.scope
       }
-      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module", 1)
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData ? listOfListsData.listData : null;

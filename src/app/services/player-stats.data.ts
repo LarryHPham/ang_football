@@ -400,7 +400,7 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     display : item.playerFirstName + " " + item.playerLastName,
                     sort : item.playerLastName + ', ' + item.playerFirstName,
                     link : VerticalGlobalFunctions.formatPlayerRoute(league, teamFullName, playerFullName, item.playerId),
-                    imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
+                    imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot, GlobalSettings._imgSmLogo),
                     bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
                     bottomStat2:item.stat8 != null ? item.stat8: 'N/A',
                 },

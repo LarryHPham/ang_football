@@ -9,8 +9,6 @@ import {PlayerStatsData, SportsPlayerStatsTableData, MLBPlayerStatsTableModel} f
 import { ModelService } from '../global/shared/model/model.service';
 
 
-
-
 @Injectable()
 export class PlayerStatsService{
     tabName:string;
@@ -144,10 +142,10 @@ export class PlayerStatsService{
         //Set display values
         table.rows.forEach((value, index) => {
             value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
-            value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot);
-            value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo);
+            value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot, GlobalSettings._imgProfileLogo);
+            value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo, 100);
             if ( value.backgroundImage ) {
-                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
+                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(value.backgroundImage, VerticalGlobalFunctions._imgProfileMod);
             }
 
 

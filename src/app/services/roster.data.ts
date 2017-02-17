@@ -193,7 +193,7 @@ var salary; // if college => do not show salary
 
 
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundUrl),
+      backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val.backgroundUrl, VerticalGlobalFunctions._imgProfileMod),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [curYear + ' TEAM ROSTER'],
       profileNameLink: playerLinkText,
@@ -204,7 +204,7 @@ var salary; // if college => do not show salary
           'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" lbs. " + salary
       ],
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
-      circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),
+      circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl, GlobalSettings._imgLgLogo),
       circleImageRoute: playerRoute,
       // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
       // subImageRoute: teamRoute,
@@ -331,7 +331,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
                   display : item.playerFirstName + " " + item.playerLastName,
                   sort : item.playerLastName + ', ' + item.playerFirstName,
                   link : VerticalGlobalFunctions.formatPlayerRoute(scope, item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
-                  imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl),
+                  imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl, GlobalSettings._imgSmLogo),
                   bottomStat: "Jersey No.",
                   bottomStat2:item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A',
 

@@ -259,7 +259,8 @@ export class LeaguePage{
       let header = data.headerData;
       let title = header.leagueFullName;
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
-      let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.mainIcon;
+      let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
+      let color = '#2d3e50';
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -618,7 +619,7 @@ export class LeaguePage{
         pageNum : 1,
         scope: this.scope
       }
-      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "league", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "league", "module", 1)
         .subscribe(
           listOfListsData => {
             if(listOfListsData){

@@ -489,7 +489,7 @@ export class PlayerPage{
       pageNum: 1,
       scope: this.scope
     }
-    this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module")
+    this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module", 1)
       .subscribe(
         listOfListsData => {
           if (listOfListsData != null) {

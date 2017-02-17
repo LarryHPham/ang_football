@@ -63,7 +63,7 @@ export class DeepDiveBlock1{
   getFirstArticleStackData(){
     this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
         .subscribe(data => {
-          this.firstStackTop = this._deepDiveData.transformToArticleStack(data);
+          this.firstStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveLg);
         },
         err => {
               console.log("Error getting first article stack data");

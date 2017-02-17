@@ -59,7 +59,7 @@ export class PickateamPageService {
           val.imageData= {
             imageClass: "image-100",
             mainImage: {
-              imageUrl:  GlobalSettings.getImageUrl(val.logo_url),
+              imageUrl:  GlobalSettings.getImageUrl(val.logo_url, GlobalSettings._imgPickTeam),
               urlRouteArray: VerticalGlobalFunctions.formatTeamRoute(self.scope,teamName, val.id.toString()),
               hoverText: "<i class='fa fa-mail-forward home-team-image-fa'></i>",// style='font-size:30px;'
               imageClass: "border-3"

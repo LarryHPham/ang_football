@@ -5,6 +5,7 @@ import { Http, Headers } from '@angular/http';
 //globals
 import { GlobalFunctions } from '../global/global-functions';
 import { GlobalSettings } from '../global/global-settings';
+import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 //interfaces
 import { Conference, Division, SportPageParameters } from '../global/global-interface';
@@ -66,7 +67,7 @@ export class NewsService {
         newsUrl: val.articleUrl,
         author: _getHostName(val.articleUrl) != null ? _getHostName(val.articleUrl) : 'Anonymous',
         published: GlobalFunctions.sntGlobalDateFormatting(+val.publishedDate,'dayOfWeek'),
-        backgroundImage: GlobalSettings.getImageUrl('/TDL/stock_images/TDL_Stock-3.png'),
+        backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback('/TDL/stock_images/TDL_Stock-3.png', VerticalGlobalFunctions._imgProfileMod),
         footerData: {
           infoDesc: 'Want to check out the full story?',
           text: 'READ THE ARTICLE',

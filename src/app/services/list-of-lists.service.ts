@@ -26,8 +26,8 @@ export class ListOfListsService {
   constructor(public model: ModelService){
   }
 
-        //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
-  getListOfListsService(urlParams, profileType: string, pageType: string){
+  //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
+  getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
@@ -36,7 +36,7 @@ export class ListOfListsService {
       id = 'null';
     }
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
-    var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
+    var pageNum = pageNumber != null ? pageNumber : 1;
     var target =  profileType;
     let scope = urlParams.scope;
 
@@ -54,21 +54,22 @@ export class ListOfListsService {
     return this.model.get( callURL )
       .map(
         data => {
-          if ( !data || !data.data ) {
-            return null;
+          if(data && data.data.length != 0){
+            if ( !data || !data.data ) {
+              return null;
+            }
+            var lastUpdated = "";
+            if ( data && data.data && data.data.length > 0 && data.data != undefined) {
+              lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
+            }
+            return {
+              carData: this.carDataPage(data.data,target),
+              listData: this.detailedData(data.data, pageType,target),
+              targetData: this.getTargetData(data.data),
+              pagination: data.data[0].listInfo,
+              lastUpdated: lastUpdated
+            };
           }
-          var lastUpdated = "";
-          if ( data && data.data && data.data.length > 0 && data.data != undefined) {
-            lastUpdated = data.data[0].targetData;
-
-          }
-          return {
-            carData: this.carDataPage(data.data,target),
-            listData: this.detailedData(data.data, pageType,target),
-            targetData: this.getTargetData(data.data),
-            pagination: data.data[0].listInfo,
-            lastUpdated: lastUpdated
-          };
         }
       )
   }
@@ -114,9 +115,9 @@ export class ListOfListsService {
           itemTargetData.playerName = itemTargetData.playerFirstName + ' ' + itemTargetData.playerLastName;
           if( itemTargetData.rankType == "player") {
             itemProfile       = itemTargetData.playerName;
-            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl);
+            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl, GlobalSettings._imgLgLogo);
             itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
-            itemSubImg        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
+            itemSubImg        = GlobalSettings.getImageUrl(itemTargetData.teamLogo, GlobalSettings._imgLgLogo);
             itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
             profileLinkText   = {
               route: itemRoute,
@@ -126,7 +127,7 @@ export class ListOfListsService {
             itemDescription   = [profileLinkText, " is currently ranked <b>"+ rankStr +"</b> in the "+ itemTargetData.rankScope +" with the most <b>" + itemStatName + "</b>."];
           } else if ( itemTargetData.rankType == "team" ) {
             itemProfile       = itemTargetData.teamName;
-            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
+            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo, GlobalSettings._imgLgLogo);
             itemRoute         = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
             profileLinkText   = {
               route: itemRoute,
@@ -138,7 +139,7 @@ export class ListOfListsService {
             itemTargetData.backgroundImage = "/app/public/Image-Placeholder-2.jpg";
           }
           else {
-            itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(itemTargetData.backgroundImage);
+            itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(itemTargetData.backgroundImage, VerticalGlobalFunctions._imgProfileMod);
           }
 
 
@@ -281,7 +282,7 @@ export class ListOfListsService {
           {
             imageClass : index > 0 ? "image-43" : "image-121",
             mainImage: {
-              imageUrl        : GlobalSettings.getImageUrl(itemTarget.teamLogo) != null ? GlobalSettings.getImageUrl(itemTarget.teamLogo) : GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl),
+              imageUrl        : GlobalSettings.getImageUrl(itemTarget.teamLogo, GlobalSettings._imgProfileLogo) != null ? GlobalSettings.getImageUrl(itemTarget.teamLogo, GlobalSettings._imgProfileLogo) : GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl, GlobalSettings._imgProfileLogo),
               urlRouteArray   : version == "page" || index > 0 ? itemUrlRouteArray : null,
               hoverText       : index > 0 ? "<i class='fa fa-mail-forward'></i>" : firstItemHover,
               imageClass      : index > 0 ? "border-1" : "border-2"

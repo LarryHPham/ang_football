@@ -141,7 +141,7 @@ export class ArticlePages implements OnInit {
             self._router.navigateByUrl('/home');
           }, 5000);
         }
-      );
+      )
   }
 
   getRecommendedArticles(eventId) {
@@ -156,6 +156,7 @@ export class ArticlePages implements OnInit {
       //needed to uppercase for ai to grab data correctly
       this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, startNum, 3)
         .subscribe(data => {
+          this.randomHeadlines = this._deepDiveService.transformToRecArticles(data);
         });
     }
   }
@@ -227,7 +228,7 @@ export class ArticlePages implements OnInit {
             this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
             this.imageTitle = ["", ""];
           } else {
-            this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath)];
+            this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath, GlobalSettings._carouselImg)];
             this.copyright = ["USA Today Sports Images"];
             this.imageTitle = [""];
           }
@@ -312,7 +313,7 @@ export class ArticlePages implements OnInit {
       image = metaData['images']['imageData'][0];
     } else {
       metaDesc = metaData.title;
-      image = GlobalSettings.getImageUrl(metaData.imagePath);
+      image = GlobalSettings.getImageUrl(metaData.imagePath, GlobalSettings._imgLgLogo);
     }
 
     let metaObjData;

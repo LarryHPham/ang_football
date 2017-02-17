@@ -143,9 +143,9 @@ export class BoxScoresService {
                   date = date.format('dddd') + ', ' + date.format('MMM') + date.format('. DD, YYYY');
                 }
                 if (eventType.image_url != null) {
-                  var homeImage = GlobalSettings.getImageUrl(eventType.image_url);
+                  var homeImage = GlobalSettings.getImageUrl(eventType.image_url, GlobalSettings._deepDiveBoxScore);
                 } else {
-                  var homeImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null);
+                  var homeImage = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null);
                 }
               }
               let urlRouteArray;
@@ -365,8 +365,8 @@ export class BoxScoresService {
             awayRoute = null;
           }
         }
-        var homeLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(homeData.logo), homeRoute);
-        var awayLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(awayData.logo), awayRoute);
+        var homeLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgMdLogo), homeRoute);
+        var awayLogo = this.imageData("image-70", "border-2", GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgMdLogo), awayRoute);
         right = {
           homeHex: homeData.colors.split(', ')[0], //parse out comma + space to grab only hex colors
           homeID: homeData.id,
@@ -432,18 +432,18 @@ export class BoxScoresService {
         if (teamId != null && profile == 'team') {//if league then both items will link
           if (homeData.id == teamId) {//if not league then check current team they are one
             homeLink = null;
-            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo))
-            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgSmLogo))
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgSmLogo), awayLink)
           } else {
             awayLink = null;
-            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgSmLogo), homeLink)
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgSmLogo))
           }
         } else {
           aiContent[0] = data.aiContent != null && data.aiContent.featuredReport != null ? self.formatArticle(data) : null;
 
-          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgSmLogo), homeLink)
+          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgSmLogo), awayLink)
         }
 
         let gameDate = data.gameInfo;
@@ -546,17 +546,17 @@ export class BoxScoresService {
         if (teamId != null && profile == 'team') {//if league then both items will link
           if (homeData.id == teamId) {//if not league then check current team they are one
             homeLink = null;
-            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo))
-            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgSmLogo))
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgSmLogo), awayLink)
           } else {
             awayLink = null;
-            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo))
+            var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgSmLogo), homeLink)
+            var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgSmLogo))
           }
         } else {
           aiContent[0] = data.aiContent != null ? self.formatArticle(data) : null;
-          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo), homeLink)
-          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo), awayLink)
+          var link1 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(homeData.logo, GlobalSettings._imgSmLogo), homeLink)
+          var link2 = self.imageData('image-45', 'border-1', GlobalSettings.getImageUrl(awayData.logo, GlobalSettings._imgSmLogo), awayLink)
         }
 
 
@@ -648,7 +648,7 @@ export class BoxScoresService {
       gameArticle['imageConfig'] = <gameAiImageConfig>{
         hoverText: 'View Article',
         imageClass: aiContent.featuredReport[report].imageClass ? aiContent.featuredReport[report].imageClass : null,
-        imageUrl: aiContent.featuredReport[report].image_url ? GlobalSettings.getImageUrl(aiContent.featuredReport[report].image_url) : null,
+        imageUrl: aiContent.featuredReport[report].image_url ? GlobalSettings.getImageUrl(aiContent.featuredReport[report].image_url, GlobalSettings._imgAiBoxScore) : null,
         urlRouteArray: aiContent.featuredReport[report].article_url ? aiContent.featuredReport[report].article_url : null
       }
       gameArticle['keyword'] = aiContent.featuredReport[report].subcategory ? aiContent.featuredReport[report].subcategory : null,
@@ -681,7 +681,7 @@ export class BoxScoresService {
     //     // }
     //   }else{
     //     gameArticle['images'] = [];
-    //     gameArticle['images'].push(VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null));
+    //     gameArticle['images'].push(VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null));
     //   }
     // }
     return gameArticle;
