@@ -71,7 +71,6 @@
           [seasonBase]="seasonBase"
           (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
       </div>
-
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
         <responsive-widget
           *ngIf="playerStatsData"
@@ -97,7 +96,7 @@
             [selectedTabName]="draftHistoryActiveTab"
             [isError]="draftHistoryIsError"
             [storedPartnerParam]="storedPartnerParam"
-            [pageParams]="pageParams"
+            [moduleFooterUrl]="draftHistortyModuleFooterUrl"
             (tabSelectedListener)="draftHistoryTab($event)"
             (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
         </draft-history-module>

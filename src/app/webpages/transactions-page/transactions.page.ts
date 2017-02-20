@@ -62,6 +62,9 @@ export class TransactionsPage {
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
+  private transactionsService: any;
+  private profileService: any;
+
     constructor(
         private router: Router,
         private activateRoute: ActivatedRoute,
@@ -94,12 +97,6 @@ export class TransactionsPage {
 
 
 
-    ngOnDestroy(){
-      this.paramsub.unsubscribe();
-    } //ngOnDestroy
-
-
-
     private metaTags(data) {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
@@ -129,7 +126,7 @@ export class TransactionsPage {
 
     getProfileInfo() {
       if (this.pageParams.teamId) {
-          this._profileService.getTeamProfile(this.pageParams.teamId)
+          this.profileService = this._profileService.getTeamProfile(this.pageParams.teamId)
             .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
                 data => {
@@ -154,7 +151,7 @@ export class TransactionsPage {
             );
       }
       else {
-          this._profileService.getLeagueProfile()
+          this.profileService = this._profileService.getLeagueProfile()
             .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
                 data => {
@@ -189,7 +186,7 @@ export class TransactionsPage {
             this.dropdownKey1 = this.dropdownKey1 ?
                                 this.dropdownKey1 :
                                 this.filter1Param;
-            this._transactionsService.getTransactionsService(tab, this.teamIdParam, 'page', this.dropdownKey1, 'desc', this.limitParam)
+            this.transactionsService = this._transactionsService.getTransactionsService(tab, this.teamIdParam, 'page', this.dropdownKey1, 'desc', this.limitParam)
                 .subscribe(
                 transactionsData => {
                     if (this.transactionFilter1 == undefined) {
@@ -234,6 +231,14 @@ export class TransactionsPage {
             this.router.navigate(newRoute);
         }
     } //transactionsFilterDropdown(filter)
+
+
+
+    ngOnDestroy(){
+      this.paramsub.unsubscribe();
+      this.transactionsService.unsubscribe();
+      this.profileService.unsubscribe();
+    } //ngOnDestroy
 
 
 

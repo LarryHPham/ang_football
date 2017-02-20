@@ -63,6 +63,7 @@ export class TeamPage implements OnInit {
   public storeSubscriptions: any = [];
   public routeSubscriptions: any;
   public teamID: number;
+  public teamName: string;
   public pageParams:SportPageParameters;
   public dateParam:any;
   public storedPartnerParam: string;
@@ -110,6 +111,7 @@ export class TeamPage implements OnInit {
   private draftHistoryCarouselData: Array<Array<SliderCarouselInput>>;
   private draftHistoryDetailedDataArray: any;
   private draftHistoryIsError: boolean = false;
+  private draftHistortyModuleFooterUrl: Array<any>;
 
   private comparisonModuleData: ComparisonModuleData;
 
@@ -166,6 +168,7 @@ export class TeamPage implements OnInit {
         this.routeChangeResets();
 
         this.imageConfig = this._dailyUpdateService.getImageConfig();
+        this.teamName = param['teamName'];
         this.teamID = param['teamID'];
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
@@ -519,6 +522,7 @@ export class TeamPage implements OnInit {
                         }
                     )
             )
+            this.draftHistortyModuleFooterUrl = [this.storedPartnerParam, this.scope, 'draft-history', activeTab.tabKey, this.teamName, this.teamID, activeFilter == 1 ? 'asc' : 'desc'];
         }
     } //getDraftHistoryData
 

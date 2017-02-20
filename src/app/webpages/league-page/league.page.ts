@@ -89,7 +89,7 @@ export class LeaguePage{
     private transactionsData: TransactionModuleData;
     private transactionsActiveTab: any;
     private transactionFilter1: Array<any>;
-    private transactionModuleFooterParams: any;
+    private transactionModuleFooterParams: Array<any>;
     private dropdownKey1: string;
 
     private draftHistoryData: any;
@@ -100,6 +100,8 @@ export class LeaguePage{
     private draftHistoryCarouselData: Array<Array<SliderCarouselInput>>;
     private draftHistoryDetailedDataArray: any;
     private draftHistoryIsError: boolean = false;
+    private draftHistoryModuleInfo: Object;
+    private draftHistortyModuleFooterUrl: Array<any>;
 
     private positionParams: any;
     private positionData: Array<positionMVPTabData>;
@@ -245,7 +247,6 @@ export class LeaguePage{
           //---Batch 6 Load---//
           this.getNewsService();
           this.getTwitterService(this.profileType, partnerID, scope);
-
         }
       ))
     } //setupProfileData
@@ -335,7 +336,6 @@ export class LeaguePage{
           this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
         }
     } //scheduleTab
-
     private filterDropdown(filter) {
         let filterChange = false;
         if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key) {
@@ -423,7 +423,6 @@ export class LeaguePage{
       if(this.dropdownKey1 == null){
         this.dropdownKey1 = this.seasonBase;
       }
-
       this.storeSubscriptions.push(this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'page', this.dropdownKey1)
       .subscribe(
           transactionsData => {
@@ -440,8 +439,7 @@ export class LeaguePage{
           err => {
           console.log('Error: transactionsData API: ', err);
           }
-      ));
-      // pass transaction page route params to module filter, so set module footer route
+      )); // pass transaction page route params to module filter, so set module footer route
     } //getTransactionsData
 
 
@@ -478,8 +476,13 @@ export class LeaguePage{
                         }
                     )
             )
-        }
+            this.draftHistortyModuleFooterUrl = [this.storedPartnerParam, this.scope, 'draft-history', activeTab.tabKey, 'league', activeFilter == 1 ? 'asc' : 'desc'];
+        } //if
     } //getDraftHistoryData
+
+    private setModuleInfo(title:string, identifier:string, url:Array<any>) {
+
+    } //setModuleInfo
 
 
 
