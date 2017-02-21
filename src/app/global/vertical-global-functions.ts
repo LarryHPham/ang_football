@@ -556,13 +556,30 @@ export class VerticalGlobalFunctions {
   } //static nonRankedDataPoints
 
   //function to select a random stock photo
+  static _imgRecSm: number = 100;
+  static _imgRecMd: number = 300;
+  static _imgProfileMod: number = 900;
 
+  static resizeImage(width:number){
+    var resizePath;
+    width = width > 1920 ? 1920 : width;//width limit to 1920 if larger
+    if (isBrowser) {
+      let r = window.devicePixelRatio;
+      width = width * r;
+    }
+    resizePath = "?width=" + width;
+    if (width < 100) {//increase quality if smaller than 100, default is set to 70
+      resizePath += "&quality=90";
+    }
+    return resizePath;
+  }
 
-  static getBackroundImageUrlWithStockFallback(relativePath) {
-      let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
-      let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
-      var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath: this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
-      return relPath;
+  static getBackgroundImageUrlWithStockFallback(relativePath, width:number=1920):string {
+    let stockPhotoArray = ["/TDL/stock_images/TDL_Stock-1.png","/TDL/stock_images/TDL_Stock-2.png","/TDL/stock_images/TDL_Stock-3.png","/TDL/stock_images/TDL_Stock-4.png","/TDL/stock_images/TDL_Stock-5.png","/TDL/stock_images/TDL_Stock-6.png"];
+    let randomStockPhotoSelection = stockPhotoArray[Math.floor(Math.random()*stockPhotoArray.length)];
+    var relPath = relativePath != null ? this._proto + "//" + GlobalSettings._imageUrl + relativePath : this._proto + "//" + GlobalSettings._imageUrl+randomStockPhotoSelection;
+    relPath += this.resizeImage(width);
+    return relPath;
   }
 
   static getRandomToggleCarouselImage() {

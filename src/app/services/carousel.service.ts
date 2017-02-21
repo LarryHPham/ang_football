@@ -25,7 +25,7 @@ export class ImagesService {
         var copyArray = [];
         var titleArray = [];
         imageData.forEach(function (val, index) {
-            val['images'] = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.imageUrl);
+            val['images'] = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val.imageUrl, 1000);
             val['copyright'] = val.imageCopyright;
             val['title'] = val.imageDescription;
             imageArray.push(val['images']);
@@ -44,7 +44,7 @@ export class ImagesService {
         var copyArray = [];
         var titleArray = [];
         imageData.forEach(function (val, index) {
-            val['images'] = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val['image_url']);
+            val['images'] = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val['image_url'], 1000);
             val['copyright'] = val['image_copyright'];
             val['title'] = val['image_title'];
             imageArray.push(val['images']);

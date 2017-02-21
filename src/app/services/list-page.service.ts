@@ -297,7 +297,7 @@ export class ListPageService {
         if(data.query.target == 'team') {
           ctaDesc = 'Interested in discovering more about this team?';
           primaryRoute = teamRoute;
-          primaryImage = GlobalSettings.getImageUrl(val.teamLogo);
+          primaryImage = GlobalSettings.getImageUrl(val.teamLogo, GlobalSettings._imgLgLogo);
 
           profileLinkText = teamLinkText;
 
@@ -305,7 +305,7 @@ export class ListPageService {
         } else { //if profile == 'player'
           ctaDesc = 'Interested in discovering more about this player?';
           primaryRoute = VerticalGlobalFunctions.formatPlayerRoute(routeScope, val.teamName,playerName,val.playerId.toString());
-          primaryImage = GlobalSettings.getImageUrl(val.playerHeadshotUrl);
+          primaryImage = GlobalSettings.getImageUrl(val.playerHeadshotUrl, GlobalSettings._imgLgLogo);
 
           profileLinkText = {
             route: primaryRoute,
@@ -359,7 +359,7 @@ export class ListPageService {
             ],
             statDescription,
             null),
-          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo), teamRoute, rank),
+          imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.teamLogo, GlobalSettings._imgProfileLogo), teamRoute, rank),
           hasCTA:true,
           ctaDesc:'Want more info about this team?',
           ctaBtn:'',
@@ -387,7 +387,7 @@ export class ListPageService {
             ],
             statDescription,
             null),
-            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl),playerRoute, rank, '', null),
+            imageConfig: ListPageService.imageData("list",GlobalSettings.getImageUrl(val.playerHeadshotUrl, GlobalSettings._imgProfileLogo),playerRoute, rank, '', null),
 
           hasCTA:true,
           ctaDesc:'Want more info about this player?',

@@ -28,7 +28,7 @@ export class DeepDiveBlock4{
   getFourthArticleStackData(){
     this._deepDiveData.getDeepDiveBatchService(this.scope, 1, 4, this.geoLocation)
         .subscribe(data => {
-          this.fourthStackTop = this._deepDiveData.transformToArticleStack(data);
+          this.fourthStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveLg);
         },
         err => {
               console.log("Error getting forth article stack TOP data");

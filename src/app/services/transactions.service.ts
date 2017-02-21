@@ -248,7 +248,7 @@ export class TransactionsService {
         }
 
         return SliderCarousel.convertToCarouselItemType1(index, {
-          backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundImage),
+          backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val.backgroundImage, VerticalGlobalFunctions._imgProfileMod),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           subheader: [tab.tabDisplay + ' - ', scope],
           profileNameLink: playerLinkText,
@@ -257,10 +257,10 @@ export class TransactionsService {
           ],
           // lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionTimestamp),
           lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.transactionDate),
-          circleImageUrl: GlobalSettings.getImageUrl(val.playerImage),
+          circleImageUrl: GlobalSettings.getImageUrl(val.playerImage, GlobalSettings._imgLgLogo),
           circleImageRoute: playerRoute,
           noData: false
-          // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
+          // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo, GlobalSettings._imgLgLogo),
           // subImageRoute: teamRoute
         });
       });
@@ -312,7 +312,7 @@ export class TransactionsService {
           value   : [description],
           url     : null
         }],
-        imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerImage), playerRoute)
+        imageConfig: TransactionsService.getListImageData(GlobalSettings.getImageUrl(val.playerImage, GlobalSettings._imgSmLogo), playerRoute)
       };
     });
     return listDataArray;

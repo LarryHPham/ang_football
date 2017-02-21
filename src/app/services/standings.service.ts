@@ -313,8 +313,8 @@ export class StandingsService {
     rows.forEach((value, index) => {
       value.groupName = groupName;
       value.displayDate = GlobalFunctions.sntGlobalDateFormatting(value.lastUpdated, 'defaultDate');
-      value.fullImageUrl = GlobalSettings.getImageUrl(value.imageUrl);
-      value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
+      value.fullImageUrl = GlobalSettings.getImageUrl(value.imageUrl, GlobalSettings._imgLgLogo);
+      value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(value.backgroundImage, VerticalGlobalFunctions._imgProfileMod);
       //Make sure numbers are numbers.
       value.pageType = page;
       value.totalWins = value.totalWins;

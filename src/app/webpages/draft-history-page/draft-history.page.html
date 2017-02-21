@@ -4,7 +4,20 @@
     <title-component *ngIf="profileHeaderData" [titleData]="profileHeaderData"></title-component>
     <loading-component *ngIf="!profileData && !isError"></loading-component>
     <error-component *ngIf="isError"></error-component>
-    <draft-history *ngIf="profileData" [profileData]="profileData" [type]="'page'" class="draft-history"></draft-history>
+    <draft-history
+        class="draft-history"
+        *ngIf="profileData"
+        [profileData]="profileData"
+        [type]="type"
+        [carouselDataArray]="carouselDataArray"
+        [data]="tabs"
+        [sortOptions]="sortOptions"
+        [dropdownKey1]="dropdownKey1"
+        [selectedTabName]="tabParam"
+        [isError]="isError"
+        (tabSelectedListener)="draftHistoryTab($event)"
+        (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
+    </draft-history>
     <responsive-widget embedPlace="widgetForPage"></responsive-widget>
   </section>
 </sidekick-wrapper>

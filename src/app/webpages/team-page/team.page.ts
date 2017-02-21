@@ -27,6 +27,7 @@ import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
 import { SeoService } from "../../seo.service";
 import { PlayerStatsService } from "../../services/player-stats.service";
+import { DraftHistoryService } from '../../services/draft-history.service';
 
 //interfaces
 import { Division, Conference, SportPageParameters } from '../../global/global-interface';
@@ -42,6 +43,7 @@ import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
 import { PlayerStatsModule, PlayerStatsModuleData } from '../../fe-core/modules/player-stats/player-stats.module';
+import { SliderCarouselInput } from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
 //Libraries
 declare var moment;
@@ -61,6 +63,7 @@ export class TeamPage implements OnInit {
   public storeSubscriptions: any = [];
   public routeSubscriptions: any;
   public teamID: number;
+  public teamName: string;
   public pageParams:SportPageParameters;
   public dateParam:any;
   public storedPartnerParam: string;
@@ -100,6 +103,16 @@ export class TeamPage implements OnInit {
   private transactionModuleFooterParams: any;
   private dropdownKey1: string;
 
+  private draftHistoryData: any;
+  private draftHistoryActiveTab: string;
+  private draftHistoryFilter1: any = 1;
+  private draftHistoryModuleFooterParams: any;
+  private draftHistorySortOptions: Array<any> = [{key: '1', value: 'Ascending'}, {key: '2', value: 'Descending'}];
+  private draftHistoryCarouselData: Array<Array<SliderCarouselInput>>;
+  private draftHistoryDetailedDataArray: any;
+  private draftHistoryIsError: boolean = false;
+  private draftHistortyModuleFooterUrl: Array<any>;
+
   private comparisonModuleData: ComparisonModuleData;
 
   private imageData:Array<any>;
@@ -136,6 +149,7 @@ export class TeamPage implements OnInit {
     private _standingsService:StandingsService,
     private _rosterService: RosterService,
     private _transactionsService: TransactionsService,
+    private _draftHistoryService: DraftHistoryService,
     private _comparisonService: ComparisonStatsService,
     private _imagesService: ImagesService,
     private _videoBatchService: VideoService,
@@ -148,14 +162,13 @@ export class TeamPage implements OnInit {
     private _playerStatsService: PlayerStatsService,
     private _cdRef: ChangeDetectorRef
   ) {
-
-
     this.routeSubscriptions = this.activateRoute.params.subscribe(
       (param :any)=> {
         this.resetSubscription();
         this.routeChangeResets();
 
         this.imageConfig = this._dailyUpdateService.getImageConfig();
+        this.teamName = param['teamName'];
         this.teamID = param['teamID'];
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
@@ -248,6 +261,8 @@ export class TeamPage implements OnInit {
         //--Batch 3--//
         this.activeTransactionsTab = "Transactions"; // default tab is Transactions
         this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
+        this.draftHistoryData = this._draftHistoryService.getDraftHistoryTabs(this.profileData);
+        this.getDraftHistoryData();
 
         //--Batch 4--//
         this.setupComparisonData();
@@ -271,7 +286,7 @@ export class TeamPage implements OnInit {
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.fallBackIcon;
+    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
@@ -472,6 +487,44 @@ export class TeamPage implements OnInit {
           }
       ));
     } //private getTransactionsData
+
+
+
+    private draftHistoryTab(tab) {
+        this.draftHistoryActiveTab = tab;
+        this.getDraftHistoryData();
+    }
+    private draftHistoryFilterDropdown(filter) {
+        this.draftHistoryFilter1 = filter;
+        this.getDraftHistoryData();
+    }
+    private getDraftHistoryData() {
+        this.draftHistoryActiveTab = this.draftHistoryActiveTab ? this.draftHistoryActiveTab : this.seasonBase;
+        var matchingTabs = this.draftHistoryActiveTab ?
+                        this.draftHistoryData.filter(tab => tab.tabKey == this.draftHistoryActiveTab) :
+                        null;
+        if ( matchingTabs ) {
+            var activeTab = matchingTabs[0];
+            var activeFilter = this.draftHistoryFilter1 ? this.draftHistoryFilter1 : 1;
+            this.storeSubscriptions.push(
+                this._draftHistoryService.getDraftHistoryService(this.profileData, activeTab, 0, 'page', activeFilter, 2)
+                    .subscribe(
+                        draftHistoryData => {
+                            activeTab.isLoaded = true;
+                            activeTab.detailedDataArray = draftHistoryData.detailedDataArray;
+                            activeTab.carouselDataArray = draftHistoryData.carouselDataArray;
+                            this.draftHistoryCarouselData = draftHistoryData.carouselDataArray
+                        },
+                        err => {
+                          activeTab.isLoaded = true;
+                          this.draftHistoryIsError = true;
+                          console.log('Error: draftData API: ', err);
+                        }
+                    )
+            )
+            this.draftHistortyModuleFooterUrl = [this.storedPartnerParam, this.scope, 'draft-history', activeTab.tabKey, this.teamName, this.teamID, activeFilter == 1 ? 'asc' : 'desc'];
+        }
+    } //getDraftHistoryData
 
 
 

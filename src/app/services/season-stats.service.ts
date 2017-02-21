@@ -164,7 +164,7 @@ export class SeasonStatsService {
               infoBoxImage : {
                 imageClass: "image-40",
                 mainImage: {
-                  imageUrl: GlobalSettings.getImageUrl(stats[index].leaderHeadshotUrl),
+                  imageUrl: GlobalSettings.getImageUrl(stats[index].leaderHeadshotUrl, GlobalSettings._imgSmLogo),
                   imageClass: "border-1",
                   urlRouteArray:  linkToPlayer,
                   hoverText: "<i class='fa fa-mail-forward infobox-list-fa'></i>",
@@ -267,15 +267,15 @@ export class SeasonStatsService {
       description = SeasonStatsService.getDescription(stats[currentTab], playerInfo[0].position, playerRouteText, playerInfo[0].statScope);
     }
     return SliderCarousel.convertToCarouselItemType1(1, {
-      backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(playerInfo[0].backgroundUrl),
+      backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(playerInfo[0].backgroundUrl, VerticalGlobalFunctions._imgProfileMod),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [longSeasonName + " Stats Report"],
       profileNameLink: playerRouteText,
       description: description,
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(playerInfo[0].lastUpdated),
-      circleImageUrl: GlobalSettings.getImageUrl(playerInfo[0].playerHeadshot),
+      circleImageUrl: GlobalSettings.getImageUrl(playerInfo[0].playerHeadshot, GlobalSettings._imgLgLogo),
       circleImageRoute: null, //? the single item on the player profile page, so no link is needed
-      // subImageUrl: GlobalSettings.getImageUrl(data.playerInfo.teamLogo),
+      // subImageUrl: GlobalSettings.getImageUrl(data.playerInfo.teamLogo, GlobalSettings._imgLgLogo),
       // subImageRoute: teamRoute
     });
   }
