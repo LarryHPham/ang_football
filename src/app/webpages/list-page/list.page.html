@@ -23,8 +23,8 @@
     </div>
     <detailed-list-item *ngIf="detailedDataArray.length > 0" [detailedItemData] = 'detailedDataArray'></detailed-list-item>
     <!-- <detailed-list-item *ngIf="detailedDataArray" [detailedItemData] = 'pageNumber != null ? detailedDataArray[pageNumber-1] : detailedDataArray'></detailed-list-item> -->
-    <div class="list_loadmore">
-      <load-more-button *ngIf="showLoading"></load-more-button>
+    <div *ngIf="showLoading" class="list_loadmore">
+      <load-more-button></load-more-button>
     </div>
     <!-- <pagination-footer *ngIf="paginationParameters" [paginationParameters]="paginationParameters" (newIndex)="newIndex($event)"></pagination-footer> -->
     <responsive-widget *ngIf="paginationParameters" embedPlace="widgetForPage"></responsive-widget>

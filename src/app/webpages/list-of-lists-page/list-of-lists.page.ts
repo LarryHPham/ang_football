@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ChangeDetectorRef } from '@angular/core';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -53,7 +54,8 @@ export class ListOfListsPage {
         private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
         private _title: Title,
-        private _seoService: SeoService
+        private _seoService: SeoService,
+        private _cdRef: ChangeDetectorRef
     ) {
       // check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
@@ -74,6 +76,7 @@ export class ListOfListsPage {
             .subscribe(data => {
               this.getListOfListsPage(this.pageParams, this.batchLoadIndex, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
             }, err => {
+              this.isError = true;
               console.log("Error loading profile");
             });
           } else{
@@ -97,13 +100,13 @@ export class ListOfListsPage {
                 if(list.listData.length != 0){
                   list.listData.forEach(function(val, i){
                     self.detailedDataArray.push(val);
-                  })
+                  });
                   list.carData.forEach(function(val, i){
                     self.carouselDataArray.push(val);
-                  })
+                  });
                 }
-                // this.setPaginationParams(list.pagination);
-
+                this._cdRef.detectChanges();
+                
                 var profileName = "League";
                 var profileRoute = ['/' + urlParams.scope, 'league'];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
@@ -112,8 +115,7 @@ export class ListOfListsPage {
 
                 if (urlParams.target != 'league') {
                   listTargetData = list.targetData[0];
-                }
-                else {
+                } else {
                   listTargetData = list.targetData;
                 }
 

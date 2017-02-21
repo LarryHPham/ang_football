@@ -101,24 +101,33 @@ export class ListPageService {
 
   getListPageService(query, errorMessage: string, scope, pageNum, season?){
   var callURL = this._apiUrl+'/list';
+  let pageCount = query.perPageCount ? query.perPageCount : 20;
+
+  let pageNumber = ( query.pageNumber && ( Number(pageNum) <= 1 ) ) ? query.pageNumber : pageNum;
   if (season == null || season == undefined || season == "null") {
     var date = new Date;
-    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + pageNum + "&season=" + (Number(date.getFullYear()) - 1).toString();
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + pageCount + "&pageNumber=" + pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
   }
   else {
-    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + query.perPageCount + "&pageNumber=" + pageNum + "&season=" + season;
+    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + pageCount + "&pageNumber=" + pageNumber + "&season=" + season;
   }
   return this.model.get( callURL )
     .map(
       data => {
-        data.data['query'] = query;
-        this.formatData(data.data.listInfo.stat, data.data.listData);
-        return {
-          profHeader: ListPageService.profileHeader(data.data, scope),
-          carData: ListPageService.carDataPage(data.data, pageNum, 'page', errorMessage),
-          listData: ListPageService.detailedData(data.data, pageNum),
-          listDisplayName: data.data.listInfo.name,
-          seasons: this.formatSeasons(data.data.listInfo.seasons)
+        try{
+          if(data.data.listData[0]){
+            data.data['query'] = query;
+            this.formatData(data.data.listInfo.stat, data.data.listData);
+            return {
+              profHeader: ListPageService.profileHeader(data.data, scope),
+              carData: ListPageService.carDataPage(data.data, pageNumber, 'page', errorMessage),
+              listData: ListPageService.detailedData(data.data, pageNumber),
+              listDisplayName: data.data.listInfo.name,
+              seasons: this.formatSeasons(data.data.listInfo.seasons)
+            }
+          }
+        }catch(e){
+          console.log('INVALID DATA');
         }
       },
       err => {
@@ -243,10 +252,11 @@ export class ListPageService {
 
   static profileHeader(data, scope): TitleInputData {
     var profile = data.listInfo;
+    let lastUpdated = data.listData[0] ? data.listData[0].lastUpdated : null;
     return {
       imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
       imageRoute: ['/'+scope,"home"],
-      text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdated),
+      text1: 'Last Updated: '+ GlobalFunctions.formatUpdatedDate(lastUpdated),
       text2: 'United States',
       text3: profile.listName,
       icon: 'fa fa-map-marker'
@@ -266,7 +276,8 @@ export class ListPageService {
       carouselArray = carData.map(function(val, index){
         let routeScope = val.affiliation.toLowerCase() == 'fbs' ? 'ncaaf' : val.affiliation.toLowerCase();
         var carouselItem;
-        var rank = ((Number(pageNum) - 1) * Number(pageNum)) + (index+1);
+        let pageLimit = data.query.perPageCount ? data.query.perPageCount : 20;
+        var rank = ((Number(pageNum) - 1) * Number(pageLimit)) + (index+1);
         var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
         var teamLinkText = {
           route: teamRoute,
@@ -331,7 +342,8 @@ export class ListPageService {
       var teamRoute = VerticalGlobalFunctions.formatTeamRoute(routeScope, val.teamName, val.teamId);
       var teamLocation = val.teamCity + ", " + val.teamState;
       var statDescription = "<span class='mobile-only'>" + val.statAbbreviation + "</span><span class='not-mobile'>" + val.statDescription + "</span>" +  ' for ' + val.seasonLong;
-      var rank = ((Number(pageNum) - 1) * Number(data.query.perPageCount)) + (index+1);
+      let pageLimit = data.query.perPageCount ? data.query.perPageCount : 20;
+      var rank = ((Number(pageNum) - 1) * Number(pageLimit)) + (index+1);
       var stat = GlobalFunctions.roundToDecimal(val.stat).toString();
       if(data.query.target == 'team'){
         return {

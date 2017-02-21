@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 //globals
@@ -12,7 +12,7 @@ import { DetailListInput } from '../../fe-core/components/detailed-list-item/det
 import { ModuleFooterData, FooterStyle } from '../../fe-core/components/module-footer/module-footer.component';
 import { SliderCarouselInput } from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 import { TitleInputData } from '../../fe-core/components/title/title.component';
-import { PaginationParameters } from '../../fe-core/components/pagination-footer/pagination-footer.component';
+// import { PaginationParameters } from '../../fe-core/components/pagination-footer/pagination-footer.component';
 
 //services
 import { ListPageService } from '../../services/list-page.service';
@@ -44,7 +44,7 @@ export class ListPage {
     ctaBtnClass: "list-footer-btn",
     hasIcon: true,
   };
-  paginationParameters: PaginationParameters;
+  paginationParameters: any;
   isError: boolean = false;
   tw: string;
   sw: string;
@@ -54,6 +54,7 @@ export class ListPage {
   dropdownCounter: number = 0;
 
   constructor(
+    private _router: Router,
     private activatedRoute: ActivatedRoute,
     private listService: ListPageService,
     private _profileService: ProfileHeaderService,
@@ -71,37 +72,14 @@ export class ListPage {
         this.partnerID = param['partnerID'];
         this.pageParams = param;
         this.season = param.season ? param.season : null;
-        this.getListPage(this.pageParams);
+        this.getStandardList(this.pageParams, this.batchLoadIndex, this.pageParams.season);
       }
     )
   } //constructor
 
-  getListPage(urlParams) {
-    this.getStandardList(urlParams, 1, urlParams.season);
-  } //getListPage
-
-  //PAGINATION
   //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
   setPaginationParams(input) {
-    var info = input.listInfo;
-    var navigationParams = {
-      target: this.pageParams.target,
-      statName: this.pageParams.statName,
-      season: this.pageParams.season,
-      ordering: this.pageParams.ordering,
-      perPageCount: this.pageParams.perPageCount,
-      pageNumber: this.pageParams.pageNumber,
-    };
-    var navigationPage = '/' + this.pageParams.scope + '/list';
 
-    this.paginationParameters = {
-      index: this.pageParams.pageNumber != null ? Number(this.pageParams.pageNumber) : null,
-      max: Number(input.pageCount),
-      paginationType: 'page',
-      navigationPage: navigationPage,
-      navigationParams: navigationParams,
-      indexKey: 'pageNumber'
-    };
   } //setPaginationParams
 
   getStandardList(urlParams, pageNum, season?) {
@@ -117,6 +95,15 @@ export class ListPage {
       list => {
         if (list) {
           this.profileHeaderData = list.profHeader;
+          var navigationParams = {
+            target: this.pageParams.target,
+            statName: this.pageParams.statName,
+            season: this.pageParams.season,
+            ordering: this.pageParams.ordering,
+          };
+          this.paginationParameters = navigationParams;
+
+
           this.metaTags(this.profileHeaderData);
           if (list.listData.length != 0) {//makes sure it only runs once
             list.listData.forEach(function(val, i) {
@@ -167,25 +154,18 @@ export class ListPage {
     this.pageParams.pageNumber = index;
   } //newIndex
 
-  getPage() {
-    this._profileService.getLeagueProfile()
-      .subscribe(data => {
-        this.getListPage(this.pageParams);
-      }, err => {
-        console.log("Error loading profile");
-      });
-    var date = new Date();
-    var dateStr = (Number(date.getFullYear()) - 1).toString() + " / " + date.getFullYear();
-    this.sortSeason = [
-      { key: (Number(date.getFullYear()) - 1).toString(), value: dateStr }
-    ];
-  }
-
   dropdownChanged(event) {
-    if (this.dropdownCounter > 0) {
-      this.getStandardList(this.pageParams, this.batchLoadIndex, event);
-    }
-    this.dropdownCounter++;
+      this.paginationParameters['season'] = event;
+      var navigationPage = VerticalGlobalFunctions.getWhiteLabel() + '/' + this.pageParams.scope + '/list';
+
+      let route = [navigationPage];
+
+      for(var obj in this.paginationParameters){
+        route.push(this.paginationParameters[obj]);
+      };
+      this._router.navigate(event);
+      //':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber'
+      // this.getStandardList(this.pageParams, this.batchLoadIndex, event);
   } //dropdownChanged
 
   // function to lazy load page sections
