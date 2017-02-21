@@ -35,7 +35,7 @@ export class ListOfListsService {
     if(id == 'all'){
       id = 'null';
     }
-    var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 10;
+    var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
     let pageNum = ( urlParams.pageNumber && ( Number(pageNumber) <= 1 ) ) ? urlParams.pageNumber : pageNumber;
     var target =  profileType;
     let scope = urlParams.scope;
