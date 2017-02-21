@@ -281,12 +281,16 @@ export class VerticalGlobalFunctions {
 
   //path: '/list/:target/:statName/:ordering/:perPageCount/:pageNumber',
   static formatListRoute(urlArr: Array<any>, scope): Array<any> {
+    let route = this.getWhiteLabel();
+    let listRoute = [route, scope, 'list'];
     for(var arg in urlArr) {
-      if (arg == null) return ['Error-page'];
+      if (arg == null) {
+        return ['Error-page'];
+      }else{
+        listRoute.push(urlArr[arg]);
+      }
     }
     // let kebabArr = urlArr.map( item => GlobalFunctions.toLowerKebab(item) );
-    let route = this.getWhiteLabel();
-    let listRoute = [route, scope, 'list', urlArr[0], urlArr[1], urlArr[2], urlArr[3], urlArr[4], urlArr[5]];
     return listRoute;
   } //formatListRoute
 
