@@ -112,11 +112,11 @@ const relativeChildRoutes = [
         component: ListPage
     },
     {
-        path: ':scope/draft-history',
+        path: ':scope/draft-history/:tab/league/:filter1',
         component: DraftHistoryPage
     },
     {
-        path: ':scope/draft-history/:teamName/:teamID',
+        path: ':scope/draft-history/:tab/:teamName/:teamId/:filter1',
         component: DraftHistoryPage
     },
     {

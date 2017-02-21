@@ -62,6 +62,9 @@ export class TransactionsPage {
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
+  private transactionsService: any;
+  private profileService: any;
+
     constructor(
         private router: Router,
         private activateRoute: ActivatedRoute,
@@ -94,12 +97,6 @@ export class TransactionsPage {
 
 
 
-    ngOnDestroy(){
-      this.paramsub.unsubscribe();
-    } //ngOnDestroy
-
-
-
     private metaTags(data) {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
@@ -129,23 +126,22 @@ export class TransactionsPage {
 
     getProfileInfo() {
       if (this.pageParams.teamId) {
-          this._profileService.getTeamProfile(this.pageParams.teamId)
+          this.profileService = this._profileService.getTeamProfile(this.pageParams.teamId)
             .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
-              data => {
-                this.seasonBase = data.headerData['seasonBase'];
-                this.dropdownKey1 = this.dropdownKey1 ?
-                                    this.dropdownKey1 :
-                                    this.filter1Param;
-                var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
-                this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
-                this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.teamIdParam);
-                profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-                this.profileHeaderData = profileHeaderData;
-                this.metaTags(this.profileHeaderData);
-
-                var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.teamIdParam.toString());
-                this.getTransactionsPage();
+                data => {
+                    var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
+                    this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
+                    profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+                    this.seasonBase = data.headerData['seasonBase'];
+                    this.dropdownKey1 = this.dropdownKey1 ?
+                                        this.dropdownKey1 :
+                                        this.filter1Param;
+                    this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.teamIdParam);
+                    this.profileHeaderData = profileHeaderData;
+                    this.metaTags(this.profileHeaderData);
+                    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.teamIdParam.toString());
+                    this.getTransactionsPage();
               },
               err => {
                   this.isError = true;
@@ -155,23 +151,22 @@ export class TransactionsPage {
             );
       }
       else {
-          this._profileService.getLeagueProfile()
+          this.profileService = this._profileService.getLeagueProfile()
             .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
-              data => {
-                this.seasonBase = data.headerData['seasonBase'];
-                this.dropdownKey1 = this.dropdownKey1 ?
-                                    this.dropdownKey1 :
-                                    this.filter1Param;
-                var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
-                this.profileName = this.pageParams.scope.toUpperCase();
-                this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.teamIdParam);
-                profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-                this.profileHeaderData = profileHeaderData;
-                this.metaTags(this.profileHeaderData);
-
-                var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
-                this.getTransactionsPage();
+                data => {
+                    var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
+                    this.profileName = this.pageParams.scope.toUpperCase();
+                    profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+                    this.seasonBase = data.headerData['seasonBase'];
+                    this.dropdownKey1 = this.dropdownKey1 ?
+                                        this.dropdownKey1 :
+                                        this.filter1Param;
+                    this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.teamIdParam);
+                    this.profileHeaderData = profileHeaderData;
+                    this.metaTags(this.profileHeaderData);
+                    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
+                    this.getTransactionsPage();
               },
               err => {
                   this.isError = true;
@@ -191,14 +186,13 @@ export class TransactionsPage {
             this.dropdownKey1 = this.dropdownKey1 ?
                                 this.dropdownKey1 :
                                 this.filter1Param;
-            this._transactionsService.getTransactionsService(tab, this.teamIdParam, 'page', this.dropdownKey1, 'desc', this.limitParam)
+            this.transactionsService = this._transactionsService.getTransactionsService(tab, this.teamIdParam, 'page', this.dropdownKey1, 'desc', this.limitParam)
                 .subscribe(
                 transactionsData => {
                     if (this.transactionFilter1 == undefined) {
                         this.transactionFilter1 = transactionsData.yearArray;
                     }
                     tab = transactionsData;
-                    // this.setPaginationParams(transactionsData);
                 }, err => {
                     console.log("Error loading transaction data");
                 })
@@ -215,9 +209,9 @@ export class TransactionsPage {
         if (tabNameTo != tabNameFrom) { // check if clicked tab is already active
             this.selectedTabName = tabNameTo;
             this.transactionsActiveTab = tab;
-            newRoute = this.pageParams.teamId ?
-                        [this.pageParams.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, this.teamNameParam, this.teamIdParam, this.limitParam] :
-                        [this.pageParams.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, 'league', this.limitParam];
+            newRoute = this.teamIdParam ?
+                        [this.storedPartnerParam, this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, this.teamNameParam, this.teamIdParam, this.limitParam] :
+                        [this.storedPartnerParam, this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, 'league', this.limitParam];
             this.router.navigate(newRoute);
         }
     } //transactionsTab(tab)
@@ -226,17 +220,25 @@ export class TransactionsPage {
 
     transactionsFilterDropdown(filter) {
         var newRoute;
-        var filterFrom = this.pageParams.filter1;
+        var filterFrom = this.filter1Param;
         var filterTo = filter;
 
         if (filterTo != filterFrom) {
             this.dropdownKey1 = filter;
             newRoute = this.pageParams.teamId ?
-                        [this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, this.teamNameParam, this.teamIdParam, this.limitParam] :
-                        [this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, 'league', this.limitParam];
+                        [this.storedPartnerParam, this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, this.teamNameParam, this.teamIdParam, this.limitParam] :
+                        [this.storedPartnerParam, this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, 'league', this.limitParam];
             this.router.navigate(newRoute);
         }
     } //transactionsFilterDropdown(filter)
+
+
+
+    ngOnDestroy(){
+      this.paramsub.unsubscribe();
+      this.transactionsService.unsubscribe();
+      this.profileService.unsubscribe();
+    } //ngOnDestroy
 
 
 
