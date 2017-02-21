@@ -480,10 +480,6 @@ export class LeaguePage{
         } //if
     } //getDraftHistoryData
 
-    private setModuleInfo(title:string, identifier:string, url:Array<any>) {
-
-    } //setModuleInfo
-
 
 
 
