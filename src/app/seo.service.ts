@@ -300,7 +300,7 @@ export class SeoService {
     el = this.DOM.createElement(type);
     this.setElementAttribute(el, name, attr);
     if (attr != "canonical") {
-      this.setElementAttribute(el, "rel", "tdl");
+      this.setElementAttribute(el, 'dochead', '1');
     }
     this.DOM.insertBefore(this.document.head.lastChild, el);
     return el;
@@ -314,7 +314,7 @@ export class SeoService {
     if (isBrowser) {
       var element = this.DOM.getElementsByTagName(this.document, 'meta'), index;
       for (index = element.length - 1; index >= 0; index--) {
-        if (element[index].getAttribute('rel') == 'tdl') {
+        if (element[index].getAttribute('dochead') == '1') {
           element[index].parentNode.removeChild(element[index]);
         }
       }
