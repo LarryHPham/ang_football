@@ -43,6 +43,7 @@ import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 import { SearchPage } from "../webpages/search-page/search.page";
+import { SiteMap } from "../siteMap/siteMap";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
@@ -121,7 +122,8 @@ const PAGEMODULES = [
   DisclaimerPage,
   DirectoryPage,
   ErrorPage,
-  SearchPage
+  SearchPage,
+  SiteMap
 ]
 
 const COREMODULES = [

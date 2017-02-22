@@ -24,7 +24,8 @@ import { ListPage } from "../webpages/list-page/list.page";
 import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
-// import { SyndicatedArticlePage } from "./webppages/syndicated-article-page/syndicated-article-page";
+
+import { SiteMap } from "../siteMap/siteMap";
 import { SearchPage } from "../webpages/search-page/search.page";
 
 const relativeChildRoutes = [
@@ -166,6 +167,10 @@ const relativeChildRoutes = [
     {
         path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         component: ListOfListsPage
+    },
+    {
+        path: 'sitemap',
+        component: SiteMap
     },
     // // //Error pages and error handling
     {
