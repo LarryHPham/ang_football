@@ -300,7 +300,7 @@ export class SeoService {
     el = this.DOM.createElement(type);
     this.setElementAttribute(el, name, attr);
     if (attr != "canonical") {
-      this.setElementAttribute(el, "dochead", "1");
+      this.setElementAttribute(el, 'dochead', '1');
     }
     this.DOM.insertBefore(this.document.head.lastChild, el);
     return el;
