@@ -36,7 +36,7 @@ export class ListOfListsService {
       id = 'null';
     }
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
-    var pageNum = pageNumber != null ? pageNumber : 1;
+    let pageNum = ( urlParams.pageNumber && ( Number(pageNumber) <= 1 ) ) ? urlParams.pageNumber : pageNumber;
     var target =  profileType;
     let scope = urlParams.scope;
 
@@ -234,8 +234,6 @@ export class ListOfListsService {
         listype,
         itemTarget['seasonBase'],
         itemInfo.ordering,
-        10,
-        1
       ]
 
       var profileTypePlural = "types";

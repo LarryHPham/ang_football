@@ -108,6 +108,10 @@ const relativeChildRoutes = [
         component: ListPage
     },
     {
+        path: ':scope/list/:target/:statName/:season/:ordering',
+        component: ListPage
+    },
+    {
         path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
         component: ListPage
     },
@@ -156,7 +160,11 @@ const relativeChildRoutes = [
         component: ArticlePages
     },
     {
-        path: ':scope/list-of-lists/:target/:targetId/:perPageCount',
+        path: ':scope/list-of-lists/:target/:targetId',
+        component: ListOfListsPage
+    },
+    {
+        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         component: ListOfListsPage
     },
     // // //Error pages and error handling

@@ -5,14 +5,6 @@
     <div *ngIf="profileHeaderData && pageParams">
       <div class="loadBatch1">
         <profile-header [profileHeaderData]="profileHeaderData" [profileType]="'team'"></profile-header>
-        <list-of-lists
-          *ngIf="listOfListsData"
-          [profileHeaderData]="profileHeaderData"
-          [listOfListsData]="listOfListsData"
-          [profileType]="profileType"
-          [teamId]="pageParams.teamId"
-          [scope]="scope"
-          [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <daily-update-module
           *ngIf="dailyUpdateData"
           [imageConfig]="imageConfig"
@@ -137,7 +129,14 @@
           [profileName]="profileHeaderData.profileName"
           [faqData]="faqData"></faq-module>
         <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
-
+        <list-of-lists
+          *ngIf="listOfListsData"
+          [profileHeaderData]="profileHeaderData"
+          [listOfListsData]="listOfListsData"
+          [profileType]="profileType"
+          [teamId]="pageParams.teamId"
+          [scope]="scope"
+          [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
 
         <news-module
