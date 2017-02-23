@@ -13,6 +13,7 @@ import { SeoService } from "../seo.service";
 //services
 import { PickateamPageService } from '../services/pickateam.service';
 import { RosterService } from '../services/roster.service';
+import { FooterService } from '../services/footer.service';
 import { DirectoryService } from '../services/directory.service';
 
 export interface siteKey {
@@ -67,6 +68,7 @@ export class SiteMap {
     private router:ActivatedRoute,
     private _pickateamPageService: PickateamPageService,
     private _rosterService: RosterService,
+    private _footerService: FooterService,
     private _directoryService: DirectoryService,
   ) {
     this.domainUrl = this.getPageUrl();
@@ -119,8 +121,8 @@ export class SiteMap {
 
       if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of home that is located in dontLog variable
         this.addTeamPages(scopes[i]);
-        this.teamDirectory(scopes[i]);
-        this.playerDirectory(scopes[i]);
+        // this.teamDirectory(scopes[i]);
+        // this.playerDirectory(scopes[i]);
       }
     }
     console.log(this.totalSiteMap);
@@ -172,7 +174,6 @@ export class SiteMap {
     // let routerRoute = this.getComponentPages(this.childrenRoutes, 'TeamPage');
     // console.log('teampage variations',routerRoute);
     this._pickateamPageService.getLandingPageService(scope, null)
-    .finally(() => this.displaySiteMap = true ) // call preboot after last piece of data is returned on page
     .subscribe(data => {
       try{
         //note function may not make sense with nfl & ncaaf Conferences and Divisions naming but will be used for consistencies
@@ -208,6 +209,7 @@ export class SiteMap {
     // let routerRoute = this.getComponentPages(this.childrenRoutes, 'TeamPage');
     // console.log('teampage variations',routerRoute);
     this._rosterService.getTeamRosterData(team.id)
+    .finally(() => this.displaySiteMap = true ) // call preboot after last piece of data is returned on page
     .subscribe(data => {
       try{
         console.log(data);
@@ -229,47 +231,64 @@ export class SiteMap {
   }
 
   teamDirectory(scope) {//TODO
-    let param {
-      startsWith:'a',
-      listingsLimit:20,
-      page:'team',
-    }
-    this._directoryService.getPlayerData(scope, param)
-    .subscribe(data => {
-      console.log(data);
-      let relPath = teamRoute.join('/').toString();
-      let pathData: siteKey = {
-        path: teamRoute,
-        name: self.domainUrl + relPath,
-        dataPoints: null,
-      }
-      this.totalSiteMap.push(pathData);
-    },
-    err => {
-      console.log("Error getting footer data");
-    });
+    // let param {
+    //   startsWith:'a',
+    //   newlyAdded:false,
+    //   listingsLimit:20,
+    //   page:'team',
+    // }
+    // this._footerService.getFooterService(scope, "team")
+    // .subscribe(data => {
+    //   console.log(data);
+    //   this._directoryService.getTeamData(scope, param)
+    //   .subscribe(data => {
+    //     console.log(data);
+    //     let relPath = teamRoute.join('/').toString();
+    //     let pathData: siteKey = {
+    //       path: teamRoute,
+    //       name: self.domainUrl + relPath,
+    //       dataPoints: null,
+    //     }
+    //     this.totalSiteMap.push(pathData);
+    //   },
+    //   err => {
+    //     console.log("Error getting footer data");
+    //   });
+    // },
+    // err => {
+    //   console.log("Error getting footer data");
+    // });
   }
 
   playerDirectory(scope) {//TODO
-    let param {
-      startsWith:'a',
-      listingsLimit:20,
-      page:'player',
-    }
-    this._directoryService.getTeamData(scope, param)
-    .subscribe(data => {
-      console.log(data);
-      let relPath = teamRoute.join('/').toString();
-      let pathData: siteKey = {
-        path: teamRoute,
-        name: self.domainUrl + relPath,
-        dataPoints: null,
-      }
-      this.totalSiteMap.push(pathData);
-    },
-    err => {
-      console.log("Error getting footer data");
-    });
+    // let param {
+    //   startsWith:'a',
+    //   newlyAdded:false,
+    //   listingsLimit:20,
+    //   page:'player',
+    // }
+    // this._footerService.getFooterService(scope, "player")
+    // .subscribe(data => {
+    //   console.log(data);
+    //   this._directoryService.getTeamData(scope, param)
+    //   .subscribe(data => {
+    //     console.log(data);
+    //     let relPath = teamRoute.join('/').toString();
+    //     let pathData: siteKey = {
+    //       path: teamRoute,
+    //       name: self.domainUrl + relPath,
+    //       dataPoints: null,
+    //     }
+    //     this.totalSiteMap.push(pathData);
+    //   },
+    //   err => {
+    //     console.log("Error getting footer data");
+    //   });
+    // },
+    // err => {
+    //   console.log("Error getting footer data");
+    // });
+
   }
 
 }
