@@ -107,6 +107,8 @@ export class SchedulesPage implements OnInit {
 
 
   private metaTags(data) {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     let text3 = data.text3 != null ? data.text3: '';
     let text4 = data.text4 != null ? '. '+data.text4: '';
@@ -164,7 +166,7 @@ export class SchedulesPage implements OnInit {
     }
     if (teamId) {
       this.profHeadService.getTeamProfile(Number(teamId))
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
         data => {
           // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
@@ -205,7 +207,7 @@ export class SchedulesPage implements OnInit {
     } else {
     // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
     this.profHeadService.getLeagueProfile(this.scope)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
         data => {
           var currentDate = new Date();// no stat for date so will grab current year client is on
@@ -242,7 +244,7 @@ export class SchedulesPage implements OnInit {
         if (schedulesData.carData.length > 0) {
           this.scheduleFilter2 = schedulesData.weeks;
         } else {
-          this.scheduleFilter2 = null;
+          // this.scheduleFilter2 = null; // setting this to null causes dropdown to disapear and does not let user res
         }
         this.schedulesData = schedulesData;
         this.tabData = schedulesData != null ? schedulesData.tabs : null;
@@ -326,7 +328,6 @@ export class SchedulesPage implements OnInit {
 
 
   newIndex(newPage) {
-    window.scrollTo(0, 0);
     this.isFirstRun = 0;
     this.initialPage = newPage;
 

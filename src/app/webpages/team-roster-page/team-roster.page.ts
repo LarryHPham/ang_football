@@ -71,6 +71,8 @@ export class TeamRosterPage implements OnInit {
 
 
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let text3 = data.text3 != null ? data.text3: '';
       let text4 = data.text4 != null ? '. '+data.text4: '';
@@ -98,7 +100,7 @@ export class TeamRosterPage implements OnInit {
     getData() {
       if ( this.pageParams.teamId ) {
         this._profileService.getTeamProfile(this.pageParams.teamId)
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(
             data => {
               this.profileLoaded = true;

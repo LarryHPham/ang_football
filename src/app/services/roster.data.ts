@@ -55,18 +55,16 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
   tableData: RosterTableModel;
   isTeamProfilePage: boolean;
   scope:string;
+  subscriptions:any = [];
 
   constructor(private _service: RosterService, scope, teamId: string, type: string, conference: Conference, maxRows: number, isTeamProfilePage: boolean) {
+    this.resetSubscription();
     this.type = type;
     this.teamId = teamId;
     this.maxRows = maxRows;
     this.errorMessage = "Sorry, there is no roster data available.";
     this.isTeamProfilePage = isTeamProfilePage;
     this.scope = scope;
-    // if ( this.type == "hitters" && conference == Conference.national ) {
-    //   this.hasError = true;
-    //   this.errorMessage = "This team is a National League team and has no designated hitters.";
-    // }
 
     switch ( type ) {
       case "full":      this.title = "Full Roster"; break;
@@ -76,13 +74,24 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
     }
   }
 
+  private resetSubscription(){
+    if(this.subscriptions){
+      var numOfSubs = this.subscriptions.length;
+
+      for( var i = 0; i < numOfSubs; i++ ){
+        if(this.subscriptions[i]){
+          this.subscriptions[i].unsubscribe();
+        }
+      }
+    }
+  }
+
   loadData() {
     if ( !this.tableData ) {
       if ( !this._service.fullRoster ) {
-        this._service.getRosterTabData(this).subscribe(data => {
+        this.subscriptions.push(this._service.getRosterTabData(this).subscribe(data => {
           //Limit to maxRows, if necessary
           var rows = this.filterRows(data);
-
           this.tableData = new RosterTableModel(this.scope, rows);
           this.isLoaded = true;
           this.hasError = false;
@@ -91,7 +100,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
           this.isLoaded = true;
           this.hasError = true;
           console.log("Error getting roster data", err);
-        });
+        }));
       }
       else {
         var rows = this.filterRows(this._service.fullRoster);
@@ -184,7 +193,7 @@ var salary; // if college => do not show salary
 
 
     return SliderCarousel.convertToCarouselItemType1(index, {
-      backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.backgroundUrl),
+      backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val.backgroundUrl, VerticalGlobalFunctions._imgProfileMod),
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       subheader: [curYear + ' TEAM ROSTER'],
       profileNameLink: playerLinkText,
@@ -195,7 +204,7 @@ var salary; // if college => do not show salary
           'is <span class="text-heavy">'+ playerNum + '</span> and stands at ' + playerHeight + "tall, weighing " + playerWeight +" lbs. " + salary
       ],
       lastUpdatedDate: GlobalFunctions.formatUpdatedDate(val.lastUpdated),
-      circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl),
+      circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshotUrl, GlobalSettings._imgLgLogo),
       circleImageRoute: playerRoute,
       // subImageUrl: GlobalSettings.getImageUrl(val.teamLogo),
       // subImageRoute: teamRoute,
@@ -322,7 +331,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
                   display : item.playerFirstName + " " + item.playerLastName,
                   sort : item.playerLastName + ', ' + item.playerFirstName,
                   link : VerticalGlobalFunctions.formatPlayerRoute(scope, item.teamName, item.playerFirstName + " " + item.playerLastName, item.playerId),
-                  imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl),
+                  imageUrl : GlobalSettings.getImageUrl(item.playerHeadshotUrl, GlobalSettings._imgSmLogo),
                   bottomStat: "Jersey No.",
                   bottomStat2:item.playerJerseyNumber != null ? item.playerJerseyNumber: 'N/A',
 

@@ -1,4 +1,4 @@
-              <section *ngIf="!isPartnerZone && isLoading" class="deep-dive container-fluid {{isPartner}}" (window:scroll)="onScroll($event)">
+              <section *ngIf="isLoading" class="deep-dive" (window:scroll)="onScroll($event)">
                 <section *ngIf="carouselData"class="deep-dive-container1">
                   <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" (changeScope)="toggleRoute($event)">
                   </news-box>
@@ -14,13 +14,11 @@
                     <div class="deep-dive-module">
                       <side-scroll-schedules *ngIf="scopeDisplayed" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="scope" [topScope]="scopeDisplayed.topScope" (changeScope)="changeScope($event)"></side-scroll-schedules>
                     </div>
-
                     <!-- First article stack was moved out of deep dive block 1 for performance-->
                     <div class="deep-dive-module" *ngIf="firstStackRow && firstStackTop">
                       <article-stack-module [stackTop]="firstStackTop" [stackRow]="firstStackRow"></article-stack-module>
                     </div>
                     <!---->
-
                     <deep-dive-block-1 *ngIf="blockIndex >= 1 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-1>
 
                     <deep-dive-block-2 *ngIf="blockIndex >= 2 && geoLocation" [geoLocation]="geoLocation" [profileName]="profileName" [maxHeight]="maxHeight" [scope]="scope"></deep-dive-block-2>
@@ -34,4 +32,3 @@
                   </div>
                 </section>
               </section>
-<!-- <Partner-home-page *ngIf="isPartnerZone"></Partner-home-page> -->

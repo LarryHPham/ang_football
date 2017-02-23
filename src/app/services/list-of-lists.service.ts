@@ -26,8 +26,8 @@ export class ListOfListsService {
   constructor(public model: ModelService){
   }
 
-        //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
-  getListOfListsService(urlParams, profileType: string, pageType: string){
+  //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
+  getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
 
@@ -36,12 +36,12 @@ export class ListOfListsService {
       id = 'null';
     }
     var limit   = urlParams.perPageCount != null ? urlParams.perPageCount: 4;
-    var pageNum = urlParams.pageNumber != null ? urlParams.pageNumber : 1;
+    let pageNum = ( urlParams.pageNumber && ( Number(pageNumber) <= 1 ) ) ? urlParams.pageNumber : pageNumber;
     var target =  profileType;
     let scope = urlParams.scope;
 
     //usesd for keeping all data withing given scope of api
-    this._scope = scope;
+    this._scope = scope == 'fbs' ? 'ncaaf' : 'nfl';
 
     if (profileType == 'league' && pageType == 'module') {
       id = '';
@@ -49,27 +49,27 @@ export class ListOfListsService {
 
     }
 
-
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
     return this.model.get( callURL )
       .map(
         data => {
-          if ( !data || !data.data ) {
-            return null;
+          if(data && data.data.length != 0){
+            if ( !data || !data.data ) {
+              return null;
+            }
+            var lastUpdated = "";
+            if ( data && data.data && data.data.length > 0 && data.data != undefined) {
+              lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
+            }
+            return {
+              carData: this.carDataPage(data.data,target),
+              listData: this.detailedData(data.data, pageType,target),
+              targetData: this.getTargetData(data.data),
+              pagination: data.data[0].listInfo,
+              lastUpdated: lastUpdated
+            };
           }
-          var lastUpdated = "";
-          if ( data && data.data && data.data.length > 0 && data.data != undefined) {
-            lastUpdated = data.data[0].targetData;
-
-          }
-          return {
-            carData: this.carDataPage(data.data,target),
-            listData: this.detailedData(data.data, pageType,target),
-            targetData: this.getTargetData(data.data),
-            pagination: data.data[0].listInfo,
-            lastUpdated: lastUpdated
-          };
         }
       )
   }
@@ -86,78 +86,83 @@ export class ListOfListsService {
     if(data.length == 0){
       carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
     }else{
+      try{
+        //if data is coming through then run through the transforming function for the module
+        data.forEach(function(val, index){
+          if( val.listData[0] == null) return;
+          let itemInfo = val.listInfo;
+          var itemTargetData;
+          if (target != 'league') {  // if page is league, reformat data [API changes]
+            itemTargetData = val.targetData[0];
+          }
+          else {
+            itemTargetData = val.targetData;
+          }
 
-      //if data is coming through then run through the transforming function for the module
-      data.forEach(function(val, index){
-        if( val.listData[0] == null) return;
-        let itemInfo = val.listInfo;
-        var itemTargetData;
-        if (target != 'league') {  // if page is league, reformat data [API changes]
-          itemTargetData = val.targetData[0];
-        }
-        else {
-          itemTargetData = val.targetData;
-        }
-
-        let itemProfile       = null;
-        let itemImgUrl        = null;
-        let itemRoute         = null;
-        let itemSubImg        = null;
-        let itemSubRoute      = null;
-      //  let itemHasHover      = version == "page";
-      //  let ctaUrlArray       = itemInfo.url.split("/");
-      //  let ctaUrlArray       = null;
-        let itemStatName      = itemTargetData.statType.replace(/_/g,' '); //TODO
-        // let updatedDate       = moment(itemTargetData.lastUpdated).format('dddd, MMMM Do, YYYY');
-        let itemDescription   = [];
-        let rankStr = itemTargetData.rank + GlobalFunctions.Suffix(Number(itemTargetData.rank));
-        let profileLinkText;
-        itemTargetData.playerName = itemTargetData.playerFirstName + ' ' + itemTargetData.playerLastName;
-        if( itemTargetData.rankType == "player") {
-          itemProfile       = itemTargetData.playerName;
-          itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl);
-          itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
-          itemSubImg        = VerticalGlobalFunctions.formatTeamLogo(itemTargetData.teamLogo);
-          itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
-          profileLinkText   = {
-            route: itemRoute,
-            text: itemProfile,
-            class: 'text-heavy'
-          };
-          itemDescription   = [profileLinkText, " is currently ranked <b>"+ rankStr +"</b> in the "+ itemTargetData.rankScope +" with the most <b>" + itemStatName + "</b>."];
-        } else if ( itemTargetData.rankType == "team" ) {
-          itemProfile       = itemTargetData.teamName;
-          itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo);
-          itemRoute         = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
-          profileLinkText   = {
-            route: itemRoute,
-            text: itemProfile
-          };
-          itemDescription   = ["The ", profileLinkText, " are currently ranked <b>"+ rankStr +"</b> in the "+ itemTargetData.rankScope +" with the most <b>" + itemStatName + "</b>."];
-        }
-        if (itemTargetData.backgroundImage == null || itemTargetData.backgroundImage == undefined) {
-          itemTargetData.backgroundImage = "/app/public/Image-Placeholder-2.jpg";
-        }
-        else {
-          itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(itemTargetData.backgroundImage);
-        }
+          let itemProfile       = null;
+          let itemImgUrl        = null;
+          let itemRoute         = null;
+          let itemSubImg        = null;
+          let itemSubRoute      = null;
+        //  let itemHasHover      = version == "page";
+        //  let ctaUrlArray       = itemInfo.url.split("/");
+        //  let ctaUrlArray       = null;
+          let itemStatName      = itemTargetData.statType.replace(/_/g,' '); //TODO
+          // let updatedDate       = moment(itemTargetData.lastUpdated).format('dddd, MMMM Do, YYYY');
+          let itemDescription   = [];
+          let rankStr = itemTargetData.rank + GlobalFunctions.Suffix(Number(itemTargetData.rank));
+          let profileLinkText;
+          itemTargetData.playerName = itemTargetData.playerFirstName + ' ' + itemTargetData.playerLastName;
+          if( itemTargetData.rankType == "player") {
+            itemProfile       = itemTargetData.playerName;
+            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.playerHeadshotUrl, GlobalSettings._imgLgLogo);
+            itemRoute         = VerticalGlobalFunctions.formatPlayerRoute(self._scope, itemTargetData.teamName, itemTargetData.playerName, itemTargetData.playerId);
+            itemSubImg        = GlobalSettings.getImageUrl(itemTargetData.teamLogo, GlobalSettings._imgLgLogo);
+            itemSubRoute      = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
+            profileLinkText   = {
+              route: itemRoute,
+              text: itemProfile,
+              class: 'text-heavy'
+            };
+            itemDescription   = [profileLinkText, " is currently ranked <b>"+ rankStr +"</b> in the "+ itemTargetData.rankScope +" with the most <b>" + itemStatName + "</b>."];
+          } else if ( itemTargetData.rankType == "team" ) {
+            itemProfile       = itemTargetData.teamName;
+            itemImgUrl        = GlobalSettings.getImageUrl(itemTargetData.teamLogo, GlobalSettings._imgLgLogo);
+            itemRoute         = VerticalGlobalFunctions.formatTeamRoute(self._scope, itemTargetData.teamName, itemTargetData.teamId);
+            profileLinkText   = {
+              route: itemRoute,
+              text: itemProfile
+            };
+            itemDescription   = ["The ", profileLinkText, " are currently ranked <b>"+ rankStr +"</b> in the "+ itemTargetData.rankScope +" with the most <b>" + itemStatName + "</b>."];
+          }
+          if (itemTargetData.backgroundImage == null || itemTargetData.backgroundImage == undefined) {
+            itemTargetData.backgroundImage = "/app/public/Image-Placeholder-2.jpg";
+          }
+          else {
+            itemTargetData.backgroundImage = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(itemTargetData.backgroundImage, VerticalGlobalFunctions._imgProfileMod);
+          }
 
 
-        var carouselItem = SliderCarousel.convertToCarouselItemType1(index, {
-    //      backgroundImage: itemTargetData.backgroundImage,
-          copyrightInfo: GlobalSettings.getCopyrightInfo(),
-          subheader: ["Related List - ", profileLinkText],
-          profileNameLink: {text: itemInfo.listName},
-          description: itemDescription,
-          lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData.lastUpdated),
-      //    lastUpdatedDate: 'last-updated',
-          circleImageUrl: itemImgUrl,
-          circleImageRoute: itemRoute, //replacement for
-          rank: itemTargetData.rank,
-          rankClass: "image-48-rank"
+          var carouselItem = SliderCarousel.convertToCarouselItemType1(index, {
+      //      backgroundImage: itemTargetData.backgroundImage,
+            copyrightInfo: GlobalSettings.getCopyrightInfo(),
+            subheader: ["Related List - ", profileLinkText],
+            profileNameLink: {text: itemInfo.listName},
+            description: itemDescription,
+            lastUpdatedDate: GlobalFunctions.formatUpdatedDate(itemTargetData.lastUpdated),
+        //    lastUpdatedDate: 'last-updated',
+            circleImageUrl: itemImgUrl,
+            circleImageRoute: itemRoute, //replacement for
+            rank: itemTargetData.rank,
+            rankClass: "image-48-rank"
+          });
+          carouselArray.push(carouselItem);
         });
-        carouselArray.push(carouselItem);
-      });
+      }catch(e){
+        carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
+      }
+
+
     }
     return carouselArray;
 
@@ -165,9 +170,9 @@ export class ListOfListsService {
 
   detailedData(data, version,target){
     let listDataArray     = [];
-    let dummyUrl          = "/list/player/batter-home-runs/asc/National";
-    let dummyName         = "Batters with the most home runs in the National League";
-    let dummyStat         = "batter-home-runs";
+    let dummyUrl          = "/#";
+    let dummyName         = "Name";
+    let dummyStat         = "Stat";
     let dummyOrdering     = "asc";
     let dummyScope        = "conference";
     let dummyConference   = "National";
@@ -190,6 +195,11 @@ export class ListOfListsService {
 
 
     data.forEach(function(item, index){
+      try{
+
+      }catch(e){
+        return null;
+      }
       let itemInfo = item.listInfo;
       let itemListData = item.listData;
       var itemTarget;
@@ -205,27 +215,10 @@ export class ListOfListsService {
         leaguerank = '#'+itemTarget.rank;
       }
 
-
-
-
-
       if( itemListData.length<1 ) return;
       itemListData.unshift(item.targetData);
       itemListData = itemListData.slice(1, 7);
 
-    //  let itemListInfo = item['listInfo'];
-      //  let ctaUrlArray = itemListInfo.url.split("/");
-      //let ctaUrlArray = 'test';
-
-      //:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
-      /*
-      let listRoute = ['List-page', {
-        target      : kebabArr[0],
-        statName    : kebabArr[1],
-        ordering    : kebabArr[2],
-        perPageCount: kebabArr[3],
-        pageNumber  : kebabArr[4],
-      }];*/
       let listype;
       if (itemTarget['rankType'] == "team") {
         listype = itemTarget['statType'].replace('team_','');
@@ -241,14 +234,7 @@ export class ListOfListsService {
         listype,
         itemTarget['seasonBase'],
         itemInfo.ordering,
-        10,
-        1
       ]
-
-
-      // removes first empty item and second "list" item
-      //  ctaUrlArray.splice(0,2);
-      //  ctaUrlArray.push.apply(ctaUrlArray,["10","1"]);
 
       var profileTypePlural = "types";
       if ( itemTarget['rankType'] == "player" ) {
@@ -257,18 +243,6 @@ export class ListOfListsService {
       else if ( itemTarget['rankType'] == "team" ) {
         profileTypePlural = "teams";
       }
-
-      // let id;
-      // switch(itemTarget[0]['rankType']) {
-      //   case 'team':
-      //     id = itemTarget[0]['teamId'];
-      //     break;
-      //   case 'player':
-      //     id = itemTarget[0]['playerId'];
-      //     break
-      //   default:
-      //     id = 'player';
-      // }
 
       var listData = {
         name          : itemInfo.listName           != null  ? itemInfo.listName         : dummyName,
@@ -283,8 +257,6 @@ export class ListOfListsService {
         ctaText       : 'View The List',
         ctaUrl        : VerticalGlobalFunctions.formatListRoute(ctaUrlArr, self._scope)  != null ? VerticalGlobalFunctions.formatListRoute(ctaUrlArr, self._scope) : dummyUrl
       };
-
-
 
       itemListData.forEach(function(val, index) {
 
@@ -308,26 +280,19 @@ export class ListOfListsService {
           {
             imageClass : index > 0 ? "image-43" : "image-121",
             mainImage: {
-              imageUrl        : GlobalSettings.getImageUrl(itemTarget.teamLogo) != null ? GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl) : GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl),
+              imageUrl        : GlobalSettings.getImageUrl(itemTarget.teamLogo, GlobalSettings._imgProfileLogo) != null ? GlobalSettings.getImageUrl(itemTarget.teamLogo, GlobalSettings._imgProfileLogo) : GlobalSettings.getImageUrl(itemTarget.playerHeadshotUrl, GlobalSettings._imgProfileLogo),
               urlRouteArray   : version == "page" || index > 0 ? itemUrlRouteArray : null,
               hoverText       : index > 0 ? "<i class='fa fa-mail-forward'></i>" : firstItemHover,
               imageClass      : index > 0 ? "border-1" : "border-2"
             },
-            subImages         : index > 0 ? null : [
-              // {
-              //   imageUrl      : itemTarget[0].rankType == "player" ? VerticalGlobalFunctions.formatTeamLogo(itemTarget[0].teamName) : null,
-              //   urlRouteArray : itemTarget[0].rankType == "player" ? VerticalGlobalFunctions.formatTeamRoute(itemTarget[0].teamName, itemTarget[0].teamId) : null,
-              //   hoverText     : itemTarget[0].rankType == "player" ? "<i class='fa fa-mail-forward'></i>" : null,
-              //   imageClass    : itemTarget[0].rankType == "player" ? "image-round-sub image-40-sub image-round-lower-right" : null
-              // },
-              {
+            subImages         : index > 0 ? null :
+            [{
               text: leaguerank,
               imageClass: leagueimgclass
             }]
           }
         )
       });
-
       listDataArray.push(listData);
     });
     return listDataArray;

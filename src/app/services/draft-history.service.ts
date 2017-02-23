@@ -95,7 +95,7 @@ export class DraftHistoryService {
     for(var i = 0; i <5; i++) {
       var seasonName = year + " season";
       tabArray.push({
-        tabTitle: i == 0 ? 'Current Season' : year.toString(),
+        tabTitle: year.toString(),
         tabKey: year.toString(),
         isLoaded: false,
         errorMessage: errorMessage.replace("{0}", seasonName)
@@ -108,10 +108,9 @@ export class DraftHistoryService {
 /**
  * @param {string} type - 'page' or 'module'
  */
-  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string, sortBy: string): Observable<DraftHistoryData> {
-    // console.log("concrete - getDraftHistoryService");
+  getDraftHistoryService(profileData: IProfileData, tab: DraftHistoryTab, currIndex: number, type: string, sortBy: string, paginationIndex: number): Observable<DraftHistoryData> {
     let year = tab.tabKey;
-    let itemsOnPage = 10;
+    let itemsOnPage = paginationIndex;
 
     var callURL;
     // if(year == null){
@@ -124,13 +123,14 @@ export class DraftHistoryService {
       this._scope = 'nfl';
     }
     if ( profileData.profileType == "team" ) {
-      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/999/1";
+      callURL = this._apiUrl + '/draftHistory/team/'+year+ "/"+profileData.profileId+"/"+paginationIndex+"/"+"1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
     else {
-      callURL = this._apiUrl + '/draftHistory/'+profileData.profileType+'/'+year+ "/999/1";
+      callURL = this._apiUrl + '/draftHistory/'+profileData.profileType+'/'+year+ "/"+paginationIndex+"/"+"1";
       //callURL = this._apiUrl + '/draftHistory/team/'+year+ "/1/5/1";
     }
+
     return this.model.get(callURL)
     .map(data => {
         if(type == 'module'){
@@ -140,7 +140,7 @@ export class DraftHistoryService {
           }
         }
 
-        var allCarouselItems = this.carDraftHistory(data.data, tab.errorMessage, type);
+        var allCarouselItems = this.carDraftHistory(data.data, tab.errorMessage, type, sortBy);
         var allDetailItems = this.detailedData(data.data, sortBy);
         var totalPages = allDetailItems ? Math.ceil(allDetailItems.length / itemsOnPage) : 0;
         var draftData = {
@@ -177,7 +177,7 @@ export class DraftHistoryService {
 
   //BELOW ARE TRANSFORMING FUNCTIONS to allow the modules to match their corresponding components
   //FOR THE PAGE
-  private carDraftHistory(data: Array<PlayerDraftData>, errorMessage: string, type){
+  private carDraftHistory(data: Array<PlayerDraftData>, errorMessage: string, type, sortBy){
     let self = this;
     var carouselArray = [];
     var dummyImg = "/app/public/no-image.svg";
@@ -227,13 +227,13 @@ export class DraftHistoryService {
         }
         var carouselItem = SliderCarousel.convertToCarouselItemType2(index, {
           isPageCarousel: false,
-          backgroundImage: VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(val.playerBackground),
+          backgroundImage: VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(val.playerBackground, VerticalGlobalFunctions._imgProfileMod),
           copyrightInfo: GlobalSettings.getCopyrightInfo(),
           profileNameLink: playerLinkText,
           description: ['<i class="fa fa-map-marker"></i> <span class="hometown">Hometown: </span>', location, '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ', collegeNickname],
           dataValue: ovPick + " Overall",
           dataLabel: "Draft Round " + dRound,
-          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot),
+          circleImageUrl: GlobalSettings.getImageUrl(val.playerHeadshot, GlobalSettings._imgLgLogo),
           circleImageRoute: playerRoute,
           rank: rank
         });
@@ -248,7 +248,12 @@ export class DraftHistoryService {
       });
     }
     // console.log('TRANSFORMED CAROUSEL', carouselArray);
-    return carouselArray;
+    if (sortBy != "1") {
+      return carouselArray.length > 0 ? carouselArray.reverse() : null;
+    }
+    else {
+      return carouselArray.length > 0 ? carouselArray : null;
+    }
   }
 
   private detailedData(data: Array<PlayerDraftData>, sortBy){
@@ -300,7 +305,7 @@ export class DraftHistoryService {
             {text:'<i class="fa fa-map-marker"></i><span class="hometown"> Hometown: </span>' + location + '<span class="list-college">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;College: ' + collegeNickname + '</span>'}
           ],
           'Draft Round '+dRound),
-        imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot), playerRoute, rank),
+        imageConfig: ListPageService.imageData("list", GlobalSettings.getImageUrl(val.playerHeadshot, GlobalSettings._imgProfileLogo), playerRoute, rank),
         hasCTA:true,
         ctaDesc: playerRoute ? 'Want more info about this player?' : 'This player is currently not active.',
         ctaBtn:'',

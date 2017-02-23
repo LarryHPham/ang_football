@@ -26,6 +26,7 @@ export class PickateamPageService {
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     this.scope = scope;
+
     let urlScope = scope == 'ncaaf' ? 'fbs' : 'nfl';
     if (geoLocation) {
       var newFullUrl = this._apiUrl+'/landingPage/'+urlScope+'/'+geoLocation; //TODO
@@ -58,7 +59,7 @@ export class PickateamPageService {
           val.imageData= {
             imageClass: "image-100",
             mainImage: {
-              imageUrl:  GlobalSettings.getImageUrl(val.logo_url),
+              imageUrl:  GlobalSettings.getImageUrl(val.logo_url, GlobalSettings._imgPickTeam),
               urlRouteArray: VerticalGlobalFunctions.formatTeamRoute(self.scope,teamName, val.id.toString()),
               hoverText: "<i class='fa fa-mail-forward home-team-image-fa'></i>",// style='font-size:30px;'
               imageClass: "border-3"

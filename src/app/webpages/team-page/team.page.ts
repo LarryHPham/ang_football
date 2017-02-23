@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -26,6 +27,7 @@ import { NewsService } from "../../services/news.service";
 import { TwitterService } from "../../services/twitter.service";
 import { SeoService } from "../../seo.service";
 import { PlayerStatsService } from "../../services/player-stats.service";
+import { DraftHistoryService } from '../../services/draft-history.service';
 
 //interfaces
 import { Division, Conference, SportPageParameters } from '../../global/global-interface';
@@ -41,6 +43,7 @@ import { dykModuleData } from "../../fe-core/modules/dyk/dyk.module";
 import { faqModuleData } from "../../fe-core/modules/faq/faq.module";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
 import { PlayerStatsModule, PlayerStatsModuleData } from '../../fe-core/modules/player-stats/player-stats.module';
+import { SliderCarouselInput } from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
 //Libraries
 declare var moment;
@@ -52,11 +55,15 @@ declare var Zone: any;
 })
 
 export class TeamPage implements OnInit {
+  public widgetPlace: string = "widgetForModule";
+
   private constructorControl:boolean = true;
   public partnerID: string;
   public scope: string;
-  public paramsub: any;
+  public storeSubscriptions: any = [];
+  public routeSubscriptions: any;
   public teamID: number;
+  public teamName: string;
   public pageParams:SportPageParameters;
   public dateParam:any;
   public storedPartnerParam: string;
@@ -96,6 +103,16 @@ export class TeamPage implements OnInit {
   private transactionModuleFooterParams: any;
   private dropdownKey1: string;
 
+  private draftHistoryData: any;
+  private draftHistoryActiveTab: string;
+  private draftHistoryFilter1: any = 1;
+  private draftHistoryModuleFooterParams: any;
+  private draftHistorySortOptions: Array<any> = [{key: '1', value: 'Ascending'}, {key: '2', value: 'Descending'}];
+  private draftHistoryCarouselData: Array<Array<SliderCarouselInput>>;
+  private draftHistoryDetailedDataArray: any;
+  private draftHistoryIsError: boolean = false;
+  private draftHistortyModuleFooterUrl: Array<any>;
+
   private comparisonModuleData: ComparisonModuleData;
 
   private imageData:Array<any>;
@@ -120,6 +137,7 @@ export class TeamPage implements OnInit {
   private batchLoadIndex: number = 1;
 
   private playerStatsData: PlayerStatsModuleData;
+  private isLoaded: boolean = false;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -131,6 +149,7 @@ export class TeamPage implements OnInit {
     private _standingsService:StandingsService,
     private _rosterService: RosterService,
     private _transactionsService: TransactionsService,
+    private _draftHistoryService: DraftHistoryService,
     private _comparisonService: ComparisonStatsService,
     private _imagesService: ImagesService,
     private _videoBatchService: VideoService,
@@ -140,15 +159,16 @@ export class TeamPage implements OnInit {
     private _newsService: NewsService,
     private _twitterService: TwitterService,
     private _seoService: SeoService,
-    private _playerStatsService: PlayerStatsService
+    private _playerStatsService: PlayerStatsService,
+    private _cdRef: ChangeDetectorRef
   ) {
-
-
-    this.paramsub = this.activateRoute.params.subscribe(
+    this.routeSubscriptions = this.activateRoute.params.subscribe(
       (param :any)=> {
+        this.resetSubscription();
         this.routeChangeResets();
-        this.imageConfig = this._dailyUpdateService.getImageConfig();
 
+        this.imageConfig = this._dailyUpdateService.getImageConfig();
+        this.teamName = param['teamName'];
         this.teamID = param['teamID'];
         this.partnerID = param['partnerID'];
         this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
@@ -156,7 +176,7 @@ export class TeamPage implements OnInit {
         var currentUnixDate = new Date().getTime();
         this.dateParam = {
           scope: 'team',//current profile page
-          teamId: this.teamID, // teamId if it exists
+          teamId: param['teamID'], // teamId if it exists
           date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
         } //this.dateParam
 
@@ -172,15 +192,40 @@ export class TeamPage implements OnInit {
 
   // This function contains values that need to be manually reset when navigatiing from team page to team page
   routeChangeResets() {
-    this.profileHeaderData = null;
-    this.boxScoresData = null
+    this.isLoaded = false;
+    this.standingsData = null;
+    this.rosterData = null;
+    this.playerStatsData = null;
+    this.transactionsData = null;
     this.batchLoadIndex = 1;
-    // window.scrollTo(0, 0);
   } //routeChangeResets
 
 
+  ngOnDestroy(){
+    this._seoService.removeApplicationJSON('page');
+    this._seoService.removeApplicationJSON('json');
+
+    this.routeChangeResets();
+    this.resetSubscription();
+    if(this.routeSubscriptions){
+      this.routeSubscriptions.unsubscribe();
+    }
+  } //ngOnDestroy
+
+  private resetSubscription(){
+    if(this.storeSubscriptions){
+      var numOfSubs = this.storeSubscriptions.length;
+
+      for( var i = 0; i < numOfSubs; i++ ){
+        if(this.storeSubscriptions[i]){
+          this.storeSubscriptions[i].unsubscribe();
+        }
+      }
+    }
+  }
+
   private setupProfileData(partnerID, scope, teamID?) {
-    this._profileService.getTeamProfile(this.teamID).subscribe(
+    this.storeSubscriptions.push(this._profileService.getTeamProfile(this.teamID).subscribe(
       data => {
         this.metaTags(data);
         this.pageParams = data.pageParams;
@@ -188,6 +233,7 @@ export class TeamPage implements OnInit {
         this.pageParams['scope'] = this.scope;
         this.pageParams['teamName'] = GlobalFunctions.toLowerKebab(this.pageParams['teamName']);
         this.pageParams['teamID'] = this.teamID;
+
         this.profileData = data;
         let headerData = data.headerData != null ? data.headerData : null;
 
@@ -201,64 +247,65 @@ export class TeamPage implements OnInit {
         data['scope'] = this.scope;
         this.profileHeaderData = this._profileService.convertToTeamProfileHeader(data);
         this.dailyUpdateModule(teamID);
+        this.getHeadlines();
+        this.getBoxScores(this.dateParam);
+        this.isLoaded = true;
 
-        setTimeout(() => { // defer loading everything below the fold
-          //---Batch 2---//
-          this.getHeadlines();
-          this.getBoxScores(this.dateParam);
+        //---Batch 2---//
+        this.eventStatus = 'pregame';
+        this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+        this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
+        this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+        this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
-          //---Batch 3---//
-          this.eventStatus = 'pregame';
-          this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-          this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
-          this.rosterData = this._rosterService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
-          this.playerStatsData = this._playerStatsService.loadAllTabsForModule(this.storedPartnerParam, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
+        //--Batch 3--//
+        this.activeTransactionsTab = "Transactions"; // default tab is Transactions
+        this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
+        this.draftHistoryData = this._draftHistoryService.getDraftHistoryTabs(this.profileData);
+        this.getDraftHistoryData();
 
-          //--Batch 4--//
-          this.activeTransactionsTab = "Transactions"; // default tab is Transactions
-          this.transactionsData = this._transactionsService.loadAllTabsForModule(this.profileName, this.activeTransactionsTab, this.pageParams.teamId);
+        //--Batch 4--//
+        this.setupComparisonData();
+        this.getImages(this.imageData);
+        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+        this.getDykService();
 
-          //--Batch 5--//
-          this.setupComparisonData();
-          this.getImages(this.imageData);
-          this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
-          this.getDykService();
-
-          //--Batch 6--//
-          this.getFaqService();
-          this.setupListOfListsModule();
-          // this.getNewsService();
-          this.getTwitterService();
-        }, 2000);
+        //--Batch 5--//
+        this.getFaqService();
+        this.setupListOfListsModule();
+        // this.getNewsService();
+        this.getTwitterService();
       }
-    )
+    ))
   } //setupProfileData
 
-
-
   private metaTags(data) {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     // //create meta description that is below 160 characters otherwise will be truncated
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.teamMarket + ' ' + header.teamName;
-    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo) : GlobalSettings.getImageUrl(header.leagueLogo);
+    let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
     let recordArr = record.split('-');
       record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
     }
-    let color = header.color != null ? header.color.split(',')[0]:'#2d3e50';
+    let color = header.teamColorsHex != null ? header.teamColorsHex.split(',')[0]:'#2d3e50';
     //grab domain for json schema
     let domainSite;
     if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
-      domainSite = Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }else{
-      domainSite = Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
 
     title = title  + ' ' + record;
+
     this._seoService.setTitle(title);
+    this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
@@ -308,49 +355,41 @@ export class TeamPage implements OnInit {
     this._seoService.setApplicationJSON(jsonSchema, 'json');
   } //metaTags
 
-  ngOnDestroy(){
-    // this._seoService.removeApplicationJSON('page');
-    // this._seoService.removeApplicationJSON('json');
-  } //ngOnDestroy
-
-
-
   private dailyUpdateModule(teamId: number) {
-    this._dailyUpdateService.getTeamDailyUpdate(teamId)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
+    this.storeSubscriptions.push(this._dailyUpdateService.getTeamDailyUpdate(teamId)
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
       },
       err => {
         this.dailyUpdateData = this._dailyUpdateService.getErrorData();
         console.log("Error getting daily update data", err);
-    });
+    }));
   } //dailyUpdateModule
 
 
 
   private getHeadlines(){
-    this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId, false)
+    this.storeSubscriptions.push(this._headlineDataService.getAiHeadlineData(this.scope, this.pageParams.teamId, false)
       .subscribe(
         HeadlineData => {
           this.headlineData = HeadlineData;
-        },
-        err => {
-          console.log("Error loading AI headline data for " + this.pageParams.teamId, err);
         }
-    )
+    ))
   } //getHeadlines
 
-
-
-  private getBoxScores(dateParams?) {
-     if ( dateParams != null ) {
+  private getBoxScores(dateParams) {
+     let newDate;
+     if ( dateParams != null && (newDate == null || dateParams.date != newDate.date) ) {
+       newDate = dateParams;
        this.dateParam = dateParams;
+       this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
+         this.boxScoresData = boxScoresData;
+         this.currentBoxScores = currentBoxScores;
+         this.dateParam = newDate;
+         this._cdRef.detectChanges();
+       }))
      }
-     this._boxScores.getBoxScores(this.boxScoresData, this.profileName, this.dateParam, (boxScoresData, currentBoxScores) => {
-       this.boxScoresData = boxScoresData;
-       this.currentBoxScores = currentBoxScores;
-     })
   } //getBoxScores
 
 
@@ -386,7 +425,7 @@ export class TeamPage implements OnInit {
       if(status == 'pregame'){
         this.selectedFilter1 = null;
       }
-      this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+      this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
           this.scheduleFilter1=null;
         }else{
@@ -404,24 +443,20 @@ export class TeamPage implements OnInit {
           tab : status == 'pregame' ? 'pregame' : 'postgame',
           pageNum: 1,
         }
-      }, year) //year if null will return current year and if no data is returned then subract 1 year and try again
+      }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
 
-
-
     private standingsTabSelected(tabData: Array<any>) {
-        //only show 5 rows in the module
-        this.pageParams.scope = this.scope;
-        this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5);
+      //only show 5 rows in the module
+      this.pageParams.scope = this.scope;
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5));
     } //standingsTabSelected
 
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
-      this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
-      }, 5);
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      }, 5));
     } //standingsFilterSelected
-
-
 
     private transactionsTab(tab) {
       this.transactionsActiveTab = tab;
@@ -438,88 +473,122 @@ export class TeamPage implements OnInit {
       if(this.dropdownKey1 == null){
         this.dropdownKey1 = this.seasonBase;
       }
-      this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
+      this.storeSubscriptions.push(this._transactionsService.getTransactionsService(this.transactionsActiveTab, this.pageParams.teamId, 'module', this.dropdownKey1)
         .subscribe(
           transactionsData => {
             if ( this.transactionFilter1 == undefined ) {
               this.transactionFilter1 = transactionsData.yearArray;
             }
-            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.pageParams['teamName'], this.pageParams['teamID'], 20, 1];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.dropdownKey1, this.pageParams['teamName'], this.pageParams['teamID'], 20];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {
             console.log('Error: transactionsData API: ', err);
           }
-      );
-
-      // pass transaction page route params to module filter, so set module footer route
-      this.transactionModuleFooterParams = [
-        this.storedPartnerParam,
-        this.scope,
-        'league'
-      ]
+      ));
     } //private getTransactionsData
 
 
 
+    private draftHistoryTab(tab) {
+        this.draftHistoryActiveTab = tab;
+        this.getDraftHistoryData();
+    }
+    private draftHistoryFilterDropdown(filter) {
+        this.draftHistoryFilter1 = filter;
+        this.getDraftHistoryData();
+    }
+    private getDraftHistoryData() {
+        this.draftHistoryActiveTab = this.draftHistoryActiveTab ? this.draftHistoryActiveTab : this.seasonBase;
+        var matchingTabs = this.draftHistoryActiveTab ?
+                        this.draftHistoryData.filter(tab => tab.tabKey == this.draftHistoryActiveTab) :
+                        null;
+        if ( matchingTabs ) {
+            var activeTab = matchingTabs[0];
+            var activeFilter = this.draftHistoryFilter1 ? this.draftHistoryFilter1 : 1;
+            this.storeSubscriptions.push(
+                this._draftHistoryService.getDraftHistoryService(this.profileData, activeTab, 0, 'page', activeFilter, 2)
+                    .subscribe(
+                        draftHistoryData => {
+                            activeTab.isLoaded = true;
+                            activeTab.detailedDataArray = draftHistoryData.detailedDataArray;
+                            activeTab.carouselDataArray = draftHistoryData.carouselDataArray;
+                            this.draftHistoryCarouselData = draftHistoryData.carouselDataArray
+                        },
+                        err => {
+                          activeTab.isLoaded = true;
+                          this.draftHistoryIsError = true;
+                          console.log('Error: draftData API: ', err);
+                        }
+                    )
+            )
+            this.draftHistortyModuleFooterUrl = [this.storedPartnerParam, this.scope, 'draft-history', activeTab.tabKey, this.teamName, this.teamID, activeFilter == 1 ? 'asc' : 'desc'];
+        }
+    } //getDraftHistoryData
+
+
+
     private setupComparisonData() {
-      this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
+      this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
         data => {
           this.comparisonModuleData = data;
         },
         err => {
           console.log("Error getting comparison data for "+ this.pageParams.teamId, err);
-        });
+        }));
     } //setupComparisonData
 
 
 
     private getImages(imageData) {
-      this._imagesService.getImages(this.profileType, this.pageParams.teamId)
+      this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.pageParams.teamId)
       .subscribe(data => {
         return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
       },
       err => {
         console.log("Error getting image data" + err);
-      });
+      }));
     } //getImages
 
 
-
     private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
         .subscribe(data => {
-          this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
-          this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+          if(data){
+            this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
+            this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+          }else{
+            console.warn('Insufficient number of videos available');
+          }
         },
         err => {
           console.log("Error getting video data");
         }
-      );
+      ));
     } //getTeamVideoBatch
 
 
 
     private getDykService() {
-      this._dykService.getDykService(this.profileType, this.pageParams.teamId)
+      this.storeSubscriptions.push(this._dykService.getDykService(this.profileType, this.pageParams.teamId)
         .subscribe(data => {
           this.dykData = data;
         },
         err => {
           console.log("Error getting did you know data");
-      });
+      }));
     } //getDykService
 
 
 
     private getFaqService() {
-       this._faqService.getFaqService(this.profileType, this.pageParams.teamId)
+       this.storeSubscriptions.push(this._faqService.getFaqService(this.profileType, this.pageParams.teamId)
          .subscribe(data => {
            this.faqData = data;
          },
          err => {
            console.log("Error getting faq data for team", err);
-       });
+       }));
     } //getFaqService
 
 
@@ -531,7 +600,7 @@ export class TeamPage implements OnInit {
         pageNum : 1,
         scope : this.scope
       }
-      this._lolService.getListOfListsService(params, "team", "module")
+      this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "team", "module", 1)
         .subscribe(
           listOfListsData => {
             this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
@@ -539,7 +608,7 @@ export class TeamPage implements OnInit {
           err => {
             console.log('Error: listOfListsData API: ', err);
           }
-      );
+      ));
     } //setupListOfListsModule
 
 
@@ -551,50 +620,51 @@ export class TeamPage implements OnInit {
         id : this.pageParams.teamId
       }
       let scope = GlobalSettings.getScope(this.scope);
-      this._newsService.getNewsService(scope, params, "team", "module")
+      this.storeSubscriptions.push(this._newsService.getNewsService(scope, params, "team", "module")
         .subscribe(data => {
           this.newsDataArray = data.news;
         },
         err => {
           console.log("Error getting news data");
-      });
+      }));
     } //getNewsService
 
 
 
     private playerStatsTabSelected(tabData: Array<any>) {
          //only show 4 rows in the module
+         if(tabData[1] == null){
+           tabData[1] = this.seasonBase;
+         }
         this._playerStatsService.getStatsTabData(tabData, this.pageParams, data => {}, 5);
         var seasonArray = tabData[0];
         var seasonIds = seasonArray.seasonIds;
         var seasonTab = seasonIds.find(function (e) {
-            if( e.value === tabData[1]){
-                return true;
-            }
-
+          if( e.value === tabData[1]){
+            return true;
+          }
         });
         if (tabData[0].tabActive=="Special"){
             this.ptabName="Kicking";
             if(seasonTab){
-
-            }else{
-                this.ptabName=tabData[1];
+            } else {
+              this.ptabName=tabData[1];
             }
-        }else{
-            this.ptabName=tabData[0].tabActive;
+        } else {
+          this.ptabName=tabData[0].tabActive;
         };
     }
 
 
 
     private getTwitterService() {
-      this._twitterService.getTwitterService(this.profileType, this.pageParams.teamId)
+      this.storeSubscriptions.push(this._twitterService.getTwitterService(this.profileType, this.pageParams.teamId)
         .subscribe(data => {
           this.twitterData = data;
         },
         err => {
           console.log("Error getting twitter data");
-      });
+      }));
     } //getTwitterService
 
 

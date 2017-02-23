@@ -5,22 +5,16 @@ import {GlobalFunctions} from '../global/global-functions';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 
-
-
-//libraries
-declare var moment;
-
-
-
 @Injectable()
 export class HamburgerDeliveryService {
   static createMenu(division?, partner?){ //TODO
     var params;
     var divisionUrl;
-    let route = VerticalGlobalFunctions.getWhiteLabel();
 
     if (division != null) {
       divisionUrl = division.toLowerCase();
+    }else{
+      divisionUrl = 'home';
     }
     if (partner == null || partner == false || GlobalSettings.getHomeInfo().isSubdomainPartner){
       params = '/' + divisionUrl;
@@ -28,11 +22,10 @@ export class HamburgerDeliveryService {
     else {
       params = '/' + partner + '/' + divisionUrl;
     }
-
     var menuData = [
       {
         menuTitle: "Home",
-        url: [route, 'home']
+        url: [params]
       },
       {
         menuTitle: division + " Standings",

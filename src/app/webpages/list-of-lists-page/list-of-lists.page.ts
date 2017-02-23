@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ChangeDetectorRef } from '@angular/core';
 
 //globals
 import { GlobalSettings } from "../../global/global-settings";
@@ -26,14 +27,16 @@ declare var moment:any;
     templateUrl: './list-of-lists.page.html'
 })
 
-export class ListOfListsPage implements OnInit {
+export class ListOfListsPage {
   public partnerID: string;
   public scope: string;
   public pageParams: any;
+  private batchLoadIndex: number = 1;
+  private showLoading = true;
 
   errorData             : string;
-  detailedDataArray     : Array<IListOfListsItem>; //variable that is just a list of the detailed DataArray
-  carouselDataArray     : Array<SliderCarouselInput>;
+  detailedDataArray     : Array<IListOfListsItem> = []; //variable that is just a list of the detailed DataArray
+  carouselDataArray     : Array<SliderCarouselInput> = [];
   profileName           : string;
   isError               : boolean = false;
   pageType              : string; // [player,team]
@@ -41,7 +44,7 @@ export class ListOfListsPage implements OnInit {
   limit                 : string; // pagination limit
   pageNum               : string; // page of pages to show
 
-  paginationSize        : number = 10;
+  paginationSize        : number = 20;
   index                 : number = 0;
   paginationParameters  : PaginationParameters;
   titleData             : TitleInputData;
@@ -51,16 +54,16 @@ export class ListOfListsPage implements OnInit {
         private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
         private _title: Title,
-        private _seoService: SeoService
+        private _seoService: SeoService,
+        private _cdRef: ChangeDetectorRef
     ) {
       // check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
       this.activatedRoute.params.subscribe(
         (param :any)=> {
           //if the activated route changes then reset all important variables
-          this.paginationParameters = null;
-          this.detailedDataArray = null;
-          this.carouselDataArray = null;
+          this.detailedDataArray = [];
+          this.carouselDataArray = [];
 
           this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
           this.partnerID = param['partnerID'];
@@ -71,75 +74,78 @@ export class ListOfListsPage implements OnInit {
             this.pageParams.target = "league";
             this._profileService.getLeagueProfile()
             .subscribe(data => {
-              this.getListOfListsPage(this.pageParams, GlobalSettings.getImageUrl(data.headerData.leagueLogo));
+              this.getListOfListsPage(this.pageParams, this.batchLoadIndex, GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgProfileLogo));
             }, err => {
+              this.isError = true;
               console.log("Error loading profile");
             });
           } else{
-            this.getListOfListsPage(this.pageParams);
+            this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
           }
         }
       )
     } //constructor
 
-
-
-    getListOfListsPage(urlParams, logoUrl?: string) {
-        this.listService.getListOfListsService(urlParams, urlParams.target, "page")
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+    getListOfListsPage(urlParams, pageNumber, logoUrl?: string) {
+      let self = this;
+        this.showLoading = true;
+        this.listService.getListOfListsService(urlParams, urlParams.target, "page", pageNumber)
+          .finally(() => {
+            GlobalSettings.setPreboot();
+            this.showLoading = false;
+          } ) // call preboot after last piece of data is returned on page
           .subscribe(
             list => {
-                if(list.listData.length == 0){//makes sure it only runs once
-                    this.detailedDataArray = null;
-                }else{
-                    this.detailedDataArray = list.listData;
+              if(list){
+                if(list.listData.length != 0){
+                  list.listData.forEach(function(val, i){
+                    self.detailedDataArray.push(val);
+                  });
+                  list.carData.forEach(function(val, i){
+                    self.carouselDataArray.push(val);
+                  });
                 }
-                this.setPaginationParams(list.pagination);
-                this.carouselDataArray = list.carData;
-
-
+                this._cdRef.detectChanges();
+                
                 var profileName = "League";
                 var profileRoute = ['/' + urlParams.scope, 'league'];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
-
 
                 var listTargetData;
 
                 if (urlParams.target != 'league') {
                   listTargetData = list.targetData[0];
-                }
-                else {
+                } else {
                   listTargetData = list.targetData;
                 }
 
                 switch ( urlParams.target ) {
-                    case "player":
-                        profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
-                        profileRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, listTargetData.teamName, profileName, listTargetData.playerId);
-                        profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl);
-                        break;
+                  case "player":
+                  profileName = listTargetData.playerFirstName + " " + listTargetData.playerLastName;
+                  profileRoute = VerticalGlobalFunctions.formatPlayerRoute(this.scope, listTargetData.teamName, profileName, listTargetData.playerId);
+                  profileImage = GlobalSettings.getImageUrl(listTargetData.playerHeadshotUrl, GlobalSettings._imgLgLogo);
+                  break;
 
-                    case "team":
-                        profileName = listTargetData.teamName;
-                        profileRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, listTargetData.teamName, listTargetData.teamId);
-                        profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo);
-                        break;
+                  case "team":
+                  profileName = listTargetData.teamName;
+                  profileRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, listTargetData.teamName, listTargetData.teamId);
+                  profileImage = GlobalSettings.getImageUrl(listTargetData.teamLogo, GlobalSettings._imgLgLogo);
+                  break;
 
-                    default: break;
+                  default: break;
                 }
 
-
                 this.profileName = profileName
-
                 this.titleData = {
-                    imageURL : profileImage,
-                    imageRoute: profileRoute,
-                    text1 : 'Last Updated: ' + GlobalFunctions.sntGlobalDateFormatting(list.lastUpdated['lastUpdated'],'defaultDate'),
-                    text2 : ' United States',
-                    text3 : 'Top lists - ' + this.profileName,
-                    icon: 'fa fa-map-marker'
+                  imageURL : profileImage,
+                  imageRoute: profileRoute,
+                  text1 : 'Last Updated: ' + GlobalFunctions.sntGlobalDateFormatting(list.lastUpdated,'defaultDate'),
+                  text2 : ' United States',
+                  text3 : 'Top lists - ' + this.profileName,
+                  icon: 'fa fa-map-marker'
                 };
                 this.metaTags(this.titleData);
+              }
 
             },
             err => {
@@ -149,13 +155,9 @@ export class ListOfListsPage implements OnInit {
           );
     } //getListOfListsPage
 
-
-
-    ngOnInit(){}
-
-
-
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let text3 = data.text3 != null ? data.text3: '';
       let text4 = data.text4 != null ? '. '+data.text4: '';
@@ -178,39 +180,14 @@ export class ListOfListsPage implements OnInit {
       this._seoService.setOgImage(imageUrl);
     } //metaTags
 
-
-
-    //PAGINATION
-    //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
-    setPaginationParams(input) {
-        var params = {
-          target: this.pageParams.target,
-          targetId: this.pageParams.targetId,
-          perPageCount: this.pageParams.perPageCount,
-          pageNumber: this.pageParams.pageNumber,
-        };
-
-        if(params['targetId'] == null) {
-          params['targetId'] = 'null';
-        }
-
-        var navigationPage;
-        if ( !this.detailedDataArray ) {
-            navigationPage = "Error-page";
-        }
-        else if ( this.pageParams['scope'] ) {
-            navigationPage = '/'+this.pageParams['scope']+'/list-of-lists';
-        }
-        this.paginationParameters = {
-            index: params['pageNumber'] != null ? Number(params['pageNumber']) : null,
-            max: Number(input.listPageCount),
-            paginationType: 'page',
-            navigationPage: navigationPage,
-            navigationParams: params,
-            indexKey: 'pageNumber'
-        };
-    } //setPaginationParams
-
-
+    // function to lazy load page sections
+    private onScroll(event) {
+      let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+      if( num != this.batchLoadIndex && !this.showLoading){
+        this.batchLoadIndex = num;
+        this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
+      }
+      return;
+    }
 
 }

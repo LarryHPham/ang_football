@@ -30,7 +30,6 @@ export class DeepDivePage {
   partnerData: any;
   profileName: string;
   geoLocation: string;
-  isPartner: string = "";
 
   sideScrollIcon: string;
   sideScrollData: any;
@@ -50,7 +49,6 @@ export class DeepDivePage {
   firstStackTop: any;
   firstStackRow: any;
 
-  private isPartnerZone: boolean = false;
   private _routeSubscription: any;
 
   public prebootHasRun: boolean = false;
@@ -141,6 +139,8 @@ export class DeepDivePage {
 
 
   private metaTags() {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
     this._seoService.setTitle('Deep Dive');
@@ -151,7 +151,7 @@ export class DeepDivePage {
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
-    this._seoService.setOgImage('./app/public/mainLogo.png');
+    this._seoService.setOgImage('//images.synapsys.us/01/logos/football/2017/01/logos_football_01.svg');
   } //metaTags
 
 
@@ -162,7 +162,10 @@ export class DeepDivePage {
         title: 'Loyal to the NFL?',
         subtext: 'Stay up to date with everything NFL.',
         scope: 'NFL',
-        image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl,
+        // This is image has been hardcoded to prevent from the server side rendering from selecting a different random image
+        // from the client side rendering. It allows for a smoother transition between the two views
+        image: 'http://images.synapsys.us/02/nfl/stock/2016/11/image-carousel-nfl-05.jpg',
+        // image: VerticalGlobalFunctions.getRandomToggleCarouselImage().nfl, // random selection
         buttonClass: 'carousel_toggle-button',
         buttonText: 'Visit the NFL Section',
         buttonScope: 'nfl'
@@ -171,7 +174,10 @@ export class DeepDivePage {
         title: 'Loyal to the NCAA?',
         subtext: 'Stay up to date with everything NCAA.',
         scope: 'NCAA',
-        image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf,
+        // This is image has been hardcoded to prevent from the server side rendering from selecting a different random image
+        // from the client side rendering. It allows for a smoother transition between the two views
+        image: '//images.synapsys.us/02/ncaaf/stock/2016/11/image-carousel-ncaaf-01.jpg',
+        // image: VerticalGlobalFunctions.getRandomToggleCarouselImage().ncaaf, // random selection
         buttonClass: 'carousel_toggle-button',
         buttonText: 'Visit the College Section',
         buttonScope: 'ncaaf'
@@ -229,9 +235,7 @@ export class DeepDivePage {
   private getDeepDiveVideoBatch() {
     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
       data => {
-        if (data.data != null) {
-          this.videoData = this._deepDiveData.transformVideoStack(data.data);
-        }
+        this.videoData = data.data != null ? this._deepDiveData.transformVideoStack(data.data) : null;
       }
     )
   }
@@ -245,13 +249,13 @@ export class DeepDivePage {
   getFirstArticleStackData() {
     this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
       .subscribe(data => {
-        this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]]);
+        this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]], GlobalSettings._deepDiveMd);
       },
       err => {
         console.log("Error getting first article stack data");
       });
     this._deepDiveData.getDeepDiveAiBatchService(this.scope, 'postgame-report', 1, this.callLimit, this.geoLocation)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(data => {
         this.firstStackRow = this._deepDiveData.transformToAiArticleRow(data);
       },

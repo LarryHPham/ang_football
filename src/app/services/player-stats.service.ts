@@ -1,4 +1,5 @@
 import {Injectable, Input, OnDestroy} from '@angular/core';
+import { isBrowser } from 'angular2-universal';
 import {Observable} from 'rxjs/Rx';
 import {SportPageParameters} from '../global/global-interface';
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
@@ -8,13 +9,9 @@ import {PlayerStatsData, SportsPlayerStatsTableData, MLBPlayerStatsTableModel} f
 import { ModelService } from '../global/shared/model/model.service';
 
 
-
-
 @Injectable()
 export class PlayerStatsService{
-
     tabName:string;
-    seasonId:string = new Date().getFullYear().toString();
     public GlossaryData;
     private _apiUrl = GlobalSettings.getApiUrl();
     private _allTabs=[ "Passing", "Rushing", "Receiving", "Defense", "Special" ];
@@ -54,10 +51,8 @@ export class PlayerStatsService{
             return;
         }
 
-
         var standingsTab: SportsPlayerStatsTableData = tabData[0];
         var seasonArray=standingsTab.seasonIds;
-        //console.log(seasonArray);
 
         var columnTabType;
         var seasonTabClicked = seasonArray.find(function (e) {
@@ -66,40 +61,29 @@ export class PlayerStatsService{
         }
 
         });
+        var seasonId = seasonArray[0].key != null ?
+                     seasonArray[0].key :
+                     new Date().getFullYear().toString();
 
-        if(seasonTabClicked){
-               this.seasonId = tabData[1];
-
-
-            if(standingsTab.tabActive=="Special"){
-                //console.log(this.tabName);
-                this.tabName=this.tabName;
-
-            }else {
-                this.tabName = standingsTab.tabTitle.toLowerCase();
-
-                this.GlossaryData=standingsTab.glossary;
-
-            }
-
-        }else{
-             columnTabType = tabData[1];
-
-
-            if(standingsTab.tabActive=="Special"){
-
-
-                this.tabName=columnTabType.toLowerCase();
-
-            }else {
-                this.tabName = standingsTab.tabTitle.toLowerCase();
-
-                this.GlossaryData=standingsTab.glossary;
-
-            }
+        if (seasonTabClicked) {
+            seasonId = tabData[1];
+        if (standingsTab.tabActive=="Special"){
+            this.tabName = 'kicking';
+        } else {
+            this.tabName = standingsTab.tabTitle.toLowerCase();
+            this.GlossaryData=standingsTab.glossary;
         }
-
-
+      }
+      else {
+        columnTabType = tabData[1];
+        if (standingsTab.tabActive == "Special") {
+          columnTabType = tabData[1] ? tabData[1] : 'kicking';
+          this.tabName = columnTabType.toLowerCase();
+        } else {
+          this.tabName = standingsTab.tabTitle.toLowerCase();
+          this.GlossaryData = standingsTab.glossary;
+        }
+      }
 
         /*if ( !seasonId && standingsTab.seasonIds.length > 0 ) {
             seasonId = standingsTab.seasonIds[0].key;
@@ -114,14 +98,12 @@ export class PlayerStatsService{
             }
         }*/
 
-
         standingsTab.isLoaded = false;
         standingsTab.hasError = false;
         standingsTab.tableData = null;
         // standingsTab.tabActive="Passing";
 
-
-        let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ this.seasonId+ "/" +pageParams.teamId +'/'+ this.tabName ;
+        let url = GlobalSettings.getApiUrl() + "/teamPlayerStats/team/"+ seasonId + "/" +pageParams.teamId +'/'+ this.tabName ;
         this.model.get(url)
             .map(data => this.setupTableData(standingsTab, pageParams, data.data, maxRows))
             .subscribe(data => {
@@ -138,16 +120,15 @@ export class PlayerStatsService{
                     console.log("Error getting player stats data");
                 });
 
-
-
     }
+
 
 
     initializeAllTabs(teamName: string, seasonBase: string, isActive?:boolean, isTeamProfilePage?: boolean): Array<SportsPlayerStatsTableData> {
+      return this._allTabs.map(tabActive => new SportsPlayerStatsTableData(teamName, tabActive, tabActive=="Passing"?true:false , seasonBase, isTeamProfilePage));
+    } //initializeAllTabs
 
-        return this._allTabs.map(tabActive => new SportsPlayerStatsTableData(teamName, tabActive, tabActive=="Passing"?true:false , seasonBase, isTeamProfilePage));
 
-    }
 
     private setupTableData(standingsTab: SportsPlayerStatsTableData, pageParams: SportPageParameters, data: Array<PlayerStatsData>, maxRows?: number): MLBPlayerStatsTableModel {
         let table = new MLBPlayerStatsTableModel(data, standingsTab.tabActive);
@@ -161,10 +142,10 @@ export class PlayerStatsService{
         //Set display values
         table.rows.forEach((value, index) => {
             value.displayDate = GlobalFunctions.formatUpdatedDate(value.lastUpdated, false);
-            value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot);
-            value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo);
+            value.fullPlayerImageUrl = GlobalSettings.getImageUrl(value.playerHeadshot, GlobalSettings._imgProfileLogo);
+            value.fullTeamImageUrl = GlobalSettings.getImageUrl(value.teamLogo, 100);
             if ( value.backgroundImage ) {
-                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(value.backgroundImage);
+                value.fullBackgroundImageUrl = VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(value.backgroundImage, VerticalGlobalFunctions._imgProfileMod);
             }
 
 

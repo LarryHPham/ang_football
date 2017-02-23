@@ -137,10 +137,10 @@ export class SchedulesService {
           {display: 'Previous Games', data:'postgame', disclaimer:'Games are displayed by most recent.', season:displayYear, tabData: new ScheduleTabData(this.formatGroupName(year,'postgame'), !eventTab)}
         ];
         scheduleData = {
-          data:tableData,
-          tabs:tabData,
+          data: tableData ? tableData : null,
+          tabs: tabData ? tabData : null,
           carData: this.setupCarouselData(gamesData, tableData[0], limit),
-          pageInfo:{
+          pageInfo: {
             totalPages: data.data != null ? data.data.info.pages:0,
             totalResults: data.data != null ? data.data.info.total:0,
           },
@@ -148,9 +148,11 @@ export class SchedulesService {
           weeks: data.data.info.weeks.length > 0 ? this.formatWeekDropdown(data.data.info.weeks):null
         }
         callback(scheduleData);
-      },
+    },
     err => callback(null))
-  }
+  } //getScheduleTable
+
+
 
   formatYearDropdown(data){
     let yearArray = [];
@@ -233,7 +235,7 @@ export class SchedulesService {
           reportText = 'PRE GAME REPORT'
         }
       }else{
-        if(val.eventStatus = 'pregame'){
+        if(val.eventStatus == 'pregame'){
           reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
           reportText = 'PRE GAME REPORT'
         }else if (val.eventStatus == 'postgame'){
@@ -255,8 +257,8 @@ export class SchedulesService {
       newData = {
         eos: false,
         date: date,
-        awayImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team2Logo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id)),
-        homeImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team1Logo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id)),
+        awayImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team2Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id)),
+        homeImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team1Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id)),
         awayTeamName: scope =='fbs' ? val.team2Abbreviation: team2FullName.replace(val.team2Market+" ",''),
         homeTeamName: scope =='fbs' ? val.team1Abbreviation: team1FullName.replace(val.team1Market+" ",''),
         awayLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id),

@@ -84,7 +84,6 @@ export class SearchPageModule implements OnChanges {
 
     newIndex(index) {
         this.pageNumber = index;
-        window.scrollTo(0, 0);
         this.getShowResults(this.searchPageInput);
     }
 
@@ -112,6 +111,7 @@ export class SearchPageModule implements OnChanges {
 
     tabSelected(event) {
         this.pageNumber = 1;
+
         this.searchPageInput.tabData.forEach(function(val, index) {
             if (val.tabName == event) {//Optimize
                 val.isTabDefault = true;

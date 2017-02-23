@@ -29,6 +29,7 @@ declare var moment;
 
 export class ArticlePages implements OnInit {
   public params;
+  public trendingContent:Array<any>;
   public trendingData:any;
   public isArticle:boolean = false;
   article:Article;
@@ -47,12 +48,10 @@ export class ArticlePages implements OnInit {
   isFantasyReport:boolean = false;
   isTrendingMax:boolean = false;
   showLoading:boolean = true;
-  trendingLength:number;
   eventType:string;
   eventID:string;
   date:string;
   partnerId:string;
-  rawUrl:string;
   title:string;
   type:string;
   scope:string = null;
@@ -60,6 +59,7 @@ export class ArticlePages implements OnInit {
   geoLocation:string;
   iframeUrl:any;
   batch:number = 1;
+  isBrowser:any;
 
   constructor(private _activateRoute:ActivatedRoute,
               private _router:Router,
@@ -70,21 +70,14 @@ export class ArticlePages implements OnInit {
               private _geoLocation:GeoLocation) {
     this.subRec = this._activateRoute.params.subscribe(
       (params:any) => {
-        window.scrollTo(0, 0);
-        this.articleData = null;
-        this.trendingData = null;
-        this.trendingLength = 10;
-        this.isTrendingMax = false;
+        this.routeChangeResets();
         this.scope = params.scope == "nfl" ? "nfl" : "ncaa";
         if (params.partnerID != null) {
           this.partnerId = params.partnerID;
         }
-        this.params = this._activateRoute.params.subscribe(
-          (param:any)=> {
-            this.eventID = param['eventID'];
-            this.eventType = param['eventType'];
-          }
-        );
+        this.eventID = params['eventID'];
+        this.eventType = params['eventType'];
+
         if (this.eventType == "story" || this.eventType == "video") {
           this.isArticle = false;
           this.eventType == "story" ? this.getDeepDiveArticle(this.eventID) : this.getDeepDiveVideo(this.eventID);
@@ -98,17 +91,24 @@ export class ArticlePages implements OnInit {
           if (this.eventType == "articleType=player-fantasy") {
             this.isFantasyReport = true;
           }
-          this.getArticles();
+          this.getAiArticles();
         }
         this.checkPartner = GlobalSettings.getHomeInfo().isPartner;
-        this.rawUrl = window.location.href;
       }
     );
   }
 
-  getArticles() {
+  routeChangeResets() {
+    this.articleData = null;
+    this.trendingData = null;
+    this.isTrendingMax = false;
+    this.isFantasyReport = false;
+    this.trendingContent = [];
+  } //routeChangeResets
+
+  getAiArticles() {
     this._articleDataService.getArticle(this.eventID, this.eventType, this.partnerId, this.scope, this.isFantasyReport, this.type)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
       .subscribe(Article => {
           try {
             this.articleData = Article;
@@ -118,7 +118,9 @@ export class ArticlePages implements OnInit {
             }
             this.isTrendingMax = false;
             this.getTrendingArticles(this.eventID);
+            this.metaTags(Article);
           } catch (e) {
+            console.log('Error getAiArticles Function', e);
             this.error = true;
             var self = this;
             setTimeout(function () {
@@ -139,7 +141,7 @@ export class ArticlePages implements OnInit {
             self._router.navigateByUrl('/home');
           }, 5000);
         }
-      );
+      )
   }
 
   getRecommendedArticles(eventId) {
@@ -160,16 +162,17 @@ export class ArticlePages implements OnInit {
   }
 
   private getTrendingArticles(currentArticleId) {
-    var getData = this.isArticle ? this._articleDataService.getAiTrendingData(this.trendingLength, this.scope) :
-      this._deepDiveService.getDeepDiveBatchService(this.scope, this.trendingLength, 1, this.geoLocation);
-    this.trendingArticles = getData.subscribe(
-      data => {
+    var getData = this.isArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) :
+      this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
+    this.trendingArticles = getData
+      .subscribe(data => {
         if (!this.hasRun) {
+          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['data']) : this.trendingContent.concat(data);
           this.hasRun = true;
-          this.trendingData = this.isArticle ? this._articleDataService.transformTrending(data['data'], currentArticleId, this.scope, true) :
-            this._articleDataService.transformTrending(data, currentArticleId, this.scope, false);
+          this.trendingData = this.isArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
+            this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
           if ((data.article_count % 10 == 0 || data.length % 10 == 0) && this.trendingData) {
-            this.trendingLength = this.trendingLength + 10;
+            this.batch = this.batch + 1;
           } else {
             this.isTrendingMax = true;
             this.showLoading = false;
@@ -179,18 +182,17 @@ export class ArticlePages implements OnInit {
   }
 
   private trendingScroll(event) {
-    if (!this.isTrendingMax && isBrowser) {
-      this.hasRun = false;
+    if (!this.isTrendingMax) {
       if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
+        this.hasRun = false;
         this.showLoading = true;
-        this.batch = this.batch + 1;
         this.getTrendingArticles(this.eventID);
       }
     }
   }
 
   ngOnInit() {
-    if(isBrowser){
+    if (isBrowser) {
       //This has to be resize to trigger the takeover update
       try {
         window.dispatchEvent(new Event('resize'));
@@ -204,7 +206,7 @@ export class ArticlePages implements OnInit {
   }
 
   ngAfterViewInit() {
-    if(isBrowser){
+    if (isBrowser) {
       // to run the resize event on load
       try {
         window.dispatchEvent(new Event('load'));
@@ -218,51 +220,75 @@ export class ArticlePages implements OnInit {
   }
 
   private getDeepDiveArticle(articleID) {
-    this._deepDiveService.getDeepDiveArticleService(articleID).subscribe(
-      data => {
-        if (data.data.imagePath == null || data.data.imagePath == undefined || data.data.imagePath == "") {
-          this.imageData = ["/app/public/stockphoto_bb_1.jpg", "/app/public/stockphoto_bb_2.jpg"];
-          this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
-          this.imageTitle = ["", ""];
-        } else {
-          this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath)];
-          this.copyright = ["USA Today Sports Images"];
-          this.imageTitle = [""];
-        }
-        this.metaTags(data);
-        this.articleData = data.data;
+    this._deepDiveService.getDeepDiveArticleService(articleID)
+      .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
+      .subscribe(data => {
+          if (data.data.imagePath == null || data.data.imagePath == undefined || data.data.imagePath == "") {
+            this.imageData = ["/app/public/stockphoto_bb_1.jpg", "/app/public/stockphoto_bb_2.jpg"];
+            this.copyright = ["USA Today Sports Images", "USA Today Sports Images"];
+            this.imageTitle = ["", ""];
+          } else {
+            this.imageData = [GlobalSettings.getImageUrl(data.data.imagePath, GlobalSettings._carouselImg)];
+            this.copyright = ["USA Today Sports Images"];
+            this.imageTitle = [""];
+          }
 
-        this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
-        this.getRecommendedArticles(articleID);
-        this.getTrendingArticles(this.eventID);
-      }
-    )
+          this.metaTags(data);
+          this.articleData = data.data;
+
+          this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
+          this.getRecommendedArticles(articleID);
+          this.getTrendingArticles(this.eventID);
+        },
+        err => {
+          this.error = true;
+          var self = this;
+          setTimeout(function () {
+            //removes error page from browser history
+            self._location.replaceState('/');
+            //returns user to previous page
+            self._router.navigateByUrl('/home');
+          }, 5000);
+        }
+      )
   }
 
   private getDeepDiveVideo(articleID) {
-    this._deepDiveService.getDeepDiveVideoService(articleID).subscribe(
-      data => {
-        this.articleData = data.data;
-        this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
-        this.metaTags(data);
-        this.iframeUrl = this.articleData.videoLink;
-        this.getRecommendedArticles(articleID);
-      }
-    )
+    this._deepDiveService.getDeepDiveVideoService(articleID)
+      .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
+      .subscribe(data => {
+          this.articleData = data.data;
+          this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
+          this.metaTags(data);
+          this.iframeUrl = this.articleData.videoLink;
+          this.getRecommendedArticles(articleID);
+        },
+        err => {
+          this.error = true;
+          var self = this;
+          setTimeout(function () {
+            //removes error page from browser history
+            self._location.replaceState('/');
+            //returns user to previous page
+            self._router.navigateByUrl('/home');
+          }, 5000);
+        }
+      )
   }
 
   private metaTags(data) {
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     var metaData = this.isArticle ? data : data.data;
-    let image;
-    var keyword = this.isArticle ? "keywords" : "keyword";
+    let image, metaDesc;
     var teams = [];
     var players = [];
     var searchString;
     var searchArray = [];
     if (this.isArticle) {
-      var headerData = data['article_data']['metadata'];
-      var metaDesc = data['article_data'].meta_headline;
+      var headerData = metaData['articleContent']['metadata'];
+      metaDesc = metaData['articleContent'].meta_headline;
       if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
         headerData['team_name'].forEach(function (val) {
           searchArray.push(val);
@@ -275,43 +301,73 @@ export class ArticlePages implements OnInit {
           players.push(val);
         });
       }
-    }
-    if (metaData[keyword] && metaData[keyword].constructor === Array) {
-      metaData[keyword].forEach(function (val) {
-        searchArray.push(val);
-      });
-      searchString = searchArray.join(',');
+      if (metaData['articleContent']['keyword'] && metaData['articleContent']['keyword'].constructor === Array) {
+        metaData['articleContent']['keyword'].forEach(function (val) {
+          searchArray.push(val);
+        });
+        searchString = searchArray.join(',');
+      } else {
+        searchArray.push(metaData['articleContent']['keyword']);
+        searchString = searchArray.join(',');
+      }
+      image = metaData['images']['imageData'][0];
     } else {
-      searchString = metaData[keyword];
+      metaDesc = metaData.title;
+      image = GlobalSettings.getImageUrl(metaData.imagePath, GlobalSettings._imgLgLogo);
     }
-    if (this.imageData != null) {
-      image = this.imageData[0];
+
+    let metaObjData;
+    if (this.isArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
+      metaObjData = {
+        startDate: headerData['relevancy_start_date'].toString(),
+        endDate: headerData['relevancy_end_date'].toString(),
+        source: "snt_ai",
+        keyword: metaData['articleContent']['keyword'],
+        publishedDate: metaData['articleContent'].publication_date.toString(),
+        author: metaData['articleContent'].author,
+        publisher: metaData['articleContent'].publisher,
+        articleTeaser: metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),
+        setArticleType: metaData.articleType,
+      }
     } else {
-      image = this.isArticle ? metaData.image_url : metaData.thumbnail;
+      metaObjData = {
+        startDate: metaData.publishedDate,
+        endDate: metaData.publishedDate,
+        source: "TCA",
+        keyword: metaData.keyword,
+        publishedDate: metaData.publishedDate,
+        author: metaData.author,
+        publisher: metaData.publisher,
+        articleTeaser: metaData.teaser,
+        setArticleType: this.scope,
+      }
     }
+
     this._seoService.setCanonicalLink();
+    this._seoService.setTitle(metaData.title);
+    this._seoService.setMetaDescription(metaDesc);
     this._seoService.setOgTitle(metaData.title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
-    this._seoService.setStartDate(this.isArticle ? headerData['relevancy_start_date'] : metaData.publishedDate);
-    this._seoService.setEndDate(this.isArticle ? headerData['relevancy_end_date'] : metaData.publishedDate);
+    this._seoService.setStartDate(metaObjData.startDate);
+    this._seoService.setEndDate(metaObjData.endDate);
     this._seoService.setIsArticle(this.isArticle.toString());
     this._seoService.setSearchType("article");
-    this._seoService.setSource(this.isArticle ? metaData.source : "TCA");
+    this._seoService.setSource(metaObjData.source);
     this._seoService.setArticleId(this.eventID);
     this._seoService.setArticleTitle(metaData.title);
-    this._seoService.setKeyword(this.isArticle ? metaData['keywords'] : metaData.keyword);
-    this._seoService.setPublishedDate(this.isArticle ? metaData['article_data'].publication_date : metaData.publishedDate);
-    this._seoService.setAuthor(metaData.author);
-    this._seoService.setPublisher(metaData.publisher);
+    this._seoService.setKeyword(metaObjData.keyword);
+    this._seoService.setPublishedDate(metaObjData.publishedDate);
+    this._seoService.setAuthor(metaObjData.author);
+    this._seoService.setPublisher(metaObjData.publisher);
     this._seoService.setImageUrl(image);
-    this._seoService.setArticleTeaser(this.isArticle ? metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, '') : metaData.teaser);
+    this._seoService.setArticleTeaser(metaObjData.articleTeaser);
     this._seoService.setArticleUrl();
-    this._seoService.setArticleType(this.isArticle ? metaData.article_type : this.scope);
+    this._seoService.setArticleType(metaObjData.setArticleType);
     this._seoService.setSearchString(searchString);
-  } //metaTags
+  } //metaTags=
 
   getGeoLocation() {
     var defaultState = 'ca';
@@ -329,7 +385,9 @@ export class ArticlePages implements OnInit {
   ngOnDestroy() {
     if (!this.error) {
       this.subRec.unsubscribe();
-      this.trendingArticles.unsubscribe();
+      if ( this.trendingArticles ) {
+        this.trendingArticles.unsubscribe();
+      }
     }
   }
 }

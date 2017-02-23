@@ -30,10 +30,12 @@ export class FooterService {
         }
       )
   }
-  
+
   footerData(data, scope: string, profile: string): Array<Link>{
+    scope = scope.toLowerCase();
     var navigationArray: Array<Link> = [];
     //Build alphabet array for navigation links
+    var currentScope = scope.toLowerCase();
     for ( var i in data ) {
       var text = i.toUpperCase();
       navigationArray.push({

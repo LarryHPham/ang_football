@@ -81,22 +81,32 @@ export class GeoLocation{
 
     //api to get geo location
     getGeoLocation() {
-        var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
+      var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
+      // var getGeoLocation = '//dev-waldo.synapsys.us/ip2loc/69.178.104.1/2';
         return this.model.get(getGeoLocation)
             .map(
             data => {
+              try{
                 data[0].state = data[0].state == null ? "us" : data[0].state;
                 let state = data[0].state.toLowerCase();
                 let city = data[0].city.replace(/ /g, "%20");
                 let zipcode = data[0].zipcode;
+
                 if (!this.geoData) {
-                    this.geoData = {};
+                  this.geoData = {};
                 }
+
                 this.geoData['state'] = state;
                 this.geoData['city'] = city;
                 this.geoData['zipcode'] = zipcode;
 
                 return this.geoData;
+              }catch(e){
+                console.error(e);
+                this.geoData['state'] = 'ks';
+                this.geoData['city'] = 'wichita';
+                return this.geoData;
+              }
             })
             .share();
     };

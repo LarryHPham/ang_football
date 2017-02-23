@@ -1,4 +1,5 @@
 import { GlobalFunctions } from "../../global/global-functions";
+import { GlobalSettings } from "../../global/global-settings";
 import {Component, OnInit} from '@angular/core';
 
 @Component({
@@ -682,7 +683,7 @@ export class PartnerHomePage implements OnInit{
         }
       }
 
-      GlobalFunctions.setPreboot();
+      GlobalSettings.setPreboot();
       return partners;
     }
     ngOnInit() {

@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+import {isBrowser} from 'angular2-universal';
 
 //globals
 import {GlobalSettings} from "../../global/global-settings";
@@ -100,35 +101,41 @@ export class PickTeamPage{
         this.isPartnerZone = partnerHome;
 
         this.scope = param.scope;
-        this.getGeoLocation(this.scope);
 
-        //set the active league variables based on scope
-        if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
-          this.activeDivision = this._collegeDivisonFullAbbrv;
-          this.activeDivisionSegments = this._collegeDivisionSegments;
-        }
-        else {
-          this.activeDivision = this._sportLeagueAbbrv;
-          this.activeDivisionSegments = this._sportLeagueSegments;
-        }
+        //check if there is a cached dataset available for geolocation
+        this._geoLocation.grabLocation().subscribe( res => {
+          this.setLocationHeaderString(res.state);
+          this.getData(this.scope, res.state);
+          //set the active league variables based on scope
+          if ( this.scope == this._collegeDivisonFullAbbrv.toLowerCase() ) {
+            this.activeDivision = this._collegeDivisonFullAbbrv;
+            this.activeDivisionSegments = this._sportLeagueSegments;
+          }
+          else {
+            this.activeDivision = this._sportLeagueAbbrv;
+            this.activeDivisionSegments = this._collegeDivisionSegments;
+          }
 
-        this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
-        this.homeSubHeading1 = "Find the sports information you need to show your loyalty";
-        this.homeHeading2 = "PICK YOUR FAVORITE <span class='text-heavy'>" + this.activeDivision + " TEAM</span>";
-        this.homeFeaturesTile1 = this.activeDivision + " Standings";
-        this.homeFeaturesTile3 = this.activeDivision + " Scores";
-        this.homeFeaturesTile4 = this.activeDivision + " Schedules";
-        this.homeFeaturesButton1 = "View " + this.activeDivision + " Standings";
-        this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
-        this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
+          this.homeHeading1 = "Stay Loyal to Your Favorite " + this.activeDivision + " Team";
+          this.homeSubHeading1 = "Find the sports information you need to show your loyalty";
+          this.homeHeading2 = "PICK YOUR FAVORITE <span class='text-heavy'>" + this.activeDivision + " TEAM</span>";
+          this.homeFeaturesTile1 = this.activeDivision + " Standings";
+          this.homeFeaturesTile3 = this.activeDivision + " Scores";
+          this.homeFeaturesTile4 = this.activeDivision + " Schedules";
+          this.homeFeaturesButton1 = "View " + this.activeDivision + " Standings";
+          this.homeFeaturesButton3 = "View " + this.activeDivision + " Scores";
+          this.homeFeaturesButton4 = "View " + this.activeDivision + " Schedules";
 
-        this.metaTags();
-      }); //GlobalSettings.getParentParams
+          this.metaTags();
+        })
+      });
     } //constructor
 
 
 
     private metaTags() {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
       let title = 'Pick A Team';
@@ -146,76 +153,27 @@ export class PickTeamPage{
 
 
 
-    ngOnDestroy(){
-      this._routeSubscription.unsubscribe();
-    }
-
-    left(){
-      var counter = this.counter;
-      counter--;
-
-      //make a check to see if the array is below 0 change the array to the top level
-      if(counter < 0){
-        this.counter = (this.max - 1);
-      }else{
-        this.counter = counter;
-      }
-      this.changeMain(this.counter);
-    }
-
-    right(){
-      var counter = this.counter;
-      counter++;
-      //check to see if the end of the obj array of images has reached the end and will go on the the next obj with new set of array
-      if(counter == this.max){
-        this.counter = 0;
-      }else{
-        this.counter = counter;
-      }
-      this.changeMain(this.counter);
-    }
-
-    //this is where the angular2 decides what is the main image
-    changeMain(num){
-      if ( num < this.listData.length ) {
-        this.displayData = this.listData[num];
-      }
-    }
-
     setLocationHeaderString(state) {
       //only set for NCAAF
-      if ( this.scope == this._collegeDivisionAbbrv.toLowerCase() ) {
-        this.homeLocationHeading = 'Showing '+this.activeDivision+ ' Football '+ this.activeDivisionSegments.toLowerCase() + '<span class="location-designation"> located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + '<span class="location-title">' + GlobalFunctions.fullstate(state) + '</span>';
+      if ( this.scope.toLowerCase() == this._collegeDivisonFullAbbrv.toLowerCase() ) {
+        this.homeLocationHeading = 'Showing '+this._collegeDivisonFullAbbrv+ ' Football '+ this._collegeDivisionSegments + '<span class="location-designation"> located around <i ng-reflect-class-name="fa fa-map-marker" class="fa fa-map-marker"></i> ' + '<span class="location-title">' + GlobalFunctions.fullstate(state) + '</span>';
       }
-    }
-
-
-
-    getGeoLocation(scope) {
-      var defaultState = 'ca';
-      this._geoLocation.grabLocation()
-        .subscribe(
-          res => {
-            this.geoLocationState = res.state;
-            this.geoLocationCity = res.city;
-
-            this.setLocationHeaderString(this.geoLocationState);
-            this.getData(scope, this.geoLocationState);
-          },
-          err => {
-            this.geoLocationState = defaultState;
-          }
-      );
-    } //getGeoLocation
+    } //setLocationHeaderString
 
 
 
     getData(scope, geoLocation?){
       this._pickateamPageService.getLandingPageService(scope, geoLocation)
-        .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
-        .subscribe(data => {
-          this.teams = data.league;
-        })
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+      .subscribe(data => {
+        this.teams = data.league;
+      })
       var sampleImage = "./app/public/placeholder-location.jpg";
     } //getData
+
+
+
+    ngOnDestroy(){
+      this._routeSubscription.unsubscribe();
+    }
 }

@@ -31,7 +31,7 @@ export var commonPlugins = [
 
   //Compiled .less file
   new ExtractTextPlugin({
-    filename: 'stylesheets/[name].css',
+    filename: '[name].css',
     allChunks: true
   }),
 
@@ -51,15 +51,13 @@ export var commonPlugins = [
 
   //takes source files in node_modules and copies them into directory for use.
   new CopyWebpackPlugin([
-    {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
-    {from: './node_modules/jquery/dist/jquery.min.js', to:  root('src/lib/jquery.min.js')},
-    {from: './node_modules/fuse.js/src/fuse.min.js', to:  root('src/lib/fuse.min.js')},
-    {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')},
-    {from: './node_modules/highcharts/highcharts.js', to: root('src/lib/highcharts.js')}
+    // {from: './node_modules/moment/min/moment.min.js', to:  root('src/lib/moment.min.js')},
+    // {from: './node_modules/jquery/dist/jquery.min.js', to:  root('src/lib/jquery.min.js')},
+    // {from: './node_modules/fuse.js/src/fuse.min.js', to:  root('src/lib/fuse.min.js')},
+    // {from: './node_modules/moment-timezone/builds/moment-timezone-with-data-2010-2020.min.js', to: root('src/lib/moment-timezone-with-data-2010-2020.min.js')},
+    // {from: './node_modules/highcharts/highcharts.js', to: root('src/lib/highcharts.js')}
   ])
 ]; //commonPlugins
-
-
 
 export var commonConfig = {
   // https://webpack.github.io/docs/configuration.html#devtool
@@ -85,12 +83,8 @@ export var commonConfig = {
   }
 }; //commonConfig
 
-
-
 // Client.
 export var clientPlugins = [];
-
-
 
 export var clientConfig = {
   target: 'web',
@@ -104,16 +98,13 @@ export var clientConfig = {
     __dirname: true,
     __filename: true,
     process: true,
-    Buffer: true,
-    time: true
+    Buffer: true
   }
 }; //clientConfig
 
 
 // Server.
 export var serverPlugins = [];
-
-
 
 export var serverConfig = {
   target: 'node',
@@ -140,11 +131,9 @@ export var serverConfig = {
     __dirname: true,
     __filename: true,
     process: true,
-    Buffer: true
+    Buffer: false
   }
 }; //serverConfig
-
-
 
 export default [
   // Client
@@ -152,8 +141,6 @@ export default [
   // Server
   webpackMerge(clone(commonConfig), serverConfig, { plugins: serverPlugins.concat(commonPlugins) })
 ];
-
-
 
 // Helpers
 export function includeClientPackages(packages, localModule?: string[]) {

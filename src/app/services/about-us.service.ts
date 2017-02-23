@@ -61,7 +61,8 @@ export class AboutUsService {
     let championshipTeamMarket = data[0].championshipTeamMarket;
     let championshipTeamName = data[0].championshipTeamName;
     let imageUrl = data[0].imageUrl;
-    let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(scope, championshipTeamName, championshipTeamId);
+    let scopeLink = scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ? this.collegeDivisionFullAbbrv.toLowerCase() : scope.toLowerCase();
+    let championshipTeamLink = VerticalGlobalFunctions.formatTeamRoute(scopeLink, championshipTeamName, championshipTeamId);
     let lastUpdated = GlobalFunctions.sntGlobalDateFormatting(data[0].unixTimestamp,"defaultDate");
     // Set auBlocks vars based on divisionScope
     let activeDivision;
@@ -111,7 +112,7 @@ export class AboutUsService {
             imageConfig: {
               imageClass: "image-50",
               mainImage: {
-                imageUrl: GlobalSettings.getImageUrl(imageUrl),
+                imageUrl: GlobalSettings.getImageUrl(imageUrl, GlobalSettings._imgSmLogo),
                 imageClass: "border-1",
                 urlRouteArray: championshipTeamLink,
                 hoverText: "<i class=\"fa fa-mail-forward\"></i>"

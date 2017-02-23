@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Link} from './global-interface';
-import { isBrowser, prebootComplete } from 'angular2-universal';
+import { isBrowser, isNode, prebootComplete } from 'angular2-universal';
+
 declare var jQuery: any; //used for scroll event
 declare var moment: any;
+
 @Injectable()
 
 export class GlobalFunctions {
    private static prebootFired:boolean = false;
-
+   private static documentHeight:number = 0;
     /*convert from inches to ft-in format*/
     static inchesToFeet(inch):string {
         if (inch === undefined || inch === null) {
@@ -912,21 +914,17 @@ export class GlobalFunctions {
 
     static lazyLoadOnScroll(event, batchLoadIndex) {
       if(isBrowser){
+        if(batchLoadIndex == 1){
+          GlobalFunctions.documentHeight = 0;
+        }
         if (jQuery(document).height() - window.innerHeight - jQuery("footer").height() <= jQuery(window).scrollTop()) {
           //fire when scrolled into footer
-          batchLoadIndex = batchLoadIndex + 1;
+          if(jQuery(document).height() > GlobalFunctions.documentHeight){
+            GlobalFunctions.documentHeight = jQuery(document).height();
+            batchLoadIndex = batchLoadIndex + 1;
+          }
         }
         return batchLoadIndex;
       }
     } //onScroll
-
-    // this function is to fire preboot for angular universal, fires the transition of server-side view to client view
-    static setPreboot() {
-      if(isBrowser && !this.prebootFired) {
-        setTimeout(function () {
-          prebootComplete();
-          this.prebootFired = true;
-        }, 400);
-      }
-    } //setPreboot
 }

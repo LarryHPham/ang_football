@@ -63,7 +63,7 @@ export class SeasonStatsPage implements OnInit {
     ngOnInit() {
         if (this.pageParams.playerId) {
             this._profileService.getPlayerProfile(this.pageParams.playerId)
-              .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+              .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
               .subscribe(
                 data => {
                     this.profileLoaded = true;
@@ -85,6 +85,8 @@ export class SeasonStatsPage implements OnInit {
 
 
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let text3 = data.text3 != null ? data.text3: '';
       let text4 = data.text4 != null ? '. '+data.text4: '';

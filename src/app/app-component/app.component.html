@@ -2,9 +2,9 @@
   [partnerID]="partnerID"
   [partnerScript] ="partnerScript"
   (scrollPadding)="setScrollPadding($event)"></header-component>
-<div class="container-fluid vertical page-content-container" [style.padding-top]="scrollPadding">
+<div class="container-fluid page-content-container" [style.padding-top]="scrollPadding">
   <div class="container-fluid">
     <router-outlet></router-outlet>
   </div>
 </div>
-<footer-component [scopeParam]="scopeParam"></footer-component>
+<footer-component *ngIf="scopeParam" [partnerID]="partnerID" [scopeParam]="scopeParam"></footer-component>

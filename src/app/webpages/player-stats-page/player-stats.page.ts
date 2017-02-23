@@ -32,6 +32,7 @@ export class PlayerStatsPage implements OnInit {
   public teamID: number;
   public teamName: string;
   public pageParams: SportPageParameters = {}
+  public seasonBase: string;
 
   public tabs: Array<SportsPlayerStatsTableData>;
 
@@ -84,7 +85,7 @@ export class PlayerStatsPage implements OnInit {
     ngOnInit() {
         if (this.pageParams.teamId) {
             this._profileService.getTeamProfile(this.pageParams.teamId)
-            .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+            .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
                 data => {
                     this.profileLoaded = true;
@@ -92,6 +93,7 @@ export class PlayerStatsPage implements OnInit {
                     data.teamName = data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
                     var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, data.pageParams.teamId ? data.pageParams.teamId.toString() : null);
                     this.setupTitleData(teamRoute, data.teamName, data.fullProfileImageUrl);
+                    this.seasonBase = data.headerData['seasonBase'];
                     this.tabs = this._statsService.initializeAllTabs(data.teamName, data.headerData['seasonBase'], false);
                 },
                 err => {
@@ -108,6 +110,8 @@ export class PlayerStatsPage implements OnInit {
 
 
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let text3 = data.text3 != null ? data.text3: '';
       let text4 = data.text4 != null ? '. '+data.text4: '';
@@ -148,29 +152,23 @@ export class PlayerStatsPage implements OnInit {
 
 
     private playerStatsTabSelected(tabData: Array<any>) {
-        this._statsService.getStatsTabData(tabData, this.pageParams, data => {
-            this.getLastUpdatedDateForPage(data);
+      this._statsService.getStatsTabData(tabData, this.pageParams, data => {
+          this.getLastUpdatedDateForPage(data);
 
-            var seasonArray = tabData[0];
-            var seasonIds = seasonArray.seasonIds;
-            var seasonTab = seasonIds.find(function(e) {
-                if (e.value === tabData[1]) {
-                    return true;
-                }
-
-            });
-
-            if (tabData[0].tabActive == "Special") {
-                if (seasonTab) {
-                    //console.log("year clicked");
-                } else {
-                    this.tabName = tabData[1];
-                }
-            } else {
-                this.tabName = tabData[0].tabActive;
-            };
-            //tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
-        });
+          var seasonArray = tabData[0];
+          var seasonIds = seasonArray.seasonIds;
+          var seasonTab = seasonIds.find(function(e) {
+            if (e.value === tabData[1]) {
+                return true;
+            }
+          });
+        if (tabData[0].tabActive == "Special") {
+          this.tabName = 'kicking';
+        } else {
+          this.tabName = tabData[0].tabActive;
+        }
+        // tabData[0].tabActive!="Special"&&tabData[1]!="2015"||tabData[1]!="2014"?this.tabName=tabData[1]:this.tabName=tabData[0].tabActive;
+      });
     } //playerStatsTabSelected
 
 

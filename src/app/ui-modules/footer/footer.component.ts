@@ -1,9 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { isBrowser } from 'angular2-universal';
+
+//globals
+import { GlobalSettings } from "../../global/global-settings";
 import { GlobalFunctions } from '../../global/global-functions';
 import { Link, NavigationData } from '../../global/global-interface';
-import { GlobalSettings } from "../../global/global-settings";
+import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
+
+//services
 import { FooterService } from '../../services/footer.service';
-import { isBrowser } from 'angular2-universal';
+
 
 @Component({
     selector: 'footer-component',
@@ -17,17 +23,17 @@ export class FooterComponent implements OnInit {
     public homePageLinkName: string;
     public linkName: string;
     public currentUrl: string;
-    public _sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
     public _copyrightInfo: string = "<i>Images Provided By: </i><b> " + GlobalSettings.getCopyrightInfo() + "</b>";
-    public _siteTwitterUrl: string = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
-    public _siteFacebookUrl: string = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
-    public _siteGoogleUrl: string = GlobalSettings.getSiteGoogleUrl(this.partnerID);
+    public _siteTwitterUrl: string;
+    public _siteFacebookUrl: string;
+    public _siteGoogleUrl: string;
     public _sportLeagueFull: string = GlobalSettings.getSportLeagueFull();
     public _lastUpdated: string;
     public advertise: string = "Advertise with ";
     public contactUs: string = "Contact Us";
     public disc: string = "Disclaimer";
     public au: string = "About Us";
+    public footerLinks: Object;
 
     image:string = GlobalSettings.mainIcon;
     teamDirectoryListings: Array<Link>;
@@ -37,6 +43,9 @@ export class FooterComponent implements OnInit {
     constructor(private _service: FooterService, private _globalFunc: GlobalFunctions){//TODO
       if(isBrowser){
         this.currentUrl = window.location.href;
+        this._siteTwitterUrl = GlobalSettings.getSiteTwitterUrl(this.currentUrl);
+        this._siteFacebookUrl = GlobalSettings.getSiteFacebookUrl(this.currentUrl);
+        this._siteGoogleUrl = GlobalSettings.getSiteGoogleUrl(this.currentUrl);
       }
       this.teamDirectory();
       this.playerDirectory();
@@ -76,5 +85,14 @@ export class FooterComponent implements OnInit {
 
     ngOnInit() {
         this.loadData(this.partnerID);
+        var scope = this.scopeParam == 'home' ? 'nfl' : this.scopeParam;
+        let partnerLink = VerticalGlobalFunctions.getWhiteLabel();
+        var baseFooterLink = partnerLink != '' ? [partnerLink, this.scopeParam] : [this.scopeParam];
+
+        this.footerLinks = {
+          aboutUs: baseFooterLink.concat(['about-us']),
+          contactUs: baseFooterLink.concat(['contact-us']),
+          disclaimer: baseFooterLink.concat(['disclaimer'])
+        }
     }
 }

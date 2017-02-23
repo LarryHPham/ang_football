@@ -1,5 +1,5 @@
 import { ModuleWithProviders }  from '@angular/core';
-import { Routes, RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { AppComponent }  from '../app-component/app.component';
 
 //pages
@@ -108,39 +108,43 @@ const relativeChildRoutes = [
         component: ListPage
     },
     {
+        path: ':scope/list/:target/:statName/:season/:ordering',
+        component: ListPage
+    },
+    {
         path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
         component: ListPage
     },
     {
-        path: ':scope/draft-history',
+        path: ':scope/draft-history/:tab/league/:filter1',
         component: DraftHistoryPage
     },
     {
-        path: ':scope/draft-history/:teamName/:teamID',
+        path: ':scope/draft-history/:tab/:teamName/:teamId/:filter1',
         component: DraftHistoryPage
     },
     {
-        path: ':scope/transactions/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/transactions/:filter1/:teamName/:teamId/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/suspensions/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/suspensions/:filter1/:teamName/:teamId/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/injuries/:teamName/:teamId/:limit/:pageNum',
+        path: ':scope/injuries/:filter1/:teamName/:teamId/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/transactions/league/:limit/:pageNum',
+        path: ':scope/transactions/:filter1/league/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/suspensions/league/:limit/:pageNum',
+        path: ':scope/suspensions/:filter1/league/:limit',
         component: TransactionsPage
     },
     {
-        path: ':scope/injuries/league/:limit/:pageNum',
+        path: ':scope/injuries/:filter1/league/:limit',
         component: TransactionsPage
     },
     {
@@ -154,6 +158,10 @@ const relativeChildRoutes = [
     {
         path: ':scope/articles/:eventType/:eventID',
         component: ArticlePages
+    },
+    {
+        path: ':scope/list-of-lists/:target/:targetId',
+        component: ListOfListsPage
     },
     {
         path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
@@ -200,4 +208,4 @@ export const appRoutes: Routes = [
     },
 ];
 
-export const routing = RouterModule.forRoot(appRoutes);
+export const routing = RouterModule.forChild(appRoutes);

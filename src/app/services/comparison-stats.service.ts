@@ -126,8 +126,10 @@ export class SportsComparisonModuleData implements ComparisonModuleData {
       // teams in the list
       if ( !this.teamList || this.teamList.length <= 2 ) {
         this._service.getTeamList().subscribe(data => {
-          this.teamList = data;
-          listLoaded(this.teamList);
+          if(data){
+            this.teamList = data;
+            listLoaded(this.teamList);
+          }
         },
         err => {
           console.log("Error loading team list for comparison module", err);
@@ -216,8 +218,8 @@ export class ComparisonStatsService {
       data.playerOne['height'] = GlobalFunctions.inchesToFeet(data.playerOne.height);
       data.playerTwo['height'] = GlobalFunctions.inchesToFeet(data.playerTwo.height);
 
-      data.playerOne['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerOne.playerHeadshot);
-      data.playerTwo['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerTwo.playerHeadshot);
+      data.playerOne['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerOne.playerHeadshot, GlobalSettings._imgLgLogo);
+      data.playerTwo['playerHeadshot'] = GlobalSettings.getImageUrl(data.playerTwo.playerHeadshot, GlobalSettings._imgLgLogo);
 
 
       var team1Data = {
@@ -250,12 +252,12 @@ export class ComparisonStatsService {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
       if(apiData.playerOne != null){
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
-        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot);
+        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot, GlobalSettings._imgLgLogo);
         existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
       }else{
         apiData.playerOne = {};
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
-        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot);
+        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot, GlobalSettings._imgLgLogo);
         existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
       }
       if ( index == 0 ) {
@@ -282,10 +284,14 @@ export class ComparisonStatsService {
   }
 
   getTeamList(scope = this.scope): Observable<Array<{key: string, value: string}>> {
+    scope = this.scope == 'ncaaf' ? 'fbs' : 'nfl';
     let teamsUrl = this._apiUrl + "/comparisonTeamList/" + scope;
     return this.model.get(teamsUrl)
       .map(data => {
-        return this.formatTeamList(data.data);
+          if(data.data){
+            return this.formatTeamList(data.data);
+          }
+          return null;
     });
   }
 
@@ -315,10 +321,16 @@ export class ComparisonStatsService {
   }
   */
   private formatTeamList(teamList) {
-    return teamList.map(team => {
-      var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
-      return {key: team.id, value: teamName};
-    });
+    try{
+      if(teamList.data){
+        return teamList.map(team => {
+          var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
+          return {key: team.id, value: teamName};
+        });
+      }
+    }catch(e){
+      console.warn(e);
+    }
   }
 
   private formatPlayerList(playerList: TeamPlayers) {

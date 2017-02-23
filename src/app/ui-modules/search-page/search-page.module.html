@@ -10,7 +10,7 @@
             {{searchPageInput.subHeaderText}}
         </h2>
         <div class="search-page-header-input">
-            <search [searchInput]="searchPageInput.searchComponent" ></search>
+            <search [searchInput]="searchPageInput.searchComponent"></search>
         </div>
     </div>
     <!-- Tabs Component -->
@@ -43,7 +43,11 @@
               </template>
                 <!-- No Results Found -->
               <div class="no-results">
-                <no-data-box *ngIf="outerItem.results.length == 0 || outerItem.totalResults == 0" [data]="outerItem.error.message" [icon]="outerItem.error.icon"></no-data-box>
+                <no-data-box
+                  *ngIf="outerItem.results.length == 0 || outerItem.totalResults == 0"
+                  [data]="outerItem.error.message"
+                  [icon]="outerItem.error.icon">
+                </no-data-box>
               </div>
             </ul>
             <pagination-footer *ngIf="outerItem.paginationParameters" [paginationParameters]="outerItem.paginationParameters" (newIndex)="newIndex($event)"></pagination-footer>

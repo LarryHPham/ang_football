@@ -1,13 +1,12 @@
 import {Component, Input, OnInit, Output, EventEmitter, ElementRef, Renderer, AfterContentChecked } from '@angular/core';
 // import {Search, SearchInput} from '../components/search/search.component';
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
-import {GlobalSettings} from "../../global/global-settings";
-import {GlobalFunctions} from "../../global/global-functions";
-import {HamburgerMenuComponent, MenuData} from '../../ui-modules/hamburger-menu/hamburger-menu.component';
+import { GlobalSettings } from "../../global/global-settings";
+import { GlobalFunctions } from "../../global/global-functions";
+import { HamburgerMenuComponent, MenuData } from '../../ui-modules/hamburger-menu/hamburger-menu.component';
 import { isBrowser } from 'angular2-universal';
 
 declare var stButtons: any;
-declare var jQuery: any;
 
 @Component({
   selector: 'header-component',
@@ -93,7 +92,7 @@ export class HeaderComponent implements AfterContentChecked {
     if (isBrowser) {
       var headerBottom = document.getElementById('header-bottom');
       var headerBottomHeight = headerBottom.offsetHeight;
-      var scrollTop = event.srcElement.body.scrollTop;
+      var scrollTop = event.srcElement ? event.srcElement.body.scrollTop : document.documentElement.scrollTop; //fallback for firefox scroll events
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
 
@@ -110,7 +109,10 @@ export class HeaderComponent implements AfterContentChecked {
         this.scrollMenuUp = false;
         this.menuTransitionAmount = 0;
       }
-
+      // fix for 'page overscroll' in safari
+      if (scrollTop == 0) {
+        this.menuTransitionAmount = 0;
+      }
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
     }
   }//onScrollStick ends
@@ -137,15 +139,15 @@ export class HeaderComponent implements AfterContentChecked {
       this.scope = GlobalSettings.getScopeNow();
     }, 1000);
 
-    // with router deprecated being able to navigate correctly on different layered router outlets
+    // close menu if it is open and user clicks outside the menu
     var partnerHome = GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner;
-    this.linkHome = [VerticalGlobalFunctions.getWhiteLabel(), 'home'];
+    this.linkHome = [VerticalGlobalFunctions.getWhiteLabel() + '/home'];
     this._renderer.listenGlobal('document', 'click', (event) => {
       var element = document.elementFromPoint(event.clientX, event.clientY);
-      if (element) {
+      if (element && isBrowser) {
         let menuCheck = element.className.indexOf("menucheck");
         let searchCheck = element.className.indexOf("searchcheck");
-        if (this.isOpened && menuCheck < 0) {
+        if (this.isOpened) {
           this.isOpened = false;
         }
         if (this.isSearchOpened && searchCheck < 0) {
@@ -158,7 +160,7 @@ export class HeaderComponent implements AfterContentChecked {
       stButtons.locateElements();
       //insert salad bar
       var v = document.createElement('script');
-      v.src = 'http://w1.synapsys.us/widgets/deepdive/bar/bar.js?brandHex=234a66';
+      v.src = '//w1.synapsys.us/widgets/deepdive/bar/bar.js?brandHex=234a66';
       document.getElementById('header-bottom').insertBefore(v, document.getElementById('salad-bar'));
 
       var setPlaceholder = setInterval(function() { // keep checking for the existance of the salad bar until it loads in

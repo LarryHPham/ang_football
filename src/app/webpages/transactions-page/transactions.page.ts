@@ -28,14 +28,14 @@ declare var moment: any;
     templateUrl: './transactions.page.html',
 })
 
-export class TransactionsPage{
+export class TransactionsPage {
   public scope: string;
   public partnerID: string;
+  public tabParam: any;
+  public filter1Param: any;
   public teamNameParam: string;
-  public teamIdParam: string;
-  public limitParam: string;
-  public pageNumParam: string;
-  public transactionTypeParam: string;
+  public teamIdParam: number;
+  public limitParam: number;
   public paramsub: any;
   public storedPartnerParam: string;
   public seasonBase: string;
@@ -48,10 +48,8 @@ export class TransactionsPage{
   isError: boolean = false;
   profileName: string;
   sort: string = "desc";
-  limit: number;
-  pageNum: number;
-  selectedTabKey: string;
   listSort: string = "recent";
+  selectedTabKey: string;
 
   transactionsActiveTab: any;
   transactionsData: TransactionTabData;
@@ -64,6 +62,9 @@ export class TransactionsPage{
   public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
   public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
+  private transactionsService: any;
+  private profileService: any;
+
     constructor(
         private router: Router,
         private activateRoute: ActivatedRoute,
@@ -72,31 +73,33 @@ export class TransactionsPage{
         private _title: Title,
         private _seoService: SeoService
     ) {
-      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.paramsub = this.activateRoute.params.subscribe(
+            (param :any)=> {
+                let route = this.router.url.split('/');
+                this.pageParams = param;
+                if(this.storedPartnerParam != ''){
+                    this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[3]);
+                } else {
+                    this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[2]);
+                }
 
-      this.paramsub = this.activateRoute.params.subscribe(
-        (param :any)=> {
-          let route = this.router.url.split('/');
-          if(this.storedPartnerParam != '/'){
-            this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[3]);
-          }else{
-            this.selectedTabName = GlobalFunctions.capitalizeFirstLetter(route[2]);
-          }
-          //check to see if scope is correct and redirect
-          this.pageParams = param;
-
-          if (this.pageNum === 0) {
-              this.pageNum = 1; //page index starts at one
-          }
-          this.getProfileInfo();
-        }
-      )
+                this.scope = param.scope;
+                this.tabParam = this.selectedTabName;
+                this.filter1Param = param.filter1;
+                this.teamNameParam = param.teamName;
+                this.teamIdParam = param.teamId;
+                this.limitParam = param.limit;
+                this.getProfileInfo();
+            }
+        )
     } //constructor
 
-    ngOnDestroy(){
-      this.paramsub.unsubscribe();
-    }
+
+
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let text3 = data.text3 != null ? data.text3: '';
       let text4 = data.text4 != null ? '. '+data.text4: '';
@@ -123,21 +126,22 @@ export class TransactionsPage{
 
     getProfileInfo() {
       if (this.pageParams.teamId) {
-          this._profileService.getTeamProfile(this.pageParams.teamId)
-            .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          this.profileService = this._profileService.getTeamProfile(this.pageParams.teamId)
+            .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
             .subscribe(
-              data => {
-                this.seasonBase = data.headerData['seasonBase'];
-                  //var stats = data.headerData.stats;
-                  var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
-                  this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
-                  // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
-                  this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-                  profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-                  this.profileHeaderData = profileHeaderData;
-                  this.metaTags(this.profileHeaderData);
-
-                  var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.pageParams.teamId.toString());
+                data => {
+                    var profileHeaderData = this._profileService.convertTeamPageHeader(this.scope, data, "");
+                    this.profileName = data.headerData.teamMarket + " " + data.headerData.teamName;
+                    profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+                    this.seasonBase = data.headerData['seasonBase'];
+                    this.dropdownKey1 = this.dropdownKey1 ?
+                                        this.dropdownKey1 :
+                                        this.filter1Param;
+                    this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.teamIdParam);
+                    this.profileHeaderData = profileHeaderData;
+                    this.metaTags(this.profileHeaderData);
+                    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, data.teamName, this.teamIdParam.toString());
+                    this.getTransactionsPage();
               },
               err => {
                   this.isError = true;
@@ -147,27 +151,29 @@ export class TransactionsPage{
             );
       }
       else {
-          this._profileService.getLeagueProfile()
-              .subscribe(
-              data => {
-                  this.seasonBase = data.headerData['seasonBase'];
-                  var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
-                  this.profileName = this.pageParams.scope.toUpperCase();
-                  // this._title.setTitle(GlobalSettings.getPageTitle("Transactions", this.profileName));
-
-                  this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.pageParams.teamId);
-                  profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
-                  this.profileHeaderData = profileHeaderData;
-                  this.metaTags(this.profileHeaderData);
-
-                  var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
+          this.profileService = this._profileService.getLeagueProfile()
+            .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+            .subscribe(
+                data => {
+                    var profileHeaderData = this._profileService.convertLeagueHeader(data.headerData, "");
+                    this.profileName = this.pageParams.scope.toUpperCase();
+                    profileHeaderData.text3 = this.selectedTabName + ' - ' + this.profileName;
+                    this.seasonBase = data.headerData['seasonBase'];
+                    this.dropdownKey1 = this.dropdownKey1 ?
+                                        this.dropdownKey1 :
+                                        this.filter1Param;
+                    this.tabs = this._transactionsService.getTabsForPage(this.profileName, this.teamIdParam);
+                    this.profileHeaderData = profileHeaderData;
+                    this.metaTags(this.profileHeaderData);
+                    var teamRoute = VerticalGlobalFunctions.formatTeamRoute(this.scope, this.profileName, null);
+                    this.getTransactionsPage();
               },
               err => {
                   this.isError = true;
                   console.error('Error: transactionsData Profile Header API: ', err);
                   // this.isError = true;
               }
-              )
+            )
       }
     } //getProfileInfo()
 
@@ -177,18 +183,16 @@ export class TransactionsPage{
         var matchingTabs = this.tabs.filter(tab => tab.tabDisplay == this.selectedTabName);
         if (matchingTabs.length > 0) {
             var tab = matchingTabs[0];
-            if(this.dropdownKey1 == null){
-              this.dropdownKey1 = this.seasonBase;
-            }
-            this._transactionsService.getTransactionsService(tab, this.pageParams.teamId, 'page', this.dropdownKey1, 'desc', this.limit, this.pageNum)
+            this.dropdownKey1 = this.dropdownKey1 ?
+                                this.dropdownKey1 :
+                                this.filter1Param;
+            this.transactionsService = this._transactionsService.getTransactionsService(tab, this.teamIdParam, 'page', this.dropdownKey1, 'desc', this.limitParam)
                 .subscribe(
                 transactionsData => {
                     if (this.transactionFilter1 == undefined) {
                         this.transactionFilter1 = transactionsData.yearArray;
                     }
-
                     tab = transactionsData;
-                    this.setPaginationParams(transactionsData);
                 }, err => {
                     console.log("Error loading transaction data");
                 })
@@ -198,66 +202,73 @@ export class TransactionsPage{
 
 
     transactionsTab(tab) { // set selected tab and route page if necessary
-        var tabRoute;
+        var newRoute;
         var tabNameFrom = this.selectedTabName; // capture previous value before changing it
         var tabNameTo = tab.tabDisplay; // newly selected tab
 
         if (tabNameTo != tabNameFrom) { // check if clicked tab is already active
-          this.selectedTabName = tabNameTo;
-          this.transactionsActiveTab = tab;
-            if (this.pageParams.teamId) {
-                tabRoute = [this.pageParams.scope, tabNameTo.toLowerCase(), this.pageParams.teamName, this.pageParams.teamId, 20, 1];
-                this.router.navigate(tabRoute);
-            }
-            else {
-                tabRoute = [this.pageParams.scope, tabNameTo.toLowerCase(), 'league', 20, 1];
-                this.router.navigate(tabRoute);
-            }
+            this.selectedTabName = tabNameTo;
+            this.transactionsActiveTab = tab;
+            newRoute = this.teamIdParam ?
+                        [this.storedPartnerParam, this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, this.teamNameParam, this.teamIdParam, this.limitParam] :
+                        [this.storedPartnerParam, this.scope, tabNameTo.toLowerCase(), this.pageParams.filter1, 'league', this.limitParam];
+            this.router.navigate(newRoute);
         }
-        this.getTransactionsPage();
     } //transactionsTab(tab)
 
 
 
     transactionsFilterDropdown(filter) {
-        if (this.transactionsActiveTab == null) {
-            this.transactionsActiveTab = this.transactionsData;
+        var newRoute;
+        var filterFrom = this.filter1Param;
+        var filterTo = filter;
+
+        if (filterTo != filterFrom) {
+            this.dropdownKey1 = filter;
+            newRoute = this.pageParams.teamId ?
+                        [this.storedPartnerParam, this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, this.teamNameParam, this.teamIdParam, this.limitParam] :
+                        [this.storedPartnerParam, this.pageParams.scope, this.selectedTabName.toLowerCase() , this.dropdownKey1, 'league', this.limitParam];
+            this.router.navigate(newRoute);
         }
-        this.dropdownKey1 = filter;
-        this.getTransactionsPage();
     } //transactionsFilterDropdown(filter)
 
 
 
-    setPaginationParams(input) {
-        var params = this.pageParams; //TODO
+    ngOnDestroy(){
+      this.paramsub.unsubscribe();
+      this.transactionsService.unsubscribe();
+      this.profileService.unsubscribe();
+    } //ngOnDestroy
 
-        //path: '/directory/:type/:startsWith/page/:page',
-        var navigationParams;
 
-        var navigationPage = params['teamId'] != null ? '/'+params.scope+'/'+this.selectedTabName.toLowerCase() : '/'+params.scope+'/'+this.selectedTabName.toLowerCase()+'/league';
-        let max = Math.ceil(input.totalTransactions / this.limit); //NEED Number of entries from API
 
-        if(params['teamId']){
-          navigationParams = {
-              teamName: params['teamName'],
-              teamId: params['teamId'],
-              limit: params['limit'],
-              pageNum: params['pageNum']
-          };
-        }else{
-          navigationParams = {
-              limit: params['limit'],
-              pageNum: params['pageNum']
-          };
-        }
-        this.paginationParameters = {
-            index: params['pageNum'] != null ? Number(params['pageNum']) : null,
-            max: max,
-            paginationType: 'page',
-            navigationPage: navigationPage,
-            navigationParams: navigationParams,
-            indexKey: 'pageNum'
-        }
-    } //setPaginationParams(input)
+    // setPaginationParams(input) {
+    //     var navigationParams;
+    //     var navigationPage = this.teamIdParam != null ?
+    //                             '/'+this.scope+'/'+this.selectedTabName.toLowerCase()+'/'+this.filter1Param :
+    //                             '/'+this.scope+'/'+this.selectedTabName.toLowerCase()+'/'+this.filter1Param+'/league';
+    //     let max = Math.ceil(input.totalTransactions / this.limitParam); //NEED Number of entries from API
+    //
+    //     if(this.teamIdParam){
+    //         navigationParams = {
+    //             teamName: this.teamNameParam,
+    //             teamId: this.teamIdParam,
+    //             limit: this.limitParam,
+    //             pageNum: this.pageNumParam
+    //         }
+    //     } else {
+    //       navigationParams = {
+    //           limit: this.limitParam,
+    //           pageNum: this.pageNumParam
+    //       }
+    //     }
+    //     this.paginationParameters = {
+    //         index: this.pageNumParam ? this.pageNumParam : null,
+    //         max: max,
+    //         paginationType: 'page',
+    //         navigationPage: navigationPage,
+    //         navigationParams: navigationParams,
+    //         indexKey: 'pageNum'
+    //     }
+    // } //setPaginationParams(input)
 }

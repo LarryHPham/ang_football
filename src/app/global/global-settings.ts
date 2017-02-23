@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalFunctions } from './global-functions';
-import { isBrowser, isNode } from 'angular2-universal';
+import { isBrowser, isNode, prebootComplete } from 'angular2-universal';
+import { defaultOptions } from 'preboot';
 
 declare var Zone;
+
 @Injectable()
 
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
-    private static _env = isNode ? 'dev' : window.location.hostname.split('.')[0];//TODO
-    public static _proto = isNode ? 'http:' : window.location.protocol;//TODO
+    private static _env = isNode ? 'prod' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
+    public static _proto = isNode ? 'http:' : window.location.protocol;//TODO currently server side is hardcoding protocol
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
     private static _partnerId:string;
@@ -31,12 +33,12 @@ export class GlobalSettings {
     private static _partnerHomepageLinkName:string = 'mytouchdownzone';
 
     //links from our share providers that do not change
-    private static _siteTwitterUrl:string = 'https://twitter.com/home?status=';
-    private static _siteFacebookUrl:string = 'https://www.facebook.com/sharer/sharer.php?u=';
-    private static _siteLinkedinUrl:string = 'https://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=&source=';
-    private static _siteGoogleUrl:string = 'https://plus.google.com/share?url=';
-    private static _verticalFacebook: string = 'https://www.facebook.com/TCX-382018522187919';
-    private static _verticalTwitter: string = 'https://twitter.com/tcxmedia';
+    private static _siteTwitterUrl:string = '//twitter.com/home?status=';
+    private static _siteFacebookUrl:string = '//www.facebook.com/sharer/sharer.php?u=';
+    private static _siteLinkedinUrl:string = '//www.linkedin.com/shareArticle?mini=true&url=&title=&summary=&source=';
+    private static _siteGoogleUrl:string = '//plus.google.com/share?url=';
+    private static _verticalFacebook: string = '//www.facebook.com/TCX-382018522187919';
+    private static _verticalTwitter: string = '//twitter.com/tcxmedia';
 
     private static _baseTitle: string = "Touchdown Loyal";
     private static _basePartnerTitle: string = "My Touchdown Zone";
@@ -58,20 +60,42 @@ export class GlobalSettings {
 
     private static _mainLogo: string = "/app/public/mainLogo.jpg";
     public static _mainPageUrl: string = "touchdownloyal.com";
-    public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg");
+    public static mainIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/01/logos_football_01.svg", 85);
+    public static fallBackIcon : string = GlobalSettings.getImageUrl("/01/logos/football/2017/02/logos_football_01.png", 85);
     public static _defaultStockImage: string = GlobalSettings.getImageUrl("/TDL/stock_images/TDL_Stock-3.png");// default stock image on the server for FOOTBALL
-
 
     private static _currentRouteParams: any;
     private static _router: any;
 
+    private static prebootFired:boolean = false;
+
+    static _imgSmLogo: number = 45;
+    static _imgMdLogo: number = 70;
+    static _imgLgLogo: number = 150;
+    static _imgPickTeam: number = 100;
+    static _imgProfileLogo: number = 125;
+    static _imgAiBoxScore: number = 130;
+    static _imgTrending: number = 615;
+    static _imgRecommend: number = 750;
+    static _deepDiveSm: number = 85;
+    static _deepDiveRec: number = 360;
+    static _deepDiveTileStack: number = 365;
+    static _deepDiveBoxScore: number = 600;
+    static _deepDiveMd: number = 750;
+    static _deepDiveLg: number = 935;
+    static _imgPageLogo: number = 85;
+    static _carouselImg: number = 1240;
+
     static getEnv(env:string):string {
-      if (env == "localhost" || env == "render"){
+      if (env == "localhost"){
           env = "dev";
       }
       if (env != "dev" && env !="qa"){
           env = "prod";
       }
+
+      //env = "prod"; //TODO remove only used for testing
+
       return env;
     }
 
@@ -111,9 +135,26 @@ export class GlobalSettings {
         return this._proto + "//" + this._mainPageUrl + this._mainLogo;
     }
 
+    static resizeImage(width:number){
+        var resizePath;
+        width = width > 1920 ? 1920 : width;//width limit to 1920 if larger
+        if (isBrowser) {
+          let r = window.devicePixelRatio;
+          width = width * r;
+        }
+        resizePath = "?width=" + width;
+        if (width < 100) {//increase quality if smaller than 100, default is set to 70
+          resizePath += "&quality=90";
+        }
+        return resizePath;
+    }
+
     //include bypass parameter if you want the image to be served on server side (meta tag images)
-    static getImageUrl(relativePath):string {
-      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: 'app/public/no-image.svg';
+    static getImageUrl(relativePath, width:number=1920):string {
+      var relPath = relativePath != null && relativePath != "" ? this._proto + "//" + this._imageUrl + relativePath: GlobalSettings.fallBackIcon;
+      if (relativePath != null && relativePath != "") {
+        relPath += this.resizeImage(width);
+      }
       return relPath;
     }
 
@@ -131,7 +172,6 @@ export class GlobalSettings {
     }
 
     static getNewsUrl():string {
-        //[https:]//[prod]-homerunloyal-api.synapsys.us
         return this._proto + "//" + this._newsUrl;
     }
 
@@ -148,48 +188,16 @@ export class GlobalSettings {
     }
 
     static storedPartnerId(partnerId?) {
-      if(partnerId != null){
+      if(partnerId != null && this._partnerId == null){
         this._partnerId = partnerId;
       }
       return this._partnerId;
     }
 
-    static getRouteFullParams():any {
-      // var domainHostName, domainParams, pageHostName, pageParams;
-      // var router = this._router;
-      // var relPath = GlobalFunctions.routerRelPath(router);
-      // if(router != null){
-      //   if(router.parent.parent != null){//if there are more parameters past home page
-      //     domainHostName = router.parent.parent.currentInstruction.component.routeName;
-      //     domainParams = router.parent.parent.currentInstruction.component.params;
-      //     pageHostName = router.parent.currentInstruction.component.routeName;
-      //     pageParams = router.parent.currentInstruction.component.params;
-      //     this._currentRouteParams = {
-      //       relPath: relPath,
-      //       domainHostName: router.parent.parent.currentInstruction.component.routeName,
-      //       domainParams: router.parent.parent.currentInstruction.component.params,
-      //       pageHostName: router.parent.currentInstruction.component.routeName,
-      //       pageParams: router.parent.currentInstruction.component.params,
-      //     };
-      //   }else{// if there are no more parameters then set domain routeName and param
-      //     domainHostName = router.parent.currentInstruction.component.routeName;
-      //     domainParams = router.parent.currentInstruction.component.params;
-          this._currentRouteParams = {
-            relPath: 'relPath',
-            domainHostName: 'test',
-            domainParams: 'test',
-            pageHostName: null,
-            pageParams: null,
-          };
-      //   }
-      // }
-      return this._currentRouteParams;
-    }
-
     static getHomePage(partnerId: string, includePartnerId?: boolean) {
       var linkEnv = this._env != 'localhost' && this._env != "touchdownloyal" && this._env != "mytouchdownzone" && this._env != "football" ? this._env:'www';
         if ( partnerId ) {
-            return this._proto + "//" + linkEnv + this._partnerHomepageUrl + (includePartnerId ? "/" + partnerId : "");
+            return this._proto + "//" + linkEnv + this._partnerHomepageUrl + (partnerId || includePartnerId ? "/" + partnerId : "");
         }
         else {
             return this._proto + "//" + linkEnv + this._homepageUrl;
@@ -201,7 +209,7 @@ export class GlobalSettings {
       var partner = false;
       var isHome = false;
       var hide = false;
-      var hostname = isNode ? Zone.current.get('originUrl') : window.location.hostname;
+      var hostname = isNode ? GlobalSettings._proto + "//" + Zone.current.get('originUrl') : window.location.hostname;
       var partnerPage = /mytouchdownzone/.test(hostname) || /^football\./.test(hostname);
       var name = isNode ? Zone.current.get('requestUrl') : window.location.pathname.split('/')[1];
       var isSubdomainPartner = /^football\./.test(hostname);
@@ -249,37 +257,6 @@ export class GlobalSettings {
       return scope;
     }
 
-    /**
-     * This should be called by classes in their constructor function, so that the
-     * 'subscribe' function actually gets called and the partnerID and scope can be located from the route
-     *
-     * @param{Router} router
-     * @param {Function} subscribeListener - takes a single parameter that represents the partnerID: (partnerID) => {}
-     */
-
-    //static getPartnerID(router: Router, subscribeListener: Function)
-    static getParentParams(router, subscribeListener: Function) {
-        // if ( !subscribeListener ) return;
-        // return router.root.subscribe (
-        //     route => {
-        //         let partnerID = null;
-        //         let scope = route.instruction.params["scope"];
-        //         if ( route && route.instruction && route.instruction.params["partner_id"] != null ) {
-        //           partnerID = route.instruction.params["partner_id"];
-        //         }else if(window.location.hostname.split(".")[0].toLowerCase() == "football"){
-        //           partnerID = window.location.hostname.split(".")[1] + "." + window.location.hostname.split(".")[2];
-        //         }
-        //
-        //         if ( scope == null ) {
-        //           scope = this.getSportLeagueAbbrv();
-        //         }
-        //         subscribeListener({
-        //           partnerID: partnerID == '' ? null : partnerID,
-        //           scope: this.getScope(scope)
-        //         });
-        //     }
-        // );
-    }
 
     //converts URL route scope from NCAAF to FBS
     //NCAAF is for display purpose and returning FBS is for API requirements
@@ -367,5 +344,39 @@ export class GlobalSettings {
     static getEstYear() {
       return this._estYear;
     }
+
+    // function sets custom selectors for gap-events between SSR and CSR
+    static setCustomPrebootSelectors() {
+      var defaultSelectors = defaultOptions.eventSelectors; // default selectors include 'input,textarea, select, option, button'
+
+      var customSelectors = [
+        {
+          selector: 'div',
+          events: [ 'click' ]
+        },
+        {
+          selector: 'span',
+          events: [ 'click' ]
+        },
+        {
+          selector: 'a',
+          events: [ 'click' ]
+        }
+      ];
+      defaultSelectors.push.apply(defaultSelectors, customSelectors);
+    }
+
+    // function is to fire preboot for angular universal, fires the transition of server-side view to client view
+    static setPreboot() {
+      if (isNode) {
+        this.setCustomPrebootSelectors();
+      }
+      else if(isBrowser && !this.prebootFired) {
+        setTimeout(function () {
+          prebootComplete();
+          this.prebootFired = true;
+        }, 400);
+      }
+    } //setPreboot
 
 }

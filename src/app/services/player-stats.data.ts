@@ -91,7 +91,7 @@ export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStats
 
         this.isTeamProfilePage = isTeamProfilePage;
 
-        function getTabTitle(tabActive){
+        function getTabTitle(tabActive) {
             return {
                 Passing:{
                     title: "Passing",
@@ -167,7 +167,7 @@ export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStats
                     ],
 
                 },
-                kicking:{
+                Kicking:{
                     title:"Special Teams",
                     glossary:[
                         {key: "FGM", value: "Field Goals Made"},
@@ -296,16 +296,11 @@ export class SportsPlayerStatsTableData implements StatsTableTabData<PlayerStats
 
 export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
     columns: Array<TableColumn>;
-
     rows: Array<PlayerStatsData>;
-
     selectedKey:string = "";
-
     istab: string;
 
-
     constructor(rows: Array<PlayerStatsData> ,tabActive: string) {
-
         this.rows = rows;
 
         if ( this.rows === undefined || this.rows === null ) {
@@ -313,58 +308,55 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
         }
         this.istab = tabActive;
 
-
-
-        function getTabTableData(tabActive){
-            return{
+        function getTabTableData(tabActive) {
+            return {
                 columns:[{
-                    headerValue: "Player Name",
-                    columnClass: "image-column",
-                    key: "name"
+                  headerValue: "Player Name",
+                  columnClass: "image-column",
+                  key: "name"
                 },{
-                    headerValue: rows[0].stat1Type,
-                    columnClass: "data-column",
-                    isNumericType: true,
-                    key: "stat1-type"
+                  headerValue: rows[0].stat1Type,
+                  columnClass: "data-column",
+                  isNumericType: true,
+                  key: "stat1-type"
                 },{
-                    headerValue: rows[0].stat2Type,
-                    columnClass: "data-column",
-                    isNumericType: true,
-                    key: "stat2-type"
+                  headerValue: rows[0].stat2Type,
+                  columnClass: "data-column",
+                  isNumericType: true,
+                  key: "stat2-type"
                 },{
-                    headerValue: rows[0].stat3Type,
-                    columnClass: "data-column",
-                    sortDirection: -1, //descending
-                    isNumericType: true,
-                    key: "stat3-type"
+                  headerValue: rows[0].stat3Type,
+                  columnClass: "data-column",
+                  sortDirection: -1, //descending
+                  isNumericType: true,
+                  key: "stat3-type"
 
                 },{
-                    headerValue: rows[0].stat4Type,
-                    columnClass: "data-column",
-                    isNumericType: true,
-                    key: "stat4-type"
+                  headerValue: rows[0].stat4Type,
+                  columnClass: "data-column",
+                  isNumericType: true,
+                  key: "stat4-type"
                 },{
-                    headerValue: rows[0].stat5Type,
-                    columnClass: "data-column",
-                    isNumericType: true,
-                    key: "stat5-type"
+                  headerValue: rows[0].stat5Type,
+                  columnClass: "data-column",
+                  isNumericType: true,
+                  key: "stat5-type"
                 },{
-                    headerValue: rows[0].stat6Type,
-                    columnClass: "data-column",
-                    isNumericType: true,
-                    key: "stat6-type"
+                  headerValue: rows[0].stat6Type,
+                  columnClass: "data-column",
+                  isNumericType: true,
+                  key: "stat6-type"
                 },{
-                    headerValue: rows[0].stat7Type,
-                    columnClass: "data-column",
-                    isNumericType: true,
-                    key: "stat7-type"
+                  headerValue: rows[0].stat7Type,
+                  columnClass: "data-column",
+                  isNumericType: true,
+                  key: "stat7-type"
                 }]
             }
         }
-        this.columns=getTabTableData(tabActive).columns;
+        this.columns = getTabTableData(tabActive).columns;
         //this.columns = getTabTableData(tabActive).columns;
     }
-
 
     setSelectedKey(key: string) {
         this.selectedKey = key;
@@ -396,8 +388,8 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
         var presentColumn;
         let teamFullName = item.teamMarket + ' ' + item.teamName;
         let playerFullName = item.playerFirstName + ' ' + item.playerLastName;
-        function removeDecimal(type,number){
-            if(type=="AVG"|| type=='RATE' || type=="YDS/G"|| type=="SACK"){
+        function removeDecimal(type,number) {
+            if(type=="AVG"|| type=="RATE" || type=="YDS/G" || type=="YDS" || type=="SACK" || type=="INT" || type=="TD" || type=="COMP" || type=="ATT"){
                 return number;
             }
             return parseInt(number);
@@ -408,55 +400,41 @@ export class MLBPlayerStatsTableModel implements TableModel<PlayerStatsData> {
                     display : item.playerFirstName + " " + item.playerLastName,
                     sort : item.playerLastName + ', ' + item.playerFirstName,
                     link : VerticalGlobalFunctions.formatPlayerRoute(league, teamFullName, playerFullName, item.playerId),
-                    imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot),
+                    imageUrl : GlobalSettings.getImageUrl(item.playerHeadshot, GlobalSettings._imgSmLogo),
                     bottomStat: item.stat8Type != null ? item.stat8Type: 'N/A',
                     bottomStat2:item.stat8 != null ? item.stat8: 'N/A',
-
                 },
                 "stat1-type":{
-                    display:item.stat1 != null ? removeDecimal(item.stat1Type, item.stat1): 'N/A',
-                    sort : item.stat1 != null ? Number(item.stat1) : null,
+                    display: item.stat1 != null ? removeDecimal(item.stat1Type, item.stat1): 'N/A',
+                    sort: item.stat1 != null ? Number(item.stat1) : null,
                 },
                 "stat2-type":{
-                    display:item.stat2 != null ? removeDecimal(item.stat2Type, item.stat2): 'N/A',
-                    sort : item.stat2 != null ? Number(item.stat2) : null,
+                    display: item.stat2 != null ? removeDecimal(item.stat2Type, item.stat2): 'N/A',
+                    sort: item.stat2 != null ? Number(item.stat2) : null,
                 },
-
                 "stat3-type":{
-
-                    display:item.stat3 != null ? removeDecimal(item.stat3Type, item.stat3): 'N/A',
-                    sort : item.stat3 != null ? Number(item.stat3) : null,
-
+                    display: item.stat3 != null ? removeDecimal(item.stat3Type, item.stat3): 'N/A',
+                    sort: item.stat3 != null ? Number(item.stat3) : null,
                 },
                 "stat4-type":{
-                    display:item.stat4 != null ? removeDecimal(item.stat4Type, item.stat4): 'N/A',
-                    sort : item.stat4 != null ? Number(item.stat4) : null,
+                    display: item.stat4 != null ? removeDecimal(item.stat4Type, item.stat4): 'N/A',
+                    sort: item.stat4 != null ? Number(item.stat4) : null,
                 },
-
                 "stat5-type":{
-                    display:item.stat5 != null ? removeDecimal(item.stat5Type, item.stat5): 'N/A',
-                    sort : item.stat5 != null ? Number(item.stat5) : null,
+                    display: item.stat5 != null ? removeDecimal(item.stat5Type, item.stat5): 'N/A',
+                    sort: item.stat5 != null ? Number(item.stat5) : null,
                 },
                 "stat6-type":{
-                    display:item.stat6 != null ? removeDecimal(item.stat6Type, item.stat6): 'N/A',
-                    sort : item.stat6 != null ? Number(item.stat6) : null,
+                    display: item.stat6 != null ? removeDecimal(item.stat6Type, item.stat6): 'N/A',
+                    sort: item.stat6 != null ? Number(item.stat6) : null,
                 },
                 "stat7-type":{
-                    display:item.stat7 != null ? removeDecimal(item.stat7Type, item.stat7): 'N/A',
-                    sort : item.stat7 != null ? Number(item.stat7) : null,
+                    display: item.stat7 != null ? removeDecimal(item.stat7Type, item.stat7): 'N/A',
+                    sort: item.stat7 != null ? Number(item.stat7) : null,
                 }
-
-
             }[columnType];
-        }
+        } //tabCellData
         presentColumn = tabCellData(column.key);
-
-
-
        return new CellData(presentColumn.display,presentColumn.sort,presentColumn.link,presentColumn.imageUrl, presentColumn.bottomStat, presentColumn.bottomStat2);
-
-
     }
-
-
 }

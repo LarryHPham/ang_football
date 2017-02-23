@@ -145,7 +145,7 @@ export class StandingsPage {
                 }
             ]
         }
-        GlobalFunctions.setPreboot(); // call preboot after last piece of data is returned on page
+        GlobalSettings.setPreboot(); // call preboot after last piece of data is returned on page
         return this.glossary;
     } //getGlossaryValue
 
@@ -200,6 +200,8 @@ export class StandingsPage {
 
 
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       let header, metaDesc, link, title, ogTitle, image, titleName;
 
       //create meta description that is below 160 characters otherwise will be truncated
@@ -209,7 +211,7 @@ export class StandingsPage {
       title = titleName + ' Standings';
       ogTitle = titleName;
       metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
-      image = GlobalSettings.getImageUrl(header.backgroundUrl);
+      image = GlobalSettings.getImageUrl(header.backgroundUrl, GlobalSettings._imgPageLogo);
 
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);

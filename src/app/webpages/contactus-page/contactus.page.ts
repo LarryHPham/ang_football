@@ -40,9 +40,9 @@ export class ContactUsPage {
           this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
         }
       );
-      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+      this.storedPartnerParam = GlobalSettings.storedPartnerId();
 
-      var domainTitle = this.storedPartnerParam != '/' ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
+      var domainTitle = this.storedPartnerParam != null ? GlobalSettings.getBasePartnerTitle() : GlobalSettings.getBaseTitle();
       this.contactusInput = {
         subjects: [
           {
@@ -112,12 +112,14 @@ export class ContactUsPage {
 
     ngAfterViewInit(){
       this.metaTags();
-      GlobalFunctions.setPreboot();
+      GlobalSettings.setPreboot();
     }
 
 
 
     metaTags() {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
       this._seoService.setTitle('Contact Us');

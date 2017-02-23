@@ -4,6 +4,7 @@ import { DeepDiveService } from '../../../services/deep-dive.service';
 import { ArticleStackData, VideoStackData } from "../../../fe-core/interfaces/deep-dive.data";
 import { GlobalSettings } from "../../../global/global-settings";
 import { GlobalFunctions } from '../../../global/global-functions';
+import { isNode } from "angular2-universal";
 
 declare var moment;
 
@@ -62,7 +63,7 @@ export class DeepDiveBlock1{
   getFirstArticleStackData(){
     this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
         .subscribe(data => {
-          this.firstStackTop = this._deepDiveData.transformToArticleStack(data);
+          this.firstStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveLg);
         },
         err => {
               console.log("Error getting first article stack data");

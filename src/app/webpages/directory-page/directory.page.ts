@@ -44,6 +44,9 @@ export class DirectoryPage {
   public pageType: DirectoryType;
   public _sportLeagueAbbrv: string;
 
+  public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+  public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+
   paginationParameters:PaginationParameters;
 
   navLists: Array<Link>;
@@ -120,7 +123,9 @@ export class DirectoryPage {
 
 
   private metaTags() {
-    let startsWith = this.startsWith
+    //This call will remove all meta tags from the head.
+    this._seoService.removeMetaTags();
+    let startsWith = this.startsWith;
     if ( startsWith !== undefined && startsWith !== null ) {
       this.newlyAdded = startsWith.toLowerCase() === "new";
       this.startsWith = !this.newlyAdded && startsWith.length > 0 ? startsWith[0] : undefined;
@@ -144,10 +149,6 @@ export class DirectoryPage {
 
 
   getDirectoryData() {
-    if(isBrowser) {
-      window.scrollTo(0, 0);
-    }
-
     let params: DirectorySearchParams = {
       page: this.currentPage,
       listingsLimit: this.listingsLimit,
@@ -155,7 +156,7 @@ export class DirectoryPage {
       newlyAdded: this.newlyAdded
     }
     this._directoryService.getData(this.scope, this.pageType, params)
-      .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
           data => this.setupData(data),
           err => {
@@ -176,8 +177,11 @@ export class DirectoryPage {
         startsWith:this.startsWith,
         page: 'page'
       };
+      let scopeLink = this.scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ?
+                      this.collegeDivisionFullAbbrv.toLowerCase() :
+                      this.scope.toLowerCase();
 
-      var navigationPage = '/' + this.scope + '/directory';
+      var navigationPage = '/' + scopeLink + '/directory';
       let max = Math.ceil(info.totalItems/this.listingsLimit);
       this.paginationParameters = {
         index: params['page'] != null ? Number(params['page']) : null,
@@ -193,9 +197,6 @@ export class DirectoryPage {
 
   newIndex(index){
     this.currentPage = index;
-    if(isBrowser) {
-      window.scrollTo(0, 0);
-    }
   } //newIndex
 
 
@@ -251,7 +252,7 @@ export class DirectoryPage {
       pagingDescription: pagingDescription,
       pageParams: pageParams
     };
-    ;
+
     if(listings !== undefined && listings !== null ) {
       // this.setupPaginationParameters(data);
       data.hasListings = listings.items.length > 0;

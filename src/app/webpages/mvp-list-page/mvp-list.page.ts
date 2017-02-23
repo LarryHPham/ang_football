@@ -74,7 +74,6 @@ export class MVPListPage implements OnInit {
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-
         this.activateRoute.params.subscribe(
           (param :any) => {
             this.paginationParameters = null;
@@ -145,10 +144,10 @@ export class MVPListPage implements OnInit {
         // };
 
         this._profileService.getLeagueProfile(this.scope)
-          .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(data => {
               this.profileHeaderData = {
-                  imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo),
+                  imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgPageLogo),
                   imageRoute: ["League-page"],
                   text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
                   text2: 'United States',
@@ -165,6 +164,8 @@ export class MVPListPage implements OnInit {
 
 
     private metaTags(data) {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let text3 = data.text3 != null ? data.text3: '';
       let text4 = data.text4 != null ? '. '+data.text4: '';
@@ -200,21 +201,27 @@ export class MVPListPage implements OnInit {
 
     loadTabs() {
         this.tabs = this._service.getMVPTabs(this.listType, 'page');
-        if (this.tabs != null && this.tabs.length > 0) {
+        try {
+          if (this.tabs != null && this.tabs.length > 0 && this.queryParams) {
+              var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
+              if (this.queryParams.statName) {
+                  var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
 
-            var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
-            if (this.queryParams.statName) {
-                var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
+                  if (matchingTabs.length > 0) {
+                      selectedTab = matchingTabs[0];
+                  }
+              }
+              this.selectedTabName = selectedTab.tabDisplayTitle;
 
-                if (matchingTabs.length > 0) {
-                    selectedTab = matchingTabs[0];
-                }
-            }
-            this.selectedTabName = selectedTab.tabDisplayTitle;
-
-            this.getStandardList(selectedTab);
+              this.getStandardList(selectedTab);
+          }
         }
-    }
+        catch(e) {
+          console.log('Error loading MVP page tabs - ',e);
+        }
+    } //loadTabs
+
+
 
     //PAGINATION
     //sets the total pages for particular lists to allow client to

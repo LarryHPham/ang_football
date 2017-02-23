@@ -128,7 +128,7 @@ export class DailyUpdateService {
         return {
           hasError: false,
           lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null),
+          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
           type: "Team",
           wrapperStyle: {},
           seasonStats: stats,
@@ -145,8 +145,7 @@ export class DailyUpdateService {
 
     let url = GlobalSettings.getApiUrl() + '/dailyUpdate/player/' + playerId;
 
-    return this.http.get(url)
-        .map(res => res.json())
+    return this.model.get(url)
         .map(data => this.formatPlayerData(data.data, playerId));
   }
 
@@ -246,63 +245,78 @@ export class DailyUpdateService {
       lastUpdated: data.recentGames["lastUpdated"] ? GlobalFunctions.formatUpdatedDate(data.recentGames["lastUpdated"]) : "N/A",
     }
 
-    //Setting up chart info
-    // TODO add cases for other positions
-    var seriesOne = {
-      name: data.recentGames["gameStat1Type"] != null ? data.recentGames["gameStat1Type"] : "N/A",
-      key: "gameStat1"
-    };
-    var seriesTwo = {
-      name: data.recentGames["gameStat2Type"] != null ? data.recentGames["gameStat2Type"] : "N/A",
-      key: "gameStat2"
-    };
-    data['recentGamesChartData'] =[
-      {
-        gameStat1: data.recentGames["game1Stat1"] != null ? data.recentGames["game1Stat1"] : "N/A",
-        gameStat2: data.recentGames["game1Stat2"] != null ? data.recentGames["game1Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game1AgainstNick"] != null ? data.recentGames["game1AgainstNick"] : "N/A"
-      },
-      {
-        gameStat1: data.recentGames["game2Stat1"] != null ? data.recentGames["game2Stat1"] : "N/A",
-        gameStat2: data.recentGames["game2Stat2"] != null ? data.recentGames["game2Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game2AgainstNick"] != null ? data.recentGames["game2AgainstNick"] : "N/A"
-      },
-      {
-        gameStat1: data.recentGames["game3Stat1"] != null ? data.recentGames["game3Stat1"] : "N/A",
-        gameStat2: data.recentGames["game3Stat2"] != null ? data.recentGames["game3Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game3AgainstNick"] != null ? data.recentGames["game3AgainstNick"] : "N/A"
-      },
-      {
-        gameStat1: data.recentGames["game4Stat1"] != null ? data.recentGames["game4Stat1"] : "N/A",
-        gameStat2: data.recentGames["game4Stat2"] != null ? data.recentGames["game4Stat2"] : "N/A",
-        opponentTeamName: data.recentGames["game4AgainstNick"] != null ? data.recentGames["game4AgainstNick"] : "N/A"
-      }
-    ];
-
-    var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
-    this.getPostGameArticle(data);
-
-    let tempText = "";
-    if(this.postGameArticleData.text && this.postGameArticleData.text.length>0 && typeof(this.postGameArticleData.text) == "object") {
-      tempText = this.postGameArticleData.text.join(" ");
-    }else{
-      tempText = <any>this.postGameArticleData.text;
-    }
-    this.postGameArticleData.text = [tempText];
-
-    if ( chart ) {
-      return {
-        hasError: false,
-        lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-        fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl) :  VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(null),
-        type: "Player",
-        wrapperStyle: {},
-        seasonStats: stats,
-        chart: chart,
-        postGameArticle: this.postGameArticleData
+    try{
+      //Setting up chart info
+      // TODO add cases for other positions
+      var seriesOne = {
+        name: data.recentGames["gameStat1Type"] != null ? data.recentGames["gameStat1Type"] : "N/A",
+        key: "gameStat1"
       };
+      var seriesTwo = {
+        name: data.recentGames["gameStat2Type"] != null ? data.recentGames["gameStat2Type"] : "N/A",
+        key: "gameStat2"
+      };
+      if(data.recentGames["game1AgainstNick"] != null){
+        data['recentGamesChartData'] =[
+          {
+            gameStat1: data.recentGames["game1Stat1"] != null ? data.recentGames["game1Stat1"] : "N/A",
+            gameStat2: data.recentGames["game1Stat2"] != null ? data.recentGames["game1Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game1AgainstNick"] != null ? data.recentGames["game1AgainstNick"] : "N/A"
+          },
+          {
+            gameStat1: data.recentGames["game2Stat1"] != null ? data.recentGames["game2Stat1"] : "N/A",
+            gameStat2: data.recentGames["game2Stat2"] != null ? data.recentGames["game2Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game2AgainstNick"] != null ? data.recentGames["game2AgainstNick"] : "N/A"
+          },
+          {
+            gameStat1: data.recentGames["game3Stat1"] != null ? data.recentGames["game3Stat1"] : "N/A",
+            gameStat2: data.recentGames["game3Stat2"] != null ? data.recentGames["game3Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game3AgainstNick"] != null ? data.recentGames["game3AgainstNick"] : "N/A"
+          },
+          {
+            gameStat1: data.recentGames["game4Stat1"] != null ? data.recentGames["game4Stat1"] : "N/A",
+            gameStat2: data.recentGames["game4Stat2"] != null ? data.recentGames["game4Stat2"] : "N/A",
+            opponentTeamName: data.recentGames["game4AgainstNick"] != null ? data.recentGames["game4AgainstNick"] : "N/A"
+          }
+        ];
+      }else{
+        console.warn('Insufficient chart data');
+        data['recentGamesChartData'] =[];
+      }
+      var chart:DailyUpdateChart = this.getChart(data, seriesOne, seriesTwo);
+      this.getPostGameArticle(data);
+    }catch(e){
+      console.warn('Insufficient chart data');
+      data['recentGamesChartData'] =[];
     }
-    else {
+
+    try{
+      let tempText = "";
+      if(this.postGameArticleData.text && this.postGameArticleData.text.length>0 && typeof(this.postGameArticleData.text) == "object") {
+        tempText = this.postGameArticleData.text.join(" ");
+      }else{
+        tempText = <any>this.postGameArticleData.text;
+      }
+      this.postGameArticleData.text = [tempText];
+
+      if ( chart ) {
+        return {
+          hasError: false,
+          lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
+          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
+          type: "Player",
+          wrapperStyle: {},
+          seasonStats: stats,
+          chart: chart,
+          postGameArticle: this.postGameArticleData
+        };
+      }
+      else {
+        return null;
+      }
+
+    }catch(e){
+      console.warn('error in daily update post game article data');
       return null;
     }
   }
@@ -381,17 +395,21 @@ export class DailyUpdateService {
         aiData = data[game];
       }
     }
-    articleData['eventId'] = aiData.article.status != 'Error' || aiData.article != null ? aiData.article.data[0].eventId : null;
-    articleData['teamId'] = data.recentGames.teamId != null ? data.recentGames.teamId : null;
-    articleData['playerId'] = data.recentGames["playerId"] != null ? data.recentGames["playerId"] : null;
-    articleData['playerPosition'] = data.recentGames["playerPosition"] != null ? data.recentGames["playerPosition"] : null;
-    articleData['url'] = articleData['eventId'] != null ? VerticalGlobalFunctions.formatArticleRoute(data['postgame-report'].article.data[0]['subcategory'], 'postgame-report', articleData['eventId']) : null;
-    articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? GlobalFunctions.formatUpdatedDate(data['postgame-report'].article.data[0].lastUpdated*1000, true, " " + moment().tz('America/New_York').format('z')) : null;
-    articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
-    articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;
-    articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(data['postgame-report'].article.data[0].imageUrl): null;
 
-    this.postGameArticleData = <PostGameArticleData>articleData;
+    if(typeof aiData.article != 'string'){ //TODO needs to be revisited and done properly
+      articleData['eventId'] = aiData.article.status != 'Error' || aiData.article != null ? aiData.article.data[0].eventId : null;
+      articleData['teamId'] = data.recentGames.teamId != null ? data.recentGames.teamId : null;
+      articleData['playerId'] = data.recentGames["playerId"] != null ? data.recentGames["playerId"] : null;
+      articleData['playerPosition'] = data.recentGames["playerPosition"] != null ? data.recentGames["playerPosition"] : null;
+      articleData['url'] = articleData['eventId'] != null ? VerticalGlobalFunctions.formatArticleRoute(data['postgame-report'].article.data[0]['subcategory'], 'postgame-report', articleData['eventId']) : null;
+      articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? GlobalFunctions.formatUpdatedDate(data['postgame-report'].article.data[0].lastUpdated*1000, true, " " + moment().tz('America/New_York').format('z')) : null;
+      articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
+      articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;
+      articleData['img'] = data['postgame-report'].article.data.length && data['postgame-report'].article.data[0].imageUrl != null && data['postgame-report'].article.data[0].imageUrl.length > 0 ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].article.data[0].imageUrl, GlobalSettings._imgProfileLogo): null;
+
+      this.postGameArticleData = <PostGameArticleData>articleData;
+    }
+
   }
 
   private getChart(data: APIDailyUpdateData, seriesOne: DataSeries, seriesTwo: DataSeries) {

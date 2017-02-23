@@ -6,6 +6,7 @@
   "log_date_format": "YYYY-MM-DD HH:mm Z",
   "error_file": "/dev/null",
   "out_file": "/dev/null",
+  "max_memory_restart" : "500M",
   "autorestart": true,
   "env": {}
 }

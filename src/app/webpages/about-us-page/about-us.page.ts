@@ -72,7 +72,7 @@ export class AboutUsPage {
       this.activatedRoute.params.subscribe(
           (param :any)=> {
             this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
-            this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+            this.storedPartnerParam = GlobalSettings.storedPartnerId();
             this.loadData(this.storedPartnerParam, this.scope)
           }
       );
@@ -87,6 +87,8 @@ export class AboutUsPage {
 
 
     private metaTags() {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'About Us';
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
@@ -106,7 +108,7 @@ export class AboutUsPage {
 
     loadData(partnerID?:string, scope?:string) {
         this._service.getData(partnerID, scope)
-        .finally(() => GlobalFunctions.setPreboot() ) // call preboot after last piece of data is returned on page
+        .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
         .subscribe(
           data => this.setupAboutUsData(data),
           err => {

@@ -208,8 +208,8 @@ export class TDLStandingsTabdata implements StandingsTableTabData<TeamStandingsD
       ],
       copyrightInfo: GlobalSettings.getCopyrightInfo(),
       lastUpdatedDate: item.displayDate,
-      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl) : VerticalGlobalFunctions.getBackroundImageUrlWithStockFallback(item.backgroundUrl),
-      circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo),
+      backgroundImage: item.backgroundUrl != null ? GlobalSettings.getImageUrl(item.backgroundUrl, VerticalGlobalFunctions._imgProfileMod) : VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(item.backgroundUrl, VerticalGlobalFunctions._imgProfileMod),
+      circleImageUrl: GlobalSettings.getImageUrl(item.teamLogo, GlobalSettings._imgLgLogo),
       circleImageRoute: teamRoute,
       rank: rank.toString()
     });
@@ -377,7 +377,7 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         if ( item.teamId != this.currentTeamId ) {
           link = VerticalGlobalFunctions.formatTeamRoute(routeScope, teamFullName,item.teamId);
         }
-        imageUrl = item.teamLogo ? GlobalSettings.getImageUrl(item.teamLogo) : null;
+        imageUrl = item.teamLogo ? GlobalSettings.getImageUrl(item.teamLogo, GlobalSettings._imgSmLogo) : null;
         break;
 
       case "wlt":
