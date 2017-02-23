@@ -106,6 +106,7 @@ export class DirectoryService {
       url += "/" + searchParams.startsWith;
     }
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
+    console.log(url);
     return this.model.get(url)
         .map(data => {
           var items = data.data;
@@ -129,6 +130,7 @@ export class DirectoryService {
       url += "/" + searchParams.startsWith;
     }
     url += "/" + searchParams.listingsLimit + "/" + searchParams.page;
+    console.log(url);
     return this.model.get(url)
       .map(data => {
         var items = data.data;

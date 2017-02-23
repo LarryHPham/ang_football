@@ -30,6 +30,17 @@ export class RosterService {
     return this._tabTypes.map(type => new NFLRosterTabData(this, scope, teamId, type, conference, maxRows, isTeamProfilePage));
   }
 
+  getTeamRosterData(teamId){
+    var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
+    //console.log("loading full team roster: "+ fullUrl);
+    return this.http.get(fullUrl, {headers: this.setToken()})
+      .map(res => res.json())
+      .map(data => {
+        this.fullRoster = data.data;
+        return data.data;
+      });
+  }//getRosterService ends
+
   getRosterTabData(rosterTab: NFLRosterTabData): Observable<Array<TeamRosterData>> {
     var teamId = rosterTab.teamId;
     var type = rosterTab.type;

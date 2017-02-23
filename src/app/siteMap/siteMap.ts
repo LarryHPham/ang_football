@@ -11,7 +11,9 @@ import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 import { SeoService } from "../seo.service";
 
 //services
-import {PickateamPageService} from '../services/pickateam.service';
+import { PickateamPageService } from '../services/pickateam.service';
+import { RosterService } from '../services/roster.service';
+import { DirectoryService } from '../services/directory.service';
 
 export interface siteKey {
   path: Array<string>;
@@ -60,10 +62,12 @@ export class SiteMap {
   private domainUrl:string;
   private childrenRoutes: any;
   private totalSiteMap:any = [];
-
+  private displaySiteMap: boolean = false;
   constructor(
     private router:ActivatedRoute,
     private _pickateamPageService: PickateamPageService,
+    private _rosterService: RosterService,
+    private _directoryService: DirectoryService,
   ) {
     this.domainUrl = this.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
@@ -115,6 +119,8 @@ export class SiteMap {
 
       if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of home that is located in dontLog variable
         this.addTeamPages(scopes[i]);
+        this.teamDirectory(scopes[i]);
+        this.playerDirectory(scopes[i]);
       }
     }
     console.log(this.totalSiteMap);
@@ -131,45 +137,48 @@ export class SiteMap {
       name: this.domainUrl + relPath,
       dataPoints: null,
     }
-    console.log('adding SinglePage', pathData.name);
+    console.log('adding DeepDive page', pathData.name);
     this.totalSiteMap.push(pathData);
   }
 
   addSinglePages(scope){
-    let singlePages = this.singlePages;
-    //run and create each single page urls
-    for( var i = 0; i < singlePages.length; i++ ){// start creating site map from top level
-      if(this.dontLog.indexOf(scope) < 0){// dont use index of home that is located in dontLog variable
-        let baseRoute = [this.partnerSite + '/' + scope];
-        baseRoute.push(singlePages[i]);
-
-        let relPath = baseRoute.join('/').toString();
-        let pathData: siteKey = {
-          path: baseRoute,
-          name: this.domainUrl + relPath,
-          dataPoints: null,
+    try{
+      let singlePages = this.singlePages;
+      //run and create each single page urls
+      for( var i = 0; i < singlePages.length; i++ ){// start creating site map from top level
+        if(this.dontLog.indexOf(scope) < 0){// dont use index of home that is located in dontLog variable
+          let baseRoute = [this.partnerSite + '/' + scope];
+          baseRoute.push(singlePages[i]);
+          let relPath = baseRoute.join('/').toString();
+          let pathData: siteKey = {
+            path: baseRoute,
+            name: this.domainUrl + relPath,
+            dataPoints: null,
+          }
+          console.log('adding SinglePage', pathData.name);
+          this.totalSiteMap.push(pathData);
         }
-        console.log('adding SinglePage', pathData.name);
-        this.totalSiteMap.push(pathData);
       }
+    }catch(e){
+      console.warn('Error siteMap failure @ addSinglePages', e)
     }
   }
 
+  //add team pages by using pick a team page api call => api.com/landingPage/:scope
+  //directory page requires multiple pages with letters so too many api calls to use
   addTeamPages(scope){
     let self = this;
     let baseRoute = [this.partnerSite + '/' + scope];
     // let routerRoute = this.getComponentPages(this.childrenRoutes, 'TeamPage');
     // console.log('teampage variations',routerRoute);
     this._pickateamPageService.getLandingPageService(scope, null)
-    .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+    .finally(() => this.displaySiteMap = true ) // call preboot after last piece of data is returned on page
     .subscribe(data => {
-      console.log(data);
       try{
         //note function may not make sense with nfl & ncaaf Conferences and Divisions naming but will be used for consistencies
         data.league.forEach(function(conference){
           conference.dataArray.forEach(function(division){
             division.dataArray.forEach(function(team){
-              console.log(team);
               //[scope: string, teamName: string, teamId: string]
               let teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, team.full_name, team.id);
               let relPath = teamRoute.join('/').toString();
@@ -179,15 +188,88 @@ export class SiteMap {
                 dataPoints: null,
               }
               console.log('adding team', pathData.name);
+              this.addPlayerPages(team, scope);
               self.totalSiteMap.push(pathData);
             });//end team
           });//end division
         });//end conference
       }catch(e){
-        console.warn('Error siteMap failure', e)
+        console.warn('Error siteMap failure @ addTeamPages', e)
       }
 
     })
+  }
+
+  //add player pages by using pick a team roster page api call
+  //directory page requires multiple pages with letters so too many api calls to use
+  addPlayerPages(team, scope){
+    let self = this;
+    let baseRoute = [this.partnerSite + '/' + scope];
+    // let routerRoute = this.getComponentPages(this.childrenRoutes, 'TeamPage');
+    // console.log('teampage variations',routerRoute);
+    this._rosterService.getTeamRosterData(team.id)
+    .subscribe(data => {
+      try{
+        console.log(data);
+        //[scope: string, teamName: string, teamId: string]
+        // let teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, team.full_name, team.id);
+        // let relPath = teamRoute.join('/').toString();
+        // let pathData: siteKey = {
+        //   path: teamRoute,
+        //   name: self.domainUrl + relPath,
+        //   dataPoints: null,
+        // }
+        // console.log('adding player', pathData.name);
+        // self.totalSiteMap.push(pathData);
+      }catch(e){
+        console.warn('Error siteMap failure @ addPlayerPages', e)
+      }
+
+    })
+  }
+
+  teamDirectory(scope) {//TODO
+    let param {
+      startsWith:'a',
+      listingsLimit:20,
+      page:'team',
+    }
+    this._directoryService.getPlayerData(scope, param)
+    .subscribe(data => {
+      console.log(data);
+      let relPath = teamRoute.join('/').toString();
+      let pathData: siteKey = {
+        path: teamRoute,
+        name: self.domainUrl + relPath,
+        dataPoints: null,
+      }
+      this.totalSiteMap.push(pathData);
+    },
+    err => {
+      console.log("Error getting footer data");
+    });
+  }
+
+  playerDirectory(scope) {//TODO
+    let param {
+      startsWith:'a',
+      listingsLimit:20,
+      page:'player',
+    }
+    this._directoryService.getTeamData(scope, param)
+    .subscribe(data => {
+      console.log(data);
+      let relPath = teamRoute.join('/').toString();
+      let pathData: siteKey = {
+        path: teamRoute,
+        name: self.domainUrl + relPath,
+        dataPoints: null,
+      }
+      this.totalSiteMap.push(pathData);
+    },
+    err => {
+      console.log("Error getting footer data");
+    });
   }
 
 }
