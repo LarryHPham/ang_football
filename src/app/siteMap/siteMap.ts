@@ -12,9 +12,9 @@ import { SeoService } from "../seo.service";
 
 //services
 import { PickateamPageService } from '../services/pickateam.service';
-import { RosterService } from '../services/roster.service';
 import { FooterService } from '../services/footer.service';
 import { DirectoryService } from '../services/directory.service';
+import { ArticleDataService } from "../services/article-page-service";
 
 export interface siteKey {
   path: Array<string>;
@@ -29,13 +29,13 @@ export interface siteKey {
 
 export class SiteMap {
 
-  private scopeLevel : Array<any> = [
+  public scopeLevel : Array<any> = [
     'home',
     'nfl',
     'ncaaf'
   ];
 
-  private singlePages : Array<any> = [
+  public singlePages : Array<any> = [
     'contact-us',
     'disclaimer',
     'about-us',
@@ -44,8 +44,8 @@ export class SiteMap {
     'league'
   ];
 
-  private dontLog: Array<any> = [
-    //single pages where the strings should not exist
+  public dontLog: Array<any> = [
+    //single pages
     'contact-us',
     'disclaimer',
     'about-us',
@@ -63,15 +63,15 @@ export class SiteMap {
   private domainUrl:string;
   private childrenRoutes: any;
   private totalSiteMap:any = [];
-  private displaySiteMap: boolean = false;
+  // private displaySiteMap: boolean = false;
   constructor(
     private router:ActivatedRoute,
     private _pickateamPageService: PickateamPageService,
-    private _rosterService: RosterService,
+    private _articleService: ArticleDataService,
     private _footerService: FooterService,
     private _directoryService: DirectoryService,
   ) {
-    this.domainUrl = this.getPageUrl();
+    this.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
     /*
     ** appRoutes[0] routes for non white labeled sites Touchdownloyal.com
@@ -88,32 +88,12 @@ export class SiteMap {
     this.createSiteMap();
   }
 
-  public getPageUrl() {
-    let pageUrl = "";
-    if (isNode) {
-      pageUrl = GlobalSettings._proto + "//" + Zone.current.get('originUrl');
-    } else {
-      pageUrl = GlobalSettings._proto + "//" + window.location.hostname;
-    }
-    return pageUrl;
-  } //getPageUrl
-
-  getComponentPages(routes, name){
-    let routeArray = [];
-    routes.children.forEach(function(route){
-      // if(route.component.name == name){
-      //   routeArray.push(route);
-      // }
-    });
-    return routeArray;
-  }
-
   createSiteMap(){
     let self = this;
     let route = [];
     let scopes = this.scopeLevel;
+    this.addArticlePages();
     for( var i = 0; i < scopes.length; i++ ){// start creating site map from top level
-
       //add deepDive page routes
       this.addDeepDive(scopes[i]);
       //add single page routes
@@ -125,7 +105,6 @@ export class SiteMap {
         // this.playerDirectory(scopes[i]);
       }
     }
-    console.log(this.totalSiteMap);
   }
 
   addDeepDive(scope){
@@ -139,8 +118,17 @@ export class SiteMap {
       name: this.domainUrl + relPath,
       dataPoints: null,
     }
+
+    let articlePath = '/sitemap/'+ scope + '/articles';
+    let sitePath: siteKey = {
+      path: [articlePath],
+      name: this.domainUrl + articlePath,
+      dataPoints: null,
+    }
+
     console.log('adding DeepDive page', pathData.name);
     this.totalSiteMap.push(pathData);
+    this.totalSiteMap.push(sitePath);
   }
 
   addSinglePages(scope){
@@ -188,107 +176,41 @@ export class SiteMap {
                 name: self.domainUrl + relPath,
                 dataPoints: null,
               }
-              console.log('adding team', pathData.name);
-              this.addPlayerPages(team, scope);
+              let teamPath = '/sitemap/team/' + team.id;
+              let sitePath: siteKey = {
+                path: [teamPath],
+                name: self.domainUrl + teamPath,
+                dataPoints: null,
+              }
+              console.log('adding TeamPage', pathData.name);
               self.totalSiteMap.push(pathData);
+              self.totalSiteMap.push(sitePath);
             });//end team
           });//end division
         });//end conference
       }catch(e){
         console.warn('Error siteMap failure @ addTeamPages', e)
       }
-
     })
   }
 
-  //add player pages by using pick a team roster page api call
-  //directory page requires multiple pages with letters so too many api calls to use
-  addPlayerPages(team, scope){
+  addArticlePages(){
+    let articleCount = 1000;
     let self = this;
-    let baseRoute = [this.partnerSite + '/' + scope];
-    // let routerRoute = this.getComponentPages(this.childrenRoutes, 'TeamPage');
-    // console.log('teampage variations',routerRoute);
-    this._rosterService.getTeamRosterData(team.id)
-    .finally(() => this.displaySiteMap = true ) // call preboot after last piece of data is returned on page
+    this._articleService.getArticleTotal()
     .subscribe(data => {
       try{
-        console.log(data);
-        //[scope: string, teamName: string, teamId: string]
-        // let teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, team.full_name, team.id);
-        // let relPath = teamRoute.join('/').toString();
-        // let pathData: siteKey = {
-        //   path: teamRoute,
-        //   name: self.domainUrl + relPath,
-        //   dataPoints: null,
-        // }
-        // console.log('adding player', pathData.name);
-        // self.totalSiteMap.push(pathData);
+        let total = data[0].total_articles;
+        console.log(total);
+        let totalPages = (total / articleCount).toFixed(0);
+        console.log(totalPages);
+        for(var i = 1; i <= Number(totalPages); i++){
+
+        }
       }catch(e){
-        console.warn('Error siteMap failure @ addPlayerPages', e)
+        console.warn('Error siteMap failure @ addArticlePages', e)
       }
-
     })
-  }
-
-  teamDirectory(scope) {//TODO
-    // let param {
-    //   startsWith:'a',
-    //   newlyAdded:false,
-    //   listingsLimit:20,
-    //   page:'team',
-    // }
-    // this._footerService.getFooterService(scope, "team")
-    // .subscribe(data => {
-    //   console.log(data);
-    //   this._directoryService.getTeamData(scope, param)
-    //   .subscribe(data => {
-    //     console.log(data);
-    //     let relPath = teamRoute.join('/').toString();
-    //     let pathData: siteKey = {
-    //       path: teamRoute,
-    //       name: self.domainUrl + relPath,
-    //       dataPoints: null,
-    //     }
-    //     this.totalSiteMap.push(pathData);
-    //   },
-    //   err => {
-    //     console.log("Error getting footer data");
-    //   });
-    // },
-    // err => {
-    //   console.log("Error getting footer data");
-    // });
-  }
-
-  playerDirectory(scope) {//TODO
-    // let param {
-    //   startsWith:'a',
-    //   newlyAdded:false,
-    //   listingsLimit:20,
-    //   page:'player',
-    // }
-    // this._footerService.getFooterService(scope, "player")
-    // .subscribe(data => {
-    //   console.log(data);
-    //   this._directoryService.getTeamData(scope, param)
-    //   .subscribe(data => {
-    //     console.log(data);
-    //     let relPath = teamRoute.join('/').toString();
-    //     let pathData: siteKey = {
-    //       path: teamRoute,
-    //       name: self.domainUrl + relPath,
-    //       dataPoints: null,
-    //     }
-    //     this.totalSiteMap.push(pathData);
-    //   },
-    //   err => {
-    //     console.log("Error getting footer data");
-    //   });
-    // },
-    // err => {
-    //   console.log("Error getting footer data");
-    // });
-
   }
 
 }

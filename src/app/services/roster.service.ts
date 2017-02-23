@@ -7,6 +7,7 @@ import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/ro
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
+import { ModelService } from '../global/shared/model/model.service';
 
 @Injectable()
 export class RosterService {
@@ -15,12 +16,7 @@ export class RosterService {
 
   public fullRoster: { [type:string]:Array<TeamRosterData> };
 
-  constructor(public http: Http){}
-
-  setToken(){
-    var headers = new Headers();
-    return headers;
-  }
+  constructor(public model: ModelService){}
 
   initializeAllTabs(scope:string, teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
     // with new route if route changes but using same page view then fullRoster from previous view still exists so we reset it here
@@ -32,11 +28,9 @@ export class RosterService {
 
   getTeamRosterData(teamId){
     var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
-    //console.log("loading full team roster: "+ fullUrl);
-    return this.http.get(fullUrl, {headers: this.setToken()})
-      .map(res => res.json())
+    console.log("loading full team roster: "+ fullUrl);
+    return this.model.get(fullUrl)
       .map(data => {
-        this.fullRoster = data.data;
         return data.data;
       });
   }//getRosterService ends
@@ -50,8 +44,7 @@ export class RosterService {
 
     var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
-    return this.http.get(fullUrl, {headers: this.setToken()})
-      .map(res => res.json())
+    return this.model.get(fullUrl)
       .map(data => {
         this.fullRoster = data.data;
         return data.data;

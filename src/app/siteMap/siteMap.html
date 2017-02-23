@@ -1,10 +1,10 @@
-<section *ngIf="displaySiteMap" class="site-map">
+<section class="site-map">
   <template [ngIf]="totalSiteMap">
     <div class="row">
       <div class="col-xs-12">
         <ul>
-          <template ngFor let-link [ngForOf]="totalSiteMap">
-            <li><a [routerLink]="link.path">{{link.name}}</a></li>
+          <template ngFor let-link [ngForOf]="totalSiteMap" let-i="index">
+            <li>{{i}}.&nbsp;&nbsp;<a [routerLink]="link.path">{{link.name}}</a></li>
           </template>
         </ul>
       </div>

@@ -19,6 +19,15 @@ export class ArticleDataService {
   }
 
   //AI article data processing
+  getArticleTotal() {
+    var fullUrl = GlobalSettings.getArticleUrl();
+      return this.model.get(fullUrl + "articles?totalArticleCountOverride=1")
+        .map(data => {
+          return data.data;
+        });
+  }
+
+  //AI article data processing
   getArticle(eventID, eventType, partnerId, scope, isFantasyReport, rawType) {
     var fullUrl = GlobalSettings.getArticleUrl();
     if (!isFantasyReport) {

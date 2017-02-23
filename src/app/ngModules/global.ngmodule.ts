@@ -44,6 +44,9 @@ import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
+import { SiteTeamMap } from "../siteMap/siteTeamMap";
+import { SitePlayerMap } from "../siteMap/sitePlayerMap";
+import { SiteArticleMap } from "../siteMap/siteArticleMap";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
@@ -123,7 +126,8 @@ const PAGEMODULES = [
   DirectoryPage,
   ErrorPage,
   SearchPage,
-  SiteMap
+  SiteMap,
+  SiteTeamMap
 ]
 
 const COREMODULES = [

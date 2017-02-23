@@ -26,6 +26,7 @@ import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 
 import { SiteMap } from "../siteMap/siteMap";
+import { SiteTeamMap } from "../siteMap/siteTeamMap";
 import { SearchPage } from "../webpages/search-page/search.page";
 
 const relativeChildRoutes = [
@@ -171,6 +172,18 @@ const relativeChildRoutes = [
     {
         path: 'sitemap',
         component: SiteMap
+    },
+    {
+        path: 'sitemap/:scope/articles',
+        component: SiteMap
+    },
+    {
+        path: 'sitemap/:scope/team/:teamId',
+        component: SiteTeamMap
+    },
+    {
+        path: 'sitemap/:scope/player/:playerId',
+        component: SiteTeamMap
     },
     // // //Error pages and error handling
     {
