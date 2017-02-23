@@ -10,6 +10,7 @@ import { ArticleDataService } from "../services/article-page-service";
 
 import { SideScrollSchedule } from '../ui-modules/side-scroll-schedules/side-scroll-schedules.module';
 import { ScheduleBox } from '../fe-core/components/schedule-box/schedule-box.component';
+import { ShareButtonsModule } from "ng2-sharebuttons/share-buttons.module";
 
 //deep-dive blocks
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
@@ -47,13 +48,14 @@ const MODULES = [
   CommonModule,
   GlobalModule,
   routing,
-  FormsModule
+  FormsModule,
+  ShareButtonsModule.forRoot()
 ];
 
 const PAGEMODULES = [
   // put page modules here
   DeepDivePage,
-  ArticlePages,
+  ArticlePages
 ]
 
 const COREMODULES = [
