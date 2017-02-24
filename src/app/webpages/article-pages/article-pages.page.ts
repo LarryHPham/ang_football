@@ -235,7 +235,8 @@ export class ArticlePages implements OnInit {
 
           this.metaTags(data);
           this.articleData = data.data;
-
+          let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + Zone.current.get('originUrl');
+          this.articleData.rawUrl = rawUrl + "/" + this.scope + "/articles/story/" + this.articleData.id;
           this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
           this.getRecommendedArticles(articleID);
           this.getTrendingArticles(this.eventID);
@@ -258,6 +259,8 @@ export class ArticlePages implements OnInit {
       .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page
       .subscribe(data => {
           this.articleData = data.data;
+          let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + Zone.current.get('originUrl');
+          this.articleData.rawUrl = rawUrl + "/" + this.scope + "/articles/video/" + this.articleData.id;
           this.date = GlobalFunctions.sntGlobalDateFormatting(this.articleData.pubDate, "timeZone");
           this.metaTags(data);
           this.iframeUrl = this.articleData.videoLink;
