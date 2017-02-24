@@ -420,7 +420,7 @@ export class TeamPage implements OnInit {
       }
       this.isFirstRun++;
     } //filterDropdown
-    private getSchedulesData(status, year?){
+    private getSchedulesData(status, year?) {
       var limit = 5;
       if(status == 'pregame'){
         this.selectedFilter1 = null;
@@ -437,8 +437,8 @@ export class TeamPage implements OnInit {
 
         this.scheduleParams = {
           scope: this.scope,
-          teamName: 'league',
-          teamID: null,
+          teamName: this.teamName ? this.teamName : 'league',
+          teamID: this.teamID ? this.teamID : null,
           year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
           tab : status == 'pregame' ? 'pregame' : 'postgame',
           pageNum: 1,

@@ -79,6 +79,7 @@ export class SchedulesService {
     if( week != null){
       callURL += '/'+week;
     }
+
     return this.model.get(callURL)
       .map(data => {
         return data;
@@ -105,10 +106,11 @@ export class SchedulesService {
       });
   }
 
-  getScheduleTable(dataSchedule, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, year?, week?){
+  getScheduleTable(dataSchedule, scope, profile, eventStatus, limit, pageNum, teamId, callback: Function, year?, week?) {
     var jsYear = new Date().getFullYear();//DEFAULT YEAR DATA TO CURRENT YEAR
     var displayYear;
     var eventTab:boolean = false;
+    var scope = GlobalSettings.getScope(scope);
 
     if(jsYear == year || year == null){
       displayYear = "Current Season";

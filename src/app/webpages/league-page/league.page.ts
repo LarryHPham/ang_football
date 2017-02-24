@@ -365,7 +365,7 @@ export class LeaguePage{
         limit = 3;
       }
       if(typeof year == 'undefined'){
-        year = new Date().getFullYear();
+        year = this.seasonBase;
       }
       this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, scopeLink, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame' || status == 'created'){
