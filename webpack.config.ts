@@ -47,6 +47,7 @@ export var commonPlugins = [
     'jquery': "jquery",
     Fuse: "fuse.js",
     highcharts: "highcharts",
+    'ng2-sharebuttons': 'ng2-sharebuttons.umd.js'
   }),
 
   //takes source files in node_modules and copies them into directory for use.
@@ -122,7 +123,7 @@ export var serverConfig = {
     ]
   },
   externals: includeClientPackages(
-    /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020/
+    /@angularclass|@angular|angular2-|ng2-|ng-|@ng-|angular-|@ngrx|ngrx-|@angular2|ionic|@ionic|-angular2|-ng2|-ng|moment|moment-timezone-with-data-2010-2020|ng2-sharebuttons/
   ),
   node: {
     time: true,

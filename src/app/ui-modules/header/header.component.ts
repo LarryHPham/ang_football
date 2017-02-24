@@ -6,7 +6,6 @@ import { GlobalFunctions } from "../../global/global-functions";
 import { HamburgerMenuComponent, MenuData } from '../../ui-modules/hamburger-menu/hamburger-menu.component';
 import { isBrowser } from 'angular2-universal';
 
-declare var stButtons: any;
 
 @Component({
   selector: 'header-component',
@@ -157,7 +156,6 @@ export class HeaderComponent implements AfterContentChecked {
     });
 
     if (isBrowser) {
-      stButtons.locateElements();
       //insert salad bar
       var v = document.createElement('script');
       v.src = '//w1.synapsys.us/widgets/deepdive/bar/bar.js?brandHex=234a66';
