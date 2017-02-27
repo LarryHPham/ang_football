@@ -38,10 +38,6 @@ export class SitePlayerMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-
-        console.log(this.router);
-        console.log('domainUrl',this.domainUrl);
-        console.log('partnerSite',this.partnerSite);
         this.createSiteMap(param.scope, param.teamId);
     })
   } //constructor

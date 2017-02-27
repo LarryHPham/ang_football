@@ -40,10 +40,6 @@ export class SiteArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-
-        console.log(this.router);
-        console.log('domainUrl',this.domainUrl);
-        console.log('partnerSite',this.partnerSite);
         this.createSiteMap(param.pageNumber);
     })
   } //constructor
@@ -60,7 +56,6 @@ export class SiteArticleMap {
     this._articleService.getAllAiArticle(articleCount, page)
     .subscribe(data => {
       try{
-        console.log(data);
         //(scope: string, eventType: string, eventID: string)
         data.data.forEach(function(article){
           if(article.scope == 'nfl' || article.scope == 'ncaaf'){
@@ -71,7 +66,7 @@ export class SiteArticleMap {
               name: self.domainUrl + relPath,
               dataPoints: null,
             };
-            console.log('adding addAiArticlePage', sitePath.name);
+            // console.log('adding addAiArticlePage', sitePath.name);
             self.totalSiteMap.push(sitePath);
           }
         })

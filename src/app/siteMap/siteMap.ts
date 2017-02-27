@@ -78,10 +78,6 @@ export class SiteMap {
     ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
     */
     this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-
-    console.log(this.router);
-    console.log('domainUrl',this.domainUrl);
-    console.log('partnerSite',this.partnerSite);
   } //constructor
 
   ngOnInit(){
@@ -126,7 +122,7 @@ export class SiteMap {
       dataPoints: null,
     }
 
-    console.log('adding DeepDive page', pathData.name);
+    // console.log('adding DeepDive page', pathData.name);
     this.totalSiteMap.push(pathData);
     this.totalSiteMap.push(sitePath);
   }
@@ -145,7 +141,7 @@ export class SiteMap {
             name: this.domainUrl + relPath,
             dataPoints: null,
           }
-          console.log('adding SinglePage', pathData.name);
+          // console.log('adding SinglePage', pathData.name);
           this.totalSiteMap.push(pathData);
         }
       }
@@ -182,7 +178,7 @@ export class SiteMap {
                 name: self.domainUrl + teamPath,
                 dataPoints: null,
               }
-              console.log('adding TeamPage', pathData.name);
+              // console.log('adding TeamPage', pathData.name);
               self.totalSiteMap.push(pathData);
               self.totalSiteMap.push(sitePath);
             });//end team
@@ -209,7 +205,7 @@ export class SiteMap {
             name: self.domainUrl + articlePath,
             dataPoints: null,
           }
-          console.log('adding addAiArticleSiteMaps', sitePath.name);
+          // console.log('adding addAiArticleSiteMaps', sitePath.name);
           self.totalSiteMap.push(sitePath);
         }
       }catch(e){

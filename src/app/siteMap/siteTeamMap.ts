@@ -40,10 +40,6 @@ export class SiteTeamMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-
-        console.log(this.router);
-        console.log('domainUrl',this.domainUrl);
-        console.log('partnerSite',this.partnerSite);
         this.createSiteMap(param.scope, param.teamId);
     })
   } //constructor
@@ -52,7 +48,6 @@ export class SiteTeamMap {
     let self = this;
     let route = [];
     this.addPlayerPages(scope, teamId);
-    console.log(this.totalSiteMap);
   }
 
   //add player pages by using pick a team roster page api call
@@ -63,7 +58,6 @@ export class SiteTeamMap {
     this._rosterService.getTeamRosterData(teamId)
     .subscribe(data => {
       try{
-        console.log(data);
         let fullRoster = [];
         for(var pos in data){
           data[pos].forEach(function(player){
@@ -72,9 +66,7 @@ export class SiteTeamMap {
             let playerName = player.playerFirstName + ' ' + player.playerLastName;
             //[scope: string, teamName: string, playerFullName:string, playerId: string]
             let playerRoute = VerticalGlobalFunctions.formatPlayerRoute(scope, teamName, playerName, player.playerId);
-            console.log(playerRoute);
             let relPath = playerRoute.join('/').toString();
-            console.log(relPath);
             let pathData: siteKey = {
               path: playerRoute,
               name: self.domainUrl + relPath,
@@ -86,7 +78,7 @@ export class SiteTeamMap {
             //   name: self.domainUrl + playerPath,
             //   dataPoints: null,
             // }
-            console.log('adding playerPage', pathData.name);
+            // console.log('adding playerPage', pathData.name);
             self.totalSiteMap.push(pathData);
             // self.totalSiteMap.push(sitePath);
 
