@@ -556,7 +556,7 @@ export class TeamPage implements OnInit {
         .subscribe(data => {
           if(data){
             this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
-            this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+            this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
           }else{
             console.warn('Insufficient number of videos available');
           }

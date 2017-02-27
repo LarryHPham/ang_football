@@ -63,18 +63,20 @@ export class SiteArticleMap {
         console.log(data);
         //(scope: string, eventType: string, eventID: string)
         data.data.forEach(function(article){
-          let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.article_id);
-          let relPath = articleRoute.join('/').toString();
-          let sitePath: siteKey = {
-            path: articleRoute,
-            name: self.domainUrl + relPath,
-            dataPoints: null,
-          };
-          console.log('adding addAiArticlePage', sitePath.name);
-          self.totalSiteMap.push(sitePath);
+          if(article.scope == 'nfl' || article.scope == 'ncaaf'){
+            let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.article_id);
+            let relPath = articleRoute.join('/').toString();
+            let sitePath: siteKey = {
+              path: articleRoute,
+              name: self.domainUrl + relPath,
+              dataPoints: null,
+            };
+            console.log('adding addAiArticlePage', sitePath.name);
+            self.totalSiteMap.push(sitePath);
+          }
         })
       }catch(e){
-        console.warn('Error siteMap failure @ addArticlePages', e)
+        console.warn('Error siteMap failure @ addAiArticlePage', e)
       }
     })
   }

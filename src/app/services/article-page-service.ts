@@ -32,7 +32,6 @@ export class ArticleDataService {
     var fullUrl = GlobalSettings.getArticleUrl();
       return this.model.get(fullUrl + "articles?&count=" + count + "&page=" + page + "&metaDataOnly=1")
         .map(data => {
-          console.log(data);
           return data;
         });
   }

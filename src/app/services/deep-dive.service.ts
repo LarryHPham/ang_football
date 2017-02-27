@@ -306,35 +306,39 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
+    try{
+      let tileStack = data['articles'];
+      let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
+      let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
+      var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
+      let pickATeam = ['/'+routeScope,'pick-a-team'];
+      let leaguePage = ['/'+routeScope,'league'];
+      var tileLink = [pickATeam, pickATeam, leaguePage];
+      var dataStack = [];
+      // create array of imagePaths
+      var imagePaths = [];
+      for (var i=0; i<tileStack.length; i++) {
+        imagePaths.push(tileStack[i].imagePath);
+      }
+      // remove duplicates from array
+      var imagePaths = imagePaths.filter( function(item, index, inputArray) {
+        return inputArray.indexOf(item) == index;
+      });
 
-    let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
-    let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
-    let pickATeam = ['/'+routeScope,'pick-a-team'];
-    let leaguePage = ['/'+routeScope,'league'];
-    var tileLink = [pickATeam, pickATeam, leaguePage];
-    var dataStack = [];
-    // create array of imagePaths
-    var imagePaths = [];
-    for (var i=0; i<data.length; i++) {
-      imagePaths.push(data[i].imagePath);
+
+      for(var i = 0; i < 3; i++){
+        var k = imagePaths[Math.floor(Math.random() * imagePaths.length)];
+        var indexOfK = imagePaths.indexOf(k);
+        dataStack[i] = tileStack[i];
+        dataStack[i]['lines'] = lines[i];
+        dataStack[i]['tileLink'] = tileLink[i];
+        dataStack[i]['image_url'] = GlobalSettings.getImageUrl(k) != null ? GlobalSettings.getImageUrl(k, GlobalSettings._deepDiveTileStack) : "/app/public/placeholder_XL.png";
+        // remove appended image string from array
+        imagePaths.splice(indexOfK,1);
+      }
+      return dataStack;
+    }catch(e){
+        console.log('tile stack error');
     }
-    // remove duplicates from array
-    var imagePaths = imagePaths.filter( function(item, index, inputArray) {
-      return inputArray.indexOf(item) == index;
-    });
-
-
-    for(var i = 0; i < 3; i++){
-      var k = imagePaths[Math.floor(Math.random() * imagePaths.length)];
-      var indexOfK = imagePaths.indexOf(k);
-      dataStack[i] = data[i];
-      dataStack[i]['lines'] = lines[i];
-      dataStack[i]['tileLink'] = tileLink[i];
-      dataStack[i]['image_url'] = GlobalSettings.getImageUrl(k) != null ? GlobalSettings.getImageUrl(k, GlobalSettings._deepDiveTileStack) : "/app/public/placeholder_XL.png";
-      // remove appended image string from array
-      imagePaths.splice(indexOfK,1);
-    }
-    return dataStack;
   }
 }
