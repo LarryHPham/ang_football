@@ -104,6 +104,10 @@ const relativeChildRoutes = [
         component: TeamRosterPage
     },
     {
+        path: ':scope/team-roster/:teamName/:teamID/:tab',
+        component: TeamRosterPage
+    },
+    {
         path: ':scope/list/:query',
         component: ListPage
     },
