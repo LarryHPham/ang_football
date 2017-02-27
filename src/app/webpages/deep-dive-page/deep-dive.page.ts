@@ -235,7 +235,12 @@ export class DeepDivePage {
   private getDeepDiveVideoBatch() {
     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
       data => {
-        this.videoData = data.data != null ? this._deepDiveData.transformVideoStack(data.data) : null;
+        try{
+          var video = data.data['videos'] != null ? this._deepDiveData.transformVideoStack(data.data) : null;
+          this.videoData = video['videos'];
+        }catch(e){
+          console.log('error in video data');
+        }
       }
     )
   }
@@ -247,9 +252,9 @@ export class DeepDivePage {
   }
 
   getFirstArticleStackData() {
-    this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
+    this._deepDiveData.getDeepDiveBatchService(this.scope, 1, 1, this.geoLocation)
       .subscribe(data => {
-        this.firstStackTop = this._deepDiveData.transformToArticleStack([data[0]], GlobalSettings._deepDiveMd);
+        this.firstStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveMd);
       },
       err => {
         console.log("Error getting first article stack data");

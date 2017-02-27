@@ -279,7 +279,7 @@ export class LeaguePage{
       this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
         .subscribe(data => {
             this.firstVideo = data.data[first].videoLink;
-            this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+            this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
         },
         err => {
             console.log("Error getting video data");
@@ -365,7 +365,7 @@ export class LeaguePage{
         limit = 3;
       }
       if(typeof year == 'undefined'){
-        year = new Date().getFullYear();
+        year = this.seasonBase;
       }
       this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, scopeLink, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame' || status == 'created'){
@@ -433,7 +433,7 @@ export class LeaguePage{
                 this.dropdownKey1 = this.transactionFilter1[0].key;
               }
             }
-            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, 'league', 20, 1];
+            this.transactionModuleFooterParams = [this.storedPartnerParam, this.scope, transactionsData.tabDataKey, this.dropdownKey1, 'league', 20];
             this.transactionsData.tabs.filter(tab => tab.tabDataKey == this.transactionsActiveTab.tabDataKey)[0] = transactionsData;
           },
           err => {

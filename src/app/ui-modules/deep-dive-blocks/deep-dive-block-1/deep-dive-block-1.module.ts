@@ -90,7 +90,7 @@ export class DeepDiveBlock1{
   getDeepDiveVideoBatch(scope, region, numItems, startNum){
     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, numItems, startNum, region).subscribe(
       data => {
-        this.videoData = this._deepDiveData.transformVideoStack(data.data);
+        this.videoData = this._deepDiveData.transformVideoStack(data.data)['videos'];
       },
       err => {
           console.log("Error getting video batch data");

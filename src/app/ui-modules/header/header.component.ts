@@ -6,7 +6,6 @@ import { GlobalFunctions } from "../../global/global-functions";
 import { HamburgerMenuComponent, MenuData } from '../../ui-modules/hamburger-menu/hamburger-menu.component';
 import { isBrowser } from 'angular2-universal';
 
-
 @Component({
   selector: 'header-component',
   templateUrl: './header.component.html',

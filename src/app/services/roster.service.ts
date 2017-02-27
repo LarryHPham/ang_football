@@ -7,6 +7,7 @@ import {RosterTableModel, NFLRosterTabData, TeamRosterData} from '../services/ro
 import {VerticalGlobalFunctions} from '../global/vertical-global-functions';
 import {GlobalSettings} from '../global/global-settings';
 import {Conference, Division} from '../global/global-interface';
+import { ModelService } from '../global/shared/model/model.service';
 
 @Injectable()
 export class RosterService {
@@ -15,12 +16,7 @@ export class RosterService {
 
   public fullRoster: { [type:string]:Array<TeamRosterData> };
 
-  constructor(public http: Http){}
-
-  setToken(){
-    var headers = new Headers();
-    return headers;
-  }
+  constructor(public model: ModelService){}
 
   initializeAllTabs(scope:string, teamId: string, conference: Conference, maxRows?: number, isTeamProfilePage?: boolean): Array<NFLRosterTabData> {
     // with new route if route changes but using same page view then fullRoster from previous view still exists so we reset it here
@@ -29,6 +25,15 @@ export class RosterService {
     }
     return this._tabTypes.map(type => new NFLRosterTabData(this, scope, teamId, type, conference, maxRows, isTeamProfilePage));
   }
+
+  getTeamRosterData(teamId){
+    var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
+    console.log("loading full team roster: "+ fullUrl);
+    return this.model.get(fullUrl)
+      .map(data => {
+        return data.data;
+      });
+  }//getRosterService ends
 
   getRosterTabData(rosterTab: NFLRosterTabData): Observable<Array<TeamRosterData>> {
     var teamId = rosterTab.teamId;
@@ -39,8 +44,7 @@ export class RosterService {
 
     var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
     //console.log("loading full team roster: "+ fullUrl);
-    return this.http.get(fullUrl, {headers: this.setToken()})
-      .map(res => res.json())
+    return this.model.get(fullUrl)
       .map(data => {
         this.fullRoster = data.data;
         return data.data;
@@ -51,7 +55,7 @@ export class RosterService {
     return {
         moduleTitle: "Team Roster",
         moduleIdentifier: " - " + teamName,
-        pageRouterLink: this.getLinkToPage(partnerRoute, scope, teamId, teamName),
+        // pageRouterLink: this.getLinkToPage(partnerRoute, scope, teamId, teamName),
         tabs: this.initializeAllTabs(scope, teamId.toString(), conference, 5, isTeamProfilePage)
     };
   }
@@ -72,9 +76,9 @@ export class RosterService {
     return pageTitle;
   }
 
-  getLinkToPage(partnerRoute: string, scope, teamId: number, teamName: string): Array<any> {
+  getLinkToPage(partnerRoute: string, scope, teamId: number, teamName: string, type:string): Array<any> {
     var pageName = "team-roster";
-    return [partnerRoute, scope, pageName, GlobalFunctions.toLowerKebab(teamName), teamId];
+    return [partnerRoute, scope, pageName, GlobalFunctions.toLowerKebab(teamName), teamId, type];
   }
 
 }

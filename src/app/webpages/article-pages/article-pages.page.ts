@@ -235,7 +235,6 @@ export class ArticlePages implements OnInit {
 
           this.metaTags(data);
           this.articleData = data.data;
-
           let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + Zone.current.get('originUrl');
           this.articleData.rawUrl = rawUrl + "/" + this.scope + "/articles/story/" + this.articleData.id;
           this.date = GlobalFunctions.sntGlobalDateFormatting(moment.unix(this.articleData.publishedDate / 1000), "timeZone");
