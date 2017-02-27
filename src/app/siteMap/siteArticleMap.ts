@@ -40,34 +40,36 @@ export class SiteArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.pageNumber);
+        this.createSiteMap(param.scope, param.pageNumber);
     })
   } //constructor
 
-  createSiteMap(pageNumber){
+  createSiteMap(scope, pageNumber){
     let self = this;
     let route = [];
-    this.addAiArticlePage(pageNumber)
+    this.addAiArticlePage(scope, pageNumber)
   }
 
-  addAiArticlePage(page){
+  addAiArticlePage(scope, page){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
-    this._articleService.getAllAiArticle(articleCount, page)
+    this._articleService.getAllAiArticle(scope, articleCount, page)
     .subscribe(data => {
       try{
         //(scope: string, eventType: string, eventID: string)
         data.data.forEach(function(article){
           if(article.scope == 'nfl' || article.scope == 'ncaaf'){
-            let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.article_id);
-            let relPath = articleRoute.join('/').toString();
-            let sitePath: siteKey = {
-              path: articleRoute,
-              name: self.domainUrl + relPath,
-              dataPoints: null,
-            };
-            // console.log('adding addAiArticlePage', sitePath.name);
-            self.totalSiteMap.push(sitePath);
+            if(article.event_id){
+              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.event_id);
+              let relPath = articleRoute.join('/').toString();
+              let sitePath: siteKey = {
+                path: articleRoute,
+                name: self.domainUrl + relPath,
+                dataPoints: null,
+              };
+              // console.log('adding addAiArticlePage', sitePath.name);
+              self.totalSiteMap.push(sitePath);
+            }
           }
         })
       }catch(e){

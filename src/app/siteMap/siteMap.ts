@@ -88,7 +88,6 @@ export class SiteMap {
     let self = this;
     let route = [];
     let scopes = this.scopeLevel;
-    this.addAiArticleSiteMaps();
     for( var i = 0; i < scopes.length; i++ ){// start creating site map from top level
       //add deepDive page routes
       this.addDeepDive(scopes[i]);
@@ -97,6 +96,7 @@ export class SiteMap {
 
       if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of home that is located in dontLog variable
         this.addTeamPages(scopes[i]);
+        this.addAiArticleSiteMaps(scopes[i]);
         // this.teamDirectory(scopes[i]);
         // this.playerDirectory(scopes[i]);
       }
@@ -114,17 +114,8 @@ export class SiteMap {
       name: this.domainUrl + relPath,
       dataPoints: null,
     }
-
-    let articlePath = '/sitemap/'+ scope + '/articles';
-    let sitePath: siteKey = {
-      path: [articlePath],
-      name: this.domainUrl + articlePath,
-      dataPoints: null,
-    }
-
     // console.log('adding DeepDive page', pathData.name);
     this.totalSiteMap.push(pathData);
-    this.totalSiteMap.push(sitePath);
   }
 
   addSinglePages(scope){
@@ -190,7 +181,7 @@ export class SiteMap {
     })
   }
 
-  addAiArticleSiteMaps(){
+  addAiArticleSiteMaps(scope){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
     this._articleService.getArticleTotal()
@@ -199,7 +190,7 @@ export class SiteMap {
         let total = data[0].total_articles;
         let totalPages = (total / articleCount).toFixed(0);
         for(var i = 1; i <= Number(totalPages); i++){
-          let articlePath = '/sitemap/aiarticles/' + i;
+          let articlePath = '/sitemap/'+scope+'/aiarticles/' + i;
           let sitePath: siteKey = {
             path: [articlePath],
             name: self.domainUrl + articlePath,

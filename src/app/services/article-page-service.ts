@@ -19,18 +19,18 @@ export class ArticleDataService {
   }
 
   //AI article data processing
-  getArticleTotal() {
+  getArticleTotal(scope) {
     var fullUrl = GlobalSettings.getArticleUrl();
-      return this.model.get(fullUrl + "articles?totalArticleCountOverride=1")
+      return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=99999999&page=1&metaDataOnly=1")
         .map(data => {
           return data.data;
         });
   }
 
   //AI article data processing
-  getAllAiArticle(count, page) {
+  getAllAiArticle(scope, count, page) {
     var fullUrl = GlobalSettings.getArticleUrl();
-      return this.model.get(fullUrl + "articles?&count=" + count + "&page=" + page + "&metaDataOnly=1")
+      return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=" + count + "&page=" + page + "&metaDataOnly=1")
         .map(data => {
           return data;
         });
