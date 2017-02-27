@@ -95,6 +95,8 @@ export class TeamPage implements OnInit {
   private standingsData:StandingsModuleData;
 
   private rosterData: RosterModuleData<TeamRosterData>;
+  private activeRosterTab: any;
+  private rosterModuleFooterUrl: Array<any>;
 
   private transactionsActiveTab: any;
   private transactionsData:TransactionModuleData;
@@ -256,6 +258,7 @@ export class TeamPage implements OnInit {
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
         this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
         this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+        this.getRosterService();
         this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
         //--Batch 3--//
@@ -267,7 +270,7 @@ export class TeamPage implements OnInit {
         //--Batch 4--//
         this.setupComparisonData();
         this.getImages(this.imageData);
-        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+        // this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
         this.getDykService();
 
         //--Batch 5--//
@@ -551,21 +554,21 @@ export class TeamPage implements OnInit {
     } //getImages
 
 
-    private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
-        .subscribe(data => {
-          if(data){
-            this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
-            this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
-          }else{
-            console.warn('Insufficient number of videos available');
-          }
-        },
-        err => {
-          console.log("Error getting video data");
-        }
-      ));
-    } //getTeamVideoBatch
+    // private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
+    //   this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+    //     .subscribe(data => {
+    //       if(data){
+    //         this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
+    //         this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
+    //       }else{
+    //         console.warn('Insufficient number of videos available');
+    //       }
+    //     },
+    //     err => {
+    //       console.log("Error getting video data");
+    //     }
+    //   ));
+    // } //getTeamVideoBatch
 
 
 
@@ -610,6 +613,20 @@ export class TeamPage implements OnInit {
           }
       ));
     } //setupListOfListsModule
+
+
+
+    private rosterTabSelected(rosterTabTitle) {
+        this.activeRosterTab = this.rosterData.tabs.filter(value => value.title == rosterTabTitle);
+        this.getRosterService();
+    }
+    private getRosterService() {
+        this.activeRosterTab = this.activeRosterTab ?
+                               this.activeRosterTab[0] :
+                               this.rosterData.tabs[0];
+
+        this.rosterModuleFooterUrl = this._rosterService.getLinkToPage(this.storedPartnerParam, this.scope, this.teamID, this.teamName, this.activeRosterTab.type);
+    }
 
 
 

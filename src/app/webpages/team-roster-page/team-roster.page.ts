@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, DoCheck, OnChanges } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Title } from '@angular/platform-browser';
 
 //global functions
@@ -25,13 +25,18 @@ import { SportPageParameters } from '../../global/global-interface';
     templateUrl: './team-roster.page.html',
 })
 
-export class TeamRosterPage implements OnInit {
+export class TeamRosterPage {
     public scope: string;
-    public partnerID: string;
-    public teamID: string;
-    public pageParams: SportPageParameters = {}
+    public scopeParam: string;
+    public pageParams: SportPageParameters = {};
     public paramsub: any;
-
+    public storedPartnerParam: string;
+    public partnerID: string;
+    public pageType: string;
+    public teamID: string;
+    public teamName: string;
+    public tabParam: string;
+    public selectedTabKey: string;
     public titleData: TitleInputData;
     public profileLoaded: boolean = false;
     public hasError: boolean = false;
@@ -41,32 +46,39 @@ export class TeamRosterPage implements OnInit {
         url: ['Team-roster-page']
     };
     public tabs: Array<NFLRosterTabData>;
-    private selectedTabTitle: string;
+    public activeTab: Array<NFLRosterTabData>;
+
+    private profileService: any;
 
     constructor(
+        private router: Router,
         private activateRoute: ActivatedRoute,
         private _profileService: ProfileHeaderService,
         private _rosterService: RosterService,
         private _seoService: SeoService
     ) {
-      this.paramsub = this.activateRoute.params.subscribe(
-        (param :any)=> {
-          this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
-          this.pageParams.scope = this.scope;
-          this.partnerID = param['partnerID'];
-          this.teamID = param['teamID'];
-          if ( this.teamID !== null && this.teamID !== undefined ) {
-            this.pageParams.teamId = Number(this.teamID);
-          }
-        }
-      )
-
-      this.getData();
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.paramsub = this.activateRoute.params.subscribe(
+            (param :any)=> {
+                let route = this.router.url.split('/');
+                this.pageParams.scope = this.scope;
+                this.pageType = this.storedPartnerParam != '' ?
+                                route[3] :
+                                route[2];
+                this.scopeParam = param['scope'];
+                this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
+                this.partnerID = param['partnerID'];
+                this.teamName = param['teamName'];
+                this.teamID = param['teamID'];
+                this.tabParam = param['tab'];
+                this.selectedTabKey = param['tab'];
+                if ( this.teamID !== null && this.teamID !== undefined ) {
+                    this.pageParams.teamId = Number(this.teamID);
+                }
+                this.getData();
+            }
+        )
     } //constructor
-
-
-
-    ngOnInit() {}
 
 
 
@@ -99,16 +111,17 @@ export class TeamRosterPage implements OnInit {
 
     getData() {
       if ( this.pageParams.teamId ) {
-        this._profileService.getTeamProfile(this.pageParams.teamId)
+        this.profileService = this._profileService.getTeamProfile(this.pageParams.teamId)
           .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
           .subscribe(
             data => {
               this.profileLoaded = true;
               this.pageParams = data.pageParams;
-                data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
+              data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
               this.titleData = this._profileService.convertTeamPageHeader(this.scope, data, this._rosterService.getPageTitle(data.teamName));
               this.metaTags(this.titleData);
-              this.setupRosterData();
+              this.setTabs();
+              this.getSelectedTab(this.tabParam);
             },
             err => {
               this.hasError = true;
@@ -123,7 +136,35 @@ export class TeamRosterPage implements OnInit {
 
 
 
-    private setupRosterData() {
-        this.tabs = this._rosterService.initializeAllTabs(this.scope, this.pageParams.teamId.toString(), this.pageParams.conference);
-    } //setupRosterData
+    private rosterTabSelected(tabTitle) {
+        let newRoute;
+        let tabTo = this.tabs.filter(value => value.title == tabTitle);
+        let tabFrom = this.activeTab[0].title;
+        if ( tabTo[0].title != tabFrom ) {
+            newRoute = [this.storedPartnerParam, this.scopeParam, this.pageType, this.teamName, this.teamID, tabTo[0].type];
+            this.router.navigate(newRoute);
+        }
+    } //rosterTabSelected
+
+
+
+    private getSelectedTab(tab) {
+        if ( this.tabs ) {
+            this.activeTab = this.tabs.filter(value => value.type == tab);
+            return this.activeTab;
+        }
+    } //getSelectedTab
+
+
+
+    private setTabs() {
+        this.tabs = this._rosterService.initializeAllTabs(this.scope, this.teamID, this.pageParams.conference);
+    } //setTabs
+
+
+
+    ngOnDestroy(){
+      this.paramsub.unsubscribe();
+      this.profileService.unsubscribe();
+    } //ngOnDestroy
 }

@@ -33,6 +33,7 @@ export interface TeamRosterData {
   playerAge: string,
   playerSalary: number,
   lastUpdated: string,
+  type?: string,
   /**
    * - Formatted from league and division values that generated the associated table
    */
@@ -65,6 +66,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
     this.errorMessage = "Sorry, there is no roster data available.";
     this.isTeamProfilePage = isTeamProfilePage;
     this.scope = scope;
+    this.type = type;
 
     switch ( type ) {
       case "full":      this.title = "Full Roster"; break;
@@ -92,7 +94,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
         this.subscriptions.push(this._service.getRosterTabData(this).subscribe(data => {
           //Limit to maxRows, if necessary
           var rows = this.filterRows(data);
-          this.tableData = new RosterTableModel(this.scope, rows);
+          this.tableData = new RosterTableModel(this.scope, rows, this.type);
           this.isLoaded = true;
           this.hasError = false;
         },
@@ -104,7 +106,7 @@ export class NFLRosterTabData implements RosterTabData<TeamRosterData> {
       }
       else {
         var rows = this.filterRows(this._service.fullRoster);
-        this.tableData = new RosterTableModel(this.scope, rows);
+        this.tableData = new RosterTableModel(this.scope, rows, this.type);
         this.isLoaded = true;
         this.hasError = false;
       }
@@ -242,7 +244,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
   selectedKey: string = "";
 
   scope: string;
-  constructor(scope:string, rows: Array<TeamRosterData>) {
+  constructor(scope:string, rows: Array<TeamRosterData>, key?: string) {
     this.scope = scope;
     if(scope == 'nfl'){
       this.columns.push({
@@ -271,6 +273,7 @@ export class RosterTableModel implements TableModel<TeamRosterData> {
       }*/);
     }
     this.rows = rows;
+    this.selectedKey = key;
     if ( this.rows === undefined || this.rows === null ) {
       this.rows = [];
     }
