@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GlobalFunctions } from './global-functions';
 import { Division, Conference } from './global-interface';
 import { GlobalSettings } from './global-settings';
-import { isBrowser } from 'angular2-universal';
+import { isBrowser,isNode } from 'angular2-universal';
 
 @Injectable()
 
@@ -37,7 +37,15 @@ export class VerticalGlobalFunctions {
     return route;
   } //getWhiteLabel
 
-
+  static getPageUrl() {
+    let pageUrl = "";
+    if (isNode) {
+      pageUrl = GlobalSettings._proto + "//" + Zone.current.get('originUrl');
+    } else {
+      pageUrl = GlobalSettings._proto + "//" + window.location.hostname;
+    }
+    return pageUrl;
+  } //getPageUrl
 
   /**
    * - Pass in datapoints to required parameters and formats

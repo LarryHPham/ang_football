@@ -24,8 +24,12 @@ import { ListPage } from "../webpages/list-page/list.page";
 import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
-// import { SyndicatedArticlePage } from "./webppages/syndicated-article-page/syndicated-article-page";
+
 import { SearchPage } from "../webpages/search-page/search.page";
+import { SiteMap } from "../siteMap/siteMap";
+import { SiteTeamMap } from "../siteMap/siteTeamMap";
+import { SitePlayerMap } from "../siteMap/sitePlayerMap";
+import { SiteArticleMap } from "../siteMap/siteArticleMap";
 
 const relativeChildRoutes = [
     {
@@ -170,6 +174,22 @@ const relativeChildRoutes = [
     {
         path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         component: ListOfListsPage
+    },
+    {
+        path: 'sitemap',
+        component: SiteMap
+    },
+    {
+        path: 'sitemap/:scope/team/:teamId',
+        component: SiteTeamMap
+    },
+    {
+        path: 'sitemap/:scope/player/:playerId',
+        component: SitePlayerMap
+    },
+    {
+      path: 'sitemap/aiarticles/:pageNumber',
+      component: SiteArticleMap
     },
     // // //Error pages and error handling
     {

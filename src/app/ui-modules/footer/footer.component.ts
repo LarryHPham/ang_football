@@ -32,6 +32,7 @@ export class FooterComponent implements OnInit {
     public advertise: string = "Advertise with ";
     public contactUs: string = "Contact Us";
     public disc: string = "Disclaimer";
+    public siteMap: string = "Site Map";
     public au: string = "About Us";
     public footerLinks: Object;
 
@@ -88,11 +89,13 @@ export class FooterComponent implements OnInit {
         var scope = this.scopeParam == 'home' ? 'nfl' : this.scopeParam;
         let partnerLink = VerticalGlobalFunctions.getWhiteLabel();
         var baseFooterLink = partnerLink != '' ? [partnerLink, this.scopeParam] : [this.scopeParam];
+        var siteMap = partnerLink != '' ? [partnerLink, 'sitemap'] : ['/sitemap'];
 
         this.footerLinks = {
           aboutUs: baseFooterLink.concat(['about-us']),
           contactUs: baseFooterLink.concat(['contact-us']),
-          disclaimer: baseFooterLink.concat(['disclaimer'])
+          disclaimer: baseFooterLink.concat(['disclaimer']),
+          siteMap: siteMap
         }
     }
 }
