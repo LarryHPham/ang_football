@@ -95,6 +95,8 @@ export class TeamPage implements OnInit {
   private standingsData:StandingsModuleData;
 
   private rosterData: RosterModuleData<TeamRosterData>;
+  private activeRosterTab: any;
+  private rosterModuleFooterUrl: Array<any>;
 
   private transactionsActiveTab: any;
   private transactionsData:TransactionModuleData;
@@ -256,6 +258,7 @@ export class TeamPage implements OnInit {
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
         this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
         this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
+        this.getRosterService();
         this.playerStatsData = this._playerStatsService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.seasonBase, true);
 
         //--Batch 3--//
@@ -267,7 +270,7 @@ export class TeamPage implements OnInit {
         //--Batch 4--//
         this.setupComparisonData();
         this.getImages(this.imageData);
-        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+        // this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
         this.getDykService();
 
         //--Batch 5--//
@@ -420,7 +423,7 @@ export class TeamPage implements OnInit {
       }
       this.isFirstRun++;
     } //filterDropdown
-    private getSchedulesData(status, year?){
+    private getSchedulesData(status, year?) {
       var limit = 5;
       if(status == 'pregame'){
         this.selectedFilter1 = null;
@@ -437,8 +440,8 @@ export class TeamPage implements OnInit {
 
         this.scheduleParams = {
           scope: this.scope,
-          teamName: 'league',
-          teamID: null,
+          teamName: this.teamName ? this.teamName : 'league',
+          teamID: this.teamID ? this.teamID : null,
           year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
           tab : status == 'pregame' ? 'pregame' : 'postgame',
           pageNum: 1,
@@ -610,6 +613,20 @@ export class TeamPage implements OnInit {
           }
       ));
     } //setupListOfListsModule
+
+
+
+    private rosterTabSelected(rosterTabTitle) {
+        this.activeRosterTab = this.rosterData.tabs.filter(value => value.title == rosterTabTitle);
+        this.getRosterService();
+    }
+    private getRosterService() {
+        this.activeRosterTab = this.activeRosterTab ?
+                               this.activeRosterTab[0] :
+                               this.rosterData.tabs[0];
+
+        this.rosterModuleFooterUrl = this._rosterService.getLinkToPage(this.storedPartnerParam, this.scope, this.teamID, this.teamName, this.activeRosterTab.type);
+    }
 
 
 

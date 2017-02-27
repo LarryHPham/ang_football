@@ -162,7 +162,7 @@ export class DeepDiveService {
 
   transformToAiArticleRow(data){
     try{
-      data = data.data['articles'];
+      data = data.data;
       var sampleImage = GlobalSettings._defaultStockImage;
       var articleStackArray = [];
 

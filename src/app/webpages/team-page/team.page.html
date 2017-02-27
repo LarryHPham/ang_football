@@ -52,7 +52,11 @@
           [displayAtRes]="'992'"></responsive-widget>
         <team-roster-module
           *ngIf="rosterData"
-          [data]="rosterData"></team-roster-module>
+          [data]="rosterData"
+          [activeTab]="activeRosterTab"
+          [rosterModuleFooterUrl]="rosterModuleFooterUrl"
+          (tabSelectedListener)="rosterTabSelected($event)">
+      </team-roster-module>
         <player-stats-module
           *ngIf="playerStatsData"
           [data]="playerStatsData"

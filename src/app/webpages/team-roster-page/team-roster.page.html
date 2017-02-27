@@ -4,7 +4,13 @@
     <title-component *ngIf="titleData" [titleData]="titleData"></title-component>
     <loading-component *ngIf="!profileLoaded && !hasError && !tabs"></loading-component>
     <error-component *ngIf="hasError"></error-component>
-
-    <roster-component *ngIf="tabs" [tabs]="tabs" (tabSelected)="rosterTabSelected($event)" class="{{scope}}"></roster-component>
+    <roster-component
+        *ngIf="tabs"
+        [tabs]="tabs"
+        [activeTab]="activeTab[0]"
+        [selectedTabKey]="selectedTabKey"
+        (tabSelectedListener)="rosterTabSelected($event)"
+        class="{{scope}}">
+    </roster-component>
 </section>
 </sidekick-wrapper>
