@@ -243,7 +243,7 @@ export class DeepDiveService {
   }
 
   transformToRecArticles(data){
-    data = data.data;
+    data = data.data['articles'];
     var sampleImage = GlobalSettings._defaultStockImage;
 
     var articleStackArray = [];
@@ -284,8 +284,8 @@ export class DeepDiveService {
   }
 
   transformVideoStack(data){
-    if ( data != null ) {
-      data.forEach(function(val, i){
+    if ( data['videos'] != null ) {
+      data['videos'].forEach(function(val, i){
         let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
         var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
         val['extUrl'] = false,

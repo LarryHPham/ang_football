@@ -92,7 +92,7 @@ export class SiteMap {
     let self = this;
     let route = [];
     let scopes = this.scopeLevel;
-    this.addArticleSiteMaps();
+    this.addAiArticleSiteMaps();
     for( var i = 0; i < scopes.length; i++ ){// start creating site map from top level
       //add deepDive page routes
       this.addDeepDive(scopes[i]);
