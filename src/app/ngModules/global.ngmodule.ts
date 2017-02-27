@@ -127,7 +127,9 @@ const PAGEMODULES = [
   ErrorPage,
   SearchPage,
   SiteMap,
-  SiteTeamMap
+  SiteTeamMap,
+  SitePlayerMap,
+  SiteArticleMap
 ]
 
 const COREMODULES = [

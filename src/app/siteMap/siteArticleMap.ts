@@ -12,6 +12,7 @@ import { SeoService } from "../seo.service";
 import { siteKey } from "../siteMap/siteMap";
 
 //services
+import { ArticleDataService } from "../services/article-page-service";
 
 @Component({
   selector: 'site-article-map',
@@ -27,6 +28,7 @@ export class SiteArticleMap {
   private fullRoster: Array<any>;
   // private displaySiteMap: boolean = false;
   constructor(
+    private _articleService: ArticleDataService,
     private router:ActivatedRoute,
   ) {
     this.router.params.subscribe(
@@ -42,16 +44,38 @@ export class SiteArticleMap {
         console.log(this.router);
         console.log('domainUrl',this.domainUrl);
         console.log('partnerSite',this.partnerSite);
-        this.createSiteMap(param.scope);
+        this.createSiteMap(param.pageNumber);
     })
   } //constructor
 
-  createSiteMap(scope){
+  createSiteMap(pageNumber){
     let self = this;
     let route = [];
+    this.addAiArticlePage(pageNumber)
   }
 
-  //add player pages by using pick a team roster page api call
-  //directory page requires multiple pages with letters so too many api calls to use
-
+  addAiArticlePage(page){
+    let articleCount = GlobalSettings.siteMapArticleCount;
+    let self = this;
+    this._articleService.getAllAiArticle(articleCount, page)
+    .subscribe(data => {
+      try{
+        console.log(data);
+        //(scope: string, eventType: string, eventID: string)
+        data.data.forEach(function(article){
+          let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.article_id);
+          let relPath = articleRoute.join('/').toString();
+          let sitePath: siteKey = {
+            path: articleRoute,
+            name: self.domainUrl + relPath,
+            dataPoints: null,
+          };
+          console.log('adding addAiArticlePage', sitePath.name);
+          self.totalSiteMap.push(sitePath);
+        })
+      }catch(e){
+        console.warn('Error siteMap failure @ addArticlePages', e)
+      }
+    })
+  }
 }

@@ -125,7 +125,7 @@ export class DeepDiveService {
     //always returns the first batch of articles
     this.getDeepDiveBatchService(scope, limit, batch, state)
       .subscribe(data=>{
-        var transformedData = this.carouselTransformData(data);
+        var transformedData = this.carouselTransformData(data['articles']);
         callback(transformedData);
       })
 
@@ -161,53 +161,59 @@ export class DeepDiveService {
   }
 
   transformToAiArticleRow(data){
-    data = data.data;
-    var sampleImage = GlobalSettings._defaultStockImage;
-    var articleStackArray = [];
+    try{
+      data = data.data['articles'];
+      var sampleImage = GlobalSettings._defaultStockImage;
+      var articleStackArray = [];
 
-    if ( data ) {
-      data.forEach(function(val, index){
-        let urlRouteArray;
-        if(val.last_updated){
-          var date =  moment.unix(val.last_updated);
-          date = '<span class="hide-320">' + date.format('dddd') + ', </span>' + date.format('MMM') + date.format('. DD, YYYY');
-        }
-        let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
-        let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
-        if(val.event_id){
-          urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);
-        }else{
-          urlRouteArray = [val.article_url];
-        }
-
-        var s = {
-          extUrl: false,
-          articleUrl: urlRouteArray,
-          keyword: val.article_type.replace('-', ' ').toUpperCase(),
-          timeStamp: val.last_updated ? date : null,
-          title: val.title,
-          author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
-          publisher: val.publisher != null ? "Published By: " + val.publisher : "",
-          teaser: val.title,
-          keyUrl: urlRouteArray,
-          imageConfig: {
-            extUrl: false,
-            imageClass: "embed-responsive embed-responsive-16by9",
-            imageDesc: "Article Sports Image",
-            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url, GlobalSettings._deepDiveSm) : sampleImage,
-            urlRouteArray: urlRouteArray
+      if ( data ) {
+        data.forEach(function(val, index){
+          let urlRouteArray;
+          if(val.last_updated){
+            var date =  moment.unix(val.last_updated);
+            date = '<span class="hide-320">' + date.format('dddd') + ', </span>' + date.format('MMM') + date.format('. DD, YYYY');
           }
-        };
-        articleStackArray.push(s);
-      });
-    } //if ( data )
+          let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
+          let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
+          if(val.event_id){
+            urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);
+          }else{
+            urlRouteArray = [val.article_url];
+          }
 
-    return articleStackArray;
+          var s = {
+            extUrl: false,
+            articleUrl: urlRouteArray,
+            keyword: val.article_type.replace('-', ' ').toUpperCase(),
+            timeStamp: val.last_updated ? date : null,
+            title: val.title,
+            author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
+            publisher: val.publisher != null ? "Published By: " + val.publisher : "",
+            teaser: val.title,
+            keyUrl: urlRouteArray,
+            imageConfig: {
+              extUrl: false,
+              imageClass: "embed-responsive embed-responsive-16by9",
+              imageDesc: "Article Sports Image",
+              imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url, GlobalSettings._deepDiveSm) : sampleImage,
+              urlRouteArray: urlRouteArray
+            }
+          };
+          articleStackArray.push(s);
+        });
+      } //if ( data )
+      return articleStackArray;
+    }catch(e){
+      console.log('transformToAiArticleRow error', e);
+      return null;
+    }
+
   }
 
-  transformToArticleStack(articles, width:number=750){
+  transformToArticleStack(data, width:number=750){
     var sampleImage = GlobalSettings._defaultStockImage;
     var articleArray = [];
+    var articles = data['articles'];
     articles.forEach(function(val){
       let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
       let limitDesc = val.teaser.substring(0, 360);;
@@ -233,7 +239,6 @@ export class DeepDiveService {
       };
       articleArray.push(articleStackData);
     });
-
     return articleArray;
   }
 

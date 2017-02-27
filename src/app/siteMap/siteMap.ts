@@ -92,7 +92,7 @@ export class SiteMap {
     let self = this;
     let route = [];
     let scopes = this.scopeLevel;
-    this.addArticlePages();
+    this.addArticleSiteMaps();
     for( var i = 0; i < scopes.length; i++ ){// start creating site map from top level
       //add deepDive page routes
       this.addDeepDive(scopes[i]);
@@ -176,7 +176,7 @@ export class SiteMap {
                 name: self.domainUrl + relPath,
                 dataPoints: null,
               }
-              let teamPath = '/sitemap/team/' + team.id;
+              let teamPath = '/sitemap/'+scope+'/team/' + team.id;
               let sitePath: siteKey = {
                 path: [teamPath],
                 name: self.domainUrl + teamPath,
@@ -194,23 +194,28 @@ export class SiteMap {
     })
   }
 
-  addArticlePages(){
-    let articleCount = 1000;
+  addAiArticleSiteMaps(){
+    let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
     this._articleService.getArticleTotal()
     .subscribe(data => {
       try{
         let total = data[0].total_articles;
-        console.log(total);
         let totalPages = (total / articleCount).toFixed(0);
-        console.log(totalPages);
         for(var i = 1; i <= Number(totalPages); i++){
-
+          let articlePath = '/sitemap/aiarticles/' + i;
+          let sitePath: siteKey = {
+            path: [articlePath],
+            name: self.domainUrl + articlePath,
+            dataPoints: null,
+          }
+          console.log('adding addAiArticleSiteMaps', sitePath.name);
+          self.totalSiteMap.push(sitePath);
         }
       }catch(e){
         console.warn('Error siteMap failure @ addArticlePages', e)
       }
     })
-  }
+  }// end addArticleSiteMaps
 
 }

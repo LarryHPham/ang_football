@@ -28,6 +28,16 @@ export class ArticleDataService {
   }
 
   //AI article data processing
+  getAllAiArticle(count, page) {
+    var fullUrl = GlobalSettings.getArticleUrl();
+      return this.model.get(fullUrl + "articles?&count=" + count + "&page=" + page + "&metaDataOnly=1")
+        .map(data => {
+          console.log(data);
+          return data;
+        });
+  }
+
+  //AI article data processing
   getArticle(eventID, eventType, partnerId, scope, isFantasyReport, rawType) {
     var fullUrl = GlobalSettings.getArticleUrl();
     if (!isFantasyReport) {
@@ -44,38 +54,43 @@ export class ArticleDataService {
   }
 
   static formatArticleData(data, scope, eventType, isFantasyReport, eventId) {
-    if (data['data'].length > 0) {
-      var hasEventID = true;
-      var hasImages = true;
-      var carouselImages;
-      if (isFantasyReport) {
-        eventId = data['data'][0].event_id;
-        hasEventID = eventId != null;
+    try{
+      var articles = data['data']['articles'];
+      if (articles.length > 0) {
+        var hasEventID = true;
+        var hasImages = true;
+        var carouselImages;
+        if (isFantasyReport) {
+          eventId = articles[0].event_id;
+          hasEventID = eventId != null;
+        }
+        let articleType = ArticleDataService.getArticleType(eventType);
+        ArticleDataService.parseLinks(articles[0]['article_data']['route_config'], data['data'][0]['article_data']['article'], scope);
+        if (articles[0]['article_data']['images'] != null) {
+          carouselImages = ArticleDataService.getCarouselImages(articles[0]['article_data']['images'], articleType, isFantasyReport);
+          hasImages = false;
+        }
+        return {
+          eventID: eventId,
+          hasEventId: hasEventID,
+          articleType: articleType[1],
+          articleSubType: articleType[2],
+          isSmall: isBrowser ? window.innerWidth < 640 : false,
+          rawUrl: isBrowser ? window.location.href : GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl'),
+          pageIndex: articleType[0],
+          title: articles[0]['article_data'].title,
+          teaser: articles[0].teaser,
+          date: GlobalFunctions.sntGlobalDateFormatting(articles[0]['article_data'].publication_date * 1000, "timeZone"),
+          articleContent: articles[0]['article_data'],
+          teamId: (isFantasyReport || articles[0].team_id != null) ?
+          articles[0].team_id : articles[0]['article_data']['metadata'].team_id,
+          images: carouselImages,
+          imageLinks: ArticleDataService.getImageLinks(articles[0]['article_data'], articleType[1], scope),
+          hasImages: hasImages
+        }
       }
-      let articleType = ArticleDataService.getArticleType(eventType);
-      ArticleDataService.parseLinks(data['data'][0]['article_data']['route_config'], data['data'][0]['article_data']['article'], scope);
-      if (data['data'][0]['article_data']['images'] != null) {
-        carouselImages = ArticleDataService.getCarouselImages(data['data'][0]['article_data']['images'], articleType, isFantasyReport);
-        hasImages = false;
-      }
-      return {
-        eventID: eventId,
-        hasEventId: hasEventID,
-        articleType: articleType[1],
-        articleSubType: articleType[2],
-        isSmall: isBrowser ? window.innerWidth < 640 : false,
-        rawUrl: isBrowser ? window.location.href : GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl'),
-        pageIndex: articleType[0],
-        title: data['data'][0]['article_data'].title,
-        teaser: data['data'][0].teaser,
-        date: GlobalFunctions.sntGlobalDateFormatting(data['data'][0]['article_data'].publication_date * 1000, "timeZone"),
-        articleContent: data['data'][0]['article_data'],
-        teamId: (isFantasyReport || data['data'][0].team_id != null) ?
-          data['data'][0].team_id : data['data'][0]['article_data']['metadata'].team_id,
-        images: carouselImages,
-        imageLinks: ArticleDataService.getImageLinks(data['data'][0]['article_data'], articleType[1], scope),
-        hasImages: hasImages
-      }
+    }catch(e){
+      console.log('Article Transform Error', e);
     }
   }
 

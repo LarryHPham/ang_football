@@ -25,9 +25,11 @@ import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.pa
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
 
+import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
 import { SiteTeamMap } from "../siteMap/siteTeamMap";
-import { SearchPage } from "../webpages/search-page/search.page";
+import { SitePlayerMap } from "../siteMap/sitePlayerMap";
+import { SiteArticleMap } from "../siteMap/siteArticleMap";
 
 const relativeChildRoutes = [
     {
@@ -174,16 +176,16 @@ const relativeChildRoutes = [
         component: SiteMap
     },
     {
-        path: 'sitemap/:scope/articles',
-        component: SiteMap
-    },
-    {
         path: 'sitemap/:scope/team/:teamId',
         component: SiteTeamMap
     },
     {
         path: 'sitemap/:scope/player/:playerId',
-        component: SiteTeamMap
+        component: SitePlayerMap
+    },
+    {
+      path: 'sitemap/aiarticles/:pageNumber',
+      component: SiteArticleMap
     },
     // // //Error pages and error handling
     {

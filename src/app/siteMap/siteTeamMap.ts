@@ -80,15 +80,15 @@ export class SiteTeamMap {
               name: self.domainUrl + relPath,
               dataPoints: null,
             }
-            let playerPath = '/sitemap/player/' + player.playerId;
-            let sitePath: siteKey = {
-              path: [playerPath],
-              name: self.domainUrl + playerPath,
-              dataPoints: null,
-            }
+            // let playerPath = '/sitemap/player/' + player.playerId;
+            // let sitePath: siteKey = {
+            //   path: [playerPath],
+            //   name: self.domainUrl + playerPath,
+            //   dataPoints: null,
+            // }
             console.log('adding playerPage', pathData.name);
             self.totalSiteMap.push(pathData);
-            self.totalSiteMap.push(sitePath);
+            // self.totalSiteMap.push(sitePath);
 
           })
         }

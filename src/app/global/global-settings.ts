@@ -69,6 +69,8 @@ export class GlobalSettings {
 
     private static prebootFired:boolean = false;
 
+    static siteMapArticleCount: number = 1000;
+
     static _imgSmLogo: number = 45;
     static _imgMdLogo: number = 70;
     static _imgLgLogo: number = 150;
