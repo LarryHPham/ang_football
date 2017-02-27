@@ -49,6 +49,7 @@ export class ArticleDataService {
         carouselImages = ArticleDataService.getCarouselImages(data['data'][0]['article_data']['images'], articleType, isFantasyReport);
         hasImages = false;
       }
+      var updated = data['data'][0]['article_data'].last_updated ? data['data'][0]['article_data'].last_updated : data['data'][0]['article_data'].publication_date;
       return {
         eventID: eventId,
         hasEventId: hasEventID,
@@ -59,7 +60,7 @@ export class ArticleDataService {
         pageIndex: articleType[0],
         title: data['data'][0]['article_data'].title,
         teaser: data['data'][0].teaser,
-        date: GlobalFunctions.sntGlobalDateFormatting(data['data'][0]['article_data'].publication_date * 1000, "timeZone"),
+        date: GlobalFunctions.sntGlobalDateFormatting(updated * 1000, "timeZone"),
         articleContent: data['data'][0]['article_data'],
         teamId: (isFantasyReport || data['data'][0].team_id != null) ?
           data['data'][0].team_id : data['data'][0]['article_data']['metadata'].team_id,
