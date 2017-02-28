@@ -15,11 +15,11 @@ import { siteKey } from "../siteMap/siteMap";
 import { DeepDiveService } from "../services/deep-dive.service";
 
 @Component({
-  selector: 'site-article-map',
+  selector: 'site-video-article-map',
   templateUrl: './siteMap.html'
 })
 
-export class SiteArticleMap {
+export class SiteVideoArticleMap {
 
   private partnerSite: any;
   private domainUrl:string;
@@ -61,17 +61,17 @@ export class SiteArticleMap {
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
     //scope, limit, startNum, state?
-    this._deepDiveService.getSiteMapStoryDeepDive(scope, articleCount, page)
+    this._deepDiveService.getSiteMapVideoDeepDive(scope, articleCount, page)
     .subscribe(data => {
       console.log(data);
       try{
         //(scope: string, eventType: string, eventID: string)
-        data.articles.forEach(function(article){
+        data.videos.forEach(function(article){
           let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.id).length > 0 : false;
           if( (article.league == 'nfl' || article.league == 'ncaaf') && !duplicate ){
             if(article.id){
               let scope = article.league == 'fbs' ? 'ncaaf' : article.league;
-              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'story', article.id);
+              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'video', article.id);
               let relPath = articleRoute.join('/').toString();
               let sitePath: siteKey = {
                 path: articleRoute,

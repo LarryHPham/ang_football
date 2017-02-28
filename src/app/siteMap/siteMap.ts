@@ -15,6 +15,7 @@ import { PickateamPageService } from '../services/pickateam.service';
 import { FooterService } from '../services/footer.service';
 import { DirectoryService } from '../services/directory.service';
 import { ArticleDataService } from "../services/article-page-service";
+import { DeepDiveService } from "../services/deep-dive.service";
 
 export interface siteKey {
   path: Array<string>;
@@ -72,6 +73,7 @@ export class SiteMap {
     private _footerService: FooterService,
     private _directoryService: DirectoryService,
     private _seoService: SeoService,
+    private _deepDiveService: DeepDiveService,
   ) {
     this.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
@@ -105,6 +107,7 @@ export class SiteMap {
       if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of 'home' that is located in dontLog variable
         this.addTeamPages(scopes[i]);
         this.addAiArticleSiteMaps(scopes[i]);
+        this.addArticleSiteMaps(scopes[i]);
       }
     }
   }
@@ -188,14 +191,59 @@ export class SiteMap {
   }
 
   addAiArticleSiteMaps(scope){
-    let articlePath = '/sitemap/'+scope+'/aiarticles';
+    let aiArticlePath = '/sitemap/'+scope+'/aiarticles';
     let sitePath: siteKey = {
-      path: [articlePath],
-      name: this.domainUrl + articlePath,
+      path: [aiArticlePath],
+      name: this.domainUrl + aiArticlePath,
       dataPoints: null,
     }
     // console.log('adding addAiArticleSiteMaps', sitePath.name);
     this.totalSiteMap.push(sitePath);
+  }// end addArticleSiteMaps
+
+  addArticleSiteMaps(scope){
+    let articleCount = GlobalSettings.siteMapArticleCount;
+    let self = this;
+    //STORY ARTICLES => scope, limit, page, state?
+    this._deepDiveService.getSiteMapStoryDeepDive(scope, articleCount, 1)
+    .subscribe(data => {
+      try{
+        let totalPages = data.totalPages;
+        for(var i = 1; i <= Number(totalPages); i++){
+          let articlePath = '/sitemap/'+scope+'/articles/' + i;
+          let sitePath: siteKey = {
+            path: [articlePath],
+            name: self.domainUrl + articlePath,
+            dataPoints: null,
+          }
+          // console.log('adding addArticleSiteMaps', sitePath.name);
+          self.totalSiteMap.push(sitePath);
+        }
+      }catch(e){
+        console.warn('Error siteMap failure @ STORY addArticleSiteMaps', e)
+      }
+    });
+
+    //VIDEO ARTICLES => scope, limit, page, state?
+    this._deepDiveService.getSiteMapVideoDeepDive(scope, articleCount, 1)
+    .subscribe(data => {
+      try{
+        let totalPages = data.totalPages;
+        for(var i = 1; i <= Number(totalPages); i++){
+          let articlePath = '/sitemap/'+scope+'/videoarticles/' + i;
+          let sitePath: siteKey = {
+            path: [articlePath],
+            name: self.domainUrl + articlePath,
+            dataPoints: null,
+          }
+          // console.log('adding addArticleSiteMaps', sitePath.name);
+          self.totalSiteMap.push(sitePath);
+        }
+      }catch(e){
+        console.warn('Error siteMap failure @ VIDEO addArticleSiteMaps', e)
+      }
+    });
+
   }// end addArticleSiteMaps
 
 }

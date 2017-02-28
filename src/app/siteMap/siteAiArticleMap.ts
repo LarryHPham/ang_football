@@ -12,14 +12,14 @@ import { SeoService } from "../seo.service";
 import { siteKey } from "../siteMap/siteMap";
 
 //services
-import { DeepDiveService } from "../services/deep-dive.service";
+import { ArticleDataService } from "../services/article-page-service";
 
 @Component({
-  selector: 'site-article-map',
+  selector: 'site-aiarticle-map',
   templateUrl: './siteMap.html'
 })
 
-export class SiteArticleMap {
+export class SiteAiArticleMap {
 
   private partnerSite: any;
   private domainUrl:string;
@@ -28,7 +28,7 @@ export class SiteArticleMap {
   private fullRoster: Array<any>;
   // private displaySiteMap: boolean = false;
   constructor(
-    private _deepDiveService: DeepDiveService,
+    private _articleService: ArticleDataService,
     private router:ActivatedRoute,
     private _seoService: SeoService,
   ) {
@@ -42,7 +42,7 @@ export class SiteArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.scope, param.pageNumber);
+        this.createSiteMap(param.scope);
     })
   } //constructor
 
@@ -51,33 +51,30 @@ export class SiteArticleMap {
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
 
-  createSiteMap(scope, page){
+  createSiteMap(scope){
     let self = this;
     let route = [];
-    this.addAiArticlePage(scope, page);
+    this.addAiArticlePage(scope);
   }
 
-  addAiArticlePage(scope, page){
+  addAiArticlePage(scope){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
-    //scope, limit, startNum, state?
-    this._deepDiveService.getSiteMapStoryDeepDive(scope, articleCount, page)
+    this._articleService.getArticleTotal(scope)
     .subscribe(data => {
-      console.log(data);
       try{
         //(scope: string, eventType: string, eventID: string)
-        data.articles.forEach(function(article){
-          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.id).length > 0 : false;
-          if( (article.league == 'nfl' || article.league == 'ncaaf') && !duplicate ){
-            if(article.id){
-              let scope = article.league == 'fbs' ? 'ncaaf' : article.league;
-              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'story', article.id);
+        data.data.forEach(function(article){
+          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.event_id).length > 0 : false;
+          if( (article.scope == 'nfl' || article.scope == 'ncaaf') && !duplicate ){
+            if(article.event_id){
+              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.event_id);
               let relPath = articleRoute.join('/').toString();
               let sitePath: siteKey = {
                 path: articleRoute,
                 name: self.domainUrl + relPath,
                 dataPoints: null,
-                uniqueId: article.id
+                uniqueId: article.event_id
               };
               // console.log('adding addAiArticlePage', sitePath.name);
               self.totalSiteMap.push(sitePath);
