@@ -20,6 +20,7 @@ export interface siteKey {
   path: Array<string>;
   name: string;
   dataPoints: Object;
+  uniqueId?: any;
 } //GameInfoInput
 
 @Component({
@@ -70,6 +71,7 @@ export class SiteMap {
     private _articleService: ArticleDataService,
     private _footerService: FooterService,
     private _directoryService: DirectoryService,
+    private _seoService: SeoService,
   ) {
     this.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
@@ -81,8 +83,14 @@ export class SiteMap {
   } //constructor
 
   ngOnInit(){
+    this.metaTags();
     this.createSiteMap();
   }
+
+  private metaTags(){
+    this._seoService.removeMetaTags();
+    this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+  } // metaTags
 
   createSiteMap(){
     let self = this;
@@ -94,11 +102,9 @@ export class SiteMap {
       //add single page routes
       this.addSinglePages(scopes[i]);
 
-      if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of home that is located in dontLog variable
+      if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of 'home' that is located in dontLog variable
         this.addTeamPages(scopes[i]);
         this.addAiArticleSiteMaps(scopes[i]);
-        // this.teamDirectory(scopes[i]);
-        // this.playerDirectory(scopes[i]);
       }
     }
   }
@@ -182,27 +188,14 @@ export class SiteMap {
   }
 
   addAiArticleSiteMaps(scope){
-    let articleCount = GlobalSettings.siteMapArticleCount;
-    let self = this;
-    this._articleService.getArticleTotal()
-    .subscribe(data => {
-      try{
-        let total = data[0].total_articles;
-        let totalPages = (total / articleCount).toFixed(0);
-        for(var i = 1; i <= Number(totalPages); i++){
-          let articlePath = '/sitemap/'+scope+'/aiarticles/' + i;
-          let sitePath: siteKey = {
-            path: [articlePath],
-            name: self.domainUrl + articlePath,
-            dataPoints: null,
-          }
-          // console.log('adding addAiArticleSiteMaps', sitePath.name);
-          self.totalSiteMap.push(sitePath);
-        }
-      }catch(e){
-        console.warn('Error siteMap failure @ addArticlePages', e)
-      }
-    })
+    let articlePath = '/sitemap/'+scope+'/aiarticles';
+    let sitePath: siteKey = {
+      path: [articlePath],
+      name: this.domainUrl + articlePath,
+      dataPoints: null,
+    }
+    console.log('adding addAiArticleSiteMaps', sitePath.name);
+    this.totalSiteMap.push(sitePath);
   }// end addArticleSiteMaps
 
 }

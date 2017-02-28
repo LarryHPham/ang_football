@@ -23,18 +23,18 @@ export class ArticleDataService {
     var fullUrl = GlobalSettings.getArticleUrl();
       return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=99999999&page=1&metaDataOnly=1")
         .map(data => {
-          return data.data;
-        });
-  }
-
-  //AI article data processing
-  getAllAiArticle(scope, count, page) {
-    var fullUrl = GlobalSettings.getArticleUrl();
-      return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=" + count + "&page=" + page + "&metaDataOnly=1")
-        .map(data => {
           return data;
         });
   }
+
+  // //AI article data processing
+  // getAllAiArticle(scope, count, page) {
+  //   var fullUrl = GlobalSettings.getArticleUrl();
+  //     return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=" + count + "&page=" + page + "&metaDataOnly=1")
+  //       .map(data => {
+  //         return data;
+  //       });
+  // }
 
   //AI article data processing
   getArticle(eventID, eventType, partnerId, scope, isFantasyReport, rawType) {

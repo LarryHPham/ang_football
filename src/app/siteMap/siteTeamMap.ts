@@ -30,6 +30,7 @@ export class SiteTeamMap {
   constructor(
     private router:ActivatedRoute,
     private _rosterService: RosterService,
+    private _seoService: SeoService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
@@ -40,9 +41,15 @@ export class SiteTeamMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
+        this.metaTags();
         this.createSiteMap(param.scope, param.teamId);
     })
   } //constructor
+
+  private metaTags(){
+    this._seoService.removeMetaTags();
+    this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+  } // metaTags
 
   createSiteMap(scope, teamId){
     let self = this;

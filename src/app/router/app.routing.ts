@@ -188,7 +188,7 @@ const relativeChildRoutes = [
         component: SitePlayerMap
     },
     {
-      path: 'sitemap/:scope/aiarticles/:pageNumber',
+      path: 'sitemap/:scope/aiarticles',
       component: SiteArticleMap
     },
     // // //Error pages and error handling
