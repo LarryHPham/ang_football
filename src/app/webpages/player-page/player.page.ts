@@ -1,6 +1,6 @@
 //angular core libraries
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -114,7 +114,8 @@ export class PlayerPage{
   private isLoaded: boolean = false;
 
   constructor(
-    private activateRoute: ActivatedRoute,
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
     private _fantasyService: ArticleDataService,
@@ -132,7 +133,7 @@ export class PlayerPage{
     private _seoService: SeoService,
     private _cdRef: ChangeDetectorRef
   ) {
-    this.routeSubscriptions = this.activateRoute.params.subscribe(
+    this.routeSubscriptions = this._activatedRoute.params.subscribe(
       (param: any) => {
         this.resetSubscription();
         this.routeChangeResets();
@@ -251,17 +252,17 @@ export class PlayerPage{
     }else{
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
-
+    let link = window.location.href;
     title = title  + ' ' + record;
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setCanonicalLink();
+    this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
     this._seoService.setMetaRobots('Index, Follow');
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
+    this._seoService.setOgUrl(link);
     this._seoService.setOgImage(image);
 
     //manually generate team schema for team page until global funcation can be created

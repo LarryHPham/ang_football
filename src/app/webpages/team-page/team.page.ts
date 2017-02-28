@@ -143,6 +143,7 @@ export class TeamPage implements OnInit {
 
   constructor(
     private activateRoute: ActivatedRoute,
+    private router: Router,
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
     private _headlineDataService:ArticleDataService,
@@ -306,16 +307,16 @@ export class TeamPage implements OnInit {
     }
 
     title = title  + ' ' + record;
-
+    let link = window.location.href;
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setCanonicalLink();
+    this._seoService.setCanonicalLink(this.activateRoute.params,this.router);
     this._seoService.setMetaRobots('Index, Follow');
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
+    this._seoService.setOgUrl(link);
     this._seoService.setOgImage(image);
 
     //manually generate team schema for team page until global funcation can be created

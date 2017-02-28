@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {isBrowser} from 'angular2-universal';
 
 //globals
@@ -92,10 +92,11 @@ export class PickTeamPage{
     constructor(
       private _pickateamPageService: PickateamPageService,
       private _geoLocation:GeoLocation,
-      private activateRoute: ActivatedRoute,
+      private _activatedRoute: ActivatedRoute,
+      private _router: Router,
       private _seoService: SeoService
     ) {
-      this._routeSubscription = this.activateRoute.params.subscribe(
+      this._routeSubscription = this._activatedRoute.params.subscribe(
         (param :any)=> {
         var partnerHome = GlobalSettings.getHomeInfo().isHome && GlobalSettings.getHomeInfo().isPartner;
         this.isPartnerZone = partnerHome;
@@ -139,15 +140,16 @@ export class PickTeamPage{
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
       let title = 'Pick A Team';
-      let image = 'http://www.touchdownloyal.com/app/public/mainLogo.png';
+      let image = GlobalSettings.getmainLogoUrl();
+      let link = window.location.href;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink();
+      this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
       this._seoService.setMetaRobots('Index, Follow');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
+      this._seoService.setOgUrl(link);
       this._seoService.setOgImage(image);
     } //metaTags
 

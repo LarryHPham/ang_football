@@ -54,16 +54,16 @@ export class DraftHistoryPage {
 
     constructor(
         private _title: Title,
-        private router: Router,
-        private activateRoute: ActivatedRoute,
+        private _router: Router,
+        private _activateRoute: ActivatedRoute,
         private _profileService: ProfileHeaderService,
         private _seoService: SeoService,
         private _draftService:DraftHistoryService
     ) {
         this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
-        this.paramsub = this.activateRoute.params.subscribe(
+        this.paramsub = this._activateRoute.params.subscribe(
             (param: any) => {
-                let route = this.router.url.split('/');
+                let route = this._router.url.split('/');
                 this.pageParams = param;
                 this.pageType = this.storedPartnerParam != '' ?
                                 route[3] :
@@ -94,14 +94,15 @@ export class DraftHistoryPage {
         } else {
             imageUrl = GlobalSettings.getmainLogoUrl();
         }
+        let link = window.location.href;
         this._seoService.setTitle(title);
         this._seoService.setMetaDescription(metaDesc);
-        this._seoService.setCanonicalLink();
+        this._seoService.setCanonicalLink(this._activateRoute.params,this._router);
         this._seoService.setMetaRobots('INDEX, FOLLOW');
         this._seoService.setOgTitle(title);
         this._seoService.setOgDesc(metaDesc +". Know more about football.");
         this._seoService.setOgType('Website');
-        this._seoService.setOgUrl();
+        this._seoService.setOgUrl(link);
         this._seoService.setOgImage(imageUrl);
     } //metaTags
 
@@ -193,7 +194,7 @@ export class DraftHistoryPage {
             newRoute = this.teamIdParam ?
                         [this.storedPartnerParam, this.pageParams.scope, this.pageType, tabNameTo.toLowerCase(), this.teamNameParam, this.teamIdParam, this.pageParams.filter1] :
                         [this.storedPartnerParam, this.pageParams.scope, this.pageType, tabNameTo.toLowerCase(), 'league', this.pageParams.filter1];
-            this.router.navigate(newRoute);
+            this._router.navigate(newRoute);
         }
     } //draftHistoryTab
 
@@ -208,7 +209,7 @@ export class DraftHistoryPage {
             newRoute = this.teamIdParam ?
                         [this.storedPartnerParam, this.pageParams.scope, this.pageType, this.tabParam, this.teamNameParam, this.teamIdParam, activeFilter] :
                         [this.storedPartnerParam, this.pageParams.scope, this.pageType, this.tabParam, 'league', activeFilter];
-            this.router.navigate(newRoute);
+            this._router.navigate(newRoute);
         }
     } //draftHistoryFilterDropdown
 

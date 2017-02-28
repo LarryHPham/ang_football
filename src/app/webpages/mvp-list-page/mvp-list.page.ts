@@ -65,8 +65,8 @@ export class MVPListPage implements OnInit {
 
     constructor(
       private _location: Location,
-      private router: Router,
-      private activateRoute: ActivatedRoute,
+      private _router: Router,
+      private _activateRoute: ActivatedRoute,
       private _service: ListPageService,
       private _profileService: ProfileHeaderService,
       private _seoService: SeoService,
@@ -74,7 +74,7 @@ export class MVPListPage implements OnInit {
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-        this.activateRoute.params.subscribe(
+        this._activateRoute.params.subscribe(
           (param :any) => {
             this.paginationParameters = null;
 
@@ -174,7 +174,7 @@ export class MVPListPage implements OnInit {
       // TODO
       // this._document.title = "testing";
       // console.log("title:::",this._document.title);
-      let link = "";
+      let link = window.location.href;
       if(isNode) {
         link = Zone.current.get('originUrl') + this._location.path(false);
       }else{
@@ -188,12 +188,12 @@ export class MVPListPage implements OnInit {
       }
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink();
+      this._seoService.setCanonicalLink(this._activateRoute.params,this._router);
       this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc +". Know more about football.");
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
+      this._seoService.setOgUrl(link);
       this._seoService.setOgImage(imageUrl);
     } //metaTags
 
@@ -285,7 +285,7 @@ export class MVPListPage implements OnInit {
         //actually redirect the page on tab change to update the URL for deep linking and to fix the pagination bug
         if (tabNameTo !== tabNameFrom) {
             tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, event.tab.tabDataKey, this.pageNum];
-            this.router.navigate(tabRoute);
+            this._router.navigate(tabRoute);
         }
         this.tabs = this.checkToResetTabs(event);
 
@@ -295,7 +295,7 @@ export class MVPListPage implements OnInit {
 
             if (matches != null) {
                 tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
-                this.router.navigate(tabRoute);
+                this._router.navigate(tabRoute);
             }
         }
     } //tabSelected(tab: positionMVPTabData)
@@ -326,7 +326,7 @@ export class MVPListPage implements OnInit {
                 this.getStandardList(matches);
             }
             pageRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
-            this.router.navigate(pageRoute);
+            this._router.navigate(pageRoute);
         }
     } //positionDropdown
 

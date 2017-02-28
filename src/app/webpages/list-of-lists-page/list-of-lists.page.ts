@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -51,6 +51,7 @@ export class ListOfListsPage {
 
     constructor(
         private activatedRoute: ActivatedRoute,
+        private router: Router,
         private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
         private _title: Title,
@@ -106,7 +107,7 @@ export class ListOfListsPage {
                   });
                 }
                 this._cdRef.detectChanges();
-                
+
                 var profileName = "League";
                 var profileRoute = ['/' + urlParams.scope, 'league'];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
@@ -169,14 +170,16 @@ export class ListOfListsPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
+      let link = window.location.href;
+
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink();
+      this._seoService.setCanonicalLink(this.activatedRoute.params,this.router);
       this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc +". Know more about football.");
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
+      this._seoService.setOgUrl(link);
       this._seoService.setOgImage(imageUrl);
     } //metaTags
 

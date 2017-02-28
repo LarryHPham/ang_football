@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 //globals
 import { VerticalGlobalFunctions } from "../../global/vertical-global-functions";
@@ -65,11 +65,12 @@ export class AboutUsPage {
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
 
     constructor(
-      private activatedRoute: ActivatedRoute,
+      private _activatedRoute: ActivatedRoute,
+      private _router: Router,
       private _service: AboutUsService,
       private _seoService: SeoService
     ) {
-      this.activatedRoute.params.subscribe(
+      this._activatedRoute.params.subscribe(
           (param :any)=> {
             this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
             this.storedPartnerParam = GlobalSettings.storedPartnerId();
@@ -78,33 +79,34 @@ export class AboutUsPage {
       );
     } //constructor
 
-
-
     ngAfterViewInit(){
       this.metaTags();
     }
-
-
 
     private metaTags() {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'About Us';
+      let link = window.location.href;
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
       let image = GlobalSettings.getmainLogoUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink();
+      this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
+      this._seoService.setOgUrl(link);
       this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType('About Us Page');
+      this._seoService.setPageUrl(link);
+      this._seoService.setImageUrl(image);
     } //metaTags
-
-
 
     loadData(partnerID?:string, scope?:string) {
         this._service.getData(partnerID, scope)
@@ -116,8 +118,6 @@ export class AboutUsPage {
           },
         );
     } //loadData
-
-
 
     setupAboutUsData(data:AboutUsModel) {
       if ( data !== undefined && data !== null ) {

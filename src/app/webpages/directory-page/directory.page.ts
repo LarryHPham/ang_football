@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 //globals
@@ -54,7 +54,8 @@ export class DirectoryPage {
   constructorControl:boolean = true;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
     private _footerService: FooterService,
     private _directoryService: DirectoryService,
     private _title: Title,
@@ -62,7 +63,7 @@ export class DirectoryPage {
   ) {
     // check to see if scope is correct and redirect
     // VerticalGlobalFunctions.scopeRedirect(_router, params);
-    this.activatedRoute.params.subscribe(
+    this._activatedRoute.params.subscribe(
       (param :any)=> {
         this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
         this.partnerID = param['partnerID'];
@@ -135,18 +136,23 @@ export class DirectoryPage {
     let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
     let title = this.type.charAt(0).toUpperCase() + this.type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
     let image = GlobalSettings.getmainLogoUrl();
+    let link = window.location.href;
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setCanonicalLink();
+    this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
     this._seoService.setMetaRobots('INDEX, FOLLOW');
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
+    this._seoService.setOgUrl(link);
     this._seoService.setOgImage(image);
+    //Elastic Search
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setPageTitle(title);
+    this._seoService.setPageType('Directory Page');
+    this._seoService.setPageUrl(link);
+    this._seoService.setImageUrl(image);
   } //metaTags
-
-
 
   getDirectoryData() {
     let params: DirectorySearchParams = {

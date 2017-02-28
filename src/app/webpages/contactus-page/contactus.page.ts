@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { Title } from '@angular/platform-browser';
 
@@ -30,12 +30,13 @@ export class ContactUsPage {
     public contactusInput: Object;
 
     constructor(
-      private activatedRoute: ActivatedRoute,
+      private _activatedRoute: ActivatedRoute,
       private http:Http,
       private _title: Title,
-      private _seoService: SeoService
+      private _seoService: SeoService,
+      private _router: Router
     ) {
-      this.activatedRoute.params.subscribe(
+      this._activatedRoute.params.subscribe(
         (param :any)=> {
           this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
         }
@@ -122,14 +123,23 @@ export class ContactUsPage {
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
-      this._seoService.setTitle('Contact Us');
+      let link = window.location.href;
+      let title = "About Us Page";
+      let image = GlobalSettings.getmainLogoUrl();
+      this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('INDEX, FOLLOW');
-      this._seoService.setOgTitle('Contact Us');
+      this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(GlobalSettings.getmainLogoUrl());
+      this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
+      this._seoService.setOgUrl(link);
+      this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType(title);
+      this._seoService.setPageUrl(link);
+      this._seoService.setImageUrl(image);
     } //metaTags
 }

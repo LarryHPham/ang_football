@@ -128,14 +128,15 @@ export class SchedulesPage implements OnInit {
     }else{
        imageUrl = GlobalSettings.getmainLogoUrl();
     }
+    let link = window.location.href;
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaRobots('INDEX, FOLLOW');
-    this._seoService.setCanonicalLink();
+    this._seoService.setCanonicalLink(this.activateRoute.params,this._router);
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc +". Know more about football.");
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
+    this._seoService.setOgUrl(link);
     this._seoService.setOgImage(imageUrl);
   } //metaTags
 

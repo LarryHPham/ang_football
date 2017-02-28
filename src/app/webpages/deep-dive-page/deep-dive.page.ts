@@ -145,12 +145,12 @@ export class DeepDivePage {
     let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
     this._seoService.setTitle('Deep Dive');
     this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setCanonicalLink();
+    // this._seoService.setCanonicalLink(this._activatedRoute.params,this._router); TODO
     this._seoService.setMetaRobots('Index, Follow');
     this._seoService.setOgTitle('Deep Dive');
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
+    // this._seoService.setOgUrl(link); TODO
     this._seoService.setOgImage('//images.synapsys.us/01/logos/football/2017/01/logos_football_01.svg');
   } //metaTags
 
