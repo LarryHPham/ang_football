@@ -41,7 +41,7 @@ export class ListOfListsService {
     let scope = urlParams.scope;
 
     //usesd for keeping all data withing given scope of api
-    this._scope = scope == 'fbs' ? 'ncaaf' : 'nfl';
+    this._scope = scope == 'ncaaf' ? 'fbs' : 'nfl';
 
     if (profileType == 'league' && pageType == 'module') {
       id = '';
