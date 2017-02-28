@@ -167,11 +167,11 @@ export class ArticlePages implements OnInit {
     this.trendingArticles = getData
       .subscribe(data => {
         if (!this.hasRun) {
-          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['data']) : this.trendingContent.concat(data);
+          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['articles']) : this.trendingContent.concat(data['articles']);
           this.hasRun = true;
           this.trendingData = this.isArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
             this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
-          if ((data.article_count % 10 == 0 || data.length % 10 == 0) && this.trendingData) {
+          if ((data.article_count % 10 == 0 || data['articles'].length % 10 == 0) && this.trendingData) {
             this.batch = this.batch + 1;
           } else {
             this.isTrendingMax = true;
