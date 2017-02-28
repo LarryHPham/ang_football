@@ -194,7 +194,7 @@ export class SiteMap {
       name: this.domainUrl + articlePath,
       dataPoints: null,
     }
-    console.log('adding addAiArticleSiteMaps', sitePath.name);
+    // console.log('adding addAiArticleSiteMaps', sitePath.name);
     this.totalSiteMap.push(sitePath);
   }// end addArticleSiteMaps
 
