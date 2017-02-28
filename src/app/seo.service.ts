@@ -179,7 +179,12 @@ export class SeoService {
       let el:HTMLElement;
       el = document.getElementById(id);
       if (el != null) {
-        el.remove();
+        //IE 10 & 11 does not recognize .remove() as a function.
+        if (typeof el.remove == 'function') {
+          el.remove();
+        } else {
+          el.outerHTML = "";
+        }
       }
     }
   }
