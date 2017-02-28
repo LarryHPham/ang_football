@@ -63,7 +63,6 @@ export class DeepDiveService {
     scope = scope == 'ncaaf' ? 'fbs' : scope;
     callURL += scope + '/' + limit + '/' + page;
     callURL += state ? state : '';
-    console.log(callURL);
     return this.model.get(callURL)
       .map(data => {
         return data.data;
@@ -78,7 +77,6 @@ export class DeepDiveService {
     scope = scope == 'ncaaf' ? 'fbs' : scope;
     callURL += scope + '/' + limit + '/' + page;
     callURL += state ? state : '';
-    console.log(callURL);
     return this.model.get(callURL)
       .map(data => {
         return data.data;
