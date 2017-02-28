@@ -645,7 +645,7 @@ export class TeamPage implements OnInit {
         err => {
           console.log("Error getting news data");
       }));
-    } //getNewsService
+  } //getNewsService//
 
 
 
