@@ -554,21 +554,22 @@ export class TeamPage implements OnInit {
     } //getImages
 
 
-    // private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-    //   this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
-    //     .subscribe(data => {
-    //       if(data){
-    //         this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
-    //         this.videoData = this._videoBatchService.transformVideoStack(data.data.slice(1));
-    //       }else{
-    //         console.warn('Insufficient number of videos available');
-    //       }
-    //     },
-    //     err => {
-    //       console.log("Error getting video data");
-    //     }
-    //   ));
-    // } //getTeamVideoBatch
+
+    private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
+      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
+        .subscribe(data => {
+          if(data){
+            this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
+            this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
+          }else{
+            console.warn('Insufficient number of videos available');
+          }
+        },
+        err => {
+          console.log("Error getting video data");
+        }
+      ));
+    } //getTeamVideoBatch
 
 
 

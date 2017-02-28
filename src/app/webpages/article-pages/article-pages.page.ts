@@ -167,11 +167,11 @@ export class ArticlePages implements OnInit {
     this.trendingArticles = getData
       .subscribe(data => {
         if (!this.hasRun) {
-          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['data']) : this.trendingContent.concat(data);
+          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['articles']) : this.trendingContent.concat(data['articles']);
           this.hasRun = true;
           this.trendingData = this.isArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
             this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
-          if ((data.article_count % 10 == 0 || data.length % 10 == 0) && this.trendingData) {
+          if ((data.article_count % 10 == 0 || data['articles'].length % 10 == 0) && this.trendingData) {
             this.batch = this.batch + 1;
           } else {
             this.isTrendingMax = true;
@@ -321,12 +321,13 @@ export class ArticlePages implements OnInit {
 
     let metaObjData;
     if (this.isArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
+      var updated = metaData['articleContent'].last_updated ? metaData['articleContent'].last_updated.toString() : metaData['articleContent'].publication_date.toString();
       metaObjData = {
         startDate: headerData['relevancy_start_date'].toString(),
         endDate: headerData['relevancy_end_date'].toString(),
         source: "snt_ai",
         keyword: metaData['articleContent']['keyword'],
-        publishedDate: metaData['articleContent'].publication_date.toString(),
+        publishedDate: updated,
         author: metaData['articleContent'].author,
         publisher: metaData['articleContent'].publisher,
         articleTeaser: metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),

@@ -125,7 +125,7 @@ export class DeepDiveService {
     //always returns the first batch of articles
     this.getDeepDiveBatchService(scope, limit, batch, state)
       .subscribe(data=>{
-        var transformedData = this.carouselTransformData(data);
+        var transformedData = this.carouselTransformData(data['articles']);
         callback(transformedData);
       })
 
@@ -161,53 +161,59 @@ export class DeepDiveService {
   }
 
   transformToAiArticleRow(data){
-    data = data.data;
-    var sampleImage = GlobalSettings._defaultStockImage;
-    var articleStackArray = [];
+    try{
+      data = data.data;
+      var sampleImage = GlobalSettings._defaultStockImage;
+      var articleStackArray = [];
 
-    if ( data ) {
-      data.forEach(function(val, index){
-        let urlRouteArray;
-        if(val.last_updated){
-          var date =  moment.unix(val.last_updated);
-          date = '<span class="hide-320">' + date.format('dddd') + ', </span>' + date.format('MMM') + date.format('. DD, YYYY');
-        }
-        let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
-        let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
-        if(val.event_id){
-          urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);
-        }else{
-          urlRouteArray = [val.article_url];
-        }
-
-        var s = {
-          extUrl: false,
-          articleUrl: urlRouteArray,
-          keyword: val.article_type.replace('-', ' ').toUpperCase(),
-          timeStamp: val.last_updated ? date : null,
-          title: val.title,
-          author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
-          publisher: val.publisher != null ? "Published By: " + val.publisher : "",
-          teaser: val.title,
-          keyUrl: urlRouteArray,
-          imageConfig: {
-            extUrl: false,
-            imageClass: "embed-responsive embed-responsive-16by9",
-            imageDesc: "Article Sports Image",
-            imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url, GlobalSettings._deepDiveSm) : sampleImage,
-            urlRouteArray: urlRouteArray
+      if ( data ) {
+        data.forEach(function(val, index){
+          let urlRouteArray;
+          if(val.last_updated){
+            var date =  moment.unix(val.last_updated);
+            date = '<span class="hide-320">' + date.format('dddd') + ', </span>' + date.format('MMM') + date.format('. DD, YYYY');
           }
-        };
-        articleStackArray.push(s);
-      });
-    } //if ( data )
+          let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
+          let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
+          if(val.event_id){
+            urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);
+          }else{
+            urlRouteArray = [val.article_url];
+          }
 
-    return articleStackArray;
+          var s = {
+            extUrl: false,
+            articleUrl: urlRouteArray,
+            keyword: val.article_type.replace('-', ' ').toUpperCase(),
+            timeStamp: val.last_updated ? date : null,
+            title: val.title,
+            author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
+            publisher: val.publisher != null ? "Published By: " + val.publisher : "",
+            teaser: val.title,
+            keyUrl: urlRouteArray,
+            imageConfig: {
+              extUrl: false,
+              imageClass: "embed-responsive embed-responsive-16by9",
+              imageDesc: "Article Sports Image",
+              imageUrl: val.image_url != null ? GlobalSettings.getImageUrl(val.image_url, GlobalSettings._deepDiveSm) : sampleImage,
+              urlRouteArray: urlRouteArray
+            }
+          };
+          articleStackArray.push(s);
+        });
+      } //if ( data )
+      return articleStackArray;
+    }catch(e){
+      console.log('transformToAiArticleRow error', e);
+      return null;
+    }
+
   }
 
-  transformToArticleStack(articles, width:number=750){
+  transformToArticleStack(data, width:number=750){
     var sampleImage = GlobalSettings._defaultStockImage;
     var articleArray = [];
+    var articles = data['articles'];
     articles.forEach(function(val){
       let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
       let limitDesc = val.teaser.substring(0, 360);;
@@ -233,12 +239,11 @@ export class DeepDiveService {
       };
       articleArray.push(articleStackData);
     });
-
     return articleArray;
   }
 
   transformToRecArticles(data){
-    data = data.data;
+    data = data.data['articles'];
     var sampleImage = GlobalSettings._defaultStockImage;
 
     var articleStackArray = [];
@@ -279,8 +284,8 @@ export class DeepDiveService {
   }
 
   transformVideoStack(data){
-    if ( data != null ) {
-      data.forEach(function(val, i){
+    if ( data['videos'] != null ) {
+      data['videos'].forEach(function(val, i){
         let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
         var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
         val['extUrl'] = false,
@@ -301,35 +306,39 @@ export class DeepDiveService {
     if(scope == null){
       scope = 'NFL';
     }
+    try{
+      let tileStack = data['articles'];
+      let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
+      let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
+      var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
+      let pickATeam = ['/'+routeScope,'pick-a-team'];
+      let leaguePage = ['/'+routeScope,'league'];
+      var tileLink = [pickATeam, pickATeam, leaguePage];
+      var dataStack = [];
+      // create array of imagePaths
+      var imagePaths = [];
+      for (var i=0; i<tileStack.length; i++) {
+        imagePaths.push(tileStack[i].imagePath);
+      }
+      // remove duplicates from array
+      var imagePaths = imagePaths.filter( function(item, index, inputArray) {
+        return inputArray.indexOf(item) == index;
+      });
 
-    let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
-    let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
-    var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
-    let pickATeam = ['/'+routeScope,'pick-a-team'];
-    let leaguePage = ['/'+routeScope,'league'];
-    var tileLink = [pickATeam, pickATeam, leaguePage];
-    var dataStack = [];
-    // create array of imagePaths
-    var imagePaths = [];
-    for (var i=0; i<data.length; i++) {
-      imagePaths.push(data[i].imagePath);
+
+      for(var i = 0; i < 3; i++){
+        var k = imagePaths[Math.floor(Math.random() * imagePaths.length)];
+        var indexOfK = imagePaths.indexOf(k);
+        dataStack[i] = tileStack[i];
+        dataStack[i]['lines'] = lines[i];
+        dataStack[i]['tileLink'] = tileLink[i];
+        dataStack[i]['image_url'] = GlobalSettings.getImageUrl(k) != null ? GlobalSettings.getImageUrl(k, GlobalSettings._deepDiveTileStack) : "/app/public/placeholder_XL.png";
+        // remove appended image string from array
+        imagePaths.splice(indexOfK,1);
+      }
+      return dataStack;
+    }catch(e){
+        console.log('tile stack error');
     }
-    // remove duplicates from array
-    var imagePaths = imagePaths.filter( function(item, index, inputArray) {
-      return inputArray.indexOf(item) == index;
-    });
-
-
-    for(var i = 0; i < 3; i++){
-      var k = imagePaths[Math.floor(Math.random() * imagePaths.length)];
-      var indexOfK = imagePaths.indexOf(k);
-      dataStack[i] = data[i];
-      dataStack[i]['lines'] = lines[i];
-      dataStack[i]['tileLink'] = tileLink[i];
-      dataStack[i]['image_url'] = GlobalSettings.getImageUrl(k) != null ? GlobalSettings.getImageUrl(k, GlobalSettings._deepDiveTileStack) : "/app/public/placeholder_XL.png";
-      // remove appended image string from array
-      imagePaths.splice(indexOfK,1);
-    }
-    return dataStack;
   }
 }
