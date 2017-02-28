@@ -63,7 +63,6 @@ export class SiteVideoArticleMap {
     //scope, limit, startNum, state?
     this._deepDiveService.getSiteMapVideoDeepDive(scope, articleCount, page)
     .subscribe(data => {
-      console.log(data);
       try{
         //(scope: string, eventType: string, eventID: string)
         data.videos.forEach(function(article){

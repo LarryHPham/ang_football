@@ -63,7 +63,6 @@ export class SiteArticleMap {
     //scope, limit, startNum, state?
     this._deepDiveService.getSiteMapStoryDeepDive(scope, articleCount, page)
     .subscribe(data => {
-      console.log(data);
       try{
         //(scope: string, eventType: string, eventID: string)
         data.articles.forEach(function(article){
