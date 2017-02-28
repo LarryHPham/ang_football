@@ -278,8 +278,12 @@ export class LeaguePage{
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
       this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
         .subscribe(data => {
-            this.firstVideo = data.data[first].videoLink;
+          try{
+            this.firstVideo = data.data['videos'][first].videoLink;
             this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
+          }catch(e){
+            console.log('error in league video batch');
+          }
         },
         err => {
             console.log("Error getting video data");
