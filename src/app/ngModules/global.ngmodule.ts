@@ -46,7 +46,9 @@ import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
 import { SiteTeamMap } from "../siteMap/siteTeamMap";
 import { SitePlayerMap } from "../siteMap/sitePlayerMap";
+import { SiteAiArticleMap } from "../siteMap/siteAiArticleMap";
 import { SiteArticleMap } from "../siteMap/siteArticleMap";
+import { SiteVideoArticleMap } from "../siteMap/siteVideoArticleMap";
 
 //modules
 import { WidgetModule } from "../ui-modules/widget/widget.module";
@@ -129,7 +131,9 @@ const PAGEMODULES = [
   SiteMap,
   SiteTeamMap,
   SitePlayerMap,
-  SiteArticleMap
+  SiteAiArticleMap,
+  SiteArticleMap,
+  SiteVideoArticleMap
 ]
 
 const COREMODULES = [

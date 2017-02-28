@@ -55,6 +55,33 @@ export class DeepDiveService {
       })
   }
 
+  getSiteMapStoryDeepDive(scope, limit, page, state?){
+    //Configure HTTP Headers
+    page = page == null ? 1 : page;
+    // model://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
+    var callURL = this._apiUrl + '/articleBatch/';
+    scope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += scope + '/' + limit + '/' + page;
+    callURL += state ? state : '';
+    return this.model.get(callURL)
+      .map(data => {
+        return data.data;
+      })
+  }
+
+  getSiteMapVideoDeepDive(scope, limit, page, state?){
+    //Configure HTTP Headers
+    page = page == null ? 1 : page;
+    // model://dev-touchdownloyal-api.synapsys.us/videoBatch/nfl/5/1
+    var callURL = this._apiUrl + '/videoBatch/';
+    scope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += scope + '/' + limit + '/' + page;
+    callURL += state ? state : '';
+    return this.model.get(callURL)
+      .map(data => {
+        return data.data;
+      })
+  }
 
   getDeepDiveVideoBatchService(scope, limit, startNum, state?){
     //Configure HTTP Headers
@@ -65,6 +92,7 @@ export class DeepDiveService {
       state = 'null';
     }
     var callURL = this._apiUrl + '/videoBatch/';
+    scope = scope == 'ncaaf' ? 'fbs' : scope;
     scope = scope == 'home' ? 'football' : scope;
     if(scope != null){
       callURL += scope;
@@ -284,21 +312,26 @@ export class DeepDiveService {
   }
 
   transformVideoStack(data){
-    if ( data['videos'] != null ) {
-      data['videos'].forEach(function(val, i){
-        let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
-        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
-        val['extUrl'] = false,
-        val['keyword'] = val.league.toUpperCase();
-        val['video_thumbnail'] = val.thumbnail;
-        val['embed_url'] = val.videoLink;
-        val['teaser'] = val.description;
-        val['time_stamp'] = GlobalFunctions.sntGlobalDateFormatting(moment(val.pubDate).unix()*1000,'timeZone');
-        val['urlRoute'] = urlRouteArray;
-        val['video_url'] = urlRouteArray;
-        val['keyUrl'] = ['/'+VerticalGlobalFunctions.getWhiteLabel(), scope.toLowerCase()]
-      })
-      return data;
+    try{
+      if ( data['videos'] != null ) {
+        data['videos'].forEach(function(val, i){
+          let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
+          var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
+          val['extUrl'] = false,
+          val['keyword'] = val.league.toUpperCase();
+          val['video_thumbnail'] = val.thumbnail;
+          val['embed_url'] = val.videoLink;
+          val['teaser'] = val.description;
+          val['time_stamp'] = GlobalFunctions.sntGlobalDateFormatting(moment(val.pubDate).unix()*1000,'timeZone');
+          val['urlRoute'] = urlRouteArray;
+          val['video_url'] = urlRouteArray;
+          val['keyUrl'] = ['/'+VerticalGlobalFunctions.getWhiteLabel(), scope.toLowerCase()]
+        })
+        return data;
+      }
+    }catch(e){
+      console.log('video transform Error');
+      return null;
     }
   }
 

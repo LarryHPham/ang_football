@@ -12,7 +12,7 @@ import { SeoService } from "../seo.service";
 import { siteKey } from "../siteMap/siteMap";
 
 //services
-import { ArticleDataService } from "../services/article-page-service";
+import { DeepDiveService } from "../services/deep-dive.service";
 
 @Component({
   selector: 'site-article-map',
@@ -28,7 +28,7 @@ export class SiteArticleMap {
   private fullRoster: Array<any>;
   // private displaySiteMap: boolean = false;
   constructor(
-    private _articleService: ArticleDataService,
+    private _deepDiveService: DeepDiveService,
     private router:ActivatedRoute,
     private _seoService: SeoService,
   ) {
@@ -42,7 +42,7 @@ export class SiteArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.scope);
+        this.createSiteMap(param.scope, param.pageNumber);
     })
   } //constructor
 
@@ -51,30 +51,32 @@ export class SiteArticleMap {
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
 
-  createSiteMap(scope){
+  createSiteMap(scope, page){
     let self = this;
     let route = [];
-    this.addAiArticlePage(scope);
+    this.addAiArticlePage(scope, page);
   }
 
-  addAiArticlePage(scope){
+  addAiArticlePage(scope, page){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
-    this._articleService.getArticleTotal(scope)
+    //scope, limit, startNum, state?
+    this._deepDiveService.getSiteMapStoryDeepDive(scope, articleCount, page)
     .subscribe(data => {
       try{
         //(scope: string, eventType: string, eventID: string)
-        data.data.forEach(function(article){
-          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.event_id).length > 0 : false;
-          if( (article.scope == 'nfl' || article.scope == 'ncaaf') && !duplicate ){
-            if(article.event_id){
-              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.event_id);
+        data.articles.forEach(function(article){
+          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.id).length > 0 : false;
+          if( (article.league == 'nfl' || article.league == 'ncaaf') && !duplicate ){
+            if(article.id){
+              let scope = article.league == 'fbs' ? 'ncaaf' : article.league;
+              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'story', article.id);
               let relPath = articleRoute.join('/').toString();
               let sitePath: siteKey = {
                 path: articleRoute,
                 name: self.domainUrl + relPath,
                 dataPoints: null,
-                uniqueId: article.event_id
+                uniqueId: article.id
               };
               // console.log('adding addAiArticlePage', sitePath.name);
               self.totalSiteMap.push(sitePath);
