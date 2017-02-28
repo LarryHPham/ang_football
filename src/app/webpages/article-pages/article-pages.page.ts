@@ -321,12 +321,13 @@ export class ArticlePages implements OnInit {
 
     let metaObjData;
     if (this.isArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
+      var updated = metaData['articleContent'].last_updated ? metaData['articleContent'].last_updated.toString() : metaData['articleContent'].publication_date.toString();
       metaObjData = {
         startDate: headerData['relevancy_start_date'].toString(),
         endDate: headerData['relevancy_end_date'].toString(),
         source: "snt_ai",
         keyword: metaData['articleContent']['keyword'],
-        publishedDate: metaData['articleContent'].publication_date.toString(),
+        publishedDate: updated,
         author: metaData['articleContent'].author,
         publisher: metaData['articleContent'].publisher,
         articleTeaser: metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),
