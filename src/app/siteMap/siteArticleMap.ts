@@ -30,9 +30,11 @@ export class SiteArticleMap {
   constructor(
     private _articleService: ArticleDataService,
     private router:ActivatedRoute,
+    private _seoService: SeoService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
+        this.metaTags();
         this.domainUrl = VerticalGlobalFunctions.getPageUrl();
         this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
         /*
@@ -40,34 +42,43 @@ export class SiteArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.pageNumber);
+        this.createSiteMap(param.scope);
     })
   } //constructor
 
-  createSiteMap(pageNumber){
+  private metaTags(){
+    this._seoService.removeMetaTags();
+    this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+  } // metaTags
+
+  createSiteMap(scope){
     let self = this;
     let route = [];
-    this.addAiArticlePage(pageNumber)
+    this.addAiArticlePage(scope);
   }
 
-  addAiArticlePage(page){
+  addAiArticlePage(scope){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
-    this._articleService.getAllAiArticle(articleCount, page)
+    this._articleService.getArticleTotal(scope)
     .subscribe(data => {
       try{
         //(scope: string, eventType: string, eventID: string)
         data.data.forEach(function(article){
-          if(article.scope == 'nfl' || article.scope == 'ncaaf'){
-            let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.article_id);
-            let relPath = articleRoute.join('/').toString();
-            let sitePath: siteKey = {
-              path: articleRoute,
-              name: self.domainUrl + relPath,
-              dataPoints: null,
-            };
-            // console.log('adding addAiArticlePage', sitePath.name);
-            self.totalSiteMap.push(sitePath);
+          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.event_id).length > 0 : false;
+          if( (article.scope == 'nfl' || article.scope == 'ncaaf') && !duplicate ){
+            if(article.event_id){
+              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.event_id);
+              let relPath = articleRoute.join('/').toString();
+              let sitePath: siteKey = {
+                path: articleRoute,
+                name: self.domainUrl + relPath,
+                dataPoints: null,
+                uniqueId: article.event_id
+              };
+              // console.log('adding addAiArticlePage', sitePath.name);
+              self.totalSiteMap.push(sitePath);
+            }
           }
         })
       }catch(e){
