@@ -34,7 +34,6 @@ export class ListOfListsService {
     if(id){
       callURL += '&targetId='+id;
     }
-    console.log(callURL)
     return this.model.get( callURL )
       .map(
         data => {

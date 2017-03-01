@@ -36,8 +36,6 @@ export class SiteListMap {
       (param: any) => {
         this.router.queryParams.subscribe(
           (queryParam: any) => {
-            console.log(param);
-            console.log(queryParam);
             this.metaTags();
             this.domainUrl = VerticalGlobalFunctions.getPageUrl();
             this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
