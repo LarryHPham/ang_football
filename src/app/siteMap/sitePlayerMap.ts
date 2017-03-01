@@ -12,6 +12,7 @@ import { SeoService } from "../seo.service";
 import { siteKey } from "../siteMap/siteMap";
 
 //services
+import { ListOfListsService } from "../services/list-of-lists.service";
 
 @Component({
   selector: 'site-player-map',
@@ -29,6 +30,7 @@ export class SitePlayerMap {
   constructor(
     private router:ActivatedRoute,
     private _seoService: SeoService,
+    private _listOfListService: ListOfListsService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
@@ -40,18 +42,52 @@ export class SitePlayerMap {
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
         this.metaTags();
-        this.createSiteMap(param.scope, param.teamId);
+        this.createSiteMap(param.scope, param.playerId);
     })
   } //constructor
 
-  private metaTags(){
+  metaTags(){
     this._seoService.removeMetaTags();
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
 
-  createSiteMap(scope, teamId){
+  createSiteMap(scope, playerId){
     let self = this;
     let route = [];
-
+    this.addListPage(scope, playerId);
   }
+
+  addListPage(scope, id?){
+    let articleCount = GlobalSettings.siteMapArticleCount;
+    let self = this;
+    //scope, target, count, pageNumber, id?
+    this._listOfListService.getSiteListMap(scope, 'player', articleCount, 1, id)
+    .subscribe(data => {
+      try{
+        let list = data.data[0];
+        let pages = Math.ceil(list.listInfo.listCount / articleCount);
+        for(var i = 1; i <= pages; i++){
+          let listRoute = [self.partnerSite + '/sitemap/' + scope + '/list', 'player', i];
+          let relPath = listRoute.join('/').toString();
+          if(id){
+            relPath += '?id='+id;
+          }
+          let sitePath: siteKey = {
+            path: listRoute,
+            name: self.domainUrl + relPath,
+            dataPoints: null,
+          };
+          if(id){
+            sitePath.query = {};
+            sitePath.query.id = id;
+          };
+          // console.log('adding addListPage', sitePath.name);
+          self.totalSiteMap.push(sitePath);
+        }
+      }catch(e){
+        console.warn('Error siteMap failure @ addListPage', e)
+      }
+    })
+  }
+
 }

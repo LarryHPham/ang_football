@@ -46,7 +46,7 @@ export class SiteArticleMap {
     })
   } //constructor
 
-  private metaTags(){
+  metaTags(){
     this._seoService.removeMetaTags();
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
@@ -54,10 +54,10 @@ export class SiteArticleMap {
   createSiteMap(scope, page){
     let self = this;
     let route = [];
-    this.addAiArticlePage(scope, page);
+    this.addArticlePage(scope, page);
   }
 
-  addAiArticlePage(scope, page){
+  addArticlePage(scope, page){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
     //scope, limit, startNum, state?
@@ -78,7 +78,7 @@ export class SiteArticleMap {
                 dataPoints: null,
                 uniqueId: article.id
               };
-              // console.log('adding addAiArticlePage', sitePath.name);
+              // console.log('adding addArticlePage', sitePath.name);
               self.totalSiteMap.push(sitePath);
             }
           }

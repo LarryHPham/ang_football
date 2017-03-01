@@ -16,11 +16,13 @@ import { FooterService } from '../services/footer.service';
 import { DirectoryService } from '../services/directory.service';
 import { ArticleDataService } from "../services/article-page-service";
 import { DeepDiveService } from "../services/deep-dive.service";
+import { ListOfListsService } from "../services/list-of-lists.service";
 
 export interface siteKey {
-  path: Array<string>;
+  path: Array<any>;
   name: string;
   dataPoints: Object;
+  query?: any;
   uniqueId?: any;
 } //GameInfoInput
 
@@ -74,6 +76,7 @@ export class SiteMap {
     private _directoryService: DirectoryService,
     private _seoService: SeoService,
     private _deepDiveService: DeepDiveService,
+    private _listOfListService: ListOfListsService,
   ) {
     this.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
@@ -89,7 +92,7 @@ export class SiteMap {
     this.createSiteMap();
   }
 
-  private metaTags(){
+  metaTags(){
     this._seoService.removeMetaTags();
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
@@ -106,6 +109,7 @@ export class SiteMap {
 
       if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of 'home' that is located in dontLog variable
         this.addTeamPages(scopes[i]);
+        this.addListPage(scopes[i]);
         this.addAiArticleSiteMaps(scopes[i]);
         this.addArticleSiteMaps(scopes[i]);
       }
@@ -150,8 +154,6 @@ export class SiteMap {
     }
   }
 
-  //add team pages by using pick a team page api call => api.com/landingPage/:scope
-  //directory page requires multiple pages with letters so too many api calls to use
   addTeamPages(scope){
     let self = this;
     let baseRoute = [this.partnerSite + '/' + scope];
@@ -230,7 +232,7 @@ export class SiteMap {
       try{
         let totalPages = data.totalPages;
         for(var i = 1; i <= Number(totalPages); i++){
-          let articlePath = '/sitemap/'+scope+'/videoarticles/' + i;
+          let articlePath = '/sitemap/'+scope+'/articles/' + i;
           let sitePath: siteKey = {
             path: [articlePath],
             name: self.domainUrl + articlePath,
@@ -243,7 +245,35 @@ export class SiteMap {
         console.warn('Error siteMap failure @ VIDEO addArticleSiteMaps', e)
       }
     });
-
   }// end addArticleSiteMaps
 
+  addListPage(scope, id?){
+    let articleCount = GlobalSettings.siteMapArticleCount;
+    let self = this;
+    //scope, target, count, pageNumber, id?
+    this._listOfListService.getSiteListMap(scope, 'league', articleCount, 1, id)
+    .subscribe(data => {
+      try{
+        let list = data.data[0];
+        let pages = Math.ceil(list.listInfo.listCount / articleCount);
+        for(var i = 1; i <= pages; i++){
+          let listRoute = [self.partnerSite + '/sitemap/' + scope + '/list', 'league', i];
+          let relPath = listRoute.join('/').toString();
+          if(id){
+            relPath += '?id='+id;
+            listRoute.push('?id='+id);//query
+          }
+          let sitePath: siteKey = {
+            path: listRoute,
+            name: self.domainUrl + relPath,
+            dataPoints: null,
+          };
+          // console.log('adding addListPage', sitePath.name);
+          self.totalSiteMap.push(sitePath);
+        }
+      }catch(e){
+        console.warn('Error siteMap failure @ addListPage', e)
+      }
+    })
+  }
 }
