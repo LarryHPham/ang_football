@@ -34,19 +34,24 @@ export class SiteListMap {
   ) {
     this.router.params.subscribe(
       (param: any) => {
-        this.metaTags();
-        this.domainUrl = VerticalGlobalFunctions.getPageUrl();
-        this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
-        /*
-        ** appRoutes[0] routes for non white labeled sites Touchdownloyal.com
-        ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
-        */
-        this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.scope, param.profile, param.pageNumber, param.id);
+        this.router.queryParams.subscribe(
+          (queryParam: any) => {
+            console.log(param);
+            console.log(queryParam);
+            this.metaTags();
+            this.domainUrl = VerticalGlobalFunctions.getPageUrl();
+            this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
+            /*
+            ** appRoutes[0] routes for non white labeled sites Touchdownloyal.com
+            ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
+            */
+            this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
+            this.createSiteMap(param.scope, param.profile, param.pageNumber, queryParam.id);
+          })
     })
   } //constructor
 
-  private metaTags(){
+  metaTags(){
     this._seoService.removeMetaTags();
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
@@ -64,7 +69,34 @@ export class SiteListMap {
     this._listOfListService.getSiteListMap(scope, profile, articleCount, page, id)
     .subscribe(data => {
       try{
-        console.log(data);
+        data.data.forEach(function(list){
+          list.listInfo.seasons.forEach(function(season){
+            let target = profile == 'league' ? 'team' : profile; // only two types of target list types
+
+            //NEEDED since league sends back an single obj for targetData but player and team sends back array of objects
+            let statName = profile == 'team' || profile == 'player' ? list.targetData[0]['statType'] : list.targetData['statType'];
+            let listype = profile == 'team' || profile == 'player' ? list.targetData[0]['rankType'] : list.targetData['rankType'];;
+
+            //remove text to grab actualy statName without player or team in front of stat
+            if (listype == "team") {
+              statName = statName.replace('team_','');
+            }
+            if (listype == "player") {
+              statName = statName.replace('player_','');
+            }
+            let ordering = list.listInfo.ordering;
+            let listRoute = [self.partnerSite + '/' + scope + '/list', target, statName, season, ordering];
+            let relPath = listRoute.join('/').toString();
+            let sitePath: siteKey = {
+              path: listRoute,
+              name: self.domainUrl + relPath,
+              dataPoints: null,
+            };
+            // console.log('adding addListPage', sitePath.name);
+            self.totalSiteMap.push(sitePath);
+          })//end of season
+        })// end of data.data
+
       }catch(e){
         console.warn('Error siteMap failure @ addListPage', e)
       }

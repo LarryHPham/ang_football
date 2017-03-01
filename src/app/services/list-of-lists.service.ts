@@ -28,7 +28,8 @@ export class ListOfListsService {
 
   getSiteListMap(scope, target, count, pageNumber, id?){
     let callURL = this._apiUrlTdl + '/listOfLists/';
-    callURL += 'scope=' +scope+ '&target=' +target+ '&perPageCount=' +count+ '&pageNumber=' +pageNumber;
+    let apiScope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += 'scope=' +apiScope+ '&target=' +target+ '&perPageCount=' +count+ '&pageNumber=' +pageNumber;
 
     if(id){
       callURL += '&targetId='+id;
