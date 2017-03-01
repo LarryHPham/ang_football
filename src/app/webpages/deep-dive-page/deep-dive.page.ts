@@ -254,7 +254,7 @@ export class DeepDivePage {
   getFirstArticleStackData() {
     this._deepDiveData.getDeepDiveBatchService(this.scope, 1, 1, this.geoLocation)
       .subscribe(data => {
-        this.firstStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveMd);
+        this.firstStackTop = this._deepDiveData.transformToArticleStack(data['articles'], GlobalSettings._deepDiveMd);
       },
       err => {
         console.log("Error getting first article stack data");

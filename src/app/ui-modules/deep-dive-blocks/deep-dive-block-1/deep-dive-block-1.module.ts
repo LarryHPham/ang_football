@@ -63,7 +63,7 @@ export class DeepDiveBlock1{
   getFirstArticleStackData(){
     this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 1, this.geoLocation)
         .subscribe(data => {
-          this.firstStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveLg);
+          this.firstStackTop = this._deepDiveData.transformToArticleStack(data['articles'], GlobalSettings._deepDiveLg);
         },
         err => {
               console.log("Error getting first article stack data");
@@ -80,7 +80,11 @@ export class DeepDiveBlock1{
   getTileStackData(){
     this._deepDiveData.getDeepDiveBatchService(this.scope, this.callLimit, 2, this.geoLocation)
         .subscribe(data => {
-          this.tilestackData = this._deepDiveData.transformTileStack(data, this.scope);
+          try{
+            this.tilestackData = this._deepDiveData.transformTileStack(data['articles'], this.scope);
+          }catch(e){
+            console.log('tile stack error');
+          }
         },
         err => {
             console.log("Error getting tile stack data");
@@ -90,7 +94,12 @@ export class DeepDiveBlock1{
   getDeepDiveVideoBatch(scope, region, numItems, startNum){
     this._deepDiveData.getDeepDiveVideoBatchService(this.scope, numItems, startNum, region).subscribe(
       data => {
-        this.videoData = this._deepDiveData.transformVideoStack(data.data)['videos'];
+        try{
+          var video = data.data['videos'] != null ? this._deepDiveData.transformVideoStack(data.data) : null;
+          this.videoData = video['videos'];
+        }catch(e){
+          console.log('error in video data');
+        }
       },
       err => {
           console.log("Error getting video batch data");

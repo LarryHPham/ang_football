@@ -10,7 +10,7 @@ declare var Zone;
 
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
-    private static _env = 'dev';//  isNode ? 'prod' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
+    private static _env = isNode ? 'dev' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
     public static _proto = isNode ? 'http:' : window.location.protocol;//TODO currently server side is hardcoding protocol
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
@@ -69,7 +69,7 @@ export class GlobalSettings {
 
     private static prebootFired:boolean = false;
 
-    static siteMapArticleCount: number = 200;
+    static siteMapArticleCount: number = 500;
 
     static _imgSmLogo: number = 45;
     static _imgMdLogo: number = 70;

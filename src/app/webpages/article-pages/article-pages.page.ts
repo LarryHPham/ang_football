@@ -156,7 +156,11 @@ export class ArticlePages implements OnInit {
       //needed to uppercase for ai to grab data correctly
       this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, startNum, 3)
         .subscribe(data => {
-          this.randomHeadlines = this._deepDiveService.transformToRecArticles(data);
+          try{
+            this.randomHeadlines = this._deepDiveService.transformToRecArticles(data.data['articles']);
+          }catch(e){
+            console.log("error in recommended articles");
+          }
         });
     }
   }
