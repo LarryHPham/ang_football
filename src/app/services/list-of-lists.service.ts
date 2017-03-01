@@ -26,6 +26,22 @@ export class ListOfListsService {
   constructor(public model: ModelService){
   }
 
+  getSiteListMap(scope, target, count, pageNumber, id?){
+    let callURL = this._apiUrlTdl + '/listOfLists/';
+    callURL += 'scope=' +scope+ '&target=' +target+ '&perPageCount=' +count+ '&pageNumber=' +pageNumber;
+
+    if(id){
+      callURL += '&targetId='+id;
+    }
+    console.log(callURL)
+    return this.model.get( callURL )
+      .map(
+        data => {
+          return data;
+        }
+      )
+  }
+
   //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
   getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
