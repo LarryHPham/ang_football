@@ -17,6 +17,7 @@ import { DirectoryService } from '../services/directory.service';
 import { ArticleDataService } from "../services/article-page-service";
 import { DeepDiveService } from "../services/deep-dive.service";
 import { ListOfListsService } from "../services/list-of-lists.service";
+import { ProfileHeaderService } from '../services/profile-header.service';
 
 export interface siteKey {
   path: Array<any>;
@@ -77,6 +78,7 @@ export class SiteMap {
     private _seoService: SeoService,
     private _deepDiveService: DeepDiveService,
     private _listOfListService: ListOfListsService,
+    private _profileService: ProfileHeaderService,
   ) {
     this.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
@@ -119,7 +121,7 @@ export class SiteMap {
 
   addLeagueModulePages(scope){
     try{
-      this._profileService.getTeamProfile(id)
+      this._profileService.getLeagueProfile(scope)
       .subscribe(data => {
         let headerData = data.headerData;
         let teamNameRoute = GlobalFunctions.toLowerKebab(data.profileName);
@@ -131,7 +133,7 @@ export class SiteMap {
           let schedulesTabs = ['pregame','postgame'];
           let season = Number(headerData.seasonBase) - i;
           for( var s = 0 ; s < 2; s++){
-            let scheduleRoute = [this.partnerSite + '/' + scope + '/schedules/'+ 'league', id, season, schedulesTabs[s], 1];
+            let scheduleRoute = [this.partnerSite + '/' + scope + '/schedules/'+ 'league', season, schedulesTabs[s], 1];
             let scheduleRelPath = scheduleRoute.join('/').toString();
             let scheduleMap: siteKey = {
               path: scheduleRoute,
