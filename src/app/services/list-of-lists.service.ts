@@ -70,21 +70,25 @@ export class ListOfListsService {
     return this.model.get( callURL )
       .map(
         data => {
-          if(data && data.data.length != 0){
-            if ( !data || !data.data ) {
+          try{
+            if(data && data.data.length != 0){
+              if ( !data || !data.data ) {
+                return null;
+              }
+              var lastUpdated = "";
+              if ( data && data.data && data.data.length > 0 && data.data != undefined) {
+                lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
+              }
+              return {
+                carData: this.carDataPage(data.data,target),
+                listData: this.detailedData(data.data, pageType,target),
+                targetData: this.getTargetData(data.data),
+                pagination: data.data[0].listInfo,
+                lastUpdated: lastUpdated
+              };
+            }
+          }catch(e){
               return null;
-            }
-            var lastUpdated = "";
-            if ( data && data.data && data.data.length > 0 && data.data != undefined) {
-              lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
-            }
-            return {
-              carData: this.carDataPage(data.data,target),
-              listData: this.detailedData(data.data, pageType,target),
-              targetData: this.getTargetData(data.data),
-              pagination: data.data[0].listInfo,
-              lastUpdated: lastUpdated
-            };
           }
         }
       )

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -51,6 +51,7 @@ export class ListOfListsPage {
 
     constructor(
         private activatedRoute: ActivatedRoute,
+        private router: Router,
         private listService:ListOfListsService,
         private _profileService: ProfileHeaderService,
         private _title: Title,
@@ -106,7 +107,7 @@ export class ListOfListsPage {
                   });
                 }
                 this._cdRef.detectChanges();
-                
+
                 var profileName = "League";
                 var profileRoute = ['/' + urlParams.scope, 'league'];
                 var profileImage = logoUrl ? logoUrl : GlobalSettings.getSiteLogoUrl();
@@ -169,6 +170,8 @@ export class ListOfListsPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
+      
+      let keywords = "football, " + text3;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -178,6 +181,13 @@ export class ListOfListsPage {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(imageUrl);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType('List Of List Page');
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(imageUrl);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
     // function to lazy load page sections

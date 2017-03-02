@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
 //globals
@@ -156,6 +156,7 @@ export class LeaguePage{
       private _twitterService: TwitterService,
       private _seoService: SeoService,
       private _cdRef: ChangeDetectorRef,
+      private router: Router
     ) {
       this.routeSubscriptions = this.activatedRoute.params.subscribe(
             (param :any)=> {
@@ -267,6 +268,7 @@ export class LeaguePage{
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
       let color = '#2d3e50';
+      
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -276,6 +278,12 @@ export class LeaguePage{
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType('League Page');
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(image);
     } // metaTags
 
 
