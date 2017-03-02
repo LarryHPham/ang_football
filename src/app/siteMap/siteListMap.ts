@@ -9,7 +9,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 import { SeoService } from "../seo.service";
-import { siteKey } from "../siteMap/siteMap";
+import { SiteMap, siteKey } from "../siteMap/siteMap";
 
 //services
 import { ListOfListsService } from "../services/list-of-lists.service";
@@ -85,12 +85,7 @@ export class SiteListMap {
             let ordering = list.listInfo.ordering;
             let listRoute = [self.partnerSite + '/' + scope + '/list', target, statName, season, ordering];
             let relPath = listRoute.join('/').toString();
-            let sitePath: siteKey = {
-              path: listRoute,
-              name: self.domainUrl + relPath,
-              dataPoints: null,
-            };
-            // console.log('adding addListPage', sitePath.name);
+            let sitePath = SiteMap.createSiteKey(listRoute, relPath);
             self.totalSiteMap.push(sitePath);
           })//end of season
         })// end of data.data

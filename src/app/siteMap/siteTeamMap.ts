@@ -9,7 +9,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 import { SeoService } from "../seo.service";
-import { siteKey } from "../siteMap/siteMap";
+import { SiteMap, siteKey } from "../siteMap/siteMap";
 
 //services
 import { RosterService } from '../services/roster.service';
@@ -79,11 +79,7 @@ export class SiteTeamMap {
           for( var s = 0 ; s < 2; s++){
             let scheduleRoute = [this.partnerSite + '/' + scope + '/schedules/'+ teamNameRoute, id, season, schedulesTabs[s], 1];
             let scheduleRelPath = scheduleRoute.join('/').toString();
-            let scheduleMap: siteKey = {
-              path: scheduleRoute,
-              name: this.domainUrl + scheduleRelPath,
-              dataPoints: null,
-            };
+            let scheduleMap = SiteMap.createSiteKey(scheduleRoute, scheduleRelPath);
             this.totalSiteMap.push(scheduleMap);
           }// end of schedule for loops
         }//end of for loops seasons
@@ -91,11 +87,7 @@ export class SiteTeamMap {
         //standings
         let standingsRoute = [this.partnerSite + '/' + scope + '/standings/team/'+ teamNameRoute];
         let standingsRelPath = standingsRoute.join('/').toString();
-        let standingsMap: siteKey = {
-          path: standingsRoute,
-          name: this.domainUrl + standingsRelPath,
-          dataPoints: null,
-        };
+        let standingsMap = SiteMap.createSiteKey(standingsRoute, standingsRelPath);
         this.totalSiteMap.push(standingsMap);
 
         //transaction
@@ -104,43 +96,27 @@ export class SiteTeamMap {
         for(var t = 0 ; t < 3; t++){
           let transactionRoute = [this.partnerSite + '/' + scope + '/'+transactionTabs[t]+'/'+ teamNameRoute, id, 20, 1];
           let transactionRelPath = transactionRoute.join('/').toString();
-          let transactionMap: siteKey = {
-            path: transactionRoute,
-            name: this.domainUrl + transactionRelPath,
-            dataPoints: null,
-          };
+          let transactionMap = SiteMap.createSiteKey(transactionRoute, transactionRelPath);
           this.totalSiteMap.push(transactionMap);
         }
 
         //roster
         let rosterRoute = [this.partnerSite + '/' + scope + '/team-roster/'+ teamNameRoute, id];
         let rosterRelPath = rosterRoute.join('/').toString();
-        let rosterMap: siteKey = {
-          path: rosterRoute,
-          name: this.domainUrl + rosterRelPath,
-          dataPoints: null,
-        };
+        let rosterMap = SiteMap.createSiteKey(rosterRoute, rosterRelPath);
         this.totalSiteMap.push(rosterMap);
 
         //draft history
         let draftRoute = [this.partnerSite + '/' + scope + '/draft-history/'+ teamNameRoute, id];
         let draftRelPath = draftRoute.join('/').toString();
-        let draftMap: siteKey = {
-          path: draftRoute,
-          name: this.domainUrl + draftRelPath,
-          dataPoints: null,
-        };
+        let draftMap = SiteMap.createSiteKey(draftRoute, draftRelPath);
         this.totalSiteMap.push(draftMap);
 
         //playerStats
         // nfl/player-stats/new-england-patriots/138
         let playerStatsRoute = [this.partnerSite + '/' + scope + '/player-stats/' + teamNameRoute, id];
         let playerStatsRelPath = playerStatsRoute.join('/').toString();
-        let playerStatsMap: siteKey = {
-          path: playerStatsRoute,
-          name: this.domainUrl + playerStatsRelPath,
-          dataPoints: null,
-        };
+        let playerStatsMap = SiteMap.createSiteKey(playerStatsRoute, playerStatsRelPath);
         this.totalSiteMap.push(playerStatsMap);
 
       });
@@ -164,18 +140,9 @@ export class SiteTeamMap {
             //[scope: string, teamName: string, playerFullName:string, playerId: string]
             let playerRoute = VerticalGlobalFunctions.formatPlayerRoute(scope, teamName, playerName, player.playerId);
             let relPath = playerRoute.join('/').toString();
-            let pathData: siteKey = {
-              path: playerRoute,
-              name: self.domainUrl + relPath,
-              dataPoints: null,
-            }
+            let pathData = SiteMap.createSiteKey(playerRoute, relPath);
             let playerPath = '/sitemap/' + scope + '/player/' + player.playerId;
-            let sitePath: siteKey = {
-              path: [playerPath],
-              name: self.domainUrl + playerPath,
-              dataPoints: null,
-            }
-            // console.log('adding playerPage', pathData.name);
+            let sitePath = SiteMap.createSiteKey([playerPath], playerPath);
             self.totalSiteMap.push(pathData);
             self.totalSiteMap.push(sitePath);
 
@@ -202,11 +169,7 @@ export class SiteTeamMap {
           if(id){
             relPath += '?id='+id;
           }
-          let sitePath: siteKey = {
-            path: listRoute,
-            name: self.domainUrl + relPath,
-            dataPoints: null,
-          };
+          let sitePath = SiteMap.createSiteKey(listRoute, relPath);
           if(id){
             sitePath.query = {};
             sitePath.query.id = id;

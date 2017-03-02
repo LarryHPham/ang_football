@@ -9,7 +9,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 import { SeoService } from "../seo.service";
-import { siteKey } from "../siteMap/siteMap";
+import { SiteMap, siteKey } from "../siteMap/siteMap";
 
 //services
 import { ListOfListsService } from "../services/list-of-lists.service";
@@ -70,11 +70,7 @@ export class SitePlayerMap {
           //SeasonStats
           let seasonStatsRoute = [this.partnerSite + '/sitemap/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
           let seasonStatsPath = seasonStatsRoute.join('/').toString();
-          let sitePath: siteKey = {
-            path: seasonStatsRoute,
-            name: this.domainUrl + seasonStatsPath,
-            dataPoints: null,
-          };
+          let sitePath = SiteMap.createSiteKey(seasonStatsRoute, seasonStatsPath);
           this.totalSiteMap.push(sitePath);
         });
     }catch(e){
@@ -89,11 +85,7 @@ export class SitePlayerMap {
         .subscribe(data => {
           if(data != null){
             let relPath = data.articleUrl.join('/').toString();
-            let sitePath: siteKey = {
-              path: data.articleUrl,
-              name: this.domainUrl + relPath,
-              dataPoints: null,
-            };
+            let sitePath = SiteMap.createSiteKey(data.articleUrl, relPath);
             this.totalSiteMap.push(sitePath);
           }
         });
@@ -118,11 +110,8 @@ export class SitePlayerMap {
           if(id){
             relPath += '?id='+id;
           }
-          let sitePath: siteKey = {
-            path: listRoute,
-            name: self.domainUrl + relPath,
-            dataPoints: null,
-          };
+          let sitePath = SiteMap.createSiteKey(listRoute, relPath);
+          
           if(id){
             sitePath.query = {};
             sitePath.query.id = id;
