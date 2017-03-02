@@ -56,6 +56,7 @@ export class PlayerPage{
   public storedPartnerParam: string;
   public scope: any;
   private teamName: any;
+  private teamNameParam: string;
   private fullName: string;
   private playerID: number;
   private storeSubscriptions: any = [];
@@ -83,11 +84,13 @@ export class PlayerPage{
   private boxScoresData:any;
   private currentBoxScores:any;
 
-  private schedulesData: any;
-  private scheduleFilter1: Array<any>;
-  private selectedFilter1: string;
-  private eventStatus: string;
-  private isFirstRun: number = 0;
+  private schedulesData:any;
+  private scheduleTabsData: any;
+  private scheduleFilter1:Array<any>;
+  private selectedFilter1:string;
+  private eventStatus: any;
+  private selectedScheduleTabDisplay: string;
+  private schedulesModuleFooterUrl: Array<any>;
 
   private standingsData: StandingsModuleData;
 
@@ -138,12 +141,12 @@ export class PlayerPage{
         this.routeChangeResets();
 
         this.scope = param['scope'] != null ? param['scope'] : 'nfl';
-        this.teamName = param['teamName'];
+        this.teamNameParam = param['teamName'];
         this.fullName = param['fullName'];
         this.playerID = param['playerID'];
         this.pageParams = { playerId: this.playerID }
 
-        this.storedPartnerParam = GlobalSettings.storedPartnerId();
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
         this.setupPlayerProfileData();
       }
     );
@@ -186,7 +189,6 @@ export class PlayerPage{
         this.seasonBase = data.headerData['seasonBase'];
         this.metaTags(data);
         this.pageParams = data.pageParams;
-        this.pageParams['partnerRoute'] = this.storedPartnerParam;
         this.pageParams['scope'] = this.scope;
         this.profileName = data.headerData.playerFullName;
         this.teamName = data.headerData.teamFullName;
@@ -371,43 +373,48 @@ export class PlayerPage{
     }
   } //getBoxScores
 
+
+
   private scheduleTab(tab) {
-    this.isFirstRun = 0;
-    if (tab == 'Upcoming Games') {
-      this.eventStatus = 'pregame';
-      this.getSchedulesData(this.eventStatus, null);
-    } else if (tab == 'Previous Games') {
-      this.eventStatus = 'postgame';
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1);
-    } else {
-      this.eventStatus = 'postgame';
-      this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
-    }
+      this.eventStatus = tab == "Previous Games" ? 'postgame' : 'pregame';
+      this.getSchedulesData(this.eventStatus);
   } //scheduleTab
-  private filterDropdown(filter) {
-    let tabCheck = 0;
-    if (this.eventStatus == 'postgame') {
-      tabCheck = -1;
-    }
-    if (this.isFirstRun > tabCheck) {
-      if(filter.key != this.selectedFilter1){
-        this.selectedFilter1 = filter.key;
-        this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+  private getSelectedScheduleTab(tabsData, status) {
+      let matchingTabs = tabsData.filter(value => value.data == status);
+      matchingTabs[0]['tabData'].sections = this.schedulesData.data;
+      matchingTabs[0]['tabData'].isActive = true;
+      this.selectedScheduleTabDisplay = matchingTabs[0].display;
+      return tabsData;
+  } //getSelectedScheduleTab
+  private scheduleFilterDropdown(filter){
+      if( filter.key != this.selectedFilter1 ) {
+          this.selectedFilter1 = filter.key;
+          this.getSchedulesData(this.eventStatus, filter.key);
       }
-    }
-    this.isFirstRun++;
-  } //filterDropdown
+  } //scheduleFilterDropdown
   private getSchedulesData(status, year?) {
     var limit = 5;
-    this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'player', status, limit, 1, this.teamID, (schedulesData) => {
-      if (status == 'pregame') {
+    var pageNum = 1;
+    year = year ? year : this.seasonBase;
+    if(status == 'pregame') {
+        this.selectedFilter1 = null;
+        year = 'all';
+    }
+    this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
+      if(status == 'pregame'){
         this.scheduleFilter1 = null;
       } else {
-        this.scheduleFilter1 = schedulesData.seasons;
+        if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+          this.scheduleFilter1 = schedulesData.seasons;
+        }
       }
-      this.schedulesData = schedulesData;
+      this.schedulesData = schedulesData ? schedulesData : null;
+      this.scheduleTabsData = this.schedulesData.tabs ? this.getSelectedScheduleTab(this.schedulesData.tabs, status) : null;
+      this.schedulesModuleFooterUrl = [this.storedPartnerParam, this.scope, 'schedules', this.teamNameParam, this.teamID, year, status, pageNum];
     }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
   } //getSchedulesData
+
+
 
   private standingsTabSelected(tabData: Array<any>) {
     //only show 5 rows in the module;
