@@ -13,6 +13,8 @@ import { siteKey } from "../siteMap/siteMap";
 
 //services
 import { ListOfListsService } from "../services/list-of-lists.service";
+import { ProfileHeaderService } from '../services/profile-header.service';
+import { ArticleDataService } from "../services/article-page-service";
 
 @Component({
   selector: 'site-player-map',
@@ -31,6 +33,8 @@ export class SitePlayerMap {
     private router:ActivatedRoute,
     private _seoService: SeoService,
     private _listOfListService: ListOfListsService,
+    private _profileService: ProfileHeaderService,
+    private _fantasyService: ArticleDataService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
@@ -55,6 +59,48 @@ export class SitePlayerMap {
     let self = this;
     let route = [];
     this.addListPage(scope, playerId);
+    this.addPlayerModulePages(scope, playerId);
+    this.addPlayerFantasy(scope, playerId);
+  }
+
+  addPlayerModulePages(scope, id){
+    try{
+      this._profileService.getPlayerProfile(id)
+      .subscribe(data => {
+          //SeasonStats
+          let seasonStatsRoute = [this.partnerSite + '/sitemap/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
+          let seasonStatsPath = seasonStatsRoute.join('/').toString();
+          let sitePath: siteKey = {
+            path: seasonStatsRoute,
+            name: this.domainUrl + seasonStatsPath,
+            dataPoints: null,
+          };
+          this.totalSiteMap.push(sitePath);
+        });
+    }catch(e){
+      console.log('No Player Module Data');
+    }
+  }
+
+  addPlayerFantasy(scope, id){
+    try{
+      if(scope == 'nfl'){
+        this._fantasyService.getFantasyReport(id)
+        .subscribe(data => {
+          if(data != null){
+            let relPath = data.articleUrl.join('/').toString();
+            let sitePath: siteKey = {
+              path: data.articleUrl,
+              name: this.domainUrl + relPath,
+              dataPoints: null,
+            };
+            this.totalSiteMap.push(sitePath);
+          }
+        });
+      }
+    }catch(e){
+      console.log('No Player Fantasy Data');
+    }
   }
 
   addListPage(scope, id?){

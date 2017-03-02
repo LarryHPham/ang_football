@@ -65,8 +65,7 @@ export class SiteAiArticleMap {
       try{
         //(scope: string, eventType: string, eventID: string)
         data.data.forEach(function(article){
-          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.event_id).length > 0 : false;
-          if( (article.scope == 'nfl' || article.scope == 'ncaaf') && !duplicate ){
+          if( article.scope == 'nfl' || article.scope == 'ncaaf' ){
             if(article.event_id){
               let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.event_id);
               let relPath = articleRoute.join('/').toString();
