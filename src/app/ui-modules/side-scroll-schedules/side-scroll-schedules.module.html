@@ -1,8 +1,8 @@
 <section *ngIf="scopeDisplayed">
   <div class="ss_container container-fluid">
     <div class="ss_title row">
-      <span *ngIf="scopeDisplayed.scope" class="ss_title-2 col-xs-4"><i class="fa fa-tdl-football"></i>{{scopeDisplayed.scope}}</span>
-      <span class="col-xs-8 floatRight ss_title-buttons">
+      <span *ngIf="scopeDisplayed.scope" class="ss_title-2 col-xs-12 col-md-4"><i class="fa fa-tdl-football"></i>{{scopeDisplayed.scope}}</span>
+      <span class="col-xs-12 col-md-8 floatRight ss_title-buttons">
         <div class="container-fluid">
           <div class="ss_title-container row">
             <span class="ss_title-1" [class.ss-title-active]="scope.toUpperCase() == 'HOME'" (click)="scopeChange('home')">ALL</span>
