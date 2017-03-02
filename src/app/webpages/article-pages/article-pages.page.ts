@@ -156,7 +156,11 @@ export class ArticlePages implements OnInit {
       //needed to uppercase for ai to grab data correctly
       this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, startNum, 3)
         .subscribe(data => {
-          this.randomHeadlines = this._deepDiveService.transformToRecArticles(data);
+          try{
+            this.randomHeadlines = this._deepDiveService.transformToRecArticles(data.data['articles']);
+          }catch(e){
+            console.log("error in recommended articles");
+          }
         });
     }
   }
@@ -165,11 +169,11 @@ export class ArticlePages implements OnInit {
     var getData = this.isAiArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) : this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
     this.trendingArticles = getData.subscribe(data => {
         if (!this.hasRun) {
-          this.trendingContent = this.trendingContent.concat(data['articles']) ? this.trendingContent.concat(data['articles']) : null;
+          this.trendingContent = this.isAiArticle ? this.trendingContent.concat(data['articles']) : this.trendingContent.concat(data['articles']);
           this.hasRun = true;
           this.trendingData = this.isAiArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
             this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
-          if ((data.article_count % 10 == 0 || data.length % 10 == 0) && this.trendingData) {
+          if ((data.article_count % 10 == 0 || data['articles'].length % 10 == 0) && this.trendingData) {
             this.batch = this.batch + 1;
           } else {
             this.isTrendingMax = true;
@@ -322,12 +326,13 @@ export class ArticlePages implements OnInit {
 
     let metaObjData;
     if (this.isAiArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
+      var updated = metaData['articleContent'].last_updated ? metaData['articleContent'].last_updated.toString() : metaData['articleContent'].publication_date.toString();
       metaObjData = {
         startDate: headerData['relevancy_start_date'].toString(),
         endDate: headerData['relevancy_end_date'].toString(),
         source: "snt_ai",
         keyword: metaData['articleContent']['keyword'],
-        publishedDate: metaData['articleContent'].publication_date.toString(),
+        publishedDate: updated,
         author: metaData['articleContent'].author,
         publisher: metaData['articleContent'].publisher,
         articleTeaser: metaData.teaser.replace(/<ng2-route>|<\/ng2-route>/g, ''),
@@ -346,13 +351,14 @@ export class ArticlePages implements OnInit {
         setArticleType: this.scope,
       }
     }
-    this._seoService.setCanonicalLink(this._activateRoute.params,this._router);
+
+    this._seoService.setCanonicalLink();
     this._seoService.setTitle(metaData.title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setOgTitle(metaData.title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl(link);
+    this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
     //Elastic Search
     this._seoService.setStartDate(metaObjData.startDate);
@@ -368,7 +374,7 @@ export class ArticlePages implements OnInit {
     this._seoService.setPublisher(metaObjData.publisher);
     this._seoService.setImageUrl(image);
     this._seoService.setArticleTeaser(metaObjData.articleTeaser ? metaObjData.articleTeaser : '');
-    this._seoService.setPageUrl(link);
+    this._seoService.setPageUrl();
     this._seoService.setArticleType(metaObjData.setArticleType);
     this._seoService.setKeyWord(searchString);
   } //metaTags

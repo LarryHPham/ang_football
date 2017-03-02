@@ -218,18 +218,18 @@ export class StandingsPage {
       keywords += header.teamName && header.teamName != header.teamMarket ? ", " + header.teamName : "";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink(this.activateRoute.params,this.router);
+      this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
       this._seoService.setOgTitle(ogTitle);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl(link);
+      this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
       //Elastic Search
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setPageTitle(title);
       this._seoService.setPageType("Standing Page");
-      this._seoService.setPageUrl(link);
+      this._seoService.setPageUrl();
       this._seoService.setImageUrl(image);
       this._seoService.setKeyWord(keywords);
       if (header.teamId != null) {

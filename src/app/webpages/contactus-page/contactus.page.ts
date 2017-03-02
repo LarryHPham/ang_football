@@ -133,14 +133,14 @@ export class ContactUsPage {
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
-      this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
-      this._seoService.setOgUrl(link);
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
       //Elastic Search
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setPageTitle(title);
       this._seoService.setPageType(title);
-      this._seoService.setPageUrl(link);
+      this._seoService.setPageUrl();
       this._seoService.setImageUrl(image);
       this._seoService.setKeyWord(keywords);
     } //metaTags

@@ -46,9 +46,12 @@ import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
 import { SiteTeamMap } from "../siteMap/siteTeamMap";
 import { SitePlayerMap } from "../siteMap/sitePlayerMap";
+import { SiteAiArticleMap } from "../siteMap/siteAiArticleMap";
 import { SiteArticleMap } from "../siteMap/siteArticleMap";
+import { SiteVideoArticleMap } from "../siteMap/siteVideoArticleMap";
+import { SiteListMap } from "../siteMap/siteListMap";
 
-//modules
+//moduless
 import { WidgetModule } from "../ui-modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 import { BillboardModule } from "../ui-modules/billboard/billboard.module";
@@ -129,7 +132,10 @@ const PAGEMODULES = [
   SiteMap,
   SiteTeamMap,
   SitePlayerMap,
-  SiteArticleMap
+  SiteAiArticleMap,
+  SiteArticleMap,
+  SiteVideoArticleMap,
+  SiteListMap
 ]
 
 const COREMODULES = [

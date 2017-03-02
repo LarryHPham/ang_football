@@ -149,18 +149,18 @@ export class DeepDivePage {
     let keywords = "football";
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
+    this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl(link);
+    this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
     //Elastic Search
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setPageTitle(title);
     this._seoService.setPageType(title);
-    this._seoService.setPageUrl(link);
+    this._seoService.setPageUrl();
     this._seoService.setImageUrl(image);
     this._seoService.setKeyWord(keywords);
   } //metaTags
@@ -265,7 +265,7 @@ export class DeepDivePage {
   getFirstArticleStackData() {
     this._deepDiveData.getDeepDiveBatchService(this.scope, 1, 1, this.geoLocation)
       .subscribe(data => {
-        this.firstStackTop = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveMd);
+        this.firstStackTop = this._deepDiveData.transformToArticleStack(data['articles'], GlobalSettings._deepDiveMd);
       },
       err => {
         console.log("Error getting first article stack data");

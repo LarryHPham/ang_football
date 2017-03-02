@@ -29,7 +29,10 @@ import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
 import { SiteTeamMap } from "../siteMap/siteTeamMap";
 import { SitePlayerMap } from "../siteMap/sitePlayerMap";
+import { SiteAiArticleMap } from "../siteMap/siteAiArticleMap";
 import { SiteArticleMap } from "../siteMap/siteArticleMap";
+import { SiteVideoArticleMap } from "../siteMap/siteVideoArticleMap";
+import { SiteListMap } from "../siteMap/siteListMap";
 
 const relativeChildRoutes = [
     {
@@ -188,8 +191,20 @@ const relativeChildRoutes = [
         component: SitePlayerMap
     },
     {
-      path: 'sitemap/aiarticles/:pageNumber',
+      path: 'sitemap/:scope/aiarticles',
+      component: SiteAiArticleMap
+    },
+    {
+      path: 'sitemap/:scope/articles/:pageNumber',
       component: SiteArticleMap
+    },
+    {
+      path: 'sitemap/:scope/list/:profile/:pageNumber',
+      component: SiteListMap
+    },
+    {
+      path: 'sitemap/:scope/videoarticles/:pageNumber',
+      component: SiteVideoArticleMap
     },
     // // //Error pages and error handling
     {

@@ -19,22 +19,22 @@ export class ArticleDataService {
   }
 
   //AI article data processing
-  getArticleTotal() {
+  getArticleTotal(scope) {
     var fullUrl = GlobalSettings.getArticleUrl();
-      return this.model.get(fullUrl + "articles?totalArticleCountOverride=1")
-        .map(data => {
-          return data.data;
-        });
-  }
-
-  //AI article data processing
-  getAllAiArticle(count, page) {
-    var fullUrl = GlobalSettings.getArticleUrl();
-      return this.model.get(fullUrl + "articles?&count=" + count + "&page=" + page + "&metaDataOnly=1")
+      return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=99999999&page=1&metaDataOnly=1")
         .map(data => {
           return data;
         });
   }
+
+  // //AI article data processing
+  // getAllAiArticle(scope, count, page) {
+  //   var fullUrl = GlobalSettings.getArticleUrl();
+  //     return this.model.get(fullUrl + "articles?scope="+scope+"&source[]=snt_ai&count=" + count + "&page=" + page + "&metaDataOnly=1")
+  //       .map(data => {
+  //         return data;
+  //       });
+  // }
 
   //AI article data processing
   getArticle(eventID, eventType, partnerId, scope, isFantasyReport, rawType) {
@@ -69,6 +69,7 @@ export class ArticleDataService {
           carouselImages = ArticleDataService.getCarouselImages(articles[0]['article_data']['images'], articleType, isFantasyReport);
           hasImages = false;
         }
+      var updated = data['data'][0]['article_data'].last_updated ? data['data'][0]['article_data'].last_updated : data['data'][0]['article_data'].publication_date;
         return {
           eventID: eventId,
           hasEventId: hasEventID,
@@ -79,7 +80,7 @@ export class ArticleDataService {
           pageIndex: articleType[0],
           title: articles[0]['article_data'].title,
           teaser: articles[0].teaser,
-          date: GlobalFunctions.sntGlobalDateFormatting(articles[0]['article_data'].publication_date * 1000, "timeZone"),
+          date: GlobalFunctions.sntGlobalDateFormatting(updated * 1000, "timeZone"),
           articleContent: articles[0]['article_data'],
           teamId: (isFantasyReport || articles[0].team_id != null) ?
           articles[0].team_id : articles[0]['article_data']['metadata'].team_id,

@@ -128,18 +128,18 @@ export class PlayerStatsPage implements OnInit {
       let link = window.location.href;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink(this.activatedRoute.params,this.router);
+      this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('INDEX, FOLLOW');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc +". Know more about football.");
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl(link);
+      this._seoService.setOgUrl();
       this._seoService.setOgImage(imageUrl);
       //Elastic Search
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setPageTitle(title);
       this._seoService.setPageType("Player Stats Page");
-      this._seoService.setPageUrl(link);
+      this._seoService.setPageUrl();
       this._seoService.setImageUrl(imageUrl);
       this._seoService.setKeyWord(keywords);
     } //metaTags

@@ -43,6 +43,9 @@ export class SchedulesPage implements OnInit {
   public storedPartnerParam: string;
   public pageType: string;
   public seasonBase: string;
+  public activeTab: any;
+  public selectedTabKey: string;
+  public selectedTabDisplay: string;
 
   profileHeaderData: TitleInputData;
   errorData: any;
@@ -62,7 +65,6 @@ export class SchedulesPage implements OnInit {
   eventStatus: string;
   currentYear = moment().year();
 
-  public selectedTabKey: string;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -87,30 +89,22 @@ export class SchedulesPage implements OnInit {
             this.teamID = param['teamID'];
             this.teamName = param['teamName'];
             this.selectedFilter1 = param["year"] ? param["year"] : this.currentYear;
-            this.selectedTabKey = param["tab"] == null || param["tab"] == 'all' ? 'pregame' : param["tab"];
+            this.selectedTabKey = param["tab"];
             this.pageNum = param['pageNum'] ? param['pageNum'] : 1;
             this.initialTabKey = !this.selectedTabKey ? 'pregame' : this.initialTabKey;
             this.eventStatus = this.selectedTabKey;
             if (this.initialPage <= 0) {
                 this.initialPage = 1;
             }
+            this.selectedFilter2 = this.scheduleFilter2 ? this.scheduleFilter2['data'][0].key : null; // always reset filter2 on page load
             this.getSchedulesData(this.selectedTabKey, this.initialPage, this.selectedFilter1, this.selectedFilter2);
         }
     );
   } //constructor
 
+
+
   ngOnInit() {} //ngOnInit
-
-
-
-  resetDropdown1() {
-    this.scheduleFilter1 = null;
-    this.selectedFilter1 = null;
-  }
-  resetDropdown2() {
-    this.scheduleFilter2 = null;
-    this.selectedFilter2 = null;
-  }
 
 
 
@@ -133,53 +127,31 @@ export class SchedulesPage implements OnInit {
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaRobots('INDEX, FOLLOW');
-    this._seoService.setCanonicalLink(this.activateRoute.params,this._router);
+    this._seoService.setCanonicalLink();
     this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc +". Know more about football.");
     this._seoService.setOgType('Website');
-    this._seoService.setOgUrl(link);
+    this._seoService.setOgUrl();
     this._seoService.setOgImage(imageUrl);
     //Elastic Search
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setPageTitle(title);
     this._seoService.setPageType("Schedule Page");
-    this._seoService.setPageUrl(link);
+    this._seoService.setPageUrl();
     this._seoService.setImageUrl(imageUrl);
     this._seoService.setKeyWord(keywords);
   } //metaTags
 
 
 
-  private scheduleTab(tab) {
-      let newRoute;
-      let newTab = tab == 'Upcoming Games' ?
-                            'pregame' :
-                            'postgame';
-      let currentTab = this.selectedTabKey;
-      let filter = newTab == 'pregame' ? 'all' : this.selectedFilter1;
-      if ( newTab != currentTab ) {
-            newRoute = this.teamID ?
-                        [this.storedPartnerParam, this.routeScope, this.pageType, this.teamName, this.teamID, filter, newTab, this.pageNum] :
-                        [this.storedPartnerParam, this.routeScope, this.pageType, 'league', filter, newTab, this.pageNum];
-            this._router.navigate(newRoute);
-      }
-      this.getSchedulesData(this.selectedTabKey, this.initialPage, filter, this.selectedFilter2);
-  } //scheduleTab
-
-
-
   private getSchedulesData(status, pageNum, year?, week?) {
     var teamId = this.teamID; //determines to call league page or team page for schedules-table
-    if (typeof year == 'undefined' || year == null) {
-      year = null;
-      this.selectedFilter1 = year;
-    }
+    year = year ? year : this.seasonBase;
     if (teamId) {
       this.profHeadService.getTeamProfile(Number(teamId))
       .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
         data => {
-          // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", data.teamName));
           this.seasonBase = data.headerData.seasonBase;
           data.teamName=data.headerData.teamMarket?data.headerData.teamMarket+" "+ data.teamName:data.teamName;
           this.profileHeaderData = this.profHeadService.convertTeamPageHeader(this.scope, data, "Current Season Schedule - " + data.teamName);
@@ -192,7 +164,6 @@ export class SchedulesPage implements OnInit {
         err => {
           this.isError = true;
           console.log('Error: Schedules Profile Header API: ', err);
-        // this.isError = true;
         }
       );
       this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, this.limit, this.initialPage, teamId, (schedulesData) => {
@@ -205,18 +176,14 @@ export class SchedulesPage implements OnInit {
             if (this.selectedFilter1 == null) {
               this.selectedFilter1 = this.schedulesData.seasons['data'][0].key;
             }
-            // if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
-            // }
           }
-          this.tabData = schedulesData.tabs;
+          this.schedulesData = schedulesData ? schedulesData : null;
+          this.tabData = this.schedulesData.tabs ? this.getSelectedTab(this.schedulesData.tabs) : null;
           } else if (this.schedulesData == null) {
             this.isError = true;
           }
-
-          this.setPaginationParams(schedulesData.pageInfo, year, this.selectedTabKey, pageNum);
       }, year, week)
     } else {
-    // this._title.setTitle(GlobalSettings.getPageTitle("Schedules", "Football"));
     this.profHeadService.getLeagueProfile(this.scope)
       .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
       .subscribe(
@@ -255,15 +222,12 @@ export class SchedulesPage implements OnInit {
         }
         if (schedulesData.carData.length > 0) {
           this.scheduleFilter2 = schedulesData.weeks;
-        } else {
-          // this.scheduleFilter2 = null; // setting this to null causes dropdown to disapear and does not let user res
         }
-        this.schedulesData = schedulesData;
-        this.tabData = schedulesData != null ? schedulesData.tabs : null;
+        this.schedulesData = schedulesData ? schedulesData : null;
+        this.tabData = this.schedulesData.tabs ? this.getSelectedTab(this.schedulesData.tabs) : null;
       } else if (this.schedulesData == null) {
         this.isError = true;
       }
-    //   this.setPaginationParams(schedulesData.pageInfo, year, this.selectedTabKey, pageNum);
     }, year, week)
     }
   } //getSchedulesData
@@ -282,80 +246,80 @@ export class SchedulesPage implements OnInit {
             this._router.navigate(newRoute);
         }
       }
-      else {
-          let tabCheck = 0;
-          if (this.eventStatus == 'postgame') {
-              tabCheck = -1;
-          }
-          if (this.isFirstRun > tabCheck) {
-              var teamId = this.teamID;
-              let filterChange = false;
-              if (filter.value == 'filter1' && this.eventStatus == 'postgame' && this.selectedFilter1 != filter.key) {
-                  this.selectedFilter1 = filter.key;
-                  if (this.selectedFilter2 != null) {
-                      this.selectedFilter2 = this.scheduleFilter2['data'][0].key;//reset weeks to first in dropdown
-                  }
-                  filterChange = true;
-              }
-              if (!teamId) {
-                  if (filter.value == 'filter2' && this.selectedFilter2 != filter.key) {
-                      this.selectedFilter2 = filter.key;
-                      filterChange = true;
-                  }
-              }
-              if (filterChange) {
-                  this.isFirstRun = 0;
-                  this.initialPage = 1;
-                  this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
-              }
-          }
-          this.isFirstRun++;
+      else if ( filter.value == "filter2" ) {
+          this.selectedFilter2 = filter.key;
+          this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
       }
   } //filterDropdown
+
+
+
+  private scheduleTab(tab) {
+      let newRoute;
+      let newTab;
+      let filter;
+      if ( tab == 'Previous Games' ) {
+          newTab = 'postgame';
+          filter = this.selectedFilter1 == 'all' ? this.seasonBase : this.selectedFilter1;
+          newRoute = this.teamID ?
+                      [this.storedPartnerParam, this.routeScope, this.pageType, this.teamName, this.teamID, filter, newTab, this.pageNum] :
+                      [this.storedPartnerParam, this.routeScope, this.pageType, 'league', filter, newTab, this.pageNum];
+          this._router.navigate(newRoute);
+      }
+      else if ( tab == 'Upcoming Games' ) {
+          newTab = 'pregame';
+          newRoute = this.teamID ?
+                      [this.storedPartnerParam, this.routeScope, this.pageType, this.teamName, this.teamID, 'all', newTab, this.pageNum] :
+                      [this.storedPartnerParam, this.routeScope, this.pageType, 'league', 'all', newTab, this.pageNum];
+          this._router.navigate(newRoute);
+      }
+  } //scheduleTab
+
+
+
+  public getSelectedTab(tabsData) {
+      let matchingTabs = tabsData.filter(value => value.data == this.selectedTabKey);
+      matchingTabs[0]['tabData'].sections = this.schedulesData.data;
+      matchingTabs[0]['tabData'].isActive = true;
+      this.selectedTabDisplay = matchingTabs[0].display;
+      return tabsData;
+  }
 
 
 
   //PAGINATION
   //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
   setPaginationParams(input, year: string, tab: string, pageNum: number) {
-    var pageType;
-    var navigationPage = '/' + this.scope + '/schedules/';
-    if (!teamName && !teamId) {
-      navigationPage = '/' + this.scope + '/schedules/league';
-    }
-    var navigationParams = {
-        year: year,
-        tab: tab,
-        pageNumber: pageNum
-    };
-
-    var teamName = this.teamName;
-    var teamId = this.teamID;
-
-    if (teamName) {
-        navigationParams['teamName'] = teamName;
-    }
-    if (teamId) {
-        navigationParams['teamId'] = teamId;
-    }
-
-    this.paginationParameters = {
-        index: pageNum,
-        max: input.totalPages,
-        paginationType: 'module',
-        navigationPage: navigationPage,
-        navigationParams,
-        indexKey: 'pageNumber'
-    }
+    // var pageType;
+    // var navigationPage = '/' + this.scope + '/schedules/';
+    // if (!teamName && !teamId) {
+    //   navigationPage = '/' + this.scope + '/schedules/league';
+    // }
+    // var navigationParams = {
+    //     year: year,
+    //     tab: tab,
+    //     pageNumber: pageNum
+    // };
+    //
+    // var teamName = this.teamName;
+    // var teamId = this.teamID;
+    //
+    // if (teamName) {
+    //     navigationParams['teamName'] = teamName;
+    // }
+    // if (teamId) {
+    //     navigationParams['teamId'] = teamId;
+    // }
+    //
+    // this.paginationParameters = {
+    //     index: pageNum,
+    //     max: input.totalPages,
+    //     paginationType: 'module',
+    //     navigationPage: navigationPage,
+    //     navigationParams,
+    //     indexKey: 'pageNumber'
+    // }
   } //setPaginationParams
-
-
-
-  newIndex(newPage) {
-    this.isFirstRun = 0;
-    this.initialPage = newPage;
-    this.getSchedulesData(this.eventStatus, this.initialPage, this.selectedFilter1, this.selectedFilter2);
-  } //newIndex
 
 
 

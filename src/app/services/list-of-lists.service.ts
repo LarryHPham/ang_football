@@ -26,6 +26,22 @@ export class ListOfListsService {
   constructor(public model: ModelService){
   }
 
+  getSiteListMap(scope, target, count, pageNumber, id?){
+    let callURL = this._apiUrlTdl + '/listOfLists/';
+    let apiScope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += 'scope=' +apiScope+ '&target=' +target+ '&perPageCount=' +count+ '&pageNumber=' +pageNumber;
+
+    if(id){
+      callURL += '&targetId='+id;
+    }
+    return this.model.get( callURL )
+      .map(
+        data => {
+          return data;
+        }
+      )
+  }
+
   //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
   getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
@@ -41,7 +57,7 @@ export class ListOfListsService {
     let scope = urlParams.scope;
 
     //usesd for keeping all data withing given scope of api
-    this._scope = scope == 'fbs' ? 'ncaaf' : 'nfl';
+    this._scope = scope == 'ncaaf' ? 'fbs' : 'nfl';
 
     if (profileType == 'league' && pageType == 'module') {
       id = '';

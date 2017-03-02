@@ -12,6 +12,9 @@ import { SeoService } from "../seo.service";
 import { siteKey } from "../siteMap/siteMap";
 
 //services
+import { ListOfListsService } from "../services/list-of-lists.service";
+import { ProfileHeaderService } from '../services/profile-header.service';
+import { ArticleDataService } from "../services/article-page-service";
 
 @Component({
   selector: 'site-player-map',
@@ -28,6 +31,10 @@ export class SitePlayerMap {
   // private displaySiteMap: boolean = false;
   constructor(
     private router:ActivatedRoute,
+    private _seoService: SeoService,
+    private _listOfListService: ListOfListsService,
+    private _profileService: ProfileHeaderService,
+    private _fantasyService: ArticleDataService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
@@ -38,13 +45,95 @@ export class SitePlayerMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.scope, param.teamId);
+        this.metaTags();
+        this.createSiteMap(param.scope, param.playerId);
     })
   } //constructor
 
-  createSiteMap(scope, teamId){
+  metaTags(){
+    this._seoService.removeMetaTags();
+    this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+  } // metaTags
+
+  createSiteMap(scope, playerId){
     let self = this;
     let route = [];
-
+    this.addListPage(scope, playerId);
+    this.addPlayerModulePages(scope, playerId);
+    this.addPlayerFantasy(scope, playerId);
   }
+
+  addPlayerModulePages(scope, id){
+    try{
+      this._profileService.getPlayerProfile(id)
+      .subscribe(data => {
+          //SeasonStats
+          let seasonStatsRoute = [this.partnerSite + '/sitemap/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
+          let seasonStatsPath = seasonStatsRoute.join('/').toString();
+          let sitePath: siteKey = {
+            path: seasonStatsRoute,
+            name: this.domainUrl + seasonStatsPath,
+            dataPoints: null,
+          };
+          this.totalSiteMap.push(sitePath);
+        });
+    }catch(e){
+      console.log('No Player Module Data');
+    }
+  }
+
+  addPlayerFantasy(scope, id){
+    try{
+      if(scope == 'nfl'){
+        this._fantasyService.getFantasyReport(id)
+        .subscribe(data => {
+          if(data != null){
+            let relPath = data.articleUrl.join('/').toString();
+            let sitePath: siteKey = {
+              path: data.articleUrl,
+              name: this.domainUrl + relPath,
+              dataPoints: null,
+            };
+            this.totalSiteMap.push(sitePath);
+          }
+        });
+      }
+    }catch(e){
+      console.log('No Player Fantasy Data');
+    }
+  }
+
+  addListPage(scope, id?){
+    let articleCount = GlobalSettings.siteMapArticleCount;
+    let self = this;
+    //scope, target, count, pageNumber, id?
+    this._listOfListService.getSiteListMap(scope, 'player', articleCount, 1, id)
+    .subscribe(data => {
+      try{
+        let list = data.data[0];
+        let pages = Math.ceil(list.listInfo.listCount / articleCount);
+        for(var i = 1; i <= pages; i++){
+          let listRoute = [self.partnerSite + '/sitemap/' + scope + '/list', 'player', i];
+          let relPath = listRoute.join('/').toString();
+          if(id){
+            relPath += '?id='+id;
+          }
+          let sitePath: siteKey = {
+            path: listRoute,
+            name: self.domainUrl + relPath,
+            dataPoints: null,
+          };
+          if(id){
+            sitePath.query = {};
+            sitePath.query.id = id;
+          };
+          // console.log('adding addListPage', sitePath.name);
+          self.totalSiteMap.push(sitePath);
+        }
+      }catch(e){
+        console.warn('Error siteMap failure @ addListPage', e)
+      }
+    })
+  }
+
 }

@@ -12,7 +12,7 @@ import { SeoService } from "../seo.service";
 import { siteKey } from "../siteMap/siteMap";
 
 //services
-import { ArticleDataService } from "../services/article-page-service";
+import { DeepDiveService } from "../services/deep-dive.service";
 
 @Component({
   selector: 'site-article-map',
@@ -28,11 +28,13 @@ export class SiteArticleMap {
   private fullRoster: Array<any>;
   // private displaySiteMap: boolean = false;
   constructor(
-    private _articleService: ArticleDataService,
+    private _deepDiveService: DeepDiveService,
     private router:ActivatedRoute,
+    private _seoService: SeoService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
+        this.metaTags();
         this.domainUrl = VerticalGlobalFunctions.getPageUrl();
         this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
         /*
@@ -40,34 +42,45 @@ export class SiteArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-        this.createSiteMap(param.pageNumber);
+        this.createSiteMap(param.scope, param.pageNumber);
     })
   } //constructor
 
-  createSiteMap(pageNumber){
+  metaTags(){
+    this._seoService.removeMetaTags();
+    this._seoService.setMetaRobots('NOINDEX, FOLLOW');
+  } // metaTags
+
+  createSiteMap(scope, page){
     let self = this;
     let route = [];
-    this.addAiArticlePage(pageNumber)
+    this.addArticlePage(scope, page);
   }
 
-  addAiArticlePage(page){
+  addArticlePage(scope, page){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
-    this._articleService.getAllAiArticle(articleCount, page)
+    //scope, limit, startNum, state?
+    this._deepDiveService.getSiteMapStoryDeepDive(scope, articleCount, page)
     .subscribe(data => {
       try{
         //(scope: string, eventType: string, eventID: string)
-        data.data.forEach(function(article){
-          if(article.scope == 'nfl' || article.scope == 'ncaaf'){
-            let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.article_id);
-            let relPath = articleRoute.join('/').toString();
-            let sitePath: siteKey = {
-              path: articleRoute,
-              name: self.domainUrl + relPath,
-              dataPoints: null,
-            };
-            // console.log('adding addAiArticlePage', sitePath.name);
-            self.totalSiteMap.push(sitePath);
+        data.articles.forEach(function(article){
+          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.id).length > 0 : false;
+          if( (article.league == 'nfl' || article.league == 'ncaaf') && !duplicate ){
+            if(article.id){
+              let scope = article.league == 'fbs' ? 'ncaaf' : article.league;
+              let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'story', article.id);
+              let relPath = articleRoute.join('/').toString();
+              let sitePath: siteKey = {
+                path: articleRoute,
+                name: self.domainUrl + relPath,
+                dataPoints: null,
+                uniqueId: article.id
+              };
+              // console.log('adding addArticlePage', sitePath.name);
+              self.totalSiteMap.push(sitePath);
+            }
           }
         })
       }catch(e){

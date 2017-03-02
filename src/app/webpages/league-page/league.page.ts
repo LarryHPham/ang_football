@@ -39,6 +39,8 @@ import { HeadlineData } from "../../global/global-interface";
 import { twitterModuleData } from "../../fe-core/modules/twitter/twitter.module";
 import { SliderCarouselInput } from '../../fe-core/components/carousels/slider-carousel/slider-carousel.component';
 
+
+
 // Libraries
 declare var moment;
 
@@ -77,11 +79,14 @@ export class LeaguePage{
     private dateParam:any;
 
     private schedulesData:any;
+    private scheduleTabsData: any;
     private scheduleParams:any;
     private scheduleFilter1:Array<any>;
     private scheduleFilter2:Array<any>;
     private selectedFilter1:string
     private selectedFilter2:string;
+    private selectedScheduleTabDisplay: string;
+    private schedulesModuleFooterUrl: Array<any>;
     private isFirstNum:number = 0;
 
     private standingsData:StandingsModuleData;
@@ -266,18 +271,18 @@ export class LeaguePage{
       let link = window.location.href;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink(this.activatedRoute.params,this.router);
+      this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
       this._seoService.setOgTitle(title);
       this._seoService.setOgDesc(metaDesc);
       this._seoService.setOgType('Website');
-      this._seoService.setOgUrl(link);
+      this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
       //Elastic Search
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setPageTitle(title);
       this._seoService.setPageType('League Page');
-      this._seoService.setPageUrl(link);
+      this._seoService.setPageUrl();
       this._seoService.setImageUrl(image);
     } // metaTags
 
@@ -286,8 +291,12 @@ export class LeaguePage{
     private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
       this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
         .subscribe(data => {
-            this.firstVideo = data.data[first].videoLink;
+          try{
+            this.firstVideo = data.data['videos'][first].videoLink;
             this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
+          }catch(e){
+            console.log('error in league video batch');
+          }
         },
         err => {
             console.log("Error getting video data");
@@ -332,73 +341,49 @@ export class LeaguePage{
 
     //grab tab to make api calls for post of pregame table
     private scheduleTab(tab) {
-        this.isFirstNum = 0;
-        if(tab == 'Upcoming Games'){
-          this.eventStatus = 'pregame';
-          this.getSchedulesData(this.eventStatus, null);
-        }else if(tab == 'Previous Games'){
-          this.eventStatus = 'postgame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);
-        }else{
-          this.eventStatus = 'postgame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1,this.selectedFilter2);// fall back just in case no status event is present
-        }
+        this.eventStatus = tab == "Previous Games" ? 'postgame' : 'pregame';
+        this.selectedFilter1 = null;
+        this.selectedFilter2 = null;
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     } //scheduleTab
-    private filterDropdown(filter) {
-        let filterChange = false;
-        if(filter.value == 'filter1' && this.eventStatus == 'postgame' &&   this.selectedFilter1 != filter.key) {
-          this.selectedFilter1 = filter.key;
-          if (this.selectedFilter2 != null) {
-              this.selectedFilter2 = this.scheduleFilter2['data'][0].key;//reset weeks to first in dropdown
-          }
-          filterChange = true;
+    private getSelectedScheduleTab(tabsData, status) {
+        let matchingTabs = tabsData.filter(value => value.data == status);
+        matchingTabs[0]['tabData'].sections = this.schedulesData.data;
+        matchingTabs[0]['tabData'].isActive = true;
+        this.selectedScheduleTabDisplay = matchingTabs[0].display;
+        return tabsData;
+    } //getSelectedScheduleTab
+    private scheduleFilterDropdown(filter) {
+        if ( filter.value == "filter1" ) {
+            this.selectedFilter1 = filter.key;
         }
-        if(filter.value == 'filter2' && this.selectedFilter2 != filter.key && this.scheduleFilter2 != null){
-          this.selectedFilter2 = filter.key;
-          filterChange = true;
+        if ( filter.value == "filter2" ) {
+            this.selectedFilter2 = filter.key;
         }
-        if(this.selectedFilter2 != null && this.selectedFilter1 == null){
-          this.selectedFilter1 = this.seasonBase;
-        }
-        if(filterChange){
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
-        }
+        this.getSchedulesData(this.eventStatus, this.selectedFilter1, this.selectedFilter2);
     } //filterDropdown
     private getSchedulesData(status, year?, week?) {
       let scopeLink = this.scope.toLowerCase() == this.collegeDivisionAbbrv.toLowerCase() ?
                       this.collegeDivisionFullAbbrv.toLowerCase() :
                       this.scope.toLowerCase();
-      var limit = 5;
-      if(status == 'postgame'){
-        limit = 3;
-      }
-      if(typeof year == 'undefined'){
-        year = this.seasonBase;
-      }
+      var limit = status == 'postgame' ? 3 : 5;
+      var pageNum = 1;
+      year = year ? year : this.seasonBase;
       this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, scopeLink, 'league', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-        if(status == 'pregame' || status == 'created'){
+        if (status == 'pregame' || status == 'created') {
           this.scheduleFilter1 = null;
-        }else{
-          if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+          year = 'all';
+        } else {
+          if (this.scheduleFilter1 == null) {// only replaces if the current filter is not empty
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
         if(schedulesData.carData.length > 0){
           this.scheduleFilter2 = schedulesData.weeks;
-        }else{
-          // this.scheduleFilter2 = null;
-        }
-        this.schedulesData = schedulesData;
-
-        this.scheduleParams = {
-          scope: this.scope,
-          teamName: 'league',
-          teamID: null,
-          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
-          tab : status == 'pregame' ? 'pregame' : 'postgame',
-          pageNum: 1,
-        }
-
+        } else {}
+        this.schedulesData = schedulesData ? schedulesData : null;
+        this.scheduleTabsData = this.schedulesData.tabs ? this.getSelectedScheduleTab(this.schedulesData.tabs, status) : null;
+        this.schedulesModuleFooterUrl = [this.storedPartnerParam, this.scope, 'schedules', 'league', year, status, pageNum];
       }, year, week)) // isTeamProfilePage = true
     } //getSchedulesData
 

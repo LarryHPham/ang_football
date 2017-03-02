@@ -41,7 +41,7 @@ export class DeepDiveBlock3{
       this.routeSubscription = this._deepDiveData.getDeepDiveBatchService(this.scope, this.articleCallLimit, this.batchNum)
       .subscribe(data => {
         if(data != null || data.length != 0){
-          this.articleData = this._deepDiveData.transformToArticleStack(data, GlobalSettings._deepDiveLg);
+          this.articleData = this._deepDiveData.transformToArticleStack(data['articles'], GlobalSettings._deepDiveLg);
           this.stackTop1 = this.articleData.splice(0, 1);
           this.stackTop1 = this.stackTop1.length > 0 ? this.stackTop1 : null;
           this.stackRow1 = this.articleData.splice(0, 6);
