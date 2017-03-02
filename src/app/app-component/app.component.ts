@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
               if(isNode){
                 console.log(params,childParams);
               }
-              this.scopeParam = '/'+childParams.scope;
+              this.scopeParam = childParams.scope ? '/' + childParams.scope : '/nfl';
               //function that grabs the designated location needed for the client and if a partnerID is sent through then it will also set the partnerID and partnerScript for their Header
               if(GlobalSettings.getHomeInfo().isSubdomainPartner) {
                 if (isBrowser) {
