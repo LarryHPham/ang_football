@@ -123,7 +123,6 @@ export class ContactUsPage {
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let metaDesc = 'Contact Us about any inquiries or issues with the site or data that does seems inaccurate';
-      let link = window.location.href;
       let title = "About Us Page";
       let image = GlobalSettings.getmainLogoUrl();
       let keywords = "football";

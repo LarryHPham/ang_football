@@ -136,7 +136,7 @@ export class DirectoryPage {
     let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
     let title = this.type.charAt(0).toUpperCase() + this.type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
     let image = GlobalSettings.getmainLogoUrl();
-    let link = window.location.href;
+    
     let keywords = "football";
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);

@@ -143,7 +143,7 @@ export class DeepDivePage {
     this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
-    let link = window.location.href;
+
     let image = GlobalSettings.getmainLogoUrl();
     let title = 'Deep Dive Page';
     let keywords = "football";

@@ -291,7 +291,6 @@ export class ArticlePages implements OnInit {
     var players = [];
     var searchString = "football";
     var searchArray = [];
-    let link = window.location.href;
     var isArticle;
     isArticle = this.eventType == "video" ? false : true;
     if (this.isAiArticle) {

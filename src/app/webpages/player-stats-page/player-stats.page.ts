@@ -125,7 +125,7 @@ export class PlayerStatsPage implements OnInit {
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
       let keywords = "football";
-      let link = window.location.href;
+      
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();

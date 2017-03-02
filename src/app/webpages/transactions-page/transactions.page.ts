@@ -111,7 +111,7 @@ export class TransactionsPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      let link = window.location.href;
+      
       let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);

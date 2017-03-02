@@ -96,7 +96,7 @@ export class TeamRosterPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      let link = window.location.href;
+      
       let keywords = "football";
       keywords +=
       this._seoService.setTitle(title);

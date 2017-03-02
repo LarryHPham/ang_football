@@ -51,7 +51,7 @@ export class DisclaimerPage {
       let title = 'Disclaimer';
       let metaDesc = 'Disclaimer page to disclose any information';
       let image = GlobalSettings.getmainLogoUrl();
-      let link = window.location.href;
+      
       let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);

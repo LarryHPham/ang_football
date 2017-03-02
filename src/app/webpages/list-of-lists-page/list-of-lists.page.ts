@@ -170,7 +170,7 @@ export class ListOfListsPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      let link = window.location.href;
+      
       let keywords = "football, " + text3;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);

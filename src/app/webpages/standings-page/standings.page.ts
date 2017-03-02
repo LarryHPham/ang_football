@@ -204,7 +204,7 @@ export class StandingsPage {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
       let header, metaDesc, title, ogTitle, image, titleName;
-      let link = window.location.href;
+      
       //create meta description that is below 160 characters otherwise will be truncated
       header = data.headerData;
       titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName : header.teamMarket;

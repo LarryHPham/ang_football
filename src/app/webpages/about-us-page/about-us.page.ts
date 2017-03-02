@@ -88,7 +88,6 @@ export class AboutUsPage {
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'About Us';
-      let link = window.location.href;
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
       let image = GlobalSettings.getmainLogoUrl();
       let keywords = "football";

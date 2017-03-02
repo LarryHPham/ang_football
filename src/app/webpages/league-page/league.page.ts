@@ -268,7 +268,7 @@ export class LeaguePage{
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
       let color = '#2d3e50';
-      let link = window.location.href;
+      
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();

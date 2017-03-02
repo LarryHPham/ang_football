@@ -82,7 +82,7 @@ export class SearchPage{
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'Search Page';
-      let link = window.location.href;
+      
       let metaDesc = 'Discover the latest in football - Find the players and teams you love.';
       let image = GlobalSettings.getmainLogoUrl();
       let keywords = "football";

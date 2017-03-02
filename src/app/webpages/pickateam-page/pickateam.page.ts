@@ -141,7 +141,7 @@ export class PickTeamPage{
       let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
       let title = 'Pick A Team';
       let image = GlobalSettings.getmainLogoUrl();
-      let link = window.location.href;
+      
       let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);

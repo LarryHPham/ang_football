@@ -307,7 +307,7 @@ export class TeamPage implements OnInit {
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
     title = title  + ' ' + record;
-    let link = window.location.href;
+    
     let keywords = "football";
     keywords += header.teamName ? ", " + header.teamName : "";
     keywords += header.teamMarket ? ", " + header.teamMarket : "";
