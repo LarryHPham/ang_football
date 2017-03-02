@@ -347,6 +347,7 @@ export class SeoService {
      * @returns {HTMLElement}
      */
     private getOrCreateElement(name:string, attr:string, type:string):HTMLElement {
+      if(isBrowser){
         let el:HTMLElement;
         el = this.DOM.createElement(type);
         this.setElementAttribute(el, name, attr);
@@ -355,10 +356,12 @@ export class SeoService {
         }
         this.DOM.insertBefore(this.document.head.lastChild, el);
         return el;
+      }
     }
 
 
     public setCanonicalLink(RouteParams, router):HTMLElement {
+      if(isBrowser){
         let el:HTMLElement;
         el = this.DOM.query("link[rel='canonical']");
         let canonicalLink = window.location.href;
@@ -371,15 +374,18 @@ export class SeoService {
             el.setAttribute('href', canonicalLink);
         }
         return el;
+      }
     }
 
     public removeMetaTags() {
+      if(isBrowser){
         var element = this.document.getElementsByTagName('meta'), index;
         for (index = element.length - 1; index >= 0; index--) {
             if (element[index].getAttribute('rel') == 'tcx') {
                 element[index].parentNode.removeChild(element[index]);
             }
         }
+      }
     }
 
     public elasticSearchUserAgent(){

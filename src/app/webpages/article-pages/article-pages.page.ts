@@ -162,12 +162,10 @@ export class ArticlePages implements OnInit {
   }
 
   private getTrendingArticles(currentArticleId) {
-    var getData = this.isAiArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) :
-      this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
-    this.trendingArticles = getData
-      .subscribe(data => {
+    var getData = this.isAiArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) : this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
+    this.trendingArticles = getData.subscribe(data => {
         if (!this.hasRun) {
-          this.trendingContent = this.isAiArticle ? this.trendingContent.concat(data['data']) : this.trendingContent.concat(data);
+          this.trendingContent = this.trendingContent.concat(data['articles']) ? this.trendingContent.concat(data['articles']) : null;
           this.hasRun = true;
           this.trendingData = this.isAiArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
             this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
