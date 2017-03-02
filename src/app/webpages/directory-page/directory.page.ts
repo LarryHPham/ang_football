@@ -137,6 +137,7 @@ export class DirectoryPage {
     let title = this.type.charAt(0).toUpperCase() + this.type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
     let image = GlobalSettings.getmainLogoUrl();
     let link = window.location.href;
+    let keywords = "football";
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
@@ -152,6 +153,7 @@ export class DirectoryPage {
     this._seoService.setPageType('Directory Page');
     this._seoService.setPageUrl(link);
     this._seoService.setImageUrl(image);
+    this._seoService.setKeyWord(keywords);
   } //metaTags
 
   getDirectoryData() {

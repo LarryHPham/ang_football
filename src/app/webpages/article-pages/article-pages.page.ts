@@ -287,8 +287,11 @@ export class ArticlePages implements OnInit {
     let image, metaDesc;
     var teams = [];
     var players = [];
-    var searchString;
+    var searchString = "football";
     var searchArray = [];
+    let link = window.location.href;
+    var isArticle;
+    isArticle = this.eventType == "video" ? false : true;
     if (this.isAiArticle) {
       var headerData = metaData['articleContent']['metadata'];
       metaDesc = metaData['articleContent'].meta_headline;
@@ -308,10 +311,10 @@ export class ArticlePages implements OnInit {
         metaData['articleContent']['keyword'].forEach(function (val) {
           searchArray.push(val);
         });
-        searchString = searchArray.join(',');
+        searchString += ', ' + searchArray.join(',');
       } else {
         searchArray.push(metaData['articleContent']['keyword']);
-        searchString = searchArray.join(',');
+        searchString += ', ' + searchArray.join(',');
       }
       image = metaData['images']['imageData'][0];
     } else {
@@ -336,18 +339,15 @@ export class ArticlePages implements OnInit {
       metaObjData = {
         startDate: metaData.publishedDate,
         endDate: metaData.publishedDate,
-        source: "TCA",
+        source: isArticle ? "TCA" : "sendtonews.com",
         keyword: metaData.keyword,
-        publishedDate: metaData.publishedDate,
-        author: metaData.author,
+        publishedDate: isArticle ? metaData.publishedDate : metaData.pubDate,
+        author: isArticle ? metaData.author : null,
         publisher: metaData.publisher,
         articleTeaser: metaData.teaser,
         setArticleType: this.scope,
       }
     }
-    let link = window.location.href;
-    let isArticle;
-    isArticle = this.eventType == "video" ? false : true;
     this._seoService.setCanonicalLink(this._activateRoute.params,this._router);
     this._seoService.setTitle(metaData.title);
     this._seoService.setMetaDescription(metaDesc);
@@ -361,13 +361,13 @@ export class ArticlePages implements OnInit {
     this._seoService.setEndDate(metaObjData.endDate);
     this._seoService.setIsArticle(isArticle);
     this._seoService.setPageType(isArticle ? "article page" : "video page");
-    this._seoService.setSource(metaObjData.source ? metaObjData.source : '');
+    this._seoService.setSource(metaObjData.source);
     this._seoService.setArticleId(this.eventID);
     this._seoService.setPageTitle(metaData.title ? metaData.title : '');
     this._seoService.setCategory(metaObjData.keyword ? metaObjData.keyword : '');
-    this._seoService.setPublishedDate(isArticle ? metaObjData.publishedDate : null);
-    this._seoService.setAuthor(isArticle ? metaObjData.author : null);
-    this._seoService.setPublisher(metaObjData.publisher ? metaObjData.publisher : '');
+    this._seoService.setPublishedDate(metaObjData.publishedDate);
+    this._seoService.setAuthor(metaObjData.author);
+    this._seoService.setPublisher(metaObjData.publisher);
     this._seoService.setImageUrl(image);
     this._seoService.setArticleTeaser(metaObjData.articleTeaser ? metaObjData.articleTeaser : '');
     this._seoService.setPageUrl(link);

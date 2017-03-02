@@ -91,6 +91,7 @@ export class AboutUsPage {
       let link = window.location.href;
       let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
       let image = GlobalSettings.getmainLogoUrl();
+      let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
@@ -103,9 +104,10 @@ export class AboutUsPage {
       //Elastic Search
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setPageTitle(title);
-      this._seoService.setPageType('About Us Page');
+      this._seoService.setPageType(title);
       this._seoService.setPageUrl(link);
       this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
     loadData(partnerID?:string, scope?:string) {

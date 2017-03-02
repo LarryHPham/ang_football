@@ -61,7 +61,7 @@ export class DeepDivePage {
     private _geoLocation: GeoLocation,
     private _seoService: SeoService,
     public ngZone: NgZone,
-    private _route: Router
+    private _router: Router
   ) {
     this._routeSubscription = this._activatedRoute.params.subscribe(
       (params: any) => {
@@ -143,15 +143,26 @@ export class DeepDivePage {
     this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
     let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
-    this._seoService.setTitle('Deep Dive');
+    let link = window.location.href;
+    let image = GlobalSettings.getmainLogoUrl();
+    let title = 'Deep Dive Page';
+    let keywords = "football";
+    this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
-    // this._seoService.setCanonicalLink(this._activatedRoute.params,this._router); TODO
+    this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
     this._seoService.setMetaRobots('Index, Follow');
-    this._seoService.setOgTitle('Deep Dive');
+    this._seoService.setOgTitle(title);
     this._seoService.setOgDesc(metaDesc);
     this._seoService.setOgType('Website');
-    // this._seoService.setOgUrl(link); TODO
-    this._seoService.setOgImage('//images.synapsys.us/01/logos/football/2017/01/logos_football_01.svg');
+    this._seoService.setOgUrl(link);
+    this._seoService.setOgImage(image);
+    //Elastic Search
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setPageTitle(title);
+    this._seoService.setPageType(title);
+    this._seoService.setPageUrl(link);
+    this._seoService.setImageUrl(image);
+    this._seoService.setKeyWord(keywords);
   } //metaTags
 
 
@@ -218,7 +229,7 @@ export class DeepDivePage {
     event = event.toLowerCase();
     this.scopeNameDisplay(event);
     let route = VerticalGlobalFunctions.getWhiteLabel();
-    this._route.navigate([route, event.toLowerCase()]);
+    this._router.navigate([route, event.toLowerCase()]);
   } //changeScope
 
 
@@ -285,6 +296,6 @@ export class DeepDivePage {
   }
 
   toggleRoute(event) {
-    this._route.navigate(['/' + event.toLowerCase()]);
+    this._router.navigate(['/' + event.toLowerCase()]);
   }
 }

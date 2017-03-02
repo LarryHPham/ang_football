@@ -305,9 +305,11 @@ export class TeamPage implements OnInit {
     }else{
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
-
     title = title  + ' ' + record;
     let link = window.location.href;
+    let keywords = "football";
+    keywords += header.teamName ? ", " + header.teamName : "";
+    keywords += header.teamMarket ? ", " + header.teamMarket : "";
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
@@ -318,7 +320,13 @@ export class TeamPage implements OnInit {
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl(link);
     this._seoService.setOgImage(image);
-
+    //Elastic Search
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setPageTitle(title);
+    this._seoService.setPageType("Team Profile Page");
+    this._seoService.setPageUrl(link);
+    this._seoService.setImageUrl(image);
+    this._seoService.setKeyWord(keywords);
     //manually generate team schema for team page until global funcation can be created
     let teamSchema = `
     {

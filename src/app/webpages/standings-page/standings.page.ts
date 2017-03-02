@@ -213,7 +213,9 @@ export class StandingsPage {
       ogTitle = titleName;
       metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
       image = GlobalSettings.getImageUrl(header.backgroundUrl, GlobalSettings._imgPageLogo);
-
+      let keywords = "football, " + titleName;
+      keywords += header.teamMarket ? ", " + header.teamMarket : "";
+      keywords += header.teamName && header.teamName != header.teamMarket ? ", " + header.teamName : "";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink(this.activateRoute.params,this.router);
@@ -223,7 +225,13 @@ export class StandingsPage {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(image);
-
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType("Standing Page");
+      this._seoService.setPageUrl(link);
+      this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
       if (header.teamId != null) {
         //grab domain for json schema
         let domainSite;

@@ -253,6 +253,7 @@ export class PlayerPage{
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
     let link = window.location.href;
+    let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "");
     title = title  + ' ' + record;
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
@@ -264,7 +265,13 @@ export class PlayerPage{
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl(link);
     this._seoService.setOgImage(image);
-
+    //Elastic Search
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setPageTitle(title);
+    this._seoService.setPageType('Player Profile Page');
+    this._seoService.setPageUrl(link);
+    this._seoService.setImageUrl(image);
+    this._seoService.setKeyWord(keywords);
     //manually generate team schema for team page until global funcation can be created
     let teamSchema = `
     {

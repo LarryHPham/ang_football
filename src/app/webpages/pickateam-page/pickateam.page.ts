@@ -142,6 +142,7 @@ export class PickTeamPage{
       let title = 'Pick A Team';
       let image = GlobalSettings.getmainLogoUrl();
       let link = window.location.href;
+      let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
@@ -151,6 +152,13 @@ export class PickTeamPage{
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType(title);
+      this._seoService.setPageUrl(link);
+      this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
 

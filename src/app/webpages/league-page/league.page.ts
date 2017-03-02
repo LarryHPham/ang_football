@@ -273,6 +273,12 @@ export class LeaguePage{
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType('League Page');
+      this._seoService.setPageUrl(link);
+      this._seoService.setImageUrl(image);
     } // metaTags
 
 

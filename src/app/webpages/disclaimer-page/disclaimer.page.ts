@@ -52,6 +52,7 @@ export class DisclaimerPage {
       let metaDesc = 'Disclaimer page to disclose any information';
       let image = GlobalSettings.getmainLogoUrl();
       let link = window.location.href;
+      let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink(this._activatedRoute.params,this._router);
@@ -67,6 +68,7 @@ export class DisclaimerPage {
       this._seoService.setPageType('Disclaimer Page');
       this._seoService.setPageUrl(link);
       this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
 

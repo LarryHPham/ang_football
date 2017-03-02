@@ -126,6 +126,7 @@ export class ContactUsPage {
       let link = window.location.href;
       let title = "About Us Page";
       let image = GlobalSettings.getmainLogoUrl();
+      let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setMetaRobots('INDEX, FOLLOW');
@@ -141,5 +142,6 @@ export class ContactUsPage {
       this._seoService.setPageType(title);
       this._seoService.setPageUrl(link);
       this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 }

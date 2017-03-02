@@ -171,7 +171,7 @@ export class ListOfListsPage {
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
       let link = window.location.href;
-
+      let keywords = "football, " + text3;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink(this.activatedRoute.params,this.router);
@@ -181,6 +181,13 @@ export class ListOfListsPage {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl(link);
       this._seoService.setOgImage(imageUrl);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType('List Of List Page');
+      this._seoService.setPageUrl(link);
+      this._seoService.setImageUrl(imageUrl);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
     // function to lazy load page sections
