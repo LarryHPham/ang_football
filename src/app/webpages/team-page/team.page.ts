@@ -86,11 +86,12 @@ export class TeamPage implements OnInit {
   private currentBoxScores:any;
 
   private schedulesData:any;
+  private scheduleTabsData: any;
   private scheduleFilter1:Array<any>;
   private selectedFilter1:string;
   private eventStatus: any;
-  private isFirstRun:number = 0;
-  private scheduleParams: any;
+  private selectedScheduleTabDisplay: string;
+  private schedulesModuleFooterUrl: Array<any>;
 
   private standingsData:StandingsModuleData;
 
@@ -397,57 +398,47 @@ export class TeamPage implements OnInit {
 
 
 
-  private scheduleTab(tab) {
-      this.isFirstRun = 0;
-        if(tab == 'Upcoming Games'){
-          this.eventStatus = 'pregame';
-          this.getSchedulesData(this.eventStatus, null);
-        }else if(tab == 'Previous Games'){
-          this.eventStatus = 'postgame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
-        }else{
-          this.eventStatus = 'postgame';
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1);// fall back just in case no status event is present
-        }
+    private scheduleTab(tab) {
+        this.eventStatus = tab == "Previous Games" ? 'postgame' : 'pregame';
+        this.getSchedulesData(this.eventStatus);
     } //scheduleTab
-    private filterDropdown(filter){
-      let tabCheck = 0;
-      if(this.eventStatus == 'postgame'){
-        tabCheck = -1;
-      }
-      if(this.isFirstRun > tabCheck){
-        if(filter.key != this.selectedFilter1){
-          this.selectedFilter1 = filter.key;
-          this.getSchedulesData(this.eventStatus, this.selectedFilter1);
+    private getSelectedScheduleTab(tabsData, status) {
+        let matchingTabs = tabsData.filter(value => value.data == status);
+        matchingTabs[0]['tabData'].sections = this.schedulesData.data;
+        matchingTabs[0]['tabData'].isActive = true;
+        this.selectedScheduleTabDisplay = matchingTabs[0].display;
+        return tabsData;
+    } //getSelectedScheduleTab
+    private scheduleFilterDropdown(filter){
+        if( filter.key != this.selectedFilter1 ) {
+            this.selectedFilter1 = filter.key;
+            this.getSchedulesData(this.eventStatus, filter.key);
         }
-      }
-      this.isFirstRun++;
-    } //filterDropdown
+    } //scheduleFilterDropdown
     private getSchedulesData(status, year?) {
       var limit = 5;
-      if(status == 'pregame'){
-        this.selectedFilter1 = null;
+      var pageNum = 1;
+      year = year ? year : this.seasonBase;
+      if(status == 'pregame') {
+          this.selectedFilter1 = null;
+          year = 'all';
       }
       this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
         if(status == 'pregame'){
-          this.scheduleFilter1=null;
-        }else{
+          this.scheduleFilter1 = null;
+        } else {
           if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
             this.scheduleFilter1 = schedulesData.seasons;
           }
         }
-        this.schedulesData = schedulesData;
-
-        this.scheduleParams = {
-          scope: this.scope,
-          teamName: this.teamName ? this.teamName : 'league',
-          teamID: this.teamID ? this.teamID : null,
-          year: this.selectedFilter1 != null ? this.selectedFilter1 : null,
-          tab : status == 'pregame' ? 'pregame' : 'postgame',
-          pageNum: 1,
-        }
+        this.schedulesData = schedulesData ? schedulesData : null;
+        this.scheduleTabsData = this.schedulesData.tabs ? this.getSelectedScheduleTab(this.schedulesData.tabs, status) : null;
+        this.schedulesModuleFooterUrl = [this.storedPartnerParam, this.scope, 'schedules', this.teamName, this.teamID, year, status, pageNum];
       }, year)) //year if null will return current year and if no data is returned then subract 1 year and try again
     } //getSchedulesData
+
+
+
 
     private standingsTabSelected(tabData: Array<any>) {
       //only show 5 rows in the module
