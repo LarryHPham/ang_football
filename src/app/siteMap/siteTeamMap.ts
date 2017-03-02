@@ -14,6 +14,7 @@ import { siteKey } from "../siteMap/siteMap";
 //services
 import { RosterService } from '../services/roster.service';
 import { ListOfListsService } from "../services/list-of-lists.service";
+import { ProfileHeaderService } from '../services/profile-header.service';
 
 @Component({
   selector: 'site-team-map',
@@ -33,6 +34,7 @@ export class SiteTeamMap {
     private _rosterService: RosterService,
     private _seoService: SeoService,
     private _listOfListService: ListOfListsService,
+    private _profileService: ProfileHeaderService,
   ) {
     this.router.params.subscribe(
       (param: any) => {
@@ -58,6 +60,93 @@ export class SiteTeamMap {
     let route = [];
     this.addPlayerPages(scope, teamId);
     this.addListPage(scope, teamId);
+    this.addTeamModulePages(scope, teamId);
+  }
+
+  addTeamModulePages(scope, id){
+    try{
+      this._profileService.getTeamProfile(id)
+      .subscribe(data => {
+        let headerData = data.headerData;
+        let teamNameRoute = GlobalFunctions.toLowerKebab(data.profileName);
+        let seasonsAmount = 4;
+
+        //create links for all schedules tabs
+        //schedules -> pregame, postgame
+        for(var i = 0; i < seasonsAmount; i++){
+          let schedulesTabs = ['pregame','postgame'];
+          let season = Number(headerData.seasonBase) - i;
+          for( var s = 0 ; s < 2; s++){
+            let scheduleRoute = [this.partnerSite + '/' + scope + '/schedules/'+ teamNameRoute, id, season, schedulesTabs[s], 1];
+            let scheduleRelPath = scheduleRoute.join('/').toString();
+            let scheduleMap: siteKey = {
+              path: scheduleRoute,
+              name: this.domainUrl + scheduleRelPath,
+              dataPoints: null,
+            };
+            this.totalSiteMap.push(scheduleMap);
+          }// end of schedule for loops
+        }//end of for loops seasons
+
+        //standings
+        let standingsRoute = [this.partnerSite + '/' + scope + '/standings/team/'+ teamNameRoute];
+        let standingsRelPath = standingsRoute.join('/').toString();
+        let standingsMap: siteKey = {
+          path: standingsRoute,
+          name: this.domainUrl + standingsRelPath,
+          dataPoints: null,
+        };
+        this.totalSiteMap.push(standingsMap);
+
+        //transaction
+        // create links for all tabs
+        let transactionTabs = ['Transaction', 'Suspensions', 'Injuries'];
+        for(var t = 0 ; t < 3; t++){
+          let transactionRoute = [this.partnerSite + '/' + scope + '/'+transactionTabs[t]+'/'+ teamNameRoute, id, 20, 1];
+          let transactionRelPath = transactionRoute.join('/').toString();
+          let transactionMap: siteKey = {
+            path: transactionRoute,
+            name: this.domainUrl + transactionRelPath,
+            dataPoints: null,
+          };
+          this.totalSiteMap.push(transactionMap);
+        }
+
+        //roster
+        let rosterRoute = [this.partnerSite + '/' + scope + '/team-roster/'+ teamNameRoute, id];
+        let rosterRelPath = rosterRoute.join('/').toString();
+        let rosterMap: siteKey = {
+          path: rosterRoute,
+          name: this.domainUrl + rosterRelPath,
+          dataPoints: null,
+        };
+        this.totalSiteMap.push(rosterMap);
+
+        //draft history
+        let draftRoute = [this.partnerSite + '/' + scope + '/draft-history/'+ teamNameRoute, id];
+        let draftRelPath = draftRoute.join('/').toString();
+        let draftMap: siteKey = {
+          path: draftRoute,
+          name: this.domainUrl + draftRelPath,
+          dataPoints: null,
+        };
+        this.totalSiteMap.push(draftMap);
+
+        //playerStats
+        // nfl/player-stats/new-england-patriots/138
+        let playerStatsRoute = [this.partnerSite + '/' + scope + '/player-stats/' + teamNameRoute, id];
+        let playerStatsRelPath = playerStatsRoute.join('/').toString();
+        let playerStatsMap: siteKey = {
+          path: playerStatsRoute,
+          name: this.domainUrl + playerStatsRelPath,
+          dataPoints: null,
+        };
+        this.totalSiteMap.push(playerStatsMap);
+
+      });
+    }catch(e){
+      console.log('No Player Module Data');
+    }
   }
 
   addPlayerPages(scope, teamId){

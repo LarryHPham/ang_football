@@ -112,7 +112,72 @@ export class SiteMap {
         this.addListPage(scopes[i]);
         this.addAiArticleSiteMaps(scopes[i]);
         this.addArticleSiteMaps(scopes[i]);
+        this.addLeagueModulePages(scopes[i]);
       }
+    }
+  }
+
+  addLeagueModulePages(scope){
+    try{
+      this._profileService.getTeamProfile(id)
+      .subscribe(data => {
+        let headerData = data.headerData;
+        let teamNameRoute = GlobalFunctions.toLowerKebab(data.profileName);
+        let seasonsAmount = 4;
+
+        //create links for all schedules tabs
+        //schedules -> pregame, postgame
+        for(var i = 0; i < seasonsAmount; i++){
+          let schedulesTabs = ['pregame','postgame'];
+          let season = Number(headerData.seasonBase) - i;
+          for( var s = 0 ; s < 2; s++){
+            let scheduleRoute = [this.partnerSite + '/' + scope + '/schedules/'+ 'league', id, season, schedulesTabs[s], 1];
+            let scheduleRelPath = scheduleRoute.join('/').toString();
+            let scheduleMap: siteKey = {
+              path: scheduleRoute,
+              name: this.domainUrl + scheduleRelPath,
+              dataPoints: null,
+            };
+            this.totalSiteMap.push(scheduleMap);
+          }// end of schedule for loops
+
+          //standings
+          let standingsRoute = [this.partnerSite + '/' + scope + '/standings'];
+          let standingsRelPath = standingsRoute.join('/').toString();
+          let standingsMap: siteKey = {
+            path: standingsRoute,
+            name: this.domainUrl + standingsRelPath,
+            dataPoints: null,
+          };
+          this.totalSiteMap.push(standingsMap);
+        }//end of for loops seasons
+
+        //transaction
+        // create links for all tabs
+        let transactionTabs = ['Transaction', 'Suspensions', 'Injuries'];
+        for(var t = 0 ; t < 3; t++){
+          let transactionRoute = [this.partnerSite + '/' + scope + '/'+transactionTabs[t]+'/'+ 'league', 20, 1];
+          let transactionRelPath = transactionRoute.join('/').toString();
+          let transactionMap: siteKey = {
+            path: transactionRoute,
+            name: this.domainUrl + transactionRelPath,
+            dataPoints: null,
+          };
+          this.totalSiteMap.push(transactionMap);
+        }
+
+        //draft history
+        let draftRoute = [this.partnerSite + '/' + scope + '/draft-history'];
+        let draftRelPath = draftRoute.join('/').toString();
+        let draftMap: siteKey = {
+          path: draftRoute,
+          name: this.domainUrl + draftRelPath,
+          dataPoints: null,
+        };
+        this.totalSiteMap.push(draftMap);
+      });
+    }catch(e){
+      console.log('No Player Module Data');
     }
   }
 
