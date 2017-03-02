@@ -1,6 +1,6 @@
 //angular core libraries
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -117,7 +117,8 @@ export class PlayerPage{
   private isLoaded: boolean = false;
 
   constructor(
-    private activateRoute: ActivatedRoute,
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute,
     private _profileService: ProfileHeaderService,
     private _dailyUpdateService: DailyUpdateService,
     private _fantasyService: ArticleDataService,
@@ -135,7 +136,7 @@ export class PlayerPage{
     private _seoService: SeoService,
     private _cdRef: ChangeDetectorRef
   ) {
-    this.routeSubscriptions = this.activateRoute.params.subscribe(
+    this.routeSubscriptions = this._activatedRoute.params.subscribe(
       (param: any) => {
         this.resetSubscription();
         this.routeChangeResets();
@@ -253,7 +254,8 @@ export class PlayerPage{
     }else{
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
-
+    
+    let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "");
     title = title  + ' ' + record;
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
@@ -265,7 +267,13 @@ export class PlayerPage{
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
-
+    //Elastic Search
+    this._seoService.setMetaDescription(metaDesc);
+    this._seoService.setPageTitle(title);
+    this._seoService.setPageType('Player Profile Page');
+    this._seoService.setPageUrl();
+    this._seoService.setImageUrl(image);
+    this._seoService.setKeyWord(keywords);
     //manually generate team schema for team page until global funcation can be created
     let teamSchema = `
     {
