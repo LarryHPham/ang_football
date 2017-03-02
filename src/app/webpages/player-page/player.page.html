@@ -32,14 +32,17 @@
           [displayAtRes]="'992'"></responsive-widget>
       </div>
 
-      <schedules *ngIf="schedulesData"
-        [footerParams]="scheduleParams"
-        [profHeader]="profileHeaderData"
-        [data]="schedulesData"
-        [filter1]="scheduleFilter1"
-        [dropdownKey1]="selectedFilter1"
-        (tabSelected)="scheduleTab($event)"
-        (selectedKeyFilter)="filterDropdown($event)"></schedules>
+      <schedules
+          *ngIf="schedulesData"
+          [profHeader]="profileHeaderData"
+          [tabs]="scheduleTabsData"
+          [selectedTabDisplay]="selectedScheduleTabDisplay"
+          [filter1]="scheduleFilter1"
+          [dropdownKey1]="selectedFilter1"
+          [schedulesModuleFooterUrl]="schedulesModuleFooterUrl"
+          (tabSelected)="scheduleTab($event)"
+          (selectedKeyFilter)="scheduleFilterDropdown($event)">
+      </schedules>
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
         <responsive-widget

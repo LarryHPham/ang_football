@@ -96,6 +96,9 @@ export class TeamRosterPage {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
+      
+      let keywords = "football";
+      keywords +=
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -105,6 +108,13 @@ export class TeamRosterPage {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(imageUrl);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType("Team Roster Page");
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(imageUrl);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
 

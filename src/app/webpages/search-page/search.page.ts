@@ -10,7 +10,7 @@ import { VerticalGlobalFunctions } from '../../global/vertical-global-functions'
 
 //services
 import { SearchService } from '../../services/search.service';
-
+import { SeoService } from "../../seo.service";
 //interfaces
 import { SearchPageInput } from '../../ui-modules/search-page/search-page.module';
 
@@ -36,7 +36,8 @@ export class SearchPage{
       private activatedRoute: ActivatedRoute,
       private _router: Router,
       private _searchService: SearchService,
-      private _title: Title
+      private _title: Title,
+      private _seoService: SeoService
     ) {
         //check to see if scope is correct and redirect
         //VerticalGlobalFunctions.scopeRedirect(_router, _params);
@@ -76,7 +77,32 @@ export class SearchPage{
           );
     } //configureSearchPageData
 
-
+    private metaTags() {
+      //This call will remove all meta tags from the head.
+      this._seoService.removeMetaTags();
+      //create meta description that is below 160 characters otherwise will be truncated
+      let title = 'Search Page';
+      
+      let metaDesc = 'Discover the latest in football - Find the players and teams you love.';
+      let image = GlobalSettings.getmainLogoUrl();
+      let keywords = "football";
+      this._seoService.setTitle(title);
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setCanonicalLink();
+      this._seoService.setOgUrl();
+      this._seoService.setMetaRobots('INDEX, FOLLOW');
+      this._seoService.setOgTitle(title);
+      this._seoService.setOgDesc(metaDesc);
+      this._seoService.setOgType('Website');
+      this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType(title);
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
+    } //metaTags
 
     filterSwitch(event) {
         this.configureSearchPageData(event.key);
