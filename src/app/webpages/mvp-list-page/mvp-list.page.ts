@@ -174,7 +174,7 @@ export class MVPListPage implements OnInit {
       // TODO
       // this._document.title = "testing";
       // console.log("title:::",this._document.title);
-      
+      let link;
       if(isNode) {
         link = Zone.current.get('originUrl') + this._location.path(false);
       }else{

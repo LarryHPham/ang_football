@@ -9,7 +9,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 import { SeoService } from "../seo.service";
-import { siteKey } from "../siteMap/siteMap";
+import { SiteMap, siteKey } from "../siteMap/siteMap";
 
 //services
 import { DeepDiveService } from "../services/deep-dive.service";
@@ -72,13 +72,7 @@ export class SiteVideoArticleMap {
               let scope = article.league == 'fbs' ? 'ncaaf' : article.league;
               let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'video', article.id);
               let relPath = articleRoute.join('/').toString();
-              let sitePath: siteKey = {
-                path: articleRoute,
-                name: self.domainUrl + relPath,
-                dataPoints: null,
-                uniqueId: article.id
-              };
-              // console.log('adding addAiArticlePage', sitePath.name);
+              let sitePath = SiteMap.createSiteKey(articleRoute, relPath, article.id);
               self.totalSiteMap.push(sitePath);
             }
           }
