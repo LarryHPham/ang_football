@@ -48,13 +48,39 @@ export class DeepDiveService {
       scope = 'fbs';
       callURL += scope + '/' + limit + '/' + startNum ;
     }
-
     return this.model.get(callURL)
       .map(data => {
         return data.data;
       })
   }
 
+  getSiteMapStoryDeepDive(scope, limit, page, state?){
+    //Configure HTTP Headers
+    page = page == null ? 1 : page;
+    // model://dev-touchdownloyal-api.synapsys.us/articleBatch/nfl/5/1
+    var callURL = this._apiUrl + '/articleBatch/';
+    scope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += scope + '/' + limit + '/' + page;
+    callURL += state ? state : '';
+    return this.model.get(callURL)
+      .map(data => {
+        return data.data;
+      })
+  }
+
+  getSiteMapVideoDeepDive(scope, limit, page, state?){
+    //Configure HTTP Headers
+    page = page == null ? 1 : page;
+    // model://dev-touchdownloyal-api.synapsys.us/videoBatch/nfl/5/1
+    var callURL = this._apiUrl + '/videoBatch/';
+    scope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += scope + '/' + limit + '/' + page;
+    callURL += state ? state : '';
+    return this.model.get(callURL)
+      .map(data => {
+        return data.data;
+      })
+  }
 
   getDeepDiveVideoBatchService(scope, limit, startNum, state?){
     //Configure HTTP Headers
@@ -65,6 +91,7 @@ export class DeepDiveService {
       state = 'null';
     }
     var callURL = this._apiUrl + '/videoBatch/';
+    scope = scope == 'ncaaf' ? 'fbs' : scope;
     scope = scope == 'home' ? 'football' : scope;
     if(scope != null){
       callURL += scope;
@@ -132,32 +159,35 @@ export class DeepDiveService {
   }
 
   carouselTransformData(arrayData){
-    var transformData = [];
-    arrayData.forEach(function(val,index){
-      var curdate = new Date();
-      var curmonthdate = curdate.getDate();
-      var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone");
+    try{
+      var transformData = [];
+      arrayData.forEach(function(val,index){
+        var curdate = new Date();
+        var curmonthdate = curdate.getDate();
+        var date = GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone");
 
-      let urlRouteArray;
-      urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id);
+        let urlRouteArray;
+        urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(val.league, 'story', val.id);
 
-      let carData = {
-        extUrl: false,
-        image_url: GlobalSettings.getImageUrl(val['imagePath']),
-        title:  "<span> Today's News </span>",
-        headline: val['title'],
-        keyword: val['keyword'],
-        keywords: val['keyword'],
-        keyUrl: urlRouteArray,
-        teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
-        id:val['id'],
-        articlelink: urlRouteArray,
-        date: date,
-      };
-      transformData.push(carData);
-    });
-
-    return transformData;
+        let carData = {
+          extUrl: false,
+          image_url: GlobalSettings.getImageUrl(val['imagePath']),
+          title:  "<span> Today's News </span>",
+          headline: val['title'],
+          keyword: val['keyword'],
+          keywords: val['keyword'],
+          keyUrl: urlRouteArray,
+          teaser: val['teaser'].substr(0,200).replace('_',': ').replace(/<p[^>]*>/g, ""),
+          id:val['id'],
+          articlelink: urlRouteArray,
+          date: date,
+        };
+        transformData.push(carData);
+      });
+      return transformData;
+    }catch(e){
+      return null;
+    }
   }
 
   transformToAiArticleRow(data){
@@ -211,39 +241,42 @@ export class DeepDiveService {
   }
 
   transformToArticleStack(data, width:number=750){
-    var sampleImage = GlobalSettings._defaultStockImage;
-    var articleArray = [];
-    var articles = data['articles'];
-    articles.forEach(function(val){
-      let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
-      let limitDesc = val.teaser.substring(0, 360);;
+    try{
+      var sampleImage = GlobalSettings._defaultStockImage;
+      var articleArray = [];
+      data.forEach(function(val){
+        let date = val.publishedDate != null ? GlobalFunctions.sntGlobalDateFormatting(Number(val.publishedDate),"timeZone") : null;
+        let limitDesc = val.teaser.substring(0, 360);;
 
-      let routeScope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
-      let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'story', val.id);
+        let routeScope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
+        let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'story', val.id);
 
-      var articleStackData = {
-        extUrl: false,
-        articleUrl: urlRouteArray,
-        keyword: val.keyword.replace('-', ' '),
-        timeStamp: date,
-        title: val.title,
-        author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
-        publisher: val.publisher != null ? "Published By: " + val.publisher : "",
-        teaser: limitDesc,
-        keyUrl: urlRouteArray,
-        imageConfig: {
-          imageClass: "embed-responsive embed-responsive-16by9",
-          imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath, width) : sampleImage,
-          urlRouteArray: urlRouteArray
-        }
-      };
-      articleArray.push(articleStackData);
-    });
-    return articleArray;
+        var articleStackData = {
+          extUrl: false,
+          articleUrl: urlRouteArray,
+          keyword: val.keyword.replace('-', ' '),
+          timeStamp: date,
+          title: val.title,
+          author: val.author != null ? "<span style='font-weight: 400;'>By</span> " + val.author : "",
+          publisher: val.publisher != null ? "Published By: " + val.publisher : "",
+          teaser: limitDesc,
+          keyUrl: urlRouteArray,
+          imageConfig: {
+            imageClass: "embed-responsive embed-responsive-16by9",
+            imageUrl: val.imagePath != null ? GlobalSettings.getImageUrl(val.imagePath, width) : sampleImage,
+            urlRouteArray: urlRouteArray
+          }
+        };
+        articleArray.push(articleStackData);
+      });
+      return articleArray;
+    }catch(e){
+      return null;
+    }
+
   }
 
   transformToRecArticles(data){
-    data = data.data['articles'];
     var sampleImage = GlobalSettings._defaultStockImage;
 
     var articleStackArray = [];
@@ -284,21 +317,26 @@ export class DeepDiveService {
   }
 
   transformVideoStack(data){
-    if ( data['videos'] != null ) {
-      data['videos'].forEach(function(val, i){
-        let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
-        var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
-        val['extUrl'] = false,
-        val['keyword'] = val.league.toUpperCase();
-        val['video_thumbnail'] = val.thumbnail;
-        val['embed_url'] = val.videoLink;
-        val['teaser'] = val.description;
-        val['time_stamp'] = GlobalFunctions.sntGlobalDateFormatting(moment(val.pubDate).unix()*1000,'timeZone');
-        val['urlRoute'] = urlRouteArray;
-        val['video_url'] = urlRouteArray;
-        val['keyUrl'] = ['/'+VerticalGlobalFunctions.getWhiteLabel(), scope.toLowerCase()]
-      })
-      return data;
+    try{
+      if ( data['videos'] != null ) {
+        data['videos'].forEach(function(val, i){
+          let scope = val.league == 'fbs' ? 'ncaaf' : 'nfl';
+          var urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope,"video", val.id);
+          val['extUrl'] = false,
+          val['keyword'] = val.league.toUpperCase();
+          val['video_thumbnail'] = val.thumbnail;
+          val['embed_url'] = val.videoLink;
+          val['teaser'] = val.description;
+          val['time_stamp'] = GlobalFunctions.sntGlobalDateFormatting(moment(val.pubDate).unix()*1000,'timeZone');
+          val['urlRoute'] = urlRouteArray;
+          val['video_url'] = urlRouteArray;
+          val['keyUrl'] = ['/'+VerticalGlobalFunctions.getWhiteLabel(), scope.toLowerCase()]
+        })
+        return data;
+      }
+    }catch(e){
+      console.log('video transform Error');
+      return null;
     }
   }
 
@@ -307,7 +345,7 @@ export class DeepDiveService {
       scope = 'NFL';
     }
     try{
-      let tileStack = data['articles'];
+      let tileStack = data;
       let scopeDisplay = scope.toUpperCase() == 'HOME' ? 'NFL': scope.toUpperCase();
       let routeScope = scope.toLowerCase() == 'home' ? 'nfl' : 'ncaaf';
       var lines = ['Find Your <br> Favorite Player', 'Find Your <br> Favorite Team', 'Check Out The Latest <br> With the ' + scopeDisplay];
