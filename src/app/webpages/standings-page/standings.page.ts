@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from '@angular/platform-browser';
 
 //global functions
@@ -50,6 +50,7 @@ export class StandingsPage {
 
     constructor(
       private activateRoute: ActivatedRoute,
+      private router: Router,
       private _profileService: ProfileHeaderService,
       private _standingsService: StandingsService,
       private _seoService: SeoService
@@ -202,8 +203,8 @@ export class StandingsPage {
     private metaTags(data) {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
-      let header, metaDesc, link, title, ogTitle, image, titleName;
-
+      let header, metaDesc, title, ogTitle, image, titleName;
+      
       //create meta description that is below 160 characters otherwise will be truncated
       header = data.headerData;
       titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName : header.teamMarket;
@@ -212,7 +213,9 @@ export class StandingsPage {
       ogTitle = titleName;
       metaDesc = 'Standings for ' + titleName + ' as of ' + GlobalFunctions.formatUpdatedDate(header.lastUpdated, false);
       image = GlobalSettings.getImageUrl(header.backgroundUrl, GlobalSettings._imgPageLogo);
-
+      let keywords = "football, " + titleName;
+      keywords += header.teamMarket ? ", " + header.teamMarket : "";
+      keywords += header.teamName && header.teamName != header.teamMarket ? ", " + header.teamName : "";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -222,7 +225,13 @@ export class StandingsPage {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
-
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType("Standing Page");
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
       if (header.teamId != null) {
         //grab domain for json schema
         let domainSite;

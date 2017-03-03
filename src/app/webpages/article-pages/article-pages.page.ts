@@ -31,7 +31,7 @@ export class ArticlePages implements OnInit {
   public params;
   public trendingContent:Array<any>;
   public trendingData:any;
-  public isArticle:boolean = false;
+  public isAiArticle:boolean = false;
   article:Article;
   articleData:any;
   subRec:any;
@@ -79,12 +79,12 @@ export class ArticlePages implements OnInit {
         this.eventType = params['eventType'];
 
         if (this.eventType == "story" || this.eventType == "video") {
-          this.isArticle = false;
+          this.isAiArticle = false;
           this.eventType == "story" ? this.getDeepDiveArticle(this.eventID) : this.getDeepDiveVideo(this.eventID);
           this.getGeoLocation();
         }
         if (this.eventType != 'story' && this.eventType != 'video') {
-          this.isArticle = true;
+          this.isAiArticle = true;
           this.scope = params.scope;
           this.type = this.eventType;
           this.eventType = this._articleDataService.getApiArticleType(this.eventType);
@@ -166,14 +166,12 @@ export class ArticlePages implements OnInit {
   }
 
   private getTrendingArticles(currentArticleId) {
-    var getData = this.isArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) :
-      this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
-    this.trendingArticles = getData
-      .subscribe(data => {
+    var getData = this.isAiArticle ? this._articleDataService.getAiTrendingData(this.batch, this.scope) : this._deepDiveService.getDeepDiveBatchService(this.scope, 10, this.batch, this.geoLocation);
+    this.trendingArticles = getData.subscribe(data => {
         if (!this.hasRun) {
-          this.trendingContent = this.isArticle ? this.trendingContent.concat(data['articles']) : this.trendingContent.concat(data['articles']);
+          this.trendingContent = this.isAiArticle ? this.trendingContent.concat(data['articles']) : this.trendingContent.concat(data['articles']);
           this.hasRun = true;
-          this.trendingData = this.isArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
+          this.trendingData = this.isAiArticle ? this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, true) :
             this._articleDataService.transformTrending(this.trendingContent, currentArticleId, this.scope, false);
           if ((data.article_count % 10 == 0 || data['articles'].length % 10 == 0) && this.trendingData) {
             this.batch = this.batch + 1;
@@ -287,13 +285,15 @@ export class ArticlePages implements OnInit {
     //This call will remove all meta tags from the head.
     this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
-    var metaData = this.isArticle ? data : data.data;
+    var metaData = this.isAiArticle ? data : data.data;
     let image, metaDesc;
     var teams = [];
     var players = [];
-    var searchString;
+    var searchString = "football";
     var searchArray = [];
-    if (this.isArticle) {
+    var isArticle;
+    isArticle = this.eventType == "video" ? false : true;
+    if (this.isAiArticle) {
       var headerData = metaData['articleContent']['metadata'];
       metaDesc = metaData['articleContent'].meta_headline;
       if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
@@ -312,10 +312,10 @@ export class ArticlePages implements OnInit {
         metaData['articleContent']['keyword'].forEach(function (val) {
           searchArray.push(val);
         });
-        searchString = searchArray.join(',');
+        searchString += ', ' + searchArray.join(',');
       } else {
         searchArray.push(metaData['articleContent']['keyword']);
-        searchString = searchArray.join(',');
+        searchString += ', ' + searchArray.join(',');
       }
       image = metaData['images']['imageData'][0];
     } else {
@@ -324,7 +324,7 @@ export class ArticlePages implements OnInit {
     }
 
     let metaObjData;
-    if (this.isArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
+    if (this.isAiArticle) {// done as if statement since SSR has issues with single line expressions on meta tags
       var updated = metaData['articleContent'].last_updated ? metaData['articleContent'].last_updated.toString() : metaData['articleContent'].publication_date.toString();
       metaObjData = {
         startDate: headerData['relevancy_start_date'].toString(),
@@ -341,10 +341,10 @@ export class ArticlePages implements OnInit {
       metaObjData = {
         startDate: metaData.publishedDate,
         endDate: metaData.publishedDate,
-        source: "TCA",
+        source: isArticle ? "TCA" : "sendtonews.com",
         keyword: metaData.keyword,
-        publishedDate: metaData.publishedDate,
-        author: metaData.author,
+        publishedDate: isArticle ? metaData.publishedDate : metaData.pubDate,
+        author: isArticle ? metaData.author : null,
         publisher: metaData.publisher,
         articleTeaser: metaData.teaser,
         setArticleType: this.scope,
@@ -359,23 +359,24 @@ export class ArticlePages implements OnInit {
     this._seoService.setOgType('Website');
     this._seoService.setOgUrl();
     this._seoService.setOgImage(image);
+    //Elastic Search
     this._seoService.setStartDate(metaObjData.startDate);
     this._seoService.setEndDate(metaObjData.endDate);
-    this._seoService.setIsArticle(this.isArticle.toString());
-    this._seoService.setSearchType("article");
+    this._seoService.setIsArticle(isArticle);
+    this._seoService.setPageType(isArticle ? "article page" : "video page");
     this._seoService.setSource(metaObjData.source);
     this._seoService.setArticleId(this.eventID);
-    this._seoService.setArticleTitle(metaData.title);
-    this._seoService.setKeyword(metaObjData.keyword);
+    this._seoService.setPageTitle(metaData.title ? metaData.title : '');
+    this._seoService.setCategory(metaObjData.keyword ? metaObjData.keyword : '');
     this._seoService.setPublishedDate(metaObjData.publishedDate);
     this._seoService.setAuthor(metaObjData.author);
     this._seoService.setPublisher(metaObjData.publisher);
     this._seoService.setImageUrl(image);
-    this._seoService.setArticleTeaser(metaObjData.articleTeaser);
-    this._seoService.setArticleUrl();
+    this._seoService.setArticleTeaser(metaObjData.articleTeaser ? metaObjData.articleTeaser : '');
+    this._seoService.setPageUrl();
     this._seoService.setArticleType(metaObjData.setArticleType);
-    this._seoService.setSearchString(searchString);
-  } //metaTags=
+    this._seoService.setKeyWord(searchString);
+  } //metaTags
 
   getGeoLocation() {
     var defaultState = 'ca';

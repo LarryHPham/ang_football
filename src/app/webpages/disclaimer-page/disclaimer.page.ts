@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Injector } from '@angular/core';
 
 import { TitleInputData } from "../../fe-core/components/title/title.component";
@@ -27,9 +27,10 @@ export class DisclaimerPage {
 
     constructor(
       private _seoService: SeoService,
-      public activatedRoute: ActivatedRoute
+      private _router: Router,
+      public _activatedRoute: ActivatedRoute
     ) {
-      this.activatedRoute.params.subscribe(
+      this._activatedRoute.params.subscribe(
         (param :any)=> {
           this.scope = param['scope'] != null ? param['scope'].toLowerCase() : 'nfl';
         }
@@ -50,6 +51,8 @@ export class DisclaimerPage {
       let title = 'Disclaimer';
       let metaDesc = 'Disclaimer page to disclose any information';
       let image = GlobalSettings.getmainLogoUrl();
+      
+      let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -59,6 +62,13 @@ export class DisclaimerPage {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(image);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType('Disclaimer Page');
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(image);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
 

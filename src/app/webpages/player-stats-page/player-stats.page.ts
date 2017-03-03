@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from '@angular/platform-browser';
 
 //globals
@@ -54,6 +54,7 @@ export class PlayerStatsPage implements OnInit {
 
     constructor(
         private activatedRoute: ActivatedRoute,
+        private router: Router,
         private _title: Title,
         private _profileService: ProfileHeaderService,
         private _statsService: PlayerStatsService,
@@ -123,6 +124,8 @@ export class PlayerStatsPage implements OnInit {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
+      let keywords = "football";
+      
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -132,6 +135,13 @@ export class PlayerStatsPage implements OnInit {
       this._seoService.setOgType('Website');
       this._seoService.setOgUrl();
       this._seoService.setOgImage(imageUrl);
+      //Elastic Search
+      this._seoService.setMetaDescription(metaDesc);
+      this._seoService.setPageTitle(title);
+      this._seoService.setPageType("Player Stats Page");
+      this._seoService.setPageUrl();
+      this._seoService.setImageUrl(imageUrl);
+      this._seoService.setKeyWord(keywords);
     } //metaTags
 
 

@@ -32,6 +32,7 @@ import { SitePlayerMap } from "../siteMap/sitePlayerMap";
 import { SiteAiArticleMap } from "../siteMap/siteAiArticleMap";
 import { SiteArticleMap } from "../siteMap/siteArticleMap";
 import { SiteVideoArticleMap } from "../siteMap/siteVideoArticleMap";
+import { SiteListMap } from "../siteMap/siteListMap";
 
 const relativeChildRoutes = [
     {
@@ -196,6 +197,10 @@ const relativeChildRoutes = [
     {
       path: 'sitemap/:scope/articles/:pageNumber',
       component: SiteArticleMap
+    },
+    {
+      path: 'sitemap/:scope/list/:profile/:pageNumber',
+      component: SiteListMap
     },
     {
       path: 'sitemap/:scope/videoarticles/:pageNumber',

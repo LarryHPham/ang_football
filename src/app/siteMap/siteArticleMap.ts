@@ -9,7 +9,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 import { SeoService } from "../seo.service";
-import { siteKey } from "../siteMap/siteMap";
+import {SiteMap, siteKey } from "../siteMap/siteMap";
 
 //services
 import { DeepDiveService } from "../services/deep-dive.service";
@@ -46,7 +46,7 @@ export class SiteArticleMap {
     })
   } //constructor
 
-  private metaTags(){
+  metaTags(){
     this._seoService.removeMetaTags();
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
@@ -54,10 +54,10 @@ export class SiteArticleMap {
   createSiteMap(scope, page){
     let self = this;
     let route = [];
-    this.addAiArticlePage(scope, page);
+    this.addArticlePage(scope, page);
   }
 
-  addAiArticlePage(scope, page){
+  addArticlePage(scope, page){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
     //scope, limit, startNum, state?
@@ -72,13 +72,7 @@ export class SiteArticleMap {
               let scope = article.league == 'fbs' ? 'ncaaf' : article.league;
               let articleRoute = VerticalGlobalFunctions.formatArticleRoute(scope, 'story', article.id);
               let relPath = articleRoute.join('/').toString();
-              let sitePath: siteKey = {
-                path: articleRoute,
-                name: self.domainUrl + relPath,
-                dataPoints: null,
-                uniqueId: article.id
-              };
-              // console.log('adding addAiArticlePage', sitePath.name);
+              let sitePath = SiteMap.createSiteKey(articleRoute, relPath, article.id);
               self.totalSiteMap.push(sitePath);
             }
           }

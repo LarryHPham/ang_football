@@ -16,11 +16,13 @@ import { FooterService } from '../services/footer.service';
 import { DirectoryService } from '../services/directory.service';
 import { ArticleDataService } from "../services/article-page-service";
 import { DeepDiveService } from "../services/deep-dive.service";
+import { ListOfListsService } from "../services/list-of-lists.service";
+import { ProfileHeaderService } from '../services/profile-header.service';
 
 export interface siteKey {
-  path: Array<string>;
+  path: Array<any>;
   name: string;
-  dataPoints: Object;
+  query?: any;
   uniqueId?: any;
 } //GameInfoInput
 
@@ -62,7 +64,7 @@ export class SiteMap {
   ];
 
   private partnerSite: any;
-  private domainUrl:string;
+  private static domainUrl:string;
   private childrenRoutes: any;
   private totalSiteMap:any = [];
   // private displaySiteMap: boolean = false;
@@ -74,8 +76,10 @@ export class SiteMap {
     private _directoryService: DirectoryService,
     private _seoService: SeoService,
     private _deepDiveService: DeepDiveService,
+    private _listOfListService: ListOfListsService,
+    private _profileService: ProfileHeaderService,
   ) {
-    this.domainUrl = VerticalGlobalFunctions.getPageUrl();
+    SiteMap.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
     /*
     ** appRoutes[0] routes for non white labeled sites Touchdownloyal.com
@@ -84,12 +88,21 @@ export class SiteMap {
     this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
   } //constructor
 
+  static createSiteKey(path, relativePath, u_id?){
+    let siteMapObj: siteKey = {
+      path: path,
+      name: SiteMap.domainUrl + relativePath,
+      uniqueId: u_id
+    };
+    return siteMapObj;
+  }
+
   ngOnInit(){
     this.metaTags();
     this.createSiteMap();
   }
 
-  private metaTags(){
+  metaTags(){
     this._seoService.removeMetaTags();
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
@@ -106,9 +119,60 @@ export class SiteMap {
 
       if(this.dontLog.indexOf(scopes[i]) < 0){// dont use index of 'home' that is located in dontLog variable
         this.addTeamPages(scopes[i]);
+        this.addListPage(scopes[i]);
         this.addAiArticleSiteMaps(scopes[i]);
         this.addArticleSiteMaps(scopes[i]);
+        this.addLeagueModulePages(scopes[i]);
       }
+    }
+  }
+
+  addLeagueModulePages(scope){
+    try{
+      this._profileService.getLeagueProfile(scope)
+      .subscribe(data => {
+        let headerData = data.headerData;
+        let teamNameRoute = GlobalFunctions.toLowerKebab(data.profileName);
+        let seasonsAmount = 4;
+
+        //create links for all schedules tabs
+        //schedules -> pregame, postgame
+        for(var i = 0; i < seasonsAmount; i++){
+          let schedulesTabs = ['pregame','postgame'];
+          let season = Number(headerData.seasonBase) - i;
+          for( var s = 0 ; s < 2; s++){
+            let scheduleRoute = [this.partnerSite + '/' + scope + '/schedules/'+ 'league', season, schedulesTabs[s], 1];
+            let scheduleRelPath = scheduleRoute.join('/').toString();
+            let scheduleMap = SiteMap.createSiteKey(scheduleRoute, scheduleRelPath);
+
+            this.totalSiteMap.push(scheduleMap);
+          }// end of schedule for loops
+
+          //standings
+          let standingsRoute = [this.partnerSite + '/' + scope + '/standings'];
+          let standingsRelPath = standingsRoute.join('/').toString();
+          let standingsMap = SiteMap.createSiteKey(standingsRoute, standingsRelPath);
+          this.totalSiteMap.push(standingsMap);
+        }//end of for loops seasons
+
+        //transaction
+        // create links for all tabs
+        let transactionTabs = ['Transaction', 'Suspensions', 'Injuries'];
+        for(var t = 0 ; t < 3; t++){
+          let transactionRoute = [this.partnerSite + '/' + scope + '/'+transactionTabs[t]+'/'+ 'league', 20, 1];
+          let transactionRelPath = transactionRoute.join('/').toString();
+          let transactionMap = SiteMap.createSiteKey(transactionRoute, transactionRelPath);
+          this.totalSiteMap.push(transactionMap);
+        }
+
+        //draft history
+        let draftRoute = [this.partnerSite + '/' + scope + '/draft-history'];
+        let draftRelPath = draftRoute.join('/').toString();
+        let draftMap = SiteMap.createSiteKey(draftRoute, draftRelPath);
+        this.totalSiteMap.push(draftMap);
+      });
+    }catch(e){
+      console.log('No Player Module Data');
     }
   }
 
@@ -118,11 +182,7 @@ export class SiteMap {
     let route = [this.partnerSite + '/' + scope];
     let relPath = route.join('/').toString();
 
-    let pathData: siteKey = {
-      path: route,
-      name: this.domainUrl + relPath,
-      dataPoints: null,
-    }
+    let pathData = SiteMap.createSiteKey(route, relPath);
     // console.log('adding DeepDive page', pathData.name);
     this.totalSiteMap.push(pathData);
   }
@@ -136,12 +196,7 @@ export class SiteMap {
           let baseRoute = [this.partnerSite + '/' + scope];
           baseRoute.push(singlePages[i]);
           let relPath = baseRoute.join('/').toString();
-          let pathData: siteKey = {
-            path: baseRoute,
-            name: this.domainUrl + relPath,
-            dataPoints: null,
-          }
-          // console.log('adding SinglePage', pathData.name);
+          let pathData = SiteMap.createSiteKey(baseRoute, relPath);
           this.totalSiteMap.push(pathData);
         }
       }
@@ -150,8 +205,6 @@ export class SiteMap {
     }
   }
 
-  //add team pages by using pick a team page api call => api.com/landingPage/:scope
-  //directory page requires multiple pages with letters so too many api calls to use
   addTeamPages(scope){
     let self = this;
     let baseRoute = [this.partnerSite + '/' + scope];
@@ -167,18 +220,11 @@ export class SiteMap {
               //[scope: string, teamName: string, teamId: string]
               let teamRoute = VerticalGlobalFunctions.formatTeamRoute(scope, team.full_name, team.id);
               let relPath = teamRoute.join('/').toString();
-              let pathData: siteKey = {
-                path: teamRoute,
-                name: self.domainUrl + relPath,
-                dataPoints: null,
-              }
+              let pathData = SiteMap.createSiteKey(teamRoute, relPath);
+
               let teamPath = '/sitemap/'+scope+'/team/' + team.id;
-              let sitePath: siteKey = {
-                path: [teamPath],
-                name: self.domainUrl + teamPath,
-                dataPoints: null,
-              }
-              // console.log('adding TeamPage', pathData.name);
+              let sitePath = SiteMap.createSiteKey([teamPath], teamPath);
+
               self.totalSiteMap.push(pathData);
               self.totalSiteMap.push(sitePath);
             });//end team
@@ -192,12 +238,7 @@ export class SiteMap {
 
   addAiArticleSiteMaps(scope){
     let aiArticlePath = '/sitemap/'+scope+'/aiarticles';
-    let sitePath: siteKey = {
-      path: [aiArticlePath],
-      name: this.domainUrl + aiArticlePath,
-      dataPoints: null,
-    }
-    // console.log('adding addAiArticleSiteMaps', sitePath.name);
+    let sitePath = SiteMap.createSiteKey([aiArticlePath], aiArticlePath);
     this.totalSiteMap.push(sitePath);
   }// end addArticleSiteMaps
 
@@ -211,12 +252,7 @@ export class SiteMap {
         let totalPages = data.totalPages;
         for(var i = 1; i <= Number(totalPages); i++){
           let articlePath = '/sitemap/'+scope+'/articles/' + i;
-          let sitePath: siteKey = {
-            path: [articlePath],
-            name: self.domainUrl + articlePath,
-            dataPoints: null,
-          }
-          // console.log('adding addArticleSiteMaps', sitePath.name);
+          let sitePath = SiteMap.createSiteKey([articlePath], articlePath);
           self.totalSiteMap.push(sitePath);
         }
       }catch(e){
@@ -231,19 +267,37 @@ export class SiteMap {
         let totalPages = data.totalPages;
         for(var i = 1; i <= Number(totalPages); i++){
           let articlePath = '/sitemap/'+scope+'/videoarticles/' + i;
-          let sitePath: siteKey = {
-            path: [articlePath],
-            name: self.domainUrl + articlePath,
-            dataPoints: null,
-          }
-          // console.log('adding addArticleSiteMaps', sitePath.name);
+          let sitePath = SiteMap.createSiteKey([articlePath], articlePath);
           self.totalSiteMap.push(sitePath);
         }
       }catch(e){
         console.warn('Error siteMap failure @ VIDEO addArticleSiteMaps', e)
       }
     });
-
   }// end addArticleSiteMaps
 
+  addListPage(scope, id?){
+    let articleCount = GlobalSettings.siteMapArticleCount;
+    let self = this;
+    //scope, target, count, pageNumber, id?
+    this._listOfListService.getSiteListMap(scope, 'league', articleCount, 1, id)
+    .subscribe(data => {
+      try{
+        let list = data.data[0];
+        let pages = Math.ceil(list.listInfo.listCount / articleCount);
+        for(var i = 1; i <= pages; i++){
+          let listRoute = [self.partnerSite + '/sitemap/' + scope + '/list', 'league', i];
+          let relPath = listRoute.join('/').toString();
+          if(id){
+            relPath += '?id='+id;
+            listRoute.push('?id='+id);//query
+          }
+          let sitePath = SiteMap.createSiteKey(listRoute, relPath);
+          self.totalSiteMap.push(sitePath);
+        }
+      }catch(e){
+        console.warn('Error siteMap failure @ addListPage', e)
+      }
+    })
+  }
 }

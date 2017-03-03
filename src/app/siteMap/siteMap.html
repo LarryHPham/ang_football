@@ -4,7 +4,7 @@
       <div class="col-xs-12">
         <ul>
           <template ngFor let-link [ngForOf]="totalSiteMap" let-i="index">
-            <li>{{i+1}}.&nbsp;&nbsp;<a [routerLink]="link.path">{{link.name}}</a></li>
+            <li>{{i+1}}.&nbsp;&nbsp;<a [routerLink]="link.path" [queryParams]="link.query">{{link.name}}</a></li>
           </template>
         </ul>
       </div>

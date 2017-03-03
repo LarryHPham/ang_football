@@ -9,7 +9,7 @@ import { GlobalSettings } from "../global/global-settings";
 import { VerticalGlobalFunctions } from "../global/vertical-global-functions";
 
 import { SeoService } from "../seo.service";
-import { siteKey } from "../siteMap/siteMap";
+import { SiteMap, siteKey } from "../siteMap/siteMap";
 
 //services
 import { ArticleDataService } from "../services/article-page-service";
@@ -65,18 +65,11 @@ export class SiteAiArticleMap {
       try{
         //(scope: string, eventType: string, eventID: string)
         data.data.forEach(function(article){
-          let duplicate = self.totalSiteMap.length > 0 ? self.totalSiteMap.filter(value => value.uniqueId === article.event_id).length > 0 : false;
-          if( (article.scope == 'nfl' || article.scope == 'ncaaf') && !duplicate ){
+          if( article.scope == 'nfl' || article.scope == 'ncaaf' ){
             if(article.event_id){
               let articleRoute = VerticalGlobalFunctions.formatArticleRoute(article.scope, article.article_type, article.event_id);
               let relPath = articleRoute.join('/').toString();
-              let sitePath: siteKey = {
-                path: articleRoute,
-                name: self.domainUrl + relPath,
-                dataPoints: null,
-                uniqueId: article.event_id
-              };
-              // console.log('adding addAiArticlePage', sitePath.name);
+              let sitePath = SiteMap.createSiteKey(articleRoute, relPath, article.event_id);
               self.totalSiteMap.push(sitePath);
             }
           }

@@ -28,7 +28,6 @@ export class RosterService {
 
   getTeamRosterData(teamId){
     var fullUrl = GlobalSettings.getApiUrl() + "/roster/" + teamId;
-    console.log("loading full team roster: "+ fullUrl);
     return this.model.get(fullUrl)
       .map(data => {
         return data.data;

@@ -49,8 +49,9 @@ import { SitePlayerMap } from "../siteMap/sitePlayerMap";
 import { SiteAiArticleMap } from "../siteMap/siteAiArticleMap";
 import { SiteArticleMap } from "../siteMap/siteArticleMap";
 import { SiteVideoArticleMap } from "../siteMap/siteVideoArticleMap";
+import { SiteListMap } from "../siteMap/siteListMap";
 
-//modules
+//moduless
 import { WidgetModule } from "../ui-modules/widget/widget.module";
 import { BoxScoresModule } from "../fe-core/modules/box-scores/box-scores.module";
 import { BillboardModule } from "../ui-modules/billboard/billboard.module";
@@ -133,7 +134,8 @@ const PAGEMODULES = [
   SitePlayerMap,
   SiteAiArticleMap,
   SiteArticleMap,
-  SiteVideoArticleMap
+  SiteVideoArticleMap,
+  SiteListMap
 ]
 
 const COREMODULES = [

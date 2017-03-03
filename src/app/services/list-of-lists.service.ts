@@ -26,6 +26,22 @@ export class ListOfListsService {
   constructor(public model: ModelService){
   }
 
+  getSiteListMap(scope, target, count, pageNumber, id?){
+    let callURL = this._apiUrlTdl + '/listOfLists/';
+    let apiScope = scope == 'ncaaf' ? 'fbs' : scope;
+    callURL += 'scope=' +apiScope+ '&target=' +target+ '&perPageCount=' +count+ '&pageNumber=' +pageNumber;
+
+    if(id){
+      callURL += '&targetId='+id;
+    }
+    return this.model.get( callURL )
+      .map(
+        data => {
+          return data;
+        }
+      )
+  }
+
   //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
   getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
@@ -54,21 +70,25 @@ export class ListOfListsService {
     return this.model.get( callURL )
       .map(
         data => {
-          if(data && data.data.length != 0){
-            if ( !data || !data.data ) {
+          try{
+            if(data && data.data.length != 0){
+              if ( !data || !data.data ) {
+                return null;
+              }
+              var lastUpdated = "";
+              if ( data && data.data && data.data.length > 0 && data.data != undefined) {
+                lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
+              }
+              return {
+                carData: this.carDataPage(data.data,target),
+                listData: this.detailedData(data.data, pageType,target),
+                targetData: this.getTargetData(data.data),
+                pagination: data.data[0].listInfo,
+                lastUpdated: lastUpdated
+              };
+            }
+          }catch(e){
               return null;
-            }
-            var lastUpdated = "";
-            if ( data && data.data && data.data.length > 0 && data.data != undefined) {
-              lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
-            }
-            return {
-              carData: this.carDataPage(data.data,target),
-              listData: this.detailedData(data.data, pageType,target),
-              targetData: this.getTargetData(data.data),
-              pagination: data.data[0].listInfo,
-              lastUpdated: lastUpdated
-            };
           }
         }
       )

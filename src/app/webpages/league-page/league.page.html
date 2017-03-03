@@ -19,15 +19,15 @@
         <schedules
           *ngIf="schedulesData"
           [profHeader]="profileHeaderData"
-          [data]="schedulesData"
-          [footerParams]="scheduleParams"
+          [tabs]="scheduleTabsData"
+          [selectedTabDisplay]="selectedScheduleTabDisplay"
           [filter1]="scheduleFilter1"
           [filter2]="scheduleFilter2"
           [dropdownKey1]="selectedFilter1"
           [dropdownKey2]="selectedFilter2"
-          [storedPartnerParam]="storedPartnerParam"
+          [schedulesModuleFooterUrl]="schedulesModuleFooterUrl"
           (tabSelected)="scheduleTab($event)"
-          (selectedKeyFilter)="filterDropdown($event)">
+          (selectedKeyFilter)="scheduleFilterDropdown($event)">
         </schedules>
         <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
       </div>
