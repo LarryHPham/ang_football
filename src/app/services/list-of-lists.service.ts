@@ -37,7 +37,13 @@ export class ListOfListsService {
     return this.model.get( callURL )
       .map(
         data => {
-          return data;
+          try {
+            if (data && data.data.length != 0) {
+              return data;
+            }
+          } catch(e) {
+            return null;
+          }
         }
       )
   }
