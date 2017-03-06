@@ -30,25 +30,29 @@ import {isNode} from "angular2-universal";
 })
 
 export class MVPListPage implements OnInit {
-
     @Output() tabSelectedListener = new EventEmitter();
+
+    private paramsub: any;
 
     scope: string;
     tabs: Array<positionMVPTabData>;
+    tabData: any;
     profileHeaderData: TitleInputData;
     paginationParameters: PaginationParameters;
     storedPartnerParam: string;
-    listType: string;
+    positionParam: string;
     position: string;
-    tab: string;
+    tabParam: string;
     pageNum: any;
     queryParams: any;
     isError: boolean = false;
-    selectedTabName: string;
+    selectedTabTitle: string;
     globalMVPPosition: string;
     season: number;
     listMax: number = 20;
     filter1: any;
+    seasonBase: string;
+    selectedTabData: any;
 
     displayPosition: string;
 
@@ -56,6 +60,8 @@ export class MVPListPage implements OnInit {
     public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv().toLowerCase();
     public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
     public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
+
+    private profileService: any;
 
     footerStyle: FooterStyle = {
         ctaBoxClass: " mvp-page-car-footer",
@@ -74,91 +80,79 @@ export class MVPListPage implements OnInit {
     ) {
         // check to see if scope is correct and redirect
         // VerticalGlobalFunctions.scopeRedirect(_router, _params);
-        this._activateRoute.params.subscribe(
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.paramsub = this._activateRoute.params.subscribe(
           (param :any) => {
             this.paginationParameters = null;
-
-            this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
-            this.listType = param['type'] ? param['type'] : null;
-            this.tab = param['tab'] ? param['tab'] : null;
+            this.scope = param.scope == 'ncaaf' ? 'fbs' : 'nfl';
+            this.positionParam = param['type'] ? param['type'] : null;
+            this.tabParam = param['tab'] ? param['tab'] : null;
             this.pageNum = param['pageNum'] ? param['pageNum'] : null;
+
             this.startUp();
           }
         )
 
         //Initial set for global MVP position
-        this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
-        this.globalMVPPosition = this.listType;
-        this.position = this.listType;
+        // this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
+        // this.globalMVPPosition = this.positionParam;
+        // this.position = this.positionParam;
 
         var date = new Date;
-        var season;
         var compareDate = new Date('09 15 ' + date.getFullYear());
         if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
-            season = date.getFullYear();
+            this.season = date.getFullYear();
         }
         else if (date.getMonth() > compareDate.getMonth()) {
-            season = date.getFullYear();
+            this.season = date.getFullYear();
         }
         else {
-            season = (date.getFullYear() - 1);
+            this.season = (date.getFullYear() - 1);
         }
-
-        //Initial load for mvp Data
-        this.queryParams = {
-            scope: this.scope, //TODO change to active scope
-            target: 'player',
-            position: this.listType,
-            statName: this.tab,
-            ordering: 'asc',
-            perPageCount: 20,
-            pageNumber: this.pageNum,
-            season: season
-        };
-
-        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
     } //constructor
 
 
 
     ngOnInit() {
-      this.position = this.listType;
+        console.log('---ngOnInit---');
+        //Initial load for mvp Data
     }
 
 
 
     startUp() {
-        if (this.scope == this.collegeDivisionAbbrv.toLowerCase()) {
-            this.scope = this.collegeDivisionFullAbbrv;
-        }
-
-        this.displayPosition = this.listType != null ? VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.listType) : this.globalMVPPosition;
-
-        // this.profileHeaderData = {
-        //     imageURL: GlobalSettings.getSiteLogoUrl(), //TODO
-        //     imageRoute: ["League-page"],
-        //     text1: 'Last Updated: ',//+ GlobalFunctions.formatUpdatedDate(data.listData[0].lastUpdate),
-        //     text2: 'United States',
-        //     text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
-        //     icon: 'fa fa-map-marker'
-        // };
-
-        this._profileService.getLeagueProfile(this.scope)
-          .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
-          .subscribe(data => {
-              this.profileHeaderData = {
-                  imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgPageLogo),
-                  imageRoute: ["League-page"],
-                  text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
-                  text2: 'United States',
-                  text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
-                  icon: 'fa fa-map-marker'
-              };
-              this.loadTabs();
-              this.metaTags(this.profileHeaderData);
-          }, err => {
-              console.log("Error loading profile");
-          });
+        console.log('---startUp---');
+        this.displayPosition =  this.positionParam != null ?
+                                VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.positionParam) :
+                                this.positionParam;
+        this.profileService = this._profileService.getLeagueProfile(this.scope)
+        .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+            .subscribe(data => {
+                console.log('data - ',data);
+                this.profileHeaderData = {
+                    imageURL: GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgPageLogo),
+                    imageRoute: ["League-page"],
+                    text1: 'Last Updated: ' + GlobalFunctions.formatUpdatedDate(data.headerData.lastUpdated),
+                    text2: 'United States',
+                    text3: "Most Valuable Players - " + this.scope.toUpperCase() + " " + this.displayPosition,
+                    icon: 'fa fa-map-marker'
+                };
+                this.seasonBase = data.headerData.seasonBase;
+                this.queryParams = {
+                    scope: this.scope,
+                    target: 'player',
+                    position: this.positionParam,
+                    statName: this.tabParam,
+                    ordering: 'asc',
+                    perPageCount: 20,
+                    pageNumber: this.pageNum,
+                    season: this.season ? this.season : this.seasonBase
+                };
+                this.loadTabs();
+                this.metaTags(this.profileHeaderData);
+            }, err => {
+                console.log("Error loading profile");
+            });
     } //startUp
 
 
@@ -208,20 +202,13 @@ export class MVPListPage implements OnInit {
 
 
     loadTabs() {
-        this.tabs = this._service.getMVPTabs(this.listType, 'page');
+        console.log('---loadTabs---');
+        this.tabs = this._service.getMVPTabs(this.positionParam, 'page');
         try {
-          if (this.tabs != null && this.tabs.length > 0 && this.queryParams) {
-              var selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
-              if (this.queryParams.statName) {
-                  var matchingTabs = this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName);
-
-                  if (matchingTabs.length > 0) {
-                      selectedTab = matchingTabs[0];
-                  }
-              }
-              this.selectedTabName = selectedTab.tabDisplayTitle;
-
-              this.getStandardList(selectedTab);
+          if (this.tabs != null && this.tabs.length > 0) {
+              let selectedTab = this.tabs.filter(tab => tab.tabDataKey == this.tabParam)[0];
+              this.selectedTabTitle = selectedTab.tabDisplayTitle;
+              this.tabData = this.getStandardList(selectedTab);
           }
         }
         catch(e) {
@@ -237,8 +224,8 @@ export class MVPListPage implements OnInit {
     setPaginationParams(input) {
         //path: '/directory/:type/:startsWith/page/:page',
         var navigationParams = {
-            position: this.listType,
-            statName: this.tab,
+            position: this.positionParam,
+            statName: this.tabParam,
             pageNumber: this.pageNum
         };
 
@@ -255,87 +242,90 @@ export class MVPListPage implements OnInit {
         };
     } //setPaginationParams(input)
 
-    getStandardList(tab: positionMVPTabData) {
 
+
+    getStandardList(tab) {
+        console.log('---getStandardList---');
         this.queryParams.statName = tab.tabDataKey;
-
         this._service.getListModuleService(tab, this.queryParams)
             .subscribe(
-            tab => {
-                if (tab.data.listInfo) {
-                    tab.data.listInfo.pageNum = this.pageNum;
+                tab => {
+                    if (tab.data.listInfo) {
+                        tab.data.listInfo.pageNum = this.pageNum;
+                    }
+                    this.setPaginationParams(tab.data);
+                    return tab;
+                },
+                err => {
+                    this.isError = true;
+                    console.log('Error: List MVP API: ', err);
                 }
-                this.setPaginationParams(tab.data);
-            },
-            err => {
-                this.isError = true;
-                console.log('Error: List MVP API: ', err);
-            }
             );
     }
 
     tabSelected(event) {
+        console.log('---tabSelected---');
+        console.log('event - ',event);
         var tabRoute;
-        var tabNameFrom = this.selectedTabName; //get the tab we are changing from into a var before we change it
-        var tabNameTo = event.tab.tabDisplayTitle;
+        var tabNameFrom = this.tabParam; //get the tab we are changing from into a var before we change it
+        var tabNameTo = event.tab.tabDataKey;
 
-        if (this.selectedTabName != event.tab.tabDisplayTitle) {
-            this.queryParams.pageNum = this.pageNum;
-        }
-        if (!event.tab.listData) { //let the page handle the service call if there's no data
-            this.getStandardList(event.tab);
-        }
-        else {
+        // if (this.selectedTabTitle != event.tab.tabDisplayTitle) {
+        //     this.queryParams.pageNum = this.pageNum;
+        // }
+        // if (!event.tab.listData) { //let the page handle the service call if there's no data
+        //     this.getStandardList(event.tab);
+        // }
+        // else {}
 
-        }
-        this.selectedTabName = event.tab.tabDisplayTitle;//line added to update the current tab variable when tabs are changed without reloading the page
+        // this.selectedTabTitle = event.tab.tabDisplayTitle;//line added to update the current tab variable when tabs are changed without reloading the page
 
         //actually redirect the page on tab change to update the URL for deep linking and to fix the pagination bug
-        if (tabNameTo !== tabNameFrom) {
-            tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, event.tab.tabDataKey, this.pageNum];
+        if (tabNameTo != tabNameFrom) {
+            tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', this.positionParam, tabNameTo, '1'];
             this._router.navigate(tabRoute);
         }
-        this.tabs = this.checkToResetTabs(event);
+        // this.tabs = this.checkToResetTabs(event);
 
-        if (event.tab != null) {
-            var matches = this.checkMatchingTabs(event);
-            this.globalMVPPosition = event.position;
-
-            if (matches != null) {
-                tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
-                this._router.navigate(tabRoute);
-            }
-        }
+        // if (event.tab != null) {
+        //     var matches = this.checkMatchingTabs(event);
+        //     this.globalMVPPosition = event.position;
+        //
+        //     if (matches != null) {
+        //         tabRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
+        //         this._router.navigate(tabRoute);
+        //     }
+        // }
     } //tabSelected(tab: positionMVPTabData)
 
 
 
     private positionDropdown(event) {
-        var pageRoute;
-        this.tabs = this.checkToResetTabs(event);
-
-        if (event.tab != null) {
-
-            var matches = this.checkMatchingTabs(event);
-
-            this.globalMVPPosition = event.position;
-
-            if (matches != null) {
-                this.queryParams = {
-                    scope: this.scope, //TODO change to active scope
-                    target: 'player',
-                    position: event.position,
-                    statName: matches.tabDataKey,
-                    ordering: 'asc',
-                    perPageCount: this.listMax,
-                    pageNumber: this.pageNum,
-                    season: '2015'
-                }
-                this.getStandardList(matches);
-            }
-            pageRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
-            this._router.navigate(pageRoute);
-        }
+        // var pageRoute;
+        // this.tabs = this.checkToResetTabs(event);
+        //
+        // if (event.tab != null) {
+        //
+        //     var matches = this.checkMatchingTabs(event);
+        //
+        //     this.positionParam = event.position;
+        //
+        //     if (matches != null) {
+        //         this.queryParams = {
+        //             scope: this.scope, //TODO change to active scope
+        //             target: 'player',
+        //             position: event.position,
+        //             statName: matches.tabDataKey,
+        //             ordering: 'asc',
+        //             perPageCount: this.listMax,
+        //             pageNumber: this.pageNum,
+        //             season: '2015'
+        //         }
+        //         this.getStandardList(matches);
+        //     }
+        //     pageRoute = [this.storedPartnerParam, this.scope, 'mvp-list', event.position, matches.tabDataKey, this.pageNum];
+        //     this._router.navigate(pageRoute);
+        // }
     } //positionDropdown
 
 
@@ -343,7 +333,7 @@ export class MVPListPage implements OnInit {
     private checkToResetTabs(event) {
         let localPosition = event.position;
 
-        if (localPosition != this.globalMVPPosition) {
+        if (localPosition != this.positionParam) {
             return this._service.getMVPTabs(event.position, 'page');
         } else {
             return this.tabs;
@@ -357,11 +347,18 @@ export class MVPListPage implements OnInit {
         let localPosition = event.position;
         let listName = event.tab.tabDataKey;
 
-        if (event.position != this.globalMVPPosition) {
+        if (event.position != this.positionParam) {
             this.tabs[0].isLoaded = false;
             return this.tabs[0];
         } else {
             return this.tabs.filter(tab => tab.tabDataKey == this.queryParams.statName)[0];
         }
     } //private checkMatchingTabs
+
+
+
+    ngOnDestroy(){
+      this.paramsub.unsubscribe();
+      this.profileService.unsubscribe();
+    } //ngOnDestroy
 }

@@ -64,13 +64,18 @@ export class SitePlayerMap {
   }
 
   addPlayerModulePages(scope, id){
+      console.log('---addPlayerModulePages---');
+      console.log('this.partnerSite - ',this.partnerSite);
     try{
       this._profileService.getPlayerProfile(id)
       .subscribe(data => {
           //SeasonStats
           let seasonStatsRoute = [this.partnerSite + '/sitemap/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
+          console.log('seasonStatsRoute - ',seasonStatsRoute);
           let seasonStatsPath = seasonStatsRoute.join('/').toString();
+          console.log('seasonStatsPath - ',seasonStatsPath);
           let sitePath = SiteMap.createSiteKey(seasonStatsRoute, seasonStatsPath);
+          console.log('sitePath - ',sitePath);
           this.totalSiteMap.push(sitePath);
         });
     }catch(e){
@@ -111,7 +116,7 @@ export class SitePlayerMap {
             relPath += '?id='+id;
           }
           let sitePath = SiteMap.createSiteKey(listRoute, relPath);
-          
+
           if(id){
             sitePath.query = {};
             sitePath.query.id = id;
