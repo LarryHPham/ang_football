@@ -84,17 +84,19 @@ export class FooterComponent implements OnInit {
       });
     }
 
-    ngOnInit() {
+    ngOnInit() { 
         this.loadData(this.partnerID);
         var scope = this.scopeParam == 'home' || this.scopeParam == null ? 'nfl' : this.scopeParam;
         let partnerLink = VerticalGlobalFunctions.getWhiteLabel();
         var baseFooterLink = partnerLink != '' ? [partnerLink, scope] : [scope];
         var siteMap = partnerLink != '' ? [partnerLink, 'sitemap'] : ['/sitemap'];
-
+        let aboutus = baseFooterLink.concat(['about-us']);
+        let contactUs = baseFooterLink.concat(['contact-us']);
+        let disclaimer = baseFooterLink.concat(['disclaimer']);
         this.footerLinks = {
-          aboutUs: baseFooterLink.push('about-us'),
-          contactUs: baseFooterLink.push('contact-us'),
-          disclaimer: baseFooterLink.push('disclaimer'),
+          aboutUs: aboutus,
+          contactUs: contactUs,
+          disclaimer: disclaimer,
           siteMap: siteMap
         }
     }
