@@ -30,7 +30,7 @@ export class SiteListMap {
   constructor(
     private _listOfListService: ListOfListsService,
     private router:ActivatedRoute,
-    private _seoService: SeoService,
+    private _seoService: SeoService
   ) {
     this.router.params.subscribe(
       (param: any) => {

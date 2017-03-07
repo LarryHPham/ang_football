@@ -54,25 +54,31 @@ export class GeoLocation{
         return this.model.get(fullUrl)
             .flatMap(
             data => {
+              try {
                 if (data['results'] != null) {
-                    let partnerScript = data['results'].header.script;
-                    let partnerLocation = data['results']['location']['realestate']['location_id'];
-                    if (!this.geoData) {
-                        this.geoData = {};
-                    }
-                    this.geoData['partner_id'] = partner_id;
-                    this.geoData['partner_script'] = partnerScript;
-                    if (partnerLocation.state && partnerLocation.city) {
-                        this.geoData['state'] = partnerLocation.state;
-                        this.geoData['city'] = partnerLocation.city;
-                        return new Observable(observer => {
-                            observer.next(this.geoData);
-                            observer.complete();
-                        });
-                    } else {
-                        return this.getGeoLocation();
-                    }
+                  let partnerScript = data['results'].header.script;
+                  let partnerLocation = data['results']['location']['realestate']['location_id'];
+                  if (!this.geoData) {
+                    this.geoData = {};
+                  }
+                  this.geoData['partner_id'] = partner_id;
+                  this.geoData['partner_script'] = partnerScript;
+                  if (partnerLocation.state && partnerLocation.city) {
+                    this.geoData['state'] = partnerLocation.state;
+                    this.geoData['city'] = partnerLocation.city;
+                    return new Observable(observer => {
+                      observer.next(this.geoData);
+                      observer.complete();
+                    });
+                  } else {
+                    return this.getGeoLocation();
+                  }
+                } else {
+                  return this.getGeoLocation();
                 }
+              } catch(e) {
+                return this.getGeoLocation();
+              }
                 // return data;
             }
             )
