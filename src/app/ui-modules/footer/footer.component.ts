@@ -92,9 +92,9 @@ export class FooterComponent implements OnInit {
         var siteMap = partnerLink != '' ? [partnerLink, 'sitemap'] : ['/sitemap'];
 
         this.footerLinks = {
-          aboutUs: baseFooterLink.concat(['about-us']),
-          contactUs: baseFooterLink.concat(['contact-us']),
-          disclaimer: baseFooterLink.concat(['disclaimer']),
+          aboutUs: baseFooterLink.push('about-us'),
+          contactUs: baseFooterLink.push('contact-us'),
+          disclaimer: baseFooterLink.push('disclaimer'),
           siteMap: siteMap
         }
     }
