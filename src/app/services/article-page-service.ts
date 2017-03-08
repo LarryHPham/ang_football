@@ -54,7 +54,7 @@ export class ArticleDataService {
 
   static formatArticleData(data, scope, eventType, isFantasyReport, eventId) {
     try{
-      var articles = data['data']['articles'];
+      var articles = data['data'];
       if (articles.length > 0) {
         var hasEventID = true;
         var hasImages = true;
