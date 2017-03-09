@@ -22,7 +22,7 @@ export class GlobalSettings {
 
     private static _partnerApiUrl: string = 'synapview.synapsys.us/synapview/?action=get_header_data&vertical=sports&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
-    private static _geoUrl: string = 'waldo.synapsys.us';
+    private static _geoUrl: string = 'w1.synapsys.us';
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
@@ -135,7 +135,7 @@ export class GlobalSettings {
     }
 
     static getGeoLocation():string {
-      return this._proto + "//" + this.synapsysENV(this._env) + this._geoUrl;
+      return this._proto + "//" + this._geoUrl;
     }
 
     static widgetUrl():string {
