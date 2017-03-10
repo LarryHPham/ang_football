@@ -8,8 +8,8 @@
         *ngIf="tabs"
         [tabs]="tabs"
         [tabData]="tabData"
-        [selectedKey]="position"
         [selectedTabTitle]="selectedTabTitle"
+        [position]="displayPosition"
         [sortOptions]="filter1"
         (tabSelectedListener)="tabSelected($event)"
         (dropdownPositionSelection)="positionDropdown($event)">

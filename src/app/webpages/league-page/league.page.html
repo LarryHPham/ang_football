@@ -4,6 +4,22 @@
       <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
       <error-component *ngIf="hasError"></error-component>
       <div class="loadBatch1" *ngIf="batchLoadIndex >= 1">
+          <mvp-module
+              *ngIf="mvpTabs && mvpData"
+              [scope]="scope"
+              [tabs]="mvpTabs"
+              [mvpData]="mvpData"
+              [sortOptions]="mvpSortOptions"
+              [selectedFilterTitle]="mvpActivePositionTitle"
+              [selectedTabTitle]="mvpActiveTabTitle"
+              [isError]="mvpDataError"
+              [mvpModuleFooterParams]="mvpModuleFooterParams"
+              (tabSelectedListener)="mvpTabSelected($event)"
+              (dropdownPositionSelection)="mvpFilterDropdown($event)">
+          </mvp-module>
+
+
+
         <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
         <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="true"></articles-module>
         <video-module *ngIf="videoData" [firstVideo]="firstVideo" [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
@@ -69,7 +85,9 @@
       </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
-        <mvp-module
+
+
+        <!-- <mvp-module
           *ngIf="positionData && positionParams"
           [collegeDivisionAbbrv]="collegeDivisionAbbrv"
           [collegeDivisionFullAbbrv]="collegeDivisionFullAbbrv"
@@ -80,7 +98,7 @@
           [filter1]="filter1"
           [storedPartnerParam]="storedPartnerParam"
           (tabSelectedListener)="positionDropdown($event)"
-          (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+          (dropdownPositionSelection)="positionDropdown($event)"></mvp-module> -->
         <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         <comparison-module
           [modelData]="comparisonModuleData"
