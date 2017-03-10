@@ -54,7 +54,7 @@ export class SiteMap {
     'disclaimer',
     'about-us',
     'pick-a-team',
-    //below are defaults that shouldnt be ran in array function
+    //below are defaults that shouldn't be ran in array function
     'home',
     'not-found',
     'sitemap',
@@ -78,7 +78,7 @@ export class SiteMap {
     private _seoService: SeoService,
     private _deepDiveService: DeepDiveService,
     private _listOfListService: ListOfListsService,
-    private _profileService: ProfileHeaderService,
+    private _profileService: ProfileHeaderService
   ) {
     // SiteMap.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id

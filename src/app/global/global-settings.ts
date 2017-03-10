@@ -20,7 +20,7 @@ export class GlobalSettings {
     private static _articleDataUrl:string = "-touchdownloyal-ai.synapsys.us/";
     private static _tcxArticleUrl:string = '-article-library.synapsys.us/';
 
-    private static _partnerApiUrl: string = 'apireal.synapsys.us/listhuv/?action=get_partner_data&domain=';
+    private static _partnerApiUrl: string = 'synapview.synapsys.us/synapview/?action=get_header_data&vertical=sports&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
     private static _geoUrl: string = 'w1.synapsys.us';
 
@@ -109,6 +109,15 @@ export class GlobalSettings {
       }
     }
 
+    static synapsysENV(env:string):string {
+      if (env == "localhost" || env == 'dev' || env == 'qa'){//remove qa when we have qa env setup
+          env = "dev-";
+      }else{
+        env = '';
+      }
+      return env;
+    }
+
     static storePartnerId(partnerId) {
       this._partnerId = partnerId;
     }
@@ -122,11 +131,11 @@ export class GlobalSettings {
     }
 
     static getPartnerApiUrl(partnerID):string {
-        return this._proto + "//"+ this._partnerApiUrl + partnerID;
+      return this._proto + "//"+ this.synapsysENV(this._env) + this._partnerApiUrl + partnerID;
     }
 
     static getGeoLocation():string {
-        return this._proto + "//" + this._geoUrl;
+      return this._proto + "//" + this._geoUrl;
     }
 
     static widgetUrl():string {
