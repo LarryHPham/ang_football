@@ -229,8 +229,6 @@ export class ListPageService {
       }
     }
 
-    console.log('callURL - ',callURL);
-
     return this.model.get(callURL)
       .map(
         data => {

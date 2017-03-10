@@ -96,7 +96,6 @@ export class SiteMap {
       name: domainUrl + relativePath,
       uniqueId: u_id
     };
-    console.log('siteMapObj - ',siteMapObj);
     return siteMapObj;
   }
 
