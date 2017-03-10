@@ -146,7 +146,6 @@ export class ListPageService {
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
   getMVPTabs(moduleType: string, profileType: string): Array<positionMVPTabData>{
-
     var tabArray: Array<positionMVPTabData> = [];
 
     switch(moduleType) {
@@ -219,8 +218,7 @@ export class ListPageService {
   }
 
   //moduleType can be either 'pitcher' or 'batter' to generate the tabs list used to generate a static list for MVP module
-  getListModuleService(tab: positionMVPTabData, query: Array<any>): Observable<positionMVPTabData> {
-
+  getListModuleService(tab: positionMVPTabData, query): Observable<positionMVPTabData> {
     var callURL = this._apiUrl+'/list';
 
     for(var q in query) {
@@ -230,6 +228,7 @@ export class ListPageService {
         callURL += '&' + q +'='+ query[q];
       }
     }
+
     return this.model.get(callURL)
       .map(
         data => {

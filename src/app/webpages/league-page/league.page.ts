@@ -58,6 +58,9 @@ export class LeaguePage{
     public storedPartnerParam: string;
     public routeSubscriptions: any;
     public storeSubscriptions: any = [];
+    public sportLeagueAbbrv: string = GlobalSettings.getSportLeagueAbbrv();
+    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
+    public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
 
     private headlineData:any;
     private pageParams:SportPageParameters = {};
@@ -108,15 +111,16 @@ export class LeaguePage{
     private draftHistoryModuleInfo: Object;
     private draftHistortyModuleFooterUrl: Array<any>;
 
-    private positionParams: any;
-    private positionData: Array<positionMVPTabData>;
-    private globalMVPPosition:any;
-    private filter1:any;
-    private isFirstRun: boolean = true;
-    private listMax:number = 10;
-    public collegeDivisionAbbrv: string = GlobalSettings.getCollegeDivisionAbbrv();
-    public collegeDivisionFullAbbrv: string = GlobalSettings.getCollegeDivisionFullAbbrv();
-    public positionNameDisplay: string;
+    private mvpTabs: any;
+    private mvpData: any;
+    private mvpActiveTab: positionMVPTabData;
+    private mvpActiveTabTitle: string;
+    private mvpActivePosition:any;
+    private mvpActivePositionTitle: string;
+    private mvpSortOptions:any;
+    private mvpDataError: boolean;
+    private mvpListMax:number = 10;
+    private mvpModuleFooterParams: Array<any>;
 
     private comparisonModuleData: ComparisonModuleData;
 
@@ -232,16 +236,19 @@ export class LeaguePage{
           this.getDraftHistoryData();
 
           //---Batch 4 Load---//
-          this.globalMVPPosition = 'cb'; //Initial position to display in MVP
-          this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
-          this.positionData = this._listService.getMVPTabs(this.globalMVPPosition, 'module');
-          if ( this.positionData && this.positionData.length > 0 ) {
-            //default params
-            this.positionDropdown({
-                tab: this.positionData[0],
-                position: this.globalMVPPosition
-            });
-          };
+          this.mvpActivePosition = 'cb'; //Initial position to display in MVP
+          this.mvpActivePositionTitle = VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.mvpActivePosition);
+          this.mvpSortOptions = VerticalGlobalFunctions.getMVPdropdown(this.scope);
+          this.mvpTabs = this._listService.getMVPTabs(this.mvpActivePosition, 'module');
+          this.mvpActiveTab = this.mvpActiveTab ? this.mvpActiveTab : this.mvpTabs[0];
+          this.mvpData = this.getMvpData(this.mvpActiveTab, this.mvpActivePosition);
+        //   if ( this.mvpData && this.mvpData.length > 0 ) {
+        //     //default params
+        //     this.positionDropdown({
+        //         tab: this.mvpData[0],
+        //         position: this.globalMVPPosition
+        //     });
+        //   };
           this.setupComparisonData();
           this.getImages(this.imageData);
 
@@ -268,7 +275,7 @@ export class LeaguePage{
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
       let color = '#2d3e50';
-      
+
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -447,9 +454,9 @@ export class LeaguePage{
     }
     private getDraftHistoryData() {
         this.draftHistoryActiveTab = this.draftHistoryActiveTab ? this.draftHistoryActiveTab : this.seasonBase;
-        var matchingTabs = this.draftHistoryActiveTab ?
-                        this.draftHistoryData.filter(tab => tab.tabKey == this.draftHistoryActiveTab) :
-                        null;
+        var matchingTabs =  this.draftHistoryActiveTab ?
+                            this.draftHistoryData.filter(tab => tab.tabKey == this.draftHistoryActiveTab) :
+                            null;
         if ( matchingTabs ) {
             var activeTab = matchingTabs[0];
             var activeFilter = this.draftHistoryFilter1 ? this.draftHistoryFilter1 : 1;
@@ -475,84 +482,57 @@ export class LeaguePage{
 
 
 
-
-
-
-    private positionDropdown(event) {
-      this.positionData = this.checkToResetTabs(event);
-
-      if(event.tab != null){
-
-        var matches = this.checkMatchingTabs(event);
-
-        this.globalMVPPosition = event.position;
-        var date = new Date;
-        var season;
-        var compareDate = new Date('09 15 ' + date.getFullYear());
-        if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
-          season = date.getFullYear();
+    private mvpFilterDropdown(event) {
+        if ( event.position != this.mvpActivePosition ) {
+            this.mvpTabs = this.checkToResetTabs(event);
+            this.mvpActiveTab = this.mvpTabs[0];
+            this.mvpActivePosition = event.position;
+            this.mvpActivePositionTitle = VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.mvpActivePosition);
+            this.getMvpData(this.mvpActiveTab, this.mvpActivePosition);
         }
-        else if (date.getMonth() > compareDate.getMonth()) {
-          season = date.getFullYear();
-        }
-        else {
-          season = (date.getFullYear() - 1);
-        }
-        if(matches != null){
-          this.positionParams = {
-            scope:  this.scope, //TODO change to active scope
-            target: 'player',
-            position: event.position,
-            statName: matches.tabDataKey,
-            ordering: 'asc',
-            perPageCount: this.listMax,
-            pageNumber: 1,
-            season: season
-          }
-          this.positionNameDisplay = VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.positionParams.position);
-          this.getMVPService(matches, this.positionParams);
-        }
-      }
     } //positionDropdown
-
-    //function to check if selected position in dropdown is currently active
-    private checkToResetTabs(event) {
-      let localPosition = event.position;
-
-      if ( localPosition != this.globalMVPPosition ) {
-        return this._listService.getMVPTabs(event.position, 'module');
-      } else {
-        return this.positionData;
-      } //private checkToResetTabs
+    private mvpTabSelected(event) {
+        if ( event.tabDataKey != this.mvpActiveTab.tabDataKey ) {
+            this.mvpActiveTab = this.mvpTabs.filter(tab => tab.tabDataKey == event.tabDataKey)[0];
+            this.getMvpData(this.mvpActiveTab, this.mvpActivePosition);
+        }
+    } //mvpTabSelected
+    private checkToResetTabs(event) { //function to check if selected position in dropdown is currently active
+        let localPosition = event.position;
+        if ( localPosition != this.mvpActivePosition ) {
+            return this._listService.getMVPTabs(event.position, 'module');
+        } else {
+            return this.mvpData;
+        }
     } //checkToResetTabs
-
-    //function to check if selected position in dropdown is currently active
-    private checkMatchingTabs(event) {
-      let localPosition = event.position;
-      let listName = event.tab.tabDataKey;
-      if( event.position != this.globalMVPPosition && this.positionData != [] ){
-        this.positionData[0].isLoaded = false;
-        return this.positionData[0];
-      } else {
-        return this.positionData.filter(tab => tab.tabDataKey == listName)[0];
-      }
-    } //checkMatchingTabs
-
-    getMVPService(tab, params){
-      if( this.isFirstRun ) {
-        this.isFirstRun = false;
-        this.storeSubscriptions.push(this._listService.getListModuleService(tab, params)
-          .subscribe(updatedTab => {
-            //do nothing?
-            var matches = this.positionData.filter(list => list.tabDataKey == params.listname);
-            matches[0] = updatedTab;
-            this.isFirstRun = true;
-          }, err => {
-            tab.isLoaded = true;
-            console.log('Error: Loading MVP Pitchers: ', err);
-          }))
-      }
-    } //getMVPService
+    private getMvpData(activeTab, activePosition) {
+        this.mvpActiveTabTitle = activeTab.tabDisplayTitle;
+        var mvpPositionParams = {
+            scope:  this.scope.toLowerCase() == this.collegeDivisionFullAbbrv.toLowerCase() ?
+                    this.collegeDivisionAbbrv.toLowerCase() :
+                    this.scope.toLowerCase(),
+            target: 'player',
+            position: activePosition,
+            statName: activeTab.tabDataKey,
+            ordering: 'asc',
+            perPageCount: this.mvpListMax,
+            pageNumber: 1,
+            season: this.seasonBase
+        }
+        this.storeSubscriptions.push(this._listService.getListModuleService(activeTab, mvpPositionParams)
+            .subscribe(
+                tab => {
+                    this.mvpData = tab;
+                    return tab;
+                },
+                err => {
+                    this.mvpDataError = true;
+                    console.log('Error: List MVP API: ', err);
+                }
+            )
+        );
+        this.mvpModuleFooterParams = [this.storedPartnerParam, this.scope, 'mvp-list', activePosition, activeTab.tabDataKey, '1'];
+    } //getMvpData
 
 
 

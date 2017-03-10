@@ -111,7 +111,7 @@ export class SitePlayerMap {
             relPath += '?id='+id;
           }
           let sitePath = SiteMap.createSiteKey(listRoute, relPath);
-          
+
           if(id){
             sitePath.query = {};
             sitePath.query.id = id;
