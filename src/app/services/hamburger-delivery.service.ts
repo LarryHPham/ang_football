@@ -33,7 +33,7 @@ export class HamburgerDeliveryService {
       },
       {
         menuTitle: division + " Schedule",
-        url: [params ,'schedules','league', 'all', '1'] //TODO - hard coded year
+        url: [params ,'schedules','league', 'all', 'pregame', '1'] 
       },
       {
         menuTitle: division + " League",

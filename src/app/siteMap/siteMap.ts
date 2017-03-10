@@ -67,6 +67,7 @@ export class SiteMap {
   private static domainUrl:string;
   private childrenRoutes: any;
   private totalSiteMap:any = [];
+  private domainUrl: string;
   // private displaySiteMap: boolean = false;
   constructor(
     private router:ActivatedRoute,
@@ -79,7 +80,7 @@ export class SiteMap {
     private _listOfListService: ListOfListsService,
     private _profileService: ProfileHeaderService
   ) {
-    SiteMap.domainUrl = VerticalGlobalFunctions.getPageUrl();
+    // SiteMap.domainUrl = VerticalGlobalFunctions.getPageUrl();
     this.partnerSite = VerticalGlobalFunctions.getWhiteLabel(); // grab partner id
     /*
     ** appRoutes[0] routes for non white labeled sites Touchdownloyal.com
@@ -89,10 +90,10 @@ export class SiteMap {
   } //constructor
 
   static createSiteKey(path, relativePath, u_id?){
-    SiteMap.domainUrl = VerticalGlobalFunctions.getPageUrl();
+    let domainUrl = VerticalGlobalFunctions.getPageUrl();
     let siteMapObj: siteKey = {
       path: path,
-      name: SiteMap.domainUrl + relativePath,
+      name: domainUrl + relativePath,
       uniqueId: u_id
     };
     return siteMapObj;

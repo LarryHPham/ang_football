@@ -69,18 +69,19 @@
       </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
-        <mvp-module
-          *ngIf="positionData && positionParams"
-          [collegeDivisionAbbrv]="collegeDivisionAbbrv"
-          [collegeDivisionFullAbbrv]="collegeDivisionFullAbbrv"
-          [positionNameDisplay]="positionNameDisplay"
-          [title]="'Position'"
-          [mvpData]="positionData"
-          [query]="positionParams"
-          [filter1]="filter1"
-          [storedPartnerParam]="storedPartnerParam"
-          (tabSelectedListener)="positionDropdown($event)"
-          (dropdownPositionSelection)="positionDropdown($event)"></mvp-module>
+          <mvp-module
+              *ngIf="mvpTabs && mvpData"
+              [scope]="scope"
+              [tabs]="mvpTabs"
+              [mvpData]="mvpData"
+              [sortOptions]="mvpSortOptions"
+              [selectedFilterTitle]="mvpActivePositionTitle"
+              [selectedTabTitle]="mvpActiveTabTitle"
+              [isError]="mvpDataError"
+              [mvpModuleFooterParams]="mvpModuleFooterParams"
+              (tabSelectedListener)="mvpTabSelected($event)"
+              (dropdownPositionSelection)="mvpFilterDropdown($event)">
+          </mvp-module>
         <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
         <comparison-module
           [modelData]="comparisonModuleData"
