@@ -11,6 +11,7 @@ import { isBrowser, isNode } from 'angular2-universal';
 export class AppComponent implements OnInit {
   public scopeParam: any;
   public partnerID:string;
+  public iframeMaxHeight:string;
   public partnerScript: string;
   private isLoading:boolean = true;
   private scrollPadding:string = '100px';
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit {
                   this.partnerID = res.partner_id;
                 }
                 if(res.partner_script){
+                  this.iframeMaxHeight = res.partner_height + 'px';
                   this.partnerScript = res.partner_script;
                 }
               });// end of geo location subscribe

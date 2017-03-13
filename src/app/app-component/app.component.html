@@ -1,6 +1,7 @@
 <header-component
   [partnerID]="partnerID"
   [partnerScript] ="partnerScript"
+  [iframeMaxHeight] ="iframeMaxHeight"
   (scrollPadding)="setScrollPadding($event)"></header-component>
 <div class="container-fluid page-content-container" [style.padding-top]="scrollPadding">
   <div class="container-fluid">
