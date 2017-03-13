@@ -13,6 +13,7 @@ import { isBrowser } from 'angular2-universal';
 })
 export class HeaderComponent implements AfterContentChecked {
   @Input() partnerID: string;
+  @Input() iframeMaxHeight: string;
   @Input() partnerScript: any;
   @Output() tabSelected = new EventEmitter();
   @Output() scrollPadding = new EventEmitter();
@@ -130,6 +131,7 @@ export class HeaderComponent implements AfterContentChecked {
       this.isSearchOpened = false;
     }
   }
+
   ngOnInit() {
     var document = this.elementRef.nativeElement.ownerDocument;
     //wait 1 second to make sure the router scope changes before running the global settings getScopeNow and grab correct scope
