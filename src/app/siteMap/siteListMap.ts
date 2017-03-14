@@ -44,7 +44,7 @@ export class SiteListMap {
             ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
             */
             this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
-            this.createSiteMap(param.scope, param.profile, param.pageNumber, queryParam.id);
+            this.createSiteMap(param.scope, param.profile);
           })
     })
   } //constructor
@@ -54,45 +54,36 @@ export class SiteListMap {
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
 
-  createSiteMap(scope, profile, page, id?){
+  createSiteMap(scope, profile){
     let self = this;
     let route = [];
-    this.addListPage(scope, profile, page, id);
+    this.addListPage(scope, profile);
   }
 
-  addListPage(scope, profile, page, id?){
-    let articleCount = GlobalSettings.siteMapArticleCount;
+  addListPage(scope, profile){
     let self = this;
-    //scope, target, count, pageNumber, id?
-    this._listOfListService.getSiteListMap(scope, profile, articleCount, page, id)
-    .subscribe(data => {
-      try{
-        data.data.forEach(function(list){
-          list.listInfo.seasons.forEach(function(season){
-            let target = profile == 'league' ? 'team' : profile; // only two types of target list types
+    //scope, profile, position
+    let positions = VerticalGlobalFunctions.getMVPdropdown(scope);
+    positions.forEach(function(position){
+      self._listOfListService.getSiteListMap(scope, profile, position.key.toUpperCase())
+      .subscribe(data => {
+        try{
+          let listInfo = data.data;
+          let listData = data.data.listData;
+          listData.forEach(function(list){
+            list.listInfo.seasons.forEach(function(season){
+              let ordering = list.listInfo.ordering;
+              let listRoute = [self.partnerSite + '/' + listInfo.affiliation + '/list', list.listInfo.rankType, list.listInfo.statType, season, list.listInfo.ordering];
+              let relPath = listRoute.join('/').toString();
+              let sitePath = SiteMap.createSiteKey(listRoute, relPath);
+              self.totalSiteMap.push(sitePath);
+            })//end of season
+          })// end of data.data
 
-            //NEEDED since league sends back an single obj for targetData but player and team sends back array of objects
-            let statName = profile == 'team' || profile == 'player' ? list.targetData[0]['statType'] : list.targetData['statType'];
-            let listype = profile == 'team' || profile == 'player' ? list.targetData[0]['rankType'] : list.targetData['rankType'];;
-
-            //remove text to grab actualy statName without player or team in front of stat
-            if (listype == "team") {
-              statName = statName.replace('team_','');
-            }
-            if (listype == "player") {
-              statName = statName.replace('player_','');
-            }
-            let ordering = list.listInfo.ordering;
-            let listRoute = [self.partnerSite + '/' + scope + '/list', target, statName, season, ordering];
-            let relPath = listRoute.join('/').toString();
-            let sitePath = SiteMap.createSiteKey(listRoute, relPath);
-            self.totalSiteMap.push(sitePath);
-          })//end of season
-        })// end of data.data
-
-      }catch(e){
-        console.warn('Error siteMap failure @ addListPage', e)
-      }
+        }catch(e){
+          console.warn('Error siteMap failure @ addListPage', e)
+        }
+      })
     })
   }
 }
