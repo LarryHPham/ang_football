@@ -279,27 +279,15 @@ export class SiteMap {
   }// end addArticleSiteMaps
 
   addListPage(scope, id?){
-    let articleCount = GlobalSettings.siteMapArticleCount;
-    let self = this;
-    //scope, target, count, pageNumber, id?
-    this._listOfListService.getSiteListMap(scope, 'league', articleCount, 1, id)
-    .subscribe(data => {
-      try{
-        let list = data.data[0];
-        let pages = Math.ceil(list.listInfo.listCount / articleCount);
-        for(var i = 1; i <= pages; i++){
-          let listRoute = [self.partnerSite + '/sitemap/' + scope + '/list', 'league', i];
-          let relPath = listRoute.join('/').toString();
-          if(id){
-            relPath += '?id='+id;
-            listRoute.push('?id='+id);//query
-          }
-          let sitePath = SiteMap.createSiteKey(listRoute, relPath);
-          self.totalSiteMap.push(sitePath);
-        }
-      }catch(e){
-        console.warn('Error siteMap failure @ addListPage', e)
-      }
-    })
+    let teamRoute = [this.partnerSite + '/sitemap/' + scope + '/list', 'team'];
+    let relTeamPath = teamRoute.join('/').toString();
+
+    let playerRoute = [this.partnerSite + '/sitemap/' + scope + '/list', 'player'];
+    let relPlayerPath = playerRoute.join('/').toString();
+
+    let siteTeamPath = SiteMap.createSiteKey(teamRoute, relTeamPath);
+    let sitePlayerPath = SiteMap.createSiteKey(playerRoute, relPlayerPath);
+    this.totalSiteMap.push(siteTeamPath);
+    this.totalSiteMap.push(sitePlayerPath);
   }
 }

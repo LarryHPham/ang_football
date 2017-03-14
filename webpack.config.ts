@@ -36,9 +36,9 @@ export var commonPlugins = [
   }),
 
   // minify JS
-  // new webpack.optimize.UglifyJsPlugin({
-  //   compressor: { warnings: false }
-  // }),
+  new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
+  }),
 
   //provide third pary plugins
   new webpack.ProvidePlugin({
