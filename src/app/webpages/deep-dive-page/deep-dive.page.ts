@@ -142,27 +142,52 @@ export class DeepDivePage {
     //This call will remove all meta tags from the head.
     this._seoService.removeMetaTags();
     //create meta description that is below 160 characters otherwise will be truncated
-    let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite fooball team.', 'Deep Dive');
+    let metaDesc = GlobalSettings.getPageTitle('Dive into the most recent news on Football and read the latest articles about your favorite football teams and players.', 'Deep Dive');
 
     let image = GlobalSettings.getmainLogoUrl();
     let title = 'Deep Dive Page';
     let keywords = "football";
+    let link = this._seoService.getPageUrl();
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
-    this._seoService.setOgTitle(title);
-    this._seoService.setOgDesc(metaDesc);
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage(image);
-    //Elastic Search
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setPageTitle(title);
-    this._seoService.setPageType(title);
-    this._seoService.setPageUrl();
-    this._seoService.setImageUrl(image);
-    this._seoService.setKeyWord(keywords);
+
+    this._seoService.setMetaTags([
+      {
+        'og:title': title,
+      },
+      {
+        'og:description': metaDesc,
+      },
+      {
+        'og:type':'website',
+      },
+      {
+        'og:url':link,
+      },
+      {
+        'og:image': image,
+      },
+      {
+        'es_page_title': title,
+      },
+      {
+        'es_page_url': link
+      },
+      {
+        'es_description': metaDesc,
+      },
+      {
+        'es_page_type': 'DeepDive page',
+      },
+      {
+        'es_keywords': 'football, Touchdown loyal, DeepDive page'
+      },
+      {
+        'es_image_url':image
+      }
+    ])
   } //metaTags
 
 

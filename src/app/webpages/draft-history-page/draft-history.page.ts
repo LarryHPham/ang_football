@@ -88,30 +88,55 @@ export class DraftHistoryPage {
         let text4 = data.text4 != null ? '. '+data.text4: '';
         let title = text3 + ' ' + text4;
         let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+        let link = this._seoService.getPageUrl();
         let imageUrl;
         if (data.imageURL != null && data.imageURL != "") {
             imageUrl = data.imageURL;
         } else {
             imageUrl = GlobalSettings.getmainLogoUrl();
         }
-        
+
         let keywords = "football";
         this._seoService.setTitle(title);
         this._seoService.setMetaDescription(metaDesc);
         this._seoService.setCanonicalLink();
         this._seoService.setMetaRobots('INDEX, FOLLOW');
-        this._seoService.setOgTitle(title);
-        this._seoService.setOgDesc(metaDesc +". Know more about football.");
-        this._seoService.setOgType('Website');
-        this._seoService.setOgUrl();
-        this._seoService.setOgImage(imageUrl);
-        //Elastic Search
-        this._seoService.setMetaDescription(metaDesc);
-        this._seoService.setPageTitle(title);
-        this._seoService.setPageType('Draft History Page');
-        this._seoService.setPageUrl();
-        this._seoService.setImageUrl(imageUrl);
-        this._seoService.setKeyWord(keywords);
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc+". Know more about football.",
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': imageUrl,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc+". Know more about football.",
+        },
+        {
+          'es_page_type': 'Draft History page',
+        },
+        {
+          'es_keywords': 'football, Touchdown loyal, Draft History'
+        },
+        {
+          'es_image_url':imageUrl
+        }
+      ])
+
     } //metaTags
 
 
