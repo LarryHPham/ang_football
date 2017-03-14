@@ -275,22 +275,48 @@ export class LeaguePage{
       let metaDesc =  header.leagueFullName + ' loyal to ' + header.totalTeams + ' teams ' + 'and ' + header.totalPlayers + ' players.';
       let image = header.leagueLogo ? GlobalSettings.getImageUrl(header.leagueLogo, GlobalSettings._imgPageLogo) : GlobalSettings.fallBackIcon;
       let color = '#2d3e50';
+      let link =  this._seoService.getPageUrl();
 
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(image);
-      //Elastic Search
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setPageTitle(title);
-      this._seoService.setPageType('League Page');
-      this._seoService.setPageUrl();
-      this._seoService.setImageUrl(image);
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc,
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': image,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc,
+        },
+        {
+          'es_page_type': 'League page',
+        },
+        {
+          'es_keywords': 'football, Touchdown loyal, League Page'
+        },
+        {
+          'es_image_url':image
+        }
+      ])
+
     } // metaTags
 
 

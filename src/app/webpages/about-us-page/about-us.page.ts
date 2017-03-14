@@ -80,33 +80,57 @@ export class AboutUsPage {
     } //constructor
 
     ngAfterViewInit(){
-      this.metaTags();
+
     }
 
-    private metaTags() {
+    private metaTags(data) {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'About Us';
-      let metaDesc = 'About Us, learn about football, NFL, NCAAF players and team';
+      let metaDesc = data[0];
       let image = GlobalSettings.getmainLogoUrl();
-      let keywords = "football";
+      let link = this._seoService.getPageUrl;
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
-      this._seoService.setOgUrl();
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc,
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': image,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc,
+        },
+        {
+          'es_page_type': 'About us page',
+        },
+        {
+          'es_keywords': 'football, Touchdown loyal, about us'
+        },
+        {
+          'es_image_url':image
+        }
+      ])
       this._seoService.setMetaRobots('INDEX, FOLLOW');
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgImage(image);
-      //Elastic Search
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setPageTitle(title);
-      this._seoService.setPageType(title);
-      this._seoService.setPageUrl();
-      this._seoService.setImageUrl(image);
-      this._seoService.setKeyWord(keywords);
+
     } //metaTags
 
     loadData(partnerID?:string, scope?:string) {
@@ -127,5 +151,6 @@ export class AboutUsPage {
         this.titleData = data.titleData;
         this.auContent = data.content;
       }
+      this.metaTags(this.auContent);
     } //setupAboutUsData
 }
