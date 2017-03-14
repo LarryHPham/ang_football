@@ -110,10 +110,10 @@ export class GlobalSettings {
     }
 
     static synapsysENV(env:string):string {
-      if (env == "localhost" || env == 'dev' || env == 'qa'){//remove qa when we have qa env setup
-          env = "dev-";
-      }else{
-        env = '';
+      if(env == 'localhost' || env == 'dev'){
+        env = 'dev-';
+      }else if(env == 'qa'){
+        env = 'qa-';
       }
       return env;
     }
