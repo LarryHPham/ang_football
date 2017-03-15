@@ -40,6 +40,7 @@ app.engine('.html', createEngine({
     // stateless providers only since it's shared
   ]
 }));
+
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname);
 app.set('view engine', 'html');
@@ -76,6 +77,7 @@ function ngApp(req, res) {
     return false;
   }
 
+  var env = process.env.NODE_ENV;
   Zone.current.fork({ name: 'CSR fallback', onHandleError }).run(() => {
     res.render('index', {
       req,
@@ -86,9 +88,7 @@ function ngApp(req, res) {
       baseUrl: '/',
       requestUrl: req.originalUrl,
       hostname: req.hostname,
-      server_hostname: res.hostname,
-      request: req,
-      response: res,
+      env:env,
       originUrl: `http://${req.hostname}:${ app.get('port') }`,
     });
   });
