@@ -40,9 +40,7 @@ app.engine('.html', createEngine({
     // stateless providers only since it's shared
   ]
 }));
-
 app.set('port', process.env.PORT || 3000);
-app.set('ip', '0.0.0.0');
 app.set('views', __dirname);
 app.set('view engine', 'html');
 app.set('json spaces', 2);
@@ -110,7 +108,6 @@ app.get('*', function(req, res) {
 });
 
 // Server
-let server = app.listen(app.get('port'), app.get('ip'), () => {
-  console.log('server ====>', server);
+let server = app.listen(app.get('port'), () => {
   console.log(`Listening on: http://localhost:${server.address().port}`);
 });
