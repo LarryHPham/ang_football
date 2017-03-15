@@ -86,6 +86,7 @@ function ngApp(req, res) {
       baseUrl: '/',
       requestUrl: req.originalUrl,
       hostname: req.hostname,
+      request: req,
       originUrl: `http://${req.hostname}:${ app.get('port') }`,
     });
   });
