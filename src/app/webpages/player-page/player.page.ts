@@ -254,26 +254,51 @@ export class PlayerPage{
     }else{
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
-    
+
     let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "");
     title = title  + ' ' + record;
+    let link =this._seoService.getPageUrl();
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('Index, Follow');
-    this._seoService.setOgTitle(title);
-    this._seoService.setOgDesc(metaDesc);
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage(image);
-    //Elastic Search
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setPageTitle(title);
-    this._seoService.setPageType('Player Profile Page');
-    this._seoService.setPageUrl();
-    this._seoService.setImageUrl(image);
-    this._seoService.setKeyWord(keywords);
+
+    this._seoService.setMetaTags([
+      {
+        'og:title': title,
+      },
+      {
+        'og:description': metaDesc,
+      },
+      {
+        'og:type':'website',
+      },
+      {
+        'og:url':link,
+      },
+      {
+        'og:image': image,
+      },
+      {
+        'es_page_title': title,
+      },
+      {
+        'es_page_url': link
+      },
+      {
+        'es_description': metaDesc,
+      },
+      {
+        'es_page_type': 'Player Profile page',
+      },
+      {
+        'es_keywords': keywords
+      },
+      {
+        'es_image_url':image
+      }
+    ])
     //manually generate team schema for team page until global funcation can be created
     let teamSchema = `
     {

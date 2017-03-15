@@ -82,26 +82,52 @@ export class SearchPage{
       this._seoService.removeMetaTags();
       //create meta description that is below 160 characters otherwise will be truncated
       let title = 'Search Page';
-      
+
       let metaDesc = 'Discover the latest in football - Find the players and teams you love.';
       let image = GlobalSettings.getmainLogoUrl();
-      let keywords = "football";
+      let keywords = "football, search";
+      let link = this._seoService.getPageUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
-      this._seoService.setOgUrl();
+
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc,
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': image,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc,
+        },
+        {
+          'es_page_type': 'Search page',
+        },
+        {
+          'es_keywords': keywords
+        },
+        {
+          'es_image_url':image
+        }
+      ])
       this._seoService.setMetaRobots('INDEX, FOLLOW');
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgImage(image);
-      //Elastic Search
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setPageTitle(title);
-      this._seoService.setPageType(title);
-      this._seoService.setPageUrl();
-      this._seoService.setImageUrl(image);
-      this._seoService.setKeyWord(keywords);
+
     } //metaTags
 
     filterSwitch(event) {
