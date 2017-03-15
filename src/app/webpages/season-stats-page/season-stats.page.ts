@@ -40,6 +40,7 @@ export class SeasonStatsPage implements OnInit {
   public hasError: boolean = false;
 
   public titleData: TitleInputData;
+  public carouselData: any;
 
     constructor(
       private activatedRoute: ActivatedRoute,
@@ -99,7 +100,7 @@ export class SeasonStatsPage implements OnInit {
       }else{
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
-      
+
       let keywords = "football";
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
@@ -141,6 +142,7 @@ export class SeasonStatsPage implements OnInit {
 
 
     private seasonStatsTabSelected(tab: SportSeasonStatsTabData) {
+        var data;
         this._seasonStatsPageService.getSeasonStatsTabData(tab, this.pageParams, data => {
             this.getLastUpdatedDateForPage(data);
         });

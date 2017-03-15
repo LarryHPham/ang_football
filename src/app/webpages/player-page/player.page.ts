@@ -254,7 +254,7 @@ export class PlayerPage{
     }else{
       domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
     }
-    
+
     let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "");
     title = title  + ' ' + record;
     this._seoService.setTitle(title);

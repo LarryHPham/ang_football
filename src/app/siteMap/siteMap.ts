@@ -90,10 +90,10 @@ export class SiteMap {
   } //constructor
 
   static createSiteKey(path, relativePath, u_id?){
-    let domainUrl = VerticalGlobalFunctions.getPageUrl();
+    SiteMap.domainUrl = VerticalGlobalFunctions.getPageUrl();
     let siteMapObj: siteKey = {
       path: path,
-      name: domainUrl + relativePath,
+      name: SiteMap.domainUrl + relativePath,
       uniqueId: u_id
     };
     return siteMapObj;
