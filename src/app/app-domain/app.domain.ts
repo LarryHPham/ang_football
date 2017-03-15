@@ -12,6 +12,8 @@ declare var Zone;
 })
 export class AppDomain implements OnInit{
   ngOnInit(){
-    GlobalSettings._env = isNode ? Zone.current.get('hostname') : window.location.hostname.split('.')[0];// make sure Zone is declared and set the environment before rendering the rest of the page
+    console.log('REQUEST REQUEST REQUEST',Zone.current.get('request'));
+    console.log('HOSTNAME HOSTNAME HOSTNAME',Zone.current.get('hostname'));
+    GlobalSettings._env = isNode ? Zone.current.get('hostname').split('.')[0] : window.location.hostname.split('.')[0];// make sure Zone is declared and set the environment before rendering the rest of the page
   }
 }
