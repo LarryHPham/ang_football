@@ -199,7 +199,7 @@ const relativeChildRoutes = [
       component: SiteArticleMap
     },
     {
-      path: 'sitemap/:scope/list/:profile/:pageNumber',
+      path: 'sitemap/:scope/list/:profile',
       component: SiteListMap
     },
     {

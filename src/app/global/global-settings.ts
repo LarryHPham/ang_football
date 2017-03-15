@@ -10,7 +10,7 @@ declare var Zone;
 
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
-    private static _env = 'dev';// isNode ? 'prod' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
+    public static _env;//called in the app.domain.ts
     public static _proto = isNode ? 'http:' : window.location.protocol;//TODO currently server side is hardcoding protocol
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
@@ -22,7 +22,7 @@ export class GlobalSettings {
 
     private static _partnerApiUrl: string = 'synapview.synapsys.us/synapview/?action=get_header_data&vertical=sports&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
-    private static _geoUrl: string = 'w1.synapsys.us';
+    private static _geoUrl: string = 'waldo.synapsys.us';
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
@@ -110,8 +110,10 @@ export class GlobalSettings {
     }
 
     static synapsysENV(env:string):string {
-      if (env == "localhost" || env == 'dev' || env == 'qa'){//remove qa when we have qa env setup
-          env = "dev-";
+      if(env == 'localhost' || env == 'dev'){
+        env = 'dev-';
+      }else if(env == 'qa'){
+        env = 'qa-';
       }else{
         env = '';
       }
@@ -135,7 +137,7 @@ export class GlobalSettings {
     }
 
     static getGeoLocation():string {
-      return this._proto + "//" + this._geoUrl;
+      return this._proto + "//" + this.synapsysENV(this._env) + this._geoUrl;
     }
 
     static widgetUrl():string {

@@ -101,23 +101,49 @@ export class SeasonStatsPage implements OnInit {
          imageUrl = GlobalSettings.getmainLogoUrl();
       }
 
-      let keywords = "football";
+      let keywords = "football, touchdownloyal, season stats";
+      let link = this._seoService.getPageUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('INDEX, FOLLOW');
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc +". Know more about football.");
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(imageUrl);
-      //Elastic Search
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setPageTitle(title);
-      this._seoService.setPageType("Season Stats Page");
-      this._seoService.setPageUrl();
-      this._seoService.setImageUrl(imageUrl);
-      this._seoService.setKeyWord(keywords);
+
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc,
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': imageUrl,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc,
+        },
+        {
+          'es_page_type': 'Season Stats Page',
+        },
+        {
+          'es_keywords': keywords
+        },
+        {
+          'es_image_url':imageUrl
+        }
+      ])
+
     } //metaTags
 
 

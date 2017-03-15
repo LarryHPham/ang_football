@@ -250,7 +250,6 @@ export class SeasonStatsService {
   }
 
   static getCarouselData(playerInfo: SeasonStatsPlayerData, stats, longSeasonName: string, currentTab, scope?): SliderCarouselInput {
-      console.log('---getCarouselData---');
     var date = new Date();
     if (currentTab == "Current Season") {
       currentTab = date.getFullYear();

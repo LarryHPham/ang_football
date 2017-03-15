@@ -1,6 +1,11 @@
+#partner{
+  z-index: 1000;
+  position: relative;
+}
+
 .fixedHeader {
   position:fixed !important;
-  z-index: 9999 !important;
+  z-index: 100 !important;
 }
 
 .placeholderImg{
@@ -11,7 +16,7 @@
   position: absolute;
   top:0;
   left: 20px;
-  z-index: 9999;
+  z-index: 100;
   img{
     width: 82px;
     height: 65px;
@@ -25,7 +30,7 @@
   position: absolute;
   top:20px;
   left: 20px;
-  z-index: 9999;
+  z-index: 100;
   img{
     width: 140px;
     height: 27px;
@@ -111,7 +116,7 @@
     height: 65px;
     cursor: pointer;
     position: relative;
-    z-index: 9999;
+    z-index: 100;
     .globalDefaultModFont(30px, 400, @highlightGrey);
     .flexDisplay;
     .flexDirection(column);
@@ -190,7 +195,7 @@
       }
     }
     &.active, &:focus, &:active{
-      z-index: 9990;
+      z-index: 100;
       height: 125px;
       .header-search-searchBox{
         display: inline-block;

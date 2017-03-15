@@ -55,17 +55,19 @@ export class GeoLocation{
             .flatMap(
             data => {
               try {
-                if (data['results'] != null) {
-                  let partnerScript = data['results'].header.script;
-                  let partnerLocation = data['results']['location']['realestate']['location_id'];
+                if (data[0] != null) {
+                  let partnerData = data[0];
+                  let partnerScript = partnerData.script;
+                  let partnerHeight = partnerData.height;
                   if (!this.geoData) {
                     this.geoData = {};
                   }
                   this.geoData['partner_id'] = partner_id;
                   this.geoData['partner_script'] = partnerScript;
-                  if (partnerLocation.state && partnerLocation.city) {
-                    this.geoData['state'] = partnerLocation.state;
-                    this.geoData['city'] = partnerLocation.city;
+                  this.geoData['partner_height'] = partnerHeight;
+                  if (partnerData.state && partnerData.city) {
+                    this.geoData['state'] = partnerData.state;
+                    this.geoData['city'] = partnerData.city;
                     return new Observable(observer => {
                       observer.next(this.geoData);
                       observer.complete();
@@ -87,7 +89,7 @@ export class GeoLocation{
 
     //api to get geo location
     getGeoLocation() {
-      var getGeoLocation = GlobalSettings.getGeoLocation() + '/listhuv/?action=get_remote_addr2';
+      var getGeoLocation = GlobalSettings.getGeoLocation() + '/getlocation/2';
       // var getGeoLocation = '//dev-waldo.synapsys.us/ip2loc/69.178.104.1/2';
         return this.model.get(getGeoLocation)
             .map(

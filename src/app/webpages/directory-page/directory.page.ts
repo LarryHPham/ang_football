@@ -136,24 +136,50 @@ export class DirectoryPage {
     let metaDesc = 'Directory of all the players and team profiles for the NFL and NCAAF starting with the letter ' + startsWith.toUpperCase();
     let title = this.type.charAt(0).toUpperCase() + this.type.slice(1) + ' Directory: ' + startsWith.toUpperCase();
     let image = GlobalSettings.getmainLogoUrl();
-    
+
     let keywords = "football";
+    let link = this._seoService.getPageUrl();
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
+
     this._seoService.setMetaRobots('INDEX, FOLLOW');
-    this._seoService.setOgTitle(title);
-    this._seoService.setOgDesc(metaDesc);
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage(image);
-    //Elastic Search
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setPageTitle(title);
-    this._seoService.setPageType('Directory Page');
-    this._seoService.setPageUrl();
-    this._seoService.setImageUrl(image);
-    this._seoService.setKeyWord(keywords);
+
+    this._seoService.setMetaTags([
+      {
+        'og:title': title,
+      },
+      {
+        'og:description': metaDesc,
+      },
+      {
+        'og:type':'website',
+      },
+      {
+        'og:url':link,
+      },
+      {
+        'og:image': image,
+      },
+      {
+        'es_page_title': title,
+      },
+      {
+        'es_page_url': link
+      },
+      {
+        'es_description': metaDesc,
+      },
+      {
+        'es_page_type': 'Directory page',
+      },
+      {
+        'es_keywords': 'football, Touchdown loyal, Directory'
+      },
+      {
+        'es_image_url':image
+      }
+    ])
   } //metaTags
 
   getDirectoryData() {
