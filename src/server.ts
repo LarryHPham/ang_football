@@ -77,7 +77,6 @@ function ngApp(req, res) {
     return false;
   }
 
-  var env = process.env.NODE_ENV;
   Zone.current.fork({ name: 'CSR fallback', onHandleError }).run(() => {
     res.render('index', {
       req,
@@ -88,7 +87,6 @@ function ngApp(req, res) {
       baseUrl: '/',
       requestUrl: req.originalUrl,
       hostname: req.hostname,
-      env:env,
       originUrl: `http://${req.hostname}:${ app.get('port') }`,
     });
   });
