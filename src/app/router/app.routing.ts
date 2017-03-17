@@ -159,7 +159,7 @@ const relativeChildRoutes = [
         component: TransactionsPage
     },
     {
-        path: ':scope/season-stats/:fullName/:playerID',
+        path: ':scope/season-stats/:tab/:fullName/:playerID',
         component: SeasonStatsPage
     },
     {

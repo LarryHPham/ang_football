@@ -138,23 +138,14 @@ export class SportSeasonStatsTableData implements TableComponentData<TeamSeasonS
 
 export class SportSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> {
   scope: string;
-
   playerId: string;
-
   tabName: string;
-
   title: string;
-
   isActive: boolean;
-
   isLoaded: boolean;
-
   hasError: boolean;
-
   sections: Array<SportSeasonStatsTableData>;
-
   season: Season;
-
   year: string;
 
   constructor(title: string, tabName: string, season: Season, year: string, isActive: boolean, scope) {
