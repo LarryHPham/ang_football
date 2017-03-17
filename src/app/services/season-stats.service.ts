@@ -72,9 +72,9 @@ export class SeasonStatsService {
   private _scope: string;
   constructor(public model: ModelService) { }
 
-  private getLinkToPage(playerId: number, playerName: string): Array<any> {
+  private getLinkToPage(playerId: number, playerName: string, season: string): Array<any> {
     let partnerRoute = GlobalSettings.storedPartnerId() ? '/'+GlobalSettings.storedPartnerId() : '';
-    return [partnerRoute+'/'+this._scope ,"season-stats", GlobalFunctions.toLowerKebab(playerName), playerId];
+    return [partnerRoute+'/'+this._scope ,"season-stats", season, GlobalFunctions.toLowerKebab(playerName), playerId];
   }
 
   getPlayerStats(playerId: number, scope?: string, season?: string) {
@@ -115,7 +115,7 @@ export class SeasonStatsService {
       tabs: seasonStatTabs,
       profileName: playerInfo.playerFirstName + " " + playerInfo.playerLastName,
       carouselDataItem: SeasonStatsService.getCarouselData(playerInfo, stats, curYear.toString(), curYear.toString(), scope),
-      pageRouterLink: this.getLinkToPage(Number(playerInfo.playerId), playerInfo.playerFirstName + " " + playerInfo.playerLastName),
+      pageRouterLink: this.getLinkToPage(Number(playerInfo.playerId), playerInfo.playerFirstName + " " + playerInfo.playerLastName, season),
       playerInfo: playerInfo,
       stats: stats
     };
@@ -390,23 +390,25 @@ export class SeasonStatsPageService {
     return pageTitle;
   }
 
-  initializeAllTabs(pageParams: SportPageParameters, season?:string): Array<SportSeasonStatsTabData> {
+  initializeAllTabs(pageParams: SportPageParameters, season?:string, seasonBase?: string): Array<SportSeasonStatsTabData> {
     let tabs: Array<SportSeasonStatsTabData> = [];
-    var curYear = season != null ? Number(season) : new Date().getFullYear();
-    var year = curYear;
+    let activeYear = season ? season : new Date().getFullYear();
+    var recentYear = Number(seasonBase); // most recent season
     var playerName = pageParams['playerName'];
     var possessivePlayer = GlobalFunctions.convertToPossessive(playerName);
-    //create tabs for season stats from current year of MLB and back 3 years
+
     for ( var i = 0; i < 4; i++ ){
-      let title = year == curYear ? 'Current Season' : year.toString();
+      let title = i == 0 ? 'Current Season' : recentYear.toString();
       let tabName = possessivePlayer + " " + title + " Stats";
-      tabs.push(new SportSeasonStatsTabData(title, tabName, null, year.toString(), i==0, pageParams.scope));
-      year--;
+      let isActive = recentYear == activeYear;
+      tabs.push(new SportSeasonStatsTabData(title, tabName, null, recentYear.toString(), isActive, pageParams.scope));
+      recentYear--;
     }
     //also push in last the career stats tab
     let title = 'Career Stats';
     let tabName = possessivePlayer + " Career Stats";
-    tabs.push(new SportSeasonStatsTabData(title, tabName, null, 'career', false, pageParams.scope));
+    let isActive = season == 'career';
+    tabs.push(new SportSeasonStatsTabData(title, tabName, null, 'career', isActive, pageParams.scope));
     return tabs;
   }
 
