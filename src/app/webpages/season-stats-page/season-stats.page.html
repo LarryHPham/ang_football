@@ -7,6 +7,8 @@
       <season-stats-component
           *ngIf="tabs"
           [tabs]="tabs"
+          [carData]="carData"
+          [selectedTabTitle]="selectedTabTitle"
           (tabSelected)="seasonStatsTabSelected($event)">
       </season-stats-component>
       <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
