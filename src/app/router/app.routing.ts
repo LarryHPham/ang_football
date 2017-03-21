@@ -171,11 +171,11 @@ const relativeChildRoutes = [
         component: ArticlePages
     },
     {
-        path: ':scope/list-of-lists/:target/:targetId',
+        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         component: ListOfListsPage
     },
     {
-        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+        path: ':scope/list-of-lists/:target/:targetId',
         component: ListOfListsPage
     },
     {

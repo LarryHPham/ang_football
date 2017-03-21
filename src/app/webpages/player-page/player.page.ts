@@ -542,10 +542,10 @@ export class PlayerPage{
       .subscribe(
         listOfListsData => {
           if (listOfListsData != null) {
-            this.listOfListsData = listOfListsData.listData;
+            this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
           }
-          // this.listOfListsData["type"] = "player";
-          // this.listOfListsData["id"] = this.pageParams.playerId;
+          this.listOfListsData["type"] = "player";
+          this.listOfListsData["id"] = this.pageParams.playerId;
         },
         err => {
           console.log('Error: listOfListsData API: ', err);

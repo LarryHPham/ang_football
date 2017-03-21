@@ -28,26 +28,32 @@ declare var moment:any;
 })
 
 export class ListOfListsPage {
-  public partnerID: string;
-  public scope: string;
-  public pageParams: any;
-  private batchLoadIndex: number = 1;
-  private showLoading = true;
+    public paramsub: any;
+    public pageParams: any;
+    public storedPartnerParam: string;
+    public partnerID: string;
+    public scope: string;
+    public target: string;
+    public targetId: string;
+    private batchLoadIndex: number = 1;
+    private showLoading = true;
 
-  errorData             : string;
-  detailedDataArray     : Array<IListOfListsItem> = []; //variable that is just a list of the detailed DataArray
-  carouselDataArray     : Array<SliderCarouselInput> = [];
-  profileName           : string;
-  isError               : boolean = false;
-  pageType              : string; // [player,team]
-  id                    : string; // [playerId, teamId]
-  limit                 : string; // pagination limit
-  pageNum               : string; // page of pages to show
+    errorData             : string;
+    detailedDataArray     : Array<IListOfListsItem> = []; //variable that is just a list of the detailed DataArray
+    carouselDataArray     : Array<SliderCarouselInput> = [];
+    profileName           : string;
+    isError               : boolean = false;
+    pageType              : string; // [player,team]
+    id                    : string; // [playerId, teamId]
+    limit                 : string; // pagination limit
+    pageNum               : string; // page of pages to show
 
-  paginationSize        : number = 20;
-  index                 : number = 0;
-  paginationParameters  : PaginationParameters;
-  titleData             : TitleInputData;
+    paginationSize        : number = 20;
+    index                 : number = 0;
+    paginationParameters  : PaginationParameters;
+    titleData             : TitleInputData;
+
+    public listPageService: any;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -60,19 +66,22 @@ export class ListOfListsPage {
     ) {
       // check to see if scope is correct and redirect
       // VerticalGlobalFunctions.scopeRedirect(_router, params);
-      this.activatedRoute.params.subscribe(
+      this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+      this.paramsub = this.activatedRoute.params.subscribe(
         (param :any)=> {
           //if the activated route changes then reset all important variables
           this.detailedDataArray = [];
           this.carouselDataArray = [];
 
-          this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
-          this.partnerID = param['partnerID'];
           this.pageParams = param;
+          this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
+          this.partnerID = param['partnerID'] ? param['partnerID'] : null;
+          this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
+          this.target = param['target'] ? param['target'] : null;
+          this.targetId = param['targetId'] ? param['targetId'] : 'league';
 
           //determine if a team or league list of list page is needed to be called
-          if ( this.pageParams.target == null ) {
-            this.pageParams.target = "league";
+          if ( this.targetId == 'league' ) {
             this._profileService.getLeagueProfile()
             .subscribe(data => {
               this.getListOfListsPage(this.pageParams, this.batchLoadIndex, GlobalSettings.getImageUrl(data.headerData.leagueLogo, GlobalSettings._imgProfileLogo));
@@ -90,7 +99,7 @@ export class ListOfListsPage {
     getListOfListsPage(urlParams, pageNumber, logoUrl?: string) {
       let self = this;
         this.showLoading = true;
-        this.listService.getListOfListsService(urlParams, urlParams.target, "page", pageNumber)
+        this.listPageService = this.listService.getListOfListsService(urlParams, urlParams.target, "page", pageNumber)
           .finally(() => {
             GlobalSettings.setPreboot();
             this.showLoading = false;
@@ -105,8 +114,7 @@ export class ListOfListsPage {
                   list.carData.forEach(function(val, i){
                     self.carouselDataArray.push(val);
                   });
-                }
-                this._cdRef.detectChanges();
+              }
 
                 var profileName = "League";
                 var profileRoute = ['/' + urlParams.scope, 'league'];
@@ -147,7 +155,6 @@ export class ListOfListsPage {
                 };
                 this.metaTags(this.titleData);
               }
-
             },
             err => {
                 this.isError= true;
@@ -216,6 +223,8 @@ export class ListOfListsPage {
       ])
     } //metaTags
 
+
+
     // function to lazy load page sections
     private onScroll(event) {
       let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
@@ -224,6 +233,13 @@ export class ListOfListsPage {
         this.getListOfListsPage(this.pageParams, this.batchLoadIndex);
       }
       return;
+    }
+
+
+
+    ngOnDestroy() {
+        this.paramsub.unsubscribe();
+        this.listPageService.unsubscribe();
     }
 
 }
