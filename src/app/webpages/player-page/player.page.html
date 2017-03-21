@@ -59,7 +59,10 @@
         *ngIf="seasonStatsData"
         [seasonBase]="seasonBase"
         [pageParams]="pageParams"
-        [data]="seasonStatsData"></season-stats-module>
+        [data]="seasonStatsData"
+        [seasonStatsModuleFooterUrl]="seasonStatsModuleFooterUrl"
+        (tabSelected)="seasonStatsTabSelected($event)">
+    </season-stats-module>
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
         <comparison-module
           [modelData]="comparisonModuleData"

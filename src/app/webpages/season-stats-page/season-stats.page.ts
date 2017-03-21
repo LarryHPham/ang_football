@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from '@angular/platform-browser';
 
@@ -25,125 +25,138 @@ import { Season, SportPageParameters } from '../../global/global-interface';
     templateUrl: './season-stats.page.html'
 })
 
-export class SeasonStatsPage implements OnInit {
-  public paramsub: any;
-  public partnerID: string;
-  public scope: string;
-  public playerID: number;
-  public pageParams: SportPageParameters = {}
+export class SeasonStatsPage {
+    public paramsub: any;
+    public storedPartnerParam: string;
+    public partnerID: string;
+    public scope: string;
+    public playerID: number;
+    public playerName: string;
+    public pageParams: SportPageParameters = {}
+    public tabParam: string;
 
-  public widgetPlace: string = "widgetForPage";
-  public tabs: Array<SportSeasonStatsTabData>;
+    public selectedTabTitle: string;
+    public seasonBase: string;
+    public widgetPlace: string = "widgetForPage";
+    public tabs: Array<SportSeasonStatsTabData>;
+    public profileLoaded: boolean = false;
+    public hasError: boolean = false;
+    public titleData: TitleInputData;
+    public carData: any;
 
-  public profileLoaded: boolean = false;
-
-  public hasError: boolean = false;
-
-  public titleData: TitleInputData;
-  public carouselData: any;
+    private profileService: any;
+    private seasonStatsService: any;
 
     constructor(
-      private activatedRoute: ActivatedRoute,
-      private _router: Router,
-      private _profileService: ProfileHeaderService,
-      private _seasonStatsPageService: SeasonStatsPageService,
-      private _title: Title,
-      private _seoService: SeoService
+        private activatedRoute: ActivatedRoute,
+        private _router: Router,
+        private _profileService: ProfileHeaderService,
+        private _seasonStatsPageService: SeasonStatsPageService,
+        private _title: Title,
+        private _seoService: SeoService
     ) {
-      this.paramsub = this.activatedRoute.params.subscribe(
-        (param :any)=> {
-          this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
-          this.partnerID = param['partnerID'];
-          this.playerID = param["playerID"];
-          this.pageParams.playerId = Number(this.playerID);
-        }
-      )
+        this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+        this.paramsub = this.activatedRoute.params.subscribe(
+            (param :any)=> {
+                this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
+                this.partnerID = param['partnerID'];
+                this.tabParam = param['tab'];
+                this.playerName = param['fullName'];
+                this.playerID = param['playerID'];
+                this.pageParams.playerId = Number(this.playerID);
+
+                this.setUpPage();
+            }
+        )
     } //constructor
 
-
-
-    ngOnInit() {
+    private setUpPage() {
         if (this.pageParams.playerId) {
-            this._profileService.getPlayerProfile(this.pageParams.playerId)
-              .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
-              .subscribe(
-                data => {
-                    this.profileLoaded = true;
-                    this.pageParams = data.pageParams;
-                    this.pageParams['scope'] = this.scope;
-                    // this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
-                    this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
-                    this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams, data.headerData['seasonBase']);
-                },
-                err => {
-                    this.hasError = true;
-
-                    console.log("Error getting season stats data: " + err);
-                }
-            );
-        }
-    } //ngOnInit
+            this.profileService = this._profileService.getPlayerProfile(this.pageParams.playerId)
+                .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
+                .subscribe(
+                    data => {
+                        this.profileLoaded = true;
+                        this.pageParams = data.pageParams;
+                        this.pageParams['scope'] = this.scope;
+                        this.seasonBase = data.headerData['seasonBase'] ? data.headerData['seasonBase'] : new Date().getFullYear();
+                        this.selectedTabTitle = this.tabParam ? this.tabParam : this.seasonBase;
+                        // this._title.setTitle(GlobalSettings.getPageTitle("Season Stats", data.headerData.playerFullName));
+                        this.setupTitleData(data.fullProfileImageUrl, data.headerData.teamFullName, data.pageParams.playerId.toString(), data.headerData.playerFullName);
+                        this.tabs = this._seasonStatsPageService.initializeAllTabs(this.pageParams, this.selectedTabTitle, this.seasonBase);
+                        let activeTab = this.getActiveTab(this.selectedTabTitle);
+                        this._seasonStatsPageService.getSeasonStatsTabData(activeTab, this.pageParams, data => {
+                            this.carData = data;
+                            this.getLastUpdatedDateForPage(data);
+                        });
+                    },
+                    err => {
+                        this.hasError = true;
+                        console.log("Error getting season stats data: " + err);
+                    }
+                );
+        } // if (this.pageParams.playerId)
+    }
 
 
 
     private metaTags(data) {
-      //This call will remove all meta tags from the head.
-      this._seoService.removeMetaTags();
-      //create meta description that is below 160 characters otherwise will be truncated
-      let text3 = data.text3 != null ? data.text3: '';
-      let text4 = data.text4 != null ? '. '+data.text4: '';
-      let title = text3 + ' ' + text4;
-      let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
-      let imageUrl;
-      if(data.imageURL != null && data.imageURL != ""){
-         imageUrl = data.imageURL;
-      }else{
-         imageUrl = GlobalSettings.getmainLogoUrl();
-      }
-
-      let keywords = "football, touchdownloyal, season stats";
-      let link = this._seoService.getPageUrl();
-      this._seoService.setTitle(title);
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setCanonicalLink();
-      this._seoService.setMetaRobots('INDEX, FOLLOW');
-
-      this._seoService.setMetaTags([
-        {
-          'og:title': title,
-        },
-        {
-          'og:description': metaDesc,
-        },
-        {
-          'og:type':'website',
-        },
-        {
-          'og:url':link,
-        },
-        {
-          'og:image': imageUrl,
-        },
-        {
-          'es_page_title': title,
-        },
-        {
-          'es_page_url': link
-        },
-        {
-          'es_description': metaDesc,
-        },
-        {
-          'es_page_type': 'Season Stats Page',
-        },
-        {
-          'es_keywords': keywords
-        },
-        {
-          'es_image_url':imageUrl
+        //This call will remove all meta tags from the head.
+        this._seoService.removeMetaTags();
+        //create meta description that is below 160 characters otherwise will be truncated
+        let text3 = data.text3 != null ? data.text3: '';
+        let text4 = data.text4 != null ? '. '+data.text4: '';
+        let title = text3 + ' ' + text4;
+        let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
+        let imageUrl;
+        if (data.imageURL != null && data.imageURL != "") {
+            imageUrl = data.imageURL;
+        } else {
+            imageUrl = GlobalSettings.getmainLogoUrl();
         }
-      ])
 
+        let keywords = "football, touchdownloyal, season stats";
+        let link = this._seoService.getPageUrl();
+        this._seoService.setTitle(title);
+        this._seoService.setMetaDescription(metaDesc);
+        this._seoService.setCanonicalLink();
+        this._seoService.setMetaRobots('INDEX, FOLLOW');
+
+        this._seoService.setMetaTags([
+            {
+            'og:title': title,
+            },
+            {
+            'og:description': metaDesc,
+            },
+            {
+            'og:type':'website',
+            },
+            {
+            'og:url':link,
+            },
+            {
+            'og:image': imageUrl,
+            },
+            {
+            'es_page_title': title,
+            },
+            {
+            'es_page_url': link
+            },
+            {
+            'es_description': metaDesc,
+            },
+            {
+            'es_page_type': 'Season Stats Page',
+            },
+            {
+            'es_keywords': keywords
+            },
+            {
+            'es_image_url':imageUrl
+            }
+        ])
     } //metaTags
 
 
@@ -168,11 +181,27 @@ export class SeasonStatsPage implements OnInit {
 
 
     private seasonStatsTabSelected(tab: SportSeasonStatsTabData) {
-        var data;
-        this._seasonStatsPageService.getSeasonStatsTabData(tab, this.pageParams, data => {
-            this.getLastUpdatedDateForPage(data);
-        });
+        let newRoute;
+        let tabNameFrom = this.selectedTabTitle; // capture previous value before changing it
+        let tabNameTo = tab.year; // newly selected tab
+
+        if ( tabNameTo != tabNameFrom ) {
+            this.selectedTabTitle = tabNameTo;
+            newRoute = [this.storedPartnerParam, this.scope, 'season-stats', this.selectedTabTitle, this.playerName, this.playerID];
+            this._router.navigate(newRoute);
+        }
     } //seasonStatsTabSelected
+
+
+
+    private getActiveTab(tabTitle) {
+        let selectedSeason;
+        if ( tabTitle == 'Current Season' ) { selectedSeason = this.tabs[0].year }
+        else if ( tabTitle == 'Career Stats' ) { selectedSeason = 'career' }
+        else { selectedSeason = tabTitle }
+        var matchingTabs = this.tabs.filter(value => value.year === selectedSeason);
+        return matchingTabs[0];
+    } //getActiveTab
 
 
 
@@ -184,4 +213,11 @@ export class SeasonStatsPage implements OnInit {
             this.titleData.text1 = "Last Updated: " + GlobalFunctions.formatUpdatedDate(lastUpdated, false);
         }
     } //getLastUpdatedDateForPage
+
+
+
+    ngOnDestroy(){
+      this.paramsub.unsubscribe();
+      this.profileService.unsubscribe();
+    } //ngOnDestroy
 }

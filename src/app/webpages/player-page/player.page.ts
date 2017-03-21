@@ -95,6 +95,7 @@ export class PlayerPage{
   private standingsData: StandingsModuleData;
 
   private seasonStatsData: any;
+  private seasonStatsModuleFooterUrl: Array<any>;
 
   private comparisonModuleData: ComparisonModuleData;
 
@@ -461,6 +462,8 @@ export class PlayerPage{
     }, 5));
   } //standingsFilterSelected
 
+
+
   private setupSeasonstatsData() {
     this.storeSubscriptions.push(this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
       .subscribe(
@@ -471,6 +474,12 @@ export class PlayerPage{
           return;
         }));
   } //setupSeasonstatsData
+  private seasonStatsTabSelected(tabTitle) {
+      let selectedSeason = tabTitle == 'Current Season' ? this.seasonBase : tabTitle;
+      this.seasonStatsModuleFooterUrl = [this.storedPartnerParam, this.scope, 'season-stats', tabTitle.toLowerCase(), this.fullName, this.playerID];
+  }
+
+
 
   private setupComparisonData() {
     this.storeSubscriptions.push(this._comparisonService.getInitialPlayerStats(this.scope, this.pageParams).subscribe(
