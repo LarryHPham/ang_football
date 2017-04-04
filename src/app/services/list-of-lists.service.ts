@@ -60,11 +60,11 @@ export class ListOfListsService {
     if (profileType == 'league' && pageType == 'module') {
       id = '';
       targetbit = '';
-
     }
 
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
+
     return this.model.get( callURL )
       .map(
         data => {
@@ -179,11 +179,8 @@ export class ListOfListsService {
       }catch(e){
         carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
       }
-
-
     }
     return carouselArray;
-
   }
 
   detailedData(data, version,target){

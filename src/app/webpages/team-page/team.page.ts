@@ -623,7 +623,7 @@ export class TeamPage implements OnInit {
 
 
 
-    private setupListOfListsModule() {
+private setupListOfListsModule() {
       let params = {
         targetId : this.pageParams.teamId,
         limit : 5,
