@@ -95,6 +95,7 @@ export class HeaderComponent implements AfterContentChecked {
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
       var blueBarTrans = false;
+      var partnerHeaderBuffer = document.getElementById('partner') ? document.getElementById('partner').offsetHeight : 0;
 
       if (scrollPolarity > 0) {
         this.scrollMenuUp = true;
@@ -107,7 +108,7 @@ export class HeaderComponent implements AfterContentChecked {
       }
       else if (scrollPolarity < 0) {
         this.scrollMenuUp = false;
-        blueBarTrans = true;
+        blueBarTrans = true; // if header is undergoing transition, apply transition to bluebar as well
         this.menuTransitionAmount = 0;
       }
       // fix for 'page overscroll' in safari
@@ -118,7 +119,7 @@ export class HeaderComponent implements AfterContentChecked {
 
       if(blueBarTrans && document.getElementById('deep-dive-blueBar')){ // if blueBar exists, apply top value when header transition is applied
         document.getElementById('deep-dive-blueBar').style.transition = 'top .35s ease-out';
-        document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + 50 + 'px';
+        document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
       }
     }
   }//onScrollStick ends
