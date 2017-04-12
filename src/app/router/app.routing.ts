@@ -159,7 +159,7 @@ const relativeChildRoutes = [
         component: TransactionsPage
     },
     {
-        path: ':scope/season-stats/:fullName/:playerID',
+        path: ':scope/season-stats/:tab/:fullName/:playerID',
         component: SeasonStatsPage
     },
     {
@@ -171,11 +171,11 @@ const relativeChildRoutes = [
         component: ArticlePages
     },
     {
-        path: ':scope/list-of-lists/:target/:targetId',
+        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
         component: ListOfListsPage
     },
     {
-        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+        path: ':scope/list-of-lists/:target/:targetId',
         component: ListOfListsPage
     },
     {
@@ -199,7 +199,7 @@ const relativeChildRoutes = [
       component: SiteArticleMap
     },
     {
-      path: 'sitemap/:scope/list/:profile/:pageNumber',
+      path: 'sitemap/:scope/list/:profile',
       component: SiteListMap
     },
     {

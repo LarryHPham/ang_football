@@ -99,41 +99,42 @@ export class ListPageService {
     }
   */
 
-  getListPageService(query, errorMessage: string, scope, pageNum, season?){
-  var callURL = this._apiUrl+'/list';
-  let pageCount = query.perPageCount ? query.perPageCount : 20;
 
-  let pageNumber = ( query.pageNumber && ( Number(pageNum) <= 1 ) ) ? query.pageNumber : pageNum;
-  if (season == null || season == undefined || season == "null") {
-    var date = new Date;
-    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + pageCount + "&pageNumber=" + pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
-  }
-  else {
-    callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + pageCount + "&pageNumber=" + pageNumber + "&season=" + season;
-  }
-  return this.model.get( callURL )
-    .map(
-      data => {
-        try{
-          if(data.data.listData[0]){
-            data.data['query'] = query;
-            this.formatData(data.data.listInfo.stat, data.data.listData);
-            return {
-              profHeader: ListPageService.profileHeader(data.data, scope),
-              carData: ListPageService.carDataPage(data.data, pageNumber, 'page', errorMessage),
-              listData: ListPageService.detailedData(data.data, pageNumber),
-              listDisplayName: data.data.listInfo.name,
-              seasons: this.formatSeasons(data.data.listInfo.seasons)
-            }
-          }
-        }catch(e){
-          console.log('INVALID DATA');
-        }
-      },
-      err => {
-        console.log('INVALID DATA');
+  getListPageService(query, errorMessage: string, scope, pageNum, season?) {
+      var callURL = this._apiUrl+'/list';
+      let pageCount = query.perPageCount ? query.perPageCount : 20;
+
+      let pageNumber = ( query.pageNumber && ( Number(pageNum) <= 1 ) ) ? query.pageNumber : pageNum;
+      if (season == null || season == undefined || season == "null") {
+        var date = new Date;
+        callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + pageCount + "&pageNumber=" + pageNumber + "&season=" + (Number(date.getFullYear()) - 1).toString();
       }
-    )
+      else {
+        callURL += "/scope=" + scope + "&target=" + query.target + "&statName=" + query.statName + "&ordering=" + query.ordering + "&perPageCount=" + pageCount + "&pageNumber=" + pageNumber + "&season=" + season;
+      }
+      return this.model.get( callURL )
+        .map(
+          data => {
+            try{
+              if(data.data.listData[0]){
+                data.data['query'] = query;
+                this.formatData(data.data.listInfo.stat, data.data.listData);
+                return {
+                  profHeader: ListPageService.profileHeader(data.data, scope),
+                  carData: ListPageService.carDataPage(data.data, pageNumber, 'page', errorMessage),
+                  listData: ListPageService.detailedData(data.data, pageNumber),
+                  listDisplayName: data.data.listInfo.name,
+                  seasons: this.formatSeasons(data.data.listInfo.seasons)
+                }
+              }
+            }catch(e){
+              console.log('INVALID DATA');
+            }
+          },
+          err => {
+            console.log('INVALID DATA');
+          }
+        )
   }
 
   formatSeasons (data) {

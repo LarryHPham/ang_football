@@ -204,7 +204,7 @@ export class StandingsPage {
       //This call will remove all meta tags from the head.
       this._seoService.removeMetaTags();
       let header, metaDesc, title, ogTitle, image, titleName;
-      
+
       //create meta description that is below 160 characters otherwise will be truncated
       header = data.headerData;
       titleName = header.teamName != null ? header.teamMarket + ' ' + header.teamName : header.teamMarket;
@@ -216,22 +216,48 @@ export class StandingsPage {
       let keywords = "football, " + titleName;
       keywords += header.teamMarket ? ", " + header.teamMarket : "";
       keywords += header.teamName && header.teamName != header.teamMarket ? ", " + header.teamName : "";
+      let link = this._seoService.getPageUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
-      this._seoService.setOgTitle(ogTitle);
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(image);
-      //Elastic Search
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setPageTitle(title);
-      this._seoService.setPageType("Standing Page");
-      this._seoService.setPageUrl();
-      this._seoService.setImageUrl(image);
-      this._seoService.setKeyWord(keywords);
+
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc,
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': image,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc,
+        },
+        {
+          'es_page_type': 'Standings page',
+        },
+        {
+          'es_keywords': keywords
+        },
+        {
+          'es_image_url':image,
+        }
+      ])
+
       if (header.teamId != null) {
         //grab domain for json schema
         let domainSite;

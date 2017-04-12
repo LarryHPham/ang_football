@@ -20,20 +20,13 @@ export class ListOfListsService {
   private _proto = "https";
   private _scope:string;
 
-  // private _apiToken: string = 'BApA7KEfj';
-  // private _headerName: string = 'X-SNT-TOKEN';
-
   constructor(public model: ModelService){
   }
 
-  getSiteListMap(scope, target, count, pageNumber, id?){
-    let callURL = this._apiUrlTdl + '/listOfLists/';
+  getSiteListMap(scope, target, position){
+    let callURL = this._apiUrlTdl + '/listsMetaData/';
     let apiScope = scope == 'ncaaf' ? 'fbs' : scope;
-    callURL += 'scope=' +apiScope+ '&target=' +target+ '&perPageCount=' +count+ '&pageNumber=' +pageNumber;
-
-    if(id){
-      callURL += '&targetId='+id;
-    }
+    callURL += 'scope=' +apiScope+ '&target=' +target+ '&position=' +position;
     return this.model.get( callURL )
       .map(
         data => {
@@ -48,7 +41,6 @@ export class ListOfListsService {
       )
   }
 
-  //http://dev-homerunloyal-api.synapsys.us/listOfLists/league/5
   getListOfListsService(urlParams, profileType: string, pageType: string, pageNumber: number){
     let targetbit = "&targetId=";
     let callURL = this._apiUrlTdl + '/listOfLists/';
@@ -68,11 +60,11 @@ export class ListOfListsService {
     if (profileType == 'league' && pageType == 'module') {
       id = '';
       targetbit = '';
-
     }
 
     var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
+
     return this.model.get( callURL )
       .map(
         data => {
@@ -187,11 +179,8 @@ export class ListOfListsService {
       }catch(e){
         carouselArray.push(SliderCarousel.convertToEmptyCarousel("Sorry, we currently do not have any data for this list."));
       }
-
-
     }
     return carouselArray;
-
   }
 
   detailedData(data, version,target){

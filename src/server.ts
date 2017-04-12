@@ -40,6 +40,7 @@ app.engine('.html', createEngine({
     // stateless providers only since it's shared
   ]
 }));
+
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname);
 app.set('view engine', 'html');
@@ -85,6 +86,8 @@ function ngApp(req, res) {
       appRoot: 'app-domain',
       baseUrl: '/',
       requestUrl: req.originalUrl,
+      hostname: req.hostname,
+      originUrl: `http://${req.hostname}:${ app.get('port') }`,
     });
   });
 
