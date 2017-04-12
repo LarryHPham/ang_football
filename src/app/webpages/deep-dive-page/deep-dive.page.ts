@@ -322,7 +322,7 @@ export class DeepDivePage {
     this.blockIndex = GlobalFunctions.lazyLoadOnScroll(event, this.blockIndex);   // function to lazy load page sections
     var windowScroll = event.srcElement ? event.srcElement.body.scrollTop : document.documentElement.scrollTop;
     var deepDiveCarHeight = document.getElementById('deep-dive-container1').offsetHeight - document.getElementById('deep-dive-blueBar').offsetHeight; // height of carousel window
-    var pageHeaderHeight = document.getElementById('pageHeader').offsetHeight - 35;
+    var pageHeaderHeight = document.getElementById('pageHeader').offsetHeight - 35; // height of header minus saladBar
     var headerTransOffSet = 0;
     var ifSlideDown = false; // true:false if the header is slide down or not
     var partnerHeaderBuffer = document.getElementById('partner') ? document.getElementById('partner').offsetHeight : 0; //if partner header add buffer
