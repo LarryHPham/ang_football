@@ -118,7 +118,7 @@ export class HeaderComponent implements AfterContentChecked {
 
       if(blueBarTrans && document.getElementById('deep-dive-blueBar')){ // if blueBar exists, apply top value when header transition is applied
         document.getElementById('deep-dive-blueBar').style.transition = 'top .35s ease-out';
-        document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + 'px';
+        document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + 50 + 'px';
       }
     }
   }//onScrollStick ends

@@ -325,15 +325,16 @@ export class DeepDivePage {
     var pageHeaderHeight = document.getElementById('pageHeader').offsetHeight - 35;
     var headerTransOffSet = 0;
     var ifSlideDown = false; // true:false if the header is slide down or not
+    var partnerHeaderBuffer = document.getElementById('partner') ? document.getElementById('partner').offsetHeight : 0; //if partner header add buffer
     if(document.getElementById('pageHeader').classList.contains('slide-down') == true){
-      headerTransOffSet = 15; //When header is slid down, there is a 15px offset
+      headerTransOffSet = 15 + partnerHeaderBuffer; //When header is slid down, there is a 15px offset. Add partner header heigt if exists
       ifSlideDown = true;
     }
     if(windowScroll >= deepDiveCarHeight + pageHeaderHeight - headerTransOffSet){ // if user scrolls to the blueBar
       this.blueBarPos = 'fixed';
       this.deepDivePadding = document.getElementById('deep-dive-blueBar').offsetHeight + 'px'; // when blueBar is fixed, add it's height[50px] of padding to deep-dive-container2
       if(!ifSlideDown){ // if header is Not* slid down
-        this.blueBarTop = 100 + document.getElementById('pageHeader').getBoundingClientRect().top + 'px';
+        this.blueBarTop = 100 + document.getElementById('pageHeader').getBoundingClientRect().top + partnerHeaderBuffer + 'px';
         document.getElementById('deep-dive-blueBar').style.transition = 'none'; // remove transition applied in header-component.ts
       }// when header is slid down, top value is defined in by the header's offset in header.component.ts
     } else {
@@ -343,7 +344,7 @@ export class DeepDivePage {
     }
     return;
   }
-
+  
   toggleRoute(event) {
     this._router.navigate(['/' + event.toLowerCase()]);
   }
