@@ -55,10 +55,14 @@
           (tabSelected)="standingsTabSelected($event)"
           (filterSelected)="standingsFilterSelected($event)"
           [scope]="scope" ></standings-module>
-        <season-stats-module
-          *ngIf="seasonStatsData"
-          [pageParams]="pageParams"
-          [data]="seasonStatsData"></season-stats-module>
+      <season-stats-module
+        *ngIf="seasonStatsData"
+        [seasonBase]="seasonBase"
+        [pageParams]="pageParams"
+        [data]="seasonStatsData"
+        [seasonStatsModuleFooterUrl]="seasonStatsModuleFooterUrl"
+        (tabSelected)="seasonStatsTabSelected($event)">
+    </season-stats-module>
         <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
         <comparison-module
           [modelData]="comparisonModuleData"
@@ -93,7 +97,8 @@
           [listOfListsData]="listOfListsData"
           [profileType]="profileType"
           [playerId]="pageParams.playerId"
-          [scope]="scope"></list-of-lists>
+          [scope]="scope"
+          [storedPartnerParam]="storedPartnerParam"></list-of-lists>
         <news-module
           *ngIf="newsDataArray"
           [newsDataArray]="newsDataArray"

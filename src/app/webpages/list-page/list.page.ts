@@ -27,31 +27,37 @@ import { SeoService } from "../../seo.service";
 })
 
 export class ListPage {
-  public partnerID: string;
-  public scope: string;
+    public pageParams: any;
+    public paramsub: any;
+    public storedPartnerParam: string;
+    public partnerID: string;
+    public scope: string;
+    public target: string;
+    public statName: string;
+    public season: number;
+    public ordering: number;
+    private showLoading = true;
+    private batchLoadIndex: number = 1;
 
-  public pageParams: any;
-  private showLoading = true;
-  private batchLoadIndex: number = 1;
-  private season: number;
+    detailedDataArray: Array<DetailListInput> = [];
+    carouselDataArray: Array<SliderCarouselInput> = [];
+    footerData: ModuleFooterData;
+    profileHeaderData: TitleInputData;
+    footerStyle: FooterStyle = {
+        ctaBoxClass: "list-footer",
+        ctaBtnClass: "list-footer-btn",
+        hasIcon: true,
+    };
+    paginationParameters: any;
+    isError: boolean = false;
+    tw: string;
+    sw: string;
+    input: string;
+    sortSeason: Array<any>;
+    sortSeasonSelected: string;
+    dropdownCounter: number = 0;
 
-  detailedDataArray: Array<DetailListInput> = [];
-  carouselDataArray: Array<SliderCarouselInput> = [];
-  footerData: ModuleFooterData;
-  profileHeaderData: TitleInputData;
-  footerStyle: FooterStyle = {
-    ctaBoxClass: "list-footer",
-    ctaBtnClass: "list-footer-btn",
-    hasIcon: true,
-  };
-  paginationParameters: any;
-  isError: boolean = false;
-  tw: string;
-  sw: string;
-  input: string;
-  sortSeason: Array<any>;
-  sortSeasonSelected: string;
-  dropdownCounter: number = 0;
+    private listPageService: any;
 
   constructor(
     private _router: Router,
@@ -63,30 +69,36 @@ export class ListPage {
     private _seoService: SeoService
   ) {
     // check to see if scope is correct and redirect
-    this.activatedRoute.params.subscribe(
+    this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
+    this.paramsub = this.activatedRoute.params.subscribe(
       (param: any) => {
-        this.detailedDataArray = [];
-        this.carouselDataArray = [];
+            this.detailedDataArray = [];
+            this.carouselDataArray = [];
 
-        this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
-        this.partnerID = param['partnerID'];
-        this.pageParams = param;
-        this.season = param.season ? param.season : null;
-        this.getStandardList(this.pageParams, this.batchLoadIndex, this.pageParams.season);
+            this.pageParams = param;
+            this.partnerID = param['partnerID'] ? param['partnerID'] : null;
+            this.scope = param['scope'].toLowerCase() == 'ncaaf' ? 'fbs' : 'nfl';
+            this.target = param['target'] ? param['target'] : null;
+            this.statName = param.statName ? param.statName : null;
+            this.season = param.season ? param.season : null;
+            this.ordering = param.ordering ? param.ordering : null;
+            this.getStandardList(this.pageParams, this.batchLoadIndex, this.pageParams.season);
       }
     )
   } //constructor
 
-  //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
-  setPaginationParams(input) {
 
-  } //setPaginationParams
+
+  //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
+  setPaginationParams(input) {} //setPaginationParams
+
+
 
   getStandardList(urlParams, pageNum, season?) {
     let self = this;
     var errorMessage = "Sorry, we do not currently have any data for this list";
     this.showLoading = true;
-    this.listService.getListPageService(urlParams, errorMessage, this.scope, pageNum, season)
+    this.listPageService = this.listService.getListPageService(urlParams, errorMessage, this.scope, pageNum, season)
       .finally(() => {
         GlobalSettings.setPreboot();
         this.showLoading = false;
@@ -125,6 +137,8 @@ export class ListPage {
       });
   } //getStandardList
 
+
+
   private metaTags(data) {
     //This call will remove all meta tags from the head.
     this._seoService.removeMetaTags();
@@ -139,51 +153,87 @@ export class ListPage {
     } else {
       imageUrl = GlobalSettings.getmainLogoUrl();
     }
-    
+
     let keywords = "football";
+    let link = this._seoService.getPageUrl();
     this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setCanonicalLink();
     this._seoService.setMetaRobots('INDEX, FOLLOW');
-    this._seoService.setOgTitle(title);
-    this._seoService.setOgDesc(metaDesc + ". Know more about football.");
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage(imageUrl);
-    //Elastic Search
-    this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setPageTitle(title);
-    this._seoService.setPageType('List Page');
-    this._seoService.setPageUrl();
-    this._seoService.setImageUrl(imageUrl);
-    this._seoService.setKeyWord(keywords);
+
+    this._seoService.setMetaTags([
+      {
+        'og:title': title,
+      },
+      {
+        'og:description': metaDesc,
+      },
+      {
+        'og:type':'website',
+      },
+      {
+        'og:url':link,
+      },
+      {
+        'og:image': imageUrl,
+      },
+      {
+        'es_page_title': title,
+      },
+      {
+        'es_page_url': link
+      },
+      {
+        'es_description': metaDesc,
+      },
+      {
+        'es_page_type': 'List page',
+      },
+      {
+        'es_keywords': keywords
+      },
+      {
+        'es_image_url':imageUrl
+      }
+    ])
   } //metaTags
 
-  newIndex(index) {
-    this.pageParams.pageNumber = index;
-  } //newIndex
 
-  dropdownChanged(event) {
-      this.paginationParameters['season'] = event;
-      var navigationPage = VerticalGlobalFunctions.getWhiteLabel() + '/' + this.pageParams.scope + '/list';
 
-      let route = [navigationPage];
+    newIndex(index) {
+        this.pageParams.pageNumber = index;
+    } //newIndex
 
-      for(var obj in this.paginationParameters){
-        route.push(this.paginationParameters[obj]);
-      };
-      this._router.navigate(event);
-      //':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber'
-      // this.getStandardList(this.pageParams, this.batchLoadIndex, event);
-  } //dropdownChanged
 
-  // function to lazy load page sections
-  private onScroll(event) {
-    let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
-    if (num != this.batchLoadIndex && !this.showLoading) {
-      this.batchLoadIndex = num;
-      this.getStandardList(this.pageParams, this.batchLoadIndex, this.season);
+
+    dropdownChanged(event) {
+        let newRoute;
+        let filterFrom = this.season;
+        let filterTo = event;
+        this.paginationParameters['season'] = event;
+
+        if ( filterTo != filterFrom ) {
+            newRoute = [this.storedPartnerParam, this.scope, 'list', this.target, this.statName, filterTo, this.ordering];
+            this._router.navigate(newRoute);
+        }
+    } //dropdownChanged
+
+
+
+    // function to lazy load page sections
+    private onScroll(event) {
+        let num = GlobalFunctions.lazyLoadOnScroll(event, this.batchLoadIndex);
+        if (num != this.batchLoadIndex && !this.showLoading) {
+            this.batchLoadIndex = num;
+            this.getStandardList(this.pageParams, this.batchLoadIndex, this.season);
+        }
+        return;
+    } //onScroll
+
+
+
+    ngOnDestroy() {
+        this.paramsub.unsubscribe();
+        this.listPageService.unsubscribe();
     }
-    return;
-  }
 }

@@ -292,10 +292,11 @@ export class ArticlePages implements OnInit {
     var searchString = "football";
     var searchArray = [];
     var isArticle;
+    let link = this._seoService.getPageUrl();
     isArticle = this.eventType == "video" ? false : true;
     if (this.isAiArticle) {
       var headerData = metaData['articleContent']['metadata'];
-      metaDesc = metaData['articleContent'].meta_headline;
+      metaDesc = metaData.teaser;
       if (headerData['team_name'] && headerData['team_name'].constructor === Array) {
         headerData['team_name'].forEach(function (val) {
           searchArray.push(val);
@@ -319,7 +320,7 @@ export class ArticlePages implements OnInit {
       }
       image = metaData['images']['imageData'][0];
     } else {
-      metaDesc = metaData.title;
+      metaDesc = metaData.teaser;
       image = GlobalSettings.getImageUrl(metaData.imagePath, GlobalSettings._imgLgLogo);
     }
 
@@ -354,28 +355,69 @@ export class ArticlePages implements OnInit {
     this._seoService.setCanonicalLink();
     this._seoService.setTitle(metaData.title);
     this._seoService.setMetaDescription(metaDesc);
-    this._seoService.setOgTitle(metaData.title);
-    this._seoService.setOgDesc(metaDesc);
-    this._seoService.setOgType('Website');
-    this._seoService.setOgUrl();
-    this._seoService.setOgImage(image);
-    //Elastic Search
-    this._seoService.setStartDate(metaObjData.startDate);
-    this._seoService.setEndDate(metaObjData.endDate);
-    this._seoService.setIsArticle(isArticle);
-    this._seoService.setPageType(isArticle ? "article page" : "video page");
-    this._seoService.setSource(metaObjData.source);
-    this._seoService.setArticleId(this.eventID);
-    this._seoService.setPageTitle(metaData.title ? metaData.title : '');
-    this._seoService.setCategory(metaObjData.keyword ? metaObjData.keyword : '');
-    this._seoService.setPublishedDate(metaObjData.publishedDate);
-    this._seoService.setAuthor(metaObjData.author);
-    this._seoService.setPublisher(metaObjData.publisher);
-    this._seoService.setImageUrl(image);
-    this._seoService.setArticleTeaser(metaObjData.articleTeaser ? metaObjData.articleTeaser : '');
-    this._seoService.setPageUrl();
-    this._seoService.setArticleType(metaObjData.setArticleType);
-    this._seoService.setKeyWord(searchString);
+
+    this._seoService.setMetaTags([
+      {
+        'og:title': metaData.title,
+      },
+      {
+        'og:description': metaDesc,
+      },
+      {
+        'og:type':'website',
+      },
+      {
+        'og:url':link,
+      },
+      {
+        'og:image': image,
+      },
+      {
+        'es_page_title': metaData.title ? metaData.title : '',
+      },
+      {
+        'es_page_url': link
+      },
+      {
+        'es_description': metaObjData.articleTeaser ? metaObjData.articleTeaser : metaDesc,
+      },
+      {
+        'es_page_type': isArticle ? "article page" : "video page",
+      },
+      {
+        'es_data_source':metaObjData.source
+      },
+      {
+        'es_article_id':this.eventID
+      },
+      {
+        'es_category':metaObjData.keyword ? metaObjData.keyword : ''
+      },
+      {
+        'es_published_date':metaObjData.publishedDate
+      },
+      {
+        'es_article_author':metaObjData.author
+      },
+      {
+        'es_article_publisher':metaObjData.publisher
+      },
+      {
+        'es_keywords': searchString
+      },
+      {
+        'es_image_url':image
+      },
+      {
+        'start_date':metaObjData.startDate
+      },
+      {
+        'end_date':metaObjData.endDate
+      },
+      {
+        'is_article':isArticle
+      }
+    ])
   } //metaTags
 
   getGeoLocation() {

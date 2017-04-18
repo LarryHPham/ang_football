@@ -10,7 +10,7 @@ declare var Zone;
 
 export class GlobalSettings {
     // hardCoded for ServerSide (isNode);
-    private static _env = 'dev';// isNode ? 'prod' : window.location.hostname.split('.')[0];//TODO currently server side is hardcoded to make Prod calls
+    public static _env;//called in the app.domain.ts
     public static _proto = isNode ? 'http:' : window.location.protocol;//TODO currently server side is hardcoding protocol
 
     private static _newsUrl:string = 'newsapi.synapsys.us';
@@ -110,8 +110,10 @@ export class GlobalSettings {
     }
 
     static synapsysENV(env:string):string {
-      if (env == "localhost" || env == 'dev' || env == 'qa'){//remove qa when we have qa env setup
-          env = "dev-";
+      if(env == 'localhost' || env == 'dev'){
+        env = 'dev-';
+      }else if(env == 'qa'){
+        env = 'qa-';
       }else{
         env = '';
       }

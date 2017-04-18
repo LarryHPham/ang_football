@@ -50,7 +50,7 @@ export class PickTeamPage{
     public activeDivision: string;
     public activeDivisionSegments: string;
 
-    public imgHero1: string = "http://images.synapsys.us/TDL/stock_images/TDL_Stock-2.png";
+    public imgHero1: string = "http://images.synapsys.us/TDL/stock_images/TDL_Stock-5.png";
     public imgIcon1: string = "/app/public/homePage_icon1.png";
     public imageTile1: string = "/app/public/iphone.png";
     public imageTile2: string = "/app/public/ipad.png";
@@ -141,24 +141,48 @@ export class PickTeamPage{
       let metaDesc = GlobalSettings.getPageTitle('Pick a team near you or search for your favorite football team or player.', 'Pick A Team');
       let title = 'Pick A Team';
       let image = GlobalSettings.getmainLogoUrl();
-      
-      let keywords = "football";
+
+      let keywords = "football, pick a team";
+      let link = this._seoService.getPageUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
       this._seoService.setMetaRobots('Index, Follow');
-      this._seoService.setOgTitle(title);
-      this._seoService.setOgDesc(metaDesc);
-      this._seoService.setOgType('Website');
-      this._seoService.setOgUrl();
-      this._seoService.setOgImage(image);
-      //Elastic Search
-      this._seoService.setMetaDescription(metaDesc);
-      this._seoService.setPageTitle(title);
-      this._seoService.setPageType(title);
-      this._seoService.setPageUrl();
-      this._seoService.setImageUrl(image);
-      this._seoService.setKeyWord(keywords);
+      this._seoService.setMetaTags([
+        {
+          'og:title': title,
+        },
+        {
+          'og:description': metaDesc,
+        },
+        {
+          'og:type':'website',
+        },
+        {
+          'og:url':link,
+        },
+        {
+          'og:image': image,
+        },
+        {
+          'es_page_title': title,
+        },
+        {
+          'es_page_url': link
+        },
+        {
+          'es_description': metaDesc,
+        },
+        {
+          'es_page_type': 'Pick a Team page',
+        },
+        {
+          'es_keywords': keywords,
+        },
+        {
+          'es_image_url':image,
+        }
+      ])
     } //metaTags
 
 

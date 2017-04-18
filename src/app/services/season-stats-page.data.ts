@@ -134,28 +134,18 @@ export class SportSeasonStatsTableData implements TableComponentData<TeamSeasonS
     this.year = year;
     this.tableData = table;
   }
-
 }
 
 export class SportSeasonStatsTabData implements TableTabData<TeamSeasonStatsData> {
   scope: string;
-
   playerId: string;
-
   tabName: string;
-
   title: string;
-
   isActive: boolean;
-
   isLoaded: boolean;
-
   hasError: boolean;
-
   sections: Array<SportSeasonStatsTableData>;
-
   season: Season;
-
   year: string;
 
   constructor(title: string, tabName: string, season: Season, year: string, isActive: boolean, scope) {
@@ -281,7 +271,7 @@ export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsDat
   rows: Array<TeamSeasonStatsData>;
   selectedKey: string = "";
 
-  constructor(rows: Array<TeamSeasonStatsData>, scope: string){
+  constructor(rows: Array<TeamSeasonStatsData>, scope: string) {
     this.scope = scope;
     this.rows = rows;
     if ( this.rows === undefined || this.rows === null ) {
@@ -290,6 +280,7 @@ export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsDat
     else if ( rows.length > 0 ) {
       // this.selectedKey = rows[0].playerId;
     }
+
     switch(this.rows[0]['playerInfo'].position) {
       case "CB":
       case "DB":
@@ -599,8 +590,7 @@ export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsDat
           isNumericType: true,
           key: "player_defense_passes_defended"
         }]
-}
-
+    }
   }
 
   setSelectedKey(key: string) {
@@ -631,8 +621,11 @@ export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsDat
     var isTotalColumn = item['sectionStat'] != null;
     switch (column.key) {
       case "year":
-      if(item.seasonId != null && item.seasonId != "") {
+      if(item.seasonId != null && item.seasonId != "" && item.seasonId != 'career') {
         display =  item.seasonId.slice(-2) + " / " + (Number(item.seasonId.slice(-2)) + 1).toString();
+      }
+      else if ( item.seasonId == 'career' ) {
+          display = item.year.slice(-2) + " / " + (Number(item.year.slice(-2)) + 1).toString();
       }
       else {
         display = "N/A";

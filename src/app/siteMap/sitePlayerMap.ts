@@ -58,7 +58,6 @@ export class SitePlayerMap {
   createSiteMap(scope, playerId){
     let self = this;
     let route = [];
-    this.addListPage(scope, playerId);
     this.addPlayerModulePages(scope, playerId);
     this.addPlayerFantasy(scope, playerId);
   }
@@ -68,7 +67,7 @@ export class SitePlayerMap {
       this._profileService.getPlayerProfile(id)
       .subscribe(data => {
           //SeasonStats
-          let seasonStatsRoute = [this.partnerSite + '/sitemap/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
+          let seasonStatsRoute = [this.partnerSite + '/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
           let seasonStatsPath = seasonStatsRoute.join('/').toString();
           let sitePath = SiteMap.createSiteKey(seasonStatsRoute, seasonStatsPath);
           this.totalSiteMap.push(sitePath);
@@ -94,35 +93,4 @@ export class SitePlayerMap {
       console.log('No Player Fantasy Data');
     }
   }
-
-  addListPage(scope, id?){
-    let articleCount = GlobalSettings.siteMapArticleCount;
-    let self = this;
-    //scope, target, count, pageNumber, id?
-    this._listOfListService.getSiteListMap(scope, 'player', articleCount, 1, id)
-    .subscribe(data => {
-      try{
-        let list = data.data[0];
-        let pages = Math.ceil(list.listInfo.listCount / articleCount);
-        for(var i = 1; i <= pages; i++){
-          let listRoute = [self.partnerSite + '/sitemap/' + scope + '/list', 'player', i];
-          let relPath = listRoute.join('/').toString();
-          if(id){
-            relPath += '?id='+id;
-          }
-          let sitePath = SiteMap.createSiteKey(listRoute, relPath);
-
-          if(id){
-            sitePath.query = {};
-            sitePath.query.id = id;
-          };
-          // console.log('adding addListPage', sitePath.name);
-          self.totalSiteMap.push(sitePath);
-        }
-      }catch(e){
-        console.warn('Error siteMap failure @ addListPage', e)
-      }
-    })
-  }
-
 }
