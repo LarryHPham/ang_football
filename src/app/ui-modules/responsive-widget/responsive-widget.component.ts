@@ -19,24 +19,26 @@ export class ResponsiveWidget implements OnInit {
     if (isBrowser) {
       var windowWidth = window.innerWidth;
       // var windowWidth = 960;
-      if(windowWidth < 640){
+      if (windowWidth <= 1317) {
         this.widgetSml = true;
         this.widgetMed = false;
-      }else if(windowWidth < 1317 && windowWidth >= 640){
-        this.widgetSml = false;
-        this.widgetMed = true;
+      }
+      else {
+          this.widgetSml = false;
+          this.widgetMed = true;
       }
       this.windowWidth = windowWidth;
     }
   }
   private onWindowLoadOrResize(event) {
     var windowWidth = event.target.innerWidth;
-    if(windowWidth < 640){
+    if ( windowWidth < 1317 ) {
       this.widgetSml = true;
       this.widgetMed = false;
-    }else if(windowWidth < 1317 && windowWidth >= 640){
-      this.widgetSml = false;
-      this.widgetMed = true;
+    }
+    else {
+        this.widgetSml = false;
+        this.widgetMed = true;
     }
     this.windowWidth = windowWidth;
   }
