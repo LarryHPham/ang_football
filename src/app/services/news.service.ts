@@ -22,7 +22,10 @@ export class NewsService {
     return headers;
   }
 
-  getNewsService(scope, urlParams, profileType: string, pageType: string){
+/*
+ This service call is disabled for MPC server
+
+getNewsService(scope, urlParams, profileType: string, pageType: string){
     var headers = this.setToken();
     var fullUrl = this._apiUrl;
     let type;
@@ -52,7 +55,7 @@ export class NewsService {
           news: this.newsData(data.data)
         };
     })
-  }//getNewsService ends
+  }*///getNewsService ends
 
   newsData(data){
     var self = this;

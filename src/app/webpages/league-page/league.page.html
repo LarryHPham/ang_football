@@ -109,8 +109,8 @@
       </div>
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
-        <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
-        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+       <!-- <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
+        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>-->
         <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
         <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
