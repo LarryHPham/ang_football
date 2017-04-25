@@ -134,7 +134,7 @@ export class LeaguePage{
 
     private listOfListsData:Object; // paginated data to be displayed
 
-    private newsDataArray: Array<Object>;
+    /*private newsDataArray: Array<Object>;*/
 
     private twitterData: Array<twitterModuleData>;
 
@@ -258,7 +258,7 @@ export class LeaguePage{
           this.setupListOfListsModule();
 
           //---Batch 6 Load---//
-          this.getNewsService();
+          //this.getNewsService();
           this.getTwitterService(this.profileType, partnerID, scope);
         }
       ))
@@ -631,6 +631,8 @@ export class LeaguePage{
     } //setupListOfListsModule
 
 
+/*
+ This service call is disabled for MPC server
 
     private getNewsService() {
       let params = {
@@ -646,7 +648,7 @@ export class LeaguePage{
         err => {
           console.log("Error getting news data");
       }));
-    } //getNewsService
+    }*/ //getNewsService
 
 
 
