@@ -46,7 +46,8 @@ export class HeaderComponent implements AfterContentChecked {
   public menuTransitionAmount: number = 0;
   public pageHeader: any;
   public pageHeaderHeight: any;
-
+  public isWidget: any;
+  public isBlueBar:any;
   public linkHome: any;
 
   //deprecated
@@ -94,7 +95,8 @@ export class HeaderComponent implements AfterContentChecked {
       var scrollTop = event.srcElement ? event.srcElement.body.scrollTop : document.documentElement.scrollTop; //fallback for firefox scroll events
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
-      var blueBarTrans = false;
+      var widget = document.getElementById('widget');
+      var headerTrans = false;
       var partnerHeaderBuffer = document.getElementById('partner') ? document.getElementById('partner').offsetHeight : 0;
 
       if (scrollPolarity > 0) {
@@ -108,7 +110,7 @@ export class HeaderComponent implements AfterContentChecked {
       }
       else if (scrollPolarity < 0) {
         this.scrollMenuUp = false;
-        blueBarTrans = true; // if header is undergoing transition, apply transition to bluebar as well
+        headerTrans = true; // if header is undergoing transition, apply transition to bluebar as well
         this.menuTransitionAmount = 0;
       }
       // fix for 'page overscroll' in safari
@@ -117,9 +119,14 @@ export class HeaderComponent implements AfterContentChecked {
       }
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
 
-      if(blueBarTrans && document.getElementById('deep-dive-blueBar')){ // if blueBar exists, apply top value when header transition is applied
+      if(headerTrans && this.isBlueBar && this.isWidget){ // if bluebar and widget on same page, apply top value when header is slid down.
         document.getElementById('deep-dive-blueBar').style.transition = 'top .35s ease-out';
         document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
+        document.getElementById('widget').style.top = 160 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
+        document.getElementById('widget').style.transition = 'top .35s ease-out';
+      } else { // only if the widget is present.
+        document.getElementById('widget').style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 10 + 'px';
+        document.getElementById('widget').style.transition = 'top .35s ease-out';
       }
     }
   }//onScrollStick ends
@@ -145,6 +152,18 @@ export class HeaderComponent implements AfterContentChecked {
     //wait 1 second to make sure the router scope changes before running the global settings getScopeNow and grab correct scope
     setTimeout(() => {
       this.scope = GlobalSettings.getScopeNow();
+      if(isBrowser){
+        if(document.getElementById('deep-dive-blueBar')){ // check to see if blueBar and widget exist.
+          this.isBlueBar = true;
+        } else {
+          this.isBlueBar = false;
+        }
+        if(document.getElementById('widget')){
+          this.isWidget = true;
+        } else {
+          this.isWidget = false;
+        }
+      }
     }, 1000);
 
     // close menu if it is open and user clicks outside the menu
