@@ -131,7 +131,7 @@ export class TeamPage implements OnInit {
 
   private listOfListsData:Object; // paginated data to be displayed
 
-  private newsDataArray: Array<Object>;
+  /*private newsDataArray: Array<Object>;*/
 
   private twitterData: Array<twitterModuleData>;
 
@@ -657,7 +657,10 @@ private setupListOfListsModule() {
 
 
 
-    private getNewsService() {
+ /*
+
+  This service call is disabled for MPC server
+  private getNewsService() {
       let params = {
         limit : 10,
         pageNum : 1,
@@ -671,7 +674,7 @@ private setupListOfListsModule() {
         err => {
           console.log("Error getting news data");
       }));
-  } //getNewsService//
+  }*/ //getNewsService//
 
 
 

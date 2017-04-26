@@ -99,11 +99,13 @@
           [playerId]="pageParams.playerId"
           [scope]="scope"
           [storedPartnerParam]="storedPartnerParam"></list-of-lists>
-        <news-module
+        <!--<news-module
           *ngIf="newsDataArray"
           [newsDataArray]="newsDataArray"
-          [profileName]="profileHeaderData.profileName"></news-module>
+          [profileName]="profileHeaderData.profileName"></news-module>-->
+<!--
         <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+-->
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
         <!--Like Us On FB Module, only display if not on partner page-->
         <section *ngIf="!partnerID">
