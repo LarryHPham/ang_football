@@ -109,7 +109,9 @@ export class PlayerPage{
 
   private listOfListsData: Object; // paginated data to be displayed
 
+/*
   private newsDataArray: Array<Object>;
+*/
 
   private twitterData: Array<twitterModuleData>;
 
@@ -223,7 +225,7 @@ export class PlayerPage{
 
         //--Batch 5--//
         this.setupListOfListsModule();
-        this.getNewsService();
+        //this.getNewsService();
         this.getTwitterService();
       },
       err => {
@@ -555,7 +557,9 @@ export class PlayerPage{
 
 
 
-    private getNewsService() {
+ /*
+  This service call is disabled for MPC server
+ private getNewsService() {
       let params = {
         limit: 10,
         pageNum: 1,
@@ -568,7 +572,7 @@ export class PlayerPage{
         err => {
           console.log("Error getting news data");
         }));
-    } //getNewsService
+    }*/ //getNewsService
 
 
 
