@@ -124,7 +124,7 @@ export class HeaderComponent implements AfterContentChecked {
         document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
         widget.style.top = 160 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
         widget.style.transition = 'top .35s ease-out';
-      } else { // only if the widget is present.
+      } else if(headerTrans && !this.isBlueBar) { // only if the widget is present.
         widget.style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 10 + 'px';
         widget.style.transition = 'top .35s ease-out';
       }
