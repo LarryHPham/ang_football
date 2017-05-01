@@ -119,7 +119,7 @@ export class HeaderComponent implements AfterContentChecked {
       }
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
 
-      if(headerTrans && this.isBlueBar && this.isWidget){ // if bluebar and widget on same page, apply top value when header is slid down.
+      if(headerTrans && this.isBlueBar && this.isWidget){ // if bluebar and widget on same page, apply top value to header and widget when header is slid down.
         document.getElementById('deep-dive-blueBar').style.transition = 'top .35s ease-out';
         document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
         widget.style.top = 160 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
