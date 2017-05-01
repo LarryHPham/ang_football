@@ -96,6 +96,7 @@ export class HeaderComponent implements AfterContentChecked {
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
       var widget = document.getElementById('widget');
+      var blueBar = document.getElementById('deep-dive-blueBar');
       var headerTrans = false;
       var partnerHeaderBuffer = document.getElementById('partner') ? document.getElementById('partner').offsetHeight : 0;
 
@@ -119,12 +120,12 @@ export class HeaderComponent implements AfterContentChecked {
       }
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
 
-      if(headerTrans && this.isBlueBar && this.isWidget){ // if bluebar and widget on same page, apply top value when header is slid down.
-        document.getElementById('deep-dive-blueBar').style.transition = 'top .35s ease-out';
-        document.getElementById('deep-dive-blueBar').style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
+      if(headerTrans && blueBar && widget){ // if bluebar and widget on same page, apply top value to header and widget when header is slid down.
+        blueBar.style.transition = 'top .35s ease-out';
+        blueBar.style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
         widget.style.top = 160 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
         widget.style.transition = 'top .35s ease-out';
-      } else { // only if the widget is present.
+      } else if(headerTrans && !blueBar && widget) { // only if the widget is present.
         widget.style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 10 + 'px';
         widget.style.transition = 'top .35s ease-out';
       }
@@ -152,18 +153,6 @@ export class HeaderComponent implements AfterContentChecked {
     //wait 1 second to make sure the router scope changes before running the global settings getScopeNow and grab correct scope
     setTimeout(() => {
       this.scope = GlobalSettings.getScopeNow();
-      if(isBrowser){
-        if(document.getElementById('deep-dive-blueBar')){ // check to see if blueBar and widget exist.
-          this.isBlueBar = true;
-        } else {
-          this.isBlueBar = false;
-        }
-        if(document.getElementById('widget')){
-          this.isWidget = true;
-        } else {
-          this.isWidget = false;
-        }
-      }
     }, 1000);
 
     // close menu if it is open and user clicks outside the menu
