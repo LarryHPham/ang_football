@@ -4,7 +4,7 @@
   "watch": ["dist"],
   "ignore_watch" : ["node_modules", "logs"],
   "log_date_format": "YYYY-MM-DD HH:mm Z",
-  "error_file": "/opt/builds/tdl-fe-ssr/logs",
+  "error_file": "/dev/null",
   "out_file": "/var/log/pm2/tdl-fe",
   "max_memory_restart" : "500M",
   "autorestart": true,
