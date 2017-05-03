@@ -90,7 +90,7 @@ export class GlobalSettings {
 
     static getEnv(env:string):string {
       if (env == "localhost"){
-          env = "dev";
+          env = "prod";
       }
       if (env != "dev" && env !="qa"){
           env = "prod";
@@ -111,7 +111,7 @@ export class GlobalSettings {
 
     static synapsysENV(env:string):string {
       if(env == 'localhost' || env == 'dev'){
-        env = 'dev-';
+        env = '';
       }else if(env == 'qa'){
         env = 'qa-';
       }else{
