@@ -46,8 +46,6 @@ export class HeaderComponent implements AfterContentChecked {
   public menuTransitionAmount: number = 0;
   public pageHeader: any;
   public pageHeaderHeight: any;
-  public isWidget: any;
-  public isBlueBar:any;
   public linkHome: any;
 
   //deprecated
