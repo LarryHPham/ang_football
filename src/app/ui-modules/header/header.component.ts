@@ -46,7 +46,6 @@ export class HeaderComponent implements AfterContentChecked {
   public menuTransitionAmount: number = 0;
   public pageHeader: any;
   public pageHeaderHeight: any;
-
   public linkHome: any;
 
   //deprecated
@@ -94,6 +93,10 @@ export class HeaderComponent implements AfterContentChecked {
       var scrollTop = event.srcElement ? event.srcElement.body.scrollTop : document.documentElement.scrollTop; //fallback for firefox scroll events
       var scrollPolarity = scrollTop - this.scrollTopPrev; //determines if user is scrolling up or down
       var headerHeight = this.getHeaderHeight() - headerBottomHeight;
+      var widget = document.getElementById('widget');
+      var blueBar = document.getElementById('deep-dive-blueBar');
+      var headerTrans = false;
+      var partnerHeaderBuffer = document.getElementById('partner') ? document.getElementById('partner').offsetHeight : 0;
 
       if (scrollPolarity > 0) {
         this.scrollMenuUp = true;
@@ -106,6 +109,7 @@ export class HeaderComponent implements AfterContentChecked {
       }
       else if (scrollPolarity < 0) {
         this.scrollMenuUp = false;
+        headerTrans = true; // if header is undergoing transition, apply transition to bluebar as well
         this.menuTransitionAmount = 0;
       }
       // fix for 'page overscroll' in safari
@@ -113,6 +117,16 @@ export class HeaderComponent implements AfterContentChecked {
         this.menuTransitionAmount = 0;
       }
       this.scrollTopPrev = scrollTop; //defines scrollPolarity
+
+      if(headerTrans && blueBar && widget){ // if bluebar and widget on same page, apply top value to header and widget when header is slid down.
+        blueBar.style.transition = 'top .35s ease-out';
+        blueBar.style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
+        widget.style.top = 160 + this.menuTransitionAmount + partnerHeaderBuffer + 'px';
+        widget.style.transition = 'top .35s ease-out';
+      } else if(headerTrans && !blueBar && widget) { // only if the widget is present.
+        widget.style.top = 100 + this.menuTransitionAmount + partnerHeaderBuffer + 10 + 'px';
+        widget.style.transition = 'top .35s ease-out';
+      }
     }
   }//onScrollStick ends
 

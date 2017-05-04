@@ -1,15 +1,15 @@
               <section *ngIf="isLoading" class="deep-dive" (window:scroll)="onScroll($event)">
-                <section *ngIf="carouselData"class="deep-dive-container1">
+                <section *ngIf="carouselData" class="deep-dive-container1" id="deep-dive-container1">
                   <news-box *ngIf="carouselData" [carData]="carouselData" [videoData]="videoData" [toggleData]="toggleData" (changeScope)="toggleRoute($event)">
                   </news-box>
-                  <div class="spacer" id="deep-dive-blueBar">
+                  <div class="spacer" id="deep-dive-blueBar" [ngStyle]="{'width':'100%','z-index':'11','top':blueBarTop,'position':blueBarPos}">
                     <section class="deep-dive-adWrap">
                       <iframe *ngIf="scope == 'nfl' || scope == 'home'" frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/nflbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
                       <iframe *ngIf="scope == 'ncaaf'" frameborder="0" scrolling="no" allowtransparency="true" src="app/ads/ncaafbluebar.html" [ngStyle]="{'display': 'block', 'height': '50px','width': '100%','margin': '0px','border': '0px','overflow': 'hidden','z-index': '0','background-color': '#272727'}" ></iframe>
                     </section>
                   </div>
                 </section>
-                <section *ngIf="carouselData" class="deep-dive-container2">
+                <section *ngIf="carouselData" class="deep-dive-container2" [ngStyle]="{'padding-top':deepDivePadding}">
                   <div class="deep-dive-container2a col-sm-12 col-xl-9">
                     <div class="deep-dive-module">
                       <side-scroll-schedules *ngIf="scopeDisplayed" [scopeDisplayed]="scopeDisplayed" [sideScrollData]="sideScrollData" (count)="scrollCheck($event)" [scrollLength]="scrollLength" [scope]="scope" [topScope]="scopeDisplayed.topScope" (changeScope)="changeScope($event)"></side-scroll-schedules>
