@@ -594,8 +594,8 @@ export class GlobalFunctions {
      * @returns
      */
 
-    // formatAPMonth uses zero based index for month, Moment.js uses 1 based index
-    // when sending month numbers use JS, not Moment.js
+    // formatAPMonth uses zero based index for month, moment().js uses 1 based index
+    // when sending month numbers use JS, not moment().js
     static formatAPMonth(month:number) {
         switch (month) {
             case 0:
@@ -746,22 +746,22 @@ export class GlobalFunctions {
     }
 
     static formatDate(date) {
-        var monthnum = moment.unix(date / 1000).format("MM");
+        var monthnum = moment().unix(date / 1000).format("MM");
         var month = GlobalFunctions.formatAPMonth(Number(monthnum));
-        var day = moment.unix(date / 1000).format("DD");
-        var year = moment.unix(date / 1000).format("YYYY");
-        var time = moment.unix(date / 1000).format("h:mm");
-        var a = moment.unix(date / 1000).format("A");
+        var day = moment().unix(date / 1000).format("DD");
+        var year = moment().unix(date / 1000).format("YYYY");
+        var time = moment().unix(date / 1000).format("h:mm");
+        var a = moment().unix(date / 1000).format("A");
         var zone = "EST"
         return {month: month, day: day, year: year, time: time, a: a, zone: zone}
     }
 
     static formatShortDate(date) {
-        var month = moment.unix(date / 1000).format("MM");
-        var day = moment.unix(date / 1000).format("DD");
-        var year = moment.unix(date / 1000).format("YY");
-        var time = moment.unix(date / 1000).format("h:mm");
-        var a = moment.unix(date / 1000).format("A");
+        var month = moment().unix(date / 1000).format("MM");
+        var day = moment().unix(date / 1000).format("DD");
+        var year = moment().unix(date / 1000).format("YY");
+        var time = moment().unix(date / 1000).format("h:mm");
+        var a = moment().unix(date / 1000).format("A");
         var zone = "EST"
         return {month: month, day: day, year: year, time: time, a: a, zone: zone}
     }

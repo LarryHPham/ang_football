@@ -36,13 +36,14 @@ export class DeepDiveBlock1{
   @HostListener('window:resize', ['$event'])
 
   ngOnInit(){
-    var currentUnixDate = new Date().getTime();
+    var currentUnixDate = moment(new Date().getTime()).tz('America/New_York').format('YYYY-MM-DD');
+    console.log(currentUnixDate);
     //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
     if(this.scope != 'home'){
       this.dateParam ={
         teamId:this.scope,//current profile page
         scope:'league',
-        date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+        date: currentUnixDate
       }
     }
     this.callModules();

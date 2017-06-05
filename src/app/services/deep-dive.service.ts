@@ -199,10 +199,13 @@ export class DeepDiveService {
       if ( data ) {
         data.forEach(function(val, index){
           let urlRouteArray;
+          console.log(val);
           if(val.last_updated){
-            var date =  moment.unix(val.last_updated);
-            date = '<span class="hide-320">' + date.format('dddd') + ', </span>' + date.format('MMM') + date.format('. DD, YYYY');
+            var dateUnix =  moment().unix(val.last_updated);
+            console.log(dateUnix);
+            var date = '<span class="hide-320">' + moment(dateUnix).format('dddd') + ', </span>' + moment(dateUnix).format('MMM') + moment(dateUnix).format('. DD, YYYY');
           }
+          console.log(date);
           let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
           let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
           if(val.event_id){
