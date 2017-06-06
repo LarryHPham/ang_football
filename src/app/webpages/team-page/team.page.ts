@@ -181,7 +181,7 @@ export class TeamPage implements OnInit {
         this.dateParam = {
           scope: 'team',//current profile page
           teamId: param['teamID'], // teamId if it exists
-          date: moment().tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
+          date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
         } //this.dateParam
 
         this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();

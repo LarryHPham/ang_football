@@ -60,7 +60,6 @@ export class BoxScoresService {
     var callURL = this._apiUrl + '/boxScores/' + GlobalSettings.getScope(profile) + '/' + teamId + '/' + date;
     return this.model.get(callURL)
       .map(data => {
-        console.log('##########################################################', data);
         // transform the data to YYYY-MM-DD objects from unix
         var transformedDate;
         try {
@@ -140,7 +139,7 @@ export class BoxScoresService {
                 var eventType = aiContent[p];
                 var teaser = eventType.title;
                 if (eventType.last_updated) {
-                  var date = moment().unix(eventType.last_updated);
+                  var date = moment.unix(eventType.last_updated);
                   date = date.format('dddd') + ', ' + date.format('MMM') + date.format('. DD, YYYY');
                 }
                 if (eventType.image_url != null) {

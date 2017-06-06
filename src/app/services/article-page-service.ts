@@ -374,8 +374,8 @@ export class ArticleDataService {
       var articleData;
       if (val.event_id != currentArticleId) {
         let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + Zone.current.get('originUrl');
-        val["date"] = isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment().unix(Number(val.last_updated)), "timeZone") :
-          GlobalFunctions.sntGlobalDateFormatting(moment().unix(Number(val.publishedDate) / 1000), "timeZone");
+        val["date"] = isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
+          GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
         articleData = {
           author: val['author'],
           publisher: val['publisher'],
@@ -586,8 +586,8 @@ export class ArticleDataService {
         return null;
       } else {
         data = data.data[0];
-        var date = moment().unix(data['last_updated']).format();
-        date = moment().tz(date, "America/New_York").fromNow();
+        var date = moment.unix(data['last_updated']).format();
+        date = moment.tz(date, "America/New_York").fromNow();
         return {
           backgroundImage: GlobalSettings.getImageUrl(data['article_data']['images'][0].image_url),
           profileImage: GlobalSettings.getImageUrl(data['article_data'].headshot_image),

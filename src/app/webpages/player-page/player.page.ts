@@ -392,7 +392,7 @@ export class PlayerPage{
       dateParams = {
         scope: 'player',
         teamId: this.teamID, // teamId if it exists
-        date: moment().tz(currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
+        date: moment.tz(currentUnixDate, 'America/New_York').format('YYYY-MM-DD')
       } //this.dateParam
       this.dateParam = dateParams;
     }
