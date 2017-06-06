@@ -62,7 +62,7 @@ export class ListOfListsService {
       targetbit = '';
     }
 
-    var url_api = "scope=" + scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
+    var url_api = "scope=" + this._scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
 
     return this.model.get( callURL )
