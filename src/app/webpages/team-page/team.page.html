@@ -66,12 +66,9 @@
           [tabName]="ptabName"
           [seasonBase]="seasonBase"
           (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
+          <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
       </div>
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
-        <responsive-widget
-          *ngIf="playerStatsData"
-          [embedPlace]="widgetPlace"
-          [displayAtRes]="'640'"></responsive-widget>
         <transactions-module
           *ngIf="scope == 'nfl' && transactionsData"
           [data]="transactionsData"
@@ -80,7 +77,6 @@
           [dropdownKey1]="dropdownKey1"
           (tabSwitched)="transactionsTab($event)"
           (transactionKeyFilter)="transactionsFilterDropdown($event)"></transactions-module>
-        <responsive-widget *ngIf="transactionsData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
         <draft-history-module
             *ngIf="scope == 'nfl' && profileData && pageParams"
             [profileData]="profileData"
@@ -97,7 +93,7 @@
             (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
         </draft-history-module>
         <responsive-widget
-          *ngIf="profileData"
+          *ngIf="scope == 'nfl' && profileData && pageParams"
           [embedPlace]="widgetPlace"
           [displayAtRes]="'640'"></responsive-widget>
       </div>
