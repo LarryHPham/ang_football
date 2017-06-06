@@ -20,7 +20,7 @@
       <box-article-component *ngIf="currentBoxScores" [boxArticleData]="currentBoxScores.aiContent"></box-article-component>
     </div>
   </div>
-  <div class="deep-dive-widget res1024">
+  <div class="deep-dive-widget res1024" *ngIf="currentBoxScores">
     <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="1024"></responsive-widget>
   </div>
 </div>

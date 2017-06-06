@@ -39,13 +39,14 @@ export class ArticleDataService {
   //AI article data processing
   getArticle(eventID, eventType, partnerId, scope, isFantasyReport, rawType) {
     var fullUrl = GlobalSettings.getArticleUrl();
+    var urlScope = scope == 'ncaaf' ? 'fbs' : scope;
     if (!isFantasyReport) {
-      return this.model.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
+      return this.model.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + urlScope + "&readyToPublish=all")
         .map(data => {
           return ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID)
         });
     } else {
-      return this.model.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + scope + "&readyToPublish=all")
+      return this.model.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + urlScope + "&readyToPublish=all")
         .map(data => {
           return ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID)
         });
@@ -323,7 +324,8 @@ export class ArticleDataService {
 
   //recommendations data processing
   getRecommendationsData(eventID, scope) {
-    var fullUrl = GlobalSettings.getArticleUrl() + "articles?&event=" + eventID + "&scope=" + scope + "&count=10&readyToPublish=all&random=1";
+    var articleScope = scope == 'ncaaf' ? 'fbs' : scope;
+    var fullUrl = GlobalSettings.getArticleUrl() + "articles?&event=" + eventID + "&scope=" + articleScope + "&count=10&readyToPublish=all&random=1";
     return this.model.get(fullUrl)
       .map(data => ArticleDataService.formatRecommendedData(data.data, scope));
   }
@@ -363,8 +365,9 @@ export class ArticleDataService {
     if (batch == null) {
       batch = 1;
     }
+    var articleScope = scope == 'ncaaf' ? 'fbs' : scope;
     var fullUrl = GlobalSettings.getArticleUrl();
-    return this.model.get(fullUrl + "articles?page=" + batch + "&count=10&scope=" + scope + "&articleType=postgame-report")
+    return this.model.get(fullUrl + "articles?page=" + batch + "&count=10&scope=" + articleScope + "&articleType=postgame-report")
       .map(data => data);
   }
 
@@ -403,8 +406,9 @@ export class ArticleDataService {
   //headline data processing
   getAiHeadlineData(scope, teamID, isLeague) {
     var fullUrl = GlobalSettings.getArticleDataUrl();
-    return this.model.get(fullUrl + 'headlines?scope=' + scope + '&team=' + teamID)
-      .map(headlineData => this.processHeadlineData(headlineData.data, scope, teamID, isLeague))
+    var aiScope = scope == 'ncaaf' ? 'fbs' : scope;
+    return this.model.get(fullUrl + 'headlines?scope=' + aiScope + '&team=' + teamID)
+      .map(headlineData => this.processHeadlineData(headlineData.data, aiScope, teamID, isLeague))
       .catch(err=> {
         console.log('Error', err);
         return Observable.throw(err);
@@ -415,9 +419,10 @@ export class ArticleDataService {
     if (count == null) {
       count = 10;
     }
+    var aiScope = scope == 'ncaaf' ? 'fbs' : scope;
     var fullUrl = GlobalSettings.getArticleUrl();
-    return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + scope + "&articleType=postgame-report")
-      .map(headlineData => this.processHeadlineData(headlineData.data, scope, null, isLeague))
+    return this.model.get(fullUrl + "articles?page=1&count=" + count + "&scope=" + aiScope + "&articleType=postgame-report")
+      .map(headlineData => this.processHeadlineData(headlineData.data, aiScope, null, isLeague))
       .catch(err=> {
         console.log('Error', err);
         return Observable.throw(err);
