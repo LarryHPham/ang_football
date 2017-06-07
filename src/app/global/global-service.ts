@@ -69,7 +69,7 @@ export class GeoLocation{
                     this.geoData['state'] = partnerData.state;
                     this.geoData['city'] = partnerData.city;
                     return new Observable(observer => {
-                      observer.emit(this.geoData);
+                      observer.next(this.geoData);
                       observer.complete();
                     });
                   } else {
@@ -122,7 +122,7 @@ export class GeoLocation{
     grabLocation(partnerID?: string) {
         if (this.geoData) {
             return new Observable(observer => {
-                observer.emit(this.geoData);
+                observer.next(this.geoData);
                 observer.complete();
             });
         } else if (this.geoObservable) {

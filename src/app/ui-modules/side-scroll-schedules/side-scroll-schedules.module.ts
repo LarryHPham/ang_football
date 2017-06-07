@@ -25,10 +25,10 @@ ngOnInit(){}
 
   counter(event){
     this.curCount = event;
-    this.count.emit(event);
+    this.count.next(event);
   }
 
   scopeChange(selection) {
-    this.changeScope.emit(selection);
+    this.changeScope.next(selection);
   }
 }
