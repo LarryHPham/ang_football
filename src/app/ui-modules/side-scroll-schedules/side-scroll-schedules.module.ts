@@ -29,6 +29,6 @@ ngOnInit(){}
   }
 
   scopeChange(selection) {
-    this.changeScope.next(selection);
+    this.changeScope.emit(selection);
   }
 }

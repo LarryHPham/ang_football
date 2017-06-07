@@ -50,7 +50,6 @@ export class DailyUpdateService {
     if ( !data ) {
       throw new Error("Error! Data is null from Team Daily Update API");
     }
-
     //Setting up season stats
     var stats = [];
     if ( data.recentGames['wins'] != null ) {
@@ -128,7 +127,7 @@ export class DailyUpdateService {
         return {
           hasError: false,
           lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
+          fullBackgroundImageUrl: data['postgame-report']['article'].data[0] != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report']['article'].data[0].imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
           type: "Team",
           wrapperStyle: {},
           seasonStats: stats,
@@ -303,7 +302,7 @@ export class DailyUpdateService {
         return {
           hasError: false,
           lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
-          fullBackgroundImageUrl: data['postgame-report'].image != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report'].image.imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
+          fullBackgroundImageUrl: data['postgame-report']['article'].data[0] != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report']['article'].data[0].imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
           type: "Player",
           wrapperStyle: {},
           seasonStats: stats,
