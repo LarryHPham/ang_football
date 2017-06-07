@@ -28,12 +28,12 @@ export class DraftHistoryComponent {
 
 
     selectedTab(tabTitle) {
-        this.tabSelectedListener.next(tabTitle);
+        this.tabSelectedListener.emit(tabTitle);
     } //selectedTab
 
 
 
     dropdownChanged(event) {
-        this.dropdownSelectedListener.next(event);
+        this.dropdownSelectedListener.emit(event);
     } //dropdownChanged
 }

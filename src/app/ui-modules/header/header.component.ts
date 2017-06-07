@@ -68,7 +68,7 @@ export class HeaderComponent implements AfterContentChecked {
     if (isBrowser) {
       this.pageHeader = document.getElementById('pageHeader');
       this.pageHeaderHeight = this.pageHeader.offsetHeight;
-      this.scrollPadding.next(this.pageHeaderHeight);
+      this.scrollPadding.emit(this.pageHeaderHeight);
       return this.pageHeaderHeight;
     }
   } //getHeaderHeight
