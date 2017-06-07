@@ -57,6 +57,7 @@ export class BoxScoresService {
       date += '/addAi'
     }
     //date needs to be the date coming in AS EST and come back as UTC
+    teamId = teamId == 'ncaaf' ? 'fbs' : teamId;
     var callURL = this._apiUrl + '/boxScores/' + GlobalSettings.getScope(profile) + '/' + teamId + '/' + date;
     return this.model.get(callURL)
       .map(data => {
@@ -201,7 +202,7 @@ export class BoxScoresService {
     if (profile == 'player') {
       profile = 'team'
     }
-
+    teamId = teamId == 'ncaaf' ? 'fbs' : teamId;
     var callURL = this._apiUrl + '/' + profile + '/gameDatesWeekly/' + teamId + '/' + date;
     return this.model.get(callURL)
       .map(data => {
@@ -221,6 +222,7 @@ export class BoxScoresService {
       profile = 'team'
     }
 
+    teamId = teamId == 'ncaaf' ? 'fbs' : teamId;
     var callURL = this._apiUrl + '/' + profile + '/gameDates/' + teamId + '/' + date;//localToEST needs tobe the date coming in AS UNIX
     return this.model.get(callURL)
       .map(data => {

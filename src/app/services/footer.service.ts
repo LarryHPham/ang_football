@@ -14,8 +14,9 @@ export class FooterService {
   getFooterService(scope: string, profile: string){
     var fullUrl = GlobalSettings.getApiUrl();//TODO
     fullUrl += "/footer";
+    var footerScope = scope == 'ncaaf' ? 'fbs' : scope;
     if(scope !== undefined){
-      fullUrl += "/" + scope;
+      fullUrl += "/" + footerScope;
       if(profile !== undefined){
         fullUrl += "/" + profile;
       }
