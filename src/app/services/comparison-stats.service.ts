@@ -250,6 +250,7 @@ export class ComparisonStatsService {
 
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
+      debugger;
       if(apiData.playerOne != null){
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
         apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot, GlobalSettings._imgLgLogo);
@@ -322,7 +323,7 @@ export class ComparisonStatsService {
   */
   private formatTeamList(teamList) {
     try{
-      if(teamList.data){
+      if(teamList){
         return teamList.map(team => {
           var teamName = team.teamAbbreviation + "<span class='hide-320'> " + team.nickname  + "</span>";
           return {key: team.id, value: teamName};
