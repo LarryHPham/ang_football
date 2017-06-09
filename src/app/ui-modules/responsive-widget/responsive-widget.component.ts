@@ -1,5 +1,5 @@
-import {Component, Input, Output, ChangeDetectorRef, OnInit} from '@angular/core';
-import { isBrowser } from 'angular2-universal';
+import {Component, Input, OnInit} from '@angular/core';
+import {isBrowser} from 'angular2-universal';
 
 @Component({
   selector: 'responsive-widget',
@@ -8,38 +8,59 @@ import { isBrowser } from 'angular2-universal';
 
 export class ResponsiveWidget implements OnInit {
   @Input() embedPlace: string;
-  @Input() displayAtRes: string;
   @Input() scope: string;
+  @Input() deepDive: boolean = false;
+  @Input() pageType: string;
+  public displayAtRes: string;
+  widthLimit: number;
   windowWidth: number = 10;
-  widgetMed:boolean=false;
-  widgetSml:boolean=false;
+  widgetMed: boolean = false;
+  widgetSml: boolean = false;
 
   ngOnInit() {
-    this.displayAtRes = "_" + this.displayAtRes + "only";
     if (isBrowser) {
       var windowWidth = window.innerWidth;
-      // var windowWidth = 960;
-      if (windowWidth <= 1317) {
+      this.getWidgetParams(this.pageType, windowWidth);
+    }
+  }
+
+  private onWindowLoadOrResize(event) {
+    var windowWidth = event.target.innerWidth;
+    this.getWidgetParams(this.pageType, windowWidth);
+  }
+
+  getWidgetParams(type, width) {
+    switch (type) {
+      case "deepDive":
+      case "article":
+        this.displayAtRes = "_1280only";
+        this.widthLimit = 1280;
+        break;
+      case "profile":
+        this.displayAtRes = "_1024only";
+        this.widthLimit = 992;
+        break;
+      default:
+        this.displayAtRes = "_1024only";
+        this.widthLimit = 992;
+    }
+    if (this.deepDive) {
+      if (width <= this.widthLimit) {
         this.widgetSml = true;
         this.widgetMed = false;
       }
-      else {
-          this.widgetSml = false;
-          this.widgetMed = true;
-      }
-      this.windowWidth = windowWidth;
-    }
-  }
-  private onWindowLoadOrResize(event) {
-    var windowWidth = event.target.innerWidth;
-    if ( windowWidth <= 1317 ) {
-      this.widgetSml = true;
-      this.widgetMed = false;
-    }
-    else {
+    } else {
+      if (width < this.widthLimit && width >= 670) {
         this.widgetSml = false;
         this.widgetMed = true;
+      } else if (width < 670) {
+        this.widgetSml = true;
+        this.widgetMed = false;
+      } else {
+        this.widgetSml = false;
+        this.widgetMed = false;
+      }
     }
-    this.windowWidth = windowWidth;
+    this.windowWidth = width;
   }
 }

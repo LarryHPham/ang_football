@@ -1,4 +1,4 @@
-<sidekick-wrapper>
+<sidekick-wrapper [isProfilePage]="true">
   <section *ngIf="isLoaded" class="page profile-container player-page" (window:scroll)="onScroll($event)">
     <!-- <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component> -->
     <error-component *ngIf="hasError"></error-component>
@@ -20,7 +20,7 @@
         <responsive-widget
           *ngIf="dailyUpdateData"
           [embedPlace]="widgetPlace"
-          [displayAtRes]="'640'"></responsive-widget>
+          [pageType]="'profile'"></responsive-widget>
         <box-scores
           *ngIf="dateParam"
           [boxScores]="currentBoxScores"
@@ -29,7 +29,7 @@
         <responsive-widget
           *ngIf="dateParam"
           [embedPlace]="widgetPlace"
-          [displayAtRes]="'992'"></responsive-widget>
+          [pageType]="'profile'"></responsive-widget>
       </div>
 
       <schedules
@@ -48,7 +48,7 @@
         <responsive-widget
           *ngIf="schedulesData"
           [embedPlace]="widgetPlace"
-          [displayAtRes]="'640'"></responsive-widget>
+          [pageType]="'profile'"></responsive-widget>
         <standings-module
           *ngIf="standingsData"
           [data]="standingsData"
@@ -63,7 +63,7 @@
         [seasonStatsModuleFooterUrl]="seasonStatsModuleFooterUrl"
         (tabSelected)="seasonStatsTabSelected($event)">
     </season-stats-module>
-        <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace"></responsive-widget>
+        <responsive-widget *ngIf="seasonStatsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <comparison-module
           [modelData]="comparisonModuleData"
           [profileName]="profileHeaderData.profileName"
@@ -77,12 +77,12 @@
         <div class="profile-carousel-container" *ngIf="imageData">
             <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
         </div>
-        <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <dyk-module
           *ngIf="dykData && dykData.length > 0"
           [profileName]="profileHeaderData.profileName"
           [dykData]="dykData"></dyk-module>
-        <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
+        <responsive-widget *ngIf="dykData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <faq-module
           *ngIf="faqData"
           [profileName]="profileHeaderData.profileName"
@@ -90,7 +90,7 @@
       </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
-        <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <list-of-lists
           *ngIf="profileHeaderData && listOfListsData"
           [profileHeaderData]="profileHeaderData"
@@ -104,13 +104,13 @@
           [newsDataArray]="newsDataArray"
           [profileName]="profileHeaderData.profileName"></news-module>-->
 <!--
-        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
 -->
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
         <!--Like Us On FB Module, only display if not on partner page-->
         <section *ngIf="!partnerID">
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         </section>
       </div>
     </div>

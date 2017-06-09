@@ -9,7 +9,7 @@
   </div> -->
   <!-- WIDGET -->
   <div *ngIf="stackTop1 && stackRow1" class="deep-dive-module">
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+    <responsive-widget [deepDive]="true" [embedPlace]="widgetPlace" [pageType]="'deepDive'"></responsive-widget>
   </div>
   <!-- SIX PACKS -->
   <div *ngIf="recData1" class="deep-dive-module">
@@ -21,7 +21,7 @@
   </div>
   <!-- WIDGET -->
   <div *ngIf="stackTop2 && stackRow2" class="deep-dive-module">
-    <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+    <responsive-widget [deepDive]="true" [embedPlace]="widgetPlace" [pageType]="'deepDive'"></responsive-widget>
   </div>
   <!-- ARTICLE STACK TYPE 2 -->
   <div *ngIf="articleStack2DataTop && articleStack2DataBatch" class="deep-dive-module">
@@ -34,5 +34,5 @@
 </div>
 <!-- WIDGET -->
 <div *ngIf="recData2" class="deep-dive-module">
-  <responsive-widget [embedPlace]="widgetPlace"></responsive-widget>
+  <responsive-widget [deepDive]="true" [embedPlace]="widgetPlace" [pageType]="'deepDive'"></responsive-widget>
 </div>
