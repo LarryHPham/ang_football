@@ -251,14 +251,20 @@ export class ComparisonStatsService {
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
       debugger;
+      let playerHeadShot = "";
+      if (apiData.playerOne.playerHeadshot.indexOf("http://images.synapsys.us") !== -1) {
+        playerHeadShot = apiData.playerOne.playerHeadshot.replace("http://images.synapsys.us", "");
+      } else {
+        playerHeadShot = apiData.playerOne.playerHeadshot;
+      }
       if(apiData.playerOne != null){
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
-        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot, GlobalSettings._imgLgLogo);
+        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(playerHeadShot, GlobalSettings._imgLgLogo);
         existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
       }else{
         apiData.playerOne = {};
         apiData.playerOne.statistics = this.formatPlayerData(apiData.playerOne.playerId, apiData.data);
-        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(apiData.playerOne.playerHeadshot, GlobalSettings._imgLgLogo);
+        apiData.playerOne.playerHeadshot = GlobalSettings.getImageUrl(playerHeadShot, GlobalSettings._imgLgLogo);
         existingData.playerTwo.statistics = this.formatPlayerData(existingData.playerTwo.playerId, apiData.data);
       }
       if ( index == 0 ) {
