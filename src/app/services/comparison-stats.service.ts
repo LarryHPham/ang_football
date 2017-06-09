@@ -250,7 +250,6 @@ export class ComparisonStatsService {
 
   getSinglePlayerStats(index:number, existingData: ComparisonStatsData, teamId: string, playerId: string): Observable<ComparisonBarList> {
     return this.callPlayerComparisonAPI(this.scope, teamId, playerId, apiData => {
-      debugger;
       let playerHeadShot = "";
       if (apiData.playerOne.playerHeadshot.indexOf("http://images.synapsys.us") !== -1) {
         playerHeadShot = apiData.playerOne.playerHeadshot.replace("http://images.synapsys.us", "");
