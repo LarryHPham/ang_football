@@ -16,7 +16,7 @@ transactions-page .module-container .widgetForPage {
   display:block !important;
   width:100%;
   @media @mobile {
-    height: 240px;
+    height: 280px;
   }
   .widgetWrapper {
     @media @mobile {
@@ -51,7 +51,7 @@ transactions-page .module-container .widgetForPage {
   height: 250px;
   margin: 20px 0 0;
   .widgetWrapper {
-    width: 100%;
+    width:100%;
     padding: 0 0 20px;
     height: 250px;
     position: absolute;
@@ -61,7 +61,7 @@ transactions-page .module-container .widgetForPage {
 @media @tablet and (max-width: 1024px) {
   .widgetForPage .widgetWrapper {
       background-color: transparent;
-      height: 240px;
+      height: 250px;
   }
   .pane .widgetForPage .widgetWrapper {
     //margin: 0 -15px;
@@ -76,7 +76,7 @@ transactions-page .module-container .widgetForPage {
 @media @mobile {
   table .widgetForPage {
     padding: 10px 0;
-    height:240px;
+    height:250px;
     position: unset;
     .widgetWrapper {
   //    width: 100vw;
@@ -85,7 +85,7 @@ transactions-page .module-container .widgetForPage {
 }
 
 .widgetWrapper {
-  width: 640px;
+  width:100%;
   height: 250px;
   background-color: transparent;
   // padding: 10px 0 0 0;
@@ -98,12 +98,11 @@ transactions-page .module-container .widgetForPage {
     background: white;
   }
   .adSquareMed {
-    width:640px;
+    width:100%;
+    max-width: 970px;
     height:250px;
     text-align: center;
-    margin: 0;
-    margin-left:auto;
-    margin-right:auto;
+    margin: 0 auto;
     background: white;
   }
 }
@@ -116,7 +115,7 @@ transactions-page .module-container .widgetForPage {
 
 @media @tablet  {
   .widgetForPage {
-    height: 240px;
+    height: 280px;
   }
   .deep-dive .widgetWrapper{
     width: 640px;
@@ -124,6 +123,14 @@ transactions-page .module-container .widgetForPage {
   }
 }
 
+@media @desktop-m {
+  .widgetForPage {
+    display:none;
+  }
+  .widgetForModule {
+    display:none;
+  }
+}
 
 ._640only {
   @media @mobile{display: none}
@@ -135,7 +142,11 @@ transactions-page .module-container .widgetForPage {
   @media @tablet{display: none}
   @media @desktop-m{display:none}
 }
+._1024only {
+  @media @desktop-l{display:none}
+}
 ._1280only {
+  @media @desktop-m{display:block}
   @media @mobile{display: block}
   @media @desktop-l{display:none}
 }
