@@ -1,4 +1,4 @@
-<sidekick-wrapper>
+<sidekick-wrapper [isProfilePage]="isProfilePage">
   <section *ngIf="isLoaded" class="page profile-container team-page" (window:scroll)="onScroll($event)">
     <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
     <error-component *ngIf="hasError"></error-component>
@@ -11,12 +11,12 @@
           [profileName]="profileHeaderData.profileTitleFirstPart + ' ' + profileHeaderData.profileTitleLastPart"
           [data]="dailyUpdateData">
         </daily-update-module>
-        <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="dailyUpdateData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <articles-module
         *ngIf="headlineData"
         [headlineData]="headlineData"
         [isLeague]="false"></articles-module>
-        <!-- <responsive-widget *ngIf="headlineData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget> -->
+        <!-- <responsive-widget *ngIf="headlineData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget> -->
         <box-scores
         *ngIf="dateParam"
         [boxScores]="currentBoxScores"
@@ -25,7 +25,8 @@
         <responsive-widget
         *ngIf="currentBoxScores"
         [embedPlace]="widgetPlace"
-        [displayAtRes]="'640'"></responsive-widget>
+        [pageType]="'profile'"
+       ></responsive-widget>
       </div>
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
@@ -49,7 +50,8 @@
         <responsive-widget
           *ngIf="standingsData"
           [embedPlace]="widgetPlace"
-          [displayAtRes]="'992'"></responsive-widget>
+          [pageType]="'profile'"
+         ></responsive-widget>
         <team-roster-module
           *ngIf="rosterData"
           [data]="rosterData"
@@ -66,7 +68,7 @@
           [tabName]="ptabName"
           [seasonBase]="seasonBase"
           (tabSelected)="playerStatsTabSelected($event)"></player-stats-module>
-          <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <responsive-widget *ngIf="playerStatsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
       </div>
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
         <transactions-module
@@ -95,7 +97,8 @@
         <responsive-widget
           *ngIf="scope == 'nfl' && profileData && pageParams"
           [embedPlace]="widgetPlace"
-          [displayAtRes]="'640'"></responsive-widget>
+          [pageType]="'profile'"
+         ></responsive-widget>
       </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
@@ -116,7 +119,7 @@
           [videoData]="videoData"
           [profileHeader]="profileHeaderData"
           [isProfilePage]="isProfilePage"></video-module>
-        <responsive-widget [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
+        <responsive-widget [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <dyk-module
           *ngIf="dykData"
           [profileName]="profileHeaderData.profileName"
@@ -128,7 +131,7 @@
           *ngIf="faqData"
           [profileName]="profileHeaderData.profileName"
           [faqData]="faqData"></faq-module>
-        <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <list-of-lists
           *ngIf="listOfListsData"
           [profileHeaderData]="profileHeaderData"
@@ -137,7 +140,7 @@
           [teamId]="pageParams.teamId"
           [scope]="scope"
           [storedPartnerParam]="storedPartnerParam"></list-of-lists>
-        <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
+        <responsive-widget *ngIf="listOfListsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
 
         <!--<news-module
           *ngIf="newsDataArray"
@@ -145,7 +148,7 @@
           [profileName]="profileHeaderData.profileName"></news-module>-->
 
 <!--
-        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
 -->
 
         <twitter-module
@@ -156,7 +159,7 @@
         <!--Like Us On FB Module, only display if not on partner page-->
         <section *ngIf="!partnerID">
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+          <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         </section>
       </div>
     </div>
