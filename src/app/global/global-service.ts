@@ -11,6 +11,7 @@ import {Observable} from "rxjs/Observable";
 import { GlobalFunctions } from "../global/global-functions";
 import { GlobalSettings } from "../global/global-settings";
 import { ModelService } from '../global/shared/model/model.service';
+import { isBrowser, isNode } from 'angular2-universal';
 
 export interface geoLocate {
     partner_id?: string;
@@ -91,32 +92,42 @@ export class GeoLocation{
     getGeoLocation() {
       var getGeoLocation = GlobalSettings.getGeoLocation() + '/getlocation/2';
       // var getGeoLocation = '//dev-waldo.synapsys.us/ip2loc/69.178.104.1/2';
+      if (!this.geoData) {
+        this.geoData = {};
+      }
+      if(isNode){
+        console.log("Server Detected setting geolocation to national");
+        this.geoData['state'] = 'us';
+        this.geoData['city'] = null;
+        this.geoData['zipcode'] = null;
+        return new Observable(observer => {
+            observer.next(this.geoData);
+            observer.complete();
+        });
+      }else{
         return this.model.get(getGeoLocation)
-            .map(
-            data => {
-              try{
-                data[0].state = data[0].state == null ? "us" : data[0].state;
-                let state = data[0].state.toLowerCase();
-                let city = data[0].city.replace(/ /g, "%20");
-                let zipcode = data[0].zipcode;
+        .map(
+          data => {
+            try{
+              data[0].state = data[0].state == null ? 'us' : data[0].state;
+              let state = data[0].state ? data[0].state.toLowerCase() : 'us';
+              let city = data[0].city ? data[0].city.replace(/ /g, "%20") : null;
+              let zipcode = data[0].zipcode;
 
-                if (!this.geoData) {
-                  this.geoData = {};
-                }
+              this.geoData['state'] = state;
+              this.geoData['city'] = city;
+              this.geoData['zipcode'] = zipcode;
 
-                this.geoData['state'] = state;
-                this.geoData['city'] = city;
-                this.geoData['zipcode'] = zipcode;
-
-                return this.geoData;
-              }catch(e){
-                console.error(e);
-                this.geoData['state'] = 'ks';
-                this.geoData['city'] = 'wichita';
-                return this.geoData;
-              }
-            })
-            .share();
+              return this.geoData;
+            }catch(e){
+              console.error(e);
+              this.geoData['state'] = 'ks';
+              this.geoData['city'] = 'wichita';
+              return this.geoData;
+            }
+          })
+          .share();
+      }
     };
 
     grabLocation(partnerID?: string) {

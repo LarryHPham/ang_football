@@ -10,6 +10,7 @@ export class WidgetModule {
     @Input() aiSidekick:boolean;
     @Input() syndicated:boolean; // DEPRECATED
     @Input() scope:string;// DEPRECATED
+    @Input() isProfilePage:boolean;
     isBrowser: boolean;
 
     constructor(){

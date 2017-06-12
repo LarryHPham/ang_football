@@ -1,4 +1,4 @@
-<sidekick-wrapper>
+<sidekick-wrapper [isProfilePage]="isProfilePage">
   <section class="page profile-container league-page" (window:scroll)="onScroll($event)">
     <div *ngIf="profileHeaderData && pageParams">
       <loading-component *ngIf="!profileHeaderData && !hasError"></loading-component>
@@ -12,7 +12,7 @@
         [boxScores]="currentBoxScores"
         [calendarParams]="dateParam"
         (dateEmit)="getBoxScores($event)"></box-scores>
-        <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
       </div>
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
@@ -29,7 +29,7 @@
           (tabSelected)="scheduleTab($event)"
           (selectedKeyFilter)="scheduleFilterDropdown($event)">
         </schedules>
-        <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
+        <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
       </div>
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
@@ -39,7 +39,7 @@
           (tabSelected)="standingsTabSelected($event)"
           (filterSelected)="standingsFilterSelected($event)" [scope]="scope">
         </standings-module>
-        <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <transactions-module
           *ngIf="scope == 'nfl' && transactionsData"
           [data]="transactionsData"
@@ -65,7 +65,7 @@
           (tabSelectedListener)="draftHistoryTab($event)"
           (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
         </draft-history-module>
-        <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace"></responsive-widget>
+        <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
       </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
@@ -82,22 +82,22 @@
               (tabSelectedListener)="mvpTabSelected($event)"
               (dropdownPositionSelection)="mvpFilterDropdown($event)">
           </mvp-module>
-        <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <comparison-module
           [modelData]="comparisonModuleData"
           [profileName]="profileHeaderData.profileName"
           [scope]="scope"></comparison-module>
-        <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
+        <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <div class="profile-carousel-container">
           <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
         </div>
       </div>
 
       <div class="loadBatch5" *ngIf="batchLoadIndex >= 5">
-        <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>
+        <responsive-widget *ngIf="imageData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
         <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
-        <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace"></responsive-widget>
+        <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <list-of-lists
           *ngIf="listOfListsData"
           [profileHeaderData]="profileHeaderData"
@@ -110,10 +110,10 @@
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
        <!-- <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
-        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [displayAtRes]="'640'"></responsive-widget>-->
+        <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>-->
         <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
-        <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [displayAtRes]="'992'"></responsive-widget>
+        <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <!--Like Us On FB Module, only display if not on partner page-->
         <section *ngIf="!partnerID">
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
