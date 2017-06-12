@@ -235,19 +235,21 @@ export class DeepDivePage {
       this.scope = this.scope.toLowerCase();
       let changeScope = this.scope == 'ncaaf' ? 'fbs' : this.scope;
       this._schedulesService.setupSlideScroll(this.sideScrollData, changeScope, 'league', 'pregame', this.callLimit, this.callCount, (sideScrollData) => {
-        if (this.sideScrollData == null) {
-          this.sideScrollData = sideScrollData;
+        if(sideScrollData){
+          if (this.sideScrollData == null) {
+            this.sideScrollData = sideScrollData;
+          }
+          else {
+            sideScrollData.forEach(function(val, i) {
+              self.sideScrollData.push(val);
+            })
+          }
+          if(sideScrollData.length > 0){// if data returned is an emptry array then dont run this api call anymore.
+            this.safeCall = true;
+          }
+          this.callCount++;
+          this.scrollLength = this.sideScrollData.length;
         }
-        else {
-          sideScrollData.forEach(function(val, i) {
-            self.sideScrollData.push(val);
-          })
-        }
-        if(sideScrollData.length > 0){// if data returned is an emptry array then dont run this api call anymore.
-          this.safeCall = true;
-        }
-        this.callCount++;
-        this.scrollLength = this.sideScrollData.length;
       }, null, null)
     }
   }

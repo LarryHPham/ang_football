@@ -222,59 +222,66 @@ export class SchedulesService {
     var modifiedArray = [];
     var newData:scheduleBoxInput;
     //run through and convert data to what is needed for the component
-    data.forEach(function(val,index){
-      let reportText = 'GAME REPORT';
-      let partner = GlobalSettings.getHomeInfo();
-      var reportLink;
-      let reportUrl;
-      let routeScope = scope == 'fbs' ? 'ncaaf': scope;
-      if(val.eventStatus == 'inprogress'){
-        if(Number(val.eventQuarter) > 1){// so that ai gets a chance to generate an article and no one really needs an article created for first quarter
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'in-game-report',val.eventId);
-          reportText = 'LIVE GAME REPORT';
-        }else{// link if game is inprogress and still 1st quarter
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
-          reportText = 'PRE GAME REPORT'
-        }
+    try{
+      if(data){
+        data.forEach(function(val,index){
+          let reportText = 'GAME REPORT';
+          let partner = GlobalSettings.getHomeInfo();
+          var reportLink;
+          let reportUrl;
+          let routeScope = scope == 'fbs' ? 'ncaaf': scope;
+          if(val.eventStatus == 'inprogress'){
+            if(Number(val.eventQuarter) > 1){// so that ai gets a chance to generate an article and no one really needs an article created for first quarter
+              reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'in-game-report',val.eventId);
+              reportText = 'LIVE GAME REPORT';
+            }else{// link if game is inprogress and still 1st quarter
+              reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
+              reportText = 'PRE GAME REPORT'
+            }
+          }else{
+            if(val.eventStatus == 'pregame'){
+              reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
+              reportText = 'PRE GAME REPORT'
+            }else if (val.eventStatus == 'postgame'){
+              reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'postgame-report',val.eventId);
+              reportText = 'POST GAME REPORT';
+            }else{
+              reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'postgame-report',val.eventId);
+              reportText = 'POST GAME REPORT';
+            }
+          }
+          var today = moment().format('MM/DD/YYYY');
+          var gameDate = moment(val.eventStartTime).format('MM/DD/YYYY');
+          let date = today == gameDate ? 'Today &bull; '+moment(val.eventStartTime).tz('America/New_York').format('h:mmA (z)') : GlobalFunctions.sntGlobalDateFormatting(Number(val.eventStartTime),"bulletedShortDateTime");
+
+          let team1FullName = val.team1FullName;
+          let team2FullName = val.team2FullName;
+
+          newData = {
+            eos: false,
+            date: date,
+            awayImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team2Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id)),
+            homeImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team1Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id)),
+            awayTeamName: scope =='fbs' ? val.team2Abbreviation: team2FullName.replace(val.team2Market+" ",''),
+            homeTeamName: scope =='fbs' ? val.team1Abbreviation: team1FullName.replace(val.team1Market+" ",''),
+            awayLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id),
+            homeLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id),
+            reportDisplay: reportText,
+            reportLink: reportUrl,
+            extUrl:false,
+            isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
+            inning: val.eventQuarter != null ? "Current: Quarter " + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
+          }
+          modifiedArray.push(newData);
+        });
+        return modifiedArray;
       }else{
-        if(val.eventStatus == 'pregame'){
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'pregame-report',val.eventId);
-          reportText = 'PRE GAME REPORT'
-        }else if (val.eventStatus == 'postgame'){
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'postgame-report',val.eventId);
-          reportText = 'POST GAME REPORT';
-        }else{
-          reportUrl = VerticalGlobalFunctions.formatArticleRoute(routeScope, 'postgame-report',val.eventId);
-          reportText = 'POST GAME REPORT';
-        }
+        return null;
       }
-      var today = moment().format('MM/DD/YYYY');
-      var gameDate = moment(val.eventStartTime).format('MM/DD/YYYY');
-      let date = today == gameDate ? 'Today &bull; '+moment(val.eventStartTime).tz('America/New_York').format('h:mmA (z)') : GlobalFunctions.sntGlobalDateFormatting(Number(val.eventStartTime),"bulletedShortDateTime");
-
-      let team1FullName = val.team1FullName;
-      let team2FullName = val.team2FullName;
-
-
-      newData = {
-        eos: false,
-        date: date,
-        awayImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team2Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id)),
-        homeImageConfig: self.imageData('', 'border-1', GlobalSettings.getImageUrl(val.team1Logo, GlobalSettings._imgProfileLogo), VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id)),
-        awayTeamName: scope =='fbs' ? val.team2Abbreviation: team2FullName.replace(val.team2Market+" ",''),
-        homeTeamName: scope =='fbs' ? val.team1Abbreviation: team1FullName.replace(val.team1Market+" ",''),
-        awayLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team2FullName, val.team2Id),
-        homeLink: VerticalGlobalFunctions.formatTeamRoute(routeScope, val.team1FullName, val.team1Id),
-        reportDisplay: reportText,
-        reportLink: reportUrl,
-        extUrl:false,
-        isLive: val.eventStatus == 'inprogress' ? 'schedule-live' : '',
-        inning: val.eventQuarter != null ? "Current: Quarter " + Number(val.eventQuarter) + "<sup>" + GlobalFunctions.Suffix(Number(val.eventQuarter)) + "</sup>": null
-      }
-
-      modifiedArray.push(newData);
-    });
-    return modifiedArray;
+    }catch(e){
+      console.warn('Error in slide scroll transform', e);
+      return null;
+    }
   }
 
 
