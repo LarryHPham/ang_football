@@ -92,11 +92,12 @@ export class GeoLocation{
     getGeoLocation() {
       var getGeoLocation = GlobalSettings.getGeoLocation() + '/getlocation/2';
       // var getGeoLocation = '//dev-waldo.synapsys.us/ip2loc/69.178.104.1/2';
-      if (!this.geoData) {
-        this.geoData = {};
-      }
+
       if(isNode){
         console.log("Server Detected setting geolocation to national");
+        if (!this.geoData) {
+          this.geoData = {};
+        }
         this.geoData['state'] = 'us';
         this.geoData['city'] = null;
         this.geoData['zipcode'] = null;
@@ -113,6 +114,10 @@ export class GeoLocation{
               let state = data[0].state ? data[0].state.toLowerCase() : 'us';
               let city = data[0].city ? data[0].city.replace(/ /g, "%20") : null;
               let zipcode = data[0].zipcode;
+
+              if (!this.geoData) {
+                this.geoData = {};
+              }
 
               this.geoData['state'] = state;
               this.geoData['city'] = city;

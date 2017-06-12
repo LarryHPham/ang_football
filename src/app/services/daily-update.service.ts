@@ -126,7 +126,7 @@ export class DailyUpdateService {
     if ( chart ) {
         return {
           hasError: false,
-          lastUpdateDate: GlobalFunctions.formatUpdatedDate(apiSeasonStats.lastUpdated, false, ""),
+          lastUpdateDate: apiSeasonStats.lastUpdated,
           fullBackgroundImageUrl: data['postgame-report']['article'].data[0] != null ? VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(data['postgame-report']['article'].data[0].imageUrl, VerticalGlobalFunctions._imgProfileMod) :  VerticalGlobalFunctions.getBackgroundImageUrlWithStockFallback(null),
           type: "Team",
           wrapperStyle: {},
@@ -239,7 +239,6 @@ export class DailyUpdateService {
           return "fa-trophy";
       }
     }
-
     var apiSeasonStats = {
       lastUpdated: data.recentGames["lastUpdated"] ? GlobalFunctions.formatUpdatedDate(data.recentGames["lastUpdated"]) : "N/A",
     }
@@ -401,6 +400,7 @@ export class DailyUpdateService {
       articleData['playerId'] = data.recentGames["playerId"] != null ? data.recentGames["playerId"] : null;
       articleData['playerPosition'] = data.recentGames["playerPosition"] != null ? data.recentGames["playerPosition"] : null;
       articleData['url'] = articleData['eventId'] != null ? VerticalGlobalFunctions.formatArticleRoute(data['postgame-report'].article.data[0]['subcategory'], 'postgame-report', articleData['eventId']) : null;
+
       articleData['pubDate'] = data['postgame-report'].article.data[0].lastUpdated != null ? GlobalFunctions.formatUpdatedDate(data['postgame-report'].article.data[0].lastUpdated*1000, true, " " + moment().tz('America/New_York').format('z')) : null;
       articleData['headline'] = data['postgame-report'].article.data[0].title != null ? data['postgame-report'].article.data[0].title : null;
       articleData['text'] = data['postgame-report'].article.data[0].teaser != null && data['postgame-report'].article.data[0].teaser.length > 0 ? [data['postgame-report'].article.data[0].teaser] : null;

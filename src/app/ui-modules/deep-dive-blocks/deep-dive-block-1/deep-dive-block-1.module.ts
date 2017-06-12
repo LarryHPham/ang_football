@@ -33,8 +33,6 @@ export class DeepDiveBlock1{
   @Input() scope: string;
   constructor(private _boxScores:BoxScoresService, private _deepDiveData: DeepDiveService){}
 
-  @HostListener('window:resize', ['$event'])
-
   ngOnInit(){
     var currentUnixDate = new Date().getTime();
     //convert currentDate(users local time) to Unix and push it into boxScoresAPI as YYYY-MM-DD in EST using moment timezone (America/New_York)
@@ -46,18 +44,6 @@ export class DeepDiveBlock1{
       }
     }
     this.callModules();
-  }
-
-  onResize(event) {
-    var width = event.outerWidth;
-    var height = event.outerHeight;
-    if(width < 640){
-      this.scroll = false;
-      this.maxHeight = 'auto';
-    }else if(width >= 640){
-      this.scroll = true;
-      this.maxHeight = 650;
-    }
   }
 
   getFirstArticleStackData(){
@@ -127,5 +113,18 @@ export class DeepDiveBlock1{
       this.getDeepDiveVideoBatch(this.scope, this.geoLocation, this.videoCallLimit, this.page);
       this.getTileStackData();
     }, 500);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    var width = event.outerWidth;
+    var height = event.outerHeight;
+    if(width < 640){
+      this.scroll = false;
+      this.maxHeight = 'auto';
+    }else if(width >= 640){
+      this.scroll = true;
+      this.maxHeight = 650;
+    }
   }
 }
