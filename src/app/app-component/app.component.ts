@@ -10,49 +10,58 @@ import { isBrowser, isNode } from 'angular2-universal';
 })
 export class AppComponent implements OnInit {
   public scopeParam: any;
-  public partnerID:string;
-  public iframeMaxHeight:string;
+  public partnerID: string;
+  public iframeMaxHeight: string;
   public partnerScript: string;
-  private isLoading:boolean = true;
-  private scrollPadding:string = '100px';
+  private isLoading: boolean = true;
+  private scrollPadding: string = '100px';
 
   constructor(
     private _router: Router,
-    private _activatedRoute:ActivatedRoute,
+    private _activatedRoute: ActivatedRoute,
     private _geoLocation: GeoLocation
   ) {
-      this._activatedRoute.params.subscribe(
-        (params:any) => {
-          this._activatedRoute.firstChild.params.subscribe(
-            (childParams:any) => {
-              if(isNode){
-                console.log(params,childParams);
-              }
-              this.scopeParam = childParams.scope ? '/' + childParams.scope : '/nfl';
-              //function that grabs the designated location needed for the client and if a partnerID is sent through then it will also set the partnerID and partnerScript for their Header
-              if(GlobalSettings.getHomeInfo().isSubdomainPartner) {
-                if (isBrowser) {
-                  var hostname = window.location.hostname;
-                  this.partnerID = window.location.hostname.split('.')[1] + '.' + window.location.hostname.split('.')[2];
+    this._activatedRoute.params.subscribe(
+      (params: any) => {
+        this._activatedRoute.firstChild.params.subscribe(
+          (childParams: any) => {
+            if (isNode) {
+              console.log(params, childParams);
+            }
+            try {
+              let siteScope = childParams.scope.toLowerCase();
+              if (siteScope == 'nfl' || siteScope == 'ncaaf' || siteScope == 'fbs' || siteScope == 'home') {
+                this.scopeParam = siteScope ? '/' + siteScope : '/nfl';
+                //function that grabs the designated location needed for the client and if a partnerID is sent through then it will also set the partnerID and partnerScript for their Header
+                if (GlobalSettings.getHomeInfo().isSubdomainPartner) {
+                  if (isBrowser) {
+                    var hostname = window.location.hostname;
+                    this.partnerID = window.location.hostname.split('.')[1] + '.' + window.location.hostname.split('.')[2];
+                  }
+                } else {
+                  GlobalSettings.storedPartnerId(params.partnerID);
+                  this.partnerID = params.partnerID;
                 }
+                this._geoLocation.grabLocation(this.partnerID).subscribe(res => {
+                  if (res.partner_id) {
+                    GlobalSettings.storedPartnerId(res.partner_id);
+                    this.partnerID = res.partner_id;
+                  }
+                  if (res.partner_script) {
+                    this.iframeMaxHeight = res.partner_height + 'px';
+                    this.partnerScript = res.partner_script;
+                  }
+                });// end of geo location subscribe
               } else {
-                GlobalSettings.storedPartnerId(params.partnerID);
-                this.partnerID = params.partnerID;
+                this._router.navigate(['/error-page']);
               }
-              this._geoLocation.grabLocation(this.partnerID).subscribe(res => {
-                if(res.partner_id){
-                  GlobalSettings.storedPartnerId(res.partner_id);
-                  this.partnerID = res.partner_id;
-                }
-                if(res.partner_script){
-                  this.iframeMaxHeight = res.partner_height + 'px';
-                  this.partnerScript = res.partner_script;
-                }
-              });// end of geo location subscribe
-            }//end of child params
-          )
-        }//end of parent activated param
-      );
+            } catch (e) {
+              this._router.navigate(['/error-page']);
+            }
+          }//end of child params
+        )
+      }//end of parent activated param
+    );
   } //constructor
 
   ngOnInit() {
@@ -61,7 +70,7 @@ export class AppComponent implements OnInit {
         if (!(navigation instanceof NavigationEnd)) {
           return;
         }
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
       });
     }
   }

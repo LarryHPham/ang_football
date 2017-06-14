@@ -7,6 +7,7 @@
  */
 import {Injectable} from '@angular/core';
 import {Http, Headers} from '@angular/http';
+import { Router } from '@angular/router';
 import {Observable} from "rxjs/Observable";
 import { GlobalFunctions } from "../global/global-functions";
 import { GlobalSettings } from "../global/global-settings";
@@ -28,7 +29,7 @@ export class GeoLocation{
 
     geoObservable: Observable<any>
 
-    constructor( public http: Http, public model: ModelService ) { }
+    constructor( public http: Http, public model: ModelService, private _router: Router ) { }
 
 
     getPartnerData(partner_id) {
@@ -56,7 +57,7 @@ export class GeoLocation{
             .flatMap(
             data => {
               try {
-                if (data[0] != null) {
+                if (data && data[0] != null) {
                   let partnerData = data[0];
                   let partnerScript = partnerData.script;
                   let partnerHeight = partnerData.height;
@@ -77,10 +78,12 @@ export class GeoLocation{
                     return this.getGeoLocation();
                   }
                 } else {
-                  return this.getGeoLocation();
+                  this._router.navigate(['/error-page']);
+                  // return this.getGeoLocation();
                 }
               } catch(e) {
-                return this.getGeoLocation();
+                this._router.navigate(['/error-page']);
+                // return this.getGeoLocation();
               }
                 // return data;
             }

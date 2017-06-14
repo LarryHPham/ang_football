@@ -24,6 +24,7 @@ import { ListPage } from "../webpages/list-page/list.page";
 import { ListOfListsPage } from "../webpages/list-of-lists-page/list-of-lists.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
+import { PartnerErrorPage } from "../webpages/partner-error/error";
 
 import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
@@ -235,6 +236,10 @@ const relativeChildRoutes = [
 ];
 
 export const appRoutes: Routes = [
+    {
+      path: 'error-page',
+      component: PartnerErrorPage
+    },
     {
         path: '',
         component: AppComponent,
