@@ -42,6 +42,7 @@ import { ContactUsPage } from "../webpages/contactus-page/contactus.page";
 import { DisclaimerPage } from "../webpages/disclaimer-page/disclaimer.page";
 import { DirectoryPage } from "../webpages/directory-page/directory.page";
 import { ErrorPage } from "../webpages/error-page/error-page.page";
+import { PartnerErrorPage } from "../webpages/partner-error/error";
 import { SearchPage } from "../webpages/search-page/search.page";
 import { SiteMap } from "../siteMap/siteMap";
 import { SiteTeamMap } from "../siteMap/siteTeamMap";
@@ -128,6 +129,7 @@ const PAGEMODULES = [
   DisclaimerPage,
   DirectoryPage,
   ErrorPage,
+  PartnerErrorPage,
   SearchPage,
   SiteMap,
   SiteTeamMap,
