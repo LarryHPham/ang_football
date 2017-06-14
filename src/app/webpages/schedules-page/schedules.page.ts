@@ -204,6 +204,7 @@ export class SchedulesPage implements OnInit {
           }
           this.schedulesData = schedulesData ? schedulesData : null;
           this.tabData = this.schedulesData.tabs ? this.getSelectedTab(this.schedulesData.tabs) : null;
+          this.setPaginationParams(this.schedulesData, this.selectedFilter1, this.selectedTabKey, this.pageNum);
           } else if (this.schedulesData == null) {
             this.isError = true;
           }
@@ -250,6 +251,7 @@ export class SchedulesPage implements OnInit {
         }
         this.schedulesData = schedulesData ? schedulesData : null;
         this.tabData = this.schedulesData.tabs ? this.getSelectedTab(this.schedulesData.tabs) : null;
+        this.setPaginationParams(this.schedulesData.pageInfo, this.selectedFilter1, this.selectedTabKey, this.pageNum);
       } else if (this.schedulesData == null) {
         this.isError = true;
       }
@@ -266,8 +268,8 @@ export class SchedulesPage implements OnInit {
         let currentFilter = this.selectedFilter1;
         if ( newFilter != currentFilter ) {
             newRoute = this.teamID ?
-            [this.storedPartnerParam, this.routeScope, this.pageType, this.teamName, this.teamID, newFilter, this.selectedTabKey, this.pageNum] :
-            [this.storedPartnerParam, this.routeScope, this.pageType, 'league', newFilter, this.selectedTabKey, this.pageNum];
+            [this.storedPartnerParam, this.routeScope, this.pageType, this.teamName, this.teamID, newFilter, this.selectedTabKey, 1] :
+            [this.storedPartnerParam, this.routeScope, this.pageType, 'league', newFilter, this.selectedTabKey, 1];
             this._router.navigate(newRoute);
         }
       }
@@ -315,35 +317,34 @@ export class SchedulesPage implements OnInit {
   //PAGINATION
   //sets the total pages for particular lists to allow client to move from page to page without losing the sorting of the list
   setPaginationParams(input, year: string, tab: string, pageNum: number) {
-    // var pageType;
-    // var navigationPage = '/' + this.scope + '/schedules/';
-    // if (!teamName && !teamId) {
-    //   navigationPage = '/' + this.scope + '/schedules/league';
-    // }
-    // var navigationParams = {
-    //     year: year,
-    //     tab: tab,
-    //     pageNumber: pageNum
-    // };
-    //
-    // var teamName = this.teamName;
-    // var teamId = this.teamID;
-    //
-    // if (teamName) {
-    //     navigationParams['teamName'] = teamName;
-    // }
-    // if (teamId) {
-    //     navigationParams['teamId'] = teamId;
-    // }
-    //
-    // this.paginationParameters = {
-    //     index: pageNum,
-    //     max: input.totalPages,
-    //     paginationType: 'module',
-    //     navigationPage: navigationPage,
-    //     navigationParams,
-    //     indexKey: 'pageNumber'
-    // }
+    var pageType;
+    var navigationPage = '/' + this.scope + '/schedules/';
+    if (!teamName && !teamId) {
+      navigationPage = '/' + this.scope + '/schedules/league';
+    }
+    var navigationParams = {
+        year: year,
+        tab: tab,
+        pageNumber: pageNum
+    };
+
+    var teamName = this.teamName;
+    var teamId = this.teamID;
+
+    if (teamName) {
+        navigationParams['teamName'] = teamName;
+    }
+    if (teamId) {
+        navigationParams['teamId'] = teamId;
+    }
+    this.paginationParameters = {
+        index: pageNum,
+        max: input.totalPages,
+        paginationType: 'page',
+        navigationPage: navigationPage,
+        navigationParams,
+        indexKey: 'pageNumber'
+    }
   } //setPaginationParams
 
 
