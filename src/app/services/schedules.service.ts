@@ -160,7 +160,9 @@ export class SchedulesService {
     let yearArray = [];
     let YYArr = []
     data.forEach(function(val){
-      let YY = Number(val[2]+val[3]);
+      val = Number(val);
+      let yearChar = val.toString();
+      let YY = Number(yearChar[2]+yearChar[3]);
       let yearObj = {};
       let YYObj = {};
       yearObj['key'] = val;
