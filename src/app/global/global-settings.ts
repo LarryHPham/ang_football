@@ -89,8 +89,8 @@ export class GlobalSettings {
     static _carouselImg: number = 1240;
 
     static getEnv(env:string):string {
-      if (env == "localhost"){
-          env = "dev";
+      if (env == "localhost"){ // since express is being used on the server it gets proxied and points back to local host so on the server it will always see local host
+          env = "prod";
       }
       if (env != "dev" && env !="qa"){
           env = "prod";
@@ -110,8 +110,10 @@ export class GlobalSettings {
     }
 
     static synapsysENV(env:string):string {
-      if(env == 'localhost' || env == 'dev'){
-        env = 'dev-';
+      if(env == 'localhost'){ // since express is being used on the server it gets proxied and points back to local host so on the server it will always see local host
+        env = '';
+      }else if(env == 'dev'){
+
       }else if(env == 'qa'){
         env = 'qa-';
       }else{
