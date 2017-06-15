@@ -137,7 +137,7 @@ export class TeamPage implements OnInit {
 
   private ptabName:string;
 
-  private batchLoadIndex: number = 1;
+  private batchLoadIndex: number = 2;
 
   private playerStatsData: PlayerStatsModuleData;
   private isLoaded: boolean = false;
@@ -200,7 +200,7 @@ export class TeamPage implements OnInit {
     this.rosterData = null;
     this.playerStatsData = null;
     this.transactionsData = null;
-    this.batchLoadIndex = 1;
+    this.batchLoadIndex = 2;
   } //routeChangeResets
 
 
