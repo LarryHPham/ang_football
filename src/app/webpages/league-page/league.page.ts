@@ -138,7 +138,7 @@ export class LeaguePage{
 
     private twitterData: Array<twitterModuleData>;
 
-    private batchLoadIndex: number = 1;
+    private batchLoadIndex: number = 2;
 
     constructor(
       private activatedRoute: ActivatedRoute,
@@ -188,7 +188,7 @@ export class LeaguePage{
 
     // This function contains values that need to be manually reset when navigatiing from league page to league page
     routeChangeResets() {
-      this.batchLoadIndex = 1;
+      this.batchLoadIndex = 2;
     } //routeChangeResets
 
 

@@ -115,7 +115,7 @@ export class PlayerPage{
 
   private twitterData: Array<twitterModuleData>;
 
-  private batchLoadIndex:any;
+  private batchLoadIndex:any = 2;
   private hasError:any;
   private isLoaded: boolean = false;
 
@@ -161,7 +161,7 @@ export class PlayerPage{
   routeChangeResets() {
     this.isLoaded = false;
     this.standingsData = null;
-    this.batchLoadIndex = 1;
+    this.batchLoadIndex = 2;
   } //routeChangeResets
 
   ngOnDestroy(){
