@@ -137,7 +137,7 @@ export class TeamPage implements OnInit {
 
   private ptabName:string;
 
-  private batchLoadIndex: number = 2;
+  private batchLoadIndex: number = 1;
 
   private playerStatsData: PlayerStatsModuleData;
   private isLoaded: boolean = false;
@@ -200,7 +200,7 @@ export class TeamPage implements OnInit {
     this.rosterData = null;
     this.playerStatsData = null;
     this.transactionsData = null;
-    this.batchLoadIndex = 2;
+    this.batchLoadIndex = 1;
   } //routeChangeResets
 
 
@@ -253,10 +253,10 @@ export class TeamPage implements OnInit {
         this.getHeadlines();
         this.getBoxScores(this.dateParam);
         this.isLoaded = true;
-
-        //---Batch 2---//
         this.eventStatus = 'pregame';
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
+
+        //---Batch 2---//
         this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, data.profileType, this.pageParams.teamId.toString(), data.teamName);
         this.rosterData = this._rosterService.loadAllTabsForModule(partnerID, this.scope, this.pageParams.teamId, this.profileName, this.pageParams.conference, true, data.headerData.teamMarket);
         this.getRosterService();

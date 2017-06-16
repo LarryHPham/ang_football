@@ -27,20 +27,20 @@
         [embedPlace]="widgetPlace"
         [pageType]="'profile'"
        ></responsive-widget>
+       <schedules
+       *ngIf="schedulesData"
+       [profHeader]="profileHeaderData"
+       [tabs]="scheduleTabsData"
+       [selectedTabDisplay]="selectedScheduleTabDisplay"
+       [filter1]="scheduleFilter1"
+       [dropdownKey1]="selectedFilter1"
+       [schedulesModuleFooterUrl]="schedulesModuleFooterUrl"
+       (tabSelected)="scheduleTab($event)"
+       (selectedKeyFilter)="scheduleFilterDropdown($event)">
+     </schedules>
       </div>
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
-        <schedules
-            *ngIf="schedulesData"
-            [profHeader]="profileHeaderData"
-            [tabs]="scheduleTabsData"
-            [selectedTabDisplay]="selectedScheduleTabDisplay"
-            [filter1]="scheduleFilter1"
-            [dropdownKey1]="selectedFilter1"
-            [schedulesModuleFooterUrl]="schedulesModuleFooterUrl"
-            (tabSelected)="scheduleTab($event)"
-            (selectedKeyFilter)="scheduleFilterDropdown($event)">
-        </schedules>
         <standings-module
           *ngIf="standingsData"
           [data]="standingsData"
