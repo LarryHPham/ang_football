@@ -184,8 +184,10 @@ export class HeaderComponent implements AfterContentChecked {
           document.getElementById('ddb-search-mobile')['placeholder'] = "Search for a sports team…";
           //override the default salad bars hamburger icon and use the scoreboard icon when on TDL
           var scoreboardIcon = document.getElementById('ddb-dropdown-boxscores-button').getElementsByClassName('ddb-icon')[0];
-          scoreboardIcon.classList.add('fa', 'fa-box-scores');
-          scoreboardIcon.classList.remove('ddb-icon-bars', 'ddb-icon');
+          if(scoreboardIcon){
+            scoreboardIcon.classList.add('fa', 'fa-box-scores');
+            scoreboardIcon.classList.remove('ddb-icon-bars', 'ddb-icon');
+          }
 
           //dont need to keep running this anymore now that its all set
           clearInterval(setPlaceholder);
