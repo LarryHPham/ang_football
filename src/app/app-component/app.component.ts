@@ -53,7 +53,11 @@ export class AppComponent implements OnInit {
                   }
                 });// end of geo location subscribe
               } else {
-                this._router.navigate(['/error-page']);
+                if((params.partnerID == '' || params.partnerID == null) && childParams.scope != null){//Redirect to see if the scope was possibly a partner page
+                  this._router.navigate(['/'+childParams.scope+'/home']);
+                }else{
+                  this._router.navigate(['/error-page']);//otherwise go straight to error page
+                }
               }
             } catch (e) {
               this._router.navigate(['/error-page']);
