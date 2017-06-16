@@ -7,86 +7,34 @@
         <profile-header [profileHeaderData]="profileHeaderData"></profile-header>
         <articles-module *ngIf="headlineData" [headlineData]="headlineData" [isLeague]="true"></articles-module>
         <video-module *ngIf="videoData" [firstVideo]="firstVideo" [videoData]="videoData" [profileHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></video-module>
-        <box-scores
-        *ngIf="dateParam"
-        [boxScores]="currentBoxScores"
-        [calendarParams]="dateParam"
-        (dateEmit)="getBoxScores($event)"></box-scores>
+        <box-scores *ngIf="dateParam" [boxScores]="currentBoxScores" [calendarParams]="dateParam" (dateEmit)="getBoxScores($event)"></box-scores>
         <responsive-widget *ngIf="dateParam" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
+        <schedules *ngIf="schedulesData" [profHeader]="profileHeaderData" [tabs]="scheduleTabsData" [selectedTabDisplay]="selectedScheduleTabDisplay" [filter1]="scheduleFilter1" [filter2]="scheduleFilter2" [dropdownKey1]="selectedFilter1" [dropdownKey2]="selectedFilter2"
+            [schedulesModuleFooterUrl]="schedulesModuleFooterUrl" (tabSelected)="scheduleTab($event)" (selectedKeyFilter)="scheduleFilterDropdown($event)">
+        </schedules>
       </div>
 
       <div class="loadBatch2" *ngIf="batchLoadIndex >= 2">
-        <schedules
-          *ngIf="schedulesData"
-          [profHeader]="profileHeaderData"
-          [tabs]="scheduleTabsData"
-          [selectedTabDisplay]="selectedScheduleTabDisplay"
-          [filter1]="scheduleFilter1"
-          [filter2]="scheduleFilter2"
-          [dropdownKey1]="selectedFilter1"
-          [dropdownKey2]="selectedFilter2"
-          [schedulesModuleFooterUrl]="schedulesModuleFooterUrl"
-          (tabSelected)="scheduleTab($event)"
-          (selectedKeyFilter)="scheduleFilterDropdown($event)">
-        </schedules>
-        <responsive-widget *ngIf="schedulesData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
+        <standings-module [data]="standingsData" [storedPartnerParam]="storedPartnerParam" (tabSelected)="standingsTabSelected($event)" (filterSelected)="standingsFilterSelected($event)" [scope]="scope">
+        </standings-module>
+        <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
+        <transactions-module *ngIf="scope == 'nfl' && transactionsData" [data]="transactionsData" [transactionModuleFooterParams]="transactionModuleFooterParams" [transactionFilter1]="transactionFilter1" [dropdownKey1]="dropdownKey1" (tabSwitched)="transactionsTab($event)"
+            (transactionKeyFilter)="transactionsFilterDropdown($event)">
+        </transactions-module>
       </div>
 
       <div class="loadBatch3" *ngIf="batchLoadIndex >= 3">
-        <standings-module
-          [data]="standingsData"
-          [storedPartnerParam]="storedPartnerParam"
-          (tabSelected)="standingsTabSelected($event)"
-          (filterSelected)="standingsFilterSelected($event)" [scope]="scope">
-        </standings-module>
-        <responsive-widget *ngIf="standingsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
-        <transactions-module
-          *ngIf="scope == 'nfl' && transactionsData"
-          [data]="transactionsData"
-          [transactionModuleFooterParams]="transactionModuleFooterParams"
-          [transactionFilter1]="transactionFilter1"
-          [dropdownKey1]="dropdownKey1"
-          (tabSwitched)="transactionsTab($event)"
-          (transactionKeyFilter)="transactionsFilterDropdown($event)">
-        </transactions-module>
-        <draft-history-module
-          *ngIf="scope == 'nfl' && profileData && pageParams"
-          [profileData]="profileData"
-          [type]="type"
-          [carouselDataArray]="draftHistoryCarouselData"
-          [data]="draftHistoryData"
-          [sortOptions]="draftHistorySortOptions"
-          [dropdownKey1]="draftHistoryFilter1"
-          [selectedTabName]="draftHistoryActiveTab"
-          [isError]="draftHistoryIsError"
-          [storedPartnerParam]="storedPartnerParam"
-          [pageParams]="pageParams"
-          [moduleFooterUrl]="draftHistortyModuleFooterUrl"
-          (tabSelectedListener)="draftHistoryTab($event)"
-          (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
+        <draft-history-module *ngIf="scope == 'nfl' && profileData && pageParams" [profileData]="profileData" [type]="type" [carouselDataArray]="draftHistoryCarouselData" [data]="draftHistoryData" [sortOptions]="draftHistorySortOptions" [dropdownKey1]="draftHistoryFilter1"
+            [selectedTabName]="draftHistoryActiveTab" [isError]="draftHistoryIsError" [storedPartnerParam]="storedPartnerParam" [pageParams]="pageParams" [moduleFooterUrl]="draftHistortyModuleFooterUrl" (tabSelectedListener)="draftHistoryTab($event)" (dropdownSelectedListener)="draftHistoryFilterDropdown($event)">
         </draft-history-module>
         <responsive-widget *ngIf="scope == sportLeagueAbbrv && transactionsData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
+        <mvp-module *ngIf="mvpTabs && mvpData" [scope]="scope" [tabs]="mvpTabs" [mvpData]="mvpData" [sortOptions]="mvpSortOptions" [selectedFilterTitle]="mvpActivePositionTitle" [selectedTabTitle]="mvpActiveTabTitle" [isError]="mvpDataError" [mvpModuleFooterParams]="mvpModuleFooterParams"
+            (tabSelectedListener)="mvpTabSelected($event)" (dropdownPositionSelection)="mvpFilterDropdown($event)">
+        </mvp-module>
       </div>
 
       <div class="loadBatch4" *ngIf="batchLoadIndex >= 4">
-          <mvp-module
-              *ngIf="mvpTabs && mvpData"
-              [scope]="scope"
-              [tabs]="mvpTabs"
-              [mvpData]="mvpData"
-              [sortOptions]="mvpSortOptions"
-              [selectedFilterTitle]="mvpActivePositionTitle"
-              [selectedTabTitle]="mvpActiveTabTitle"
-              [isError]="mvpDataError"
-              [mvpModuleFooterParams]="mvpModuleFooterParams"
-              (tabSelectedListener)="mvpTabSelected($event)"
-              (dropdownPositionSelection)="mvpFilterDropdown($event)">
-          </mvp-module>
-        <responsive-widget *ngIf="positionData && positionParams" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
-        <comparison-module
-          [modelData]="comparisonModuleData"
-          [profileName]="profileHeaderData.profileName"
-          [scope]="scope"></comparison-module>
+        <comparison-module [modelData]="comparisonModuleData" [profileName]="profileHeaderData.profileName" [scope]="scope"></comparison-module>
         <responsive-widget *ngIf="comparisonModuleData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <div class="profile-carousel-container">
           <images-media-carousel [imageData]="imageData" [copyright]="copyright" [imageTitle]="imageTitle" [profHeader]="profileHeaderData" [isProfilePage]="isProfilePage"></images-media-carousel>
@@ -98,18 +46,12 @@
         <dyk-module *ngIf="dykData" [profileName]="profileHeaderData.profileName" [dykData]="dykData"></dyk-module>
         <faq-module *ngIf="faqData" [profileName]="profileHeaderData.profileName" [faqData]="faqData"></faq-module>
         <responsive-widget *ngIf="faqData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
-        <list-of-lists
-          *ngIf="listOfListsData"
-          [profileHeaderData]="profileHeaderData"
-          [listOfListsData]="listOfListsData"
-          [profileType]="profileType"
-          [scope]="scope"
-          [storedPartnerParam]="storedPartnerParam">
+        <list-of-lists *ngIf="listOfListsData" [profileHeaderData]="profileHeaderData" [listOfListsData]="listOfListsData" [profileType]="profileType" [scope]="scope" [storedPartnerParam]="storedPartnerParam">
         </list-of-lists>
       </div>
 
       <div class="loadBatch6" *ngIf="batchLoadIndex >= 6">
-       <!-- <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
+        <!-- <news-module *ngIf="newsDataArray" [newsDataArray]="newsDataArray" [profileName]="profileHeaderData.profileName"></news-module>
         <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>-->
         <!-- <headline-component [title]="'Interact With MLB\'s Fans'"></headline-component> -->
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
@@ -119,6 +61,8 @@
           <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
         </section>
       </div>
-    </div> <!--profileHeaderData-->
-  </section> <!--profile-container-->
+    </div>
+    <!--profileHeaderData-->
+  </section>
+  <!--profile-container-->
 </sidekick-wrapper>

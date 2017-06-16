@@ -138,7 +138,7 @@ export class LeaguePage{
 
     private twitterData: Array<twitterModuleData>;
 
-    private batchLoadIndex: number = 2;
+    private batchLoadIndex: number = 1;
 
     constructor(
       private activatedRoute: ActivatedRoute,
@@ -188,7 +188,7 @@ export class LeaguePage{
 
     // This function contains values that need to be manually reset when navigatiing from league page to league page
     routeChangeResets() {
-      this.batchLoadIndex = 2;
+      this.batchLoadIndex = 1;
     } //routeChangeResets
 
 
@@ -221,34 +221,34 @@ export class LeaguePage{
           this.profileHeaderData = this._profileService.convertToLeagueProfileHeader(data.headerData);
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
           this.getLeagueHeadlines();
-
-          //---Batch 2 Load---//
+          this.eventStatus = 'pregame';
           this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
           this.getBoxScores(this.dateParam);
-          this.eventStatus = 'pregame';
           this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
-          //---Batch 3 Load---//
+          //---Batch 2 Load---//
           this.standingsData = this._standingsService.loadAllTabsForModule(this.pageParams, this.profileType);
           this.transactionsActiveTab = "Transactions";
           this.transactionsData = this._transactionsService.loadAllTabsForModule(this.scope.toUpperCase(), this.transactionsActiveTab);
+
+          //---Batch 3 Load---//
           this.draftHistoryData = this._draftHistoryService.getDraftHistoryTabs(this.profileData);
           this.getDraftHistoryData();
-
-          //---Batch 4 Load---//
           this.mvpActivePosition = 'cb'; //Initial position to display in MVP
           this.mvpActivePositionTitle = VerticalGlobalFunctions.convertPositionAbbrvToPlural(this.mvpActivePosition);
           this.mvpSortOptions = VerticalGlobalFunctions.getMVPdropdown(this.scope);
           this.mvpTabs = this._listService.getMVPTabs(this.mvpActivePosition, 'module');
           this.mvpActiveTab = this.mvpActiveTab ? this.mvpActiveTab : this.mvpTabs[0];
           this.mvpData = this.getMvpData(this.mvpActiveTab, this.mvpActivePosition);
-        //   if ( this.mvpData && this.mvpData.length > 0 ) {
-        //     //default params
-        //     this.positionDropdown({
-        //         tab: this.mvpData[0],
-        //         position: this.globalMVPPosition
-        //     });
-        //   };
+
+          //---Batch 4 Load---//
+          //   if ( this.mvpData && this.mvpData.length > 0 ) {
+          //     //default params
+          //     this.positionDropdown({
+          //         tab: this.mvpData[0],
+          //         position: this.globalMVPPosition
+          //     });
+          //   };
           this.setupComparisonData();
           this.getImages(this.imageData);
 

@@ -115,7 +115,7 @@ export class PlayerPage{
 
   private twitterData: Array<twitterModuleData>;
 
-  private batchLoadIndex:any = 2;
+  private batchLoadIndex:any = 1;
   private hasError:any;
   private isLoaded: boolean = false;
 
@@ -161,7 +161,7 @@ export class PlayerPage{
   routeChangeResets() {
     this.isLoaded = false;
     this.standingsData = null;
-    this.batchLoadIndex = 2;
+    this.batchLoadIndex = 1;
   } //routeChangeResets
 
   ngOnDestroy(){
@@ -209,24 +209,23 @@ export class PlayerPage{
          }
         this.getBoxScores(this.dateParam);
         this.isLoaded = true;
-
-        //--Batch 2--//
         this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
-        //--Batch 3--//
+
+        //--Batch 2--//
         this.standingsData = this._standingsService.loadAllTabsForModule(data.pageParams, this.scope, null, this.teamName);
         this.setupSeasonstatsData();
         this.setupComparisonData();
-
-        //--Batch 4--//
+        //--Batch 3--//
         this.getImages(this.imageData);
         this.getDykService();
         this.getFaqService();
 
-        //--Batch 5--//
+        //--Batch 4--//
         this.setupListOfListsModule();
         //this.getNewsService();
         this.getTwitterService();
+
       },
       err => {
         this.hasError = true;
