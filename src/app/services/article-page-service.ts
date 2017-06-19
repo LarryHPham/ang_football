@@ -77,7 +77,7 @@ export class ArticleDataService {
           articleType: articleType[1],
           articleSubType: articleType[2],
           isSmall: isBrowser ? window.innerWidth < 640 : false,
-          rawUrl: isBrowser ? window.location.href : GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl'),
+          rawUrl: isBrowser ? window.location.href : GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl'),
           pageIndex: articleType[0],
           title: articles[0]['article_data'].title,
           teaser: articles[0].teaser,
@@ -376,7 +376,7 @@ export class ArticleDataService {
     data.forEach(function (val) {
       var articleData;
       if (val.event_id != currentArticleId) {
-        let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + Zone.current.get('originUrl');
+        let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl;
         val["date"] = isArticle ? GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.last_updated)), "timeZone") :
           GlobalFunctions.sntGlobalDateFormatting(moment.unix(Number(val.publishedDate) / 1000), "timeZone");
         articleData = {

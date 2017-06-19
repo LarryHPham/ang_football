@@ -167,7 +167,7 @@ export class MVPListPage implements OnInit {
       let metaDesc = text3 + ' ' + text4 + ' as of ' + data.text1;
       let link;
       if(isNode) {
-        link = Zone.current.get('originUrl') + this._location.path(false);
+        link = GlobalSettings._globalSiteUrl + this._location.path(false);
       }else{
         link = window.location.href;
       }

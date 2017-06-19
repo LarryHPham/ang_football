@@ -300,10 +300,12 @@ export class TeamPage implements OnInit {
     let color = header.teamColorsHex != null ? header.teamColorsHex.split(',')[0]:'#2d3e50';
     //grab domain for json schema
     let domainSite;
+    console.log('TEST TEST', GlobalSettings._globalSiteUrl);
+
     if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
-      domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      domainSite = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl');
     }else{
-      domainSite = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      domainSite = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl');
     }
     title = title  + ' ' + record;
 

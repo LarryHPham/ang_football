@@ -204,7 +204,7 @@ export class DeepDiveService {
             date = '<span class="hide-320">' + date.format('dddd') + ', </span>' + date.format('MMM') + date.format('. DD, YYYY');
           }
           let articleType = val.article_sub_type == null ? val.article_type : val.article_sub_type;
-          let routeScope = val.scope == 'fbs' ? 'ncaaf' : 'nfl';
+          let routeScope = val.scope == 'fbs' ? 'ncaaf' : val.scope.toLowerCase();
           if(val.event_id){
             urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(routeScope, articleType, val.event_id);
           }else{

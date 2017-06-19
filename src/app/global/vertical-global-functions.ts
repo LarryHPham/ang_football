@@ -40,7 +40,7 @@ export class VerticalGlobalFunctions {
   static getPageUrl() {
     let pageUrl = "";
     if (isNode) {
-      pageUrl = GlobalSettings._proto + "//" + Zone.current.get('originUrl');
+      pageUrl = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl;
     } else {
       pageUrl = GlobalSettings._proto + "//" + window.location.hostname;
     }

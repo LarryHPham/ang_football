@@ -46,7 +46,7 @@ export class SeoService {
   public getPageUrl() {
     this.pageUrl = "";
     if (isNode) {
-      this.pageUrl = GlobalSettings._proto + "//" + Zone.current.get('originUrl') + Zone.current.get('requestUrl');
+      this.pageUrl = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl');
     } else {
       this.pageUrl = window.location.href;
     }

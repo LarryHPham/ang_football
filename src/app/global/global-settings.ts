@@ -32,6 +32,8 @@ export class GlobalSettings {
     private static _partnerHomepageUrl:string = '.mytouchdownzone.com';
     private static _partnerHomepageLinkName:string = 'mytouchdownzone';
 
+    public static _globalSiteUrl: string = '';
+
     //links from our share providers that do not change
     private static _siteTwitterUrl:string = '//twitter.com/home?status=';
     private static _siteFacebookUrl:string = '//www.facebook.com/sharer/sharer.php?u=';
@@ -221,6 +223,23 @@ export class GlobalSettings {
         }
     }
 
+    /*
+    isPartner: partner,
+    hide:hide,
+    isHome:isHome,
+    partnerName: name,
+    isSubdomainPartner: isSubdomainPartner
+    */
+    static getDomainUrl(domainObject) {
+      if(domainObject.isPartner && domainObject.isSubdomainPartner){
+        GlobalSettings._globalSiteUrl = 'football.'+domainObject.partnerName;
+      }else if(domainObject.isPartner && !domainObject.isSubdomainPartner){
+        GlobalSettings._globalSiteUrl = 'www.mytouchdownzone.com';
+      }else{
+        GlobalSettings._globalSiteUrl = 'www.touchdownloyal.com';
+      }
+    }
+
     static getHomeInfo(){
       //grabs the domain name of the site and sees if it is our partner page
       var partner = false;
@@ -228,7 +247,7 @@ export class GlobalSettings {
       var hide = false;
       var hostname = isNode ? GlobalSettings._proto + "//" + Zone.current.get('originUrl') : window.location.hostname;
       var partnerPage = /mytouchdownzone/.test(hostname) || /^football\./.test(hostname);
-      var name = isNode ? Zone.current.get('requestUrl') : window.location.pathname.split('/')[1];
+      var name = isNode ? Zone.current.get('requestUrl').split('/')[1] : window.location.pathname.split('/')[1];
       var isSubdomainPartner = /^football\./.test(hostname);
       //PLEASE REVISIT and change
       if(partnerPage && (name == '' || name == 'deep-dive')){
@@ -245,17 +264,22 @@ export class GlobalSettings {
       if(partnerPage){
         partner = partnerPage;
       }
-      return {
+
+      let dataObj = {
         isPartner: partner,
         hide:hide,
         isHome:isHome,
         partnerName: name,
         isSubdomainPartner: isSubdomainPartner
       };
+
+      GlobalSettings.getDomainUrl(dataObj);//SETS DOMAIN URL FOR SSR
+
+      return dataObj;
     }
 
     static getSiteLogoUrl():string {
-        return "app/public/mainLogo.jpg";
+        return "/app/public/mainLogo.jpg";
     }
 
     static getScopeNow() {
