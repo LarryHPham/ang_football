@@ -381,17 +381,17 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         break;
 
       case "wlt":
-        display = item.teamOverallRecord != null ? item.teamOverallRecord : 'N/A';
+        display = item.teamOverallRecord != null ? item.teamOverallRecord.toString() : 'N/A';
         sort = item.teamOverallRecord ? this.calcWLT(item.teamOverallRecord) : null;
         break;
 
       case "conf":
-        display = item.teamConferenceRecord != null ? item.teamConferenceRecord : 'N/A';
+        display = item.teamConferenceRecord != null ? item.teamConferenceRecord.toString() : 'N/A';
         sort = item.teamConferenceRecord ? this.calcWLT(item.teamConferenceRecord) : null;
         break;
 
       case "strk":
-        display = item.streak != null ? item.streak : 'N/A';
+        display = item.streak != null ? item.streak.toString() : 'N/A';
         if(item.streak){
           var compareValue = Number(item.streak.slice(1, item.streak.length));
           if(item.streak.charAt(0) == "L"){
@@ -402,37 +402,37 @@ export class VerticalStandingsTableModel implements TableModel<TeamStandingsData
         break;
 
       case "hm":
-        display = item.homeRecord != null ? item.homeRecord : 'N/A';
+        display = item.homeRecord != null ? item.homeRecord.toString() : 'N/A';
         sort = item.homeRecord ? this.calcWLT(item.homeRecord) : null;
         break;
 
       case "rd":
-        display = item.roadRecord != null ? item.roadRecord : 'N/A';
+        display = item.roadRecord != null ? item.roadRecord.toString() : 'N/A';
         sort = item.roadRecord ? this.calcWLT(item.roadRecord) : null;
         break;
 
       case "pa":
-        display = item.teamPointsAllowed != null ? item.teamPointsAllowed : 'N/A';
+        display = item.teamPointsAllowed != null ? item.teamPointsAllowed.toString() : 'N/A';
         sort = item.teamPointsAllowed ? Number(item.teamPointsAllowed) : null;
         break;
 
       case "rank":
-        display = rank != null ? rank : 'N/A';
+        display = rank != null ? rank.toString() : 'N/A';
         sort = rank ? Number(rank) : null;
         break;
 
       case "pct":
-        display = item.teamWinPercent != null ? item.teamWinPercent : 'N/A';
+        display = item.teamWinPercent != null ? item.teamWinPercent.toString() : 'N/A';
         sort = item.teamWinPercent ? Number(item.teamWinPercent) : null;
         break;
 
       case "div":
-        display = item.teamDivisionRecord != null ? item.teamDivisionRecord : 'N/A';
+        display = item.teamDivisionRecord != null ? item.teamDivisionRecord.toString() : 'N/A';
         sort = item.teamDivisionRecord ? this.calcWLT(item.teamDivisionRecord) : null;
         break;
 
       case "pf":
-        display = item.teamPointsFor != null ? item.teamPointsFor : null;
+        display = item.teamPointsFor != null ? item.teamPointsFor.toString() : null;
         sort = item.teamPointsFor ? Number(item.teamPointsFor) : null;
         break;
     }

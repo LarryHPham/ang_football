@@ -118,7 +118,7 @@ export class ArticlePages implements OnInit {
             }
             this.isTrendingMax = false;
             this.getTrendingArticles(this.eventID);
-            this.metaTags(Article);
+            // this.metaTags(Article);
           } catch (e) {
             console.log('Error getAiArticles Function', e);
             this.error = true;
@@ -415,7 +415,7 @@ export class ArticlePages implements OnInit {
         'end_date':metaObjData.endDate
       },
       {
-        'is_article':isArticle
+        'is_article':isArticle ? 'true' : 'false'
       }
     ])
   } //metaTags
