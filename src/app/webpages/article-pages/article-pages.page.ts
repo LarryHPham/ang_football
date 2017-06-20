@@ -118,7 +118,7 @@ export class ArticlePages implements OnInit {
             }
             this.isTrendingMax = false;
             this.getTrendingArticles(this.eventID);
-            // this.metaTags(Article);
+            this.metaTags(Article);
           } catch (e) {
             console.log('Error getAiArticles Function', e);
             this.error = true;
