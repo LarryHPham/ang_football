@@ -234,7 +234,6 @@ export class ArticlePages implements OnInit {
             this.copyright = ["USA Today Sports Images"];
             this.imageTitle = [""];
           }
-
           this.metaTags(data);
           this.articleData = data.data;
           let rawUrl = isBrowser ? window.location.protocol + "//" + window.location.host : GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl;
@@ -340,11 +339,11 @@ export class ArticlePages implements OnInit {
       }
     } else {
       metaObjData = {
-        startDate: metaData.publishedDate,
-        endDate: metaData.publishedDate,
+        startDate: metaData.publishedDate.toString(),
+        endDate: metaData.publishedDate.toString(),
         source: isArticle ? "TCA" : "sendtonews.com",
         keyword: metaData.keyword,
-        publishedDate: isArticle ? metaData.publishedDate : metaData.pubDate,
+        publishedDate: isArticle ? metaData.publishedDate.toString() : metaData.pubDate.toString(),
         author: isArticle ? metaData.author : null,
         publisher: metaData.publisher,
         articleTeaser: metaData.teaser,
@@ -355,7 +354,6 @@ export class ArticlePages implements OnInit {
     this._seoService.setCanonicalLink();
     this._seoService.setTitle(metaData.title);
     this._seoService.setMetaDescription(metaDesc);
-
     this._seoService.setMetaTags([
       {
         'og:title': metaData.title,
