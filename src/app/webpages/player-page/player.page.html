@@ -109,7 +109,7 @@
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
         <!--Like Us On FB Module, only display if not on partner page-->
         <section *ngIf="!partnerID">
-          <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
+          <!--<comment-module [profileName]="profileHeaderData.profileName"></comment-module>-->
           <responsive-widget *ngIf="newsDataArray" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         </section>
       </div>

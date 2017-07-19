@@ -57,9 +57,9 @@
         <twitter-module *ngIf="twitterData" [profileName]="profileHeaderData.profileName" [twitterData]="twitterData"></twitter-module>
         <responsive-widget *ngIf="twitterData" [embedPlace]="widgetPlace" [pageType]="'profile'"></responsive-widget>
         <!--Like Us On FB Module, only display if not on partner page-->
-        <section *ngIf="!partnerID">
-          <comment-module [profileName]="profileHeaderData.profileName"></comment-module>
-        </section>
+        <!--<section *ngIf="!partnerID">-->
+          <!--<comment-module [profileName]="profileHeaderData.profileName"></comment-module>-->
+        <!--</section>-->
       </div>
     </div>
     <!--profileHeaderData-->
