@@ -208,6 +208,7 @@ export class PlayerPage{
            this.getFantasyData(this.pageParams.playerId);
          }
         this.getBoxScores(this.dateParam);
+
         this.isLoaded = true;
         this.eventStatus = this.eventStatus == null ? 'pregame' : this.eventStatus;
         this.getSchedulesData(this.eventStatus);//grab pregame data for upcoming games
@@ -240,7 +241,7 @@ export class PlayerPage{
     // //create meta description that is below 160 characters otherwise will be truncated
     let header = data.headerData;
     let metaDesc =  header.description;
-    let title = header.teamMarket + ' ' + header.teamName;
+    let title = header.playerFullName;
     let image = header.playerHeadshotUrl ? GlobalSettings.getImageUrl(header.playerHeadshotUrl) : GlobalSettings.fallBackIcon;
     let record = '';
     if (header.leagueRecord != null) {
@@ -257,8 +258,8 @@ export class PlayerPage{
       domainSite = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl');
     }
 
-    let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "");
-    title = title  + ' ' + record;
+    let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "") + (header.playerFullName ? ", " + header.playerFullName : "");
+    title = title  + ' - ' + header.teamMarket + ' ' + header.teamName;
     let link =this._seoService.getPageUrl();
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
