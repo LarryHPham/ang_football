@@ -91,8 +91,8 @@ export class GlobalSettings {
     static _carouselImg: number = 1240;
 
     static getEnv(env:string):string {
-      if (env == "localhost"){ // since express is being used on the server it gets proxied and points back to local host so on the server it will always see local host
-          env = "prod";
+      if (env == "localhost" || env == "test"){ // since express is being used on the server it gets proxied and points back to local host so on the server it will always see local host
+          env = "dev";
       }else if(env == "dev"){
           env = "dev";
       }

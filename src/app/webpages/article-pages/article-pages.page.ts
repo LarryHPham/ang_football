@@ -339,8 +339,8 @@ export class ArticlePages implements OnInit {
       }
     } else {
       metaObjData = {
-        startDate: metaData.publishedDate.toString(),
-        endDate: metaData.publishedDate.toString(),
+        startDate: metaData.pubDate,
+        endDate: metaData.pubDate,
         source: isArticle ? "TCA" : "sendtonews.com",
         keyword: metaData.keyword,
         publishedDate: isArticle ? metaData.publishedDate.toString() : metaData.pubDate.toString(),
