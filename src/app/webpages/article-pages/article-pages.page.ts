@@ -357,7 +357,7 @@ export class ArticlePages implements OnInit {
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaTags([
       {
-        'og:title': metaData.title,
+        'og:title': title,
       },
       {
         'og:description': metaDesc,
@@ -372,7 +372,7 @@ export class ArticlePages implements OnInit {
         'og:image': image,
       },
       {
-        'es_page_title': metaData.title ? metaData.title : '',
+        'es_page_title': title ? title : '',
       },
       {
         'es_page_url': link
