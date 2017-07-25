@@ -13,26 +13,26 @@ import { isNode, isBrowser } from "angular2-universal";
 
 import { GlobalSettings } from "./global/global-settings";
 
-declare var Zone:any;
+declare var Zone: any;
 
 @Injectable()
 export class SeoService {
-  private dom:any;
-  private document:any;
-  private headElement:HTMLElement;
-  private pageUrl:string;
-  private metaDescription:HTMLElement;
-  private canonicalLink:HTMLElement;
-  private themeColor:HTMLElement;
-  private DOM:any;
-  private metaElement:HTMLElement;
-  robots:HTMLElement;
+  private dom: any;
+  private document: any;
+  private headElement: HTMLElement;
+  private pageUrl: string;
+  private metaDescription: HTMLElement;
+  private canonicalLink: HTMLElement;
+  private themeColor: HTMLElement;
+  private DOM: any;
+  private metaElement: HTMLElement;
+  robots: HTMLElement;
 
   /**
    * Inject the Angular 2 Title Service
    * @param titleService
    */
-  constructor(@Inject(DOCUMENT) document:any) {
+  constructor( @Inject(DOCUMENT) document: any) {
     this.DOM = getDOM();
     this.document = document;
     this.headElement = this.document.head;
@@ -53,9 +53,15 @@ export class SeoService {
     return this.pageUrl;
   } //getPageUrl
 
+  public HtmlEncode(s) {
+    var el = this.DOM.createElement('div');
+    el.innerHTML = s;
+    s = el.innerHTML;
+    return s;
+  }
 
   //sets title to at least less than 50 characters and will choose the  first 3 words and append site name at end
-  public setTitle(newTitle:string) {
+  public setTitle(newTitle: string) {
     let splitTitle = newTitle.split(' ');
     let shortTitle;
     if (splitTitle.length > 3) {
@@ -72,7 +78,7 @@ export class SeoService {
   //     this.setTitle(title);
   // };
 
-  public setMetaDescription(description:string) {
+  public setMetaDescription(description: string) {
     if (SeoService.checkData(description)) {
       let truncatedDescription;
       if (description) {
@@ -96,14 +102,14 @@ export class SeoService {
 
   //Valid values for the "CONTENT" attribute are: "INDEX", "NOINDEX", "FOLLOW", "NOFOLLOW"
   //http://www.robotstxt.org/meta.html
-  public setMetaRobots(robots:string) {
+  public setMetaRobots(robots: string) {
     if (SeoService.checkData(robots)) {
       this.robots = this.getOrCreateElement('name', 'robots', 'meta');
       this.setElementAttribute(this.robots, 'content', robots);
     }
   }
 
-  public setThemeColor(color:string) {
+  public setThemeColor(color: string) {
     if (SeoService.checkData(color)) {
       this.themeColor = this.getOrCreateElement('name', 'themeColor', 'meta');
       this.setElementAttribute(this.themeColor, 'content', color);
@@ -111,7 +117,7 @@ export class SeoService {
   }
 
   public setApplicationJSON(json, id) {
-    let el:HTMLElement;
+    let el: HTMLElement;
     el = this.DOM.createElement('script');
     this.setElementAttribute(el, 'type', 'application/ld+json');
     this.setElementAttribute(el, 'id', id);
@@ -120,8 +126,8 @@ export class SeoService {
   }
 
   public removeApplicationJSON(id) {
-    if(isBrowser){
-      let el:HTMLElement;
+    if (isBrowser) {
+      let el: HTMLElement;
       el = document.getElementById(id);
       if (el != null) {
         //IE 10 & 11 does not recognize .remove() as a function.
@@ -135,20 +141,20 @@ export class SeoService {
   }
 
 
-  public setMetaTags(metaAttr:Array<any>){
-    for(var i=0;i<metaAttr.length;i++){
+  public setMetaTags(metaAttr: Array<any>) {
+    for (var i = 0; i < metaAttr.length; i++) {
       let metaKey = Object.keys(metaAttr[i])[0];
-      if(SeoService.checkData(metaAttr[i][metaKey])){
+      if (SeoService.checkData(metaAttr[i][metaKey])) {
         this.metaElement = this.getOrCreateElement('property', metaKey, 'meta')
-        this.setElementAttribute(this.metaElement,'content',metaAttr[i][metaKey])
+        this.setElementAttribute(this.metaElement, 'content', metaAttr[i][metaKey])
       }
 
     }
 
   }
 
-  private getOrCreateElement(name:string, attr:string, type:string):HTMLElement {
-    let el:HTMLElement;
+  private getOrCreateElement(name: string, attr: string, type: string): HTMLElement {
+    let el: HTMLElement;
     el = this.DOM.createElement(type);
     this.setElementAttribute(el, name, attr);
     if (attr != "canonical") {
@@ -158,7 +164,7 @@ export class SeoService {
     return el;
   }
 
-  private setElementAttribute(el:HTMLElement, name:string, attr:string) {
+  private setElementAttribute(el: HTMLElement, name: string, attr: string) {
     return this.DOM.setAttribute(el, name, attr);
   }
 

@@ -350,9 +350,10 @@ export class ArticlePages implements OnInit {
         setArticleType: this.scope,
       }
     }
+    var title = this._seoService.HtmlEncode(metaData.title);
 
     this._seoService.setCanonicalLink();
-    this._seoService.setTitle(metaData.title);
+    this._seoService.setTitle(title);
     this._seoService.setMetaDescription(metaDesc);
     this._seoService.setMetaTags([
       {
