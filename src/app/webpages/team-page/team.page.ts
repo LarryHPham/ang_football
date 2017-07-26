@@ -271,7 +271,7 @@ export class TeamPage implements OnInit {
         //--Batch 4--//
         this.setupComparisonData();
         this.getImages(this.imageData);
-        // this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
+        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
         this.getDykService();
 
         //--Batch 5--//
@@ -584,10 +584,10 @@ export class TeamPage implements OnInit {
     private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
       this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
         .subscribe(data => {
-          if(data){
-            this.firstVideo = data.data[first] ? data.data[first].videoLink : null;
+          try{
+            this.firstVideo = data.data['videos'][first] ? data.data['videos'][first].videoLink : null;
             this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
-          }else{
+          }catch(e){
             console.warn('Insufficient number of videos available');
           }
         },

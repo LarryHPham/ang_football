@@ -23,19 +23,18 @@ export class VideoService {
     }
     return this.model.get(tdlURL)
       .map(data => {
-        if (data.data) {
-          try {
-            if (data.data.length > 0) {
+        try {
+          if(data.data){
+            if (data.data.videos.length > 0) {
               return data;
-            }
-            else {
+            }else {
               return null;
             }
-          } catch (e) {
-            //default value return
+          }else{
             return null;
           }
-        } else {
+        } catch (e) {
+          //default value return
           return null;
         }
       })

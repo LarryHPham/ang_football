@@ -90,7 +90,7 @@ export class AboutUsPage {
       let title = 'About Us';
       let metaDesc = data[0];
       let image = GlobalSettings.getmainLogoUrl();
-      let link = this._seoService.getPageUrl;
+      let link = this._seoService.getPageUrl();
       this._seoService.setTitle(title);
       this._seoService.setMetaDescription(metaDesc);
       this._seoService.setCanonicalLink();
@@ -128,7 +128,8 @@ export class AboutUsPage {
         {
           'es_image_url':image
         }
-      ])
+      ]);
+
       this._seoService.setMetaRobots('INDEX, FOLLOW');
 
     } //metaTags
@@ -137,7 +138,9 @@ export class AboutUsPage {
         this._service.getData(partnerID, scope)
         .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page
         .subscribe(
-          data => this.setupAboutUsData(data),
+          data => {
+            this.setupAboutUsData(data);
+          },
           err => {
             console.log("Error getting About Us data: " + err);
           },

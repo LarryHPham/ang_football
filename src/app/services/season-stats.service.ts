@@ -83,11 +83,11 @@ export class SeasonStatsService {
     if(scope != null){
       this._scope = scope;
     }
-
     return this.model.get(url)
-      .map(data =>
-          this.formatData(data.data, scope, season)
-      );
+      .map(data =>{
+        var statsData = this.formatData(data.data, scope, season);
+        return statsData;
+      });
   }
 
   private formatData(data: APISeasonStatsData, scope?: string, season?: string) {
@@ -122,77 +122,84 @@ export class SeasonStatsService {
   }
 
   private getBarData(stats: SeasonStats, isCareer: boolean, isPitcher: boolean, scope) {
-    if(stats !== undefined){ //catch if no data for season
-    //let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
-    let bars = [];
+    try{
+      if(stats !== undefined){ //catch if no data for season
+      //let statsToInclude = isPitcher ? this.pitchingFields : this.battingFields;
+      let bars = [];
 
-    for ( var index in stats ) {
-      var fieldName = stats[index].statDescription;
-      var infoBox = null;
+      for ( var index in stats ) {
+        if(stats[index]){
+          var fieldName = stats[index].statDescription;
+          var infoBox = null;
 
-      //catch no stat data
-      var worstValue = stats[index].statAverage != undefined ? stats[index].statAverage : null;
-      var leaderValue = stats[index].leaderStat != undefined ? stats[index].leaderStat : null;
-      var playerValue = stats[index].stat != undefined ? stats[index].stat : null;
-      var dataPoints = [];
+          //catch no stat data
+          var worstValue = stats[index].statAverage != undefined ? stats[index].statAverage : null;
+          var leaderValue = stats[index].leaderStat != undefined ? stats[index].leaderStat : null;
+          var playerValue = stats[index].stat != undefined ? stats[index].stat : null;
+          var dataPoints = [];
 
-      //Set up data points
-      if ( isCareer ) {
-        dataPoints = [{
-          value: this.formatValue(fieldName, playerValue),
-          color: '#2d3e50'
-        }];
-      }
-      else {
-        var avgValue = stats[index].statAverage  != null ? stats[index].statAverage  : 'N/A';
-        var infoIcon = 'fa-info-circle';
-        dataPoints = [{
-          value: this.formatValue(fieldName, playerValue),
-          color: '#2d3e50',
-          fontWeight: '800'
-        },
-        {
-          value: this.formatValue(fieldName, avgValue),
-          color: '#999999',
-        }];
-
-        //Set up info box only for non-career tabs
-        if ( leaderValue == null ) {
-          console.log("Error - leader value is null for " + fieldName);
-        }
-        else if ( leaderValue ) {
-          var playerName = stats[index].leaderName;
-          var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(scope, stats[index].leaderName, playerName, stats[index].leaderId);
-          infoBox = [{
-              teamName: stats[index].leaderTeamName,
-              playerName: playerName,
-              infoBoxImage : {
-                imageClass: "image-40",
-                mainImage: {
-                  imageUrl: GlobalSettings.getImageUrl(stats[index].leaderHeadshotUrl, GlobalSettings._imgSmLogo),
-                  imageClass: "border-1",
-                  urlRouteArray:  linkToPlayer,
-                  hoverText: "<i class='fa fa-mail-forward infobox-list-fa'></i>",
-                },
-              },
-              routerLinkPlayer: linkToPlayer,
-              routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(scope, stats[index].leaderTeamName, stats[index].leaderTeamId),
+          //Set up data points
+          if ( isCareer ) {
+            dataPoints = [{
+              value: this.formatValue(fieldName, playerValue),
+              color: '#2d3e50'
             }];
+          }
+          else {
+            var avgValue = stats[index].statAverage  != null ? stats[index].statAverage  : 'N/A';
+            var infoIcon = 'fa-info-circle';
+            dataPoints = [{
+              value: this.formatValue(fieldName, playerValue),
+              color: '#2d3e50',
+              fontWeight: '800'
+            },
+            {
+              value: this.formatValue(fieldName, avgValue),
+              color: '#999999',
+            }];
+
+            //Set up info box only for non-career tabs
+            if ( leaderValue == null ) {
+              console.log("Error - leader value is null for " + fieldName);
+            }
+            else if ( leaderValue ) {
+              var playerName = stats[index].leaderName;
+              var linkToPlayer = VerticalGlobalFunctions.formatPlayerRoute(scope, stats[index].leaderName, playerName, stats[index].leaderId);
+              infoBox = [{
+                teamName: stats[index].leaderTeamName,
+                playerName: playerName,
+                infoBoxImage : {
+                  imageClass: "image-40",
+                  mainImage: {
+                    imageUrl: GlobalSettings.getImageUrl(stats[index].leaderHeadshotUrl, GlobalSettings._imgSmLogo),
+                    imageClass: "border-1",
+                    urlRouteArray:  linkToPlayer,
+                    hoverText: "<i class='fa fa-mail-forward infobox-list-fa'></i>",
+                  },
+                },
+                routerLinkPlayer: linkToPlayer,
+                routerLinkTeam: VerticalGlobalFunctions.formatTeamRoute(scope, stats[index].leaderTeamName, stats[index].leaderTeamId),
+              }];
+            }
+          }
+
+          bars.push({
+            title: fieldName,
+            data: dataPoints,
+            minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue)) : null,
+            maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue)) : null,
+            info: infoIcon != null ? infoIcon : null,
+            infoBoxDetails: infoBox,
+            qualifierLabel: SeasonStatsService.getQualifierLabel(fieldName)
+          });
         }
       }
+      return bars;
+      }
+    }catch(e){
+      return [];
+    }
 
-      bars.push({
-        title: fieldName,
-        data: dataPoints,
-        minValue: worstValue != null ? Number(this.formatValue(fieldName, worstValue)) : null,
-        maxValue: leaderValue != null ? Number(this.formatValue(fieldName, leaderValue)) : null,
-        info: infoIcon != null ? infoIcon : null,
-        infoBoxDetails: infoBox,
-        qualifierLabel: SeasonStatsService.getQualifierLabel(fieldName)
-      });
-    }
-    return bars;
-    }
   }
 
 
@@ -204,7 +211,6 @@ export class SeasonStatsService {
     var isCareer = seasonId == "Career";
     var seasonId = isCareer ? 'career' : seasonId;
     var bars = this.getBarData(data.stats[seasonId], isCareer, isPitcher, data.playerInfo.statScope);
-
     scopeName = scopeName != null ? scopeName.toUpperCase() : "League";
     scopeName = scopeName == "FBS" ? "NCAAF" : scopeName;
 
