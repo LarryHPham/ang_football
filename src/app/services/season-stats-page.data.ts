@@ -202,6 +202,7 @@ export class SportSeasonStatsTabData implements TableTabData<TeamSeasonStatsData
         }
         else {description = ["No Season Stats Data for this Season"]}
           break;
+      case "RS":
       case "RB":
       if (stats.player_rushing_yards_per_game) {
           description = [playerRouteText, " has a total of ", Number(stats.player_rushing_yards_per_game).toFixed(0) , " " , "Rushing Yards" , " with " , Number(stats.player_rushing_yards_per_carry
@@ -209,15 +210,8 @@ export class SportSeasonStatsTabData implements TableTabData<TeamSeasonStatsData
         }
         else {description = ["No Season Stats Data for this Season"]}
           break;
-      case "RS":
-      if (stats.player_passing_yards) {
-          description = [playerRouteText, " has a total of ", Number(stats[0].stat).toFixed(0) , " " , stats[0].statType , " with " , Number(stats[1].stat).toFixed(0)  , " " , stats[1].statType , " and " , Number(stats[2].stat).toFixed(0)  , " " , stats[2].statType+"." ];
-        }
-        else {description = ["No Season Stats Data for this Season"]}
-          break;
       case "TE":
       case "WR":
-
       if (stats.player_receiving_yards_per_game) {
           description = [playerRouteText, " has a total of ", Number(stats.player_receiving_yards_per_game).toFixed(0) , " " , "Recieving Yards", " with " , Number(stats.player_receiving_average_per_reception).toFixed(0)  , " " , "Average Yards Per Reception" , " and " , Number(stats.player_receiving_receptions).toFixed(0)  , " " , "Receptions." ];
         }
@@ -280,7 +274,6 @@ export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsDat
     else if ( rows.length > 0 ) {
       // this.selectedKey = rows[0].playerId;
     }
-
     switch(this.rows[0]['playerInfo'].position) {
       case "CB":
       case "DB":
@@ -418,6 +411,7 @@ export class SportSeasonStatsTableModel implements TableModel<TeamSeasonStatsDat
           key: "player_punting_inside_twenty"
         }]
           break;
+      case "RS":
       case "RB":
         this.columns = [{
           headerValue: "Year",
