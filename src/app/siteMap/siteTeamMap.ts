@@ -69,7 +69,6 @@ export class SiteTeamMap {
         let headerData = data.headerData;
         let teamNameRoute = GlobalFunctions.toLowerKebab(data.profileName);
         let seasonsAmount = 4;
-
         //create links for all schedules tabs
         //schedules -> pregame, postgame
         for(var i = 0; i < seasonsAmount; i++){
@@ -91,22 +90,22 @@ export class SiteTeamMap {
 
         //transaction
         // create links for all tabs
-        let transactionTabs = ['Transaction', 'Suspensions', 'Injuries'];
+        let transactionTabs = ['transaction', 'suspensions', 'injuries'];
         for(var t = 0 ; t < 3; t++){
-          let transactionRoute = [this.partnerSite + '/' + scope + '/'+transactionTabs[t]+'/'+ teamNameRoute, id, 20, 1];
+          let transactionRoute = [this.partnerSite + '/' + scope + '/'+ transactionTabs[t] + '/' + headerData.seasonBase + '/' + teamNameRoute, id, 20, 1];
           let transactionRelPath = transactionRoute.join('/').toString();
           let transactionMap = SiteMap.createSiteKey(transactionRoute, transactionRelPath);
           this.totalSiteMap.push(transactionMap);
         }
 
         //roster
-        let rosterRoute = [this.partnerSite + '/' + scope + '/team-roster/'+ teamNameRoute, id];
+        let rosterRoute = [this.partnerSite + '/' + scope + '/team-roster/'+ teamNameRoute, id, 'full'];
         let rosterRelPath = rosterRoute.join('/').toString();
         let rosterMap = SiteMap.createSiteKey(rosterRoute, rosterRelPath);
         this.totalSiteMap.push(rosterMap);
 
         //draft history
-        let draftRoute = [this.partnerSite + '/' + scope + '/draft-history/'+ teamNameRoute, id];
+        let draftRoute = [this.partnerSite + '/' + scope + '/draft-history/'+ teamNameRoute, id, 'asc'];
         let draftRelPath = draftRoute.join('/').toString();
         let draftMap = SiteMap.createSiteKey(draftRoute, draftRelPath);
         this.totalSiteMap.push(draftMap);

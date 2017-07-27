@@ -1,6 +1,7 @@
 import { ModuleWithProviders }  from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppComponent }  from '../app-component/app.component';
+import { AppSiteMap }  from '../app-sitemap/app.sitemap';
 
 //pages
 import { DeepDivePage } from "../webpages/deep-dive-page/deep-dive.page";
@@ -35,221 +36,230 @@ import { SiteArticleMap } from "../siteMap/siteArticleMap";
 import { SiteVideoArticleMap } from "../siteMap/siteVideoArticleMap";
 import { SiteListMap } from "../siteMap/siteListMap";
 
+
+export const siteMapRoutes = [
+  {
+    path: '',
+    component: SiteMap
+  },
+  {
+    path: ':scope/team/:teamId',
+    component: SiteTeamMap
+  },
+  {
+    path: ':scope/player/:playerId',
+    component: SitePlayerMap
+  },
+  {
+    path: ':scope/aiarticles',
+    component: SiteAiArticleMap
+  },
+  {
+    path: ':scope/articles/:pageNumber',
+    component: SiteArticleMap
+  },
+  {
+    path: ':scope/list/:profile',
+    component: SiteListMap
+  },
+  {
+    path: ':scope/videoarticles/:pageNumber',
+    component: SiteVideoArticleMap
+  },
+];
+
 const relativeChildRoutes = [
-    {
-        path: ':scope/contact-us',
-        component: ContactUsPage,
-    },
-    {
-        path: ':scope/disclaimer',
-        component: DisclaimerPage,
-    },
-    {
-        path: ':scope/about-us',
-        component: AboutUsPage,
-    },
-    {
-        path: ':scope/pick-a-team',
-        component: PickTeamPage,
-    },
-    {
-        path: ':scope/team/:teamName/:teamID',
-        component: TeamPage,
-    },
-    {
-        path: ':scope/player/:teamName/:fullName/:playerID',
-        component: PlayerPage,
-    },
-    // // //Misc. Pages
-    {
-        path: ':scope/directory/:type/:startsWith/page/:page',
-        component: DirectoryPage,
-    },
-    {
-        path: ':scope/search/:query',
-        component: SearchPage,
-    },
-    //
-    // // //Module Pages
-    {
-        path: ':scope/mvp-list/:type/:pageNum',
-        component: MVPListPage
-    },
-    {
-        path: ':scope/mvp-list/:type/:tab/:pageNum',
-        component: MVPListPage
-    },
-    {
-        path: ':scope/schedules/league/:year/:pageNum',
-        component: SchedulesPage
-    },
-    {
-        path: ':scope/schedules/league/:year/:tab/:pageNum',
-        component: SchedulesPage
-    },
-    {
-        path: ':scope/schedules/:teamName/:teamID/:year/:pageNum',
-        component: SchedulesPage
-    },
-    {
-        path: ':scope/schedules/:teamName/:teamID/:year/:tab/:pageNum',
-        component: SchedulesPage
-    },
-    {
-        path: ':scope/standings',
-        component: StandingsPage
-    },
-    {
-        path: ':scope/standings/:type',
-        component: StandingsPage
-    },
-    {
-        path: ':scope/standings/:type/:teamName/:teamID',
-        component: StandingsPage
-    },
-    {
-        path: ':scope/team-roster/:teamName/:teamID',
-        component: TeamRosterPage
-    },
-    {
-        path: ':scope/team-roster/:teamName/:teamID/:tab',
-        component: TeamRosterPage
-    },
-    {
-        path: ':scope/list/:query',
-        component: ListPage
-    },
-    {
-        path: ':scope/list/:target/:statName/:season/:ordering',
-        component: ListPage
-    },
-    {
-        path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
-        component: ListPage
-    },
-    {
-        path: ':scope/draft-history/:tab/league/:filter1',
-        component: DraftHistoryPage
-    },
-    {
-        path: ':scope/draft-history/:tab/:teamName/:teamId/:filter1',
-        component: DraftHistoryPage
-    },
-    {
-        path: ':scope/transactions/:filter1/:teamName/:teamId/:limit',
-        component: TransactionsPage
-    },
-    {
-        path: ':scope/suspensions/:filter1/:teamName/:teamId/:limit',
-        component: TransactionsPage
-    },
-    {
-        path: ':scope/injuries/:filter1/:teamName/:teamId/:limit',
-        component: TransactionsPage
-    },
-    {
-        path: ':scope/transactions/:filter1/league/:limit',
-        component: TransactionsPage
-    },
-    {
-        path: ':scope/suspensions/:filter1/league/:limit',
-        component: TransactionsPage
-    },
-    {
-        path: ':scope/injuries/:filter1/league/:limit',
-        component: TransactionsPage
-    },
-    {
-        path: ':scope/season-stats/:tab/:fullName/:playerID',
-        component: SeasonStatsPage
-    },
-    {
-        path: ':scope/player-stats/:teamName/:teamID',
-        component: PlayerStatsPage
-    },
-    {
-        path: ':scope/articles/:eventType/:eventID',
-        component: ArticlePages
-    },
-    {
-        path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
-        component: ListOfListsPage
-    },
-    {
-        path: ':scope/list-of-lists/:target/:targetId',
-        component: ListOfListsPage
-    },
-    {
-        path: 'sitemap',
-        component: SiteMap
-    },
-    {
-        path: 'sitemap/:scope/team/:teamId',
-        component: SiteTeamMap
-    },
-    {
-        path: 'sitemap/:scope/player/:playerId',
-        component: SitePlayerMap
-    },
-    {
-      path: 'sitemap/:scope/aiarticles',
-      component: SiteAiArticleMap
-    },
-    {
-      path: 'sitemap/:scope/articles/:pageNumber',
-      component: SiteArticleMap
-    },
-    {
-      path: 'sitemap/:scope/list/:profile',
-      component: SiteListMap
-    },
-    {
-      path: 'sitemap/:scope/videoarticles/:pageNumber',
-      component: SiteVideoArticleMap
-    },
-    // // //Error pages and error handling
-    {
-        path: '/error',
-        component: ErrorPage
-    },
-    {
-        path: '/not-found',
-        component: ErrorPage,
-    },
-    {
-        path: ':scope/league',
-        component: LeaguePage,
-    },
-    {
-        path: ':scope',
-        component: DeepDivePage,
-    },
-    {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full'
-    },
-    {
-        path: '/**',
-        redirectTo: 'home'
-    }
+  {
+    path: 'sitemap',
+    component: AppSiteMap,
+    children: siteMapRoutes
+  },
+  {
+    path: ':scope/contact-us',
+    component: ContactUsPage,
+  },
+  {
+    path: ':scope/disclaimer',
+    component: DisclaimerPage,
+  },
+  {
+    path: ':scope/about-us',
+    component: AboutUsPage,
+  },
+  {
+    path: ':scope/pick-a-team',
+    component: PickTeamPage,
+  },
+  {
+    path: ':scope/team/:teamName/:teamID',
+    component: TeamPage,
+  },
+  {
+    path: ':scope/player/:teamName/:fullName/:playerID',
+    component: PlayerPage,
+  },
+  // // //Misc. Pages
+  {
+    path: ':scope/directory/:type/:startsWith/page/:page',
+    component: DirectoryPage,
+  },
+  {
+    path: ':scope/search/:query',
+    component: SearchPage,
+  },
+  //
+  // // //Module Pages
+  {
+    path: ':scope/mvp-list/:type/:pageNum',
+    component: MVPListPage
+  },
+  {
+    path: ':scope/mvp-list/:type/:tab/:pageNum',
+    component: MVPListPage
+  },
+  {
+    path: ':scope/schedules/league/:year/:pageNum',
+    component: SchedulesPage
+  },
+  {
+    path: ':scope/schedules/league/:year/:tab/:pageNum',
+    component: SchedulesPage
+  },
+  {
+    path: ':scope/schedules/:teamName/:teamID/:year/:pageNum',
+    component: SchedulesPage
+  },
+  {
+    path: ':scope/schedules/:teamName/:teamID/:year/:tab/:pageNum',
+    component: SchedulesPage
+  },
+  {
+    path: ':scope/standings',
+    component: StandingsPage
+  },
+  {
+    path: ':scope/standings/:type',
+    component: StandingsPage
+  },
+  {
+    path: ':scope/standings/:type/:teamName/:teamID',
+    component: StandingsPage
+  },
+  {
+    path: ':scope/team-roster/:teamName/:teamID',
+    component: TeamRosterPage
+  },
+  {
+    path: ':scope/team-roster/:teamName/:teamID/:tab',
+    component: TeamRosterPage
+  },
+  {
+    path: ':scope/list/:query',
+    component: ListPage
+  },
+  {
+    path: ':scope/list/:target/:statName/:season/:ordering',
+    component: ListPage
+  },
+  {
+    path: ':scope/list/:target/:statName/:season/:ordering/:perPageCount/:pageNumber',
+    component: ListPage
+  },
+  {
+    path: ':scope/draft-history/:tab/league/:filter1',
+    component: DraftHistoryPage
+  },
+  {
+    path: ':scope/draft-history/:tab/:teamName/:teamId/:filter1',
+    component: DraftHistoryPage
+  },
+  {
+    path: ':scope/transactions/:filter1/:teamName/:teamId/:limit',
+    component: TransactionsPage
+  },
+  {
+    path: ':scope/suspensions/:filter1/:teamName/:teamId/:limit',
+    component: TransactionsPage
+  },
+  {
+    path: ':scope/injuries/:filter1/:teamName/:teamId/:limit',
+    component: TransactionsPage
+  },
+  {
+    path: ':scope/transactions/:filter1/league/:limit',
+    component: TransactionsPage
+  },
+  {
+    path: ':scope/suspensions/:filter1/league/:limit',
+    component: TransactionsPage
+  },
+  {
+    path: ':scope/injuries/:filter1/league/:limit',
+    component: TransactionsPage
+  },
+  {
+    path: ':scope/season-stats/:tab/:fullName/:playerID',
+    component: SeasonStatsPage
+  },
+  {
+    path: ':scope/player-stats/:teamName/:teamID',
+    component: PlayerStatsPage
+  },
+  {
+    path: ':scope/articles/:eventType/:eventID',
+    component: ArticlePages
+  },
+  {
+    path: ':scope/list-of-lists/:target/:targetId/:perPageCount/:pageNumber',
+    component: ListOfListsPage
+  },
+  {
+    path: ':scope/list-of-lists/:target/:targetId',
+    component: ListOfListsPage
+  },
+  // // //Error pages and error handling
+  {
+    path: '/error',
+    component: ErrorPage
+  },
+  {
+    path: '/not-found',
+    component: ErrorPage,
+  },
+  {
+    path: ':scope/league',
+    component: LeaguePage,
+  },
+  {
+    path: ':scope',
+    component: DeepDivePage,
+  },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: '/**',
+    redirectTo: 'home'
+  }
 ];
 
 export const appRoutes: Routes = [
-    {
-      path: 'error-page',
-      component: PartnerErrorPage
-    },
-    {
-        path: '',
-        component: AppComponent,
-        children: relativeChildRoutes
-    },
-    {
-        path: ':partnerID',
-        component: AppComponent,
-        children: relativeChildRoutes
-    },
+  {
+    path: 'error-page',
+    component: PartnerErrorPage
+  },
+  {
+    path: '',
+    component: AppComponent,
+    children: relativeChildRoutes
+  },
+  {
+    path: ':partnerID',
+    component: AppComponent,
+    children: relativeChildRoutes
+  },
 ];
 
 export const routing = RouterModule.forChild(appRoutes);

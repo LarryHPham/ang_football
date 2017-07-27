@@ -66,8 +66,9 @@ export class SitePlayerMap {
     try{
       this._profileService.getPlayerProfile(id)
       .subscribe(data => {
+          let headerData = data.headerData;
           //SeasonStats
-          let seasonStatsRoute = [this.partnerSite + '/' + scope + '/season-stats', GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
+          let seasonStatsRoute = [this.partnerSite + '/' + scope + '/season-stats', headerData.seasonBase, GlobalFunctions.toLowerKebab(data.headerData.playerFullName), id];
           let seasonStatsPath = seasonStatsRoute.join('/').toString();
           let sitePath = SiteMap.createSiteKey(seasonStatsRoute, seasonStatsPath);
           this.totalSiteMap.push(sitePath);

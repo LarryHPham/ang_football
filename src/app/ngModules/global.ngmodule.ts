@@ -3,6 +3,8 @@ import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent }  from '../app-component/app.component';
+import { AppSiteMap }  from '../app-sitemap/app.sitemap';
+
 import { Title, DOCUMENT } from '@angular/platform-browser';
 
 //router
@@ -154,6 +156,7 @@ const COREMODULES = [
 const COMPONENTS = [
   // put shared components here
   AppComponent,
+  AppSiteMap,
   CircleImage,
   HoverImage,
   RectangleImage,

@@ -29,8 +29,8 @@ export class AppComponent implements OnInit {
               console.log(params, childParams);
             }
             try {
-              let siteScope = childParams.scope.toLowerCase();
-              if (siteScope == 'nfl' || siteScope == 'ncaaf' || siteScope == 'fbs' || siteScope == 'home') {
+              let siteScope = childParams.scope ? childParams.scope.toLowerCase() : '';
+              if (siteScope == 'nfl' || siteScope == 'ncaaf' || siteScope == 'fbs' || siteScope == 'home' || siteScope == '') {
                 this.scopeParam = siteScope ? '/' + siteScope : '/nfl';
                 //function that grabs the designated location needed for the client and if a partnerID is sent through then it will also set the partnerID and partnerScript for their Header
                 if (GlobalSettings.getHomeInfo().isSubdomainPartner) {
