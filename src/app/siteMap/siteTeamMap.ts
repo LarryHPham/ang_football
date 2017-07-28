@@ -83,7 +83,7 @@ export class SiteTeamMap {
         }//end of for loops seasons
 
         //standings
-        let standingsRoute = [this.partnerSite + '/' + scope + '/standings/team/'+ teamNameRoute];
+        let standingsRoute = [this.partnerSite + '/' + scope + '/standings/team/'+ teamNameRoute, id];
         let standingsRelPath = standingsRoute.join('/').toString();
         let standingsMap = SiteMap.createSiteKey(standingsRoute, standingsRelPath);
         this.totalSiteMap.push(standingsMap);
