@@ -20,9 +20,9 @@ export class GlobalSettings {
     private static _articleDataUrl:string = "-touchdownloyal-ai.synapsys.us/";
     private static _tcxArticleUrl:string = '-article-library.synapsys.us/';
 
-    private static _partnerApiUrl: string = 'synapview.synapsys.us/synapview/?action=get_header_data&vertical=sports&domain=';
+    private static _partnerApiUrl: string = '-synapview.synapsys.us/synapview/?action=get_header_data&vertical=sports&domain=';
     private static _widgetUrl: string = 'w1.synapsys.us';
-    private static _geoUrl: string = 'waldo.synapsys.us';
+    private static _geoUrl: string = '-waldo.synapsys.us';
 
     private static _dynamicApiUrl: string = 'dw.synapsys.us/list_creator_api.php';
 
@@ -90,17 +90,13 @@ export class GlobalSettings {
     static _carouselImg: number = 1240;
 
     static getEnv(env:string):string {
-      if (env == "localhost"){ // since express is being used on the server it gets proxied and points back to local host so on the server it will always see local host
-          env = "prod";
-      }else if(env == "dev"){
-          env = "dev";
+      if(env == 'dev'){
+        env = 'dev';
+      }else if(env == 'qa'){
+        env = 'qa';
+      }else{
+        env = 'prod';
       }
-      if (env != "dev" && env !="qa"){
-          env = "prod";
-      }
-
-      //env = "prod"; //TODO remove only used for testing
-
       return env;
     }
 
@@ -112,17 +108,24 @@ export class GlobalSettings {
       }
     }
 
-    static synapsysENV(env:string):string {
-      if(env == 'localhost'){ // since express is being used on the server it gets proxied and points back to local host so on the server it will always see local host
-        env = '';
-      }else if(env == 'dev'){
-        env = 'dev-';
-      }else if(env == 'qa'){
-        env = 'qa-';
-      }else{
-        env = '';
-      }
-      return env;
+    static getApiUrl():string {
+        return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
+    }
+
+    static getPartnerApiUrl(partnerID):string {
+      return this._proto + "//" + this.getEnv(this._env) + this._partnerApiUrl + partnerID;
+    }
+
+    static getGeoLocation():string {
+      return this._proto + "//" + this.getEnv(this._env) + this._geoUrl;
+    }
+
+    static getArticleUrl():string {
+      return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
+    }
+
+    static getArticleDataUrl():string {
+      return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
     }
 
     static storePartnerId(partnerId) {
@@ -131,18 +134,6 @@ export class GlobalSettings {
 
     static getDynamicWidet():string {
         return this._proto + "//" + this._dynamicApiUrl;
-    }
-
-    static getApiUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._apiUrl;
-    }
-
-    static getPartnerApiUrl(partnerID):string {
-      return this._proto + "//"+ this.synapsysENV(this._env) + this._partnerApiUrl + partnerID;
-    }
-
-    static getGeoLocation():string {
-      return this._proto + "//" + this.synapsysENV(this._env) + this._geoUrl;
     }
 
     static widgetUrl():string {
@@ -179,14 +170,6 @@ export class GlobalSettings {
     static getBackgroundImageUrl(relativePath):string {
         var relPath = relativePath != null ? this._proto + "//" + this._imageUrl + relativePath: './app/public/drk-linen.png';
         return relPath;
-    }
-
-    static getArticleUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._tcxArticleUrl;
-    }
-
-    static getArticleDataUrl():string {
-        return this._proto + "//" + this.getEnv(this._env) + this._articleDataUrl;
     }
 
     static getNewsUrl():string {
