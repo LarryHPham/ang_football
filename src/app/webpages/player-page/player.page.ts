@@ -47,11 +47,11 @@ declare var moment;
   templateUrl: './player.page.html',
 })
 
-export class PlayerPage{
+export class PlayerPage {
   public widgetPlace: string = "widgetForModule";
 
   public currentUnixDate = new Date().getTime();
-  private constructorControl:boolean = true;
+  private constructorControl: boolean = true;
   public partnerID: string;
   public storedPartnerParam: string;
   public scope: any;
@@ -71,23 +71,23 @@ export class PlayerPage{
   private profileData: IProfileData;
   private profileName: any;
   private profileHeaderData: ProfileHeaderData;
-  private profileType:string = "player";
-  private isProfilePage:boolean = true;
+  private profileType: string = "player";
+  private isProfilePage: boolean = true;
 
   private dailyUpdateData: any;
 
-  private modHeadData:ModuleHeaderData;
-  private footerData:any;
+  private modHeadData: ModuleHeaderData;
+  private footerData: any;
   private fantasyData: any;
   private isError: boolean = false;
 
-  private boxScoresData:any;
-  private currentBoxScores:any;
+  private boxScoresData: any;
+  private currentBoxScores: any;
 
-  private schedulesData:any;
+  private schedulesData: any;
   private scheduleTabsData: any;
-  private scheduleFilter1:Array<any>;
-  private selectedFilter1:string;
+  private scheduleFilter1: Array<any>;
+  private selectedFilter1: string;
   private eventStatus: any;
   private selectedScheduleTabDisplay: string;
   private schedulesModuleFooterUrl: Array<any>;
@@ -109,14 +109,14 @@ export class PlayerPage{
 
   private listOfListsData: Object; // paginated data to be displayed
 
-/*
-  private newsDataArray: Array<Object>;
-*/
+  /*
+    private newsDataArray: Array<Object>;
+  */
 
   private twitterData: Array<twitterModuleData>;
 
-  private batchLoadIndex:any = 1;
-  private hasError:any;
+  private batchLoadIndex: any = 1;
+  private hasError: any;
   private isLoaded: boolean = false;
 
   constructor(
@@ -164,23 +164,23 @@ export class PlayerPage{
     this.batchLoadIndex = 1;
   } //routeChangeResets
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this._seoService.removeApplicationJSON('page');
     this._seoService.removeApplicationJSON('json');
 
     this.routeChangeResets();
     this.resetSubscription();
-    if(this.routeSubscriptions){
+    if (this.routeSubscriptions) {
       this.routeSubscriptions.unsubscribe();
     }
   } //ngOnDestroy
 
-  private resetSubscription(){
-    if(this.storeSubscriptions){
+  private resetSubscription() {
+    if (this.storeSubscriptions) {
       var numOfSubs = this.storeSubscriptions.length;
 
-      for( var i = 0; i < numOfSubs; i++ ){
-        if(this.storeSubscriptions[i]){
+      for (var i = 0; i < numOfSubs; i++) {
+        if (this.storeSubscriptions[i]) {
           this.storeSubscriptions[i].unsubscribe();
         }
       }
@@ -204,9 +204,9 @@ export class PlayerPage{
         this.profileHeaderData = this._profileService.convertToPlayerProfileHeader(data, this.scope);
         this.dailyUpdateModule(this.playerID);
 
-         if (this.scope.toLocaleLowerCase() == "nfl") {
-           this.getFantasyData(this.pageParams.playerId);
-         }
+        if (this.scope.toLocaleLowerCase() == "nfl") {
+          this.getFantasyData(this.pageParams.playerId);
+        }
         this.getBoxScores(this.dateParam);
 
         this.isLoaded = true;
@@ -240,27 +240,27 @@ export class PlayerPage{
     this._seoService.removeMetaTags();
     // //create meta description that is below 160 characters otherwise will be truncated
     let header = data.headerData;
-    let metaDesc =  header.description;
+    let metaDesc = header.description;
     let title = header.playerFullName;
     let image = header.playerHeadshotUrl ? GlobalSettings.getImageUrl(header.playerHeadshotUrl) : GlobalSettings.mainIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
-    let recordArr = record.split('-');
+      let recordArr = record.split('-');
       record = "(" + recordArr[0] + "-" + recordArr[1] + ")";
     }
     let color = '#2d3e50';
     //grab domain for json schema
     let domainSite;
-    if(GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner){
+    if (GlobalSettings.getHomeInfo().isPartner && !GlobalSettings.getHomeInfo().isSubdomainPartner) {
       domainSite = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl');
-    }else{
+    } else {
       domainSite = GlobalSettings._proto + "//" + GlobalSettings._globalSiteUrl + Zone.current.get('requestUrl');
     }
 
     let keywords = "football" + (header.teamMarket ? ", " + header.teamMarket : "") + (header.teamName ? ", " + header.teamName : "") + (header.playerFullName ? ", " + header.playerFullName : "");
-    title = title  + ' - ' + header.teamMarket + ' ' + header.teamName;
-    let link =this._seoService.getPageUrl();
+    title = title + ' - ' + header.teamMarket + ' ' + header.teamName;
+    let link = this._seoService.getPageUrl();
     this._seoService.setTitle(title);
     this._seoService.setThemeColor(color);
     this._seoService.setMetaDescription(metaDesc);
@@ -275,10 +275,10 @@ export class PlayerPage{
         'og:description': metaDesc,
       },
       {
-        'og:type':'website',
+        'og:type': 'website',
       },
       {
-        'og:url':link,
+        'og:url': link,
       },
       {
         'og:image': image,
@@ -299,7 +299,7 @@ export class PlayerPage{
         'es_keywords': keywords
       },
       {
-        'es_image_url':image
+        'es_image_url': image
       }
     ])
     //manually generate team schema for team page until global funcation can be created
@@ -307,7 +307,7 @@ export class PlayerPage{
     {
       "@context": "http://schema.org",
       "@type": "SportsTeam",
-      "name": "`+header.teamMarket + ' ' + header.teamName+`",
+      "name": "`+ header.teamMarket + ' ' + header.teamName + `",
     }`;
 
     //manually generate json schema for BreadcrumbList
@@ -319,22 +319,22 @@ export class PlayerPage{
       "@type": "ListItem",
       "position": 1,
       "item": {
-        "@id": "`+domainSite+"/"+this.scope.toLowerCase()+"/pick-a-team"+`",
-        "name": "`+this.scope.toUpperCase()+`"
+        "@id": "`+ domainSite + "/" + this.scope.toLowerCase() + "/pick-a-team" + `",
+        "name": "`+ this.scope.toUpperCase() + `"
       }
     },{
       "@type": "ListItem",
       "position": 2,
       "item": {
-        "@id": "`+domainSite+"?league="+header.divisionName+`",
-        "name": "`+header.divisionName+`"
+        "@id": "`+ domainSite + "?league=" + header.divisionName + `",
+        "name": "`+ header.divisionName + `"
       }
     },{
       "@type": "ListItem",
       "position": 3,
       "item": {
-        "@id": "`+domainSite+`",
-        "name": "`+header.teamMarket + ' ' + header.teamName+`"
+        "@id": "`+ domainSite + `",
+        "name": "`+ header.teamMarket + ' ' + header.teamName + `"
         }
       }]
     }`;
@@ -345,7 +345,7 @@ export class PlayerPage{
   private dailyUpdateModule(playerId: number) {
     this.imageConfig = this._dailyUpdateService.getImageConfig();
     this.storeSubscriptions.push(this._dailyUpdateService.getPlayerDailyUpdate(playerId)
-      .finally(() => GlobalSettings.setPreboot() ) // call preboot after last piece of data is returned on page (of first batch)
+      .finally(() => GlobalSettings.setPreboot()) // call preboot after last piece of data is returned on page (of first batch)
       .subscribe(data => {
         this.dailyUpdateData = data;
       },
@@ -387,7 +387,7 @@ export class PlayerPage{
   } //getFantasyData
 
   private getBoxScores(dateParams) {
-    if(!this.dateParam || !dateParams){
+    if (!this.dateParam || !dateParams) {
       var currentUnixDate = new Date().getTime();
       dateParams = {
         scope: 'player',
@@ -397,7 +397,7 @@ export class PlayerPage{
       this.dateParam = dateParams;
     }
     let newDate;
-    if ( (newDate == null || dateParams.date != newDate.date) ) {
+    if ((newDate == null || dateParams.date != newDate.date)) {
       newDate = dateParams;
       this.dateParam = newDate;
       this.storeSubscriptions.push(this._boxScores.getBoxScores(this.boxScoresData, this.profileName, newDate, (boxScoresData, currentBoxScores) => {
@@ -412,35 +412,35 @@ export class PlayerPage{
 
 
   private scheduleTab(tab) {
-      this.eventStatus = tab == "Previous Games" ? 'postgame' : 'pregame';
-      this.getSchedulesData(this.eventStatus);
+    this.eventStatus = tab == "Previous Games" ? 'postgame' : 'pregame';
+    this.getSchedulesData(this.eventStatus);
   } //scheduleTab
   private getSelectedScheduleTab(tabsData, status) {
-      let matchingTabs = tabsData.filter(value => value.data == status);
-      matchingTabs[0]['tabData'].sections = this.schedulesData.data;
-      matchingTabs[0]['tabData'].isActive = true;
-      this.selectedScheduleTabDisplay = matchingTabs[0].display;
-      return tabsData;
+    let matchingTabs = tabsData.filter(value => value.data == status);
+    matchingTabs[0]['tabData'].sections = this.schedulesData.data;
+    matchingTabs[0]['tabData'].isActive = true;
+    this.selectedScheduleTabDisplay = matchingTabs[0].display;
+    return tabsData;
   } //getSelectedScheduleTab
-  private scheduleFilterDropdown(filter){
-      if( filter.key != this.selectedFilter1 ) {
-          this.selectedFilter1 = filter.key;
-          this.getSchedulesData(this.eventStatus, filter.key);
-      }
+  private scheduleFilterDropdown(filter) {
+    if (filter.key != this.selectedFilter1) {
+      this.selectedFilter1 = filter.key;
+      this.getSchedulesData(this.eventStatus, filter.key);
+    }
   } //scheduleFilterDropdown
   private getSchedulesData(status, year?) {
     var limit = 5;
     var pageNum = 1;
     year = year ? year : this.seasonBase;
-    if(status == 'pregame') {
-        this.selectedFilter1 = null;
-        year = 'all';
+    if (status == 'pregame') {
+      this.selectedFilter1 = null;
+      year = 'all';
     }
     this.storeSubscriptions.push(this._schedulesService.getScheduleTable(this.schedulesData, this.scope, 'team', status, limit, 1, this.pageParams.teamId, (schedulesData) => {
-      if(status == 'pregame'){
+      if (status == 'pregame') {
         this.scheduleFilter1 = null;
       } else {
-        if(this.scheduleFilter1 == null){// only replaces if the current filter is not empty
+        if (this.scheduleFilter1 == null) {// only replaces if the current filter is not empty
           this.scheduleFilter1 = schedulesData.seasons;
         }
       }
@@ -469,16 +469,16 @@ export class PlayerPage{
   private setupSeasonstatsData() {
     this.storeSubscriptions.push(this._seasonStatsService.getPlayerStats(Number(this.pageParams.playerId), this.scope, this.seasonBase)
       .subscribe(
-        data => {
-          this.seasonStatsData = data;
-        },
-        err => {
-          return;
-        }));
+      data => {
+        this.seasonStatsData = data;
+      },
+      err => {
+        return;
+      }));
   } //setupSeasonstatsData
   private seasonStatsTabSelected(tabTitle) {
-      let selectedSeason = tabTitle == 'Current Season' ? this.seasonBase : tabTitle;
-      this.seasonStatsModuleFooterUrl = [this.storedPartnerParam, this.scope, 'season-stats', tabTitle.toLowerCase(), this.fullName, this.playerID];
+    let selectedSeason = tabTitle == 'Current Season' ? this.seasonBase : tabTitle;
+    this.seasonStatsModuleFooterUrl = [this.storedPartnerParam, this.scope, 'season-stats', tabTitle.toLowerCase(), this.fullName, this.playerID];
   }
 
 
@@ -496,10 +496,12 @@ export class PlayerPage{
   private getImages(imageData) {
     this.storeSubscriptions.push(this._imagesService.getImages(this.profileType, this.pageParams.playerId)
       .subscribe(data => {
-        if (data.imageArray.length <= 0) {
-          return this.imageData = null;
-        } else {
-          return this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
+        if (data) {
+          if (data.imageArray.length <= 0) {
+            this.imageData = null;
+          } else {
+            this.imageData = data.imageArray, this.copyright = data.copyArray, this.imageTitle = data.titleArray;
+          }
         }
       },
       err => {
@@ -542,49 +544,49 @@ export class PlayerPage{
     }
     this.storeSubscriptions.push(this._lolService.getListOfListsService(params, "player", "module", 1)
       .subscribe(
-        listOfListsData => {
-          if (listOfListsData != null) {
-            this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
-          }
+      listOfListsData => {
+        if (listOfListsData != null) {
+          this.listOfListsData = listOfListsData ? listOfListsData.listData : null;
           this.listOfListsData["type"] = "player";
           this.listOfListsData["id"] = this.pageParams.playerId;
-        },
-        err => {
-          console.log('Error: listOfListsData API: ', err);
         }
-      ));
-    } //setupListOfListsModule
-
-
-
- /*
-  This service call is disabled for MPC server
- private getNewsService() {
-      let params = {
-        limit: 10,
-        pageNum: 1,
-        id: this.pageParams.teamId
+      },
+      err => {
+        console.log('Error: listOfListsData API: ', err);
       }
-      this.storeSubscriptions.push(this._newsService.getNewsService(this.scope, params, 'player', 'module')
-        .subscribe(data => {
-          this.newsDataArray = data.news;
-        },
-        err => {
-          console.log("Error getting news data");
-        }));
-    }*/ //getNewsService
+      ));
+  } //setupListOfListsModule
 
 
 
-    private getTwitterService() {
-      this.storeSubscriptions.push(this._twitterService.getTwitterService("team", this.pageParams.teamId) //getting team twitter information for now
-        .subscribe(data => {
-          this.twitterData = data;
-        },
-        err => {
-          console.log("Error getting twitter data");
-        }));
-    } //getTwitterService
+  /*
+   This service call is disabled for MPC server
+  private getNewsService() {
+       let params = {
+         limit: 10,
+         pageNum: 1,
+         id: this.pageParams.teamId
+       }
+       this.storeSubscriptions.push(this._newsService.getNewsService(this.scope, params, 'player', 'module')
+         .subscribe(data => {
+           this.newsDataArray = data.news;
+         },
+         err => {
+           console.log("Error getting news data");
+         }));
+     }*/ //getNewsService
+
+
+
+  private getTwitterService() {
+    this.storeSubscriptions.push(this._twitterService.getTwitterService("team", this.pageParams.teamId) //getting team twitter information for now
+      .subscribe(data => {
+        this.twitterData = data;
+      },
+      err => {
+        console.log("Error getting twitter data");
+      }));
+  } //getTwitterService
 
   // function to lazy load page sections
   private onScroll(event) {

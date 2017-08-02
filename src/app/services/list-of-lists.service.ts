@@ -64,7 +64,6 @@ export class ListOfListsService {
 
     var url_api = "scope=" + this._scope + "&target=" + target + "&perPageCount=" + limit + "&pageNumber=" + pageNum + targetbit + id;
     callURL += url_api;
-
     return this.model.get( callURL )
       .map(
         data => {
@@ -84,6 +83,8 @@ export class ListOfListsService {
                 pagination: data.data[0].listInfo,
                 lastUpdated: lastUpdated
               };
+            }else{
+              return null
             }
           }catch(e){
               return null;
