@@ -151,7 +151,8 @@ export class ArticleDataService {
         imageUrl: url,
         urlRouteArray: routeArray,
         hoverText: "<i class='fa fa-mail-forward'></i>",
-        imageClass: "border-logo"
+        imageClass: url.indexOf("logos_football") !== -1 ? "fallback-logo" : "border-logo",
+        fallbackImageClass: url.indexOf("logos_football") !== -1 ? "fallback-class" : ""
       }
     };
   }
@@ -164,7 +165,7 @@ export class ArticleDataService {
         if (val[dataType]) {
           var routeArray = VerticalGlobalFunctions.formatPlayerRoute(scope, val[dataType].team_name, val[dataType].name, val[dataType].id);
           var url = GlobalSettings.getImageUrl(val[dataType]['headshot'], GlobalSettings._imgProfileLogo);
-          val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
+          val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-121");
           val['image2'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
           imageLinkArray.push(val['image1'], val['image2']);
         }
@@ -181,7 +182,7 @@ export class ArticleDataService {
               var routeArray = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].name, val[dataType].id);
               var url = GlobalSettings.getImageUrl(val[dataType].logo, GlobalSettings._imgProfileLogo);
             }
-            val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
+            val['image1'] = ArticleDataService.getProfileImages(routeArray, url, "image-121");
             val['image2'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
             imageLinkArray.push(val['image1'], val['image2']);
             isFirstTeam = false;
@@ -191,8 +192,8 @@ export class ArticleDataService {
             var urlTeamRightTop = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].away_team_name, val[dataType].away_team_id);
             var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo, GlobalSettings._imgProfileLogo);
             var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo, GlobalSettings._imgProfileLogo);
-            val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-122");
-            val['image2'] = ArticleDataService.getProfileImages(urlTeamRightTop, awayUrl, "image-122");
+            val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-121");
+            val['image2'] = ArticleDataService.getProfileImages(urlTeamRightTop, awayUrl, "image-121");
             val['image3'] = ArticleDataService.getProfileImages(urlTeamLeftTop, homeUrl, "image-71");
             val['image4'] = ArticleDataService.getProfileImages(urlTeamRightTop, awayUrl, "image-71");
             imageLinkArray.push(val['image1'], val['image2'], val['image3'], val['image4'], shortDate);
@@ -207,7 +208,7 @@ export class ArticleDataService {
               var routeArray = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].name, val[dataType].id);
               var url = GlobalSettings.getImageUrl(val[dataType].logo, GlobalSettings._imgProfileLogo);
             }
-            val['image3'] = ArticleDataService.getProfileImages(routeArray, url, "image-122");
+            val['image3'] = ArticleDataService.getProfileImages(routeArray, url, "image-121");
             val['image4'] = ArticleDataService.getProfileImages(routeArray, url, "image-71");
             imageLinkArray.push(val['image3'], val['image4']);
           } else {
@@ -216,8 +217,8 @@ export class ArticleDataService {
             var urlTeamRightBottom = VerticalGlobalFunctions.formatTeamRoute(scope, val[dataType].away_team_name, val[dataType].away_team_id);
             var homeUrl = GlobalSettings.getImageUrl(val[dataType].home_team_logo, GlobalSettings._imgProfileLogo);
             var awayUrl = GlobalSettings.getImageUrl(val[dataType].away_team_logo, GlobalSettings._imgProfileLogo);
-            val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-122");
-            val['image2'] = ArticleDataService.getProfileImages(urlTeamRightBottom, awayUrl, "image-122");
+            val['image1'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-121");
+            val['image2'] = ArticleDataService.getProfileImages(urlTeamRightBottom, awayUrl, "image-121");
             val['image3'] = ArticleDataService.getProfileImages(urlTeamLeftBottom, homeUrl, "image-71");
             val['image4'] = ArticleDataService.getProfileImages(urlTeamRightBottom, awayUrl, "image-71");
             imageLinkArray.push(val['image1'], val['image2'], val['image3'], val['image4'], shortDate);

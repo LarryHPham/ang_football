@@ -242,7 +242,7 @@ export class PlayerPage{
     let header = data.headerData;
     let metaDesc =  header.description;
     let title = header.playerFullName;
-    let image = header.playerHeadshotUrl ? GlobalSettings.getImageUrl(header.playerHeadshotUrl) : GlobalSettings.fallBackIcon;
+    let image = header.playerHeadshotUrl ? GlobalSettings.getImageUrl(header.playerHeadshotUrl) : GlobalSettings.mainIcon;
     let record = '';
     if (header.leagueRecord != null) {
       record = header.leagueRecord;
