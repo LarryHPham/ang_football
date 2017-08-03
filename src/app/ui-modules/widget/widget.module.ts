@@ -11,10 +11,17 @@ export class WidgetModule {
     @Input() syndicated:boolean; // DEPRECATED
     @Input() scope:string;// DEPRECATED
     @Input() isProfilePage:boolean;
+    isProSport:boolean;
     isBrowser: boolean;
 
     constructor(){
       this.isBrowser = isBrowser;
+    }
+
+    ngOnChanges() {
+      if (this.scope) {
+        this.isProSport = this.scope == 'nfl';
+      }
     }
 
 }
