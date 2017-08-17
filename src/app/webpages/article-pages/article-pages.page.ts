@@ -157,7 +157,7 @@ export class ArticlePages implements OnInit {
       this._deepDiveService.getRecArticleData(this.scope, this.geoLocation, startNum, 3)
         .subscribe(data => {
           try{
-            this.randomHeadlines = this._deepDiveService.transformToRecArticles(data.data['articles']);
+            this.randomHeadlines = this._deepDiveService.transformToRecArticles(data.data);
           }catch(e){
             console.log("error in recommended articles");
           }

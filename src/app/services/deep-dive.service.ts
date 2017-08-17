@@ -299,7 +299,7 @@ export class DeepDiveService {
       var info = val.info;
       var date = GlobalFunctions.sntGlobalDateFormatting(Number(info.last_updated) * 1000, "dayOfWeek");
       let scope = info.subcategory == 'nfl' || info.subcategory == 'football' ? 'nfl' : 'ncaaf';
-      let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope, 'story', info.article_id.toString());
+      let urlRouteArray = VerticalGlobalFunctions.formatArticleRoute(scope, val.keyword, info.event_id.toString());
       var s = {
         extUrl: false,
         urlRouteArray: urlRouteArray ? urlRouteArray : null,
