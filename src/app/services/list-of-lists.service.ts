@@ -74,7 +74,13 @@ export class ListOfListsService {
               }
               var lastUpdated = "";
               if ( data && data.data && data.data.length > 0 && data.data != undefined) {
-                lastUpdated = data.data[0] ? data.data[0].targetData[0].lastUpdated : new Date();
+                if (data.data[0] && data.data[0].targetData[0]) {
+                  lastUpdated = data.data[0].targetData[0].lastUpdated;
+                } else if (data.data[0] && data.data[0].targetData && lastUpdated == "") {
+                  lastUpdated = data.data[0].targetData.lastUpdated
+                } else {
+                  lastUpdated = new Date().toDateString();
+                }
               }
               return {
                 carData: this.carDataPage(data.data,target),
