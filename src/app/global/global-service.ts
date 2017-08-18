@@ -38,7 +38,7 @@ export class GeoLocation{
             .flatMap(
             data => {
               try {
-                if (data && data[0] != null && data[0].source != null && data[0].source != '' && data[0].source != 'NULL') {
+                if (data && data[0] != null && data[0].source != null && data[0].source != '') {
                   let partnerData = data[0];
                   let partnerScript = partnerData.script;
                   let partnerHeight = partnerData.height;
