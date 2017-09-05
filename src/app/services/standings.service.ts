@@ -95,9 +95,8 @@ export class StandingsService {
     return tabs;
   }
 
-  getStandingsTabData(tabData: Array<any>, pageParams: SportPageParameters, onTabsLoaded: Function, maxRows?: number, page?:string) {
+  getStandingsTabData(tabData: Array<any>, pageParams: SportPageParameters, season, onTabsLoaded: Function, maxRows?: number, page?:string) {
     var newParams: any;
-    var season: any = null;
     let scope = GlobalSettings.getScope(pageParams.scope);
 
     if (maxRows == null) {
@@ -106,19 +105,6 @@ export class StandingsService {
     if (tabData[2] && tabData[2] != null) {
       newParams = tabData[2];
       season = tabData[2].season;
-    }
-    if (season == null) {
-      var date = new Date;
-      var compareDate = new Date('09 08 ' + date.getFullYear());
-      if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
-        season = date.getFullYear();
-      }
-      else if (date.getMonth() > compareDate.getMonth()) {
-        season = date.getFullYear();
-      }
-      else {
-        season = (date.getFullYear() - 1);
-      }
     }
     if ( !tabData || tabData.length < 2 ) {
       throw new Error("Invalid tabData for standings")

@@ -148,7 +148,7 @@ export class PlayerPage {
         this.teamNameParam = param['teamName'];
         this.fullName = param['fullName'];
         this.playerID = param['playerID'];
-        this.pageParams = { playerId: this.playerID }
+        this.pageParams = { playerId: this.playerID };
 
         this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
         this.setupPlayerProfileData();
@@ -455,12 +455,12 @@ export class PlayerPage {
   private standingsTabSelected(tabData: Array<any>) {
     //only show 5 rows in the module;
     this.pageParams.scope = this.scope;
-    this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {
+    this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, (data) => {
     }, 5));
   } //standingsTabSelected
   private standingsFilterSelected(tabData: Array<any>) {
     this.pageParams.scope = this.scope;
-    this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+    this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, data => {
     }, 5));
   } //standingsFilterSelected
 

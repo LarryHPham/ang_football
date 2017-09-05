@@ -176,7 +176,7 @@ export class LeaguePage{
                 scope:'league',//current profile page
                 teamId: this.scope == 'ncaaf' ? 'fbs' : this.scope,
                 date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')// date: '2016-09-11
-              }
+              };
 
               this.setupProfileData(this.partnerID, this.scope);
               this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
@@ -424,11 +424,11 @@ export class LeaguePage{
 
     private standingsTabSelected(tabData: Array<any>) {
       //only show 5 rows in the module
-      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5,this.dateParam.profile));
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, (data) => {}, 5,this.dateParam.profile));
     } //standingsTabSelected
     private standingsFilterSelected(tabData: Array<any>) {
       this.scope = this.scope;
-      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, data => {
       }, 5 , this.dateParam.profile));
     } //standingsFilterSelected
 

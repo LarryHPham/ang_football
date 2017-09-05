@@ -36,6 +36,7 @@ export class StandingsPage {
   public scope: string;
   public type: string;
   public teamID: number;
+  public seasonBase: string;
   public pageParams: SportPageParameters = {};
 
   public tabs: Array<TDLStandingsTabdata>;
@@ -161,6 +162,7 @@ export class StandingsPage {
                     this.profileLoaded = true;
                     this.pageParams = data.pageParams;
                     this.pageParams.scope = this.scope;
+                    this.seasonBase = data.headerData['seasonBase'];
                     var teamFullName = data.headerData.teamMarket + ' ' + data.headerData.teamName;
                     var title = this._standingsService.getPageTitle(this.pageParams, teamFullName);
                     this.titleData = this._profileService.convertTeamPageHeader(this.scope, data, title)
@@ -319,7 +321,7 @@ export class StandingsPage {
 
     private standingsTabSelected(tabData: Array<any>) {
         this.pageParams.scope = this.scope;
-        this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+        this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, data => {
             this.getLastUpdatedDateForPage(data);
         });
     } //standingsTabSelected
@@ -328,7 +330,7 @@ export class StandingsPage {
 
     private standingsFilterSelected(tabData: Array<any>) {
         this.pageParams.scope = this.scope;
-        this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+        this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, data => {
             this.getLastUpdatedDateForPage(data);
         });
     } //standingsFilterSelected

@@ -96,24 +96,12 @@ export class MVPListPage implements OnInit {
 
             this.startUp();
           }
-        )
+        );
 
         //Initial set for global MVP position
         this.filter1 = VerticalGlobalFunctions.getMVPdropdown(this.scope);
         // this.globalMVPPosition = this.positionParam;
         // this.position = this.positionParam;
-
-        var date = new Date;
-        var compareDate = new Date('09 15 ' + date.getFullYear());
-        if (date.getMonth() == compareDate.getMonth() && date.getDate() >= compareDate.getDate()) {
-            this.season = date.getFullYear();
-        }
-        else if (date.getMonth() > compareDate.getMonth()) {
-            this.season = date.getFullYear();
-        }
-        else {
-            this.season = (date.getFullYear() - 1);
-        }
     } //constructor
 
 
@@ -146,7 +134,7 @@ export class MVPListPage implements OnInit {
                     ordering: 'asc',
                     perPageCount: 20,
                     pageNumber: this.pageNum,
-                    season: this.season ? this.season : this.seasonBase
+                    season: this.seasonBase
                 };
                 this.loadTabs();
                 this.metaTags(this.profileHeaderData);

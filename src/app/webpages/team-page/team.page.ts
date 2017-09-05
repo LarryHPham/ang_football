@@ -182,7 +182,7 @@ export class TeamPage implements OnInit {
           scope: 'team',//current profile page
           teamId: param['teamID'], // teamId if it exists
           date: moment.tz( currentUnixDate , 'America/New_York' ).format('YYYY-MM-DD')
-        } //this.dateParam
+        }; //this.dateParam
         this.storedPartnerParam = VerticalGlobalFunctions.getWhiteLabel();
         this.setupProfileData(this.storedPartnerParam, this.scope, this.teamID);
       }
@@ -478,12 +478,12 @@ export class TeamPage implements OnInit {
     private standingsTabSelected(tabData: Array<any>) {
       //only show 5 rows in the module
       this.pageParams.scope = this.scope;
-      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, (data) => {}, 5));
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, (data) => {}, 5,));
     } //standingsTabSelected
 
     private standingsFilterSelected(tabData: Array<any>) {
       this.pageParams.scope = this.scope;
-      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, data => {
+      this.storeSubscriptions.push(this._standingsService.getStandingsTabData(tabData, this.pageParams, this.seasonBase, data => {
       }, 5));
     } //standingsFilterSelected
 
