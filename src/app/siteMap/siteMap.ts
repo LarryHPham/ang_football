@@ -260,9 +260,9 @@ export class SiteMap {
         console.warn('Error siteMap failure @ STORY addArticleSiteMaps', e)
       }
     });
-
+    //remove all video article pages from sitemap as per task DCU - 121
     //VIDEO ARTICLES => scope, limit, page, state?
-    this._deepDiveService.getSiteMapVideoDeepDive(scope, articleCount, 1)
+ /*   this._deepDiveService.getSiteMapVideoDeepDive(scope, articleCount, 1)
     .subscribe(data => {
       try{
         let totalPages = data.totalPages;
@@ -274,7 +274,7 @@ export class SiteMap {
       }catch(e){
         console.warn('Error siteMap failure @ VIDEO addArticleSiteMaps', e)
       }
-    });
+    });*/
   }// end addArticleSiteMaps
 
   addListPage(scope, id?){

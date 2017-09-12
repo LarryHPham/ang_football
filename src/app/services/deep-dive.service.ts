@@ -68,7 +68,9 @@ export class DeepDiveService {
       })
   }
 
-  getSiteMapVideoDeepDive(scope, limit, page, state?){
+  // Removed the service call to all video modules as mentioned in the task DCU 121
+
+  /*  getSiteMapVideoDeepDive(scope, limit, page, state?){
     //Configure HTTP Headers
     page = page == null ? 1 : page;
     // model://dev-touchdownloyal-api.synapsys.us/videoBatch/nfl/5/1
@@ -80,7 +82,7 @@ export class DeepDiveService {
       .map(data => {
         return data.data;
       })
-  }
+  }*/
   // Removed the service call to all video modules as mentioned in the task DCU 121
   getDeepDiveVideoBatchService(scope, limit, startNum, state?){
     //Configure HTTP Headers
