@@ -41,12 +41,12 @@ export class ArticleDataService {
     var fullUrl = GlobalSettings.getArticleUrl();
     var urlScope = scope == 'ncaaf' ? 'fbs' : scope;
     if (!isFantasyReport) {
-      return this.model.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + urlScope + "&readyToPublish=all")
+      return this.model.get(fullUrl + "articles?" + eventType + '&event=' + eventID + "&partner=" + partnerId + "&scope=" + urlScope + "&readyToPublish=true")
         .map(data => {
           return ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID)
         });
     } else {
-      return this.model.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + urlScope + "&readyToPublish=all")
+      return this.model.get(fullUrl + "articles?" + eventType + '&articleID=' + eventID + "&partner=" + partnerId + "&scope=" + urlScope + "&readyToPublish=true")
         .map(data => {
           return ArticleDataService.formatArticleData(data, scope, rawType, isFantasyReport, eventID)
         });
@@ -326,7 +326,7 @@ export class ArticleDataService {
   //recommendations data processing
   getRecommendationsData(eventID, scope) {
     var articleScope = scope == 'ncaaf' ? 'fbs' : scope;
-    var fullUrl = GlobalSettings.getArticleUrl() + "articles?&event=" + eventID + "&scope=" + articleScope + "&count=10&readyToPublish=all&random=1";
+    var fullUrl = GlobalSettings.getArticleUrl() + "articles?&event=" + eventID + "&scope=" + articleScope + "&count=10&readyToPublish=true&random=1";
     return this.model.get(fullUrl)
       .map(data => ArticleDataService.formatRecommendedData(data.data, scope));
   }
