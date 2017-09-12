@@ -40,7 +40,7 @@ export class DeepDivePage {
   safeCall: boolean = true;
   //for carousel
   carouselData: any;
-  videoData: any;
+  videoData: any = null;
   toggleData: any;
   blockIndex: number = 0;
   changeScopeVar: string = "";
@@ -275,16 +275,19 @@ export class DeepDivePage {
 
 
   private getDeepDiveVideoBatch() {
-    this._deepDiveData.getDeepDiveVideoBatchService(this.scope, '1', '1', this.geoLocation).subscribe(
-      data => {
-        try{
-          var video = data.data['videos'] != null ? this._deepDiveData.transformVideoStack(data.data) : null;
-          this.videoData = video['videos'];
-        }catch(e){
-          console.log('error in video data');
-        }
-      }
-    )
+   if(this.scope === "ncaaf"){
+      this.videoData = [{
+        'videoSource': 'http://embed.sendtonews.com/player3/embedcode.js?fk=x7pC9OIA&cid=8178&offsetx=0&offsety=0&floatwidth=400&floatposition=bottom-right',
+        'videoDatatype': 's2nScript',
+        'videoClassList': ["s2nPlayer", "k-x7pC9OIA"]
+      }];
+    }  else {
+      this.videoData = [{
+        'videoSource': 'http://embed.sendtonews.com/player3/embedcode.js?fk=q7QHIaY7&cid=8178&offsetx=0&offsety=0&floatwidth=400&floatposition=bottom-right',
+        'videoDatatype': 's2nScript',
+        'videoClassList': ["s2nPlayer", "k-q7QHIaY7"]
+      }];
+    }
   }
 
   private getDataCarousel() {

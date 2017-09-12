@@ -6,7 +6,7 @@
     <tile-stack-module [tilestackData] = "tilestackData"></tile-stack-module>
   </div>
   <div class="deep-dive-module" *ngIf="videoData">
-    <deep-dive-video-module [videoData]="videoData"></deep-dive-video-module>
+    <deep-dive-video-module ngIf="videoData" [videoData]="videoData"></deep-dive-video-module>
   </div>
   <div class="deep-dive-widget res640" *ngIf="videoData">
     <responsive-widget [deepDive]="true" [embedPlace]="widgetPlace" [pageType]="'deepDive'"></responsive-widget>
