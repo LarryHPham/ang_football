@@ -10,7 +10,7 @@ import { ModelService } from '../global/shared/model/model.service';
 export class VideoService {
   constructor(public model: ModelService) { };
 
-  getVideoBatchService(limit, startNum, pageNum, first, scope, teamID?, state?) {
+/*  getVideoBatchService(limit, startNum, pageNum, first, scope, teamID?, state?) {
     let tdlURL;
     if (first == undefined || first == null) {
       first = 0;
@@ -38,7 +38,7 @@ export class VideoService {
           return null;
         }
       })
-  }
+  }*/
 
   transformVideoStack(data) {
     try{
