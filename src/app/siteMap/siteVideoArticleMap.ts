@@ -42,7 +42,9 @@ export class SiteVideoArticleMap {
         ** appRoutes[1] routes for white labeled and subdomains  football.  && mytouchdownloyal.
         */
         this.childrenRoutes = this.partnerSite == '' ? appRoutes[0] : appRoutes[1];
+/*
         this.createSiteMap(param.scope, param.pageNumber);
+*/
     })
   } //constructor
 
@@ -51,13 +53,14 @@ export class SiteVideoArticleMap {
     this._seoService.setMetaRobots('NOINDEX, FOLLOW');
   } // metaTags
 
-  createSiteMap(scope, page){
+  //remove all video article pages from sitemap as per task DCU - 121
+/*  createSiteMap(scope, page){
     let self = this;
     let route = [];
     this.addAiArticlePage(scope, page);
-  }
+  }*/
 
-  addAiArticlePage(scope, page){
+/*  addAiArticlePage(scope, page){
     let articleCount = GlobalSettings.siteMapArticleCount;
     let self = this;
     //scope, limit, startNum, state?
@@ -81,5 +84,5 @@ export class SiteVideoArticleMap {
         console.warn('Error siteMap failure @ addAiArticlePage', e)
       }
     })
-  }
+  }*/
 }

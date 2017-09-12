@@ -75,7 +75,7 @@ export class LeaguePage{
     private eventStatus: string;
 
     private firstVideo:string;
-    private videoData:any;
+    private videoData:any = null;
 
     private boxScoresData:any;
     private currentBoxScores:any;
@@ -222,7 +222,6 @@ export class LeaguePage{
           this.profileName = this.scope == 'fbs'? 'NCAAF':this.scope.toUpperCase(); //leagueShortName
           this.getLeagueHeadlines();
           this.eventStatus = 'pregame';
-          this.getLeagueVideoBatch(7,1,1,0,GlobalSettings.getScope(scope));
           this.getBoxScores(this.dateParam);
           this.getSchedulesData(this.eventStatus);//grab pre event data for upcoming games
 
@@ -318,25 +317,6 @@ export class LeaguePage{
       ])
 
     } // metaTags
-
-
-
-    private getLeagueVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope)
-        .subscribe(data => {
-          try{
-            this.firstVideo = data.data['videos'][first].videoLink;
-            this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
-          }catch(e){
-            console.log('error in league video batch');
-          }
-        },
-        err => {
-            console.log("Error getting video data");
-        }));
-    } //getLeagueVideoBatch
-
-
 
     private getBoxScores(dateParams) {
         let newDate;

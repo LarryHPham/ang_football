@@ -123,7 +123,7 @@ export class TeamPage implements OnInit {
   private imageTitle:any;
 
   private firstVideo:string;
-  private videoData:any;
+  private videoData:any = null;
 
   private dykData: Array<dykModuleData>;
 
@@ -271,7 +271,6 @@ export class TeamPage implements OnInit {
         //--Batch 4--//
         this.setupComparisonData();
         this.getImages(this.imageData);
-        this.getTeamVideoBatch(7, 1, 1, 0, GlobalSettings.getScope(scope), this.pageParams.teamId);
         this.getDykService();
 
         //--Batch 5--//
@@ -578,26 +577,6 @@ export class TeamPage implements OnInit {
         console.log("Error getting image data" + err);
       }));
     } //getImages
-
-
-
-    private getTeamVideoBatch(numItems, startNum, pageNum, first, scope, teamID?) {
-      this.storeSubscriptions.push(this._videoBatchService.getVideoBatchService(numItems, startNum, pageNum, first, scope, teamID)
-        .subscribe(data => {
-          try{
-            this.firstVideo = data.data['videos'][first] ? data.data['videos'][first].videoLink : null;
-            this.videoData = this._videoBatchService.transformVideoStack(data.data['videos'].slice(1));
-          }catch(e){
-            console.warn('Insufficient number of videos available');
-          }
-        },
-        err => {
-          console.log("Error getting video data");
-        }
-      ));
-    } //getTeamVideoBatch
-
-
 
     private getDykService() {
       this.storeSubscriptions.push(this._dykService.getDykService(this.profileType, this.pageParams.teamId)
