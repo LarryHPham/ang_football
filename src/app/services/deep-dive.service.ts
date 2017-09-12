@@ -81,10 +81,10 @@ export class DeepDiveService {
         return data.data;
       })
   }
-
+  // Removed the service call to all video modules as mentioned in the task DCU 121
   getDeepDiveVideoBatchService(scope, limit, startNum, state?){
     //Configure HTTP Headers
-    if(startNum == null){
+/*    if(startNum == null){
       startNum = 1;
     }
     if(state == null){//make sure it comes back as a string of null if nothing is returned or sent to parameter
@@ -105,7 +105,7 @@ export class DeepDiveService {
     return this.model.get(callURL)
       .map(data => {
         return data;
-      })
+      })*/
   }
 
   getDeepDiveAiBatchService(scope, key?, page?, count?, state?){

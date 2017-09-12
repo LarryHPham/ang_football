@@ -22,7 +22,7 @@ export class DeepDiveBlock1{
   tilestackData: any;
   //for box scores
   boxScoresData: any;
-  videoData: any;
+  videoData: any = null;
   currentBoxScores: any;
   page: number = 1;
   dateParam: any;
@@ -77,21 +77,6 @@ export class DeepDiveBlock1{
         });
   }
 
-  getDeepDiveVideoBatch(scope, region, numItems, startNum){
-    this._deepDiveData.getDeepDiveVideoBatchService(this.scope, numItems, startNum, region).subscribe(
-      data => {
-        try{
-          var video = data.data['videos'] != null ? this._deepDiveData.transformVideoStack(data.data) : null;
-          this.videoData = video['videos'];
-        }catch(e){
-          console.log('error in video data');
-        }
-      },
-      err => {
-          console.log("Error getting video batch data");
-      });
-  }
-
   //api for BOX SCORES
   getBoxScores(dateParams?) {
     if(this.scope != 'home'){
@@ -110,7 +95,6 @@ export class DeepDiveBlock1{
   callModules(){
     setTimeout(() => { // wait to load the rest of the page below the fold
       this.getBoxScores(this.dateParam);
-      this.getDeepDiveVideoBatch(this.scope, this.geoLocation, this.videoCallLimit, this.page);
       this.getTileStackData();
     }, 500);
   }

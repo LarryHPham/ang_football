@@ -17,3 +17,6 @@ webpack.records.json
 /npm-debug.log.*
 
 morgan.log
+TouchdownLoyal-frontend.iml
+package-lock.json
+fe-core.iml

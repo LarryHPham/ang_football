@@ -114,6 +114,7 @@ import { LoadMoreButtonComponent } from "../fe-core/components/load-more-button/
 
 //Global custom Directives
 import {verticalWidgetScrollDirective} from "../fe-core/custom-directives/verticalWidgetScroll.directive";
+import {EmbedVideoDeepdive} from "../fe-core/components/embed-video-deepdive/embed-video-deepdive";
 
 const MODULES = [
   // put modules here
@@ -203,7 +204,8 @@ const COMPONENTS = [
   Search,
   ArticleScheduleComponent,
   ScoreBoard,
-  LoadMoreButtonComponent
+  LoadMoreButtonComponent,
+  EmbedVideoDeepdive
 ];
 
 const PIPES = [
