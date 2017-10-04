@@ -12,7 +12,6 @@ declare var ga:any;
   styles: [require('../global/stylesheets/main.less').toString()]
 })
 export class AppDomain implements OnInit{
-  currentRoute: string;
   constructor( private _router: Router, private _activateRoute: ActivatedRoute){
    this._router.events.subscribe(event =>{
      if(event instanceof NavigationEnd){
